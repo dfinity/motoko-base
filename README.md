@@ -45,3 +45,13 @@ installed.
 Note that the documentation tool relies on a very peculiar coding convention.
 See `doc/README.md` for details. This convention is not necessarily the best
 convention!
+
+The `next-moc` branch
+---------------------
+
+The `next-moc` branch contains changes that make base compatible with the
+in-development version of `moc`. This repositorie's public CI does _not_ run
+on that branch.
+
+External contributions are best made against `master`.
+
