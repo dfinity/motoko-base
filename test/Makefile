@@ -1,5 +1,5 @@
 STDLIB ?= ../src
-MOC ?= moc
+MOC ?= ../bin/moc
 WASMTIME_OPTIONS = --disable-cache --cranelift
 
 OUTDIR=_out
