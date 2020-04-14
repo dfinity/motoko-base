@@ -1,0 +1,33 @@
+
+name: "build"
+on: push
+jobs:
+  tests:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - uses: cachix/install-nix-action@v7
+    - name: "install dependencies"
+      run: |
+        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
+        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --add https://nixos.org/channels/nixos-20.03 nixpkgs
+        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --update
+        ls -l /nix/var/nix/profiles/per-user/root/channels/
+        nix-env --install --attr asciidoctor --file '<nixpkgs>'
+        nix-env --install --attr wasmtime --file '<nixpkgs>'
+    - name: "install dfx"
+      run: |
+       wget https://sdk.dfinity.org/install.sh
+       yes Y | sh install.sh
+       echo "::add-path::/home/runner/bin"
+    - name: "dfx cache install"
+      run: dfx cache install
+    - name: "test"
+      run: make -C test
+    - name: "docs"
+      run: make -C doc
+    - name: Upload docs
+      uses: actions/upload-artifact@v1
+      with:
+        name: reference documentation
+        path: doc/_out/
