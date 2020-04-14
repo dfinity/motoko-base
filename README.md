@@ -32,6 +32,8 @@ that compiler:
 
     make MOC=moc
 
+Similarly, you can run `make` in `examples/`.
+
 Documentation
 -------------
 

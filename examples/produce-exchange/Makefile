@@ -1,5 +1,5 @@
 STDLIB ?= ../../src
-MOC ?= ../../../src/moc
+MOC ?= ../../bin/moc
 DRUN ?= drun
 
 WASMTIME_OPTIONS = --disable-cache --cranelift
