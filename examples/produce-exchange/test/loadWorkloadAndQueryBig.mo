@@ -1,7 +1,7 @@
 //let T = (import "../src/serverTypes");
 //let A = (import "../src/serverActor");
-//let Result = (import "mo:stdlib/Result");
-//let Option = (import "mo:stdlib/Option");
+//let Result = (import "mo:base/Result");
+//let Option = (import "mo:base/Option");
 
 func scaledParams(region_count_:Nat, factor:Nat) : T.WorkloadParams = shared {
   region_count        = region_count_:Nat;

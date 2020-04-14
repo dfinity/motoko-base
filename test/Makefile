@@ -18,14 +18,14 @@ $(OUTDIR):
 $(OUTDIR)/import_all.mo: $(STDLIB_FILES) | $(OUTDIR)
 	> $@
 	for f in $(patsubst $(STDLIB)/%.mo,%,$(STDLIB_FILES)); do \
-	  echo "import Import_$$f \"mo:stdlib/$$f\";" >> $@; \
+	  echo "import Import_$$f \"mo:base/$$f\";" >> $@; \
 	done
 
 $(OUTDIR)/%.wasm: %.mo | $(OUTDIR)
-	$(MOC) -c --package stdlib $(STDLIB) -wasi-system-api -o $@ $<
+	$(MOC) -c --package base $(STDLIB) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.wasm: $(OUTDIR)/%.mo | $(OUTDIR)
-	$(MOC) -c --package stdlib $(STDLIB) -wasi-system-api -o $@ $<
+	$(MOC) -c --package base $(STDLIB) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.checked: $(OUTDIR)/%.wasm
 	wasmtime $(WASMTIME_OPTIONS) $<

@@ -22,7 +22,7 @@ To refer to them, use asciidoc syntax, as in
 
 ## Conventions and assumptions
 
-See `stdlib/src/List.mo` for inspiration.
+See `base/src/List.mo` for inspiration.
 
 The doc generation tools requires the standard library code to be in a certain
 shape:

@@ -10,7 +10,7 @@ $(OUTDIR):
 	@mkdir $@
 
 $(OUTDIR)/Test.wasm: test/RxTest.mo src/*.mo | $(OUTDIR)
-	$(MOC) -c --package stdlib $(STDLIB) -wasi-system-api -o $@ $<
+	$(MOC) -c --package base $(STDLIB) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/test.out: $(OUTDIR)/Test.wasm
 	wasmtime $(WASMTIME_OPTIONS) $<

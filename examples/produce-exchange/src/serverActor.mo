@@ -4,16 +4,16 @@
  --------------------
 */
 
-import Debug "mo:stdlib/Debug";
-import P = "mo:stdlib/Prelude";
-import Option = "mo:stdlib/Option";
+import Debug "mo:base/Debug";
+import P = "mo:base/Prelude";
+import Option = "mo:base/Option";
 import T = "serverTypes";
 import L = "serverLang";
 import Model = "serverModel";
-import Result = "mo:stdlib/Result";
+import Result = "mo:base/Result";
 
-import Trie = "mo:stdlib/Trie";
-import List = "mo:stdlib/List";
+import Trie = "mo:base/Trie";
+import List = "mo:base/List";
 
 type List<T> = List.List<T>;
 
@@ -589,7 +589,7 @@ actor class Server () {
    `producerAddInventory`
    ------------------------------------------
 
-   See also [Model.producerAddInventory]($DOCURL/stdlib/examples/produce-exchange/serverModel.md#produceraddinventory)
+   See also [Model.producerAddInventory]($DOCURL/base/examples/produce-exchange/serverModel.md#produceraddinventory)
    */
   public func producerAddInventory(
     public_key: T.PublicKey,

@@ -1,5 +1,5 @@
-import Prelude "mo:stdlib/Prelude";
-import Float "mo:stdlib/Float";
+import Prelude "mo:base/Prelude";
+import Float "mo:base/Float";
 
 Prelude.printLn("Float");
 

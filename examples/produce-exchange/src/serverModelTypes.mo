@@ -1,5 +1,5 @@
 import T = "serverTypes";
-import Trie = "mo:stdlib/Trie";
+import Trie = "mo:base/Trie";
 import DocTable = "docTable";
 
 
