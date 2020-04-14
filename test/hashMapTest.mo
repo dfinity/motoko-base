@@ -1,6 +1,6 @@
 import Prim "mo:prim";
-import H "mo:stdlib/HashMap";
-import Hash "mo:stdlib/Hash";
+import H "mo:base/HashMap";
+import Hash "mo:base/Hash";
 
 func textIsEq(x:Text,y:Text):Bool { x == y };
 

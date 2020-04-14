@@ -5,7 +5,7 @@ DRUN ?= drun
 WASMTIME_OPTIONS = --disable-cache --cranelift
 OUTDIR=_out
 
-MOC_OPTIONS = --package stdlib $(STDLIB)
+MOC_OPTIONS = --package base $(STDLIB)
 
 TESTS = \
   simpleSetupAndQuery \

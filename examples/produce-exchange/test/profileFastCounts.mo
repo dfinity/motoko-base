@@ -2,7 +2,7 @@
 // we correlate these numbers with times that we
 // measure elsewhere, where these numbers are not available.
 
-import Debug "mo:stdlib/Debug";
+import Debug "mo:base/Debug";
 import T "../src/serverTypes";
 import Model "../src/serverModel";
 

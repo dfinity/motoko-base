@@ -1,6 +1,6 @@
-import Function "mo:stdlib/Function";
-import Prelude "mo:stdlib/Prelude";
-import Text "mo:stdlib/Text";
+import Function "mo:base/Function";
+import Prelude "mo:base/Prelude";
+import Text "mo:base/Text";
 
 Prelude.printLn("Function");
 

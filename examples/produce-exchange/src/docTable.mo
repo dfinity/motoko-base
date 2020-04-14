@@ -1,6 +1,6 @@
-import Hash "mo:stdlib/Hash";
+import Hash "mo:base/Hash";
 
-import Trie "mo:stdlib/Trie";
+import Trie "mo:base/Trie";
 
 module {
 /**

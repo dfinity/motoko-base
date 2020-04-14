@@ -31,7 +31,7 @@ The documentation of this design now evolves in two places:
     iii. Early, older [documentation under the Motoko space](https://dfinity.atlassian.net/wiki/spaces/AST/pages/104401122/Example+Dapp+Produce+Exchange).  
 
  2. [**This documentation and associated source
-    code**](https://github.com/dfinity-lab/motoko/tree/stdlib-examples/stdlib/examples/produce-exchange)
+    code**](https://github.com/dfinity-lab/motoko/tree/base-examples/stdlib/examples/produce-exchange)
     
     This code is implementing the **Produce Exchange Canister component**,
     as a way to push the development of the Motoko language, its
@@ -126,7 +126,7 @@ Basic types used in messages, and published/stored internally in the server acto
 
 See [`serverTypes.md`]($DOCURL/examples/produce-exchange/serverTypes.html) for authoritative documentation.
 
-See [`serverTypes.mo`](https://github.com/dfinity-lab/motoko/blob/stdlib-examples/stdlib/examples/produce-exchange/serverTypes.mo) for the source code.
+See [`serverTypes.mo`](https://github.com/dfinity-lab/motoko/blob/base-examples/stdlib/examples/produce-exchange/serverTypes.mo) for the source code.
 
 **Server actor**
 ----------------------
@@ -135,7 +135,7 @@ Defined by the server actor's public signature, which specifies the messages and
 
 See [`serverActor.md`]($DOCURL/examples/produce-exchange/serverActor.html) for authoritative documentation.
 
-See [`serverActor.mo`](https://github.com/dfinity-lab/motoko/blob/stdlib-examples/stdlib/examples/produce-exchange/serverActor.mo) for the source code.
+See [`serverActor.mo`](https://github.com/dfinity-lab/motoko/blob/base-examples/stdlib/examples/produce-exchange/serverActor.mo) for the source code.
 
 
 **Server model types**
@@ -145,12 +145,12 @@ This component defines structures that the next component uses to implement the 
 
 See [`serverModelTypes.md`]($DOCURL/examples/produce-exchange/serverModelTypes.html) for authoritative documentation.
 
-See [`serverModelTypes.mo`](https://github.com/dfinity-lab/motoko/blob/stdlib-examples/stdlib/examples/produce-exchange/serverModelTypes.mo) for the source code.
+See [`serverModelTypes.mo`](https://github.com/dfinity-lab/motoko/blob/base-examples/stdlib/examples/produce-exchange/serverModelTypes.mo) for the source code.
 
 **Standard library**
 --------------------------
 
-See [the standard library](https://github.com/dfinity-lab/motoko/tree/stdlib-examples/stdlib/#produce-exchange)
+See [the standard library](https://github.com/dfinity-lab/motoko/tree/base-examples/stdlib/#produce-exchange)
 for collection abstractions,
 including 
     the [`DocTable` class]($DOCURL/docTable.html)
@@ -166,7 +166,7 @@ types_](#server-model-types).
 
 See  [`serverModel.md`]($DOCURL/examples/produce-exchange/serverModel.html) for authoritative documentation.
 
-See [`serverModel.mo`](https://github.com/dfinity-lab/motoko/blob/stdlib-examples/stdlib/examples/produce-exchange/serverModel.mo) for the source code.
+See [`serverModel.mo`](https://github.com/dfinity-lab/motoko/blob/base-examples/stdlib/examples/produce-exchange/serverModel.mo) for the source code.
 
 Note that while we define the **behavior for the server**, the
 _implementation details of this component and [server model
@@ -200,7 +200,7 @@ We decompose the **test suite** for the Produce Exchange into the following mile
 
     To do
 
-See below for [more thoughts about performance testing]($DOCURL/stdlib/examples/produce-exchange#performance-considerations).
+See below for [more thoughts about performance testing]($DOCURL/base/examples/produce-exchange#performance-considerations).
 
 
 
