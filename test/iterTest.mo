@@ -1,8 +1,28 @@
 import Iter "mo:base/Iter";
 import List "mo:base/List";
+import Nat "mo:base/Nat";
+import Int "mo:base/Int";
 import Prelude "mo:base/Prelude";
 
 Prelude.printLn("Iter");
+
+{
+  Prelude.printLn("  range");
+
+  let tests = [((0,-1), "", "0-1"), ((0,0), "0", "0"), ((0, 5), "012345", ""), ((5, 0), "", "543210")];
+  for ((range, expected, revExpected) in tests.vals()) {
+      var x = "";
+      for (i in Iter.range(range)) {
+          x := x # Nat.toText(i);
+      };
+      assert(x == expected);
+      x := "";
+      for (i in Iter.revRange(range)) {
+          x := x # Int.toText(i);
+      };
+      assert(x == revExpected);      
+  };
+};
 
 {
   Prelude.printLn("  forIn");
@@ -144,3 +164,4 @@ Prelude.printLn("Iter");
   assert (expected.length == actual.length);
   assert List.isEq<Nat>(expected.list, actual.list, func (x1, x2) { x1 == x2 });
 };
+

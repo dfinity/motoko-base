@@ -1,6 +1,7 @@
 import Prim "mo:prim";
 import B "mo:base/Buf";
 import I "mo:base/Iter";
+import O "mo:base/Option";
 
 // test repeated growing
 let a = B.Buf<Nat>(3);
@@ -20,6 +21,12 @@ for (i in I.range(0, 123)) {
 
 Prim.debugPrint(debug_show(a.toArray()));
 Prim.debugPrint(debug_show(b.toArray()));
+
+// test repeated removing
+for (i in I.revRange(123, 0)) {
+    assert(O.unwrap(a.remove_last()) == i);
+};
+O.assertNull(a.remove_last());
 
 func natArrayIter(elems:[Nat]) : I.Iter<Nat> = object {
   var pos = 0;
