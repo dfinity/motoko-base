@@ -24,9 +24,9 @@ Prim.debugPrint(debug_show(b.toArray()));
 
 // test repeated removing
 for (i in I.revRange(123, 0)) {
-    assert(O.unwrap(a.remove_last()) == i);
+    assert(O.unwrap(a.removeLast()) == i);
 };
-O.assertNull(a.remove_last());
+O.assertNull(a.removeLast());
 
 func natArrayIter(elems:[Nat]) : I.Iter<Nat> = object {
   var pos = 0;
