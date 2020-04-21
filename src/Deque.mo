@@ -1,3 +1,11 @@
+/**
+[#mod-Deque]
+= `Deque` -- Double-ended Queue 
+
+This module provides purely-functional double-ended queue.
+
+*/
+
 import List "mo:base/List";
 import P "mo:base/Prelude";
 
