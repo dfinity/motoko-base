@@ -5,7 +5,6 @@
 
 import Array "Array";
 import List "List";
-import P "mo:prim";
 
 module {
   public type Iter<T> = {next : () -> ?T};

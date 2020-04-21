@@ -65,12 +65,12 @@ public class Buf<X> (initCapacity : Nat) {
     count += 1;
   };
 
-  public func remove_last() : ?X {
-      if (count == 0) null
-      else {
-          count -= 1;
-          ?elems[count]
-      };
+  public func removeLast() : ?X {
+    if (count == 0) null
+    else {
+      count -= 1;
+      ?elems[count]
+    };
   };
 
   public func append(b:Buf<X>) {
