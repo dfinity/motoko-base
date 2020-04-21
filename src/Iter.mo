@@ -9,9 +9,14 @@ import List "List";
 module {
   public type Iter<T> = {next : () -> ?T};
 
-  public class range(x : Nat, y : Nat) {
+  public class range(x : Nat, y : Int) {
     var i = x;
     public func next() : ?Nat { if (i > y) null else {let j = i; i += 1; ?j} };
+  };
+
+  public class revRange(x : Int, y : Int) {
+      var i = x;
+      public func next() : ?Int { if (i < y) null else {let j = i; i -= 1; ?j} };
   };
 
   public func forIn<A>(

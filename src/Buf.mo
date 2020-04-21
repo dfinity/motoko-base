@@ -56,15 +56,21 @@ public class Buf<X> (initCapacity : Nat) {
         else
           2 * elems.len();
       let elems2 = A.init<X>(size, elem);
-      if (count > 0) {
-        for (i in I.range(0, count - 1)) {
+      for (i in I.range(0, count - 1)) {
           elems2[i] := elems[i];
-        };
       };
       elems := elems2;
     };
     elems[count] := elem;
     count += 1;
+  };
+
+  public func removeLast() : ?X {
+    if (count == 0) null
+    else {
+      count -= 1;
+      ?elems[count]
+    };
   };
 
   public func append(b:Buf<X>) {
@@ -85,10 +91,8 @@ public class Buf<X> (initCapacity : Nat) {
 
   public func clone() : Buf<X> {
     let c = Buf<X>(initCapacity);
-    if (count > 0) {
-      for (i in I.range(0, count - 1)) {
+    for (i in I.range(0, count - 1)) {
         c.add(elems[i])
-      };
     };
     c
   };
