@@ -49,4 +49,8 @@ module {
   public let max : (Nat, Nat) -> Nat = func(x,y) {
     if (x < y) y else x;
   };
+
+  public let compare : (Nat, Nat) -> {#lt; #gt; #eq} = func(x,y) {
+    if (x < y) #lt else if (x > y) #gt else #eq;
+  };
 }
