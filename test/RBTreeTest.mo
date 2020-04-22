@@ -36,7 +36,7 @@ module {
 
     var t = RBT.RBTree<Nat, Text>(Nat.compare);
 
-    for ((num, lab) in sorted.vals()) {
+    for ((num, lab) in unsort.vals()) {
       Debug.print (Nat.toText num);
       Debug.print lab;
       ignore t.insert(num, lab);
