@@ -1,10 +1,9 @@
-import Debug "mo:stdlib/Debug";
-import P "mo:stdlib/Prelude";
-import Nat "mo:stdlib/Nat";
-//import Render "../render/render";
-import I "mo:stdlib/Iter";
-import List "mo:stdlib/List";
-import RBT "mo:stdlib/RedBlackTree";
+import Debug "mo:base/Debug";
+import P "mo:base/Prelude";
+import Nat "mo:base/Nat";
+import I "mo:base/Iter";
+import List "mo:base/List";
+import RBT "mo:base/RBTree";
 
 module {
 
