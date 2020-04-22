@@ -148,7 +148,7 @@ module {
   };
 
   // copy from iter.mo, but iter depends on array
-  class range(x : Nat, y : Nat) {
+  class range(x : Nat, y : Int) {
     var i = x;
     public func next() : ?Nat { if (i > y) null else {let j = i; i += 1; ?j} };
   };
