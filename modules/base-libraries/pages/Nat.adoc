@@ -1,0 +1,146 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Nat]
+= `Nat` -- Natural numbers
+
+Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
+This module provides conversion functions.
+
+The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
+
+
+
+[#Nat_toText]
+== `toText`
+
+
+[listing]
+toText : Nat -> Text
+
+[#Nat_fromWord8]
+== `fromWord8`
+
+
+[listing]
+fromWord8 : Word8  -> Nat
+
+[#Nat_fromWord16]
+== `fromWord16`
+
+
+[listing]
+fromWord16 : Word16 -> Nat
+
+[#Nat_fromWord32]
+== `fromWord32`
+
+
+[listing]
+fromWord32 : Word32 -> Nat
+
+[#Nat_fromWord64]
+== `fromWord64`
+
+
+[listing]
+fromWord64 : Word64 -> Nat
+
+[#Nat_toWord8]
+== `toWord8`
+
+
+[listing]
+toWord8 : Nat -> Word8
+
+[#Nat_toWord16]
+== `toWord16`
+
+
+[listing]
+toWord16 : Nat -> Word16
+
+[#Nat_toWord32]
+== `toWord32`
+
+
+[listing]
+toWord32 : Nat -> Word32
+
+[#Nat_toWord64]
+== `toWord64`
+
+
+[listing]
+toWord64 : Nat -> Word64
+
+[#Nat_fromNat8]
+== `fromNat8`
+
+
+[listing]
+fromNat8 : Nat8  -> Nat
+
+[#Nat_fromNat16]
+== `fromNat16`
+
+
+[listing]
+fromNat16 : Nat16 -> Nat
+
+[#Nat_fromNat32]
+== `fromNat32`
+
+
+[listing]
+fromNat32 : Nat32 -> Nat
+
+[#Nat_fromNat64]
+== `fromNat64`
+
+
+[listing]
+fromNat64 : Nat64 -> Nat
+
+[#Nat_toNat8]
+== `toNat8`
+
+
+[listing]
+toNat8 : Nat -> Nat8
+
+[#Nat_toNat16]
+== `toNat16`
+
+
+[listing]
+toNat16 : Nat -> Nat16
+
+[#Nat_toNat32]
+== `toNat32`
+
+
+[listing]
+toNat32 : Nat -> Nat32
+
+[#Nat_toNat64]
+== `toNat64`
+
+
+[listing]
+toNat64 : Nat -> Nat64
+
+[#Nat_min]
+== `min`
+
+
+[listing]
+min : (Nat, Nat) -> Nat
+
+[#Nat_max]
+== `max`
+
+
+[listing]
+max : (Nat, Nat) -> Nat
+
