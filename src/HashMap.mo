@@ -19,11 +19,11 @@ Hash Map (aka Hash table)
 
 This module defines an imperative hash map (hash table), with a general key and value type.
 
-It has a minimal object-oriented interface: get, set, del, count and iter.
+It has a minimal object-oriented interface: get, set, swap, del, count and iter.
 
 The class is parameterized by the key's equality and hash functions,
 and an initial capacity.  However, as with `Buf`, no array allocation
-happens until the first `set`.
+happens until the first `set` (or `swap`).
 
 Internally, table growth policy is very simple, for now:
   Double an initial capacity when the expected
@@ -71,7 +71,9 @@ public class HashMap<K,V> (
     };
   };
 
-  public func set(k:K, v:V) : ?V {
+  public func set(k:K, v:V) = ignore swap(k, v);
+
+  public func swap(k:K, v:V) : ?V {
     if (_count >= table.len()) {
       let size =
         if (_count == 0)
