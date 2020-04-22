@@ -9,10 +9,20 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
-If you build your project using the [vessel package manager] then, TODO
+If you build your project using the [vessel package manager] then, add this entry to your `package-set.json` file:
+
+```
+  {
+    "name": "base",
+    "repo": "https://github.com/dfinity-lab/motoko-base",
+    "version": "master",
+    "dependencies": []
+  }
+```
+
+The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch name (among other things).  There are no dependencies.  See [vessel package manager] docs for more details.
 
 [vessel package manager]: https://github.com/kritzcreek/vessel
-
 
 Building/testing
 ----------------
