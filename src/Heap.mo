@@ -5,6 +5,7 @@
 This module provides purely-functional priority queue based on leftist heap
 
 */
+
 import P "mo:base/Prelude";
 import L "mo:base/List";  
 
