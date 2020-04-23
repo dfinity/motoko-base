@@ -42,10 +42,13 @@ debug {
   };
 
   // do some more operations:
-  ignore a.set("apple", 1111);
-  ignore a.set("banana", 2222);
-  ignore a.del("pear");
-  ignore a.del("avocado");
+  a.set("apple", 1111);
+  a.set("banana", 2222);
+  switch( a.remove("pear")) {
+    case null { assert false };
+    case (?three) { assert three == 3 };
+  };
+  a.delete("avocado");
 
   // check them:
   switch (a.get("apple")) {
@@ -66,10 +69,17 @@ debug {
   };
 
   // undo operations above:
-  ignore a.set("apple", 1);
-  ignore a.set("banana", 2);
-  ignore a.set("pear", 3);
-  ignore a.set("avocado", 4);
+  a.set("apple", 1);
+  // .. and test that swap works
+  switch (a.swap("apple", 666)) {
+    case null { assert false };
+    case (?one) { assert one == 1; // ...and revert
+                  a.set("apple", 1)
+         };
+  };
+  a.set("banana", 2);
+  a.set("pear", 3);
+  a.set("avocado", 4);
 
   // ensure clone has each key-value pair present in original
   for ((k,v) in a.iter()) {
