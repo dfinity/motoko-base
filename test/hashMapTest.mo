@@ -44,7 +44,7 @@ debug {
   // do some more operations:
   a.set("apple", 1111);
   a.set("banana", 2222);
-  switch a.remove("pear") {
+  switch( a.remove("pear")) {
     case null { assert false };
     case (?three) { assert three == 3 };
   };
