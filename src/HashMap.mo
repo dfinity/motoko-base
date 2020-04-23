@@ -44,9 +44,9 @@ public class HashMap<K,V> (
 
   public func count() : Nat = _count;
 
-  public func del(k:K) = ignore rem(k);
+  public func delete(k:K) = ignore remove(k);
 
-  public func rem(k:K) : ?V {
+  public func remove(k:K) : ?V {
     let h = Prim.word32ToNat(keyHash(k));
     let m = table.len();
     let pos = h % m;

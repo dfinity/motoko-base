@@ -44,11 +44,11 @@ debug {
   // do some more operations:
   a.set("apple", 1111);
   a.set("banana", 2222);
-  switch a.rem("pear") {
+  switch a.remove("pear") {
     case null { assert false };
     case (?three) { assert three == 3 };
   };
-  a.del("avocado");
+  a.delete("avocado");
 
   // check them:
   switch (a.get("apple")) {
