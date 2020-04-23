@@ -6,7 +6,7 @@ This module provides purely-functional double-ended queue.
 
 */
 
-import List "mo:List";
+import List "List";
 import P "mo:Prelude";
 
 module {
