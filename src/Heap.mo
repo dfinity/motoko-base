@@ -6,8 +6,8 @@ This module provides purely-functional priority queue based on leftist heap
 
 */
 
-import P "mo:base/Prelude";
-import L "mo:base/List";  
+import P "mo:Prelude";
+import L "mo:List";
 
 module {
     public type Heap<T> = ?(Int, T, Heap<T>, Heap<T>);
