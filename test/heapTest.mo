@@ -13,7 +13,7 @@ let ord : Heap.Comparable<Int> = object {
 };
 
 {
-    var pq = Heap.makeHeap<Int>(ord);
+    var pq : Heap.t<Int> = Heap.makeHeap<Int>(ord);
     for (i in I.revRange(100, 0)) {
         pq.add(i);
         let x = pq.peekMin();

@@ -14,11 +14,10 @@ module {
     public type Comparable<T> = {
         compare : (T, T) -> Order;
     };
-    
-    public type t<T> = ?(Int, T, t<T>, t<T>);
-    
+    public type t<T> = makeHeap<T>;
     public class makeHeap<T>(ord : Comparable<T>) {
-        // type t = t<T>;  // error: reference T from an outer scope
+        type t<T> = ?(Int, T, t<T>, t<T>);
+
         var heap : t<T> = null;
         func rank(heap : t<T>) : Int {
             switch heap {
@@ -57,6 +56,7 @@ module {
             case (?(_, _, a, b)) heap := merge(a,b);
             }
         };
+        // Ideally this should be a static function. Also don't know how to return self
         public func fromList(a : L.List<T>) {
             func build(xs : L.List<t<T>>) : t<T> {
                 func join(xs : L.List<t<T>>) : L.List<t<T>> {
