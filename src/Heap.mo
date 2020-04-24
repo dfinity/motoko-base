@@ -10,27 +10,34 @@ import P "mo:base/Prelude";
 import L "mo:base/List";  
 
 module {
-    public type Heap<T> = ?(Int, T, Heap<T>, Heap<T>);
-    public class MakeHeap<T>(ord : (T, T) -> Bool) {
-        var heap : Heap<T> = null;
-        func rank(heap : Heap<T>) : Int {
+    public type Order = { #lt; #eq; #gt };
+    public type Comparable<T> = {
+        compare : (T, T) -> Order;
+    };
+    
+    public type t<T> = ?(Int, T, t<T>, t<T>);
+    
+    public class makeHeap<T>(ord : Comparable<T>) {
+        // type t = t<T>;  // error: reference T from an outer scope
+        var heap : t<T> = null;
+        func rank(heap : t<T>) : Int {
             switch heap {
             case (null) 0;
             case (?(r, _, _, _)) r;
             }
         };
-        func makeT (x : T, a : Heap<T>, b : Heap<T>) : Heap<T> {
+        func makeT (x : T, a : t<T>, b : t<T>) : t<T> {
             if (rank(a) >= rank(b)) ?(rank(b) + 1, x, a, b) else ?(rank(a) + 1, x, b, a);
         };
-        func merge (h1 : Heap<T>, h2 : Heap<T>) : Heap<T> {
+        func merge (h1 : t<T>, h2 : t<T>) : t<T> {
             switch (h1, h2) {
             case (null, h) h;
             case (h, null) h;
             case (?(_, x, a, b), ?(_, y, c, d)) {
-                     if (ord(x,y))
-                     makeT (x, a, merge(b, h2))
-                     else
-                     makeT (y, c, merge(d, h1))
+                     switch (ord.compare(x,y)) {
+                     case (#lt) makeT (x, a, merge(b, h2));
+                     case _ makeT (y, c, merge(d, h1));
+                     };
                  };
             }
         };
@@ -51,8 +58,8 @@ module {
             }
         };
         public func fromList(a : L.List<T>) {
-            func build(xs : L.List<Heap<T>>) : Heap<T> {
-                func join(xs : L.List<Heap<T>>) : L.List<Heap<T>> {
+            func build(xs : L.List<t<T>>) : t<T> {
+                func join(xs : L.List<t<T>>) : L.List<t<T>> {
                     switch(xs) {
                     case (null) null;
                     case (?(hd, null)) ?(hd, null);
@@ -68,7 +75,7 @@ module {
             switch(a) {
             case (null) heap := null;
             case _
-              heap := build (L.map (a, func (x : T) : Heap<T> = ?(1, x, null, null)));
+              heap := build (L.map (a, func (x : T) : t<T> = ?(1, x, null, null)));
             };
         };
     };

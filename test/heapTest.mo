@@ -1,15 +1,19 @@
-import H "mo:base/Heap";
+import Heap "mo:base/Heap";
 import I "mo:base/Iter";
 import O "mo:base/Option";
 import D "mo:base/Debug";
 import L "mo:base/List";
 
-func ord(x : Int, y : Int) : Bool {
-    x < y
+let ord : Heap.Comparable<Int> = object {
+    public func compare(x : Int, y : Int) : Heap.Order {
+        if (x < y) #lt
+        else if (x > y) #gt
+        else #eq;
+    };
 };
 
 {
-    var pq = H.MakeHeap<Int>(ord);
+    var pq = Heap.makeHeap<Int>(ord);
     for (i in I.revRange(100, 0)) {
         pq.add(i);
         let x = pq.peekMin();
@@ -32,7 +36,7 @@ func ord(x : Int, y : Int) : Bool {
 // fromList
 {
     let list = L.fromArray([5,10,9,7,3,8,1,0,2,4,6]);
-    var pq = H.MakeHeap<Int>(ord);
+    var pq = Heap.makeHeap<Int>(ord);
     pq.fromList(list);
     for (i in I.range(0, 10)) {
         let x = pq.peekMin();
