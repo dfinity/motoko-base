@@ -8,7 +8,8 @@ import Blob "Blob";
 module {
   public let hash : Principal -> Word32 =
     func(x) = Blob.hash (Prim.blobOfPrincipal x);
-
   public let fromActor : (actor {}) -> Principal =
-    Prim.principalOfActor;
+    Prim.principalOfActor;  
+  public let fromText : Text -> Principal =
+    func(x) = fromActor(actor(x))
 }
