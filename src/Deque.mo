@@ -6,8 +6,8 @@ This module provides purely-functional double-ended queue.
 
 */
 
-import List "mo:base/List";
-import P "mo:base/Prelude";
+import List "List";
+import P "Prelude";
 
 module {
     type List<T> = List.List<T>;
