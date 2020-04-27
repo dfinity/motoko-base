@@ -23,10 +23,10 @@ jobs:
     - name: "dfx cache install"
       run: dfx cache install
     - name: "test"
-      if: github.ref != 'refs/heads/next-moc' || github.base_ref != 'refs/heads/next-moc'
+      if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: make -C test
     - name: "examples"
-      if: github.ref != 'refs/heads/next-moc' || github.base_ref != 'refs/heads/next-moc'
+      if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: make -C examples
     - name: "docs"
       run: make -C doc
