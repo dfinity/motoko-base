@@ -190,9 +190,6 @@ module {
       };
     };
 
-  /**
-  The Quicksort algorithm.
-  */
   private func sortByHelper<A>(
     arr : [var A],
     l : Nat,
