@@ -163,8 +163,8 @@ module {
   };
 
   /**
-   * Sorts the elements of an array using the given comparison function.
-   */
+  Sorts the elements of an array using the given comparison function.
+  */
   public func sortBy<A>(arr : [A], compare : (A, A) -> Int) : [A] {
     let n = arr.len();
     if (n == 0) {
@@ -177,9 +177,8 @@ module {
   };
 
   /**
-   * Sorts the elements of an array in place using the given comparison
-   * function.
-   */
+  Sorts the elements of an array in place using the given comparison function.
+  */
   public func sortByVar<A>(arr : [var A], compare : (A, A) -> Int) {
     let n = arr.len();
     if (n == 0) {
@@ -190,8 +189,8 @@ module {
   };
 
   /**
-   * The Quicksort algorithm.
-   */
+  The Quicksort algorithm.
+  */
   private func sortByHelper<A>(
     arr : [var A],
     l : Nat,
