@@ -180,7 +180,7 @@ module {
   /**
   Sorts the elements of an array in place using the given comparison function.
   */
-  public let sortByVar : <A> ([var A], (A, A) -> Int) =
+  public let sortByVar : <A> ([var A], (A, A) -> Int) -> () =
     func<A>(arr : [var A], compare : (A, A) -> Int) {
       let n = arr.len();
       if (n == 0) {
@@ -193,7 +193,7 @@ module {
   /**
   The Quicksort algorithm.
   */
-  private let sortByHelper : <A> ([var A], Nat, Nat, (A, A) -> Int) =
+  private let sortByHelper : <A> ([var A], Nat, Nat, (A, A) -> Int) -> () =
     func<A>(
       arr : [var A],
       l : Nat,
