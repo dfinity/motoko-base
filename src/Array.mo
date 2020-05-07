@@ -193,40 +193,38 @@ module {
   /**
   The Quicksort algorithm.
   */
-  private let sortByHelper : <A> ([var A], Nat, Nat, (A, A) -> Int) -> () =
-    func<A>(
-      arr : [var A],
-      l : Nat,
-      r : Nat,
-      compare : (A, A) -> Int,
-    ) {
-      if (l < r) {
-        var i = l;
-        var j = r;
-        var swap = arr[0];
-        let pivot = arr[(l + r) / 2];
-        while (i <= j) {
-          while (compare(arr[i], pivot) < 0) {
-            i += 1;
-          };
-          while (compare(arr[j], pivot) > 0) {
-            j -= 1;
-          };
-          if (i <= j) {
-            swap := arr[i];
-            arr[i] := arr[j];
-            arr[j] := swap;
-            i += 1;
-            j -= 1;
-          };
+  private func sortByHelper<A>(
+    arr : [var A],
+    l : Nat,
+    r : Nat,
+    compare : (A, A) -> Int,
+  ) {
+    if (l < r) {
+      var i = l;
+      var j = r;
+      var swap = arr[0];
+      let pivot = arr[(l + r) / 2];
+      while (i <= j) {
+        while (compare(arr[i], pivot) < 0) {
+          i += 1;
         };
-        if (l < j) {
-          sortByHelper<A>(arr, l, j, compare);
+        while (compare(arr[j], pivot) > 0) {
+          j -= 1;
         };
-        if (i < r) {
-          sortByHelper<A>(arr, i, r, compare);
+        if (i <= j) {
+          swap := arr[i];
+          arr[i] := arr[j];
+          arr[j] := swap;
+          i += 1;
+          j -= 1;
         };
       };
+      if (l < j) {
+        sortByHelper<A>(arr, l, j, compare);
+      };
+      if (i < r) {
+        sortByHelper<A>(arr, i, r, compare);
+      };
     };
-
+  };
 };
