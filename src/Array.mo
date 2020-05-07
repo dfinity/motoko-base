@@ -165,28 +165,30 @@ module {
   /**
   Sorts the elements of an array using the given comparison function.
   */
-  public func sortBy<A>(arr : [A], compare : (A, A) -> Int) : [A] {
-    let n = arr.len();
-    if (n == 0) {
-      return arr;
-    } else {
-      let res = thaw<A>(arr);
-      sortByHelper<A>(res, 0, n - 1, compare);
-      return freeze<A>(res);
+  public let sortBy <A> : ([A], (A, A) -> Int) -> [A] =
+    func<A>(arr : [A], compare : (A, A) -> Int) : [A] {
+      let n = arr.len();
+      if (n == 0) {
+        return arr;
+      } else {
+        let res = thaw<A>(arr);
+        sortByHelper<A>(res, 0, n - 1, compare);
+        return freeze<A>(res);
+      };
     };
-  };
 
   /**
   Sorts the elements of an array in place using the given comparison function.
   */
-  public func sortByVar<A>(arr : [var A], compare : (A, A) -> Int) {
-    let n = arr.len();
-    if (n == 0) {
-      return;
-    } else {
-      sortByHelper<A>(arr, 0, n - 1, compare);
+  public let sortByVar <A> : ([var A], (A, A) -> Int) =
+    func<A>(arr : [var A], compare : (A, A) -> Int) {
+      let n = arr.len();
+      if (n == 0) {
+        return;
+      } else {
+        sortByHelper<A>(arr, 0, n - 1, compare);
+      };
     };
-  };
 
   /**
   The Quicksort algorithm.
