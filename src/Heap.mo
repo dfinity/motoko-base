@@ -10,9 +10,8 @@ import P "Prelude";
 import L "List";
 
 module {
-    public type Comp = { #lt; #eq; #gt; };
 
-    public class Heap<T>(ord : (T, T) -> Comp) {
+    public class Heap<T>(ord : (T, T) -> P.Comp) {
         type t<T> = ?(Int, T, t<T>, t<T>);
         var heap : t<T> = null;
         func rank(heap : t<T>) : Int {

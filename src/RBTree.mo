@@ -6,12 +6,6 @@ import P "Prelude";
 
 module {
 
-public type Comp = {
-  #lt;
-  #eq;
-  #gt;
-};
-
 public type Color = {#R; #B};
 
 public type Tree<X, Y> = {
@@ -19,7 +13,7 @@ public type Tree<X, Y> = {
   #leaf;
 };
 
-public class RBTree<X, Y>(compareTo:(X, X) -> Comp) {
+public class RBTree<X, Y>(compareTo:(X, X) -> P.Comp) {
 
   var tree: Tree<X, Y> = (#leaf : Tree<X, Y>);
 
@@ -70,7 +64,7 @@ public func toIter<X, Y>(t:Tree<X, Y>, dir:{#l2r; #r2l}) : I.Iter<(X, Y)> {
   }
 };
 
-func removeRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>)
+func removeRec<X, Y>(x:X, compareTo:(X, X) -> P.Comp, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
@@ -107,7 +101,7 @@ func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, 
   }
 };
 
-func insertRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
+func insertRoot<X, Y>(x:X, compareTo:(X, X) -> P.Comp, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch (insertRec(x, compareTo, y, t)) {
@@ -116,7 +110,7 @@ func insertRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
   }
 };
 
-func insertRec<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
+func insertRec<X, Y>(x:X, compareTo:(X, X) -> P.Comp, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
@@ -139,7 +133,7 @@ func insertRec<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
   }
 };
 
-func findRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>) : ?Y {
+func findRec<X, Y>(x:X, compareTo:(X, X) -> P.Comp, t:Tree<X, Y>) : ?Y {
   switch t {
   case (#leaf) { null };
   case (#node(c, l, xy, r)) {
