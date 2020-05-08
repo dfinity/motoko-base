@@ -6,12 +6,13 @@ This module provides purely-functional priority queue based on leftist heap
 
 */
 
+import C "Comp";
 import P "Prelude";
 import L "List";
 
 module {
 
-    public class Heap<T>(ord : (T, T) -> P.Comp) {
+    public class Heap<T>(ord : (T, T) -> C.Comp) {
         type t<T> = ?(Int, T, t<T>, t<T>);
         var heap : t<T> = null;
         func rank(heap : t<T>) : Int {

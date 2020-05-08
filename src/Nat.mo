@@ -9,9 +9,9 @@ The conversions `toNat*` will trap if the number is out of bounds; the conversio
 
 */
 
-import Prim "mo:prim";
+import Comp "Comp";
 import Int "Int";
-import Prelude "Prelude";
+import Prim "mo:prim";
 
 module {
 
@@ -50,7 +50,7 @@ module {
     if (x < y) y else x;
   };
 
-  public let compare : (Nat, Nat) -> Prelude.Comp = func(x,y) {
+  public let compare : (Nat, Nat) -> Comp.Comp = func(x,y) {
     if (x < y) #lt else if (x > y) #gt else #eq;
   };
 }

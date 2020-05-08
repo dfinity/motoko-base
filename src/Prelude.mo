@@ -19,20 +19,6 @@ some further experience and discussion.  Until then, they live here.
 
 /*
 
-  `Comp`
-  --
-
-  A type to represent the result of a comparison.
-
-*/
-public type Comp = {
-  #lt;
-  #eq;
-  #gt;
-};
-
-/*
-
   `printLn`
   ---------
 
