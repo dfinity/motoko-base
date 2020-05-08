@@ -269,6 +269,7 @@ Prelude.printLn("Array");
   let actual = Array.sortBy<Nat>(xs, Nat.compare);
   let expected = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+  assert(actual.len() == expected.len());
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
   };
@@ -281,6 +282,7 @@ Prelude.printLn("Array");
   Array.sortByVar<Nat>(actual, Nat.compare);
   let expected = [ var 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+  assert(actual.len() == expected.len());
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
   };
