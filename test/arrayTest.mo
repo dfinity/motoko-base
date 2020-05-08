@@ -272,5 +272,7 @@ Prelude.printLn("Array");
   });
   let expected = [0,1,2,3,4,5,6,7,8,9];
 
-  assert(actual == expected);
+  for (i in actual.keys()) {
+    assert(actual[i] == expected[i]);
+  };
 };
