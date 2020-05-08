@@ -227,14 +227,14 @@ module {
 
   private func isLT(ordering : {#lt; #eq; #gt}) : Bool {
     switch ordering {
-      case #lt true;
+      case (#lt) true;
       case _ false;
     };
   };
 
   private func isGT(ordering : {#lt; #eq; #gt}) : Bool {
     switch ordering {
-      case #gt true;
+      case (#gt) true;
       case _ false;
     };
   };
