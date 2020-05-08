@@ -165,8 +165,8 @@ module {
   /**
   Sorts the elements of an array using the given comparison function.
   */
-  public let sortBy : <A> ([A], (A, A) -> Int) -> [A] =
-    func<A>(arr : [A], compare : (A, A) -> Int) : [A] {
+  public let sortBy : <A> ([A], (A, A) -> {#lt; #eq; #gt}) -> [A] =
+    func<A>(arr : [A], compare : (A, A) -> {#lt; #eq; #gt}) : [A] {
       let n = arr.len();
       if (n == 0) {
         return arr;
@@ -180,8 +180,8 @@ module {
   /**
   Sorts the elements of an array in place using the given comparison function.
   */
-  public let sortByVar : <A> ([var A], (A, A) -> Int) -> () =
-    func<A>(arr : [var A], compare : (A, A) -> Int) {
+  public let sortByVar : <A> ([var A], (A, A) -> {#lt; #eq; #gt}) -> () =
+    func<A>(arr : [var A], compare : (A, A) -> {#lt; #eq; #gt}) {
       let n = arr.len();
       if (n == 0) {
         return;
@@ -194,7 +194,7 @@ module {
     arr : [var A],
     l : Nat,
     r : Nat,
-    compare : (A, A) -> Int,
+    compare : (A, A) -> {#lt; #eq; #gt},
   ) {
     if (l < r) {
       var i = l;
@@ -202,10 +202,10 @@ module {
       var swap = arr[0];
       let pivot = arr[(l + r) / 2];
       while (i <= j) {
-        while (compare(arr[i], pivot) < 0) {
+        while (compare(arr[i], pivot) == #lt) {
           i += 1;
         };
-        while (compare(arr[j], pivot) > 0) {
+        while (compare(arr[j], pivot) == #gt) {
           j -= 1;
         };
         if (i <= j) {

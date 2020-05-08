@@ -1,4 +1,5 @@
 import Array "mo:base/Array";
+import Nat "mo:base/Nat";
 import Prelude "mo:base/Prelude";
 import Text "mo:base/Text";
 
@@ -265,11 +266,7 @@ Prelude.printLn("Array");
 
   let xs = [5,3,0,9,8,2,1,4,7,6];
 
-  let actual = Array.sort(xs, func (a : Nat, b : Nat) {
-    if (a < b) return -1;
-    if (a > b) return  1;
-    return 0;
-  });
+  let actual = Array.sortBy(xs, Nat.compare);
   let expected = [0,1,2,3,4,5,6,7,8,9];
 
   for (i in actual.keys()) {
