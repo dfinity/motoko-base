@@ -259,3 +259,18 @@ Prelude.printLn("Array");
   let test3 = Array.tabulateVar<Nat>(3, func (i:Nat) { assert(i < 3); 0 });
 
 };
+
+{
+  Prelude.printLn("  sort");
+
+  let xs = [5,3,0,9,8,2,1,4,7,6];
+
+  let actual = Array.sort(xs, func (a : Nat, b : Nat) {
+    if (a < b) return -1;
+    if (a > b) return  1;
+    return 0;
+  });
+  let expected = [0,1,2,3,4,5,6,7,8,9];
+
+  assert(actual == expected);
+};
