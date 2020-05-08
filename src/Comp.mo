@@ -5,12 +5,13 @@
 
 module {
 
-  /**
-  A type to represent the result of a comparison.
-  */
-  public type Comp = {
-    #lt;
-    #eq;
-    #gt;
-  };
+/**
+A type to represent the result of a comparison.
+*/
+public type Comp = {
+  #lt;
+  #eq;
+  #gt;
+};
+
 };
