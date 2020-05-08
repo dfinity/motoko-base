@@ -3,8 +3,13 @@
 = `Array` -- Arrays
 */
 
+import Ord "mo:base/Ord";
 import Prim "mo:prim";
+
 module {
+
+  type Ordering = Ord.Ordering;
+
   public func equals<A>(a : [A], b : [A], eq : (A,A) -> Bool) : Bool {
     if (a.len() != b.len()) { 
       return false; 
@@ -165,8 +170,8 @@ module {
   /**
   Sorts the elements of an array using the given comparison function.
   */
-  public let sortBy : <A> ([A], (A, A) -> {#lt; #eq; #gt}) -> [A] =
-    func<A>(arr : [A], compare : (A, A) -> {#lt; #eq; #gt}) : [A] {
+  public let sortBy : <A> ([A], (A, A) -> Ordering) -> [A] =
+    func<A>(arr : [A], compare : (A, A) -> Ordering) : [A] {
       let n = arr.len();
       if (n == 0) {
         return arr;
@@ -180,8 +185,8 @@ module {
   /**
   Sorts the elements of an array in place using the given comparison function.
   */
-  public let sortByVar : <A> ([var A], (A, A) -> {#lt; #eq; #gt}) -> () =
-    func<A>(arr : [var A], compare : (A, A) -> {#lt; #eq; #gt}) {
+  public let sortByVar : <A> ([var A], (A, A) -> Ordering) -> () =
+    func<A>(arr : [var A], compare : (A, A) -> Ordering) {
       let n = arr.len();
       if (n == 0) {
         return;
@@ -194,7 +199,7 @@ module {
     arr : [var A],
     l : Nat,
     r : Nat,
-    compare : (A, A) -> {#lt; #eq; #gt},
+    compare : (A, A) -> Ordering,
   ) {
     if (l < r) {
       var i = l;
@@ -202,10 +207,10 @@ module {
       var swap = arr[0];
       let pivot = arr[(l + r) / 2];
       while (i <= j) {
-        while (isLT(compare(arr[i], pivot))) {
+        while (Ord.isLT(compare(arr[i], pivot))) {
           i += 1;
         };
-        while (isGT(compare(arr[j], pivot))) {
+        while (Ord.isGT(compare(arr[j], pivot))) {
           j -= 1;
         };
         if (i <= j) {
@@ -222,20 +227,6 @@ module {
       if (i < r) {
         sortByHelper<A>(arr, i, r, compare);
       };
-    };
-  };
-
-  private func isLT(ordering : {#lt; #eq; #gt}) : Bool {
-    switch ordering {
-      case (#lt) true;
-      case _ false;
-    };
-  };
-
-  private func isGT(ordering : {#lt; #eq; #gt}) : Bool {
-    switch ordering {
-      case (#gt) true;
-      case _ false;
     };
   };
 };
