@@ -12,7 +12,7 @@ import L "List";
 
 module {
 
-    public class Heap<T>(ord : (T, T) -> O.Ord) {
+    public class Heap<T>(ord : (T, T) -> O.Ordering) {
         type t<T> = ?(Int, T, t<T>, t<T>);
         var heap : t<T> = null;
         func rank(heap : t<T>) : Int {

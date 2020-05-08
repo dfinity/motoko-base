@@ -50,7 +50,7 @@ module {
     if (x < y) y else x;
   };
 
-  public let compare : (Nat, Nat) -> Ord.Ord = func(x,y) {
+  public let compare : (Nat, Nat) -> Ord.Ordering = func(x,y) {
     if (x < y) #lt else if (x > y) #gt else #eq;
   };
 }

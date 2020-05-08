@@ -5,7 +5,7 @@ import L "mo:base/List";
 import O "mo:base/Option";
 import Ord "mo:base/Ord";
 
-func ord(x : Int, y : Int) : Ord.Ord {
+func ord(x : Int, y : Int) : Ord.Ordering {
     if (x < y) #lt
     else if (x == y) #eq
     else #gt;
