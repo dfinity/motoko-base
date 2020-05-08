@@ -202,10 +202,10 @@ module {
       var swap = arr[0];
       let pivot = arr[(l + r) / 2];
       while (i <= j) {
-        while (compare(arr[i], pivot) == #lt) {
+        while (isLT(compare(arr[i], pivot))) {
           i += 1;
         };
-        while (compare(arr[j], pivot) == #gt) {
+        while (isGT(compare(arr[j], pivot))) {
           j -= 1;
         };
         if (i <= j) {
@@ -222,6 +222,20 @@ module {
       if (i < r) {
         sortByHelper<A>(arr, i, r, compare);
       };
+    };
+  };
+
+  private func isLT(ordering : {#lt; #eq; #gt}) : Bool {
+    switch ordering {
+      case #lt true;
+      case _ false;
+    };
+  };
+
+  private func isGT(ordering : {#lt; #eq; #gt}) : Bool {
+    switch ordering {
+      case #gt true;
+      case _ false;
     };
   };
 };
