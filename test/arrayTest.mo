@@ -262,12 +262,24 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  sort");
+  Prelude.printLn("  sortBy");
 
-  let xs = [5,3,0,9,8,2,1,4,7,6];
+  let xs = [ 5, 3, 0, 9, 8, 2, 1, 4, 7, 6];
 
-  let actual = Array.sortBy(xs, Nat.compare);
-  let expected = [0,1,2,3,4,5,6,7,8,9];
+  let actual = Array.sortBy<Nat>(xs, Nat.compare);
+  let expected = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  for (i in actual.keys()) {
+    assert(actual[i] == expected[i]);
+  };
+};
+
+{
+  Prelude.printLn("  sortByVar");
+
+  let actual = [ var 5, 3, 0, 9, 8, 2, 1, 4, 7, 6];
+  Array.sortByVar<Nat>(actual, Nat.compare);
+  let expected = [ var 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
