@@ -1,8 +1,8 @@
-import C "Comp";
 import Debug "Debug";
 import I "Iter";
 import List "List";
 import Nat "Nat";
+import O "Ord";
 
 module {
 
@@ -13,7 +13,7 @@ public type Tree<X, Y> = {
   #leaf;
 };
 
-public class RBTree<X, Y>(compareTo:(X, X) -> C.Comp) {
+public class RBTree<X, Y>(compareTo:(X, X) -> O.Ord) {
 
   var tree: Tree<X, Y> = (#leaf : Tree<X, Y>);
 
@@ -64,7 +64,7 @@ public func toIter<X, Y>(t:Tree<X, Y>, dir:{#l2r; #r2l}) : I.Iter<(X, Y)> {
   }
 };
 
-func removeRec<X, Y>(x:X, compareTo:(X, X) -> C.Comp, t:Tree<X, Y>)
+func removeRec<X, Y>(x:X, compareTo:(X, X) -> O.Ord, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
@@ -101,7 +101,7 @@ func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, 
   }
 };
 
-func insertRoot<X, Y>(x:X, compareTo:(X, X) -> C.Comp, y:Y, t:Tree<X, Y>)
+func insertRoot<X, Y>(x:X, compareTo:(X, X) -> O.Ord, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch (insertRec(x, compareTo, y, t)) {
@@ -110,7 +110,7 @@ func insertRoot<X, Y>(x:X, compareTo:(X, X) -> C.Comp, y:Y, t:Tree<X, Y>)
   }
 };
 
-func insertRec<X, Y>(x:X, compareTo:(X, X) -> C.Comp, y:Y, t:Tree<X, Y>)
+func insertRec<X, Y>(x:X, compareTo:(X, X) -> O.Ord, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
@@ -133,7 +133,7 @@ func insertRec<X, Y>(x:X, compareTo:(X, X) -> C.Comp, y:Y, t:Tree<X, Y>)
   }
 };
 
-func findRec<X, Y>(x:X, compareTo:(X, X) -> C.Comp, t:Tree<X, Y>) : ?Y {
+func findRec<X, Y>(x:X, compareTo:(X, X) -> O.Ord, t:Tree<X, Y>) : ?Y {
   switch t {
   case (#leaf) { null };
   case (#node(c, l, xy, r)) {
@@ -166,3 +166,20 @@ public func size<X, Y>(t:Tree<X, Y>) : Nat {
 };
 
 }
+/**
+[#mod-Ord]
+= `Ord` -- Orderings
+*/
+
+module {
+
+/**
+A type to represent an ordering.
+*/
+public type Ord = {
+  #lt;
+  #eq;
+  #gt;
+};
+
+};
