@@ -1,10 +1,11 @@
+import D "mo:base/Debug";
 import H "mo:base/Heap";
 import I "mo:base/Iter";
-import O "mo:base/Option";
-import D "mo:base/Debug";
 import L "mo:base/List";
+import O "mo:base/Option";
+import P "mo:base/Prelude";
 
-func ord(x : Int, y : Int) : H.Comp {
+func ord(x : Int, y : Int) : P.Comp {
     if (x < y) #lt
     else if (x == y) #eq
     else #gt;
