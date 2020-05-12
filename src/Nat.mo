@@ -9,9 +9,9 @@ The conversions `toNat*` will trap if the number is out of bounds; the conversio
 
 */
 
-import Prim "mo:prim";
 import Int "Int";
-import Prelude "Prelude";
+import Ord "Ord";
+import Prim "mo:prim";
 
 module {
 
@@ -48,5 +48,9 @@ module {
 
   public let max : (Nat, Nat) -> Nat = func(x,y) {
     if (x < y) y else x;
+  };
+
+  public let compare : (Nat, Nat) -> Ord.Ordering = func(x,y) {
+    if (x < y) #lt else if (x > y) #gt else #eq;
   };
 }
