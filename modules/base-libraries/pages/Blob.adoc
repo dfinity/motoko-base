@@ -1,3 +1,4 @@
 // Do not edit; This file was machine-generated
 
-
+[#mod-Blob]
+= `Blob` -- Binary large objects
