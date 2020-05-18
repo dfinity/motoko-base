@@ -124,6 +124,16 @@ public let assertNull : ?Any -> () =
     };
 
 /**
+Asserts that the value _is_ `null`; fails otherwise.
+*/
+public let add : <X>(?X, ?X) -> ?X =
+  func<X>(x: ?X, y: ?X): ?X =
+    switch (x, y) {
+      case (?_,   _) x;
+      case (null, _) y;
+    };
+
+/**
 Unwraps an optional value, i.e. `unwrap(?x) = x`.
 
 WARNING: `unwrap(x)` will fail if the argument is `null`, and is generally considered bad style. Use `switch x` instead.

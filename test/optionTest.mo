@@ -253,3 +253,19 @@ Prelude.printLn("Option");
     };
   };
 };
+
+{
+  Prelude.printLn("  add");
+  switch (Option.add(?1, ?2)) {
+    case (?1) { assert true };
+    case _ { assert false };
+  };
+  switch (Option.add(null, ?2)) {
+    case (?2) { assert true };
+    case _ { assert false };
+  };
+  switch (Option.add(null, null)) {
+    case null { assert true };
+    case _ { assert false };
+  };
+};

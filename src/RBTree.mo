@@ -3,6 +3,7 @@ import I "Iter";
 import List "List";
 import Nat "Nat";
 import P "Prelude";
+import O "Option";
 
 module {
 
@@ -12,16 +13,17 @@ public type Comp = {
   #gt;
 };
 
-public type Color = {#R; #B};
+public type Color = {#BB; #B; #R; #RR}; // (double) black, (double) red
 
 public type Tree<X, Y> = {
   #node : (Color, Tree<X, Y>, (X, ?Y), Tree<X, Y>);
-  #leaf;
+  #emp;
+  #blackEmp
 };
 
 public class RBTree<X, Y>(compareTo:(X, X) -> Comp) {
 
-  var tree: Tree<X, Y> = (#leaf : Tree<X, Y>);
+  var tree: Tree<X, Y> = (#emp : Tree<X, Y>);
 
   // Get non-OO, purely-functional representation:
   // for drawing, pretty-printing and non-OO contexts
@@ -40,7 +42,7 @@ public class RBTree<X, Y>(compareTo:(X, X) -> Comp) {
   };
 
   public func remove(x:X) : ?Y {
-    let (res, t) = removeRec(x, compareTo, tree);
+    let (res, t) = removeRoot(x, compareTo, tree);
     tree := t;
     res
   };
@@ -61,7 +63,7 @@ public func toIter<X, Y>(t:Tree<X, Y>, dir:{#l2r; #r2l}) : I.Iter<(X, Y)> {
     public func next() : ?(X, Y) {
       switch (dir, trees) {
       case (_, null) { null };
-      case (_, ?(#tr(#leaf), ts))                     { trees := ts; next() };
+      case (_, ?(#tr(#emp or #blackEmp), ts))                     { trees := ts; next() };
       case (_, ?(#xy xy, ts))                         { trees := ts; switch (xy.1) { case null next(); case (?y) ?(xy.0, y) } };
       case (#l2r, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr l, ?(#xy xy, ?(#tr r, ts))); next() };
       case (#r2l, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr r, ?(#xy xy, ?(#tr l, ts))); next() };
@@ -70,30 +72,44 @@ public func toIter<X, Y>(t:Tree<X, Y>, dir:{#l2r; #r2l}) : I.Iter<(X, Y)> {
   }
 };
 
+func removeRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>)
+  : (?Y, Tree<X, Y>)
+{
+  // do recursion, then re-color root as black:
+  switch (removeRec(x, compareTo, t)) {
+  case (yo, #blackEmp) { (yo, #blackEmp) };
+  case (yo, #emp) { (yo, #blackEmp) };
+  case (yo, #node(_, l, xy, r)) { (yo, #node(#B, l, xy, r)) };
+  }
+};
+
 func removeRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
-  case (#leaf) { (null, #leaf) };
-  case (#node(c, l, xy, r)) {
-         switch (compareTo(x, xy.0)) {
-         case (#lt) {
-                let (yo, l2) = removeRec(x, compareTo, l);
-                (yo, #node(c, l2, xy, r))
-              };
-         case (#eq) {
-                (xy.1, #node(c, l, (x, null), r))
-              };
-         case (#gt) {
-                let (yo, r2) = removeRec(x, compareTo, r);
-                (yo, #node(c, l, xy, r2))
-              };
+    case (#blackEmp) { P.unreachable() };
+    case (#emp) { (null, #emp) };
+    case (#node(#R, #emp, xy, #emp)) {
+           switch (compareTo(x, xy.0)) {
+             case (#eq) { (xy.1, #blackEmp) };
+             case _ { (null, t) }
+           }
+         };
+    case (#node(#B, #emp, xy, #emp)) {
+           switch (compareTo(x, xy.0)) {
+             case (#eq) { (xy.1, #blackEmp) };
+             case _ { (null, t) }
+           }
+         };
+    case _ {
+           P.xxx()
          }
-       }
   }
 };
 
-
+func balRec<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, Y> {
+  P.xxx()
+};
 
 func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, Y> {
   // thank you, algebraic pattern matching!
@@ -110,8 +126,10 @@ func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, 
 func insertRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
+  // do recursion, then re-color root as black:
   switch (insertRec(x, compareTo, y, t)) {
-  case (_, #leaf) { assert false; loop { } };
+  case (_, #emp) { P.unreachable() };
+  case (_, #blackEmp) { P.unreachable() };
   case (yo, #node(_, l, xy, r)) { (yo, #node(#B, l, xy, r)) };
   }
 };
@@ -120,7 +138,8 @@ func insertRec<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
-  case (#leaf) { (null, #node(#R, #leaf, (x, ?y), #leaf)) };
+  case (#emp) { (null, #node(#R, #emp, (x, ?y), #emp)) };
+  case (#blackEmp) { (null, #node(#R, #blackEmp, (x, ?y), #blackEmp)) };
   case (#node(c, l, xy, r)) {
          switch (compareTo(x, xy.0)) {
          case (#lt) {
@@ -141,7 +160,7 @@ func insertRec<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
 
 func findRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>) : ?Y {
   switch t {
-  case (#leaf) { null };
+  case (#emp or #blackEmp) { null };
   case (#node(c, l, xy, r)) {
          switch (compareTo(x, xy.0)) {
          case (#lt) { findRec(x, compareTo, l) };
@@ -155,7 +174,7 @@ func findRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>) : ?Y {
 
 public func height<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
-    case (#leaf) 0;
+    case (#emp or #blackEmp) 0;
     case (#node(_, l, _, r)) {
            Nat.max(height(l), height(r))
          }
@@ -164,7 +183,7 @@ public func height<X, Y>(t:Tree<X, Y>) : Nat {
 
 public func size<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
-    case (#leaf) 0;
+    case (#emp or #blackEmp) 0;
     case (#node(_, l, _, r)) {
            size(l) + size(r)
          };
