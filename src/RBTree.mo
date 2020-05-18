@@ -3,15 +3,12 @@ import I "Iter";
 import List "List";
 import Nat "Nat";
 import P "Prelude";
-import O "Option";
+import Opt "Option";
+import Ord "Ord";
 
 module {
 
-public type Comp = {
-  #lt;
-  #eq;
-  #gt;
-};
+public type Ordering = Ord.Ordering;
 
 public type Color = {#BB; #B; #R; #RR}; // (double) black, (double) red
 
@@ -21,7 +18,7 @@ public type Tree<X, Y> = {
   #blackEmp
 };
 
-public class RBTree<X, Y>(compareTo:(X, X) -> Comp) {
+public class RBTree<X, Y>(compareTo:(X, X) -> Ordering) {
 
   var tree: Tree<X, Y> = (#emp : Tree<X, Y>);
 
@@ -72,7 +69,7 @@ public func toIter<X, Y>(t:Tree<X, Y>, dir:{#l2r; #r2l}) : I.Iter<(X, Y)> {
   }
 };
 
-func removeRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>)
+func removeRoot<X, Y>(x:X, compareTo:(X, X) -> Ordering, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   // do recursion, then re-color root as black:
@@ -83,7 +80,7 @@ func removeRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>)
   }
 };
 
-func removeRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>)
+func removeRec<X, Y>(x:X, compareTo:(X, X) -> Ordering, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
@@ -123,7 +120,7 @@ func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, 
   }
 };
 
-func insertRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
+func insertRoot<X, Y>(x:X, compareTo:(X, X) -> Ordering, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   // do recursion, then re-color root as black:
@@ -134,7 +131,7 @@ func insertRoot<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
   }
 };
 
-func insertRec<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
+func insertRec<X, Y>(x:X, compareTo:(X, X) -> Ordering, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
@@ -158,7 +155,7 @@ func insertRec<X, Y>(x:X, compareTo:(X, X) -> Comp, y:Y, t:Tree<X, Y>)
   }
 };
 
-func findRec<X, Y>(x:X, compareTo:(X, X) -> Comp, t:Tree<X, Y>) : ?Y {
+func findRec<X, Y>(x:X, compareTo:(X, X) -> Ordering, t:Tree<X, Y>) : ?Y {
   switch t {
   case (#emp or #blackEmp) { null };
   case (#node(c, l, xy, r)) {
