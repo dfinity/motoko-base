@@ -1,0 +1,14 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Char]
+= `Char` -- Characters
+
+
+[#Char_isDigit]
+== `isDigit`
+
+
+[listing]
+isDigit : Char -> Bool
+

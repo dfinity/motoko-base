@@ -1,0 +1,16 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-TrieSet]
+= `TrieSet` -- Functional set
+
+
+[#TrieSet_Hash]
+== `Hash` (type)
+
+
+....
+type Hash = Hash.Hash;public type Set<T> = Trie.Trie<T,()>;
+
+....
+

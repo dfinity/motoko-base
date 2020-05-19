@@ -1,0 +1,97 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Hash]
+= `Hash` -- Hash values
+
+
+[#Hash_Hash]
+== `Hash` (type)
+Hash values represent a string of _hash bits_, packed into a `Word32`.
+
+
+
+....
+type Hash = Word32;
+....
+
+[#Hash_length]
+== `length`
+The hash length, always 31.
+
+
+
+[listing]
+length : Nat
+
+[#Hash_hashOfInt]
+== `hashOfInt`
+
+
+[listing]
+hashOfInt : Int -> Hash
+
+[#Hash_hashOfIntAcc]
+== `hashOfIntAcc`
+WARNING: This only hashes the lowest 32 bits of the `Int`
+
+
+
+[listing]
+hashOfIntAcc : (Hash, Int) -> Hash
+
+[#Hash_hashOfText]
+== `hashOfText`
+WARNING: This only hashes the lowest 32 bits of the `Int`
+
+
+
+[listing]
+hashOfText : Text -> Hash
+
+[#Hash_getHashBit]
+== `getHashBit`
+Project a given bit from the bit vector.
+
+
+
+[listing]
+getHashBit : (Hash, Nat) -> Bool
+
+[#Hash_hashEq]
+== `hashEq`
+Test if two hashes are equal
+
+
+
+[listing]
+hashEq : (Hash, Hash) -> Bool
+
+[#Hash_bitsPrintRev]
+== `bitsPrintRev`
+
+
+[listing]
+bitsPrintRev : Hash -> ()
+
+[#Hash_hashPrintRev]
+== `hashPrintRev`
+
+
+[listing]
+hashPrintRev : Hash -> ()
+
+[#Hash_hashWord8s]
+== `hashWord8s`
+Jenkin's one at a time:
+https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
+
+The input type should actually be `[Word8]`.
+Note: Be sure to explode each `Word8` of a `Word32` into its own `Word32`, and to shift into lower 8 bits.
+// should this really be public?
+
+
+
+[listing]
+hashWord8s : [Hash] -> Hash
+
