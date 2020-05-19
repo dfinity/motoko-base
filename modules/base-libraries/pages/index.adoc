@@ -1,9 +1,9 @@
-= The Motoko Standard Library
+= The Motoko base Library
 :toc:
 :toc: right
 :sectanchors:
 
-This is the reference manual for the Motoko standard library. The following chapters each describe one module provided by the standard library. You can import the module under a name of your choice, e.g.
+This is the reference manual for the Motoko base library. The following chapters each describe one module provided by the base library. You can import the module under a name of your choice, e.g.
 ....
 import List "mo:stdlib/List"
 ....

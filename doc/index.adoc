@@ -1,17 +1,17 @@
-= The Motoko Standard Library
+= The Motoko base Library
 :toc:
 :toc: right
 :sectanchors:
 
-This is the reference manual for the Motoko standard library. The following chapters each describe one module provided by the standard library. You can import the module under a name of your choice, e.g.
+This is the reference manual for the Motoko base library. The following chapters each describe one module provided by the base library. You can import the module under a name of your choice, e.g.
 ....
-import List "mo:stdlib/List"
+import List "mo:base/List"
 ....
 
 or
 
 ....
-import L "mo:stdlib/List"
+import L "mo:base/List"
 ....
 
 For most basic types (<<mod-Int,`Int`>>, <<mod-Char,`Char`>>) there is one module with common operations on them. Additionally, there are more advanced data structures (<<mod-Trie,`Trie`>>) and utility modules (<<mod-Iter,`Iter`>>, <<mod-Debug,`Debug`>>).
