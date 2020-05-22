@@ -164,5 +164,5 @@ func printLabeledCost(lab:Text, cost:Nat) {
   debugPrint "\n";
 };
 
-let test = Test();
+let test = await Test();
 test.go()

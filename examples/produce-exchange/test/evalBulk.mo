@@ -16,7 +16,7 @@ actor class Test() = this {
   public func go() {
     ignore(async
     {
-      let s = A.Server();
+      let s = await A.Server();
 
       Debug.print "\nExchange setup: Begin...\n====================================\n";
 
@@ -220,5 +220,5 @@ func debugDumpAll(server:A.Server) : async () {
   };
 };
 
-let test = Test();
+let test = await Test();
 test.go()

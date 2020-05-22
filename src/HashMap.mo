@@ -152,7 +152,7 @@ public func clone<K,V>
    keyHash: K -> Hash.Hash) : HashMap<K,V> {
   let h2 = HashMap<K,V>(h.count(), keyEq, keyHash);
   for ((k,v) in h.iter()) {
-    ignore h2.set(k,v);
+    h2.set(k,v);
   };
   h2
 };
@@ -164,7 +164,7 @@ public func fromIter<K, V>(iter:Iter.Iter<(K, V)>,
                            keyHash: K -> Hash.Hash) : HashMap<K,V> {
   let h = HashMap<K,V>(initCapacity, keyEq, keyHash);
   for ((k,v) in iter) {
-    ignore h.set(k,v);
+    h.set(k,v);
   };
   h
 };
@@ -178,7 +178,7 @@ public func map<K, V1, V2>
   let h2 = HashMap<K,V2>(h.count(), keyEq, keyHash);
   for ((k, v1) in h.iter()) {
     let v2 = mapFn(k, v1);
-    ignore h2.set(k,v2);
+    h2.set(k,v2);
   };
   h2
 };
@@ -194,8 +194,8 @@ public func mapFilter<K, V1, V2>
     switch (mapFn(k, v1)) {
       case null { };
       case (?v2) {
-             ignore h2.set(k,v2);
-           };
+        h2.set(k,v2);
+      };
     }
   };
   h2
