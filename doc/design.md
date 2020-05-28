@@ -130,7 +130,7 @@
 
      Note: Not naming this `map` in order to avoid confusion for map types.
 
-  - `foldLeft`, `foldRight`: fold collection (have the same argument order, but their callback type differs in its order of arguments)
+  - `fold`, `foldLeft`, `foldRight`: fold unordered or ordered collection (have the same argument order, but their callback type differs in its order of arguments)
 
   - `filter`: narrow collections
 
@@ -138,11 +138,11 @@
 
   - `some`, `all`: check for existential or universal property
 
-* In addition to the above higher-order functions, keyed collections can provide variants where the parameter function takes both key and value:
+* In addition to the above higher-order functions, keyed collections can provide variants where the parameter function takes a `(key, value)` pair:
 
   - `applyEntries`
   - `transformEntries`
-  - `foldEntriesLeft`, `foldEntriesRight`
+  - `foldEntries`, `foldEntriesLeft`, `foldEntriesRight`
   - `filterEntries`
   - `findEntry` 
   - `someEntry`, `allEntries`
