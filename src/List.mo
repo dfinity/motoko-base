@@ -1,9 +1,8 @@
 /**
 [#mod-List]
-= `List` -- Lists
+= Lists
 
-This module provides purely-functional, singly-linked lists.
-
+The `List` module provides purely-functional, singly-linked lists.
 
 */
 
@@ -20,14 +19,13 @@ module {
   public type List<T> = ?(T, List<T>);
 
   /**
-  The empty list
+  Create an empty list.
   */
   public let nil : <T> () -> List<T> =
     func<T>() : List<T> = null;
 
-
   /**
-  Returns true if the list is empty.
+  Check whether a list is empty and return true if the list is empty.
   */
   public let isNil : <T> List<T> -> Bool =
     func<T>(l : List<T>) : Bool {
@@ -38,13 +36,14 @@ module {
     };
 
   /**
-  also known as "list cons"
+  Construct a list by pre-pending a value.
+  This function is similar to a `list.cons(item)` function.
   */
   public let push : <T> (T, List<T>) -> List<T> =
     func<T>(x : T, l : List<T>) : List<T> = ?(x, l);
 
   /**
-  The last element of the list, if present.
+  Return the last element of the list, if present.
   */
   public let last : <T> List<T> -> ?T =
     func<T>(l : List<T>) : ?T {
@@ -56,7 +55,8 @@ module {
     };
 
   /**
-  Treating the list as a stack; this combines the usual operations `head` and (non-failing) `tail` into one operation.
+  Treat the list as a stack
+  This function combines the `head` and (non-failing) `tail` operations into one operation.
   */
   public let pop : <T> List<T> -> (?T, List<T>) =
     func<T>(l : List<T>) : (?T, List<T>) {
@@ -67,7 +67,7 @@ module {
     };
 
   /**
-  The length of the list
+  Return the length of the list.
   */
   public let len : <T> List<T> -> Nat =
     func<T>(l : List<T>) : Nat {
@@ -81,7 +81,8 @@ module {
     };
 
   /**
-  Tests the length against a maximum value
+  Test the list length against a maximum value and return true if 
+  the list length is less than or equal to the value specified.
   */
   public let lenIsEqLessThan : <T> (List<T>, Nat) -> Bool =
     func<T>(l : List <T>, i : Nat) : Bool {
@@ -95,7 +96,9 @@ module {
     };
 
   /**
-  Get the length, unless greater than a maximum value, in which return `null`.
+  Return the list length unless the number of items in the list exceeds
+  a maximum value. If the list length exceed the maximum, the function
+  returns `null`.
   */
   public let lenClamp : <T> (List<T>, max : Nat) -> ?Nat =
     func<T>(l : List<T>, max : Nat) : ?Nat {
@@ -112,10 +115,11 @@ module {
     };
 
   /**
-  Random list access, zero-based.
+  Access any item in a list, zero-based.
 
-  NOTE: Indexing into a list is a linear operation, and usually an indication
-  that a list might not be the best data structure to use.
+  NOTE: Indexing into a list is a linear operation, and usually an 
+  indication that a list might not be the best data structure 
+  to use.
   */
   public let nth : <T>(List<T>, Nat) -> ?T =
     func<T>(l : List<T>, n : Nat) : ?T {
@@ -127,7 +131,7 @@ module {
     };
 
   /**
-  reverse the list; tail recursive
+  Reverse the list; tail recursive.
   */
   public let rev : <T> List<T> -> List<T> =
     func<T>(l : List<T>) : List<T> = {
@@ -141,9 +145,10 @@ module {
     };
 
   /**
-  Calls the given function with each list element in turn.
+  Call the given function with each list element in turn.
 
-  This is called `app` in SML Basis, and `iter` in OCaml.
+  This function is equivalent to the `app` function in Standard ML Basis, 
+  and the `iter` function in OCaml.
   */
   public let iter : <T>(List<T>, f : T -> ()) -> () =
     func iter<T>(l : List<T>, f : T -> ()) {
@@ -154,8 +159,8 @@ module {
     };
 
   /**
-  Calls the given function on each list element, collecing the results in a new
-  list.
+  Call the given function on each list element and collect the results 
+  in a new list.
   */
   public let map : <T,S>(List<T>, f : T -> S) -> List<S> =
     func<T,S>(l : List<T>, f:T -> S) : List<S> = {
@@ -166,8 +171,8 @@ module {
     };
 
   /**
-  Creates a new list with only those elements of the original list for which
-  the given function (often called the _predicate_) is returns true.
+  Create a new list with only those elements of the original list for which
+  the given function (often called the _predicate_) returns true.
   */
   public let filter : <T>(List<T>, p : T -> Bool) -> List<T> =
     func<T>(l : List<T>, f:T -> Bool) : List<T> = {
@@ -184,10 +189,13 @@ module {
     };
 
   /**
-  Creates two new lists. The first has those elements for which the given
-  function `f` returns true, the second those for which it returns false.
+  Create two new lists from the results of a given function (`f`). 
+  The first list only includes the elements for which the given 
+  function `f` returns true and tThe second list only includes 
+  the elements for which the function returns false.
 
-  Also known as `partition`.
+  In some languages, this operation is also known as a `partition`
+  function.
   */
   public let split : <T>(List<T>, f : T -> Bool) -> (List<T>, List<T>) =
     func<T>(l : List<T>, f:T -> Bool) : (List<T>, List<T>) = {
@@ -206,7 +214,7 @@ module {
     };
 
   /**
-  Calls the given function on each list element, collecing the non-null results
+  Call the given function on each list element, and collect the non-null results
   in a new list.
   */
   public let mapFilter : <T,S>(List<T>, f : T -> ?S) -> List<S> =
@@ -223,7 +231,7 @@ module {
     };
 
   /**
-  Appends two lists.
+  Append the elements from one list to another list.
   */
   public let append : <T>(List<T>, List<T>) -> List<T> =
     func <T>(l : List<T>, m : List<T>) : List<T> = {
@@ -237,7 +245,9 @@ module {
     };
 
   /**
-  concatenations a list of lists (Also known as "list join")
+  Concatenate a list of lists.
+  
+  In some languages, this operation is also known as a `list join`.
   */
   public let concat : <T>(List<List<T>>) -> List<T> =
     // tail recursive, but requires "two passes"
@@ -257,9 +267,9 @@ module {
   };
 
   /**
-  "takes" `n` elements from the prefix of the given list.
-  If the given list has fewer than `n` elements, this returns (a copy of) the
-  full input list.
+  Take the `n` number of elements from the prefix of the given list.
+  If the given list has fewer than `n` elements, this function returns 
+  a copy of the full input list.
   */
   public let take : <T>(List<T>, n:Nat) -> List<T> =
     func<T>(l : List<T>, n:Nat) : List<T> = {
@@ -271,7 +281,7 @@ module {
     };
 
   /**
-  "drops" an `n` element prefix from the given list.
+  Drop the element in the positiion `n` from the given list.
   */
   public let drop : <T>(List<T>, n:Nat) -> List<T> =
     func<T>(l : List<T>, n:Nat) : List<T> = {
@@ -283,7 +293,7 @@ module {
     };
 
   /**
-  fold list left-to-right using function `f`.
+  Fold the list left-to-right using the given function (`f`).
   */
   public let foldLeft : <T,S>(List<T>, S, f : (T,S) -> S) -> S =
     func<T,S>(l : List<T>, a:S, f:(T,S) -> S) : S = {
@@ -294,7 +304,7 @@ module {
     };
 
   /**
-  fold the list right-to-left using function `f`.
+  Fold the list right-to-left using the given function (`f`).
   */
   public let foldRight : <T,S>(List<T>, S, f : (T,S) -> S) -> S =
     func<T,S>(l : List<T>, a:S, f:(T,S) -> S) : S = {
@@ -305,7 +315,8 @@ module {
     };
 
   /**
-  Returns the first element for which given predicate `f` is true, if such an element exists.
+  Return the first element for which the given predicate `f` is true, 
+  if such an element exists.
   */
   public let find : <T>(l: List<T>, f : T -> Bool) -> ?T =
     func<T>(l: List<T>, f:T -> Bool) : ?T = {
@@ -316,7 +327,8 @@ module {
     };
 
   /**
-  Returns true if there exists list element for which given predicate `f` is true
+  Return true if there exists a list element for which 
+  the given predicate `f` is true.
   */
   public let exists : <T>(List<T>, f : T -> Bool) -> Bool =
     func<T>(l: List<T>, f:T -> Bool) : Bool = {
@@ -327,7 +339,8 @@ module {
     };
 
   /**
-  Returns true if for all list element the given predicate `f` is true
+  Return true if the given predicate `f` is true for all list 
+  elements.
   */
   public let all : <T>(List<T>, f : T -> Bool) -> Bool =
     func<T>(l: List<T>, f:T -> Bool) : Bool = {
@@ -338,8 +351,9 @@ module {
     };
 
   /**
-  Given two lists that are orderd (with regard to the given relation `lte`),
-  merge them into a single ordered list
+  Merge two ordered lists into a single ordered list.
+  This function requires both list to be ordered as specified
+  by the given relation `lte`.
   */
   public let merge : <T>(List<T>, List<T>, lte : (T,T) -> Bool) -> List<T> =
     func<T>(l1: List<T>, l2: List<T>, lte:(T,T) -> Bool) : List<T> {
@@ -357,9 +371,9 @@ module {
     };
 
   /**
-  Compares two lists using lexicographic ordering (with regard to the given relation `lte`).
+  Compare two lists using lexicographic ordering specified by the given relation `lte`.
 
-  // To do: Eventually, follow `collate` design from SML Basis, with real sum
+  // To do: Eventually, follow `collate` design from Standard ML Basis, with real sum
   // types, use 3-valued `order` type here.
   */
   public let lessThanEq : <T>(List<T>, List<T>, lte: (T,T) -> Bool) -> Bool =
@@ -372,9 +386,10 @@ module {
     };
 
   /**
-  Compares two lists for equality (with regard to the given relation `eq` on elements).
+  Compare two lists for equality as specified by the given relation `eq` on the elements.
 
-  // `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`, but the former is more efficient.
+  // The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`, 
+  but the former is more efficient.
   */
   public let isEq : <T>(List<T>, List<T>, eq : (T,T) -> Bool) -> Bool =
     func<T>(l1: List<T>, l2: List<T>, eq:(T,T) -> Bool) : Bool {
@@ -387,7 +402,8 @@ module {
     };
 
   /**
-  generates a list based on a length, and a function from list index to list element.
+  Generate a list based on a length and a function that maps from 
+  a list index to a list element.
   */
   public let tabulate : <T>(Nat, f : Nat -> T) -> List<T> =
     func<T>(n:Nat, f:Nat -> T) : List<T> {
@@ -398,7 +414,7 @@ module {
     };
 
   /**
-  creates a list with exactly one element.
+  Create a list with exactly one element.
   */
   public let singleton : <X> X -> List<X> =
     func<X>(x : X) : List<X> {
@@ -406,7 +422,7 @@ module {
     };
 
   /**
-  creates a list of the given length with the same value in each position.
+  Create a list of the given length with the same value in each position.
   */
   public let replicate : <X>(Nat, X) -> List<X> =
     func<X>(n : Nat, x : X) : List<X> {
@@ -414,10 +430,10 @@ module {
     };
 
   /**
-  creates a list of pairs from a pair of lists.
+  Create a list of pairs from a pair of lists.
 
   If the given lists have different lengths, then the created list will have a
-  length equal to the lenght of the smaller list.
+  length equal to the length of the smaller list.
   */
   public let zip : <X, Y>(List<X>, List<Y>) -> List<(X, Y)> =
     func<X, Y>(xs : List<X>, ys : List<Y>) : List<(X, Y)> {
@@ -425,8 +441,8 @@ module {
     };
 
   /**
-  Creates a list whose elements are calculated from the function `f` and
-  elements occuring at the same position in the given lists.
+  Create a list in which elements are calculated from the function `f` and
+  include elements occuring at the same position in the given lists.
 
   If the given lists have different lengths, then the created list will have a
   length equal to the length of the smaller list.
@@ -447,7 +463,7 @@ module {
     };
 
   /**
-  splits the given list at the given zero-based index.
+  Split the given list at the given zero-based index.
   */
   public let splitAt : <X>(Nat, List<X>) -> (List<X>, List<X>) =
     func<X>(n : Nat, xs : List<X>) : (List<X>, List<X>) {
@@ -474,8 +490,9 @@ module {
     };
 
   /**
-  split the given list into length-n chunks. The last chunk will be shorter if
-  n does not evenly divide the length of the given list.
+  Split the given list into chunks of length `n`.
+  The last chunk will be shorter if the length of the given list
+  does not divide by `n` evenly.
   */
   public let chunksOf : <X>(Nat, List<X>) -> List<List<X>> =
     func<X>(n : Nat, xs : List<X>) : List<List<X>> {
@@ -488,7 +505,7 @@ module {
     };
 
   /**
-  converts an array into a list.
+  Convert an array into a list.
   */
   public let fromArray : <A>[A] -> List<A> =
     func<A>(xs : [A]) : List<A> {
@@ -498,7 +515,7 @@ module {
     };
 
   /**
-  converts a mutable array into a list.
+  Convert a mutable array into a list.
   */
   public let fromArrayMut : <A>[var A] -> List<A> =
     func<A>(xs : [var A]) : List<A> {
@@ -506,7 +523,7 @@ module {
     };
 
   /**
-  creates an array from the list
+  Creates an array from a list.
   */
   public let toArray : <A> List<A> -> [A] =
     func<A>(xs : List<A>) : [A] {
@@ -520,7 +537,7 @@ module {
     };
 
   /**
-  creates a mutable array from the list
+  Creates a mutable array from a list.
   */
   public let toArrayMut : <A> List<A> -> [var A] =
     func<A>(xs : List<A>) : [var A] {
