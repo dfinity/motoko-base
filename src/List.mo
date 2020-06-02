@@ -524,7 +524,7 @@ module {
     };
 
   /**
-  Creates an array from a list.
+  Create an array from a list.
   */
   public let toArray : <A> List<A> -> [A] =
     func<A>(xs : List<A>) : [A] {
@@ -538,7 +538,7 @@ module {
     };
 
   /**
-  Creates a mutable array from a list.
+  Create a mutable array from a list.
   */
   public let toArrayMut : <A> List<A> -> [var A] =
     func<A>(xs : List<A>) : [var A] {
