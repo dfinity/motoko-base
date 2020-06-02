@@ -1,6 +1,6 @@
 /**
 [#mod-List]
-= Lists
+= List
 
 The `List` module provides purely-functional, singly-linked lists.
 
@@ -55,7 +55,7 @@ module {
     };
 
   /**
-  Treat the list as a stack
+  Treat the list as a stack.
   This function combines the `head` and (non-failing) `tail` operations into one operation.
   */
   public let pop : <T> List<T> -> (?T, List<T>) =
@@ -281,8 +281,9 @@ module {
     };
 
   /**
-  Drop the element in the positiion `n` from the given list.
+  Drop all but the first  `n` elements from the given list.
   */
+
   public let drop : <T>(List<T>, n:Nat) -> List<T> =
     func<T>(l : List<T>, n:Nat) : List<T> = {
       switch (l, n) {
