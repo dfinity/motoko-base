@@ -1,13 +1,15 @@
 Reference manual generation
 ===========================
 
-This directory contains the tools to create the reference manual.
+This directory contains the setup to create the reference manual.
 
 ## Building
 
-Run `make`. The output is in `_out`.
+Run `make`. The asciidoc files are in `_build`. The HTML output is in `_out`.
 
 ## Anchors
+
+TODO: Christoph, please update (or delete, if not supported) this section
 
 The tool creates HTML anchors of these forms:
 
@@ -21,6 +23,12 @@ To refer to them, use asciidoc syntax, as in
     Also see <<List_map,the `map` function for lists>>.
 
 ## Conventions and assumptions
+
+The doc generation tool is `mo-doc`.
+
+TODO: Christoph, do we have documentation on how `mo-doc` works (how to mark
+comments, where they are to be placed, what syntax)? Either link from here, or
+just summarize here.
 
 See `base/src/List.mo` for inspiration.
 

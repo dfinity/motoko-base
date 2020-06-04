@@ -1,11 +1,11 @@
 STDLIB ?= ../src
-ADocOfMo=./adoc-of-mo.pl
 
 SHELL=bash
 
 
 STDLIB_FILES= $(patsubst $(STDLIB)/%.mo,%,$(wildcard $(STDLIB)/*.mo))
 
+INPUTS = $(patsubst %,$(STDLIB)/%.mo,$(STDLIB_FILES))
 DOCS = $(patsubst %,_build/%.adoc,$(STDLIB_FILES))
 
 ADOCS = _build/index.adoc $(DOCS)
@@ -23,13 +23,8 @@ _out:
 _build:
 	@mkdir -p $@
 
-_build/%.adoc: $(STDLIB)/%.mo $(ADocOfMo) | _build
-	$(ADocOfMo) $* < $< > $@.tmp
-	@echo "// Do not edit; This file was machine-generated" > $@
-	@echo "" >> $@
-	@echo "" >> $@
-	cat $@.tmp >> $@
-	rm -f $@.tmp
+$(DOCS) : $(INPUTS)  | _build
+	mo-doc --source $(STDLIB) --output _build --format adoc
 
 _build/index.adoc: index.adoc | _build
 	cp $< $@
