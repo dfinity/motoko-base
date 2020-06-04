@@ -2,10 +2,9 @@
 
 
 [#mod-List]
-= `List` -- Lists
+= List
 
-This module provides purely-functional, singly-linked lists.
-
+The `List` module provides purely-functional, singly-linked lists.
 
 
 
@@ -23,7 +22,7 @@ type List<T> = ?(T, List<T>);
 
 [#List_nil]
 == `nil`
-The empty list
+Create an empty list.
 
 
 
@@ -32,7 +31,7 @@ nil : <T> () -> List<T>
 
 [#List_isNil]
 == `isNil`
-Returns true if the list is empty.
+Check whether a list is empty and return true if the list is empty.
 
 
 
@@ -41,7 +40,8 @@ isNil : <T> List<T> -> Bool
 
 [#List_push]
 == `push`
-also known as "list cons"
+Construct a list by pre-pending a value.
+This function is similar to a `list.cons(item)` function.
 
 
 
@@ -50,7 +50,7 @@ push : <T> (T, List<T>) -> List<T>
 
 [#List_last]
 == `last`
-The last element of the list, if present.
+Return the last element of the list, if present.
 
 
 
@@ -59,7 +59,8 @@ last : <T> List<T> -> ?T
 
 [#List_pop]
 == `pop`
-Treating the list as a stack; this combines the usual operations `head` and (non-failing) `tail` into one operation.
+Treat the list as a stack.
+This function combines the `head` and (non-failing) `tail` operations into one operation.
 
 
 
@@ -68,7 +69,7 @@ pop : <T> List<T> -> (?T, List<T>)
 
 [#List_len]
 == `len`
-The length of the list
+Return the length of the list.
 
 
 
@@ -77,7 +78,8 @@ len : <T> List<T> -> Nat
 
 [#List_lenIsEqLessThan]
 == `lenIsEqLessThan`
-Tests the length against a maximum value
+Test the list length against a maximum value and return true if 
+the list length is less than or equal to the value specified.
 
 
 
@@ -86,7 +88,9 @@ lenIsEqLessThan : <T> (List<T>, Nat) -> Bool
 
 [#List_lenClamp]
 == `lenClamp`
-Get the length, unless greater than a maximum value, in which return `null`.
+Return the list length unless the number of items in the list exceeds
+a maximum value. If the list length exceed the maximum, the function
+returns `null`.
 
 
 
@@ -95,10 +99,11 @@ lenClamp : <T> (List<T>, max : Nat) -> ?Nat
 
 [#List_nth]
 == `nth`
-Random list access, zero-based.
+Access any item in a list, zero-based.
 
-NOTE: Indexing into a list is a linear operation, and usually an indication
-that a list might not be the best data structure to use.
+NOTE: Indexing into a list is a linear operation, and usually an 
+indication that a list might not be the best data structure 
+to use.
 
 
 
@@ -107,7 +112,7 @@ nth : <T>(List<T>, Nat) -> ?T
 
 [#List_rev]
 == `rev`
-reverse the list; tail recursive
+Reverse the list; tail recursive.
 
 
 
@@ -116,9 +121,10 @@ rev : <T> List<T> -> List<T>
 
 [#List_iter]
 == `iter`
-Calls the given function with each list element in turn.
+Call the given function with each list element in turn.
 
-This is called `app` in SML Basis, and `iter` in OCaml.
+This function is equivalent to the `app` function in Standard ML Basis, 
+and the `iter` function in OCaml.
 
 
 
@@ -127,8 +133,8 @@ iter : <T>(List<T>, f : T -> ()) -> ()
 
 [#List_map]
 == `map`
-Calls the given function on each list element, collecing the results in a new
-list.
+Call the given function on each list element and collect the results 
+in a new list.
 
 
 
@@ -137,8 +143,8 @@ map : <T,S>(List<T>, f : T -> S) -> List<S>
 
 [#List_filter]
 == `filter`
-Creates a new list with only those elements of the original list for which
-the given function (often called the _predicate_) is returns true.
+Create a new list with only those elements of the original list for which
+the given function (often called the _predicate_) returns true.
 
 
 
@@ -147,10 +153,13 @@ filter : <T>(List<T>, p : T -> Bool) -> List<T>
 
 [#List_split]
 == `split`
-Creates two new lists. The first has those elements for which the given
-function `f` returns true, the second those for which it returns false.
+Create two new lists from the results of a given function (`f`). 
+The first list only includes the elements for which the given 
+function `f` returns true and tThe second list only includes 
+the elements for which the function returns false.
 
-Also known as `partition`.
+In some languages, this operation is also known as a `partition`
+function.
 
 
 
@@ -159,7 +168,7 @@ split : <T>(List<T>, f : T -> Bool) -> (List<T>, List<T>)
 
 [#List_mapFilter]
 == `mapFilter`
-Calls the given function on each list element, collecing the non-null results
+Call the given function on each list element, and collect the non-null results
 in a new list.
 
 
@@ -169,7 +178,7 @@ mapFilter : <T,S>(List<T>, f : T -> ?S) -> List<S>
 
 [#List_append]
 == `append`
-Appends two lists.
+Append the elements from one list to another list.
 
 
 
@@ -178,7 +187,9 @@ append : <T>(List<T>, List<T>) -> List<T>
 
 [#List_concat]
 == `concat`
-concatenations a list of lists (Also known as "list join")
+Concatenate a list of lists.
+
+In some languages, this operation is also known as a `list join`.
 
 
 
@@ -187,19 +198,20 @@ concat : <T>(List<List<T>>) -> List<T>
 
 [#List_take]
 == `take`
-"takes" `n` elements from the prefix of the given list.
-If the given list has fewer than `n` elements, this returns (a copy of) the
-full input list.
+Take the `n` number of elements from the prefix of the given list.
+If the given list has fewer than `n` elements, this function returns 
+a copy of the full input list.
 
 
 
 [listing]
 take : <T>(List<T>, n:Nat) -> List<T>
 
+Drop all but the first  `n` elements from the given list.
+
+
 [#List_drop]
 == `drop`
-"drops" an `n` element prefix from the given list.
-
 
 
 [listing]
@@ -207,7 +219,7 @@ drop : <T>(List<T>, n:Nat) -> List<T>
 
 [#List_foldLeft]
 == `foldLeft`
-fold list left-to-right using function `f`.
+Fold the list left-to-right using the given function (`f`).
 
 
 
@@ -216,7 +228,7 @@ foldLeft : <T,S>(List<T>, S, f : (T,S) -> S) -> S
 
 [#List_foldRight]
 == `foldRight`
-fold the list right-to-left using function `f`.
+Fold the list right-to-left using the given function (`f`).
 
 
 
@@ -225,7 +237,8 @@ foldRight : <T,S>(List<T>, S, f : (T,S) -> S) -> S
 
 [#List_find]
 == `find`
-Returns the first element for which given predicate `f` is true, if such an element exists.
+Return the first element for which the given predicate `f` is true, 
+if such an element exists.
 
 
 
@@ -234,7 +247,8 @@ find : <T>(l: List<T>, f : T -> Bool) -> ?T
 
 [#List_exists]
 == `exists`
-Returns true if there exists list element for which given predicate `f` is true
+Return true if there exists a list element for which 
+the given predicate `f` is true.
 
 
 
@@ -243,7 +257,8 @@ exists : <T>(List<T>, f : T -> Bool) -> Bool
 
 [#List_all]
 == `all`
-Returns true if for all list element the given predicate `f` is true
+Return true if the given predicate `f` is true for all list 
+elements.
 
 
 
@@ -252,8 +267,9 @@ all : <T>(List<T>, f : T -> Bool) -> Bool
 
 [#List_merge]
 == `merge`
-Given two lists that are orderd (with regard to the given relation `lte`),
-merge them into a single ordered list
+Merge two ordered lists into a single ordered list.
+This function requires both list to be ordered as specified
+by the given relation `lte`.
 
 
 
@@ -262,9 +278,9 @@ merge : <T>(List<T>, List<T>, lte : (T,T) -> Bool) -> List<T>
 
 [#List_lessThanEq]
 == `lessThanEq`
-Compares two lists using lexicographic ordering (with regard to the given relation `lte`).
+Compare two lists using lexicographic ordering specified by the given relation `lte`.
 
-// To do: Eventually, follow `collate` design from SML Basis, with real sum
+// To do: Eventually, follow `collate` design from Standard ML Basis, with real sum
 // types, use 3-valued `order` type here.
 
 
@@ -274,9 +290,10 @@ lessThanEq : <T>(List<T>, List<T>, lte: (T,T) -> Bool) -> Bool
 
 [#List_isEq]
 == `isEq`
-Compares two lists for equality (with regard to the given relation `eq` on elements).
+Compare two lists for equality as specified by the given relation `eq` on the elements.
 
-// `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`, but the former is more efficient.
+// The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`, 
+but the former is more efficient.
 
 
 
@@ -285,7 +302,8 @@ isEq : <T>(List<T>, List<T>, eq : (T,T) -> Bool) -> Bool
 
 [#List_tabulate]
 == `tabulate`
-generates a list based on a length, and a function from list index to list element.
+Generate a list based on a length and a function that maps from 
+a list index to a list element.
 
 
 
@@ -294,7 +312,7 @@ tabulate : <T>(Nat, f : Nat -> T) -> List<T>
 
 [#List_singleton]
 == `singleton`
-creates a list with exactly one element.
+Create a list with exactly one element.
 
 
 
@@ -303,7 +321,7 @@ singleton : <X> X -> List<X>
 
 [#List_replicate]
 == `replicate`
-creates a list of the given length with the same value in each position.
+Create a list of the given length with the same value in each position.
 
 
 
@@ -312,10 +330,10 @@ replicate : <X>(Nat, X) -> List<X>
 
 [#List_zip]
 == `zip`
-creates a list of pairs from a pair of lists.
+Create a list of pairs from a pair of lists.
 
 If the given lists have different lengths, then the created list will have a
-length equal to the lenght of the smaller list.
+length equal to the length of the smaller list.
 
 
 
@@ -324,8 +342,8 @@ zip : <X, Y>(List<X>, List<Y>) -> List<(X, Y)>
 
 [#List_zipWith]
 == `zipWith`
-Creates a list whose elements are calculated from the function `f` and
-elements occuring at the same position in the given lists.
+Create a list in which elements are calculated from the function `f` and
+include elements occuring at the same position in the given lists.
 
 If the given lists have different lengths, then the created list will have a
 length equal to the length of the smaller list.
@@ -337,7 +355,7 @@ zipWith : <X, Y, Z>(List<X>, List<Y>, f : (X, Y) -> Z) -> List<Z>
 
 [#List_splitAt]
 == `splitAt`
-splits the given list at the given zero-based index.
+Split the given list at the given zero-based index.
 
 
 
@@ -346,8 +364,9 @@ splitAt : <X>(Nat, List<X>) -> (List<X>, List<X>)
 
 [#List_chunksOf]
 == `chunksOf`
-split the given list into length-n chunks. The last chunk will be shorter if
-n does not evenly divide the length of the given list.
+Split the given list into chunks of length `n`.
+The last chunk will be shorter if the length of the given list
+does not divide by `n` evenly.
 
 
 
@@ -356,7 +375,7 @@ chunksOf : <X>(Nat, List<X>) -> List<List<X>>
 
 [#List_fromArray]
 == `fromArray`
-converts an array into a list.
+Convert an array into a list.
 
 
 
@@ -365,7 +384,7 @@ fromArray : <A>[A] -> List<A>
 
 [#List_fromArrayMut]
 == `fromArrayMut`
-converts a mutable array into a list.
+Convert a mutable array into a list.
 
 
 
@@ -374,7 +393,7 @@ fromArrayMut : <A>[var A] -> List<A>
 
 [#List_toArray]
 == `toArray`
-creates an array from the list
+Create an array from a list.
 
 
 
@@ -383,7 +402,7 @@ toArray : <A> List<A> -> [A]
 
 [#List_toArrayMut]
 == `toArrayMut`
-creates a mutable array from the list
+Create a mutable array from a list.
 
 
 

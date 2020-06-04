@@ -1,0 +1,74 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Deque]
+= `Deque` -- Double-ended queue 
+
+This module provides purely-functional double-ended queue.
+
+
+
+[#Deque_Deque]
+== `Deque` (type)
+
+
+....
+type Deque<T> = (List<T>, List<T>);public let empty : <T> () -> Deque<T> =
+  func<T> () : Deque<T> {
+    (List.nil(), List.nil());
+};
+public let isEmpty : <T> Deque<T> -> Bool =
+  func<T>(q : Deque<T>) : Bool {
+    switch q {
+    case (f, r) List.isNil(f) and List.isNil(r);
+    }
+};
+func check<T>(q : Deque<T>) : Deque<T> {
+  switch q {
+  case (null, r) { let (a,b) = List.splitAt(List.len(r) / 2, r); (List.rev(b), a) };
+  case (f, null) { let (a,b) = List.splitAt(List.len(f) / 2, f); (a, List.rev(b)) };
+  case q q;
+  }
+};
+public let pushFront : <T> (Deque<T>, T) -> Deque<T> =
+  func<T>((f : List<T>, r : List<T>), x : T) : Deque<T> = check (List.push(x, f), r);
+public let peekFront : <T> Deque<T> -> ?T =
+  func<T>(q: Deque<T>) : ?T {
+    switch q {
+    case (?(x, f), r) ?x;
+    case (null, ?(x, r)) ?x;
+    case _ null;
+    };
+};
+public let removeFront : <T> Deque<T> -> Deque<T> =
+  func<T>(q: Deque<T>) : Deque<T> {
+    switch q {
+    case (?(x, f), r) check(f, r);
+    case (null, ?(x, r)) check(null, r);
+    case _ P.unreachable();
+    };
+};
+
+....
+
+[#Deque_pushBack]
+== `pushBack`
+
+
+[listing]
+pushBack : <T> (Deque<T>, T) -> Deque<T>
+
+[#Deque_peekBack]
+== `peekBack`
+
+
+[listing]
+peekBack : <T> Deque<T> -> ?T
+
+[#Deque_removeBack]
+== `removeBack`
+
+
+[listing]
+removeBack : <T> Deque<T> -> Deque<T>
+
