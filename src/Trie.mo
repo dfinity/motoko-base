@@ -1,8 +1,21 @@
-/**
-[#mod-Trie]
-= `Trie` -- Functional map
-*/
-
+/// Functional map
+///
+/// Functional maps (and sets) whose representation is "canonical", and
+/// history independent.
+///
+/// Background
+/// ------------------
+///
+/// See this POPL 1989 paper (Section 6):
+///
+///  - ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
+///  - [Public copy here](http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf).
+///
+/// By contrast, other usual functional representations of maps (AVL
+/// Trees, Red-Black Trees) do not enjoy history independence, and are
+/// each more complex to implement (e.g., each requires "rebalancing";
+/// these trees never do).
+///
 import Prim "mo:prim";
 import P "Prelude";
 import Option "Option";
@@ -13,29 +26,6 @@ import List "List";
 import AssocList "AssocList";
 
 module {
-/*
-
-Hash tries
-======================
-
-Functional maps (and sets) whose representation is "canonical", and
-history independent.
-
-Background
-------------------
-
-See this POPL 1989 paper (Section 6):
-
- - ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
- - [Public copy here](http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf).
-
-By contrast, other usual functional representations of maps (AVL
-Trees, Red-Black Trees) do not enjoy history independence, and are
-each more complex to implement (e.g., each requires "rebalancing";
-these trees never do).
-
-*/
-
 /*
 Representation
 =====================
@@ -90,38 +80,37 @@ public let MAX_LEAF_COUNT = 8; // <-- beats both 4 and 16 for me, now
 public type List<T> = List.List<T>;
 public type AssocList<K,V> = AssocList.AssocList<K,V>;
 
-/* A `Key` for the trie has an associated hash value */
+//// A `Key` for the trie has an associated hash value
 public type Key<K> = {
-  /* `hash` permits fast inequality checks, and permits collisions */
+  /// `hash` permits fast inequality checks, and permits collisions
   hash: Hash.Hash;
-  /* `key` permits percise equality checks, but only used after equal hashes. */
+  /// `key` permits percise equality checks, but only used after equal hashes.
   key: K;
 };
 
-/* Equality function for two `Key<K>`s, in terms of equality of `K`'s. */
+/// Equality function for two `Key<K>`s, in terms of equality of `K`'s.
 public func keyEq<K>(keq:(K,K) -> Bool) : ((Key<K>,Key<K>) -> Bool) = {
   func (key1:Key<K>, key2:Key<K>) : Bool =
     label profile_trie_keyEq : Bool
   (Hash.hashEq(key1.hash, key2.hash) and keq(key1.key, key2.key))
 };
 
-/* leaf nodes of trie consist of key-value pairs as a list. */
+/// leaf nodes of trie consist of key-value pairs as a list.
 public type Leaf<K,V> = {
   count   : Nat ;
   keyvals : AssocList<Key<K>,V> ;
 };
 
-/* branch nodes of the trie discriminate on a bit position of the keys' hashes.
- we never store this bitpos; rather,
- we enforce a style where this position is always known from context.
-*/
+/// branch nodes of the trie discriminate on a bit position of the keys' hashes.
+/// we never store this bitpos; rather,
+/// we enforce a style where this position is always known from context.
 public type Branch<K,V> = {
   count : Nat ;
   left  : Trie<K,V> ;
   right : Trie<K,V> ;
 };
 
-/* binary hash tries: either empty, a leaf node, or a branch node */
+/// binary hash tries: either empty, a leaf node, or a branch node
 public type Trie<K,V> = {
   #empty  ;
   #leaf   : Leaf<K,V> ;
@@ -182,46 +171,28 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
 };
 
 
-/*
- Two-dimensional trie
- ---------------------
- A 2D trie is just a trie that maps dimension-1 keys to another
- layer of tries, each keyed on the dimension-2 keys.
-*/
+/// Two-dimensional trie
+/// ---------------------
+/// A 2D trie is just a trie that maps dimension-1 keys to another
+/// layer of tries, each keyed on the dimension-2 keys.
 public type Trie2D<K1, K2, V> = Trie<K1, Trie<K2,V> >;
 
-/*
- Three-dimensional trie
- ---------------------
- A 3D trie is just a trie that maps dimension-1 keys to another
- layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
-*/
+/// Three-dimensional trie
+/// ---------------------
+/// A 3D trie is just a trie that maps dimension-1 keys to another
+/// layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
 public type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V> >;
 
-/*
- Module interface
- ===================
- */
-
- /*
-  `empty`
-  --------
-  An empty trie.
-  */
+/// An empty trie.
 public func empty<K,V>() : Trie<K,V> =
    #empty;
 
- /*
-  `count`
-  --------
-  Get the number of key-value pairs in the trie, in constant time.
+///  Get the number of key-value pairs in the trie, in constant time.
 
-  ### Implementation notes
-
-  `nth` directly uses this function `count` for achieving an
-  acceptable level of algorithmic efficiently.
-
-  */
+//  ### Implementation notes
+//
+//  `nth` directly uses this function `count` for achieving an
+//  acceptable level of algorithmic efficiently.
 public func count<K,V>(t: Trie<K,V>) : Nat = label profile_trie_count : Nat {
    switch t {
      case (#empty) 0;
@@ -230,11 +201,7 @@ public func count<K,V>(t: Trie<K,V>) : Nat = label profile_trie_count : Nat {
    }
  };
 
- /*
-  `branch`
-  --------
-  Construct a branch node, computing the count stored there.
-  */
+/// Construct a branch node, computing the count stored there.
 public func branch<K,V>(l:Trie<K,V>, r:Trie<K,V>) : Trie<K,V> = label profile_trie_branch : Trie<K,V> {
    let sum = count<K,V>(l) + count<K,V>(r);
    #branch(
@@ -246,16 +213,11 @@ public func branch<K,V>(l:Trie<K,V>, r:Trie<K,V>) : Trie<K,V> = label profile_tr
    );
  };
 
- /*
-  `leaf`
-  --------
-  Construct a leaf node, computing the count stored there.
-
-  This helper function automatically enforces the MAX_LEAF_COUNT
-  by constructing branches as necessary; to do so, it also needs the bitpos
-  of the leaf.
-
-  */
+/// Construct a leaf node, computing the count stored there.
+///
+/// This helper function automatically enforces the MAX_LEAF_COUNT
+/// by constructing branches as necessary; to do so, it also needs the bitpos
+/// of the leaf.
 public func leaf<K,V>(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> = label trie_leaf : Trie<K,V> {
    fromSizedList<K,V>(null, kvs, bitpos)
  };
@@ -323,41 +285,33 @@ public func fromSizedList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : 
    rec(kvc, kvs, bitpos)
  };
 
- /*
-  `copy`
-  ---------
-  Purely-functional representation permits _O(1)_-time copy, via persistent sharing.
-  */
+/// Purely-functional representation permits _O(1)_-time copy, via persistent sharing.
 public func copy<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
 
- /*
-  `replace`
-  ---------
-  replace the given key's value option with the given one, returning the previous one
-  */
+/// replace the given key's value option with the given one, returning the previous one
 public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Trie<K,V>, ?V) =
    label profile_trie_replace : (Trie<K,V>, ?V) {
    let key_eq = keyEq<K>(k_eq);
 
    func rec(t : Trie<K,V>, bitpos:Nat) : (Trie<K,V>, ?V) =
      label profile_trie_replace_rec : (Trie<K,V>, ?V) {
-	   switch t {
-	   case (#empty) label profile_trie_replace_rec_empty : (Trie<K,V>, ?V) {
+      switch t {
+      case (#empty) label profile_trie_replace_rec_empty : (Trie<K,V>, ?V) {
             let (kvs, _) = AssocList.replace<Key<K>,V>(null, k, key_eq, v);
             (leaf<K,V>(kvs, bitpos), null)
           };
-	   case (#branch b) label profile_trie_replace_rec_branch : (Trie<K,V>, ?V) {
-	          let bit = Hash.getHashBit(k.hash, bitpos);
-	          // rebuild either the left or right path with the inserted (k,v) pair
-	          if (not bit) {
-	            let (l, v_) = rec(b.left, bitpos+1);
-	            (branch<K,V>(l, b.right), v_)
-	          }
-	          else {
-	            let (r, v_) = rec(b.right, bitpos+1);
-	            (branch<K,V>(b.left, r), v_)
-	          }
-	        };
+     case (#branch b) label profile_trie_replace_rec_branch : (Trie<K,V>, ?V) {
+            let bit = Hash.getHashBit(k.hash, bitpos);
+            // rebuild either the left or right path with the inserted (k,v) pair
+            if (not bit) {
+              let (l, v_) = rec(b.left, bitpos+1);
+              (branch<K,V>(l, b.right), v_)
+            }
+            else {
+              let (r, v_) = rec(b.right, bitpos+1);
+              (branch<K,V>(b.left, r), v_)
+            }
+          };
      case (#leaf l) label profile_trie_replace_rec_leaf : (Trie<K,V>, ?V) {
             let (kvs2, old_val) =
               AssocList.replace<Key<K>,V>(l.keyvals, k, key_eq, v);
@@ -370,21 +324,13 @@ public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Tri
    (to, vo)
  };
 
- /*
-  `insert`
-  ------------
-  insert the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
-  */
+/// insert the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
 public func insert<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:V) : (Trie<K,V>, ?V) =
    label profile_trie_insert : (Trie<K,V>, ?V) {
    replace<K,V>(t, k, k_eq, ?v)
  };
 
-/*
-  `find`
-  ---------
-  find the given key's value in the trie, or return null if nonexistent
-  */
+///  find the given key's value in the trie, or return null if nonexistent
 public func find<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K) -> Bool) : ?V = label profile_trie_find : (?V) {
    let key_eq = keyEq<K>(k_eq);
    func rec(t : Trie<K,V>, bitpos:Nat) : ?V = label profile_trie_find_rec : (?V) {
@@ -398,12 +344,12 @@ public func find<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K) -> Bool) : ?V = label 
               AssocList.find<Key<K>,V>(l.keyvals, k, key_eq)
             };
        case (#branch b) {
-	            let bit = Hash.getHashBit(k.hash, bitpos);
-	            if (not bit) {
+            let bit = Hash.getHashBit(k.hash, bitpos);
+            if (not bit) {
                 label profile_trie_find_branch_left : (?V)
                 rec(b.left, bitpos+1)
               }
-	            else {
+            else {
                 label profile_trie_find_branch_right : (?V)
                 rec(b.right, bitpos+1)
               }
@@ -435,8 +381,8 @@ public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
    func rec(l : AssocList<Key<K>,V>) : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>) =
      label profile_trie_sized_split_rec : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>) {
      switch l {
-	   case null { (0, null, 0, null) };
-	   case (?((k,v),t)) {
+     case null { (0, null, 0, null) };
+     case (?((k,v),t)) {
             let (cl, l, cr, r) = rec(t) ;
             if (not Hash.getHashBit(k.hash, bitpos)){
               (cl + 1, ?((k,v),l), cr, r)
@@ -449,21 +395,16 @@ public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
    rec(l)
  };
 
-  /*
-   `merge`
-   ---------
-   merge tries, preferring the right trie where there are collisions
-   in common keys. note: the `disj` operation generalizes this `merge`
-   operation in various ways, and does not (in general) lose
-   information; this operation is a simpler, special case.
-
-   See also:
-
-   - [`disj`](#disj)
-   - [`join`](#join)
-   - [`prod`](#prod)
-
-   */
+///   merge tries, preferring the right trie where there are collisions
+///   in common keys. note: the `disj` operation generalizes this `merge`
+///   operation in various ways, and does not (in general) lose
+///   information; this operation is a simpler, special case.
+///
+///   See also:
+///
+///   - [`disj`](#value.disj)
+///   - [`join`](#value.join)
+///   - [`prod`](#value.prod)
 public func merge<K,V>(tl:Trie<K,V>, tr:Trie<K,V>, k_eq:(K,K)->Bool) : Trie<K,V> = label profile_trie_merge : Trie<K,V> {
     let key_eq = keyEq<K>(k_eq);
     func br(l:Trie<K,V>, r:Trie<K,V>) : Trie<K,V> = branch<K,V>(l,r);
@@ -503,13 +444,9 @@ public func merge<K,V>(tl:Trie<K,V>, tr:Trie<K,V>, k_eq:(K,K)->Bool) : Trie<K,V>
     rec(0, tl, tr)
   };
 
-  /*
-   `mergeDisjoint`
-   ----------------
-   like `merge`, it merges tries, but unlike `merge`, it signals a
-   dynamic error if there are collisions in common keys between the
-   left and right inputs.
-   */
+/// like `merge`, it merges tries, but unlike `merge`, it signals a
+/// dynamic error if there are collisions in common keys between the
+/// left and right inputs.
 public func mergeDisjoint<K,V>(tl:Trie<K,V>, tr:Trie<K,V>, k_eq:(K,K)->Bool): Trie<K,V> =
     label profile_trie_mergeDisjoint : Trie<K,V> {
     let key_eq = keyEq<K>(k_eq);
@@ -553,13 +490,9 @@ public func mergeDisjoint<K,V>(tl:Trie<K,V>, tr:Trie<K,V>, k_eq:(K,K)->Bool): Tr
     rec(0, tl, tr)
   };
 
-  /*
-   `diff`
-   ------
-   The key-value pairs of the final trie consists of those pairs of
-   the left trie whose keys are not present in the right trie; the
-   values of the right trie are irrelevant.
-   */
+/// The key-value pairs of the final trie consists of those pairs of
+/// the left trie whose keys are not present in the right trie; the
+/// values of the right trie are irrelevant.
 public func diff<K,V,W>(tl:Trie<K,V>, tr:Trie<K,W>, k_eq:(K,K)->Bool): Trie<K,V> {
     let key_eq = keyEq<K>(k_eq);
 
@@ -598,33 +531,27 @@ public func diff<K,V,W>(tl:Trie<K,V>, tr:Trie<K,W>, k_eq:(K,K)->Bool): Trie<K,V>
     rec(0, tl, tr)
   };
 
-  /*
-   `disj`
-   --------
-
-   This operation generalizes the notion of "set union" to finite maps.
-
-   Produces a "disjunctive image" of the two tries, where the values of
-   matching keys are combined with the given binary operator.
-
-   For unmatched key-value pairs, the operator is still applied to
-   create the value in the image.  To accomodate these various
-   situations, the operator accepts optional values, but is never
-   applied to (null, null).
-
-   Implements the database idea of an ["outer join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
-
-   See also:
-
-   - [`join`](#join)
-   - [`merge`](#merge)
-   - [`prod`](#prod)
-
-   */
+/// This operation generalizes the notion of "set union" to finite maps.
+///
+/// Produces a "disjunctive image" of the two tries, where the values of
+/// matching keys are combined with the given binary operator.
+///
+/// For unmatched key-value pairs, the operator is still applied to
+/// create the value in the image.  To accomodate these various
+/// situations, the operator accepts optional values, but is never
+/// applied to (null, null).
+///
+/// Implements the database idea of an ["outer join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
+///
+/// See also:
+///
+/// - [`join`](#value.join)
+/// - [`merge`](#value.merge)
+/// - [`prod`](#value.prod)
 public func disj<K,V,W,X>(
     tl   : Trie<K,V>,
     tr   : Trie<K,W>,
-		k_eq : (K,K)->Bool,
+    k_eq : (K,K)->Bool,
     vbin : (?V,?W)->X
   )
     : Trie<K,X>
@@ -640,8 +567,8 @@ public func disj<K,V,W,X>(
     /* empty right case; build from left only: */
     func recL(t:Trie<K,V>, bitpos:Nat) : Trie<K,X> {
       switch t {
-	    case (#empty) #empty;
-	    case (#leaf l) {
+      case (#empty) #empty;
+      case (#leaf l) {
              lf3(AssocList.disj<Key<K>,V,W,X>(l.keyvals, null, key_eq, vbin), bitpos)
            };
       case (#branch(b)) { br3(recL(b.left,bitpos+1),recL(b.right,bitpos+1)) };
@@ -650,8 +577,8 @@ public func disj<K,V,W,X>(
     /* empty left case; build from right only: */
     func recR(t:Trie<K,W>, bitpos:Nat) : Trie<K,X> {
       switch t {
-	    case (#empty) #empty;
-	    case (#leaf l) {
+      case (#empty) #empty;
+      case (#leaf l) {
              lf3(AssocList.disj<Key<K>,V,W,X>(null, l.keyvals, key_eq, vbin), bitpos)
            };
       case (#branch(b)) { br3(recR(b.left,bitpos+1),recR(b.right,bitpos+1)) };
@@ -688,25 +615,24 @@ public func disj<K,V,W,X>(
     rec(0, tl, tr)
   };
 
-  /*
-   `join`
-   ---------
-   This operation generalizes the notion of "set intersection" to
-   finite maps.  Produces a "conjuctive image" of the two tries, where
-   the values of matching keys are combined with the given binary
-   operator, and unmatched key-value pairs are not present in the output.
-
-   Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
-
-   See also:
-
-   - [`disj`](#disj)
-   - [`merge`](#merge)
-   - [`prod`](#prod)
-
-   */
-  public func join<K,V,W,X>(tl:Trie<K,V>, tr:Trie<K,W>,
-		                 k_eq:(K,K)->Bool, vbin:(V,W)->X)
+  /// This operation generalizes the notion of "set intersection" to
+  /// finite maps.  Produces a "conjuctive image" of the two tries, where
+  /// the values of matching keys are combined with the given binary
+  /// operator, and unmatched key-value pairs are not present in the output.
+  ///
+  /// Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
+  ///
+  /// See also:
+  ///
+  /// - [`disj`](#value.disj)
+  /// - [`merge`](#value.merge)
+  /// - [`prod`](#value.prod)
+  public func join<K,V,W,X>(
+    tl:Trie<K,V>,
+    tr:Trie<K,W>,
+    k_eq:(K,K)->Bool,
+    vbin:(V,W)->X
+  )
     : Trie<K,X> = label profile_trie_join : Trie<K,X>
   {
     let key_eq = keyEq<K>(k_eq);
@@ -721,9 +647,9 @@ public func disj<K,V,W,X>(
       func lf3(kvs:AssocList<Key<K>,X>) : Trie<K,X> = leaf<K,X>(kvs, bitpos);
 
       switch (tl, tr) {
-	    case (#empty, _) { #empty };
-	    case (_, #empty) { #empty };
-	    case (#leaf l1, #leaf l2) {
+      case (#empty, _) { #empty };
+      case (_, #empty) { #empty };
+      case (#leaf l1, #leaf l2) {
              lf3(AssocList.join<Key<K>,V,W,X>(l1.keyvals, l2.keyvals, key_eq, vbin))
            };
       case (#leaf l, _) {
@@ -744,52 +670,42 @@ public func disj<K,V,W,X>(
     rec(0, tl, tr)
   };
 
-  /*
-   `foldUp`
-   ------------
-   This operation gives a recursor for the internal structure of
-   tries.  Many common operations are instantiations of this function,
-   either as clients, or as hand-specialized versions (e.g., see map,
-   mapFilter, exists and forAll below).
-   */
+  /// This operation gives a recursor for the internal structure of
+  /// tries.  Many common operations are instantiations of this function,
+  /// either as clients, or as hand-specialized versions (e.g., see map,
+  /// mapFilter, exists and forAll below).
   public func foldUp<K,V,X>(t:Trie<K,V>, bin:(X,X)->X, leaf:(K,V)->X, empty:X) : X {
     func rec(t:Trie<K,V>) : X {
       switch t {
       case (#empty) { empty };
-	    case (#leaf l) {
+      case (#leaf l) {
              AssocList.fold<Key<K>,V,X>(
                l.keyvals, empty,
                func (k:Key<K>, v:V, x:X):X =
                  bin(leaf(k.key,v),x)
              )
            };
-	    case (#branch(b)) { bin(rec(b.left), rec(b.right)) };
+      case (#branch(b)) { bin(rec(b.left), rec(b.right)) };
       }
     };
     rec(t)
   };
 
 
-  /*
-   `prod`
-   ---------
-
-   Conditional _catesian product_, where the given
-   operation `op` _conditionally_ creates output elements in the
-   resulting trie.
-
-   The keyed structure of the input tries are not relevant for this
-   operation: all pairs are considered, regardless of keys matching or
-   not.  Moreover, the resulting trie may use keys that are unrelated to
-   these input keys.
-
-   See also:
-
-   - [`disj`](#disj)
-   - [`join`](#join)
-   - [`merge`](#merge)
-
-   */
+  /// Conditional _catesian product_, where the given
+  /// operation `op` _conditionally_ creates output elements in the
+  /// resulting trie.
+  ///
+  /// The keyed structure of the input tries are not relevant for this
+  /// operation: all pairs are considered, regardless of keys matching or
+  /// not.  Moreover, the resulting trie may use keys that are unrelated to
+  /// these input keys.
+  ///
+  /// See also:
+  ///
+  /// - [`disj`](#value.disj)
+  /// - [`join`](#value.join)
+  /// - [`merge`](#value.merge)
   public func prod<K1,V1,K2,V2,K3,V3>(
     tl    :Trie<K1,V1>,
     tr    :Trie<K2,V2>,
@@ -1025,13 +941,13 @@ public func disj<K,V,W,X>(
     func rec(t:Trie<K,V>, x:X) : X {
       switch t {
       case (#empty) x;
-	    case (#leaf l) {
+      case (#leaf l) {
              AssocList.fold<Key<K>,V,X>(
                l.keyvals, x,
                func (k:Key<K>, v:V, x:X):X = f(k.key,v,x)
              )
            };
-	    case (#branch(b)) { rec(b.left,rec(b.right,x)) };
+      case (#branch(b)) { rec(b.left,rec(b.right,x)) };
       };
     };
     rec(t, x)
@@ -1047,12 +963,12 @@ public func disj<K,V,W,X>(
     func rec(t:Trie<K,V>) : Bool {
       switch t {
       case (#empty) { false };
-	    case (#leaf l) {
+      case (#leaf l) {
              List.exists<(Key<K>,V)>(
                l.keyvals, func ((k:Key<K>,v:V)):Bool=f(k.key,v)
              )
            };
-	    case (#branch(b)) { rec(b.left) or rec(b.right) };
+      case (#branch(b)) { rec(b.left) or rec(b.right) };
       };
     };
     rec(t)
@@ -1067,12 +983,12 @@ public func disj<K,V,W,X>(
     func rec(t:Trie<K,V>) : Bool {
       switch t {
       case (#empty) { true };
-	    case (#leaf l) {
+      case (#leaf l) {
              List.all<(Key<K>,V)>(
                l.keyvals, func ((k:Key<K>,v:V)):Bool=f(k.key,v)
              )
            };
-	    case (#branch(b)) { rec(b.left) and rec(b.right) };
+      case (#branch(b)) { rec(b.left) and rec(b.right) };
       };
     };
     rec(t)

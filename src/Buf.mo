@@ -1,49 +1,35 @@
-/**
-[#mod-Buf]
-= `Buf` -- Growing buffers
-*/
-
+/// Growing buffers
+///
+/// This module defines buffers that grow, with a general element type.
+///
+/// ### Why?
+///
+/// Motoko applications expose interfaces that use fixed-size arrays of
+/// general (user-defined) elements to represent sets, sequences and maps
+/// of application-specific elements.
+///
+/// The `Array` module focuses on Motoko's builtin arrays, whose size is
+/// each fixed.  They do not permit general growth/appending, which is the
+/// focus here.
+///
+/// To create these arrays, and to consume them with ergonomic (imperative) code, and
+/// low API friction, developers need _buffers that grow_.
+///
+/// ### Define `Buf<X>` object type
+///
+/// A "buffer" is a mutable sequence that grows, either one element at a
+/// time, or one (second) buffer at time.
 import P "Prelude";
 import I "Iter";
 import A "Array";
 
 module {
 
-/*
-
-Buffers
-===================
-
-This module defines buffers that grow, with a general element type.
-
-### Why?
-
-Motoko applications expose interfaces that use fixed-size arrays of
-general (user-defined) elements to represent sets, sequences and maps
-of application-specific elements.
-
-The `Array` module focuses on Motoko's builtin arrays, whose size is
-each fixed.  They do not permit general growth/appending, which is the
-focus here.
-
-To create these arrays, and to consume them with ergonomic (imperative) code, and
-low API friction, developers need _buffers that grow_.
-
-### Define `Buf<X>` object type
-
-A "buffer" is a mutable sequence that grows, either one element at a
-time, or one (second) buffer at time.
-
-*/
-
-
-/*
-Create a buffer represented internally by an mutable array.
-
-The argument `initCapacity` gives the initial capacity.  Under the
-interface, the mutable array grows by doubling when this initial
-capacity is exhausted.
-*/
+/// Create a buffer represented internally by an mutable array.
+///
+/// The argument `initCapacity` gives the initial capacity.  Under the
+/// interface, the mutable array grows by doubling when this initial
+/// capacity is exhausted.
 public class Buf<X> (initCapacity : Nat) {
   var count : Nat = 0;
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
