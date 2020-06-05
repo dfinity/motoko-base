@@ -1,7 +1,4 @@
-/**
-[#mod-Iter]
-= `Iter` -- Iterators
-*/
+/// Iterators
 
 import Array "Array";
 import List "List";

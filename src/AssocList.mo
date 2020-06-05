@@ -1,30 +1,16 @@
-/**
-[#mod-AssocList]
-= `AssocList` -- Association lists
-*/
+/// Association Lists, a la functional programming, in Motoko.
+///
+/// Implements the same interface as `Trie`, but as a linked-list of key-value
+/// pairs.
 
 import List "List";
 
 module {
-/*
 
-Association Lists
-==================
-
-Association Lists, a la functional programming, in Motoko.
-
-Implements the same interface as `Trie`, but as a linked-list of key-value pairs.
-
-*/
-
-// polymorphic association linked lists between keys and values
+/// polymorphic association linked lists between keys and values
 public type AssocList<K,V> = List.List<(K,V)>;
 
-  /*
-   `find`
-   --------
-   find the value associated with a given key, or null if absent.
-  */
+  /// Find the value associated with a given key, or null if absent.
   public func find<K,V>(al : AssocList<K,V>,
                  k:K,
                  k_eq:(K,K)->Bool)
@@ -47,12 +33,8 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec(al)
   };
 
-  /*
-   `replace`
-   ---------
-   replace the value associated with a given key, or add it, if missing.
-   returns old value, or null, if no prior value existed.
-  */
+  /// replace the value associated with a given key, or add it, if missing.
+  /// returns old value, or null, if no prior value existed.
   public func replace<K,V>(al : AssocList<K,V>,
                     k:K,
                     k_eq:(K,K)->Bool,
@@ -84,13 +66,9 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec(al)
   };
 
-  /*
-   `diff`
-   ---------
-   The key-value pairs of the final list consist of those pairs of
-   the left list whose keys are not present in the right list; the
-   values of the right list are irrelevant.
-  */
+  /// The key-value pairs of the final list consist of those pairs of
+  /// the left list whose keys are not present in the right list; the
+  /// values of the right list are irrelevant.
   public func diff<K,V,W>(al1: AssocList<K,V>,
                    al2: AssocList<K,W>,
                    keq: (K,K)->Bool)
@@ -110,10 +88,6 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec(al1)
   };
 
-  /*
-   `mapAppend`
-   --------
-  */
   public func mapAppend<K,V,W,X>(al1:AssocList<K,V>,
                           al2:AssocList<K,W>,
                           vbin:(?V,?W)->X)
@@ -138,19 +112,14 @@ public type AssocList<K,V> = List.List<(K,V)>;
     mapAppend<K,V,W,X>(al1, al2, vbin)
   };
 
-  /*
-   `disj`
-   --------
-   This operation generalizes the notion of "set union" to finite maps.
-   Produces a "disjunctive image" of the two lists, where the values of
-   matching keys are combined with the given binary operator.
-
-   For unmatched key-value pairs, the operator is still applied to
-   create the value in the image.  To accomodate these various
-   situations, the operator accepts optional values, but is never
-   applied to (null, null).
-
-  */
+  /// This operation generalizes the notion of "set union" to finite maps.
+  /// Produces a "disjunctive image" of the two lists, where the values of
+  /// matching keys are combined with the given binary operator.
+  ///
+  /// For unmatched key-value pairs, the operator is still applied to
+  /// create the value in the image.  To accomodate these various
+  /// situations, the operator accepts optional values, but is never
+  /// applied to (null, null).
   public func disj<K,V,W,X>(al1:AssocList<K,V>,
                      al2:AssocList<K,W>,
                      keq:(K,K)->Bool,
@@ -184,15 +153,10 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec1(al1)
   };
 
-  /*
-   `join`
-   ---------
-   This operation generalizes the notion of "set intersection" to
-   finite maps.  Produces a "conjuctive image" of the two lists, where
-   the values of matching keys are combined with the given binary
-   operator, and unmatched key-value pairs are not present in the output.
-
-  */
+  /// This operation generalizes the notion of "set intersection" to
+  /// finite maps.  Produces a "conjuctive image" of the two lists, where
+  /// the values of matching keys are combined with the given binary
+  /// operator, and unmatched key-value pairs are not present in the output.
   public func join<K,V,W,X>(al1 : AssocList<K,V>,
                      al2:AssocList<K,W>,
                      keq:(K,K)->Bool,
@@ -213,11 +177,6 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec(al1)
   };
 
-
-  /*
-   `fold`
-   ---------
-  */
   public func fold<K,V,X>(al:AssocList<K,V>,
                    nil:X,
                    cons:(K,V,X)->X)

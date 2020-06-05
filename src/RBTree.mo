@@ -1,3 +1,5 @@
+/// Red-Black Trees
+
 import Debug "Debug";
 import I "Iter";
 import List "List";
@@ -17,9 +19,9 @@ public class RBTree<X, Y>(compareTo:(X, X) -> O.Ordering) {
 
   var tree: Tree<X, Y> = (#leaf : Tree<X, Y>);
 
-  // Get non-OO, purely-functional representation:
-  // for drawing, pretty-printing and non-OO contexts
-  // (e.g., async args and results):
+  /// Get non-OO, purely-functional representation:
+  /// for drawing, pretty-printing and non-OO contexts
+  /// (e.g., async args and results):
   public func getTree() : Tree<X, Y> {
     tree
   };
