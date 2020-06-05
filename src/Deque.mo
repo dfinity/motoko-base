@@ -25,7 +25,7 @@ module {
     public func pushFront<T>(q : Deque<T>, x : T) : Deque<T> =
       check (List.push(x, q.0), q.1);
 
-    public func<T>(q: Deque<T>) : ?T {
+    public func peekFront<T>(q: Deque<T>) : ?T {
       switch q {
       case (?(x, f), r) ?x;
       case (null, ?(x, r)) ?x;
