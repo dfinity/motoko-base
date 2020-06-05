@@ -10,30 +10,27 @@ public type Ordering = {
 };
 
 /// Check if an ordering is less than.
-public let isLT : Ordering -> Bool =
-  func(ordering : Ordering) : Bool {
-    switch ordering {
-      case (#lt) true;
-      case _ false;
-    };
+public func isLT(ordering : Ordering) : Bool {
+  switch ordering {
+    case (#lt) true;
+    case _ false;
   };
+};
 
 /// Check if an ordering is equal.
-public let isEQ : Ordering -> Bool =
-  func(ordering : Ordering) : Bool {
-    switch ordering {
-      case (#eq) true;
-      case _ false;
-    };
+public func(ordering : Ordering) : Bool {
+  switch ordering {
+    case (#eq) true;
+    case _ false;
   };
+};
 
 /// Check if an ordering is greater than.
-public let isGT : Ordering -> Bool =
-  func(ordering : Ordering) : Bool {
-    switch ordering {
-      case (#gt) true;
-      case _ false;
-    };
+public func isGT(ordering : Ordering) : Bool {
+  switch ordering {
+    case (#gt) true;
+    case _ false;
   };
+};
 
 };

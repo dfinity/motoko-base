@@ -10,7 +10,7 @@ module {
   /// The hash length, always 31.
   public let length : Nat = 31; // Why not 32?
 
-  public let hashOfInt : Int -> Hash = func(i) {
+  public func hashOfInt(i : Int) : Hash {
     let j = Prim.intToWord32(i);
     hashWord8s(
       [j & (255 << 0),
@@ -21,7 +21,7 @@ module {
   };
 
   /// WARNING: This only hashes the lowest 32 bits of the `Int`
-  public let hashOfIntAcc : (Hash, Int) -> Hash = func(h1, i) {
+  public func hashOfIntAcc(h1 : Hash, i : Int) : Hash {
     let j = Prim.intToWord32(i);
     hashWord8s(
       [h1,
@@ -33,7 +33,7 @@ module {
   };
 
   /// WARNING: This only hashes the lowest 32 bits of the `Int`
-  public let hashOfText : Text -> Hash = func(t) {
+  public func hashOfText(t : Text) : Hash {
     var x = 0 : Word32;
     for (c in t.chars()) {
       x := x ^ Prim.charToWord32(c);
@@ -42,17 +42,17 @@ module {
   };
 
   /// Project a given bit from the bit vector.
-  public let getHashBit : (Hash, Nat) -> Bool = func(h, pos) {
+  public func getHashBit(h : Hash, pos : Nat) : Bool {
     assert (pos <= length);
     (h & (Prim.natToWord32(1) << Prim.natToWord32(pos))) != Prim.natToWord32(0)
   };
 
   /// Test if two hashes are equal
-  public let hashEq : (Hash, Hash) -> Bool = func(ha, hb) {
+  public func hashEq(ha : Hash, hb : Hash) : Bool {
     ha == hb
   };
 
-  public let bitsPrintRev : Hash -> () = func(bits) {
+  public func bitsPrintRev(bits : Hash) {
     for (j in Iter.range(0, length - 1)) {
       if (getHashBit(bits, j)) {
         Prim.debugPrint "1"
@@ -62,7 +62,7 @@ module {
     }
   };
 
-  public let hashPrintRev : Hash -> () = func(bits) {
+  public func hashPrintRev(bits : Hash) {
     for (j in Iter.revRange(length - 1, 0)) {
       if (getHashBit(bits, Prim.abs(j))) {
         Prim.debugPrint "1"
@@ -80,7 +80,7 @@ module {
   /// Note: Be sure to explode each `Word8` of a `Word32` into its own `Word32`, and to shift into lower 8 bits.
 
   // should this really be public?
-  public let hashWord8s : [Hash] -> Hash = func(key) {
+  public func hashWord8s(key : [Hash]) : Hash {
     var hash = Prim.natToWord32(0);
     for (wordOfKey in key.vals()) {
       hash := hash + wordOfKey;
