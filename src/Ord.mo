@@ -1,22 +1,15 @@
-/**
-[#mod-Ord]
-= `Ord` -- Orderings
-*/
+/// Orderings
 
 module {
 
-/**
-A type to represent an ordering.
-*/
+/// A type to represent an ordering.
 public type Ordering = {
   #lt;
   #eq;
   #gt;
 };
 
-/**
-Check if an ordering is less than.
-*/
+/// Check if an ordering is less than.
 public let isLT : Ordering -> Bool =
   func(ordering : Ordering) : Bool {
     switch ordering {
@@ -25,9 +18,7 @@ public let isLT : Ordering -> Bool =
     };
   };
 
-/**
-Check if an ordering is equal.
-*/
+/// Check if an ordering is equal.
 public let isEQ : Ordering -> Bool =
   func(ordering : Ordering) : Bool {
     switch ordering {
@@ -36,9 +27,7 @@ public let isEQ : Ordering -> Bool =
     };
   };
 
-/**
-Check if an ordering is greater than.
-*/
+/// Check if an ordering is greater than.
 public let isGT : Ordering -> Bool =
   func(ordering : Ordering) : Bool {
     switch ordering {

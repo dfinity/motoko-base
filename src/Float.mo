@@ -1,7 +1,4 @@
-/**
-[#mod-Float]
-= `Float` -- Floating-point numbers
-*/
+/// Floating-point numbers
 
 import Prim "mo:prim";
 import Prelude "Prelude";

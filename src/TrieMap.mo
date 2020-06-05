@@ -1,26 +1,16 @@
-/**
-[#mod-TrieMap]
-= `TrieMap` -- Functional map
-*/
+/// Functional map
+///
+/// This module defines an imperative hash map, with a general key and value type.  It matches the interface and semantics of HashMap.  Unlike HashMap, its internal representation uses a functional hash trie (see `trie.mo`).
+///
+/// This class permits us to compare the performance of two representations of hash-based maps, where tries (as binary trees) permit more efficient, constant-time, cloning compared with ordinary tables.  This property is nice for supporting transactional workflows where map mutations may be provisional, and where we may expect some mutations to be uncommitted, or to "roll back".
+///
+/// For now, this class does not permit a direct `clone` operation (neither does `HashMap`), but it does permit creating iterators via `iter()`.  The effect is similar: Each iterator costs `O(1)` to create, but represents a fixed view of the mapping that does not interfere with mutations (it will _not_ view subsequent insertions or mutations, if any).
 
 import T "Trie";
 import P "Prelude";
 import I "Iter";
 import Hash "Hash";
 import List "List";
-
-/*
-
-Trie Map
-=========================
-
-This module defines an imperative hash map, with a general key and value type.  It matches the interface and semantics of HashMap.  Unlike HashMap, its internal representation uses a functional hash trie (see `trie.mo`).
-
-This class permits us to compare the performance of two representations of hash-based maps, where tries (as binary trees) permit more efficient, constant-time, cloning compared with ordinary tables.  This property is nice for supporting transactional workflows where map mutations may be provisional, and where we may expect some mutations to be uncommitted, or to "roll back".
-
-For now, this class does not permit a direct `clone` operation (neither does `HashMap`), but it does permit creating iterators via `iter()`.  The effect is similar: Each iterator costs `O(1)` to create, but represents a fixed view of the mapping that does not interfere with mutations (it will _not_ view subsequent insertions or mutations, if any).
-
-*/
 
 module {
 public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
@@ -58,8 +48,8 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
     ov
   };
 
-  // notably, each iterator gets a _persistent view_ of the mapping,
-  // by virtue of the trie being a persistent data structure.
+  /// notably, each iterator gets a _persistent view_ of the mapping,
+  /// by virtue of the trie being a persistent data structure.
   public func iter() : I.Iter<(K,V)> = object {
     var stack = ?(map, null) : List.List<T.Trie<K,V>>;
     public func next() : ?(K,V) {
@@ -92,8 +82,8 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
   };
 
 
-// clone cannot be an efficient object method,
-// ...but is still useful in tests, and beyond.
+/// clone cannot be an efficient object method,
+/// ...but is still useful in tests, and beyond.
 public func clone<K,V>
   (h:TrieMap<K,V>,
    keyEq: (K,K) -> Bool,
@@ -105,7 +95,7 @@ public func clone<K,V>
   h2
 };
 
-// Clone from any iterator of key-value pairs
+/// Clone from any iterator of key-value pairs
 public func fromIter<K, V>(iter:I.Iter<(K, V)>,
                            keyEq: (K,K) -> Bool,
                            keyHash: K -> Hash.Hash) : TrieMap<K,V> {
