@@ -98,11 +98,11 @@
 
     Note: Choosing this instead of `set` since it works better for containers like sets and is visually easier to distinghuish from `get`.
 
-  - `swap`: write to container and return old value (as for `get`)
-
   - `delete`: remove from collection (does nothing if not present)
 
-  - `extract`: remove and return old value (as for `get`)
+  - `replace`: write to container and return old value (as for `get`)
+
+  - `remove`: remove and return old value (as for `get`)
 
   - `size`: query number of entries in collection (returns `Nat`)
 
