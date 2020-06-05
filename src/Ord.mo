@@ -18,7 +18,7 @@ public func isLT(ordering : Ordering) : Bool {
 };
 
 /// Check if an ordering is equal.
-public func isEq(ordering : Ordering) : Bool {
+public func isEQ(ordering : Ordering) : Bool {
   switch ordering {
     case (#eq) true;
     case _ false;
