@@ -28,10 +28,10 @@ jobs:
     - name: "examples"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: make -C examples
-    - name: "docs"
-      run: make -C doc
-    - name: Upload docs
-      uses: actions/upload-artifact@v1
-      with:
-        name: reference documentation
-        path: doc/_out/
+    # - name: "docs"
+    #   run: make -C doc
+    # - name: Upload docs
+    #   uses: actions/upload-artifact@v1
+    #   with:
+    #     name: reference documentation
+    #     path: doc/_out/

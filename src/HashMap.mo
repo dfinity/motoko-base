@@ -1,7 +1,16 @@
-/**
-[#mod-HashMap]
-= `HashMap` -- Mutable hash map
-*/
+/// Mutable hash map (aka Hashtable)
+///
+/// This module defines an imperative hash map (hash table), with a general key and value type.
+///
+/// It has a minimal object-oriented interface: get, set, swap, delete, count and iter.
+///
+/// The class is parameterized by the key's equality and hash functions,
+/// and an initial capacity.  However, as with `Buf`, no array allocation
+/// happens until the first `set` (or `swap`).
+///
+/// Internally, table growth policy is very simple, for now:
+///   Double an initial capacity when the expected
+///   bucket list beyond a certain constant.
 
 import Prim "mo:prim";
 import P "Prelude";
@@ -12,24 +21,6 @@ import AssocList "AssocList";
 
 module {
 
-/*
-
-Hash Map (aka Hash table)
-=========================
-
-This module defines an imperative hash map (hash table), with a general key and value type.
-
-It has a minimal object-oriented interface: get, set, swap, delete, count and iter.
-
-The class is parameterized by the key's equality and hash functions,
-and an initial capacity.  However, as with `Buf`, no array allocation
-happens until the first `set` (or `swap`).
-
-Internally, table growth policy is very simple, for now:
-  Double an initial capacity when the expected
-  bucket list beyond a certain constant.
-
-*/
 
 // key-val list type
 type KVs<K,V> = AssocList.AssocList<K,V>;
@@ -144,8 +135,8 @@ public class HashMap<K,V> (
   };
 };
 
-// clone cannot be an efficient object method,
-// ...but is still useful in tests, and beyond.
+/// clone cannot be an efficient object method,
+/// ...but is still useful in tests, and beyond.
 public func clone<K,V>
   (h:HashMap<K,V>,
    keyEq: (K,K) -> Bool,
@@ -157,7 +148,7 @@ public func clone<K,V>
   h2
 };
 
-// Clone from any iterator of key-value pairs
+/// Clone from any iterator of key-value pairs
 public func fromIter<K, V>(iter:Iter.Iter<(K, V)>,
                            initCapacity: Nat,
                            keyEq: (K,K) -> Bool,

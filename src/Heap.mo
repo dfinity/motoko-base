@@ -1,10 +1,6 @@
-/**
-[#mod-Heap]
-= `Heap` -- Priority Queue 
-
-This module provides purely-functional priority queue based on leftist heap
-
-*/
+/// Priority Queue
+///
+/// This module provides purely-functional priority queue based on leftist heap
 
 import O "Ord";
 import P "Prelude";
