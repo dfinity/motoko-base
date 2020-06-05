@@ -1,10 +1,6 @@
-/**
-[#mod-Deque]
-= `Deque` -- Double-ended Queue 
-
-This module provides purely-functional double-ended queue.
-
-*/
+/// Double-ended Queue
+///
+/// This module provides a purely-functional double-ended queue.
 
 import List "List";
 import P "Prelude";

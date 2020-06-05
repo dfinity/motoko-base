@@ -1,7 +1,4 @@
-/**
-[#mod-Principal]
-= `Principal` -- IC principals (User and canister IDs)
-*/
+/// IC principals (User and canister IDs)
 
 import Prim "mo:prim";
 import Blob "Blob";

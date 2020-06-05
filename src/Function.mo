@@ -1,7 +1,4 @@
-/**
-[#mod-Function]
-= `Function` -- Functions on functions
-*/
+/// Functions on functions
 
 module {
   public func compose<A, B, C>(f : B -> C, g : A -> B) : A -> C {
