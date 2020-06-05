@@ -1,0 +1,19 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Text]
+= `Text` -- Text values
+
+This type describes a valid, human-readable text. It does not contain arbitrary
+binary data.
+
+
+[#Text_toIter]
+== `toIter`
+Creates an <<mod-Iter,iterator>> that traverses the characters of the text.
+
+
+
+[listing]
+toIter : Text -> Iter.Iter<Char>
+

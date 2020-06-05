@@ -1,0 +1,411 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-List]
+= List
+
+The `List` module provides purely-functional, singly-linked lists.
+
+
+
+[#List_List]
+== `List` (type)
+A singly-linked list consists of zero or more _cons cells_, wherein
+each cell contains a single list element (the cell's _head_), and a pointer to the
+remainder of the list (the cell's _tail_).
+
+
+
+....
+type List<T> = ?(T, List<T>);
+....
+
+[#List_nil]
+== `nil`
+Create an empty list.
+
+
+
+[listing]
+nil : <T> () -> List<T>
+
+[#List_isNil]
+== `isNil`
+Check whether a list is empty and return true if the list is empty.
+
+
+
+[listing]
+isNil : <T> List<T> -> Bool
+
+[#List_push]
+== `push`
+Construct a list by pre-pending a value.
+This function is similar to a `list.cons(item)` function.
+
+
+
+[listing]
+push : <T> (T, List<T>) -> List<T>
+
+[#List_last]
+== `last`
+Return the last element of the list, if present.
+
+
+
+[listing]
+last : <T> List<T> -> ?T
+
+[#List_pop]
+== `pop`
+Treat the list as a stack.
+This function combines the `head` and (non-failing) `tail` operations into one operation.
+
+
+
+[listing]
+pop : <T> List<T> -> (?T, List<T>)
+
+[#List_len]
+== `len`
+Return the length of the list.
+
+
+
+[listing]
+len : <T> List<T> -> Nat
+
+[#List_lenIsEqLessThan]
+== `lenIsEqLessThan`
+Test the list length against a maximum value and return true if 
+the list length is less than or equal to the value specified.
+
+
+
+[listing]
+lenIsEqLessThan : <T> (List<T>, Nat) -> Bool
+
+[#List_lenClamp]
+== `lenClamp`
+Return the list length unless the number of items in the list exceeds
+a maximum value. If the list length exceed the maximum, the function
+returns `null`.
+
+
+
+[listing]
+lenClamp : <T> (List<T>, max : Nat) -> ?Nat
+
+[#List_nth]
+== `nth`
+Access any item in a list, zero-based.
+
+NOTE: Indexing into a list is a linear operation, and usually an 
+indication that a list might not be the best data structure 
+to use.
+
+
+
+[listing]
+nth : <T>(List<T>, Nat) -> ?T
+
+[#List_rev]
+== `rev`
+Reverse the list; tail recursive.
+
+
+
+[listing]
+rev : <T> List<T> -> List<T>
+
+[#List_iter]
+== `iter`
+Call the given function with each list element in turn.
+
+This function is equivalent to the `app` function in Standard ML Basis, 
+and the `iter` function in OCaml.
+
+
+
+[listing]
+iter : <T>(List<T>, f : T -> ()) -> ()
+
+[#List_map]
+== `map`
+Call the given function on each list element and collect the results 
+in a new list.
+
+
+
+[listing]
+map : <T,S>(List<T>, f : T -> S) -> List<S>
+
+[#List_filter]
+== `filter`
+Create a new list with only those elements of the original list for which
+the given function (often called the _predicate_) returns true.
+
+
+
+[listing]
+filter : <T>(List<T>, p : T -> Bool) -> List<T>
+
+[#List_split]
+== `split`
+Create two new lists from the results of a given function (`f`). 
+The first list only includes the elements for which the given 
+function `f` returns true and tThe second list only includes 
+the elements for which the function returns false.
+
+In some languages, this operation is also known as a `partition`
+function.
+
+
+
+[listing]
+split : <T>(List<T>, f : T -> Bool) -> (List<T>, List<T>)
+
+[#List_mapFilter]
+== `mapFilter`
+Call the given function on each list element, and collect the non-null results
+in a new list.
+
+
+
+[listing]
+mapFilter : <T,S>(List<T>, f : T -> ?S) -> List<S>
+
+[#List_append]
+== `append`
+Append the elements from one list to another list.
+
+
+
+[listing]
+append : <T>(List<T>, List<T>) -> List<T>
+
+[#List_concat]
+== `concat`
+Concatenate a list of lists.
+
+In some languages, this operation is also known as a `list join`.
+
+
+
+[listing]
+concat : <T>(List<List<T>>) -> List<T>
+
+[#List_take]
+== `take`
+Take the `n` number of elements from the prefix of the given list.
+If the given list has fewer than `n` elements, this function returns 
+a copy of the full input list.
+
+
+
+[listing]
+take : <T>(List<T>, n:Nat) -> List<T>
+
+Drop all but the first  `n` elements from the given list.
+
+
+[#List_drop]
+== `drop`
+
+
+[listing]
+drop : <T>(List<T>, n:Nat) -> List<T>
+
+[#List_foldLeft]
+== `foldLeft`
+Fold the list left-to-right using the given function (`f`).
+
+
+
+[listing]
+foldLeft : <T,S>(List<T>, S, f : (T,S) -> S) -> S
+
+[#List_foldRight]
+== `foldRight`
+Fold the list right-to-left using the given function (`f`).
+
+
+
+[listing]
+foldRight : <T,S>(List<T>, S, f : (T,S) -> S) -> S
+
+[#List_find]
+== `find`
+Return the first element for which the given predicate `f` is true, 
+if such an element exists.
+
+
+
+[listing]
+find : <T>(l: List<T>, f : T -> Bool) -> ?T
+
+[#List_exists]
+== `exists`
+Return true if there exists a list element for which 
+the given predicate `f` is true.
+
+
+
+[listing]
+exists : <T>(List<T>, f : T -> Bool) -> Bool
+
+[#List_all]
+== `all`
+Return true if the given predicate `f` is true for all list 
+elements.
+
+
+
+[listing]
+all : <T>(List<T>, f : T -> Bool) -> Bool
+
+[#List_merge]
+== `merge`
+Merge two ordered lists into a single ordered list.
+This function requires both list to be ordered as specified
+by the given relation `lte`.
+
+
+
+[listing]
+merge : <T>(List<T>, List<T>, lte : (T,T) -> Bool) -> List<T>
+
+[#List_lessThanEq]
+== `lessThanEq`
+Compare two lists using lexicographic ordering specified by the given relation `lte`.
+
+// To do: Eventually, follow `collate` design from Standard ML Basis, with real sum
+// types, use 3-valued `order` type here.
+
+
+
+[listing]
+lessThanEq : <T>(List<T>, List<T>, lte: (T,T) -> Bool) -> Bool
+
+[#List_isEq]
+== `isEq`
+Compare two lists for equality as specified by the given relation `eq` on the elements.
+
+// The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`, 
+but the former is more efficient.
+
+
+
+[listing]
+isEq : <T>(List<T>, List<T>, eq : (T,T) -> Bool) -> Bool
+
+[#List_tabulate]
+== `tabulate`
+Generate a list based on a length and a function that maps from 
+a list index to a list element.
+
+
+
+[listing]
+tabulate : <T>(Nat, f : Nat -> T) -> List<T>
+
+[#List_singleton]
+== `singleton`
+Create a list with exactly one element.
+
+
+
+[listing]
+singleton : <X> X -> List<X>
+
+[#List_replicate]
+== `replicate`
+Create a list of the given length with the same value in each position.
+
+
+
+[listing]
+replicate : <X>(Nat, X) -> List<X>
+
+[#List_zip]
+== `zip`
+Create a list of pairs from a pair of lists.
+
+If the given lists have different lengths, then the created list will have a
+length equal to the length of the smaller list.
+
+
+
+[listing]
+zip : <X, Y>(List<X>, List<Y>) -> List<(X, Y)>
+
+[#List_zipWith]
+== `zipWith`
+Create a list in which elements are calculated from the function `f` and
+include elements occuring at the same position in the given lists.
+
+If the given lists have different lengths, then the created list will have a
+length equal to the length of the smaller list.
+
+
+
+[listing]
+zipWith : <X, Y, Z>(List<X>, List<Y>, f : (X, Y) -> Z) -> List<Z>
+
+[#List_splitAt]
+== `splitAt`
+Split the given list at the given zero-based index.
+
+
+
+[listing]
+splitAt : <X>(Nat, List<X>) -> (List<X>, List<X>)
+
+[#List_chunksOf]
+== `chunksOf`
+Split the given list into chunks of length `n`.
+The last chunk will be shorter if the length of the given list
+does not divide by `n` evenly.
+
+
+
+[listing]
+chunksOf : <X>(Nat, List<X>) -> List<List<X>>
+
+[#List_fromArray]
+== `fromArray`
+Convert an array into a list.
+
+
+
+[listing]
+fromArray : <A>[A] -> List<A>
+
+[#List_fromArrayMut]
+== `fromArrayMut`
+Convert a mutable array into a list.
+
+
+
+[listing]
+fromArrayMut : <A>[var A] -> List<A>
+
+[#List_toArray]
+== `toArray`
+Create an array from a list.
+
+
+
+[listing]
+toArray : <A> List<A> -> [A]
+
+[#List_toArrayMut]
+== `toArrayMut`
+Create a mutable array from a list.
+
+
+
+[listing]
+toArrayMut : <A> List<A> -> [var A]
+

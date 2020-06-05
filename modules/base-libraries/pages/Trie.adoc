@@ -1,0 +1,96 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Trie]
+= `Trie` -- Functional map
+
+
+[#Trie_List]
+== `List` (type)
+
+
+....
+type List<T> = List.List<T>;public type AssocList<K,V> = AssocList.AssocList<K,V>;
+
+....
+
+[#Trie_Key]
+== `Key` (type)
+
+
+....
+type Key<K> = {  /* `hash` permits fast inequality checks, and permits collisions */
+  hash: Hash.Hash;
+  /* `key` permits percise equality checks, but only used after equal hashes. */
+  key: K;
+};
+
+....
+
+[#Trie_Leaf]
+== `Leaf` (type)
+
+
+....
+type Leaf<K,V> = {  count   : Nat ;
+  keyvals : AssocList<Key<K>,V> ;
+};
+
+....
+
+[#Trie_Branch]
+== `Branch` (type)
+
+
+....
+type Branch<K,V> = {  count : Nat ;
+  left  : Trie<K,V> ;
+  right : Trie<K,V> ;
+};
+
+....
+
+[#Trie_Trie]
+== `Trie` (type)
+
+
+....
+type Trie<K,V> = {  #empty  ;
+  #leaf   : Leaf<K,V> ;
+  #branch : Branch<K,V> ;
+};
+
+....
+
+[#Trie_Trie2D]
+== `Trie2D` (type)
+
+
+....
+type Trie2D<K1, K2, V> = Trie<K1, Trie<K2,V> >;
+....
+
+[#Trie_Trie3D]
+== `Trie3D` (type)
+
+
+....
+type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V> >;
+....
+
+[#Trie_TrieBuild]
+== `TrieBuild` (type)
+
+
+....
+type TrieBuild<K,V> = {  #skip ;
+  #insert : (K, ?Hash.Hash, V) ;
+  #seq : {
+    count : Nat ;
+    left  : TrieBuild<K,V> ;
+    right : TrieBuild<K,V> ;
+  } ;
+};
+
+....
+

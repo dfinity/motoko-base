@@ -1,0 +1,19 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-AssocList]
+= `AssocList` 
+
+The `AssocList` module provides functions for creating and manipulating association lists.
+An association list is a linked list in which each list element
+consist of a key and a value associated with the key.
+
+
+[#AssocList_AssocList]
+== `AssocList` (type)
+
+
+....
+type AssocList<K,V> = List.List<(K,V)>;
+....
+
