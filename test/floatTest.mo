@@ -69,6 +69,6 @@ Prelude.printLn("Float");
 {
   Prelude.printLn("  ofFloat64");
 
-  assert(Float.ofInt64(10000000000) == 1e10);
-  assert(Float.ofInt64(-10000000000) == -1e10);
+  assert(Float.fromInt64(10000000000) == 1e10);
+  assert(Float.fromInt64(-10000000000) == -1e10);
 };
