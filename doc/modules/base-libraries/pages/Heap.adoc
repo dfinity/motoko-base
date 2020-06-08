@@ -1,0 +1,10 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Heap]
+= `Heap` -- Priority queue 
+
+This module provides purely-functional priority queue based on leftist heap
+
+
+

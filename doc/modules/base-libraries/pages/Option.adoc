@@ -1,0 +1,119 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Option]
+= `Option` -- Optional values
+
+
+[#Option_isSome]
+== `isSome`
+Returns true if the argument is not `null`.
+
+
+
+[listing]
+isSome : ?Any -> Bool
+
+[#Option_isNull]
+== `isNull`
+Returns true if the argument is `null`.
+
+
+
+[listing]
+isNull : ?Any -> Bool
+
+[#Option_unwrapOr]
+== `unwrapOr`
+Unwraps an optional value, with a default value, i.e. `unwrap(?x, d) = x` and `unwrap(null, d) = d`.
+
+
+
+[listing]
+unwrapOr : <T> (?T, default : T) -> T
+
+[#Option_option]
+== `option`
+Unwraps an optional value using a function, or returns the default, i.e. `option(?x, f, d) = f x` and `option(null, f, d) = d`.
+
+
+
+[listing]
+option : <A,B>(?A, f : A -> B, default : B) -> B
+
+[#Option_map]
+== `map`
+Applies a function to the wrapped value.
+
+
+
+[listing]
+map : <A, B>(f: A->B, x: ?A) -> ?B
+
+[#Option_apply]
+== `apply`
+Applies an optional function to an optional value. Returns `null` if at least one of the arguments is `null`.
+
+
+
+[listing]
+apply : <A, B>(?(A -> B), ?A) -> ?B
+
+[#Option_bind]
+== `bind`
+Applies an function to an optional value. Returns `null` if the argument is `null`, or the function returns `null`.
+
+NOTE: Together with <<Option_pure,`pure`>>, this forms a “monad”.
+
+
+
+[listing]
+bind : <A, B>(?A, A -> ?B) -> ?B
+
+[#Option_join]
+== `join`
+Given an optional optional value, removes one layer of optionality.
+
+
+
+[listing]
+join : <A> ??A -> ?A
+
+[#Option_pure]
+== `pure`
+Creates an optional value from a definite value.
+
+
+
+[listing]
+pure : <A> A -> ?A
+
+[#Option_assertSome]
+== `assertSome`
+Asserts that the value is not `null`; fails otherwise.
+
+
+
+[listing]
+assertSome : ?Any -> ()
+
+[#Option_assertNull]
+== `assertNull`
+Asserts that the value _is_ `null`; fails otherwise.
+
+
+
+[listing]
+assertNull : ?Any -> ()
+
+[#Option_unwrap]
+== `unwrap`
+Unwraps an optional value, i.e. `unwrap(?x) = x`.
+
+WARNING: `unwrap(x)` will fail if the argument is `null`, and is generally considered bad style. Use `switch x` instead.
+
+
+
+[listing]
+unwrap : <T>?T -> T
+
