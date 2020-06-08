@@ -1,7 +1,0 @@
-// Do not edit; This file was machine-generated
-
-
-[#mod-Array]
-= Array
-
-The `Array` module provides functions for creating and manipulating arrays.
