@@ -40,3 +40,41 @@ The compiler itself contains a *prelude* in every program, effectively extending
 In addition to these built-in compiler definitions, the prelude of the base library contributes some additional functions in a supplemental Prelude module.
 
 In contrast to the definitions in other modules, the compiler prelude definitions are always present, and do _not_ require any `import` declaration to bring them into the current scope.
+
+== Modules for data types and data structures
+
+The base library provides one module for most basic types such as integers (`Int`) and characters (`Char`) to perform common operations. There are also modules for more advanced data structures such as `Trie` data structures and utility modules for performing common tasks such as iteration (`Iter` and debugging (`Debug`).
+
+=== Primitive data types
+
+xref:Nat{outfilesuffix}[Nat]
+xref:Int{outfilesuffix}[Int]
+xref:Char{outfilesuffix}[Char]
+xref:Text{outfilesuffix}[Text]
+xref:None{outfilesuffix}[None]
+xref:Option{outfilesuffix}[Option]
+xref:Function{outfilesuffix}[Function]
+xref::Array{outfilesuffix}[Array]
+xref:Blob{outfilesuffix}[Blob=+1]
+xref:Principal{outfilesuffix{[Principal]
+xref:Ord{outfilesuffix}[Ord]
+
+=== Complex data structures
+
+xref:Result{outfilesuffix}[Result]
+xref:Iter{outfilesuffix}[Iter]
+xref:Buf{outfilesuffix}[Buf]
+xref:List{outfilesuffix}[List]
+xref:Deque{outfilesuffix}[Deque]
+xref:AssocList{outfilesuffix}[AssocList]
+xref:Heap{outfilesuffix}[Heap]
+xref:Hash{outfilesuffix}[Hash]
+xref:HashMap{outfilesuffix}[HashMap]
+xref:RBTree{outfilesuffix}[RBTree]
+xref:Trie{outfilesuffix}[Trie]
+xref:TrieMap{outfilesuffix}[TrieMay]
+xref:TrieSet{outfilesuffix}[TrieSet]
+
+=== Utilities
+xref:Prelude{outfilesuffix}[Prelude]
+xref:Debug{outfilesuffix}[Debug]
