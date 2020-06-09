@@ -9,7 +9,7 @@ The `Array` module provides functions for creating and manipulating arrays.
 Determine if the number of elements in one array is equal to the number of elements in another array.
 The function returns true if the arrays are of equal length.
 
-=== Usage
+===== Usage
 
 [source,motoko]
 ----
@@ -20,7 +20,7 @@ public func equals<A>(
 ) : Bool
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -31,14 +31,14 @@ TODO
 
 Append an element to the end of an array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func append<A>(xs : [A], ys : [A]) : [A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -49,14 +49,14 @@ TODO
   
 Apply the specified number of elements from one array to another array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func apply<A, B>(fs : [(A) -> B], xs : [A]) : [B]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -67,14 +67,14 @@ TODO
   
 Bind the elements from one array to the elements of another array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func bind<A, B>(xs : [A], f : (A) -> [B]) : [B]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -85,14 +85,14 @@ TODO
 
 Enumerate the elements in an array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func enumerate<A>(xs : [A]) : [(A, Nat)]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -103,14 +103,14 @@ TODO
 
 Create a new array with only those elements of the original array for which the given function (often called the _predicate_) returns true.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func filter<A>(f : (A) -> Bool, xs : [A]) : [A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -121,7 +121,7 @@ TODO
   
 Fold the array left-to-right.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
@@ -132,7 +132,7 @@ public func foldl<A, B>(
 ) : B
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -143,7 +143,7 @@ TODO
 
 Fold the array right-to-left.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
@@ -154,7 +154,7 @@ public func foldr<A, B>(
 ) : B
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -165,14 +165,14 @@ TODO
 
 Return the first element for which the given predicate `f` is true, if such an element exists.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func find<A>(f : (A) -> Bool, xs : [A]) : ?A
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -183,14 +183,14 @@ TODO
 
 Freeze the number of elements allowed for a given array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func freeze<A>(xs : [var A]) : [A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -201,14 +201,14 @@ TODO
 
 Add an element to a given array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func join<A>(xs : [[A]]) : [A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -219,14 +219,14 @@ TODO
 
 Call the given function on each element in an array and use the results to create a new array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func map<A, B>(f : (A) -> B, xs : [A]) : [B]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -237,14 +237,14 @@ TODO
 
 Call the given function on each element in an array and use the results to create a new indexed array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func mapWithIndex<A, B>(f : (A, Nat) -> B, xs : [A]) : [B]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -253,14 +253,14 @@ TODO
 
 == pure
   
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func pure<A>(x : A) : [A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -270,14 +270,14 @@ TODO
 == thaw
 
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func thaw<A>(xs : [A]) : [var A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -288,14 +288,14 @@ TODO
 
 Set the initial length of a mutable array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func init<A>(len : Nat, x : A) : [var A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -306,14 +306,14 @@ TODO
 
 Calculate the length of an unmutable array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func tabulate<A>(len : Nat, gen : (Nat) -> A) : [A]
 ----
 
-=== Example
+==== Example
 
 [source,motoko]
 ----
@@ -329,13 +329,13 @@ Set a range of values for an array.
 
 Calculate the length of a mutable array.
 
-=== Usage
+==== Usage
 
 [source,motoko]
 ----
 public func tabulateVar<A>(len : Nat, gen : (Nat) -> A) : [var A]
 ----
-=== Example
+==== Example
 
 [source,motoko]
 ----
