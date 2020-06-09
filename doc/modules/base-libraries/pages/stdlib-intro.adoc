@@ -5,12 +5,16 @@
 For various practical language engineering reasons, the design of {proglang} strives to minimize built-in types and operations.
 
 Instead, whenever possible, the {proglang} base library provides the types and operations that make the language feel complete.
-__**However**, this base library is still currently under development, and is still incomplete__.
 
-This section describes a _selected subset_ of modules from the {proglang} base library, with an emphasis on the modules that support core features and the libraries that are referenced in the examples.
-The libraries documented in this section are the most stable and least likely to change.
-However, all of the base library APIs are subject to change over time to varying degrees.
-You should note, in particular, that the size and number of modules and functions included in the base library may increase dramatically as {proglang} evolves.
+// Added for Hackathon
+You can find the current list of modules and raw documentation for the operations they provide in  the base library
+link:https://hydra.dfinity.systems/latest/dfinity-ci-build/motoko.pr-1561/base-doc/index.html[Index of Modules]
+// End of section for Hackathon
+
+__You should note, however, that this base library is still under development and documentation is incomplete__.
+All base library APIs are subject to change over time and the size and number of modules and functions included in the base library is expected to increase dramatically as {proglang} evolves.
+
+This section describes a _subset_ of modules from the {proglang} base library, with an emphasis on the modules that support core features and the libraries that are referenced in the examples.
 
 == Importing from the base library
 
@@ -62,7 +66,6 @@ The base library provides one module for most basic types such as integers (`Int
 === Complex data structures
 
 * link:Result{outfilesuffix}[Result]
-* link:Iter{outfilesuffix}[Iter]
 * link:Buf{outfilesuffix}[Buf]
 * link:List{outfilesuffix}[List]
 * link:Deque{outfilesuffix}[Deque]
@@ -77,4 +80,5 @@ The base library provides one module for most basic types such as integers (`Int
 
 === Utilities
 * link:Prelude{outfilesuffix}[Prelude]
+* link:Iter{outfilesuffix}[Iter]
 * link:Debug{outfilesuffix}[Debug]
