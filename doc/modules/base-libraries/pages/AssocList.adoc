@@ -1,0 +1,15 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-AssocList]
+= `AssocList` -- Association lists
+
+
+[#AssocList_AssocList]
+== `AssocList` (type)
+
+
+....
+type AssocList<K,V> = List.List<(K,V)>;
+....
+

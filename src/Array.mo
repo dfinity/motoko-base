@@ -1,7 +1,4 @@
-/**
-[#mod-Array]
-= `Array` -- Arrays
-*/
+/// Functions on Arrays
 
 import Prim "mo:prim";
 module {
