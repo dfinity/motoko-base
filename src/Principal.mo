@@ -7,5 +7,5 @@ module {
     Blob.hash (Prim.blobOfPrincipal principal);
   public let fromActor : (actor {}) -> Principal =
     Prim.principalOfActor;  
-  public func fromText(t : Text) = fromActor(actor(t))
+  public func fromText(t : Text) : Principal = fromActor(actor(t))
 }
