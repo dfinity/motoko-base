@@ -21,7 +21,6 @@ module {
   /// };
   public type ErrorCode = Prim.ErrorCode;
 
-
   /// Create an error from message with ErrorCode #canister_reject.
   public let error : Text -> Error = Prim.error;
 
