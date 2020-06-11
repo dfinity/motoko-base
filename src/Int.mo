@@ -1,20 +1,15 @@
-/**
-[#mod-Int]
-= `Int` -- Integer numbers
-
-Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-This module provides conversion functions.
-
-The conversions `toInt*` will trap if the number is out of bounds.
-*/
+/// Integer numbers
+///
+/// Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
+/// This module provides conversion functions.
+///
+/// The conversions `toInt*` will trap if the number is out of bounds.
 
 import Prim "mo:prim";
 import Prelude "Prelude";
 
 module {
-  /**
-  Returns the absolute value of the number
-  */
+  /// Returns the absolute value of the number
   public let abs : Int -> Nat = Prim.abs;
 
   // Remove?

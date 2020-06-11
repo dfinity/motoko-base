@@ -1,9 +1,6 @@
-/*
-[#mod-Blob]
-= `Blob` -- Binary blobs
-*/
+/// Binary blobs
 
 import Prim "mo:prim";
 module {
-  public let hash = Prim.hashBlob;
+  public let hash : Blob -> Word32 = Prim.hashBlob;
 }

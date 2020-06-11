@@ -1,13 +1,9 @@
-/**
-[#mod-Nat]
-= `Nat` -- Natural numbers
-
-Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-This module provides conversion functions.
-
-The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
-
-*/
+/// Natural numbers
+///
+/// Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
+/// This module provides conversion functions.
+///
+/// The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
 
 import Int "Int";
 import Ord "Ord";
