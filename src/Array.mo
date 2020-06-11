@@ -1,7 +1,12 @@
 /// Functions on Arrays
 
+import Ord "mo:base/Ord";
 import Prim "mo:prim";
+
 module {
+
+  type Ordering = Ord.Ordering;
+
   public func equals<A>(a : [A], b : [A], eq : (A,A) -> Bool) : Bool {
     if (a.len() != b.len()) { 
       return false; 
@@ -158,4 +163,67 @@ module {
     };
     return xs;
   };
-}
+
+  /**
+  Sorts the elements of an array using the given comparison function.
+  */
+  public let sortBy : <A> ([A], (A, A) -> Ordering) -> [A] =
+    func<A>(arr : [A], compare : (A, A) -> Ordering) : [A] {
+      let n = arr.len();
+      if (n == 0) {
+        return arr;
+      } else {
+        let res = thaw<A>(arr);
+        sortByHelper<A>(res, 0, n - 1, compare);
+        return freeze<A>(res);
+      };
+    };
+
+  /**
+  Sorts the elements of an array in place using the given comparison function.
+  */
+  public let sortByVar : <A> ([var A], (A, A) -> Ordering) -> () =
+    func<A>(arr : [var A], compare : (A, A) -> Ordering) {
+      let n = arr.len();
+      if (n == 0) {
+        return;
+      } else {
+        sortByHelper<A>(arr, 0, n - 1, compare);
+      };
+    };
+
+  private func sortByHelper<A>(
+    arr : [var A],
+    l : Nat,
+    r : Nat,
+    compare : (A, A) -> Ordering,
+  ) {
+    if (l < r) {
+      var i = l;
+      var j = r;
+      var swap = arr[0];
+      let pivot = arr[(l + r) / 2];
+      while (i <= j) {
+        while (Ord.isLT(compare(arr[i], pivot))) {
+          i += 1;
+        };
+        while (Ord.isGT(compare(arr[j], pivot))) {
+          j -= 1;
+        };
+        if (i <= j) {
+          swap := arr[i];
+          arr[i] := arr[j];
+          arr[j] := swap;
+          i += 1;
+          j -= 1;
+        };
+      };
+      if (l < j) {
+        sortByHelper<A>(arr, l, j, compare);
+      };
+      if (i < r) {
+        sortByHelper<A>(arr, i, r, compare);
+      };
+    };
+  };
+};
