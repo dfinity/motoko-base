@@ -5,7 +5,7 @@ module {
   /// Convert a character to a word.
   let toWord32 : Char -> Word32 = Prim.charToWord32;
 
-  /// Convert a word to a character.
+  /// Convert a word to a character. Traps if argument not in range [0 .. 0x1FFFFF] of valid Unicode code points.
   let fromWord32 : Word32 -> Char = Prim.word32ToChar;
 
    /// Convert a character to text.
