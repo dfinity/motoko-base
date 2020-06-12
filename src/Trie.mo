@@ -805,7 +805,7 @@ public func disj<K,V,W,X>(
       } ;
     };
 
-    public func buildSize<K,V>(tb:TrieBuild<K,V>) : Nat =
+    public func size<K,V>(tb:TrieBuild<K,V>) : Nat =
       label profile_trie_buildSize : Nat {
       switch tb {
       case (#skip) 0;
@@ -816,7 +816,7 @@ public func disj<K,V,W,X>(
 
     public func buildSeq<K,V>(l:TrieBuild<K,V>, r:TrieBuild<K,V>) : TrieBuild<K,V> =
       label profile_trie_buildSeq : TrieBuild<K,V> {
-      let sum = buildSize<K,V>(l) + buildSize<K,V>(r);
+      let sum = size<K,V>(l) + size<K,V>(r);
       #seq { size = sum; left = l; right = r }
     };
 
@@ -890,13 +890,13 @@ public func disj<K,V,W,X>(
                ?(k,h,v)
              };
         case (#seq s) label profile_trie_buildNth_rec_seq : (?(K, ?Hash.Hash, V)) {
-               let size_left = buildSize<K,V>(s.left);
+               let size_left = size<K,V>(s.left);
                if (i < size_left) { rec(s.left,  i) }
                else                { rec(s.right, i - size_left) }
              };
         }
       };
-      if (i >= buildSize<K,V>(tb)) {
+      if (i >= size<K,V>(tb)) {
         return null
       };
       rec(tb, i)
@@ -928,7 +928,7 @@ public func disj<K,V,W,X>(
     public func buildToArray<K,V,W>(tb:TrieBuild<K,V>,f:(K,V)->W):[W] =
       label profile_triebuild_toArray_begin : [W] {
       let a = A.tabulate<W> (
-        buildSize<K,V>(tb),
+        size<K,V>(tb),
         func (i:Nat) : W = label profile_triebuild_toArray_nth : W {
           let (k,_,v) = Option.unwrap<(K,?Hash.Hash,V)>(buildNth<K,V>(tb, i));
           f(k, v)
@@ -946,7 +946,7 @@ public func disj<K,V,W,X>(
      (Same semantics as `buildToArray`, but faster in practice.)
      */
     public func buildToArray2<K,V,W>(tb:TrieBuild<K,V>,f:(K,V)->W):[W] {
-      let c = buildSize<K,V>(tb);
+      let c = size<K,V>(tb);
       let a = A.init<?W>(c, null);
       var i = 0;
       func rec(tb:TrieBuild<K,V>) = label profile_triebuild_toArray2_rec {

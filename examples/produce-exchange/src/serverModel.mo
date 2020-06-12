@@ -1969,7 +1969,7 @@ than the MVP goals, however.
       case (null) { return ?[] };
       case (?x) { x }};
 
-    debugOffInt(Trie.count<T.RegionId, M.RouteMap>(retailerRoutes));
+    debugOffInt(Trie.size<T.RegionId, M.RouteMap>(retailerRoutes));
     debugOff " production regions.\n";
 
     /** - Join: For each production region, consider all routes and inventory: */
@@ -2037,7 +2037,7 @@ than the MVP goals, however.
     (queryResults);
 
     debugOff "- query result count: ";
-    let size = Trie.Build.buildCount
+    let size = Trie.Build.size
     <(T.RouteId, T.InventoryId),
      (M.RouteDoc, M.InventoryDoc)>(queryResult);
     if ( size > retailerQuerySizeMax ) {
