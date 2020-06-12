@@ -65,8 +65,8 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
                stack := stack2;
                next()
              };
-        case (#leaf({count=c; keyvals=?((k,v),kvs)})) {
-               stack := ?(#leaf({count=c-1; keyvals=kvs}), stack2);
+        case (#leaf({size=c; keyvals=?((k,v),kvs)})) {
+               stack := ?(#leaf({size=c-1; keyvals=kvs}), stack2);
                ?(k.key, v)
              };
         case (#branch(br)) {

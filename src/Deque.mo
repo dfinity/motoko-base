@@ -17,8 +17,8 @@ module {
     };
     func check<T>(q : Deque<T>) : Deque<T> {
       switch q {
-      case (null, r) { let (a,b) = List.splitAt(List.len(r) / 2, r); (List.rev(b), a) };
-      case (f, null) { let (a,b) = List.splitAt(List.len(f) / 2, f); (a, List.rev(b)) };
+      case (null, r) { let (a,b) = List.split(List.size(r) / 2, r); (List.reverse(b), a) };
+      case (f, null) { let (a,b) = List.split(List.size(f) / 2, f); (a, List.reverse(b)) };
       case q q;
       }
     };
