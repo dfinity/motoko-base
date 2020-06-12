@@ -54,36 +54,6 @@ module {
     };
     rec(l,0)
   };
-/* Deprecated: lenIsEqLessThan
-  /// Test the list length against a maximum value and return true if
-  /// the list length is less than or equal to the value specified.
-  public func lenIsEqLessThan<T>(l : List <T>, i : Nat) : Bool {
-    switch l {
-      case null true;
-      case (?(_, t)) {
-        if (i == 0) { false }
-        else { lenIsEqLessThan<T>(t, i - 1) }
-      };
-    };
-  };
-*/
-/* Deprecated: lenClamp
-  /// Return the list length unless the number of items in the list exceeds
-  /// a maximum value. If the list length exceed the maximum, the function
-  /// returns `null`.
-  public func lenClamp<T>(l : List<T>, max : Nat) : ?Nat {
-    func rec(l : List<T>, max : Nat, i : Nat) : ?Nat {
-      switch l {
-        case null { ?i };
-        case (?(_, t)) {
-          if ( i > max ) { null }
-          else { rec(t, max, i + 1) }
-        };
-      }
-    };
-    rec(l, max, 0)
-  };
-  */
   /// Access any item in a list, zero-based.
   ///
   /// NOTE: Indexing into a list is a linear operation, and usually an

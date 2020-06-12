@@ -19,9 +19,9 @@ module {
     ha == hb
   };
 
-  public func hash(i : Nat) : Hash.Hash {
+  public func hash(i : Nat) : Hash {
     let j = Prim.natToWord32(i);
-    Hash.hashWord8(
+    hashWord8(
       [j & (255 << 0),
        j & (255 << 8),
        j & (255 << 16),

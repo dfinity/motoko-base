@@ -102,6 +102,6 @@ module {
       _size += 1;
       _list := List.push<A>(x, _list);
     });
-    { size = _size; list = List.rev<A>(_list); };
+    { size = _size; list = List.reverse<A>(_list); };
   };
 }

@@ -301,14 +301,14 @@ public class DocTable<Id,Doc,Info>(
   };
 
   /**
-   `count`
+   `size`
    ---------
 
-   See also [`Table.count`]($DOCURL/trie.md#count)
+   See also [`Table.size`]($DOCURL/trie.md#size)
   */
 
   public func count() : Nat {
-    Table.count<Id, Doc>(table)
+    Table.size<Id, Doc>(table)
   };
 
   /**
