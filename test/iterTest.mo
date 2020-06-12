@@ -145,7 +145,7 @@ Prelude.debugPrintLine("Iter");
 
   let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
   let actual = Iter.toList<Nat>([1, 2, 3].vals());
-  assert List.isEq<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+  assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
 };
 
 {
@@ -162,5 +162,5 @@ Prelude.debugPrintLine("Iter");
   let actual = Iter.toListWithSize<Nat>([1, 2, 3].vals());
 
   assert (expected.size == actual.size);
-  assert List.isEq<Nat>(expected.list, actual.list, func (x1, x2) { x1 == x2 });
+  assert List.equal<Nat>(expected.list, actual.list, func (x1, x2) { x1 == x2 });
 };
