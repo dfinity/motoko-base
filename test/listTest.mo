@@ -60,7 +60,7 @@ type X = Nat;
   assert (List.size<X>(l3) == 2);
 
   {
-    Prelude.printLn("  fromArray");
+    Prelude.debugPrintLine("  fromArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [1, 2, 3];
@@ -70,7 +70,7 @@ type X = Nat;
   };
 
   {
-    Prelude.printLn("  fromVarArray");
+    Prelude.debugPrintLine("  fromVarArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [var 1, 2, 3];
@@ -80,7 +80,7 @@ type X = Nat;
   };
 
   {
-    Prelude.printLn("  toArray");
+    Prelude.debugPrintLine("  toArray");
 
     let expected = [1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
@@ -94,7 +94,7 @@ type X = Nat;
   };
 
   {
-    Prelude.printLn("  toVarArray");
+    Prelude.debugPrintLine("  toVarArray");
 
     let expected = [var 1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
