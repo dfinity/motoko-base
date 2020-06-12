@@ -32,7 +32,7 @@ module {
       case _ null;
       };
     };
-    public func removeFront<T>(q: Deque<T>) : Deque<T> {
+    public func popFront<T>(q: Deque<T>) : Deque<T> {
       switch q {
       case (?(x, f), r) check(f, r);
       case (null, ?(x, r)) check(null, r);
@@ -50,7 +50,7 @@ module {
       case _ null;
       };
     };
-    public func removeBack<T>(q: Deque<T>) : Deque<T> {
+    public func popBack<T>(q: Deque<T>) : Deque<T> {
       switch q {
       case (f, ?(x, r)) check(f, r);
       case (?(x, f), null) check(f, null);
