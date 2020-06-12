@@ -1,11 +1,10 @@
 import Prim "mo:prim";
 import H "mo:base/TrieMap";
 import Hash "mo:base/Hash";
-
-func textIsEq(x:Text,y:Text):Bool { x == y };
+import Text "mo:base/Text";
 
 debug {
-  let a = H.TrieMap<Text, Nat>(textIsEq, Hash.hashOfText);
+  let a = H.TrieMap<Text, Nat>(Text.equal, Text.hash);
 
   ignore a.set("apple", 1);
   ignore a.set("banana", 2);
@@ -21,7 +20,7 @@ debug {
   ignore a.set("AvocadO", 444);
 
   // need to resupply the constructor args; they are private to the object; but, should they be?
-  let b = H.clone<Text, Nat>(a, textIsEq, Hash.hashOfText);
+  let b = H.clone<Text, Nat>(a, Text.equal, Text.hash);
 
   // ensure clone has each key-value pair present in original
   for ((k,v) in a.iter()) {
@@ -91,7 +90,7 @@ debug {
 
 
   // test fromIter method
-  let c = H.fromIter<Text, Nat>(b.iter(), textIsEq, Hash.hashOfText);
+  let c = H.fromIter<Text, Nat>(b.iter(), Text.equal, Text.hash);
 
   // c agrees with each entry of b
   for ((k,v) in b.iter()) {

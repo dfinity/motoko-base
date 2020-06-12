@@ -92,7 +92,7 @@ public type Key<K> = {
 public func keyEq<K>(keq:(K,K) -> Bool) : ((Key<K>,Key<K>) -> Bool) = {
   func (key1:Key<K>, key2:Key<K>) : Bool =
     label profile_trie_keyEq : Bool
-  (Hash.hashEq(key1.hash, key2.hash) and keq(key1.key, key2.key))
+  (Hash.equal(key1.hash, key2.hash) and keq(key1.key, key2.key))
 };
 
 /// leaf nodes of trie consist of key-value pairs as a list.
@@ -301,7 +301,7 @@ public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Tri
             (leaf<K,V>(kvs, bitpos), null)
           };
      case (#branch b) label profile_trie_replace_rec_branch : (Trie<K,V>, ?V) {
-            let bit = Hash.getHashBit(k.hash, bitpos);
+            let bit = Hash.bit(k.hash, bitpos);
             // rebuild either the left or right path with the inserted (k,v) pair
             if (not bit) {
               let (l, v_) = rec(b.left, bitpos+1);
@@ -344,7 +344,7 @@ public func find<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K) -> Bool) : ?V = label 
               AssocList.find<Key<K>,V>(l.keyvals, k, key_eq)
             };
        case (#branch b) {
-            let bit = Hash.getHashBit(k.hash, bitpos);
+            let bit = Hash.bit(k.hash, bitpos);
             if (not bit) {
                 label profile_trie_find_branch_left : (?V)
                 rec(b.left, bitpos+1)
@@ -369,7 +369,7 @@ public func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
    List.split<(Key<K>,V)>(
      al,
      func ((k : Key<K>, v : V)) : Bool {
-       not Hash.getHashBit(k.hash, bitpos)
+       not Hash.bit(k.hash, bitpos)
      }
    )
  };
@@ -384,7 +384,7 @@ public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
      case null { (0, null, 0, null) };
      case (?((k,v),t)) {
             let (cl, l, cr, r) = rec(t) ;
-            if (not Hash.getHashBit(k.hash, bitpos)){
+            if (not Hash.bit(k.hash, bitpos)){
               (cl + 1, ?((k,v),l), cr, r)
             } else {
               (cl, l, cr + 1, ?((k,v),r))
