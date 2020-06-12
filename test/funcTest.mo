@@ -1,4 +1,4 @@
-import Function "mo:base/Function";
+import Function "mo:base/Func";
 import Prelude "mo:base/Prelude";
 import Text "mo:base/Text";
 
