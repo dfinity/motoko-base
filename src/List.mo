@@ -396,9 +396,11 @@ module {
 
   /// Convert an array into a list.
   public func fromArray<A>(xs : [A]) : List<A> {
-    Array.foldr<A, List<A>>(func (x : A, ys : List<A>) : List<A> {
-      push<A>(x, ys);
-    }, nil<A>(), xs);
+    Array.foldRight<A, List<A>>(
+      xs, nil<A>(), 
+      func (x : A, ys : List<A>) : List<A> {
+        push<A>(x, ys);
+      });
   };
 
   /// Convert a mutable array into a list.

@@ -1,6 +1,8 @@
 /// Functions on Arrays
 
 import Prim "mo:prim";
+import I "mo:base/IterType";
+
 module {
   public func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool {
     if (a.len() != b.len()) { 
@@ -36,7 +38,7 @@ module {
   public func apply<A, B>(xs : [A], fs : [A -> B]) : [B] {
     var ys : [B] = [];
     for (f in fs.vals()) {
-      ys := append<B>(ys, map<A, B>(f, xs));
+      ys := append<B>(ys, transform<A, B>(xs, f));
     };
     ys;
   };
@@ -97,7 +99,7 @@ module {
   };
 
   public func flatten<A>(xs : [[A]]) : [A] {
-    bind<[A], A>(xs, func (x : [A]) : [A] {
+    chain<[A], A>(xs, func (x : [A]) : [A] {
       x;
     });
   };
@@ -118,11 +120,11 @@ module {
     [x];
   };
 
-  public func vals<A>(xs : [A]) : Iter<A> {
+  public func vals<A>(xs : [A]) : I.Iter<A> {
     xs.vals()
   };
 
-  public func keys<A>(xs : [A]) : Iter<Nat> {
+  public func keys<A>(xs : [A]) : I.Iter<Nat> {
     xs.keys()
   };
 
