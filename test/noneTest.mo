@@ -5,9 +5,9 @@ import Prelude "mo:base/Prelude";
 Prelude.printLn("None");
 
 {
-  Prelude.printLn("  absurd");
+  Prelude.printLn("  impossible");
 
   func showNone(x : None) : Text {
-    None.absurd<Text>(x);
+    None.impossible<Text>(x);
   };
 };
