@@ -25,32 +25,32 @@ Prelude.printLn("Iter");
 };
 
 {
-  Prelude.printLn("  forIn");
+  Prelude.printLn("  apply");
 
   let xs = [ "a", "b", "c", "d", "e", "f" ];
 
   var y = "";
   var z = 0;
 
-  Iter.forIn<Text>(func (x : Text, i : Nat) {
+  Iter.apply<Text>(xs.vals(), func (x : Text, i : Nat) {
     y := y # x;
     z += i;
-  }, xs.vals());
+  });
 
   assert(y == "abcdef");
   assert(z == 15);
 };
 
 {
-  Prelude.printLn("  map");
+  Prelude.printLn("  transform");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
   };
 
-  let _actual = Iter.map<Nat, Bool>(isEven, [ 1, 2, 3 ].vals());
+  let _actual = Iter.transform<Nat, Bool>([ 1, 2, 3 ].vals(), isEven);
   let actual = [var true, false, true];
-  Iter.forIn<Bool>(func (x, i) { actual[i] := x; }, _actual);
+  Iter.apply<Bool>(_actual, func (x, i) { actual[i] := x; });
 
   let expected = [false, true, false];
 
@@ -60,10 +60,10 @@ Prelude.printLn("Iter");
 };
 
 {
-  Prelude.printLn("  pure");
+  Prelude.printLn("  make");
 
   let x = 1;
-  let y = Iter.pure<Nat>(x);
+  let y = Iter.make<Nat>(x);
 
   switch (y.next()) {
     case null { assert false; };
@@ -78,7 +78,7 @@ Prelude.printLn("Iter");
   let _actual = Iter.fromArray<Nat>(expected);
   let actual = [var 0, 0, 0];
 
-  Iter.forIn<Nat>(func (x, i) { actual[i] := x; }, _actual);
+  Iter.apply<Nat>(_actual, func (x, i) { actual[i] := x; });
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -92,7 +92,7 @@ Prelude.printLn("Iter");
   let _actual = Iter.fromArrayMut<Nat>(expected);
   let actual = [var 0, 0, 0];
 
-  Iter.forIn<Nat>(func (x, i) { actual[i] := x; }, _actual);
+  Iter.apply<Nat>(_actual, func (x, i) { actual[i] := x; });
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -107,7 +107,7 @@ Prelude.printLn("Iter");
   let actual = [var 0, 0, 0];
   let expected = [1, 2, 3];
 
-  Iter.forIn<Nat>(func (x, i) { actual[i] := x; }, _actual);
+  Iter.apply<Nat>(_actual, func (x, i) { actual[i] := x; });
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -149,18 +149,18 @@ Prelude.printLn("Iter");
 };
 
 {
-  Prelude.printLn("  toListWithLength");
+  Prelude.printLn("  toListWithSize");
 
   let expected : {
-    length : Nat;
+    size : Nat;
     list : List.List<Nat>;
   } = {
-    length = 3;
+    size = 3;
     list = ?(1, ?(2, ?(3, List.nil<Nat>())));
   };
 
-  let actual = Iter.toListWithLength<Nat>([1, 2, 3].vals());
+  let actual = Iter.toListWithSize<Nat>([1, 2, 3].vals());
 
-  assert (expected.length == actual.length);
+  assert (expected.size == actual.size);
   assert List.isEq<Nat>(expected.list, actual.list, func (x1, x2) { x1 == x2 });
 };

@@ -19,6 +19,16 @@ module {
     ha == hb
   };
 
+  public func hash(i : Nat) : Hash.Hash {
+    let j = Prim.natToWord32(i);
+    Hash.hashWord8(
+      [j & (255 << 0),
+       j & (255 << 8),
+       j & (255 << 16),
+       j & (255 << 24)
+      ]);
+  };
+
   public func debugPrintBits(bits : Hash) {
     for (j in Iter.range(0, HT.length - 1)) {
       if (bit(bits, j)) {

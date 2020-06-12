@@ -23,9 +23,9 @@ type X = Nat;
   let l3 = List.push<X>(3, l2);
 
   // ## Projection -- use nth
-  assert (opnatEq(List.nth<X>(l3, 0), ?3));
-  assert (opnatEq(List.nth<X>(l3, 1), ?2));
-  assert (opnatEq(List.nth<X>(l3, 2), null));
+  assert (opnatEq(List.get<X>(l3, 0), ?3));
+  assert (opnatEq(List.get<X>(l3, 1), ?2));
+  assert (opnatEq(List.get<X>(l3, 2), null));
   //assert (opnatEq (hd<X>(l3), ?3));
   //assert (opnatEq (hd<X>(l2), ?2));
   //assert (opnat_isnull(hd<X>(l1)));
@@ -50,14 +50,14 @@ type X = Nat;
   assert (List.isNil<X>(t3));
 
   // ## List functions
-  assert (List.len<X>(l1) == 0);
-  assert (List.len<X>(l2) == 1);
-  assert (List.len<X>(l3) == 2);
+  assert (List.size<X>(l1) == 0);
+  assert (List.size<X>(l2) == 1);
+  assert (List.size<X>(l3) == 2);
 
   // ## List functions
-  assert (List.len<X>(l1) == 0);
-  assert (List.len<X>(l2) == 1);
-  assert (List.len<X>(l3) == 2);
+  assert (List.size<X>(l1) == 0);
+  assert (List.size<X>(l2) == 1);
+  assert (List.size<X>(l3) == 2);
 
   {
     Prelude.printLn("  fromArray");
@@ -66,17 +66,17 @@ type X = Nat;
     let array = [1, 2, 3];
     let actual = List.fromArray<Nat>(array);
 
-    assert List.isEq<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+    assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
   };
 
   {
-    Prelude.printLn("  fromArrayMut");
+    Prelude.printLn("  fromVarArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [var 1, 2, 3];
-    let actual = List.fromArrayMut<Nat>(array);
+    let actual = List.fromVarArray<Nat>(array);
 
-    assert List.isEq<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+    assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
   };
 
   {
@@ -94,11 +94,11 @@ type X = Nat;
   };
 
   {
-    Prelude.printLn("  toArrayMut");
+    Prelude.printLn("  toVarArray");
 
     let expected = [var 1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
-    let actual = List.toArrayMut<Nat>(list);
+    let actual = List.toVarArray<Nat>(list);
 
     assert (actual.len() == expected.len());
 

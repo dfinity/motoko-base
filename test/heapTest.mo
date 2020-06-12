@@ -14,19 +14,19 @@ func ord(x : Int, y : Int) : Ord.Ordering {
 {
     var pq = H.Heap<Int>(ord);
     for (i in I.revRange(100, 0)) {
-        pq.add(i);
+        pq.put(i);
         let x = pq.peekMin();
         assert(O.unwrap(x) == i);
     };
     for (i in I.range(0, 100)) {
-        pq.add(i);
+        pq.put(i);
         let x = pq.peekMin();
         assert(O.unwrap(x) == 0);
     };
     for (i in I.range(0, 100)) {
-        pq.removeMin();
+        pq.deleteMin();
         let x = pq.peekMin();
-        pq.removeMin();
+        pq.deleteMin();
         assert(O.unwrap(x) == i);
     };
     O.assertNull(pq.peekMin());
@@ -40,7 +40,7 @@ func ord(x : Int, y : Int) : Ord.Ordering {
     for (i in I.range(0, 10)) {
         let x = pq.peekMin();
         assert(O.unwrap(x) == i);
-        pq.removeMin();
+        pq.deleteMin();
     };
     O.assertNull(pq.peekMin());
 

@@ -34,7 +34,7 @@ module {
             };
         };
 
-        public func add(x : T) {
+        public func put(x : T) {
             heap := merge(heap, ?(1, x, null, null));
         };
         public func peekMin() : ?T {
@@ -43,7 +43,7 @@ module {
             case (?(_, x, _, _)) ?x;
             }
         };
-        public func removeMin() {
+        public func deleteMin() {
             switch heap {
             case (null) P.unreachable();
             case (?(_, _, a, b)) heap := merge(a,b);
