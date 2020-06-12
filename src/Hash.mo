@@ -2,15 +2,17 @@
 
 import Prim "mo:prim";
 import Iter "Iter";
-import HT "HashType";
 
 module {
   /// Hash values represent a string of _hash bits_, packed into a `Word32`.
-  public type Hash = HT.Hash;
+  public type Hash = Word32;
+
+  /// The hash length, always 31.
+  public let length : Nat = 31; // Why not 32?
 
   /// Project a given bit from the bit vector.
   public func bit(h : Hash, pos : Nat) : Bool {
-    assert (pos <= HT.length);
+    assert (pos <= length);
     (h & (Prim.natToWord32(1) << Prim.natToWord32(pos))) != Prim.natToWord32(0)
   };
 
@@ -30,7 +32,7 @@ module {
   };
 
   public func debugPrintBits(bits : Hash) {
-    for (j in Iter.range(0, HT.length - 1)) {
+    for (j in Iter.range(0, length - 1)) {
       if (bit(bits, j)) {
         Prim.debugPrint "1"
       } else {
@@ -40,7 +42,7 @@ module {
   };
 
   public func debugPrintBitsRev(bits : Hash) {
-    for (j in Iter.revRange(HT.length - 1, 0)) {
+    for (j in Iter.revRange(length - 1, 0)) {
       if (bit(bits, Prim.abs(j))) {
         Prim.debugPrint "1"
       } else {

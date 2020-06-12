@@ -4,7 +4,7 @@
 /// binary data.
 
 import Iter "Iter";
-import HT "HashType";
+import Hash "Hash";
 import Prim "mo:prim";
 
 module {
@@ -20,7 +20,7 @@ module {
   public func equal(x : Text, y : Text) : Bool { x == y };
 
   /// WARNING: This only hashes the lowest 32 bits of the `Int`
-  public func hash(t : Text) : HT.Hash {
+  public func hash(t : Text) : Hash.Hash {
     var x = 0 : Word32;
     for (c in t.chars()) {
       x := x ^ Prim.charToWord32(c);
