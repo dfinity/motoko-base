@@ -3,16 +3,16 @@ import H "mo:base/Heap";
 import I "mo:base/Iter";
 import L "mo:base/List";
 import O "mo:base/Option";
-import Ord "mo:base/Ord";
+import Order "mo:base/Order";
 
-func ord(x : Int, y : Int) : Ord.Ordering {
-    if (x < y) #lt
-    else if (x == y) #eq
-    else #gt;
+func order(x : Int, y : Int) : Order.Order {
+    if (x < y) #less
+    else if (x == y) #equal
+    else #greater;
 };
 
 {
-    var pq = H.Heap<Int>(ord);
+    var pq = H.Heap<Int>(order);
     for (i in I.revRange(100, 0)) {
         pq.put(i);
         let x = pq.peekMin();
@@ -35,7 +35,7 @@ func ord(x : Int, y : Int) : Ord.Ordering {
 // fromList
 {
     let list = L.fromArray([5,10,9,7,3,8,1,0,2,4,6]);
-    var pq = H.Heap<Int>(ord);
+    var pq = H.Heap<Int>(order);
     pq.fromList(list);
     for (i in I.range(0, 10)) {
         let x = pq.peekMin();
