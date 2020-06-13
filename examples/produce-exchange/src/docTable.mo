@@ -141,7 +141,7 @@ public class DocTable<Id,Doc,Info>(
    */
 
   public func getTable() : Table<Id, Doc> {
-    Table.copy<Id, Doc>(table)
+    Table.clone<Id, Doc>(table)
   };
 
   /**
@@ -156,7 +156,7 @@ public class DocTable<Id,Doc,Info>(
     let id = idNext;
     idNext := idIncr(idNext);
     let d = doc(id);
-    table := Table.insertFresh<Id, Doc>
+    table := Table.putFresh<Id, Doc>
     (table, keyOfId(id), idIsEq, d);
     (id, d)
   };
@@ -195,7 +195,7 @@ public class DocTable<Id,Doc,Info>(
              case null { null };
              case (?doc) {
                     idNext := idIncr(idNext);
-                    table := Table.insertFresh<Id, Doc>
+                    table := Table.putFresh<Id, Doc>
                     (table, keyOfId(id), idIsEq, doc);
                     ?(id, doc)
                   }
@@ -207,7 +207,7 @@ public class DocTable<Id,Doc,Info>(
              switch doc {
              case null { null };
              case (?doc) {
-                    table := Table.insertFresh<Id, Doc>
+                    table := Table.putFresh<Id, Doc>
                     (table, keyOfId(idChoice_), idIsEq, doc);
                     ?(idChoice_, doc)
                   }
