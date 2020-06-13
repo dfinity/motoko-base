@@ -1,7 +1,7 @@
 /// Functions on Arrays
 
 import Prim "mo:prim";
-import I "mo:base/IterType";
+import I "mo:IterType";
 
 module {
   public func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool {
