@@ -317,7 +317,7 @@ public func fromSizedList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : 
  };
 
 /// Purely-functional representation permits _O(1)_-time copy, via persistent sharing.
-public func copy<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
+public func clone<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
 
 /// replace the given key's value option with the given one, returning the previous one
 public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Trie<K,V>, ?V) =
@@ -333,7 +333,7 @@ public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Tri
           };
      case (#branch b) label profile_trie_replace_rec_branch : (Trie<K,V>, ?V) {
             let bit = Hash.bit(k.hash, bitpos);
-            // rebuild either the left or right path with the inserted (k,v) pair
+            // rebuild either the left or right path with the (k,v) pair
             if (not bit) {
               let (l, v_) = rec(b.left, bitpos+1);
               (branch<K,V>(l, b.right), v_)
@@ -355,9 +355,9 @@ public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Tri
    (to, vo)
  };
 
-/// insert the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
-public func insert<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:V) : (Trie<K,V>, ?V) =
-   label profile_trie_insert : (Trie<K,V>, ?V) {
+/// put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
+public func put<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:V) : (Trie<K,V>, ?V) =
+   label profile_trie_put : (Trie<K,V>, ?V) {
    replace<K,V>(t, k, k_eq, ?v)
  };
 
@@ -758,7 +758,7 @@ public func disj<K,V,W,X>(
           func (k2:K2, v2:V2) : Trie<K3, V3> {
             switch (op(k1, v1, k2, v2)) {
             case null #empty;
-            case (?(k3, v3)) { (insert<K3, V3>(#empty, k3, k3_eq, v3)).0 };
+            case (?(k3, v3)) { (put<K3, V3>(#empty, k3, k3_eq, v3)).0 };
             }
           },
           #empty
@@ -795,36 +795,36 @@ public func disj<K,V,W,X>(
 
      For PL academics: Imagine commands for the IMP imperative language,
      but where global memory consists of a single (anonymous) global trie */
-    public type TrieBuild<K,V> = {
+    public type Build<K,V> = {
       #skip ;
-      #insert : (K, ?Hash.Hash, V) ;
+      #put : (K, ?Hash.Hash, V) ;
       #seq : {
         size : Nat ;
-        left  : TrieBuild<K,V> ;
-        right : TrieBuild<K,V> ;
+        left  : Build<K,V> ;
+        right : Build<K,V> ;
       } ;
     };
 
-    public func size<K,V>(tb:TrieBuild<K,V>) : Nat =
+    public func size<K,V>(tb:Build<K,V>) : Nat =
       label profile_trie_buildSize : Nat {
       switch tb {
       case (#skip) 0;
-      case (#insert(_, _, _)) 1;
+      case (#put(_, _, _)) 1;
       case (#seq(seq)) seq.size;
       }
     };
 
-    public func buildSeq<K,V>(l:TrieBuild<K,V>, r:TrieBuild<K,V>) : TrieBuild<K,V> =
-      label profile_trie_buildSeq : TrieBuild<K,V> {
+    public func seq<K,V>(l:Build<K,V>, r:Build<K,V>) : Build<K,V> =
+      label profile_trie_seq : Build<K,V> {
       let sum = size<K,V>(l) + size<K,V>(r);
       #seq { size = sum; left = l; right = r }
     };
 
     /*
-     `prodBuild`
+     `prod`
      ---------------
 
-     Like `prod`, except do not actually do the insert calls, just
+     Like `prod`, except do not actually do the put calls, just
      record them, as a (binary tree) data structure, isomorphic to the
      recursion of this function (which is balanced, in expectation).
 
@@ -833,38 +833,38 @@ public func disj<K,V,W,X>(
      - [`prod`](#prod)
 
      */
-    public func prodBuild<K1,V1,K2,V2,K3,V3>(
+    public func prod<K1,V1,K2,V2,K3,V3>(
       tl    :Trie<K1,V1>,
       tr    :Trie<K2,V2>,
       op    :(K1,V1,K2,V2) -> ?(K3,V3),
       k3_eq :(K3,K3) -> Bool
     )
-      : TrieBuild<K3,V3>
+      : Build<K3,V3>
     {
-      func outer_bin (a:TrieBuild<K3,V3>,
-                b:TrieBuild<K3,V3>)
-        : TrieBuild<K3,V3> =
-        label profile_trie_prodBuild_outer_seqOfBranch : TrieBuild<K3,V3> {
-        buildSeq<K3, V3>(a, b)
+      func outer_bin (a:Build<K3,V3>,
+                b:Build<K3,V3>)
+        : Build<K3,V3> =
+        label profile_trie_prod_outer_seqOfBranch : Build<K3,V3> {
+        seq<K3, V3>(a, b)
       };
 
-      func inner_bin (a:TrieBuild<K3,V3>,
-                b:TrieBuild<K3,V3>)
-        : TrieBuild<K3,V3> =
-        label profile_trie_prodBuild_inner_seqOfBranch : TrieBuild<K3,V3> {
-        buildSeq<K3, V3>(a, b)
+      func inner_bin (a:Build<K3,V3>,
+                b:Build<K3,V3>)
+        : Build<K3,V3> =
+        label profile_trie_prod_inner_seqOfBranch : Build<K3,V3> {
+        seq<K3, V3>(a, b)
       };
 
       /*- "`foldUp` squared" (imagine two nested loops): */
-      foldUp<K1, V1, TrieBuild<K3, V3>>(
+      foldUp<K1, V1, Build<K3, V3>>(
         tl, outer_bin,
-        func (k1:K1, v1:V1) : TrieBuild<K3,V3> {
-          foldUp<K2, V2, TrieBuild<K3, V3>>(
+        func (k1:K1, v1:V1) : Build<K3,V3> {
+          foldUp<K2, V2, Build<K3, V3>>(
             tr, inner_bin,
-            func (k2:K2, v2:V2) : TrieBuild<K3, V3> {
+            func (k2:K2, v2:V2) : Build<K3, V3> {
               switch (op(k1, v1, k2, v2)) {
               case null #skip;
-              case (?(k3, v3)) { #insert(k3, null, v3) };
+              case (?(k3, v3)) { #put(k3, null, v3) };
               }
             },
             #skip
@@ -875,21 +875,21 @@ public func disj<K,V,W,X>(
     };
 
     /*
-     `buildNth`
+     `nth`
      --------
      Project the nth key-value pair from the trie build.
 
      This position is meaningful only when the build contains multiple uses of one or more keys, otherwise it is not.
      */
-    public func buildNth<K,V>(tb:TrieBuild<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth : (?(K, ?Hash.Hash, V)) {
-      func rec(tb:TrieBuild<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
+    public func nth<K,V>(tb:Build<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth : (?(K, ?Hash.Hash, V)) {
+      func rec(tb:Build<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
         switch tb {
         case (#skip) P.unreachable();
-        case (#insert (k,h,v)) label profile_trie_buildNth_rec_end : (?(K, ?Hash.Hash, V)) {
+        case (#put (k,h,v)) label profile_trie_nth_rec_end : (?(K, ?Hash.Hash, V)) {
                assert(i == 0);
                ?(k,h,v)
              };
-        case (#seq s) label profile_trie_buildNth_rec_seq : (?(K, ?Hash.Hash, V)) {
+        case (#seq s) label profile_trie_nth_rec_seq : (?(K, ?Hash.Hash, V)) {
                let size_left = size<K,V>(s.left);
                if (i < size_left) { rec(s.left,  i) }
                else                { rec(s.right, i - size_left) }
@@ -903,56 +903,56 @@ public func disj<K,V,W,X>(
     };
 
     /*
-     `projectInnerBuild`
+     `projectInner`
      --------------
 
      Like [`mergeDisjoint`](#mergedisjoint), except that it avoids the
      work of actually merging any tries; rather, just record the work for
      latter (if ever).
      */
-    public func projectInnerBuild<K1,K2,V>(t : Trie<K1,TrieBuild<K2,V>>)
-      : TrieBuild<K2,V>
+    public func projectInner<K1,K2,V>(t : Trie<K1,Build<K2,V>>)
+      : Build<K2,V>
     {
-      foldUp<K1, TrieBuild<K2,V>, TrieBuild<K2,V>>
+      foldUp<K1, Build<K2,V>, Build<K2,V>>
       ( t,
-        func (t1:TrieBuild<K2,V>, t2:TrieBuild<K2,V>):TrieBuild<K2,V> {  buildSeq<K2,V>(t1, t2) },
-        func (_:K1, t:TrieBuild<K2,V>): TrieBuild<K2,V> { t },
+        func (t1:Build<K2,V>, t2:Build<K2,V>):Build<K2,V> { seq<K2,V>(t1, t2) },
+        func (_:K1, t:Build<K2,V>): Build<K2,V> { t },
         #skip )
     };
 
+/*
+DEPRECATED version.
     /*
      `buildToArray`
      --------
      Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
      */
-    public func buildToArray<K,V,W>(tb:TrieBuild<K,V>,f:(K,V)->W):[W] =
+    public func buildToArray<K,V,W>(tb:Build<K,V>,f:(K,V)->W):[W] =
       label profile_triebuild_toArray_begin : [W] {
       let a = A.tabulate<W> (
         size<K,V>(tb),
         func (i:Nat) : W = label profile_triebuild_toArray_nth : W {
-          let (k,_,v) = Option.unwrap<(K,?Hash.Hash,V)>(buildNth<K,V>(tb, i));
+          let (k,_,v) = Option.unwrap<(K,?Hash.Hash,V)>(nth<K,V>(tb, i));
           f(k, v)
         }
       );
       label profile_triebuild_toArray_end : [W]
       a
     };
-
+*/
     /*
-     `buildToArray2`
+     `toArray`
      --------
      Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-
-     (Same semantics as `buildToArray`, but faster in practice.)
      */
-    public func buildToArray2<K,V,W>(tb:TrieBuild<K,V>,f:(K,V)->W):[W] {
+    public func toArray<K,V,W>(tb:Build<K,V>,f:(K,V)->W):[W] {
       let c = size<K,V>(tb);
       let a = A.init<?W>(c, null);
       var i = 0;
-      func rec(tb:TrieBuild<K,V>) = label profile_triebuild_toArray2_rec {
+      func rec(tb:Build<K,V>) = label profile_triebuild_toArray2_rec {
         switch tb {
           case (#skip) ();
-          case (#insert(k,_,v)) { a[i] := ?f(k,v); i := i + 1 };
+          case (#put(k,_,v)) { a[i] := ?f(k,v); i := i + 1 };
           case (#seq(s)) { rec(s.left); rec(s.right) };
         }
       };
@@ -1234,11 +1234,11 @@ public func disj<K,V,W,X>(
   };
 
   /*
-   `insertFresh`
+   `putFresh`
    ----------------
-   insert the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
+   put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
    */
-  public func insertFresh<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:V) : Trie<K,V> {
+  public func putFresh<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:V) : Trie<K,V> {
     let (t2, none) = replace<K,V>(t, k, k_eq, ?v);
     switch none {
       case (null) ();
@@ -1248,11 +1248,11 @@ public func disj<K,V,W,X>(
   };
 
   /*
-   `insert2D`
+   `put2D`
    ---------------
-   insert the given key's value in the 2D trie; return the new 2D trie.
+   put the given key's value in the 2D trie; return the new 2D trie.
    */
-  public func insert2D<K1,K2,V>(t : Trie2D<K1,K2,V>,
+  public func put2D<K1,K2,V>(t : Trie2D<K1,K2,V>,
                               k1:Key<K1>, k1_eq:(K1,K1)->Bool,
                               k2:Key<K2>, k2_eq:(K2,K2)->Bool,
                               v:V)
@@ -1260,19 +1260,19 @@ public func disj<K,V,W,X>(
   {
     let inner = find<K1,Trie<K2,V>>(t, k1, k1_eq);
     let (updated_inner, _) = switch inner {
-    case (null)   { insert<K2,V>(#empty, k2, k2_eq, v) };
-    case (?inner) { insert<K2,V>(inner, k2, k2_eq, v) };
+    case (null)   { put<K2,V>(#empty, k2, k2_eq, v) };
+    case (?inner) { put<K2,V>(inner, k2, k2_eq, v) };
     };
-    let (updated_outer, _) = { insert<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner) };
+    let (updated_outer, _) = { put<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner) };
     updated_outer;
   };
 
   /*
-   `insert3D`
+   `put3D`
    ---------------
-   insert the given key's value in the trie; return the new trie;
+   put the given key's value in the trie; return the new trie;
    */
-  public func insert3D<K1,K2,K3,V>
+  public func put3D<K1,K2,K3,V>
     (t : Trie3D<K1,K2,K3,V>,
      k1:Key<K1>, k1_eq:(K1,K1)->Bool,
      k2:Key<K2>, k2_eq:(K2,K2)->Bool,
@@ -1284,21 +1284,21 @@ public func disj<K,V,W,X>(
     let inner1 = find<K1,Trie2D<K2,K3,V>>(t, k1, k1_eq);
     let (updated_inner1, _) = switch inner1 {
     case (null)   {
-           insert<K2,Trie<K3,V>>(
+           put<K2,Trie<K3,V>>(
              #empty, k2, k2_eq,
-             (insert<K3,V>(#empty, k3, k3_eq, v)).0
+             (put<K3,V>(#empty, k3, k3_eq, v)).0
            )
          };
     case (?inner1) {
            let inner2 = find<K2,Trie<K3,V>>(inner1, k2, k2_eq);
            let (updated_inner2, _) = switch inner2 {
-           case (null) { insert<K3,V>(#empty, k3, k3_eq, v) };
-           case (?inner2) { insert<K3,V>(inner2, k3, k3_eq, v) };
+           case (null) { put<K3,V>(#empty, k3, k3_eq, v) };
+           case (?inner2) { put<K3,V>(inner2, k3, k3_eq, v) };
            };
-           insert<K2,Trie<K3,V>>( inner1, k2, k2_eq, updated_inner2 )
+           put<K2,Trie<K3,V>>( inner1, k2, k2_eq, updated_inner2 )
          };
     };
-    let (updated_outer, _) = { insert<K1,Trie2D<K2,K3,V>>(t, k1, k1_eq, updated_inner1) };
+    let (updated_outer, _) = { put<K1,Trie2D<K2,K3,V>>(t, k1, k1_eq, updated_inner1) };
     updated_outer;
   };
 
@@ -1349,7 +1349,7 @@ public func disj<K,V,W,X>(
     case (?inner) {
            let (updated_inner, ov) = remove<K2,V>(inner, k2, k2_eq);
            let (updated_outer, _) = {
-             insert<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner)
+             put<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner)
            };
            (updated_outer, ov)
          };
@@ -1377,7 +1377,7 @@ public func disj<K,V,W,X>(
     case (?inner) {
            let (updated_inner, ov) = remove2D<K2,K3,V>(inner, k2, k2_eq, k3, k3_eq);
            let (updated_outer, _) = {
-             insert<K1,Trie2D<K2,K3,V>>(t, k1, k1_eq, updated_inner)
+             put<K1,Trie2D<K2,K3,V>>(t, k1, k1_eq, updated_inner)
            };
            (updated_outer, ov)
          };
