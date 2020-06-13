@@ -1089,7 +1089,7 @@ been processed
   //private var model : ?Model.Model = null;
 
 
-  flexible var model : ?Model.Model = ?(Model.Model());
+  /*flexible*/ var model : ?Model.Model = ?(Model.Model());
 
   func getModel() : Model.Model {
     switch model {
