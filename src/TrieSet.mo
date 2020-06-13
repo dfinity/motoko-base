@@ -29,7 +29,7 @@ public type Set<T> = Trie.Trie<T,()>;
   };
 
   public func delete<T>(s:Set<T>, x:T, xh:Hash, eq:(T,T)->Bool) : Set<T> = {
-    let (s2, _) = Trie.delete<T,()>(s, {key=x; hash=xh}, eq);
+    let (s2, _) = Trie.remove<T,()>(s, {key=x; hash=xh}, eq);
     s2
   };
 
