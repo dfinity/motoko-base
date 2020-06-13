@@ -1,11 +1,13 @@
 import Debug "mo:base/Debug";
 import P "mo:base/Prelude";
+import Text "mo:base/Text";
 
 import T "serverTypes";
 import L "serverLang";
 import M "serverModelTypes";
 
 import List "mo:base/List";
+import Int "mo:base/Int";
 import Hash "mo:base/Hash";
 import Option "mo:base/Option";
 import Trie "mo:base/Trie";
@@ -42,7 +44,7 @@ uses are is not.
 public type List<T> = List.List<T>;
 public type Hash = Hash.Hash;
 public type Trie<K,V> = Trie.Trie<K,V>;
-public type TrieBuild<K,V> = Trie.Build.TrieBuild<K,V>;
+public type TrieBuild<K,V> = Trie.Build.Build<K,V>;
 public type Key<K> = Trie.Key<K>;
 
 public type Table<K,V> = Trie.Trie<K,V>;
@@ -96,7 +98,7 @@ public class Model() {
 
     /**- reset to initial state before adding this new workload: */
     let reqs : List<L.Req> =
-      ?(#reset, List.map<L.AddReq,L.Req>(addreqs, func (r:L.AddReq):L.Req = #add r));
+      ?(#reset, List.transform<L.AddReq,L.Req>(addreqs, func (r:L.AddReq):L.Req = #add r));
 
     /**- evaluate each request: */
     db "evaluate requests for workload...";
@@ -170,7 +172,7 @@ public class Model() {
 
            #ok(#reset)
          };
-    case (#add (#truckType info)) Result.fromSomeMap<T.TruckTypeId,L.Resp,T.IdErr>(
+    case (#add (#truckType info)) Result.fromSomeTransform<T.TruckTypeId,L.Resp,T.IdErr>(
            truckTypeTable.addInfoGetId(
              func (id_:T.TruckTypeId) : T.TruckTypeInfo =
                {
@@ -186,7 +188,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#region info)) Result.fromSomeMap<T.RegionId,L.Resp,T.IdErr>(
+    case (#add (#region info)) Result.fromSomeTransform<T.RegionId,L.Resp,T.IdErr>(
            regionTable.addInfoGetId(
              func (id_:T.RegionId) : T.RegionInfo =
                {
@@ -199,7 +201,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#produce info)) Result.fromSomeMap<T.ProduceId,L.Resp,T.IdErr>(
+    case (#add (#produce info)) Result.fromSomeTransform<T.ProduceId,L.Resp,T.IdErr>(
            produceTable.addInfoGetId(
              func (id_:T.ProduceId) : T.ProduceInfo =
                {
@@ -213,7 +215,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#producer info)) Result.fromSomeMap<T.ProducerId,L.Resp,T.IdErr>(
+    case (#add (#producer info)) Result.fromSomeTransform<T.ProducerId,L.Resp,T.IdErr>(
            producerTable.addInfoGetId(
              func(id_:T.ProducerId):T.ProducerInfo {
                {
@@ -231,7 +233,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#transporter info)) Result.fromSomeMap<T.TransporterId,L.Resp,T.IdErr>(
+    case (#add (#transporter info)) Result.fromSomeTransform<T.TransporterId,L.Resp,T.IdErr>(
            transporterTable.addInfoGetId(
              func(id_:T.TransporterId):T.TransporterInfo {
                {
@@ -248,7 +250,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#retailer info)) Result.fromSomeMap<T.RetailerId,L.Resp,T.IdErr>(
+    case (#add (#retailer info)) Result.fromSomeTransform<T.RetailerId,L.Resp,T.IdErr>(
            retailerTable.addInfoGetId(
              func(id_:T.RetailerId):T.RetailerInfo {
                {
@@ -264,7 +266,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#route info)) Result.mapOk<T.RouteId,L.Resp,T.IdErr>(
+    case (#add (#route info)) Result.transformOk<T.RouteId,L.Resp,T.IdErr>(
            transporterAddRoute(
              null,
              info.transporter,
@@ -278,7 +280,7 @@ public class Model() {
            func (id:T.RouteId):L.Resp = #add(#route(id))
          );
 
-    case (#add (#inventory info)) Result.mapOk<T.InventoryId,L.Resp,T.IdErr>(
+    case (#add (#inventory info)) Result.transformOk<T.InventoryId,L.Resp,T.IdErr>(
            producerAddInventory(
              null,
              info.producer,
@@ -293,7 +295,7 @@ public class Model() {
            func (id:T.RouteId):L.Resp = #add(#route(id))
          );
 
-    case (#add (#user info)) Result.fromSomeMap<T.UserId,L.Resp,T.IdErr>(
+    case (#add (#user info)) Result.fromSomeTransform<T.UserId,L.Resp,T.IdErr>(
            addUser(
              info.public_key,
              info.user_name,
@@ -319,7 +321,7 @@ public class Model() {
    ----------
    */
   public func evalReqList(reqs:List<L.Req>) : List<L.ResultResp> =
-    List.map<L.Req, L.ResultResp>(reqs, evalReq);
+    List.transform<L.Req, L.ResultResp>(reqs, evalReq);
 
   /**
    `evalBulk`
@@ -336,7 +338,7 @@ public class Model() {
         Array.tabulate<Result<T.EntId, T.IdErr>>(
           reqs.len(),
           func(i:Nat):Result<T.EntId, T.IdErr> =
-            Result.mapOk<L.Resp, T.EntId, T.IdErr>(
+            Result.transformOk<L.Resp, T.EntId, T.IdErr>(
               evalReq(#add(reqs[i])),
               eatAdd
             )
@@ -557,7 +559,7 @@ public class Model() {
       };
     };
     /**- use "chronological order" for adds above: */
-    List.rev<L.AddReq>(reqs)
+    List.reverse<L.AddReq>(reqs)
   };
 
   /**
@@ -616,9 +618,9 @@ public class Model() {
 
   func idPairIsEq(x:(Nat,Nat),y:(Nat,Nat)):Bool { x.0 == y.0 and x.1 == y.1 };
 
-  func idHash(x:Nat):Hash { Hash.hashOfInt(x) };
+  func idHash(x:Nat):Hash { Int.hash(x) };
 
-  func idPairHash(x:(Nat,Nat)):Hash { Hash.hashOfIntAcc(Hash.hashOfInt(x.0), x.1) };
+  func idPairHash(x:(Nat,Nat)):Hash { Int.hashAcc(Int.hash(x.0), x.1) };
 
   func keyOf(x:Nat):Key<Nat> {
    { key = x ; hash = idHash(x) }
@@ -629,7 +631,7 @@ public class Model() {
   };
 
   func keyOfText(x:Text):Key<Text> {
-   { key = x ; hash = Hash.hashOfText(x) }
+   { key = x ; hash = Text.hash(x) }
   };
 
   /**
@@ -817,7 +819,7 @@ secondary maps.
       reserved=[];
     },
     func(info:T.ProducerInfo):?M.ProducerDoc =
-      Option.map<M.RegionDoc, M.ProducerDoc>(
+      Option.transform<M.RegionDoc, M.ProducerDoc>(
         func (regionDoc: M.RegionDoc): M.ProducerDoc = {
           id=info.id;
           public_key=info.public_key;
@@ -929,7 +931,7 @@ secondary maps.
         reserved_items=[];
       },
       func(info:T.RetailerInfo):?M.RetailerDoc =
-        Option.map<M.RegionDoc, M.RetailerDoc>(
+        Option.transform<M.RegionDoc, M.RetailerDoc>(
           func (regionDoc: M.RegionDoc): M.RetailerDoc = {
             id=info.id;
             public_key=info.public_key;
@@ -1292,7 +1294,7 @@ than the MVP goals, however.
 
     /**- Record the mapping from user-chosen name to exchange-chosen id: */
     usersByUserName :=
-    Trie.insertFresh<T.UserName,T.UserId>(
+    Trie.putFresh<T.UserName,T.UserId>(
       usersByUserName,
       keyOfText(user_name_), textIsEq,
       Option.unwrap<T.UserId>(id)
@@ -1399,7 +1401,7 @@ than the MVP goals, however.
 
     /**- Update the producer's inventory collection to hold the new inventory document: */
     let updatedInventory =
-      Map.insertFresh<T.InventoryId, M.InventoryDoc>(
+      Map.putFresh<T.InventoryId, M.InventoryDoc>(
         producer_.inventory,
         keyOf(item.id),
         idIsEq,
@@ -1421,7 +1423,7 @@ than the MVP goals, however.
 
     /**- Update inventoryByRegion mapping: */
     inventoryByRegion :=
-    Map.insert2D<T.RegionId, T.ProducerId, M.InventoryMap>(
+    Map.put2D<T.RegionId, T.ProducerId, M.InventoryMap>(
       inventoryByRegion,
       keyOf(producer_.region.id), idIsEq,
       keyOf(producer_.id), idIsEq,
@@ -1618,7 +1620,7 @@ than the MVP goals, however.
 
     /**- Update the transporter's routes collection to hold the new route document: */
     let updatedRoutes =
-      Map.insertFresh<T.RouteId, M.RouteDoc>(
+      Map.putFresh<T.RouteId, M.RouteDoc>(
         transporter.routes,
         keyOf(route.id),
         idIsEq,
@@ -1639,7 +1641,7 @@ than the MVP goals, however.
 
     /**- Update the [`routesByDstSrcRegions` mapping](#routes-by-region) using the route's regions and id */
     routesByDstSrcRegions :=
-    Map.insert3D<T.RegionId, T.RegionId, T.RouteId, M.RouteDoc>(
+    Map.put3D<T.RegionId, T.RegionId, T.RouteId, M.RouteDoc>(
       routesByDstSrcRegions,
       keyOf(end_region_.id), idIsEq,
       keyOf(start_region_.id), idIsEq,
@@ -1967,7 +1969,7 @@ than the MVP goals, however.
       case (null) { return ?[] };
       case (?x) { x }};
 
-    debugOffInt(Trie.count<T.RegionId, M.RouteMap>(retailerRoutes));
+    debugOffInt(Trie.size<T.RegionId, M.RouteMap>(retailerRoutes));
     debugOff " production regions.\n";
 
     /** - Join: For each production region, consider all routes and inventory: */
@@ -1987,7 +1989,7 @@ than the MVP goals, however.
       {
 
         /** - Within this production region, consider every route-item pairing: */
-        let product = Trie.Build.prodBuild
+        let product = Trie.Build.prod
         <T.RouteId, M.RouteDoc,
          T.InventoryId, M.InventoryDoc,
          (T.RouteId, T.InventoryId),
@@ -2030,12 +2032,12 @@ than the MVP goals, however.
 
     /** - The results are still organized by producer region; merge all such regions: */
     let queryResult : QueryResult =
-      Trie.Build.projectInnerBuild
+      Trie.Build.projectInner
     <T.RegionId, (T.RouteId, T.InventoryId), (M.RouteDoc, M.InventoryDoc)>
     (queryResults);
 
     debugOff "- query result count: ";
-    let size = Trie.Build.buildCount
+    let size = Trie.Build.size
     <(T.RouteId, T.InventoryId),
      (M.RouteDoc, M.InventoryDoc)>(queryResult);
     if ( size > retailerQuerySizeMax ) {
@@ -2046,7 +2048,7 @@ than the MVP goals, however.
 
     /** - Prepare reservation information for client, as an array; see also [`makeReservationInfo`](#makereservationinfo) */
     let arr =
-      Trie.Build.buildToArray2
+      Trie.Build.toArray
     <(T.RouteId, T.InventoryId),
      (M.RouteDoc, M.InventoryDoc),
      T.ReservationInfo>(
@@ -2205,7 +2207,7 @@ than the MVP goals, however.
       /**- Update the producer's reserved inventory: */
 
       let (updatedProducerReserved,_) =
-        Map.insert<T.ReservedInventoryId,M.ReservedInventoryDoc>(
+        Map.put<T.ReservedInventoryId,M.ReservedInventoryDoc>(
           producerDoc2.reserved,
           keyOf(reservedInventoryDoc.id), idIsEq,
           reservedInventoryDoc);
@@ -2229,7 +2231,7 @@ than the MVP goals, however.
       /**- Update the transporter's reserved routes: */
 
       let (updatedTransporterReserved,_) =
-        Map.insert<T.ReservedRouteId,M.ReservedRouteDoc>(
+        Map.put<T.ReservedRouteId,M.ReservedRouteDoc>(
           transporterDoc2.reserved,
           keyOf(reservedRouteDoc.id), idIsEq,
           reservedRouteDoc);
@@ -2252,7 +2254,7 @@ than the MVP goals, however.
       /**- Update the retailer's reserved routes and inventory: */
 
       let (updatedRetailerReserved,_) =
-        Map.insert<T.ReservedInventoryId, (M.ReservedInventoryDoc, M.ReservedRouteDoc)>(
+        Map.put<T.ReservedInventoryId, (M.ReservedInventoryDoc, M.ReservedRouteDoc)>(
           retailerDoc.reserved,
           keyOf(reservedInventoryDoc.id), idIsEq,
           (reservedInventoryDoc, reservedRouteDoc));

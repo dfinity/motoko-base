@@ -60,7 +60,7 @@ public class Buf<X> (initCapacity : Nat) {
   };
 
   public func append(b:Buf<X>) {
-    let i = b.iter();
+    let i = b.vals();
     loop {
       switch (i.next()) {
       case null return;
@@ -69,7 +69,7 @@ public class Buf<X> (initCapacity : Nat) {
     };
   };
 
-  public func len() : Nat =
+  public func size() : Nat =
     count;
 
   public func clear() =
@@ -83,7 +83,7 @@ public class Buf<X> (initCapacity : Nat) {
     c
   };
 
-  public func iter() : I.Iter<X> = object {
+  public func vals() : I.Iter<X> = object {
     var pos = 0;
     public func next() : ?X {
       if (pos == count) { null } else {
@@ -124,7 +124,7 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
-  public func set(offset : Nat, elem : X) {
+  public func put(offset : Nat, elem : X) {
     elems[offset] := elem;
   };
 };

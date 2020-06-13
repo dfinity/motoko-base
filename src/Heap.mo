@@ -2,13 +2,13 @@
 ///
 /// This module provides purely-functional priority queue based on leftist heap
 
-import O "Ord";
+import O "Order";
 import P "Prelude";
 import L "List";
 
 module {
 
-    public class Heap<T>(ord : (T, T) -> O.Ordering) {
+    public class Heap<T>(ord : (T, T) -> O.Order) {
         type t<T> = ?(Int, T, t<T>, t<T>);
         var heap : t<T> = null;
         func rank(heap : t<T>) : Int {
@@ -26,7 +26,7 @@ module {
             case (h, null) h;
             case (?(_, x, a, b), ?(_, y, c, d)) {
                      switch (ord(x,y)) {
-                     case (#lt) makeT (x, a, merge(b, h2));
+                     case (#less) makeT (x, a, merge(b, h2));
                      case _ makeT (y, c, merge(d, h1));
                      };
                  };
@@ -34,7 +34,7 @@ module {
             };
         };
 
-        public func add(x : T) {
+        public func put(x : T) {
             heap := merge(heap, ?(1, x, null, null));
         };
         public func peekMin() : ?T {
@@ -43,7 +43,7 @@ module {
             case (?(_, x, _, _)) ?x;
             }
         };
-        public func removeMin() {
+        public func deleteMin() {
             switch heap {
             case (null) P.unreachable();
             case (?(_, _, a, b)) heap := merge(a,b);
@@ -68,7 +68,7 @@ module {
             switch(a) {
             case (null) heap := null;
             case _
-              heap := build (L.map (a, func (x : T) : t<T> = ?(1, x, null, null)));
+              heap := build (L.transform (a, func (x : T) : t<T> = ?(1, x, null, null)));
             };
         };
     };
