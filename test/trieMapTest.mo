@@ -1,30 +1,29 @@
 import Prim "mo:prim";
 import H "mo:base/TrieMap";
 import Hash "mo:base/Hash";
-
-func textIsEq(x:Text,y:Text):Bool { x == y };
+import Text "mo:base/Text";
 
 debug {
-  let a = H.TrieMap<Text, Nat>(textIsEq, Hash.hashOfText);
+  let a = H.TrieMap<Text, Nat>(Text.equal, Text.hash);
 
-  ignore a.set("apple", 1);
-  ignore a.set("banana", 2);
-  ignore a.set("pear", 3);
-  ignore a.set("avocado", 4);
-  ignore a.set("Apple", 11);
-  ignore a.set("Banana", 22);
-  ignore a.set("Pear", 33);
-  ignore a.set("Avocado", 44);
-  ignore a.set("ApplE", 111);
-  ignore a.set("BananA", 222);
-  ignore a.set("PeaR", 333);
-  ignore a.set("AvocadO", 444);
+  a.put("apple", 1);
+  a.put("banana", 2);
+  a.put("pear", 3);
+  a.put("avocado", 4);
+  a.put("Apple", 11);
+  a.put("Banana", 22);
+  a.put("Pear", 33);
+  a.put("Avocado", 44);
+  a.put("ApplE", 111);
+  a.put("BananA", 222);
+  a.put("PeaR", 333);
+  a.put("AvocadO", 444);
 
   // need to resupply the constructor args; they are private to the object; but, should they be?
-  let b = H.clone<Text, Nat>(a, textIsEq, Hash.hashOfText);
+  let b = H.clone<Text, Nat>(a, Text.equal, Text.hash);
 
   // ensure clone has each key-value pair present in original
-  for ((k,v) in a.iter()) {
+  for ((k,v) in a.entries()) {
     Prim.debugPrint(debug_show (k,v));
     switch (b.get(k)) {
     case null { assert false };
@@ -33,7 +32,7 @@ debug {
   };
 
   // ensure original has each key-value pair present in clone
-  for ((k,v) in b.iter()) {
+  for ((k,v) in b.entries()) {
     Prim.debugPrint(debug_show (k,v));
     switch (a.get(k)) {
     case null { assert false };
@@ -42,10 +41,10 @@ debug {
   };
 
   // do some more operations:
-  ignore a.set("apple", 1111);
-  ignore a.set("banana", 2222);
-  ignore a.del("pear");
-  ignore a.del("avocado");
+  a.put("apple", 1111);
+  a.put("banana", 2222);
+  a.delete("pear");
+  a.delete("avocado");
 
   // check them:
   switch (a.get("apple")) {
@@ -66,13 +65,13 @@ debug {
   };
 
   // undo operations above:
-  ignore a.set("apple", 1);
-  ignore a.set("banana", 2);
-  ignore a.set("pear", 3);
-  ignore a.set("avocado", 4);
+  a.put("apple", 1);
+  a.put("banana", 2);
+  a.put("pear", 3);
+  a.put("avocado", 4);
 
   // ensure clone has each key-value pair present in original
-  for ((k,v) in a.iter()) {
+  for ((k,v) in a.entries()) {
     Prim.debugPrint(debug_show (k,v));
     switch (b.get(k)) {
     case null { assert false };
@@ -81,7 +80,7 @@ debug {
   };
 
   // ensure original has each key-value pair present in clone
-  for ((k,v) in b.iter()) {
+  for ((k,v) in b.entries()) {
     Prim.debugPrint(debug_show (k,v));
     switch (a.get(k)) {
     case null { assert false };
@@ -90,11 +89,11 @@ debug {
   };
 
 
-  // test fromIter method
-  let c = H.fromIter<Text, Nat>(b.iter(), textIsEq, Hash.hashOfText);
+  // test fromEntries method
+  let c = H.fromEntries<Text, Nat>(b.entries(), Text.equal, Text.hash);
 
   // c agrees with each entry of b
-  for ((k,v) in b.iter()) {
+  for ((k,v) in b.entries()) {
     Prim.debugPrint(debug_show (k,v));
     switch (c.get(k)) {
     case null { assert false };
@@ -103,7 +102,7 @@ debug {
   };
 
   // b agrees with each entry of c
-  for ((k,v) in c.iter()) {
+  for ((k,v) in c.entries()) {
     Prim.debugPrint(debug_show (k,v));
     switch (b.get(k)) {
     case null { assert false };

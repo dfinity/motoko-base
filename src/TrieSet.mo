@@ -23,22 +23,23 @@ public type Set<T> = Trie.Trie<T,()>;
   public func empty<T>():Set<T> =
     Trie.empty<T,()>();
 
-  public func insert<T>(s:Set<T>, x:T, xh:Hash, eq:(T,T)->Bool) : Set<T> = {
-    let (s2, _) = Trie.insert<T,()>(s, {key=x; hash=xh}, eq, ());
+  public func put<T>(s:Set<T>, x:T, xh:Hash, eq:(T,T)->Bool) : Set<T> = {
+    let (s2, _) = Trie.put<T,()>(s, {key=x; hash=xh}, eq, ());
     s2
   };
 
-  public func remove<T>(s:Set<T>, x:T, xh:Hash, eq:(T,T)->Bool) : Set<T> = {
+  public func delete<T>(s:Set<T>, x:T, xh:Hash, eq:(T,T)->Bool) : Set<T> = {
     let (s2, _) = Trie.remove<T,()>(s, {key=x; hash=xh}, eq);
     s2
   };
 
-  public func eq<T>(s1:Set<T>, s2:Set<T>, eq:(T,T)->Bool):Bool {
+  public func equal<T>(s1:Set<T>, s2:Set<T>, eq:(T,T)->Bool):Bool {
     // XXX: Todo: use a smarter check
-    Trie.equalStructure<T,()>(s1, s2, eq, unitEq)
+    func unitEqual (_:(),_:()):Bool{ true };
+    Trie.equalStructure<T,()>(s1, s2, eq, unitEqual)
   };
 
-  public func card<T>(s:Set<T>) : Nat {
+  public func size<T>(s:Set<T>) : Nat {
     Trie.foldUp<T,(),Nat>
     (s,
      func(n:Nat,m:Nat):Nat{n+m},
@@ -69,5 +70,4 @@ public type Set<T> = Trie.Trie<T,()>;
     s3
   };
 
-  public func unitEq (_:(),_:()):Bool{ true };
 }

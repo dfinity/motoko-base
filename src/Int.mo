@@ -7,6 +7,7 @@
 
 import Prim "mo:prim";
 import Prelude "Prelude";
+import Hash "Hash";
 
 module {
   /// Returns the absolute value of the number
@@ -66,4 +67,27 @@ module {
   public let max : (Int, Int) -> Int = func(x,y) {
     if (x < y) y else x;
   };
+
+  public func hash(i : Int) : Hash.Hash {
+    let j = Prim.intToWord32(i);
+    Hash.hashWord8(
+      [j & (255 << 0),
+       j & (255 << 8),
+       j & (255 << 16),
+       j & (255 << 24)
+      ]);
+  };
+
+  /// WARNING: May go away (?)
+  public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
+    let j = Prim.intToWord32(i);
+    Hash.hashWord8(
+      [h1,
+       j & (255 << 0),
+       j & (255 << 8),
+       j & (255 << 16),
+       j & (255 << 24)
+      ]);
+  };
+
 }
