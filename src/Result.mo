@@ -102,6 +102,6 @@ public func toArrayOk<R,E>(x:[Result<R,E>]) : Result<[R],E> {
     }
   };
   // all of the results are Ok; tabulate them.
-  #ok(Array.tabulate<R>(x.len(), func (i:Nat):R {unwrapOk(x[i]) }))
+  #ok(Array.tabulate<R>(x.size(), func (i:Nat):R {unwrapOk(x[i]) }))
 };
 }

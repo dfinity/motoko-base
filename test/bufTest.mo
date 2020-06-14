@@ -30,7 +30,7 @@ O.assertNull(a.removeLast());
 
 func natArrayIter(elems:[Nat]) : I.Iter<Nat> = object {
   var pos = 0;
-  let count = elems.len();
+  let count = elems.size();
   public func next() : ?Nat {
     if (pos == count) { null } else {
       let elem = ?elems[pos];
@@ -42,7 +42,7 @@ func natArrayIter(elems:[Nat]) : I.Iter<Nat> = object {
 
 func natVarArrayIter(elems:[var Nat]) : I.Iter<Nat> = object {
   var pos = 0;
-  let count = elems.len();
+  let count = elems.size();
   public func next() : ?Nat {
     if (pos == count) { null } else {
       let elem = ?elems[pos];
@@ -74,21 +74,21 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
     c.add(i);
   };
   assert (c.size() == len);
-  assert (c.toArray().len() == len);
+  assert (c.toArray().size() == len);
   assert (natIterEq(c.vals(), natArrayIter(c.clone().toArray())));
-  assert (c.toVarArray().len() == len);
+  assert (c.toVarArray().size() == len);
   assert (natIterEq(c.vals(), natVarArrayIter(c.clone().toVarArray())));
 };
 
 // regression test: initially-empty buffers grow, element-by-element
 {
   let c = B.Buf<Nat>(0);
-  assert (c.toArray().len() == 0);
-  assert (c.toVarArray().len() == 0);
+  assert (c.toArray().size() == 0);
+  assert (c.toVarArray().size() == 0);
   c.add(0);
-  assert (c.toArray().len() == 1);
-  assert (c.toVarArray().len() == 1);
+  assert (c.toArray().size() == 1);
+  assert (c.toVarArray().size() == 1);
   c.add(0);
-  assert (c.toArray().len() == 2);
-  assert (c.toVarArray().len() == 2);
+  assert (c.toArray().size() == 2);
+  assert (c.toVarArray().size() == 2);
 };

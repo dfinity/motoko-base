@@ -39,7 +39,7 @@ public class HashMap<K,V> (
 
   public func remove(k:K) : ?V {
     let h = Prim.word32ToNat(keyHash(k));
-    let m = table.len();
+    let m = table.size();
     let pos = h % m;
     if (m > 0) {
       let (kvs2, ov) = AssocList.replace<K,V>(table[pos], k, keyEq, null);
@@ -56,7 +56,7 @@ public class HashMap<K,V> (
 
   public func get(k:K) : ?V {
     let h = Prim.word32ToNat(keyHash(k));
-    let m = table.len();
+    let m = table.size();
     let v = if (m > 0) {
       AssocList.find<K,V>(table[h % m], k, keyEq)
     } else {
@@ -67,7 +67,7 @@ public class HashMap<K,V> (
   public func put(k:K, v:V) = ignore replace(k, v);
 
   public func replace(k:K, v:V) : ?V {
-    if (_count >= table.len()) {
+    if (_count >= table.size()) {
       let size =
         if (_count == 0)
           if (initCapacity > 0)
@@ -75,7 +75,7 @@ public class HashMap<K,V> (
           else
             1
         else
-          table.len() * 2;
+          table.size() * 2;
       let table2 = A.init<KVs<K,V>>(size, null);
       for (i in table.keys()) {
         var kvs = table[i];
@@ -85,7 +85,7 @@ public class HashMap<K,V> (
           case null { break moveKeyVals };
           case (?((k, v), kvsTail)) {
                  let h = Prim.word32ToNat(keyHash(k));
-                 let pos2 = h % table2.len();
+                 let pos2 = h % table2.size();
                  table2[pos2] := ?((k,v), table2[pos2]);
                  kvs := kvsTail;
                };
@@ -95,7 +95,7 @@ public class HashMap<K,V> (
       table := table2;
     };
     let h = Prim.word32ToNat(keyHash(k));
-    let pos = h % table.len();
+    let pos = h % table.size();
     let (kvs2, ov) = AssocList.replace<K,V>(table[pos], k, keyEq, ?v);
     table[pos] := kvs2;
     switch(ov){
@@ -106,7 +106,7 @@ public class HashMap<K,V> (
   };
 
   public func entries() : Iter.Iter<(K,V)> {
-    if (table.len() == 0) {
+    if (table.size() == 0) {
       object { public func next() : ?(K,V) { null } }
     }
     else {
@@ -120,7 +120,7 @@ public class HashMap<K,V> (
                  ?kv
                };
           case null {
-                 if (nextTablePos < table.len()) {
+                 if (nextTablePos < table.size()) {
                    kvs := table[nextTablePos];
                    nextTablePos += 1;
                    next()

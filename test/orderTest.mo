@@ -1,10 +1,10 @@
 import Order "mo:base/Order";
 import Prelude "mo:base/Prelude";
 
-Prelude.debugPrintLine("Order");
+Prelude.printLn("Order");
 
 {
-  Prelude.debugPrintLine("  isLess");
+  Prelude.printLn("  isLess");
 
   assert(Order.isLess(#less));
   assert(not Order.isLess(#equal));
@@ -12,7 +12,7 @@ Prelude.debugPrintLine("Order");
 };
 
 {
-  Prelude.debugPrintLine("  isEqual");
+  Prelude.printLn("  isEqual");
 
   assert(not Order.isEqual(#less));
   assert(Order.isEqual(#equal));
@@ -20,7 +20,7 @@ Prelude.debugPrintLine("Order");
 };
 
 {
-  Prelude.debugPrintLine("  isGreater");
+  Prelude.printLn("  isGreater");
 
   assert(not Order.isGreater(#less));
   assert(not Order.isGreater(#equal));

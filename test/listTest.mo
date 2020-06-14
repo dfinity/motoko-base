@@ -60,7 +60,7 @@ type X = Nat;
   assert (List.size<X>(l3) == 2);
 
   {
-    Prelude.debugPrintLine("  fromArray");
+    Prelude.printLn("  fromArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [1, 2, 3];
@@ -70,7 +70,7 @@ type X = Nat;
   };
 
   {
-    Prelude.debugPrintLine("  fromVarArray");
+    Prelude.printLn("  fromVarArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [var 1, 2, 3];
@@ -80,13 +80,13 @@ type X = Nat;
   };
 
   {
-    Prelude.debugPrintLine("  toArray");
+    Prelude.printLn("  toArray");
 
     let expected = [1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let actual = List.toArray<Nat>(list);
 
-    assert (actual.len() == expected.len());
+    assert (actual.size() == expected.size());
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);
@@ -94,13 +94,13 @@ type X = Nat;
   };
 
   {
-    Prelude.debugPrintLine("  toVarArray");
+    Prelude.printLn("  toVarArray");
 
     let expected = [var 1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let actual = List.toVarArray<Nat>(list);
 
-    assert (actual.len() == expected.len());
+    assert (actual.size() == expected.size());
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);

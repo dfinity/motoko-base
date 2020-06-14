@@ -2,15 +2,15 @@ import Array "mo:base/Array";
 import Prelude "mo:base/Prelude";
 import Text "mo:base/Text";
 
-Prelude.debugPrintLine("Array");
+Prelude.printLn("Array");
 
 {
-  Prelude.debugPrintLine("  append");
+  Prelude.printLn("  append");
 
   let actual = Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]);
   let expected = [ 1, 2, 3, 4, 5, 6 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -18,7 +18,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  apply");
+  Prelude.printLn("  apply");
 
   let ask = func (x : Text) : Text {
     x # "?";
@@ -31,7 +31,7 @@ Prelude.debugPrintLine("Array");
   let actual = Array.apply<Text, Text>([ "good", "bad" ], [ ask, exclaim ]);
   let expected = [ "good?", "bad?", "good!", "bad!" ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -39,7 +39,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  chain");
+  Prelude.printLn("  chain");
 
   let purePlusOne = func (x : Int) : [Int] {
     [ x + 1 ];
@@ -48,7 +48,7 @@ Prelude.debugPrintLine("Array");
   let actual = Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
   let expected = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -56,7 +56,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  filter");
+  Prelude.printLn("  filter");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -65,7 +65,7 @@ Prelude.debugPrintLine("Array");
   let actual = Array.filter<Nat>(isEven, [ 1, 2, 3, 4, 5, 6 ]);
   let expected = [ 2, 4, 6 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -73,7 +73,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  find");
+  Prelude.printLn("  find");
 
   type Element = {
     key : Text;
@@ -101,7 +101,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  foldLeft");
+  Prelude.printLn("  foldLeft");
 
   let xs = [ "a", "b", "c" ];
 
@@ -112,7 +112,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  foldRight");
+  Prelude.printLn("  foldRight");
 
   let xs = [ "a", "b", "c" ];
 
@@ -123,14 +123,14 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  freeze");
+  Prelude.printLn("  freeze");
 
   var xs : [var Int] = [ var 1, 2, 3 ];
 
   let actual = Array.freeze<Int>(xs);
   let expected : [Int] = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -138,14 +138,14 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  flatten");
+  Prelude.printLn("  flatten");
 
   let xs = [ [ 1, 2, 3 ] ];
 
   let actual = Array.flatten<Int>(xs);
   let expected : [Int] = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -153,7 +153,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  transform");
+  Prelude.printLn("  transform");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -162,7 +162,7 @@ Prelude.debugPrintLine("Array");
   let actual = Array.transform<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
   let expected = [ false, true, false, true, false, true ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -170,7 +170,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  mapEntries");
+  Prelude.printLn("  mapEntries");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -192,7 +192,7 @@ Prelude.debugPrintLine("Array");
     (true, false),
   ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i].0 == expected[i].0);
@@ -201,12 +201,12 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  make");
+  Prelude.printLn("  make");
 
   let actual = Array.make<Int>(0);
   let expected = [0];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -214,14 +214,14 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  thaw");
+  Prelude.printLn("  thaw");
 
   let xs : [Int] = [ 1, 2, 3 ];
 
   let actual = Array.thaw<Int>(xs);
   var expected : [Int] = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -229,7 +229,7 @@ Prelude.debugPrintLine("Array");
 };
 
 {
-  Prelude.debugPrintLine("  tabulateVar");
+  Prelude.printLn("  tabulateVar");
 
   // regression test for (fixed) issues in base cases, where func was called too often:
 

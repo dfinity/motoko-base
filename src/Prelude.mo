@@ -9,7 +9,7 @@ import Prim "mo:prim";
 module {
 
 /// Print text followed by a newline.
-public func debugPrintLine(x : Text) {
+public func printLn(x : Text) {
   Prim.debugPrint(x # "\n");
 };
 

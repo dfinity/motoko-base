@@ -1,10 +1,10 @@
 import Prelude "mo:base/Prelude";
 import Nat "mo:base/Nat";
 
-Prelude.debugPrintLine("Nat");
+Prelude.printLn("Nat");
 
 {
-  Prelude.debugPrintLine("  add");
+  Prelude.printLn("  add");
 
   assert(Nat.add(1, Nat.add(2, 3)) == Nat.add(1, Nat.add(2, 3)));
   assert(Nat.add(0, 1) == 1);
@@ -14,7 +14,7 @@ Prelude.debugPrintLine("Nat");
 };
 
 {
-  Prelude.debugPrintLine("  toText");
+  Prelude.printLn("  toText");
 
   assert(Nat.toText(0) == "0");
   assert(Nat.toText(1234) == "1234");
