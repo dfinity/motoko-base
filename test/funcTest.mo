@@ -1,11 +1,11 @@
-import Function "mo:base/Function";
+import Function "mo:base/Func";
 import Prelude "mo:base/Prelude";
 import Text "mo:base/Text";
 
-Prelude.printLn("Function");
+Prelude.debugPrintLine("Function");
 
 {
-  Prelude.printLn("  compose");
+  Prelude.debugPrintLine("  compose");
 
   func isEven(x : Int) : Bool { x % 2 == 0; };
   func not_(x : Bool) : Bool { not x; };
@@ -16,21 +16,21 @@ Prelude.printLn("Function");
 };
 
 {
-  Prelude.printLn("  const");
+  Prelude.debugPrintLine("  const");
 
   assert(Function.const<Bool, Text>(true)("abc"));
   assert(Function.const<Bool, Text>(false)("abc") == false);
 };
 
 {
-  Prelude.printLn("  const2");
+  Prelude.debugPrintLine("  const2");
 
   assert(Function.const2<Bool, Int, Text>(true)(0, "abc"));
   assert(Function.const2<Bool, Int, Text>(false)(0, "abc") == false);
 };
 
 {
-  Prelude.printLn("  lift");
+  Prelude.debugPrintLine("  lift");
 
   let appendPair = Function.lift<Text, Text, Text>(Text.append);
   let pair = ("Hello, ", "World!");
@@ -39,7 +39,7 @@ Prelude.printLn("Function");
 };
 
 {
-  Prelude.printLn("  lower");
+  Prelude.debugPrintLine("  lower");
 
   func appendPair(pair : (Text, Text)) : Text {
     pair.0 # pair.1;
