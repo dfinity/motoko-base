@@ -4,7 +4,7 @@ import Debug "Debug";
 import I "Iter";
 import List "List";
 import Nat "Nat";
-import O "Order";
+import O "Ord";
 
 module {
 
@@ -15,48 +15,43 @@ public type Tree<X, Y> = {
   #leaf;
 };
 
-public class RBTree<X, Y>(compareTo:(X, X) -> O.Order) {
+public class RBTree<X, Y>(compareTo:(X, X) -> O.Ordering) {
 
   var tree: Tree<X, Y> = (#leaf : Tree<X, Y>);
 
   /// Get non-OO, purely-functional representation:
   /// for drawing, pretty-printing and non-OO contexts
   /// (e.g., async args and results):
-  public func share() : Tree<X, Y> {
+  public func getTree() : Tree<X, Y> {
     tree
   };
 
-  public func get(x:X) : ?Y =
-    getRec(x, compareTo, tree);
+  public func find(x:X) : ?Y =
+    findRec(x, compareTo, tree);
 
-  public func replace(x:X, y:Y) : ?Y {
+  public func insert(x:X, y:Y) : ?Y {
     let (res, t) = insertRoot(x, compareTo, y, tree);
     tree := t;
     res
   };
 
-  public func put(x:X, y:Y) {
-    let (res, t) = insertRoot(x, compareTo, y, tree);
-    tree := t;
-  };
-
-  public func delete(x:X) : ?Y {
+  public func remove(x:X) : ?Y {
     let (res, t) = removeRec(x, compareTo, tree);
     tree := t;
     res
   };
 
   // iterator is persistent, like the tree itself;
-  public func entries() : I.Iter<(X, Y)> = iter(tree, #fwd);
+  public func iter() : I.Iter<(X, Y)> = toIter(tree, #l2r);
 
-  public func entriesRev() : I.Iter<(X, Y)> = iter(tree, #bwd);
+  public func rev() : I.Iter<(X, Y)> = toIter(tree, #r2l);
 
 };
 
 
 type IterRep<X, Y> = List.List<{#tr:Tree<X, Y>; #xy:(X, ?Y)}>;
 
-public func iter<X, Y>(t:Tree<X, Y>, dir:{#fwd; #bwd}) : I.Iter<(X, Y)> {
+public func toIter<X, Y>(t:Tree<X, Y>, dir:{#l2r; #r2l}) : I.Iter<(X, Y)> {
   object {
     var trees : IterRep<X, Y> = ?(#tr t, null);
     public func next() : ?(X, Y) {
@@ -64,28 +59,28 @@ public func iter<X, Y>(t:Tree<X, Y>, dir:{#fwd; #bwd}) : I.Iter<(X, Y)> {
       case (_, null) { null };
       case (_, ?(#tr(#leaf), ts))                     { trees := ts; next() };
       case (_, ?(#xy xy, ts))                         { trees := ts; switch (xy.1) { case null next(); case (?y) ?(xy.0, y) } };
-      case (#fwd, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr l, ?(#xy xy, ?(#tr r, ts))); next() };
-      case (#bwd, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr r, ?(#xy xy, ?(#tr l, ts))); next() };
+      case (#l2r, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr l, ?(#xy xy, ?(#tr r, ts))); next() };
+      case (#r2l, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr r, ?(#xy xy, ?(#tr l, ts))); next() };
       }
     };
   }
 };
 
-func removeRec<X, Y>(x:X, compareTo:(X, X) -> O.Order, t:Tree<X, Y>)
+func removeRec<X, Y>(x:X, compareTo:(X, X) -> O.Ordering, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
   case (#leaf) { (null, #leaf) };
   case (#node(c, l, xy, r)) {
          switch (compareTo(x, xy.0)) {
-         case (#less) {
+         case (#lt) {
                 let (yo, l2) = removeRec(x, compareTo, l);
                 (yo, #node(c, l2, xy, r))
               };
-         case (#equal) {
+         case (#eq) {
                 (xy.1, #node(c, l, (x, null), r))
               };
-         case (#greater) {
+         case (#gt) {
                 let (yo, r2) = removeRec(x, compareTo, r);
                 (yo, #node(c, l, xy, r2))
               };
@@ -108,7 +103,7 @@ func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, 
   }
 };
 
-func insertRoot<X, Y>(x:X, compareTo:(X, X) -> O.Order, y:Y, t:Tree<X, Y>)
+func insertRoot<X, Y>(x:X, compareTo:(X, X) -> O.Ordering, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch (insertRec(x, compareTo, y, t)) {
@@ -117,21 +112,21 @@ func insertRoot<X, Y>(x:X, compareTo:(X, X) -> O.Order, y:Y, t:Tree<X, Y>)
   }
 };
 
-func insertRec<X, Y>(x:X, compareTo:(X, X) -> O.Order, y:Y, t:Tree<X, Y>)
+func insertRec<X, Y>(x:X, compareTo:(X, X) -> O.Ordering, y:Y, t:Tree<X, Y>)
   : (?Y, Tree<X, Y>)
 {
   switch t {
   case (#leaf) { (null, #node(#R, #leaf, (x, ?y), #leaf)) };
   case (#node(c, l, xy, r)) {
          switch (compareTo(x, xy.0)) {
-         case (#less) {
+         case (#lt) {
                 let (yo, l2) = insertRec(x, compareTo, y, l);
                 (yo, bal(c, l2, xy, r))
               };
-         case (#equal) {
+         case (#eq) {
                 (xy.1, #node(c, l, (x, ?y), r))
               };
-         case (#greater) {
+         case (#gt) {
                 let (yo, r2) = insertRec(x, compareTo, y, r);
                 (yo, bal(c, l, xy, r2))
               };
@@ -140,14 +135,14 @@ func insertRec<X, Y>(x:X, compareTo:(X, X) -> O.Order, y:Y, t:Tree<X, Y>)
   }
 };
 
-func getRec<X, Y>(x:X, compareTo:(X, X) -> O.Order, t:Tree<X, Y>) : ?Y {
+func findRec<X, Y>(x:X, compareTo:(X, X) -> O.Ordering, t:Tree<X, Y>) : ?Y {
   switch t {
   case (#leaf) { null };
   case (#node(c, l, xy, r)) {
          switch (compareTo(x, xy.0)) {
-         case (#less) { getRec(x, compareTo, l) };
-         case (#equal) { xy.1 };
-         case (#greater) { getRec(x, compareTo, r) };
+         case (#lt) { findRec(x, compareTo, l) };
+         case (#eq) { xy.1 };
+         case (#gt) { findRec(x, compareTo, r) };
          }
        };
   }

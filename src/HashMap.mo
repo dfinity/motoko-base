@@ -33,7 +33,7 @@ public class HashMap<K,V> (
   var table : [var KVs<K,V>] = [var];
   var _count : Nat = 0;
 
-  public func size() : Nat = _count;
+  public func count() : Nat = _count;
 
   public func delete(k:K) = ignore remove(k);
 
@@ -64,9 +64,9 @@ public class HashMap<K,V> (
     };
   };
 
-  public func put(k:K, v:V) = ignore replace(k, v);
+  public func set(k:K, v:V) = ignore swap(k, v);
 
-  public func replace(k:K, v:V) : ?V {
+  public func swap(k:K, v:V) : ?V {
     if (_count >= table.len()) {
       let size =
         if (_count == 0)
@@ -105,7 +105,7 @@ public class HashMap<K,V> (
     ov
   };
 
-  public func entries() : Iter.Iter<(K,V)> {
+  public func iter() : Iter.Iter<(K,V)> {
     if (table.len() == 0) {
       object { public func next() : ?(K,V) { null } }
     }
@@ -141,9 +141,9 @@ public func clone<K,V>
   (h:HashMap<K,V>,
    keyEq: (K,K) -> Bool,
    keyHash: K -> Hash.Hash) : HashMap<K,V> {
-  let h2 = HashMap<K,V>(h.size(), keyEq, keyHash);
-  for ((k,v) in h.entries()) {
-    h2.put(k,v);
+  let h2 = HashMap<K,V>(h.count(), keyEq, keyHash);
+  for ((k,v) in h.iter()) {
+    ignore h2.set(k,v);
   };
   h2
 };
@@ -155,37 +155,37 @@ public func fromIter<K, V>(iter:Iter.Iter<(K, V)>,
                            keyHash: K -> Hash.Hash) : HashMap<K,V> {
   let h = HashMap<K,V>(initCapacity, keyEq, keyHash);
   for ((k,v) in iter) {
-    h.put(k,v);
+    ignore h.set(k,v);
   };
   h
 };
 
-public func transform<K, V1, V2>
+public func map<K, V1, V2>
   (h:HashMap<K,V1>,
    keyEq: (K,K) -> Bool,
    keyHash: K -> Hash.Hash,
    mapFn: (K, V1) -> V2,
   ) : HashMap<K,V2> {
-  let h2 = HashMap<K,V2>(h.size(), keyEq, keyHash);
-  for ((k, v1) in h.entries()) {
+  let h2 = HashMap<K,V2>(h.count(), keyEq, keyHash);
+  for ((k, v1) in h.iter()) {
     let v2 = mapFn(k, v1);
-    h2.put(k,v2);
+    ignore h2.set(k,v2);
   };
   h2
 };
 
-public func transformFilter<K, V1, V2>
+public func mapFilter<K, V1, V2>
   (h:HashMap<K,V1>,
    keyEq: (K,K) -> Bool,
    keyHash: K -> Hash.Hash,
    mapFn: (K, V1) -> ?V2,
   ) : HashMap<K,V2> {
-  let h2 = HashMap<K,V2>(h.size(), keyEq, keyHash);
-  for ((k, v1) in h.entries()) {
+  let h2 = HashMap<K,V2>(h.count(), keyEq, keyHash);
+  for ((k, v1) in h.iter()) {
     switch (mapFn(k, v1)) {
       case null { };
       case (?v2) {
-             h2.put(k,v2);
+             ignore h2.set(k,v2);
            };
     }
   };

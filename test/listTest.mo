@@ -23,9 +23,9 @@ type X = Nat;
   let l3 = List.push<X>(3, l2);
 
   // ## Projection -- use nth
-  assert (opnatEq(List.get<X>(l3, 0), ?3));
-  assert (opnatEq(List.get<X>(l3, 1), ?2));
-  assert (opnatEq(List.get<X>(l3, 2), null));
+  assert (opnatEq(List.nth<X>(l3, 0), ?3));
+  assert (opnatEq(List.nth<X>(l3, 1), ?2));
+  assert (opnatEq(List.nth<X>(l3, 2), null));
   //assert (opnatEq (hd<X>(l3), ?3));
   //assert (opnatEq (hd<X>(l2), ?2));
   //assert (opnat_isnull(hd<X>(l1)));
@@ -50,37 +50,37 @@ type X = Nat;
   assert (List.isNil<X>(t3));
 
   // ## List functions
-  assert (List.size<X>(l1) == 0);
-  assert (List.size<X>(l2) == 1);
-  assert (List.size<X>(l3) == 2);
+  assert (List.len<X>(l1) == 0);
+  assert (List.len<X>(l2) == 1);
+  assert (List.len<X>(l3) == 2);
 
   // ## List functions
-  assert (List.size<X>(l1) == 0);
-  assert (List.size<X>(l2) == 1);
-  assert (List.size<X>(l3) == 2);
+  assert (List.len<X>(l1) == 0);
+  assert (List.len<X>(l2) == 1);
+  assert (List.len<X>(l3) == 2);
 
   {
-    Prelude.debugPrintLine("  fromArray");
+    Prelude.printLn("  fromArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [1, 2, 3];
     let actual = List.fromArray<Nat>(array);
 
-    assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+    assert List.isEq<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
   };
 
   {
-    Prelude.debugPrintLine("  fromVarArray");
+    Prelude.printLn("  fromArrayMut");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let array = [var 1, 2, 3];
-    let actual = List.fromVarArray<Nat>(array);
+    let actual = List.fromArrayMut<Nat>(array);
 
-    assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+    assert List.isEq<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
   };
 
   {
-    Prelude.debugPrintLine("  toArray");
+    Prelude.printLn("  toArray");
 
     let expected = [1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
@@ -94,11 +94,11 @@ type X = Nat;
   };
 
   {
-    Prelude.debugPrintLine("  toVarArray");
+    Prelude.printLn("  toArrayMut");
 
     let expected = [var 1, 2, 3];
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
-    let actual = List.toVarArray<Nat>(list);
+    let actual = List.toArrayMut<Nat>(list);
 
     assert (actual.len() == expected.len());
 

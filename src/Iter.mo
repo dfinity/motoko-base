@@ -16,9 +16,9 @@ module {
       public func next() : ?Int { if (i < y) null else {let j = i; i -= 1; ?j} };
   };
 
-  public func apply<A>(
-    xs : Iter<A>,
-    f : (A, Nat) -> ()
+  public func forIn<A>(
+    f : (A, Nat) -> (),
+    xs : Iter<A>
   ) {
     var i = 0;
     label l loop {
@@ -35,13 +35,13 @@ module {
     };
   };
 
-  func size<A>(xs : Iter<A>) : Nat {
+  func length<A>(xs : Iter<A>) : Nat {
     var len = 0;
-    apply<A>(xs, func (x, i) { len += 1; });
+    forIn<A>(func (x, i) { len += 1; }, xs);
     len;
   };
 
-  public func transform<A, B>(xs : Iter<A>, f : A -> B) : Iter<B> = object {
+  public func map<A, B>(f : A -> B, xs : Iter<A>) : Iter<B> = object {
     var i = 0;
     public func next() : ?B {
       label l loop {
@@ -60,7 +60,7 @@ module {
     };
   };
 
-  public func make<A>(x : A) : Iter<A> = object {
+  public func pure<A>(x : A) : Iter<A> = object {
     public func next() : ?A {
       ?x;
     };
@@ -87,21 +87,21 @@ module {
   };
 
   public func toList<A>(xs : Iter<A>) : List.List<A> {
-    toListWithSize<A>(xs).list;
+    toListWithLength<A>(xs).list;
   };
 
-  public func toListWithSize<A>(
+  public func toListWithLength<A>(
     xs : Iter<A>,
   ) : ({
-    size : Nat;
+    length : Nat;
     list : List.List<A>;
   }) {
-    var _size = 0;
+    var _length = 0;
     var _list = List.nil<A>();
-    apply<A>(xs, func (x, i) {
-      _size += 1;
+    forIn<A>(func (x, i) {
+      _length += 1;
       _list := List.push<A>(x, _list);
-    });
-    { size = _size; list = List.reverse<A>(_list); };
+    }, xs);
+    { length = _length; list = List.rev<A>(_list); };
   };
 }

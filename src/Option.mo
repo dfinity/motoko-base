@@ -19,28 +19,28 @@ public func isNull(x : ?Any) : Bool =
   };
 
 /// Unwraps an optional value, with a default value, i.e. `unwrap(?x, d) = x` and `unwrap(null, d) = d`.
-public func get<T>(x : ?T, default : T) : T =
+public func unwrapOr<T>(x : ?T, default : T) : T =
   switch x {
     case null { default };
     case (?x_) x_;
   };
 
 /// Unwraps an optional value using a function, or returns the default, i.e. `option(?x, f, d) = f x` and `option(null, f, d) = d`.
-public func getTransform<A, B>(x : ?A, f : A -> B, default : B) : B =
+public func option<A, B>(x : ?A, f : A -> B, default : B) : B =
   switch x {
     case null { default };
     case (?x_) f(x_);
   };
 
 /// Applies a function to the wrapped value.
-public func transform<A, B>(f : A->B, x : ?A) : ?B =
+public func map<A, B>(f : A->B, x : ?A) : ?B =
   switch x {
     case null null;
     case (?x_) ?f(x_);
   };
 
 /// Applies an optional function to an optional value. Returns `null` if at least one of the arguments is `null`.
-public func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B {
+public func apply<A, B>(f : ?(A -> B), x : ?A) : ?B {
   switch (f, x) {
     case (?f_, ?x_) {
       ?f_(x_);
@@ -54,7 +54,7 @@ public func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B {
 /// Applies an function to an optional value. Returns `null` if the argument is `null`, or the function returns `null`.
 ///
 /// NOTE: Together with <<Option_pure,`pure`>>, this forms a “monad”.
-public func chain<A, B>(x : ?A, f : A -> ?B) : ?B {
+public func bind<A, B>(x : ?A, f : A -> ?B) : ?B {
   switch(x) {
     case (?x_) {
       f(x_);
@@ -66,17 +66,16 @@ public func chain<A, B>(x : ?A, f : A -> ?B) : ?B {
 };
 
 /// Given an optional optional value, removes one layer of optionality.
-public func flatten<A>(x : ??A) : ?A {
-  chain<?A, A>(x, func (x_ : ?A) : ?A {
+public func join<A>(x : ??A) : ?A {
+  bind<?A, A>(x, func (x_ : ?A) : ?A {
     x_;
   });
 };
 
 /// Creates an optional value from a definite value.
-public func make<A>(x: A) : ?A = ?x;
+public func pure<A>(x: A) : ?A = ?x;
 
 /// Asserts that the value is not `null`; fails otherwise.
-/// Deprecated.
 public func assertSome(x : ?Any) =
   switch x {
     case null { P.unreachable() };
@@ -84,7 +83,6 @@ public func assertSome(x : ?Any) =
   };
 
 /// Asserts that the value _is_ `null`; fails otherwise.
-/// Deprecated.
 public func assertNull(x : ?Any) =
   switch x {
     case null { };

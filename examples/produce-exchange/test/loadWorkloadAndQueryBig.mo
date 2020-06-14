@@ -3,19 +3,19 @@
 //let Result = (import "mo:base/Result");
 //let Option = (import "mo:base/Option");
 
-func scaledParams(region_count_:Nat, factor:Nat) : T.WorkloadParams =  {
+func scaledParams(region_count_:Nat, factor:Nat) : T.WorkloadParams = shared {
   region_count        = region_count_:Nat;
   day_count           = 3:Nat;
   max_route_duration  = 1:Nat;
-  producer_count      = region_count * factor;
-  transporter_count   = region_count * factor;
-  retailer_count      = region_count * factor;
+  producer_count      = region_count * factor:Nat;
+  transporter_count   = region_count * factor:Nat;
+  retailer_count      = region_count * factor:Nat;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
 
 actor class Test() = this {
-  func go() {
+  go() {
     ignore(async
     {
       // Vary the choice of region count and scaling factor here;

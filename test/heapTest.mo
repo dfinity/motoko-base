@@ -3,30 +3,30 @@ import H "mo:base/Heap";
 import I "mo:base/Iter";
 import L "mo:base/List";
 import O "mo:base/Option";
-import Order "mo:base/Order";
+import Ord "mo:base/Ord";
 
-func order(x : Int, y : Int) : Order.Order {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater;
+func ord(x : Int, y : Int) : Ord.Ordering {
+    if (x < y) #lt
+    else if (x == y) #eq
+    else #gt;
 };
 
 {
-    var pq = H.Heap<Int>(order);
+    var pq = H.Heap<Int>(ord);
     for (i in I.revRange(100, 0)) {
-        pq.put(i);
+        pq.add(i);
         let x = pq.peekMin();
         assert(O.unwrap(x) == i);
     };
     for (i in I.range(0, 100)) {
-        pq.put(i);
+        pq.add(i);
         let x = pq.peekMin();
         assert(O.unwrap(x) == 0);
     };
     for (i in I.range(0, 100)) {
-        pq.deleteMin();
+        pq.removeMin();
         let x = pq.peekMin();
-        pq.deleteMin();
+        pq.removeMin();
         assert(O.unwrap(x) == i);
     };
     O.assertNull(pq.peekMin());
@@ -35,12 +35,12 @@ func order(x : Int, y : Int) : Order.Order {
 // fromList
 {
     let list = L.fromArray([5,10,9,7,3,8,1,0,2,4,6]);
-    var pq = H.Heap<Int>(order);
+    var pq = H.Heap<Int>(ord);
     pq.fromList(list);
     for (i in I.range(0, 10)) {
         let x = pq.peekMin();
         assert(O.unwrap(x) == i);
-        pq.deleteMin();
+        pq.removeMin();
     };
     O.assertNull(pq.peekMin());
 

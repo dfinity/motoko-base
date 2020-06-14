@@ -17,8 +17,8 @@ module {
     };
     func check<T>(q : Deque<T>) : Deque<T> {
       switch q {
-      case (null, r) { let (a,b) = List.split(List.size(r) / 2, r); (List.reverse(b), a) };
-      case (f, null) { let (a,b) = List.split(List.size(f) / 2, f); (a, List.reverse(b)) };
+      case (null, r) { let (a,b) = List.splitAt(List.len(r) / 2, r); (List.rev(b), a) };
+      case (f, null) { let (a,b) = List.splitAt(List.len(f) / 2, f); (a, List.rev(b)) };
       case q q;
       }
     };
@@ -32,7 +32,7 @@ module {
       case _ null;
       };
     };
-    public func popFront<T>(q: Deque<T>) : Deque<T> {
+    public func removeFront<T>(q: Deque<T>) : Deque<T> {
       switch q {
       case (?(x, f), r) check(f, r);
       case (null, ?(x, r)) check(null, r);
@@ -50,7 +50,7 @@ module {
       case _ null;
       };
     };
-    public func popBack<T>(q: Deque<T>) : Deque<T> {
+    public func removeBack<T>(q: Deque<T>) : Deque<T> {
       switch q {
       case (f, ?(x, r)) check(f, r);
       case (?(x, f), null) check(f, null);

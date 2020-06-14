@@ -39,17 +39,17 @@ module {
     for ((num, lab) in unsort.vals()) {
       Debug.print (Nat.toText num);
       Debug.print lab;
-      t.put(num, lab);
+      ignore t.insert(num, lab);
     };
 
     { var i = 1;
-    for ((num, lab) in t.entries()) {
+    for ((num, lab) in t.iter()) { 
       assert(num == i);
      i += 1;
     }};
 
     { var i = 9;
-    for ((num, lab) in t.entriesRev()) {
+    for ((num, lab) in t.rev()) {
       assert(num == i);
       i -= 1;
     }};

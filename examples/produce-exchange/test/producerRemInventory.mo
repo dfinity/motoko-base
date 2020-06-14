@@ -147,7 +147,7 @@ actor class Test() = this {
 func debugDumpInventory(server:A.Server, pk:T.PublicKey, p:T.ProducerId) : async () {
   Debug.print ("\nProducer " # debug_show p # "'s inventory:\n--------------------------------\n");
   let res = await server.producerAllInventoryInfo(pk, p);
-  let items = Result.unwrapOk res;
+  let items = Result.assertUnwrapAny<[T.InventoryInfo]>(res);
   for (i in items.keys()) {
     Debug.print (debug_show i # ". " # debug_show (items[i]) # "\n");
   }

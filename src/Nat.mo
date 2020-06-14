@@ -6,7 +6,7 @@
 /// The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
 
 import Int "Int";
-import Order "Order";
+import Ord "Ord";
 import Prim "mo:prim";
 
 module {
@@ -46,7 +46,7 @@ module {
     if (x < y) y else x;
   };
 
-  public let compare : (Nat, Nat) -> Order.Order = func(x,y) {
-    if (x < y) #less else if (x > y) #greater else #equal;
+  public let compare : (Nat, Nat) -> Ord.Ordering = func(x,y) {
+    if (x < y) #lt else if (x > y) #gt else #eq;
   };
 }

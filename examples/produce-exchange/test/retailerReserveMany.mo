@@ -55,11 +55,11 @@ actor class Test() = this {
       printEntityCount("Produce", (await s.getCounts()).produce_count);
 
       // register all users
-      let uida = await s.registrarAddUser(pka, "usera", "", Result.unwrapOk rega, true, true, true, true);
-      let uidb = await s.registrarAddUser(pkb, "userb", "", Result.unwrapOk regb, true, true, true, true);
-      let uidc = await s.registrarAddUser(pkc, "userc", "", Result.unwrapOk regc, true, true, true, true);
-      let uidd = await s.registrarAddUser(pkd, "userd", "", Result.unwrapOk regd, true, true, true, true);
-      let uide = await s.registrarAddUser(pke, "usere", "", Result.unwrapOk rege, true, true, true, true);
+      let uida = await s.registrarAddUser(pka, "usera", "", Result.assertUnwrapAny<T.RegionId>rega, true, true, true, true);
+      let uidb = await s.registrarAddUser(pkb, "userb", "", Result.assertUnwrapAny<T.RegionId>regb, true, true, true, true);
+      let uidc = await s.registrarAddUser(pkc, "userc", "", Result.assertUnwrapAny<T.RegionId>regc, true, true, true, true);
+      let uidd = await s.registrarAddUser(pkd, "userd", "", Result.assertUnwrapAny<T.RegionId>regd, true, true, true, true);
+      let uide = await s.registrarAddUser(pke, "usere", "", Result.assertUnwrapAny<T.RegionId>rege, true, true, true, true);
 
       printEntityCount("Producer", (await s.getCounts()).producer_count);
       printEntityCount("Transporter", (await s.getCounts()).transporter_count);
@@ -68,27 +68,27 @@ actor class Test() = this {
       // populate with inventory
       let praia = await s.producerAddInventory(
         pka,
-        Result.unwrapOk uida,
-        Result.unwrapOk pea, 100, 100, 10, 0, 110, ""
+        Result.assertUnwrapAny<T.UserId>(uida),
+        Result.assertUnwrapAny<T.ProduceId>(pea), 100, 100, 10, 0, 110, ""
       );
 
       printEntityCount("Inventory@time1", (await s.getCounts()).inventory_count);
 
       let rta_a_c_tta = await s.transporterAddRoute(
         pka,
-        Result.unwrapOk uida,
-        Result.unwrapOk rega,
-        Result.unwrapOk regc,
+        Result.assertUnwrapAny<T.UserId>(uida),
+        Result.assertUnwrapAny<T.RegionId>(rega),
+        Result.assertUnwrapAny<T.RegionId>(regc),
         0, 20, 100,
-        Result.unwrapOk tta
+        Result.assertUnwrapAny<T.TruckTypeId>(tta)
       );
       let rta_b_c_ttb = await s.transporterAddRoute(
         pka,
-        Result.unwrapOk uida,
-        Result.unwrapOk regb,
-        Result.unwrapOk regc,
+        Result.assertUnwrapAny<T.UserId>(uida),
+        Result.assertUnwrapAny<T.RegionId>(regb),
+        Result.assertUnwrapAny<T.RegionId>(regc),
         0, 20, 100,
-        Result.unwrapOk ttb
+        Result.assertUnwrapAny<T.TruckTypeId>(ttb)
       );
 
       printEntityCount("Route@time1", (await s.getCounts()).route_count);
@@ -106,11 +106,11 @@ actor class Test() = this {
       Debug.print "\nRetailer queries\n====================================\n";
 
       // do some queries
-      await retailerQueryAll(s, pka, ? Result.unwrapOk uida);
-      await retailerQueryAll(s, pkb, ? Result.unwrapOk uidb);
-      await retailerQueryAll(s, pkc, ? Result.unwrapOk uidc);
-      await retailerQueryAll(s, pkd, ? Result.unwrapOk uidd);
-      await retailerQueryAll(s, pke, ? Result.unwrapOk uide);
+      await retailerQueryAll(s, pka, ? Result.assertUnwrapAny<T.UserId>(uida));
+      await retailerQueryAll(s, pkb, ? Result.assertUnwrapAny<T.UserId>(uidb));
+      await retailerQueryAll(s, pkc, ? Result.assertUnwrapAny<T.UserId>(uidc));
+      await retailerQueryAll(s, pkd, ? Result.assertUnwrapAny<T.UserId>(uidd));
+      await retailerQueryAll(s, pke, ? Result.assertUnwrapAny<T.UserId>(uide));
 
       Debug.print "\nQuery counts\n----------------\n";
       let counts = await s.getCounts();
@@ -126,12 +126,12 @@ actor class Test() = this {
 
       let rrm =
         await s.retailerReserveMany(pka,
-                                    Result.unwrapOk uida,
+                                    Result.assertUnwrapAny<T.UserId>(uida),
                                     [(0, 0),
                                      (0, 1)]);
 
 
-      let urrm = Result.unwrapOk rrm;
+      let urrm = Result.assertUnwrapAny<[Result.Result<(T.ReservedInventoryId, T.ReservedRouteId), T.ServerErr>]>(rrm);
 
       Debug.print "\nRetailer reservations: results:\n---------------------------------\n";
 
@@ -141,7 +141,7 @@ actor class Test() = this {
 
       Debug.print "\nRetailer reservations: results[0]: expect success.\n---------------------------------\n";
 
-      let (ri0, rr0) = Result.unwrapOk (urrm[0]);
+      let (ri0, rr0) = Result.assertUnwrapAny<(T.ReservedInventoryId, T.ReservedRouteId)>(urrm[0]);
 
       Debug.print "- ";
       Debug.print (debug_show (ri0, rr0));
@@ -149,16 +149,19 @@ actor class Test() = this {
 
       Debug.print "\nRetailer reservations: results[1]: expect error: already reserved by us!\n---------------------------------\n";
 
-      let err = Result.unwrapErr(urrm[1]);
-      switch err {
-      case (#idErr entid) {
-             switch entid {
-             case (?(#inventory 0)) Debug.print "- error is `#idErr(?(#inventory 0))`\n";
-             case _ assert false;
-             }
-           };
-      case _ assert false;
-      };
+      Result.assertErrAs<T.ServerErr, ()>
+      (urrm[1],
+       func (err:T.ServerErr):(()) {
+         switch err {
+         case (#idErr entid) {
+                switch entid {
+                case (?(#inventory 0)) Debug.print "- error is `#idErr(?(#inventory 0))`\n";
+                case _ assert false;
+                }
+              };
+         case _ assert false;
+         }
+       });
 
       Debug.print "\nRetailer reservations: done.\n---------------------------------\n";
 
@@ -177,7 +180,7 @@ actor class Test() = this {
 func debugDumpInventory(server:A.Server, pk:T.PublicKey, p:T.ProducerId) : async Nat {
   Debug.print ("\nProducer " # debug_show p # "'s inventory:\n--------------------------------\n");
   let res = await server.producerAllInventoryInfo(pk, p);
-  let items = Result.unwrapOk res;
+  let items = Result.assertUnwrapAny<[T.InventoryInfo]>(res);
   for (i in items.keys()) {
     Debug.print (debug_show i # ". " # debug_show items[i] # "\n");
   };
@@ -188,7 +191,7 @@ func debugDumpInventory(server:A.Server, pk:T.PublicKey, p:T.ProducerId) : async
 func debugDumpRoutes(server:A.Server, pk:T.PublicKey, t:T.TransporterId) : async Nat {
   Debug.print ("\nTransporter " # debug_show t # "'s routes:\n--------------------------------\n");
   let res = await server.transporterAllRouteInfo(pk, t);
-  let items = Result.unwrapOk res;
+  let items = Result.assertUnwrapAny<[T.RouteInfo]>(res);
   for (i in items.keys()) {
     Debug.print (debug_show i # ". " # debug_show items[i] # "\n");
   };
@@ -201,7 +204,7 @@ func retailerQueryAll(server:A.Server, pk:Text, r:?T.UserId) : async () {
   Debug.print ("\nRetailer " # debug_show retailerId # " sends `retailerQueryAll`\n");
 
   Debug.print "\n## Query begin:\n";
-  let res = Result.unwrapOk(
+  let res = Result.assertUnwrapAny<T.QueryAllResults>(
     await server.retailerQueryAll(pk, retailerId, null, null)
   );
   Debug.print "\n## Query end.";
