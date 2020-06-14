@@ -130,7 +130,7 @@ func debugDumpAll() : async () {
   { debugPrint "\nInventory info\n----------------\n";
     let items = await server.allInventoryInfo();
     debugPrint "total count of ";
-    debugPrintInt (items.len());
+    debugPrintInt (items.size());
     debugPrint ":\n";
     for ( info in items.vals() ) {
       debugPrint "- ";
@@ -142,7 +142,7 @@ func debugDumpAll() : async () {
   { debugPrint "\nRoute info\n----------------\n";
     let routes = await server.allRouteInfo();
     debugPrint "total count of ";
-    debugPrintInt (routes.len());
+    debugPrintInt (routes.size());
     debugPrint ":\n";
     for ( info in (routes.vals()) ) {
       debugPrint "- ";

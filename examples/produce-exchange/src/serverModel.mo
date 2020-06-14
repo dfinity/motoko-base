@@ -336,7 +336,7 @@ public class Model() {
       case (#add reqs)
       #add (
         Array.tabulate<Result<T.EntId, T.IdErr>>(
-          reqs.len(),
+          reqs.size(),
           func(i:Nat):Result<T.EntId, T.IdErr> =
             Result.transformOk<L.Resp, T.EntId, T.IdErr>(
               evalReq(#add(reqs[i])),
@@ -363,7 +363,7 @@ public class Model() {
    */
   public func evalBulkArray(reqs:[L.BulkReq]) : [L.BulkResp] {
     Array.tabulate<L.BulkResp>(
-      reqs.len(),
+      reqs.size(),
       func(i:Nat):L.BulkResp = evalBulk(reqs[i])
     )
   };
@@ -2287,7 +2287,7 @@ than the MVP goals, however.
     : [Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>]
   {
     let a = Array.init<?(Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>)>(
-      array.len(),
+      array.size(),
       null
     );
     for (i in array.keys()) {
@@ -2297,7 +2297,7 @@ than the MVP goals, however.
     };
     let results =
       Array.tabulate<Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>>(
-        array.len(),
+        array.size(),
         func(i:Nat):Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>{
           Option.unwrap<Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>>(a[i])
         });
