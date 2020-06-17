@@ -2,12 +2,12 @@ import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Nat "mo:base/Nat";
 import Int "mo:base/Int";
-import Prelude "mo:base/Prelude";
+import Debug "mo:base/Debug";
 
-Prelude.debugPrintLine("Iter");
+Debug.print("Iter");
 
 {
-  Prelude.debugPrintLine("  range");
+  Debug.print("  range");
 
   let tests = [((0,-1), "", "0-1"), ((0,0), "0", "0"), ((0, 5), "012345", ""), ((5, 0), "", "543210")];
   for ((range, expected, revExpected) in tests.vals()) {
@@ -25,7 +25,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  apply");
+  Debug.print("  apply");
 
   let xs = [ "a", "b", "c", "d", "e", "f" ];
 
@@ -42,7 +42,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  transform");
+  Debug.print("  transform");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -60,7 +60,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  make");
+  Debug.print("  make");
 
   let x = 1;
   let y = Iter.make<Nat>(x);
@@ -72,7 +72,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  fromArray");
+  Debug.print("  fromArray");
 
   let expected = [1, 2, 3];
   let _actual = Iter.fromArray<Nat>(expected);
@@ -86,7 +86,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  fromArrayMut");
+  Debug.print("  fromArrayMut");
 
   let expected = [var 1, 2, 3];
   let _actual = Iter.fromArrayMut<Nat>(expected);
@@ -100,7 +100,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  fromList");
+  Debug.print("  fromList");
 
   let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
   let _actual = Iter.fromList<Nat>(list);
@@ -115,7 +115,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  toArray");
+  Debug.print("  toArray");
 
   let expected = [1, 2, 3];
   let actual = Iter.toArray<Nat>(expected.vals());
@@ -128,7 +128,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  toArrayMut");
+  Debug.print("  toArrayMut");
 
   let expected = [var 1, 2, 3];
   let actual = Iter.toArrayMut<Nat>(expected.vals());
@@ -141,7 +141,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  toList");
+  Debug.print("  toList");
 
   let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
   let actual = Iter.toList<Nat>([1, 2, 3].vals());
@@ -149,7 +149,7 @@ Prelude.debugPrintLine("Iter");
 };
 
 {
-  Prelude.debugPrintLine("  toListWithSize");
+  Debug.print("  toListWithSize");
 
   let expected : {
     size : Nat;
