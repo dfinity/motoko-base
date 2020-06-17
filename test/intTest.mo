@@ -1,10 +1,10 @@
-import Prelude "mo:base/Prelude";
+import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 
-Prelude.debugPrintLine("Int");
+Debug.print("Int");
 
 {
-  Prelude.debugPrintLine("  add");
+  Debug.print("  add");
 
   assert(Int.add(1, Int.add(2, 3)) == Int.add(1, Int.add(2, 3)));
   assert(Int.add(0, 1) == 1);
@@ -14,7 +14,7 @@ Prelude.debugPrintLine("Int");
 };
 
 {
-  Prelude.debugPrintLine("  toText");
+  Debug.print("  toText");
 
   assert(Int.toText(0) == "0");
   assert(Int.toText(-0) == "0");
