@@ -1,11 +1,11 @@
 import Array "mo:base/Array";
-import Prelude "mo:base/Prelude";
+import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 
-Prelude.printLn("Array");
+Debug.print("Array");
 
 {
-  Prelude.printLn("  append");
+  Debug.print("  append");
 
   let actual = Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]);
   let expected = [ 1, 2, 3, 4, 5, 6 ];
@@ -18,7 +18,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  apply");
+  Debug.print("  apply");
 
   let ask = func (x : Text) : Text {
     x # "?";
@@ -39,7 +39,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  chain");
+  Debug.print("  chain");
 
   let purePlusOne = func (x : Int) : [Int] {
     [ x + 1 ];
@@ -56,7 +56,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  filter");
+  Debug.print("  filter");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -73,7 +73,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  find");
+  Debug.print("  find");
 
   type Element = {
     key : Text;
@@ -101,7 +101,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  foldLeft");
+  Debug.print("  foldLeft");
 
   let xs = [ "a", "b", "c" ];
 
@@ -112,7 +112,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  foldRight");
+  Debug.print("  foldRight");
 
   let xs = [ "a", "b", "c" ];
 
@@ -123,7 +123,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  freeze");
+  Debug.print("  freeze");
 
   var xs : [var Int] = [ var 1, 2, 3 ];
 
@@ -138,7 +138,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  flatten");
+  Debug.print("  flatten");
 
   let xs = [ [ 1, 2, 3 ] ];
 
@@ -153,7 +153,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  transform");
+  Debug.print("  transform");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -170,7 +170,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  mapEntries");
+  Debug.print("  mapEntries");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -201,7 +201,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  make");
+  Debug.print("  make");
 
   let actual = Array.make<Int>(0);
   let expected = [0];
@@ -214,7 +214,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  thaw");
+  Debug.print("  thaw");
 
   let xs : [Int] = [ 1, 2, 3 ];
 
@@ -229,7 +229,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  tabulateVar");
+  Debug.print("  tabulateVar");
 
   // regression test for (fixed) issues in base cases, where func was called too often:
 

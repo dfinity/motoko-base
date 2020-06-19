@@ -1,13 +1,13 @@
 import Option "mo:base/Option";
-import Prelude "mo:base/Prelude";
+import Debug "mo:base/Debug";
 
-Prelude.printLn("Option");
+Debug.print("Option");
 
 {
-  Prelude.printLn("  apply");
+  Debug.print("  apply");
 
   {
-    Prelude.printLn("    null function, null value");
+    Debug.print("    null function, null value");
 
     let actual = Option.apply<Int, Bool>(null, null);
     let expected : ?Bool = null;
@@ -23,7 +23,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    null function, non-null value");
+    Debug.print("    null function, non-null value");
 
      let actual = Option.apply<Int, Bool>(?0, null);
     let expected : ?Bool = null;
@@ -39,7 +39,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    non-null function, null value");
+    Debug.print("    non-null function, null value");
 
      let isEven = func (x : Int) : Bool {
       x % 2 == 0;
@@ -59,7 +59,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    non-null function, non-null value");
+    Debug.print("    non-null function, non-null value");
 
    let isEven = func (x : Int) : Bool {
       x % 2 == 0;
@@ -81,10 +81,10 @@ Prelude.printLn("Option");
  };
 
 {
-  Prelude.printLn("  bind");
+  Debug.print("  bind");
 
   {
-    Prelude.printLn("    null value to null value");
+    Debug.print("    null value to null value");
 
     let safeInt = func (x : Int) : ?Int {
       if (x > 9007199254740991) {
@@ -108,7 +108,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    non-null value to null value");
+    Debug.print("    non-null value to null value");
 
     let safeInt = func (x : Int) : ?Int {
       if (x > 9007199254740991) {
@@ -132,7 +132,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    non-null value to non-null value");
+    Debug.print("    non-null value to non-null value");
 
     let safeInt = func (x : Int) : ?Int {
       if (x > 9007199254740991) {
@@ -158,10 +158,10 @@ Prelude.printLn("Option");
 };
 
 {
-  Prelude.printLn("  flatten");
+  Debug.print("  flatten");
 
   {
-    Prelude.printLn("    null value");
+    Debug.print("    null value");
 
     let actual = Option.flatten<Int>(?null);
     let expected : ?Int = null;
@@ -177,7 +177,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    non-null value");
+    Debug.print("    non-null value");
     let actual = Option.flatten<Int>(??0);
     let expected = ?0;
 
@@ -194,10 +194,10 @@ Prelude.printLn("Option");
 };
 
 {
-  Prelude.printLn("  transform");
+  Debug.print("  transform");
 
   {
-    Prelude.printLn("    null value");
+    Debug.print("    null value");
 
     let isEven = func (x : Int) : Bool {
       x % 2 == 0;
@@ -217,7 +217,7 @@ Prelude.printLn("Option");
   };
 
   {
-    Prelude.printLn("    non-null value");
+    Debug.print("    non-null value");
 
     let isEven = func (x : Int) : Bool {
       x % 2 == 0;
@@ -239,7 +239,7 @@ Prelude.printLn("Option");
 };
 
 {
-  Prelude.printLn("  make");
+  Debug.print("  make");
 
   let actual = Option.make<Int>(0);
   let expected = ?0;
