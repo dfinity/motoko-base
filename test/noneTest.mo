@@ -1,11 +1,11 @@
 import Array "mo:base/Array";
 import None "mo:base/None";
-import Prelude "mo:base/Prelude";
+import Debug "mo:base/Debug";
 
-Prelude.printLn("None");
+Debug.print("None");
 
 {
-  Prelude.printLn("  impossible");
+  Debug.print("  impossible");
 
   func showNone(x : None) : Text {
     None.impossible<Text>(x);
