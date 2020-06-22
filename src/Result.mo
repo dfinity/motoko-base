@@ -57,8 +57,8 @@ public func chain<R1,R2,Error>(
 };
 
 
-/// transform the `Ok` type/value, leaving any `Error` type/value unchanged.
-public func transformOk<Ok1,Ok2,Error>(
+/// Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
+public func mapOk<Ok1,Ok2,Error>(
   x:Result<Ok1,Error>,
   y:Ok1 -> Ok2) : Result<Ok2,Error> {
   switch x {
@@ -75,9 +75,9 @@ public func fromOption<R,E>(x:?R, err:E):Result<R,E> {
   }
 };
 
-/// transform the `Ok` type/value from the optional value, or else use the given error value.
+/// Maps the `Ok` type/value from the optional value, or else use the given error value.
 /// (Deprecate?)
-public func fromSomeTransform<R1,R2,E>(x:?R1, f:R1->R2, err:E):Result<R2,E> {
+public func fromSomeMap<R1,R2,E>(x:?R1, f:R1->R2, err:E):Result<R2,E> {
   switch x {
     case (? x) {#ok (f x)};
     case null {#err err};

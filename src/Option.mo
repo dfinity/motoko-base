@@ -26,14 +26,14 @@ public func get<T>(x : ?T, default : T) : T =
   };
 
 /// Unwraps an optional value using a function, or returns the default, i.e. `option(?x, f, d) = f x` and `option(null, f, d) = d`.
-public func getTransform<A, B>(x : ?A, f : A -> B, default : B) : B =
+public func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B =
   switch x {
     case null { default };
     case (?x_) f(x_);
   };
 
 /// Applies a function to the wrapped value.
-public func transform<A, B>(f : A->B, x : ?A) : ?B =
+public func map<A, B>(f : A->B, x : ?A) : ?B =
   switch x {
     case null null;
     case (?x_) ?f(x_);

@@ -68,7 +68,7 @@ module {
             switch(a) {
             case (null) heap := null;
             case _
-              heap := build (L.transform (a, func (x : T) : t<T> = ?(1, x, null, null)));
+              heap := build (L.map (a, func (x : T) : t<T> = ?(1, x, null, null)));
             };
         };
     };

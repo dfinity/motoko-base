@@ -42,7 +42,7 @@ module {
     len;
   };
 
-  public func transform<A, B>(xs : Iter<A>, f : A -> B) : Iter<B> = object {
+  public func map<A, B>(xs : Iter<A>, f : A -> B) : Iter<B> = object {
     var i = 0;
     public func next() : ?B {
       label l loop {
