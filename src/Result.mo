@@ -1,13 +1,24 @@
-/// Error-annotated values
+/// Error handling with the Result type.
 
 import P "Prelude";
 import Array "Array";
 
 module {
-/// The result of a computation that may contain errors, exceptions, etc.
+
+/// `Result<Ok, Err>` is the type used for returning and propagating errors. It
+/// is a type with the variants, `#ok(Ok)`, representing success and containing
+/// a value, and `#err(Err)`, representing error and containing an error value.
 ///
-/// Motoko does not have exceptions, so we use a datatype to encode these
-/// outcomes.
+/// The simplest way of working with `Result`s is to pattern match on them:
+///
+/// For example, given a function `createUser(user : User) : Result<Id, String>`
+/// where `String` is an error message we could use it like so:
+/// ```motoko
+/// switch(createUser(myUser)) {
+///   case #ok(id) Debug.print("Created new user with id: " # id)
+///   case #err(msg) Debug.print("Failed to create user with the error: " # msg)
+/// }
+/// ```
 public type Result<Ok, Err> = {
   #ok : Ok;
   #err : Err;
