@@ -170,22 +170,10 @@ module {
 
   /// Like [`toArray`](#value.toArray) but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
-    toListWithSize<A>(xs).list;
-  };
-
-  /// Deprecate?
-  public func toListWithSize<A>(
-    xs : Iter<A>,
-  ) : ({
-    size : Nat;
-    list : List.List<A>;
-  }) {
-    var _size = 0;
-    var _list = List.nil<A>();
-    apply<A>(xs, func (x, i) {
-      _size += 1;
-      _list := List.push<A>(x, _list);
+    var result = List.nil<A>();
+    apply<A>(xs, func (x, _i) {
+      result := List.push<A>(x, result);
     });
-    { size = _size; list = List.reverse<A>(_list); };
+    List.reverse<A>(result);
   };
 }
