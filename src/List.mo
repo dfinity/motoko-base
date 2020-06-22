@@ -82,10 +82,10 @@ module {
   ///
   /// This function is equivalent to the `app` function in Standard ML Basis,
   /// and the `iter` function in OCaml.
-  public func apply<T>(l : List<T>, f : T -> ()) {
+  public func forEach<T>(l : List<T>, f : T -> ()) {
     switch l {
       case null     { () };
-      case (?(h,t)) { f(h) ; apply<T>(t, f) };
+      case (?(h,t)) { f(h) ; forEach<T>(t, f) };
     }
   };
 
