@@ -10,6 +10,13 @@ module {
   /// Iterators are inherently stateful. Calling `next` "consumes" a value from
   /// the Iterator that cannot be put back, so keep that in mind when sharing
   /// iterators between consumers.
+  /// 
+  /// An iterater `i` can be iterated over using
+  /// ```
+  /// for (x in i) {
+  ///   …do something with x…
+  /// }
+  /// ```
   public type Iter<T> = { next : () -> ?T };
 
   /// Creates an iterator that produces all `Nat`'s from `x` to `y` including
