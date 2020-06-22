@@ -1,6 +1,7 @@
 /// Iterators
 
 import Array "Array";
+import Buffer "Buf";
 import List "List";
 
 module {
@@ -79,7 +80,9 @@ module {
   };
 
   public func toArray<A>(xs : Iter<A>) : [A] {
-    List.toArray<A>(toList<A>(xs));
+    let buffer = Buffer.Buf<A>(8);
+    apply(xs, func(x : A, ix : Nat) { buffer.add(x) });
+    return buffer.toArray()
   };
 
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
