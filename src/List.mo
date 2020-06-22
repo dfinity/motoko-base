@@ -91,10 +91,10 @@ module {
 
   /// Call the given function on each list element and collect the results
   /// in a new list.
-  public func transform<T,S>(l : List<T>, f:T -> S) : List<S> {
+  public func map<T,S>(l : List<T>, f:T -> S) : List<S> {
     switch l {
       case null     { null };
-      case (?(h,t)) { ?(f(h),transform<T,S>(t,f)) };
+      case (?(h,t)) { ?(f(h),map<T,S>(t,f)) };
     }
   };
 
@@ -137,13 +137,13 @@ module {
 
   /// Call the given function on each list element, and collect the non-null results
   /// in a new list.
-  public func transformFilter<T,S>(l : List<T>, f:T -> ?S) : List<S> {
+  public func mapFilter<T,S>(l : List<T>, f:T -> ?S) : List<S> {
     switch l {
       case null { null };
       case (?(h,t)) {
         switch (f(h)) {
-          case null { transformFilter<T,S>(t, f) };
-          case (?h_){ ?(h_,transformFilter<T,S>(t, f)) };
+          case null { mapFilter<T,S>(t, f) };
+          case (?h_){ ?(h_,mapFilter<T,S>(t, f)) };
         }
       };
     };

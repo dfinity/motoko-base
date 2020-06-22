@@ -42,13 +42,13 @@ Debug.print("Iter");
 };
 
 {
-  Debug.print("  transform");
+  Debug.print("  map");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
   };
 
-  let _actual = Iter.transform<Nat, Bool>([ 1, 2, 3 ].vals(), isEven);
+  let _actual = Iter.map<Nat, Bool>([ 1, 2, 3 ].vals(), isEven);
   let actual = [var true, false, true];
   Iter.apply<Bool>(_actual, func (x, i) { actual[i] := x; });
 
