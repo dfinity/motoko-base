@@ -68,7 +68,7 @@ public func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B {
   };
 };
 
-/// Applies an function to an optional value. Returns `null` if the argument is
+/// Applies a function to an optional value. Returns `null` if the argument is
 /// `null`, or the function returns `null`.
 ///
 /// NOTE: Together with [`make`](#value.make), this forms a “monad”.
@@ -97,7 +97,7 @@ public func flatten<A>(x : ??A) : ?A {
 
 /// Creates an optional value from a definite value.
 /// ```
-/// make(x) = ?(x)
+/// make(42) = ?(42)
 /// ```
 public func make<A>(x: A) : ?A = ?x;
 
