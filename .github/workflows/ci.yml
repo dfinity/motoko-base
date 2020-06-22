@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
-    - uses: cachix/install-nix-action@v7
+    - uses: cachix/install-nix-action@v10
     - name: "install dependencies"
       run: |
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
