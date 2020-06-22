@@ -1,7 +1,7 @@
 /// Integer numbers
 ///
 /// Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-/// This module provides conversion functions.
+/// This module provides equivalent functions and conversion functions.
 ///
 /// The conversions `toInt*` will trap if the number is out of bounds.
 
@@ -12,11 +12,6 @@ import Hash "Hash";
 module {
   /// Returns the absolute value of the number
   public let abs : Int -> Nat = Prim.abs;
-
-  // Remove?
-  public func add(x : Int, y : Int) : Int {
-    x + y;
-  };
 
   public let toText : Int -> Text = func(x) {
     if (x == 0) {
@@ -60,11 +55,13 @@ module {
   public let toInt32   : Int -> Int32 = Prim.intToInt32;
   public let toInt64   : Int -> Int64 = Prim.intToInt64;
 
-  public let min : (Int, Int) -> Int = func(x,y) {
+  /// Returns the minimum of x and y.
+  public func min(x : Int, y : Int) : Int {
     if (x < y) x else y;
   };
 
-  public let max : (Int, Int) -> Int = func(x,y) {
+  /// Returns the maximum of x and y.
+  public func max(x : Int, y : Int) : Int {
     if (x < y) y else x;
   };
 
@@ -90,4 +87,52 @@ module {
       ]);
   };
 
+
+  /// Returns x == y.
+  public func equal(x : Int, y : Int) : Bool { x == y };
+
+  /// Returns x != y.
+  public func notEqual(x : Int, y : Int) : Bool { x != y };
+
+  /// Returns x < y.
+  public func less(x : Int, y : Int) : Bool { x < y };
+
+  /// Returns x <= y.
+  public func lessOrEqual(x : Int, y : Int) : Bool { x <= y };
+
+  /// Returns x > y.
+  public func greater(x : Int, y : Int) : Bool { x > y };
+
+  /// Returns x >= y.
+  public func greaterOrEqual(x : Int, y : Int) : Bool { x >= y };
+
+  /// Returns the order of x and y.
+  public func compare(x : Int, y : Int) : { #less; #equal; #greater} {
+    if (x < y) #less
+    else if (x == y) #equal
+    else #greater
+  };
+
+  /// Returns the negation of x, -x .
+  public func neq(x : Int) : Int { -x; };
+
+  /// Returns the sum of x and y, x + y.
+  public func add(x : Int, y : Int) : Int { x + y };
+
+  /// Returns the difference of x and y.
+  public func sub(x : Int, y : Int) : Int { x - y };
+
+  /// Returns the product of x and y.
+  public func mul(x : Int, y : Int) : Int { x * y };
+
+  /// Returns the division of x by y, x / y.
+  public func div(x : Int, y : Int) : Int { x / y };
+
+  /// Returns the remainder of x divided by y, x % y.
+  public func rem(x : Int, y : Int) : Int { x % y };
+
+  /// Returns x to the power of y, x ** y.
+  public func pow(x : Int, y : Int) : Int { x ** y };
+
 }
+
