@@ -98,7 +98,7 @@ public class Model() {
 
     /**- reset to initial state before adding this new workload: */
     let reqs : List<L.Req> =
-      ?(#reset, List.transform<L.AddReq,L.Req>(addreqs, func (r:L.AddReq):L.Req = #add r));
+      ?(#reset, List.map<L.AddReq,L.Req>(addreqs, func (r:L.AddReq):L.Req = #add r));
 
     /**- evaluate each request: */
     db "evaluate requests for workload...";
@@ -172,7 +172,7 @@ public class Model() {
 
            #ok(#reset)
          };
-    case (#add (#truckType info)) Result.fromSomeTransform<T.TruckTypeId,L.Resp,T.IdErr>(
+    case (#add (#truckType info)) Result.fromSomeMap<T.TruckTypeId,L.Resp,T.IdErr>(
            truckTypeTable.addInfoGetId(
              func (id_:T.TruckTypeId) : T.TruckTypeInfo =
                {
@@ -188,7 +188,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#region info)) Result.fromSomeTransform<T.RegionId,L.Resp,T.IdErr>(
+    case (#add (#region info)) Result.fromSomeMap<T.RegionId,L.Resp,T.IdErr>(
            regionTable.addInfoGetId(
              func (id_:T.RegionId) : T.RegionInfo =
                {
@@ -201,7 +201,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#produce info)) Result.fromSomeTransform<T.ProduceId,L.Resp,T.IdErr>(
+    case (#add (#produce info)) Result.fromSomeMap<T.ProduceId,L.Resp,T.IdErr>(
            produceTable.addInfoGetId(
              func (id_:T.ProduceId) : T.ProduceInfo =
                {
@@ -215,7 +215,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#producer info)) Result.fromSomeTransform<T.ProducerId,L.Resp,T.IdErr>(
+    case (#add (#producer info)) Result.fromSomeMap<T.ProducerId,L.Resp,T.IdErr>(
            producerTable.addInfoGetId(
              func(id_:T.ProducerId):T.ProducerInfo {
                {
@@ -233,7 +233,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#transporter info)) Result.fromSomeTransform<T.TransporterId,L.Resp,T.IdErr>(
+    case (#add (#transporter info)) Result.fromSomeMap<T.TransporterId,L.Resp,T.IdErr>(
            transporterTable.addInfoGetId(
              func(id_:T.TransporterId):T.TransporterInfo {
                {
@@ -250,7 +250,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#retailer info)) Result.fromSomeTransform<T.RetailerId,L.Resp,T.IdErr>(
+    case (#add (#retailer info)) Result.fromSomeMap<T.RetailerId,L.Resp,T.IdErr>(
            retailerTable.addInfoGetId(
              func(id_:T.RetailerId):T.RetailerInfo {
                {
@@ -266,7 +266,7 @@ public class Model() {
            #idErr null
          );
 
-    case (#add (#route info)) Result.transformOk<T.RouteId,L.Resp,T.IdErr>(
+    case (#add (#route info)) Result.mapOk<T.RouteId,L.Resp,T.IdErr>(
            transporterAddRoute(
              null,
              info.transporter,
@@ -280,7 +280,7 @@ public class Model() {
            func (id:T.RouteId):L.Resp = #add(#route(id))
          );
 
-    case (#add (#inventory info)) Result.transformOk<T.InventoryId,L.Resp,T.IdErr>(
+    case (#add (#inventory info)) Result.mapOk<T.InventoryId,L.Resp,T.IdErr>(
            producerAddInventory(
              null,
              info.producer,
@@ -295,7 +295,7 @@ public class Model() {
            func (id:T.RouteId):L.Resp = #add(#route(id))
          );
 
-    case (#add (#user info)) Result.fromSomeTransform<T.UserId,L.Resp,T.IdErr>(
+    case (#add (#user info)) Result.fromSomeMap<T.UserId,L.Resp,T.IdErr>(
            addUser(
              info.public_key,
              info.user_name,
@@ -321,7 +321,7 @@ public class Model() {
    ----------
    */
   public func evalReqList(reqs:List<L.Req>) : List<L.ResultResp> =
-    List.transform<L.Req, L.ResultResp>(reqs, evalReq);
+    List.map<L.Req, L.ResultResp>(reqs, evalReq);
 
   /**
    `evalBulk`
@@ -338,7 +338,7 @@ public class Model() {
         Array.tabulate<Result<T.EntId, T.IdErr>>(
           reqs.len(),
           func(i:Nat):Result<T.EntId, T.IdErr> =
-            Result.transformOk<L.Resp, T.EntId, T.IdErr>(
+            Result.mapOk<L.Resp, T.EntId, T.IdErr>(
               evalReq(#add(reqs[i])),
               eatAdd
             )
@@ -819,7 +819,7 @@ secondary maps.
       reserved=[];
     },
     func(info:T.ProducerInfo):?M.ProducerDoc =
-      Option.transform<M.RegionDoc, M.ProducerDoc>(
+      Option.map<M.RegionDoc, M.ProducerDoc>(
         func (regionDoc: M.RegionDoc): M.ProducerDoc = {
           id=info.id;
           public_key=info.public_key;
@@ -931,7 +931,7 @@ secondary maps.
         reserved_items=[];
       },
       func(info:T.RetailerInfo):?M.RetailerDoc =
-        Option.transform<M.RegionDoc, M.RetailerDoc>(
+        Option.map<M.RegionDoc, M.RetailerDoc>(
           func (regionDoc: M.RegionDoc): M.RetailerDoc = {
             id=info.id;
             public_key=info.public_key;
