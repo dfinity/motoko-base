@@ -78,9 +78,7 @@ public class Buf<X> (initCapacity : Nat) {
     count := 0;
 
   public func clone() : Buf<X> {
-    // TODO(Christoph): Shouldn't this just be `count`? That way we shouldn't
-    // need to resize when cloning
-    let c = Buf<X>(initCapacity);
+    let c = Buf<X>(elems.len());
     var i = 0;
     label l loop {
       if (i >= count) break l;
