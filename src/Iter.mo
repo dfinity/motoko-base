@@ -77,8 +77,8 @@ module {
     len;
   };
 
-  /// Takes a function and an iterator and creates a new iterator by applying
-  /// the function to every element produced by the old iterator.
+  /// Takes a function and an iterator and returns a new iterator that lazily applies
+  /// the function to every element produced by the argument iterator.
   /// ```
   /// let iter = range(1, 3);
   /// let mappedIter = map(iter, func (x : Nat) : Nat { x * 2 });
@@ -118,7 +118,7 @@ module {
     };
   };
 
-  /// Creates an iterator that produces the elements of an Array.
+  /// Creates an iterator that produces the elements of an Array in ascending index order.
   /// ```
   /// let iter = fromArray([1, 2, 3]);
   /// assertEquals(?1, iter.next())

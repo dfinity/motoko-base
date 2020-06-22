@@ -101,14 +101,14 @@ public func flatten<A>(x : ??A) : ?A {
 /// ```
 public func make<A>(x: A) : ?A = ?x;
 
-/// Returns true if the argument is not `null`.
+/// Returns true if the argument is not `null`, otherwise returns false.
 public func isSome(x : ?Any) : Bool =
   switch x {
     case null false;
     case _ true;
   };
 
-/// Returns true if the argument is `null`.
+/// Returns true if the argument is `null`, otherwise returns false.
 public func isNull(x : ?Any) : Bool =
   switch x {
     case null true;

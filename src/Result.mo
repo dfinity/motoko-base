@@ -62,7 +62,7 @@ public func mapErr<Ok, Error1, Error2>(
   }
 };
 
-/// create a result from an option, including an error value to handle the `null` case.
+/// Create a result from an option, including an error value to handle the `null` case.
 /// ```
 /// fromOption(?(x), e) = #ok(x)
 /// fromOption(null, e) = #err(e)
@@ -104,7 +104,9 @@ public func toArrayOk<R,E>(x:[Result<R,E>]) : Result<[R],E> {
   #ok(Array.tabulate<R>(x.len(), func (i:Nat):R {unwrapOk(x[i]) }))
 };
 
-/// assert that we can unwrap the result; should only be used in tests, not in canister implementations. This will trap.
+/// Extract and return the value `v` of an `#ok v` result.
+/// Traps if its argument is an `#err` result.
+/// Recommended for testing only, not for production code.
 public func unwrapOk<Ok,Error>(r:Result<Ok,Error>):Ok {
   switch(r) {
     case (#err e) P.unreachable();
@@ -112,7 +114,9 @@ public func unwrapOk<Ok,Error>(r:Result<Ok,Error>):Ok {
   }
 };
 
-/// assert that the result is an error, and return the error
+/// Extract and return the value `v` of an `#err v` result.
+/// Traps if its argument is an `#ok` result.
+/// Recommended for testing only, not for production code.
 public func unwrapErr<Ok,Error>(r:Result<Ok,Error>):Error {
   switch(r) {
     case (#err e) e;
@@ -120,6 +124,7 @@ public func unwrapErr<Ok,Error>(r:Result<Ok,Error>):Error {
   }
 };
 
+/// Asserts that its argument is an `#ok` result, traps otherwise.
 public func assertOk(r:Result<Any,Any>) {
   switch(r) {
     case (#err _) assert false;
@@ -127,6 +132,7 @@ public func assertOk(r:Result<Any,Any>) {
   }
 };
 
+/// Asserts that its argument is an `#err` result, traps otherwise.
 public func assertErr(r:Result<Any,Any>) {
   switch(r) {
     case (#err _) ();
