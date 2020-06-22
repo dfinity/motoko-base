@@ -56,10 +56,10 @@ module {
   /// Returns the difference of x and y, x - y.
   public func sub(x : Int32, y : Int32) : Int32 { x - y };
 
-  /// Returns the product of x and y. Traps on overflow.
+  /// Returns the product of x and y, x * y. Traps on overflow.
   public func mul(x : Int32, y : Int32) : Int32 { x * y };
 
-  /// Returns the division of x by y. Traps on division by zero.
+  /// Returns the division of x by y, x / y. Traps on division by zero.
   public func div(x : Int32, y : Int32) : Int32 { x / y };
 
   /// Returns the remainder of x divided by y, x % y.
