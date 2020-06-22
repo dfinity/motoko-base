@@ -67,7 +67,19 @@ module {
   };
 
   public func fromArray<A>(xs : [A]) : Iter<A> {
-    fromList<A>(List.fromArray<A>(xs));
+    var ix : Nat = 0;
+    let size = xs.len();
+    object {
+      public func next() : ?A {
+        if (ix >= size) {
+          return null
+        } else {
+          let res = ?(xs[ix]);
+          ix += 1;
+          return res
+        }
+      }
+    }
   };
 
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
