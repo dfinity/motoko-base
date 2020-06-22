@@ -40,8 +40,8 @@ public func chain<R1, R2, Error>(
 };
 
 
-/// transform the `Ok` type/value, leaving any `Error` type/value unchanged.
-public func transformOk<Ok1, Ok2, Error>(
+/// Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
+public func mapOk<Ok1, Ok2, Error>(
   x : Result<Ok1, Error>,
   f : Ok1 -> Ok2
 ) : Result<Ok2, Error> {
@@ -51,8 +51,8 @@ public func transformOk<Ok1, Ok2, Error>(
   }
 };
 
-/// Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
-public func transformErr<Ok, Error1, Error2>(
+/// Maps the `Err` type/value, leaving any `Ok` type/value unchanged.
+public func mapErr<Ok, Error1, Error2>(
   x : Result<Ok, Error1>,
   f : Error1 -> Error2
 ) : Result<Ok, Error2> {
