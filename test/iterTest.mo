@@ -25,14 +25,14 @@ Debug.print("Iter");
 };
 
 {
-  Debug.print("  apply");
+  Debug.print("  iterate");
 
   let xs = [ "a", "b", "c", "d", "e", "f" ];
 
   var y = "";
   var z = 0;
 
-  Iter.apply<Text>(xs.vals(), func (x : Text, i : Nat) {
+  Iter.iterate<Text>(xs.vals(), func (x : Text, i : Nat) {
     y := y # x;
     z += i;
   });
@@ -50,7 +50,7 @@ Debug.print("Iter");
 
   let _actual = Iter.map<Nat, Bool>([ 1, 2, 3 ].vals(), isEven);
   let actual = [var true, false, true];
-  Iter.apply<Bool>(_actual, func (x, i) { actual[i] := x; });
+  Iter.iterate<Bool>(_actual, func (x, i) { actual[i] := x; });
 
   let expected = [false, true, false];
 
@@ -78,7 +78,7 @@ Debug.print("Iter");
   let _actual = Iter.fromArray<Nat>(expected);
   let actual = [var 0, 0, 0];
 
-  Iter.apply<Nat>(_actual, func (x, i) { actual[i] := x; });
+  Iter.iterate<Nat>(_actual, func (x, i) { actual[i] := x; });
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -92,7 +92,7 @@ Debug.print("Iter");
   let _actual = Iter.fromArrayMut<Nat>(expected);
   let actual = [var 0, 0, 0];
 
-  Iter.apply<Nat>(_actual, func (x, i) { actual[i] := x; });
+  Iter.iterate<Nat>(_actual, func (x, i) { actual[i] := x; });
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -107,7 +107,7 @@ Debug.print("Iter");
   let actual = [var 0, 0, 0];
   let expected = [1, 2, 3];
 
-  Iter.apply<Nat>(_actual, func (x, i) { actual[i] := x; });
+  Iter.iterate<Nat>(_actual, func (x, i) { actual[i] := x; });
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -146,21 +146,4 @@ Debug.print("Iter");
   let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
   let actual = Iter.toList<Nat>([1, 2, 3].vals());
   assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
-};
-
-{
-  Debug.print("  toListWithSize");
-
-  let expected : {
-    size : Nat;
-    list : List.List<Nat>;
-  } = {
-    size = 3;
-    list = ?(1, ?(2, ?(3, List.nil<Nat>())));
-  };
-
-  let actual = Iter.toListWithSize<Nat>([1, 2, 3].vals());
-
-  assert (expected.size == actual.size);
-  assert List.equal<Nat>(expected.list, actual.list, func (x1, x2) { x1 == x2 });
 };
