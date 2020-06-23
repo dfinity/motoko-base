@@ -55,13 +55,13 @@ module {
   public let fromWord64 : Word64 -> Int = Prim.word64ToInt;
 
   /// Conversion. Traps on overflow/underflow.
-  public let toWord8    : Int -> Word8  = Prim.natToWord8;
+  public let toWord8    : Int -> Word8  = Prim.intToWord8;
   /// Conversion. Traps on overflow/underflow.
-  public let toWord16   : Int -> Word16 = Prim.natToWord16;
+  public let toWord16   : Int -> Word16 = Prim.intoWord16;
   /// Conversion. Traps on overflow/underflow.
-  public let toWord32   : Int -> Word32 = Prim.natToWord32;
-  /// Conversion. Traps on overflow.
-  public let toWord64   : Int -> Word64 = Prim.natToWord64;
+  public let toWord32   : Int -> Word32 = Prim.intToWord32;
+  /// Conversion. Traps on overflow/underflow.
+  public let toWord64   : Int -> Word64 = Prim.intToWord64;
 
   /// Conversion.
   public let fromInt8  : Int8  -> Int = Prim.int8ToInt;
