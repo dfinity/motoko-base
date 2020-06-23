@@ -45,14 +45,37 @@ module {
     return if isNegative ("-" # text) else text;
   };
 
+  /// Conversion.
+  public let fromWord8  : Word8  -> Int = Prim.word8ToInt;
+  /// Conversion.
+  public let fromWord16 : Word16 -> Int = Prim.word16ToInt;
+  /// Conversion.
+  public let fromWord32 : Word32 -> Int = Prim.word32ToInt;
+  /// Conversion.
+  public let fromWord64 : Word64 -> Int = Prim.word64ToInt;
+
+  /// Conversion. Traps on overflow/underflow.
+  public let toWord8    : Int -> Word8  = Prim.natToWord8;
+  /// Conversion. Traps on overflow/underflow.
+  public let toWord16   : Int -> Word16 = Prim.natToWord16;
+  /// Conversion. Traps on overflow/underflow.
+  public let toWord32   : Int -> Word32 = Prim.natToWord32;
+  /// Conversion. Traps on overflow.
+  public let toWord64   : Int -> Word64 = Prim.natToWord64;
+
+  /// Conversion.
   public let fromInt8  : Int8  -> Int = Prim.int8ToInt;
   public let fromInt16 : Int16 -> Int = Prim.int16ToInt;
   public let fromInt32 : Int32 -> Int = Prim.int32ToInt;
   public let fromInt64 : Int64 -> Int = Prim.int64ToInt;
 
+  /// Conversion. Traps on overflow/underflow.
   public let toInt8    : Int -> Int8  = Prim.intToInt8;
+  /// Conversion. Traps on overflow/underflow.
   public let toInt16   : Int -> Int16 = Prim.intToInt16;
+  /// Conversion. Traps on overflow/underflow.
   public let toInt32   : Int -> Int32 = Prim.intToInt32;
+  /// Conversion. Traps on overflow/underflow.
   public let toInt64   : Int -> Int64 = Prim.intToInt64;
 
   /// Returns the minimum of x and y.
