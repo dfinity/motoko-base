@@ -6,20 +6,20 @@ import Prim "mo:prim";
 
 module {
 
-  /// Returns the Text representation of `x`.
-  public func toText(x : Int32) : Text {
-    Int.toText(Int.fromInt32(x))
-  };
-
   /// Conversion.
   public let toInt : Int32 -> Int = Prim.int32ToInt;
 
   /// Conversion. Traps on overflow/underflow.
   public let fromInt : Int -> Int32  = Prim.intToInt32;
 
+  /// Returns the Text representation of `x`.
+  public func toText(x : Int32) : Text {
+    Int.toText(toInt(x))
+  };
+
   /// Returns the absolute value of `x`. Traps when `x = -2^31`.
   public func abs(x : Int32) : Int32 {
-    Int.toInt32(Int.abs(Int.fromInt32 x))
+    fromInt(Int.abs(toInt(x)))
   };
 
   /// Returns the minimum of `x` and `y`.

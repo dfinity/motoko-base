@@ -6,20 +6,20 @@ import Prim "mo:prim";
 
 module {
 
-  /// Returns the Text representation of `x`.
-  public func toText(x : Int64) : Text {
-    Int.toText(Int.fromInt64(x))
-  };
-
   /// Conversion.
   public let toInt : Int64 -> Int = Prim.int64ToInt;
 
   /// Conversion. Traps on overflow/underflow.
   public let fromInt : Int -> Int64  = Prim.intToInt64;
 
+  /// Returns the Text representation of `x`.
+  public func toText(x : Int64) : Text {
+    Int.toText(toInt(x))
+  };
+
   /// Returns the absolute value of `x`. Traps when `x = Traps when `x = -2^63.`
   public func abs(x : Int64) : Int64 {
-    Int.toInt64(Int.abs(Int.fromInt64 x))
+    from(Int.abs(toInt(x)))
   };
 
   /// Returns the minimum of `x` and `y`.
