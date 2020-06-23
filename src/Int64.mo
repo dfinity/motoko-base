@@ -51,12 +51,12 @@ module {
   };
 
   /// Returns the negation of x, -x. Traps on overflow.
-  public func neq(x : Int64) : Int64 { -x; };
+  public func neg(x : Int64) : Int64 { -x; };
 
-  /// Returns the sum of x and y, x + y. Traps on underflow.
+  /// Returns the sum of x and y, x + y. Traps on overflow.
   public func add(x : Int64, y : Int64) : Int64 { x + y };
 
-  /// Returns the difference of x and y, x - y.
+  /// Returns the difference of x and y, x - y. Traps on underflow.
   public func sub(x : Int64, y : Int64) : Int64 { x - y };
 
   /// Returns the product of x and y, x * y. Traps on overflow.
