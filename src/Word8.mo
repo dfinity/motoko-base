@@ -79,7 +79,6 @@ module {
   /// Returns `x` to the power of `y`, `(x ** y) mod 2^8`.
   public func pow(x : Word8, y : Word8) : Word8 { x ** y };
 
-
   /// Returns the bitwise negation of `x`, `^x`.
   public func bitnot(x : Word8, y : Word8) : Word8 { ^x };
 

@@ -46,16 +46,12 @@ module {
   };
 
   /// Conversion.
-  public let fromWord8  : Word8  -> Int = Prim.word8ToInt;
-  /// Conversion.
   public let fromWord16 : Word16 -> Int = Prim.word16ToInt;
   /// Conversion.
   public let fromWord32 : Word32 -> Int = Prim.word32ToInt;
   /// Conversion.
   public let fromWord64 : Word64 -> Int = Prim.word64ToInt;
 
-  /// Conversion. Traps on overflow/underflow.
-  public let toWord8    : Int -> Word8  = Prim.intToWord8;
   /// Conversion. Traps on overflow/underflow.
   public let toWord16   : Int -> Word16 = Prim.intToWord16;
   /// Conversion. Traps on overflow/underflow.
