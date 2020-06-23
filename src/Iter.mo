@@ -50,7 +50,7 @@ module {
   /// });
   /// assertEquals(6, sum)
   /// ```
-  public func apply<A>(
+  public func iterate<A>(
     xs : Iter<A>,
     f : (A, Nat) -> ()
   ) {
@@ -73,7 +73,7 @@ module {
   /// (discarding them in the process).
   public func size<A>(xs : Iter<A>) : Nat {
     var len = 0;
-    apply<A>(xs, func (x, i) { len += 1; });
+    iterate<A>(xs, func (x, i) { len += 1; });
     len;
   };
 
@@ -171,7 +171,7 @@ module {
   /// Like [`toArray`](#value.toArray) but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
     var result = List.nil<A>();
-    apply<A>(xs, func (x, _i) {
+    iterate<A>(xs, func (x, _i) {
       result := List.push<A>(x, result);
     });
     List.reverse<A>(result);
