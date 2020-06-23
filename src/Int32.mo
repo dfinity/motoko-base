@@ -10,14 +10,19 @@ module {
     Int.toText(Int.fromInt32(x))
   };
 
+  /// Returns the absolute value of x. Traps on overflow.
+  public func abs(x : Int32) : Int32 {
+    Int.toInt32(Int.abs(Int.fromInt32 x))
+  };
+
   /// Returns the minimum of x and y.
   public func min(x : Int32, y : Int32) : Int32 {
-    if (x < y) x else y;
+    if (x < y) x else y
   };
 
   /// Returns the maximum of x and y.
   public func max( x : Int32, y : Int32) : Int32 {
-    if (x < y) y else x;
+    if (x < y) y else x
   };
 
   /// Returns x == y.
