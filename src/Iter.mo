@@ -1,6 +1,7 @@
 /// Iterators
 
 import Array "Array";
+import Buffer "Buf";
 import List "List";
 
 module {
@@ -45,7 +46,7 @@ module {
   /// [`map`](#value.map).
   /// ```
   /// var sum = 0;
-  /// apply(range(1, 3), func(x : Nat) {
+  /// iterate(range(1, 3), func(x : Nat) {
   ///   sum += x;
   /// });
   /// assertEquals(6, sum)
@@ -160,7 +161,9 @@ module {
   /// assertEquals([1, 2, 3], toArray(iter));
   /// ```
   public func toArray<A>(xs : Iter<A>) : [A] {
-    List.toArray<A>(toList<A>(xs));
+    let buffer = Buffer.Buf<A>(8);
+    iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
+    return buffer.toArray()
   };
 
   /// Like [`toArray`](#value.toArray) but for Arrays with mutable elements.
