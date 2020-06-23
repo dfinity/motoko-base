@@ -57,7 +57,7 @@ module {
   /// Conversion. Traps on overflow/underflow.
   public let toWord8    : Int -> Word8  = Prim.intToWord8;
   /// Conversion. Traps on overflow/underflow.
-  public let toWord16   : Int -> Word16 = Prim.intoWord16;
+  public let toWord16   : Int -> Word16 = Prim.inToWord16;
   /// Conversion. Traps on overflow/underflow.
   public let toWord32   : Int -> Word32 = Prim.intToWord32;
   /// Conversion. Traps on overflow/underflow.
