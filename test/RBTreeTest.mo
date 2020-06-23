@@ -1,5 +1,4 @@
 import Debug "mo:base/Debug";
-import P "mo:base/Prelude";
 import Nat "mo:base/Nat";
 import I "mo:base/Iter";
 import List "mo:base/List";

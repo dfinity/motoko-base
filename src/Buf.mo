@@ -20,7 +20,6 @@
 /// A "buffer" is a mutable sequence that grows, either one element at a
 /// time, or one (second) buffer at time.
 import P "Prelude";
-import I "Iter";
 import A "Array";
 
 module {
@@ -42,8 +41,11 @@ public class Buf<X> (initCapacity : Nat) {
         else
           2 * elems.len();
       let elems2 = A.init<X>(size, elem);
-      for (i in I.range(0, count - 1)) {
-          elems2[i] := elems[i];
+      var i = 0;
+      label l loop {
+        if (i >= count) break l;
+        elems2[i] := elems[i];
+        i += 1;
       };
       elems := elems2;
     };
@@ -76,14 +78,17 @@ public class Buf<X> (initCapacity : Nat) {
     count := 0;
 
   public func clone() : Buf<X> {
-    let c = Buf<X>(initCapacity);
-    for (i in I.range(0, count - 1)) {
-        c.add(elems[i])
+    let c = Buf<X>(elems.len());
+    var i = 0;
+    label l loop {
+      if (i >= count) break l;
+      c.add(elems[i]);
+      i += 1;
     };
     c
   };
 
-  public func vals() : I.Iter<X> = object {
+  public func vals() : { next : () -> ?X } = object {
     var pos = 0;
     public func next() : ?X {
       if (pos == count) { null } else {
@@ -104,8 +109,11 @@ public class Buf<X> (initCapacity : Nat) {
   public func toVarArray() : [var X] = {
     if (count == 0) { [var] } else {
       let a = A.init<X>(count, elems[0]);
-      for (i in I.range(0, count - 1)) {
-        a[i] := elems[i]
+      var i = 0;
+      label l loop {
+        if (i >= count) break l;
+        a[i] := elems[i];
+        i += 1;
       };
       a
     }
