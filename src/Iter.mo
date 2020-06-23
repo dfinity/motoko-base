@@ -46,7 +46,7 @@ module {
   /// [`map`](#value.map).
   /// ```
   /// var sum = 0;
-  /// apply(range(1, 3), func(x : Nat) {
+  /// iterate(range(1, 3), func(x : Nat) {
   ///   sum += x;
   /// });
   /// assertEquals(6, sum)
@@ -162,7 +162,7 @@ module {
   /// ```
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buf<A>(8);
-    apply(xs, func(x : A, ix : Nat) { buffer.add(x) });
+    iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
     return buffer.toArray()
   };
 
