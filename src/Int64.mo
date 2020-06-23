@@ -19,7 +19,7 @@ module {
 
   /// Returns the absolute value of `x`. Traps when `x = Traps when `x = -2^63.`
   public func abs(x : Int64) : Int64 {
-    from(Int.abs(toInt(x)))
+    fromInt(Int.abs(toInt(x)))
   };
 
   /// Returns the minimum of `x` and `y`.

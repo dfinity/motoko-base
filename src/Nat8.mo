@@ -6,16 +6,16 @@ import Prim "mo:prim";
 
 module {
 
-  /// Returns the Text representation of `x`.
-  public func toText(x : Nat8) : Text {
-    Nat.toText(Nat.fromNat8(x))
-  };
-
   /// Conversion.
-  public let toNat : Nat8 -> Nat = Prim.int8ToNat;
+  public let toNat : Nat8 -> Nat = Prim.nat8ToNat;
 
   /// Conversion. Traps on overflow/underflow.
-  public let fromNat : Nat -> Nat8  = Prim.intToNat8;
+  public let fromNat : Nat -> Nat8  = Prim.natToNat8;
+
+  /// Returns the Text representation of `x`.
+  public func toText(x : Nat8) : Text {
+    Nat.toText(toNat(x))
+  };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Nat8, y : Nat8) : Nat8 {
