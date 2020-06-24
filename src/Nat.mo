@@ -14,93 +14,57 @@ module {
   /// Conversion.
   public let toText : Nat -> Text = Int.toText;
 
-  /// Conversion.
-  public let fromWord8  : Word8  -> Nat = Prim.word8ToNat;
-  /// Conversion.
-  public let fromWord16 : Word16 -> Nat = Prim.word16ToNat;
-  /// Conversion.
-  public let fromWord32 : Word32 -> Nat = Prim.word32ToNat;
-  /// Conversion.
-  public let fromWord64 : Word64 -> Nat = Prim.word64ToNat;
-
-  /// Conversion. Traps on overflow.
-  public let toWord8    : Nat -> Word8  = Prim.natToWord8;
-  /// Conversion. Traps on overflow.
-  public let toWord16   : Nat -> Word16 = Prim.natToWord16;
-  /// Conversion. Traps on overflow.
-  public let toWord32   : Nat -> Word32 = Prim.natToWord32;
-  /// Conversion. Traps on overflow.
-  public let toWord64   : Nat -> Word64 = Prim.natToWord64;
-
-  /// Conversion.
-  public let fromNat8  : Nat8  -> Nat = Prim.nat8ToNat;
-  /// Conversion.
-  public let fromNat16 : Nat16 -> Nat = Prim.nat16ToNat;
-  /// Conversion.
-  public let fromNat32 : Nat32 -> Nat = Prim.nat32ToNat;
-  /// Conversion.
-  public let fromNat64 : Nat64 -> Nat = Prim.nat64ToNat;
-
-  /// Conversion. Traps on overflow.
-  public let toNat8    : Nat -> Nat8  = Prim.natToNat8;
-  /// Conversion. Traps on overflow.
-  public let toNat16   : Nat -> Nat16 = Prim.natToNat16;
-  /// Conversion. Traps on overflow.
-  public let toNat32   : Nat -> Nat32 = Prim.natToNat32;
-  /// Conversion. Traps on overflow.
-  public let toNat64   : Nat -> Nat64 = Prim.natToNat64;
-
-  /// Returns the minimum of x and y.
+  /// Returns the minimum of `x` and `y`.
   public func min(x : Nat, y : Nat) : Nat {
     if (x < y) x else y
   };
 
-  /// Returns the maximum of x and y.
+  /// Returns the maximum of `x` and `y`.
   public func max( x : Nat, y : Nat) : Nat {
     if (x < y) y else x
   };
 
-  /// Returns x == y.
+  /// Returns `x == y`.
   public func equal(x : Nat, y : Nat) : Bool { x == y };
 
-  /// Returns x != y.
+  /// Returns `x != y`.
   public func notEqual(x : Nat, y : Nat) : Bool { x != y };
 
-  /// Returns x < y.
+  /// Returns `x < y`.
   public func less(x : Nat, y : Nat) : Bool { x < y };
 
-  /// Returns x <= y.
+  /// Returns `x <= y`.
   public func lessOrEqual(x : Nat, y : Nat) : Bool { x <= y };
 
-  /// Returns x > y.
+  /// Returns `x > y`.
   public func greater(x : Nat, y : Nat) : Bool { x > y };
 
-  /// Returns x >= y.
+  /// Returns `x >= y`.
   public func greaterOrEqual(x : Nat, y : Nat) : Bool { x >= y };
 
-  /// Returns the order of x and y.
+  /// Returns the order of `x` and `y`.
   public func compare(x : Nat, y : Nat) : { #less; #equal; #greater} {
     if (x < y) #less
     else if (x == y) #equal
     else #greater
   };
 
-  /// Returns the sum of x and y, x + y.
+  /// Returns the sum of `x` and `y`, `x + y`.
   public func add(x : Nat, y : Nat) : Nat { x + y };
 
-  /// Returns the difference of x and y, x - y. Traps on underflow.
+  /// Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
   public func sub(x : Nat, y : Nat) : Nat { x - y };
 
-  /// Returns the product of x and y, x * y.
+  /// Returns the product of `x` and `y`, `x * y`.
   public func mul(x : Nat, y : Nat) : Nat { x * y };
 
-  /// Returns the division of x by y, x / y. Traps on division by zero.
+  /// Returns the division of `x` by `y`, `x / y`. Traps on division by zero.
   public func div(x : Nat, y : Nat) : Nat { x / y };
 
-  /// Returns the remainder of x divided by y, x % y.
+  /// Returns the remainder of `x` divided by `y`, `x % y`.
   public func rem(x : Nat, y : Nat) : Nat { x % y };
 
-  /// Returns x to the power of y, x ** y.
+  /// Returns `x` to the power of `y`, `x ** y`.
   public func pow(x : Nat, y : Nat) : Nat { x ** y };
 
 }
