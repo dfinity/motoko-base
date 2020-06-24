@@ -10,7 +10,7 @@ module {
   /// Conversion.
   public let toNat : Word8 -> Nat = Prim.word8ToNat;
 
-  /// Conversion. Traps on overflow.
+  /// Conversion. Wraps around.
   public let fromNat : Nat -> Word8  = Prim.natToWord8;
 
   /// Conversion.
