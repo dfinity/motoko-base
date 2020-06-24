@@ -1,4 +1,4 @@
-/// 8-bit binary integers with modular arithmetic
+/// 8-bit unsigned binary integers with modular arithmetic
 ///
 /// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Nat "Nat";
@@ -13,11 +13,11 @@ module {
   /// Conversion. Wraps around.
   public let fromNat : Nat -> Word8  = Prim.natToWord8;
 
-  /// Conversion.
-  public let toInt: Word8 -> Int = Prim.word8ToInt;
+  /// Conversion. Returns `x mod 2^8`.
+  public let toInt: (x : Word8) -> Int = Prim.word8ToInt;
 
-  /// Conversion. Traps on overflow/underflow.
-  public let fromInt : Int -> Word8  = Prim.intToWord8;
+  /// Conversion. Returns `x mod 2^8`.
+  public let fromInt : (x : Int) -> Word8  = Prim.intToWord8;
 
   /// Returns the Text representation of `x`.
   public func toText(x : Word8) : Text {
