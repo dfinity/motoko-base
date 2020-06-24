@@ -112,7 +112,7 @@ public func fromEntries<K, V>(entries:I.Iter<(K, V)>,
   h
 };
 
-public func transform<K, V1, V2>
+public func map<K, V1, V2>
   (h:TrieMap<K,V1>,
    keyEq: (K,K) -> Bool,
    keyHash: K -> Hash.Hash,

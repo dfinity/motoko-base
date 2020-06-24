@@ -38,7 +38,7 @@ module {
   public func apply<A, B>(xs : [A], fs : [A -> B]) : [B] {
     var ys : [B] = [];
     for (f in fs.vals()) {
-      ys := append<B>(ys, transform<A, B>(xs, f));
+      ys := append<B>(ys, map<A, B>(xs, f));
     };
     ys;
   };
@@ -104,8 +104,8 @@ module {
     });
   };
 
-  public func transform<A, B>(xs : [A], f : A -> B) : [B] {
-    Prim.Array_tabulate<B>(xs.size(), func (i : Nat) : B {
+  public func map<A, B>(xs : [A], f : A -> B) : [B] {
+    Prim.Array_tabulate<B>(xs.len(), func (i : Nat) : B {
       f(xs[i]);
     });
   };

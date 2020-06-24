@@ -160,7 +160,7 @@ public func fromIter<K, V>(iter:Iter.Iter<(K, V)>,
   h
 };
 
-public func transform<K, V1, V2>
+public func map<K, V1, V2>
   (h:HashMap<K,V1>,
    keyEq: (K,K) -> Bool,
    keyHash: K -> Hash.Hash,
@@ -174,7 +174,7 @@ public func transform<K, V1, V2>
   h2
 };
 
-public func transformFilter<K, V1, V2>
+public func mapFilter<K, V1, V2>
   (h:HashMap<K,V1>,
    keyEq: (K,K) -> Bool,
    keyHash: K -> Hash.Hash,
