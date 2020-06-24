@@ -1,48 +1,17 @@
-STDLIB ?= ../src
-ADocOfMo=./adoc-of-mo.pl
-
+MO_DOC ?= ../bin/mo-doc
 SHELL=bash
 
+all: html | adocs
 
-STDLIB_FILES= $(patsubst $(STDLIB)/%.mo,%,$(wildcard $(STDLIB)/*.mo))
-
-DOCS = $(patsubst %,_build/%.adoc,$(STDLIB_FILES))
-
-ADOCS = _build/index.adoc $(DOCS)
-
-all: _out/index.html
-
-adocs: $(ADOCS)
+adocs: _out
+	$(MO_DOC) --source ../src --output _out/adoc --format adoc
+html: _out
+	$(MO_DOC) --source ../src --output _out/html --format html
 
 clean:
-	rm -rf _out _build
+	rm -rf _out
 
 _out:
 	@mkdir -p $@
 
-_build:
-	@mkdir -p $@
-
-_build/%.adoc: $(STDLIB)/%.mo $(ADocOfMo) | _build
-	$(ADocOfMo) $* < $< > $@.tmp
-	@echo "// Do not edit; This file was machine-generated" > $@
-	@echo "" >> $@
-	@echo "" >> $@
-	cat $@.tmp >> $@
-	rm -f $@.tmp
-
-_build/index.adoc: index.adoc | _build
-	cp $< $@
-
-_out/index.html: _build/index.adoc $(DOCS) | _out
-	# checking if all files are included
-	@diff -u \
-	  --label "Present" \
-	  <(echo $(STDLIB_FILES)| tr ' ' '\n' |sort) \
-	  --label "Included" \
-	  <(perl -n -e 'print "$$1\n" if m,include::(.*)\.adoc,' $< | sort) \
-	 # ok
-
-	asciidoctor $< -o $@
-
-.PHONY: all clean adocs
+.PHONY: all clean adocs html
