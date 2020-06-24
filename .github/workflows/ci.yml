@@ -28,7 +28,7 @@ jobs:
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: make -C examples
     - name: "docs"
-      run: make -C doc
+      run: pushd doc && ./make_docs.sh && popd
     # - name: Upload docs
     #   uses: actions/upload-artifact@v1
     #   with:
