@@ -78,7 +78,7 @@ public class Buf<X> (initCapacity : Nat) {
     count := 0;
 
   public func clone() : Buf<X> {
-    let c = Buf<X>(elems.len());
+    let c = Buf<X>(elems.size());
     var i = 0;
     label l loop {
       if (i >= count) break l;

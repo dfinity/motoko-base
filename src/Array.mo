@@ -105,7 +105,7 @@ module {
   };
 
   public func map<A, B>(xs : [A], f : A -> B) : [B] {
-    Prim.Array_tabulate<B>(xs.len(), func (i : Nat) : B {
+    Prim.Array_tabulate<B>(xs.size(), func (i : Nat) : B {
       f(xs[i]);
     });
   };
