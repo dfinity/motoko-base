@@ -45,24 +45,6 @@ module {
     return if isNegative ("-" # text) else text;
   };
 
-  /// Conversion.
-  public let fromWord8  : Word8  -> Int = Prim.word8ToInt;
-  /// Conversion.
-  public let fromWord16 : Word16 -> Int = Prim.word16ToInt;
-  /// Conversion.
-  public let fromWord32 : Word32 -> Int = Prim.word32ToInt;
-  /// Conversion.
-  public let fromWord64 : Word64 -> Int = Prim.word64ToInt;
-
-  /// Conversion. Traps on overflow/underflow.
-  public let toWord8    : Int -> Word8  = Prim.intToWord8;
-  /// Conversion. Traps on overflow/underflow.
-  public let toWord16   : Int -> Word16 = Prim.intToWord16;
-  /// Conversion. Traps on overflow/underflow.
-  public let toWord32   : Int -> Word32 = Prim.intToWord32;
-  /// Conversion. Traps on overflow/underflow.
-  public let toWord64   : Int -> Word64 = Prim.intToWord64;
-
   /// Returns the minimum of `x` and `y`.
   public func min(x : Int, y : Int) : Int {
     if (x < y) x else y;
@@ -73,6 +55,7 @@ module {
     if (x < y) y else x;
   };
 
+  // TODO: (re)move me?
   public func hash(i : Int) : Hash.Hash {
     let j = Prim.intToWord32(i);
     Hash.hashWord8(
@@ -83,6 +66,7 @@ module {
       ]);
   };
 
+  // TODO: (re)move me?
   /// WARNING: May go away (?)
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
     let j = Prim.intToWord32(i);

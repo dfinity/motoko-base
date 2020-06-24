@@ -14,24 +14,6 @@ module {
   /// Conversion.
   public let toText : Nat -> Text = Int.toText;
 
-  /// Conversion.
-  public let fromWord8  : Word8  -> Nat = Prim.word8ToNat;
-  /// Conversion.
-  public let fromWord16 : Word16 -> Nat = Prim.word16ToNat;
-  /// Conversion.
-  public let fromWord32 : Word32 -> Nat = Prim.word32ToNat;
-  /// Conversion.
-  public let fromWord64 : Word64 -> Nat = Prim.word64ToNat;
-
-  /// Conversion. Traps on overflow.
-  public let toWord8    : Nat -> Word8  = Prim.natToWord8;
-  /// Conversion. Traps on overflow.
-  public let toWord16   : Nat -> Word16 = Prim.natToWord16;
-  /// Conversion. Traps on overflow.
-  public let toWord32   : Nat -> Word32 = Prim.natToWord32;
-  /// Conversion. Traps on overflow.
-  public let toWord64   : Nat -> Word64 = Prim.natToWord64;
-
   /// Returns the minimum of `x` and `y`.
   public func min(x : Nat, y : Nat) : Nat {
     if (x < y) x else y
