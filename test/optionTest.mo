@@ -194,7 +194,7 @@ Debug.print("Option");
 };
 
 {
-  Debug.print("  transform");
+  Debug.print("  map");
 
   {
     Debug.print("    null value");
@@ -203,7 +203,7 @@ Debug.print("Option");
       x % 2 == 0;
     };
 
-    let actual = Option.transform<Int, Bool>(isEven, null);
+    let actual = Option.map<Int, Bool>(isEven, null);
     let expected : ?Bool = null;
 
     switch (actual, expected) {
@@ -223,7 +223,7 @@ Debug.print("Option");
       x % 2 == 0;
     };
 
-    let actual = Option.transform<Int, Bool>(isEven, ?0);
+    let actual = Option.map<Int, Bool>(isEven, ?0);
     let expected = ?true;
 
     switch (actual, expected) {

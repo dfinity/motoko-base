@@ -124,11 +124,9 @@
 
   - `compare`: compare collections over ordered values (where polymorphic, takes ordering function for values)
 
-  - `apply`: map unit function over container (a.k.a. `iter` or `forEach`)
+  - `iterate`: map unit function over container (a.k.a. `iter` or `forEach`)
 
-  - `transform`: map function over container (may change type for polymorphic containers)
-
-     Note: Not naming this `map` in order to avoid confusion for map types.
+  - `map`: map function over container (may change type for polymorphic containers)
 
   - `fold`, `foldLeft`, `foldRight`: fold unordered or ordered collection (have the same argument order, but their callback type differs in its order of arguments)
 
@@ -140,8 +138,8 @@
 
 * In addition to the above higher-order functions, keyed collections can provide variants where the parameter function takes a `(key, value)` pair:
 
-  - `applyEntries`
-  - `transformEntries`
+  - `iterateEntries`
+  - `mapEntries`
   - `foldEntries`, `foldEntriesLeft`, `foldEntriesRight`
   - `filterEntries`
   - `findEntry` 

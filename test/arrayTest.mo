@@ -153,13 +153,13 @@ Debug.print("Array");
 };
 
 {
-  Debug.print("  transform");
+  Debug.print("  map");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
   };
 
-  let actual = Array.transform<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
+  let actual = Array.map<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
   let expected = [ false, true, false, true, false, true ];
 
   assert(actual.size() == expected.size());

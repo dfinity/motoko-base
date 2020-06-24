@@ -703,8 +703,8 @@ public func disj<K,V,W,X>(
 
   /// This operation gives a recursor for the internal structure of
   /// tries.  Many common operations are instantiations of this function,
-  /// either as clients, or as hand-specialized versions (e.g., see transform,
-  /// transformFilter, some and all below).
+  /// either as clients, or as hand-specialized versions (e.g., see , map,
+  /// mapFilter, some and all below).
   public func foldUp<K,V,X>(t:Trie<K,V>, bin:(X,X)->X, leaf:(K,V)->X, empty:X) : X {
     func rec(t:Trie<K,V>) : X {
       switch t {
@@ -1139,17 +1139,17 @@ DEPRECATED version.
   };
 
   /*
-   `transformFilter`
+   `mapFilter`
    -----------
-   transform and filter the key-value pairs by a given predicate.
+   map and filter the key-value pairs by a given predicate.
    */
-  public func transformFilter<K,V,W>(t:Trie<K,V>, f:(K,V)->?W) : Trie<K,W> {
+  public func mapFilter<K,V,W>(t:Trie<K,V>, f:(K,V)->?W) : Trie<K,W> {
     func rec(t:Trie<K,V>, bitpos:Nat) : Trie<K,W> {
       switch t {
       case (#empty) { #empty };
 	    case (#leaf l) {
              leaf<K,W>(
-               List.transformFilter<(Key<K>,V),(Key<K>,W)>(
+               List.mapFilter<(Key<K>,V),(Key<K>,W)>(
                  l.keyvals,
                  // retain key and hash, but update key's value using f:
                  func ((k:Key<K>,v:V)):?(Key<K>,W) = {
