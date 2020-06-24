@@ -13,7 +13,6 @@ jobs:
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --add https://nixos.org/channels/nixos-20.03 nixpkgs
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --update
         ls -l /nix/var/nix/profiles/per-user/root/channels/
-        nix-env --install --attr asciidoctor --file '<nixpkgs>'
         nix-env --install --attr wasmtime --file '<nixpkgs>'
     - name: "install dfx"
       run: |
@@ -28,8 +27,9 @@ jobs:
     - name: "examples"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: make -C examples
-    # - name: "docs"
-    #   run: make -C doc
+    - name: "docs"
+      if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
+      run: pushd doc && ./make_docs.sh && popd
     # - name: Upload docs
     #   uses: actions/upload-artifact@v1
     #   with:
