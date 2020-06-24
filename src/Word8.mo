@@ -1,4 +1,4 @@
-/// 8-bit binary integers with modular arithmetic
+/// 8-bit binary unsigned integers with modular arithmetic
 ///
 /// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Nat "Nat";
