@@ -1,6 +1,6 @@
 /// 8-bit binary integers with modular arithmetic
 ///
-/// Most operations are available as built-in operators (`1 + 1`).
+/// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Nat "Nat";
 import Int "Int";
 import Prim "mo:prim";
