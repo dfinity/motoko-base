@@ -51,12 +51,7 @@ The documentation can be generated in `doc/` by running
 
     make
 
-which creates `_out/index.html`. This requires `asciidoctor` and `perl` to be
-installed.
-
-Note that the documentation tool relies on a very peculiar coding convention.
-See `doc/README.md` for details. This convention is not necessarily the best
-convention!
+which creates `_out/html/index.html`.
 
 The `next-moc` branch
 ---------------------
