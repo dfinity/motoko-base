@@ -37,10 +37,10 @@ module {
   public let arctan2 : (x : Float, y : Float) -> Float = Prim.arctan2;
 
   // Returns the value of `e` raise to the `x`-th power.
-  public let exp : (x : Float) -> Float = Prim.cos;
+  public let exp : (x : Float) -> Float = Prim.exp;
 
   // Returns the natural logarithm (base-`e`) of x.
-  public let log : (x : Float) -> Float = Prim.tan;
+  public let log : (x : Float) -> Float = Prim.log;
 
   // Conversion.
   public let toInt64 : Float -> Int64 = Prim.floatToInt64;
