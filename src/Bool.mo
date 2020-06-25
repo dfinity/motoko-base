@@ -1,4 +1,4 @@
-/// Characters
+/// Booleans
 
 import Prim "mo:prim";
 module {
