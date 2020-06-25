@@ -29,9 +29,9 @@ module {
   public let error : (m : Text) -> Error = Prim.error;
 
   /// Returns the code of an error `e`.
-  public let errorCode : ( e : Error) -> ErrorCode = Prim.errorCode;
+  public let errorCode : (e : Error) -> ErrorCode = Prim.errorCode;
 
   /// Returns the message of an error `e`.
-  public let errorMessage : ( e: Error) -> Text = Prim.errorMessage;
+  public let errorMessage : (e : Error) -> Text = Prim.errorMessage;
 
 }
