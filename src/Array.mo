@@ -1,8 +1,10 @@
 /// Functions on Arrays
 
 import Prim "mo:prim";
+import I "IterType";
+
 module {
-  public func equals<A>(a : [A], b : [A], eq : (A,A) -> Bool) : Bool {
+  public func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool {
     if (a.len() != b.len()) { 
       return false; 
     };
@@ -33,26 +35,20 @@ module {
     };
   };
 
-  public func apply<A, B>(fs : [A -> B], xs : [A]) : [B] {
+  public func apply<A, B>(xs : [A], fs : [A -> B]) : [B] {
     var ys : [B] = [];
     for (f in fs.vals()) {
-      ys := append<B>(ys, map<A, B>(f, xs));
+      ys := append<B>(ys, map<A, B>(xs, f));
     };
     ys;
   };
 
-  public func bind<A, B>(xs : [A], f : A -> [B]) : [B] {
+  public func chain<A, B>(xs : [A], f : A -> [B]) : [B] {
     var ys : [B] = [];
     for (i in xs.keys()) {
       ys := append<B>(ys, f(xs[i]));
     };
     ys;
-  };
-
-  public func enumerate<A>(xs : [A]) : [(A, Nat)] {
-    Prim.Array_tabulate<(A, Nat)>(xs.len(), func (i : Nat) : (A, Nat) {
-      (xs[i], i);
-    });
   };
 
   public func filter<A>(f : A -> Bool, xs : [A]) : [A] {
@@ -65,7 +61,7 @@ module {
     ys;
   };
 
-  public func foldl<A, B>(f : (B, A) -> B, initial : B, xs : [A]) : B {
+  public func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B {
     var acc = initial;
     let len = xs.len();
     var i = 0;
@@ -76,7 +72,7 @@ module {
     acc;
   };
 
-  public func foldr<A, B>(f : (A, B) -> B, initial : B, xs : [A]) : B {
+  public func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B {
     var acc = initial;
     let len = xs.len();
     var i = len;
@@ -87,7 +83,7 @@ module {
     acc;
   };
 
-  public func find<A>(f : A -> Bool, xs : [A]) : ?A {
+  public func find<A>(xs : [A], f : A -> Bool) : ?A {
     for (x in xs.vals()) {
       if (f(x)) {
         return ?x;
@@ -102,26 +98,34 @@ module {
     });
   };
 
-  public func join<A>(xs : [[A]]) : [A] {
-    bind<[A], A>(xs, func (x : [A]) : [A] {
+  public func flatten<A>(xs : [[A]]) : [A] {
+    chain<[A], A>(xs, func (x : [A]) : [A] {
       x;
     });
   };
 
-  public func map<A, B>(f : A -> B, xs : [A]) : [B] {
+  public func map<A, B>(xs : [A], f : A -> B) : [B] {
     Prim.Array_tabulate<B>(xs.len(), func (i : Nat) : B {
       f(xs[i]);
     });
   };
 
-  public func mapWithIndex<A, B>(f : (A, Nat) -> B, xs : [A]) : [B] {
+  public func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B] {
     Prim.Array_tabulate<B>(xs.len(), func (i : Nat) : B {
       f(xs[i], i);
     });
   };
 
-  public func pure<A>(x: A) : [A] {
+  public func make<A>(x: A) : [A] {
     [x];
+  };
+
+  public func vals<A>(xs : [A]) : I.Iter<A> {
+    xs.vals()
+  };
+
+  public func keys<A>(xs : [A]) : I.Iter<Nat> {
+    xs.keys()
   };
 
   public func thaw<A>(xs : [A]) : [var A] {

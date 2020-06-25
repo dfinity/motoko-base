@@ -8,11 +8,6 @@ import Prim "mo:prim";
 
 module {
 
-/// Print text followed by a newline.
-public func printLn(x : Text) {
-  Prim.debugPrint(x # "\n");
-};
-
 /// Not yet implemented
 ///
 /// Mark incomplete code with the `nyi` and `xxx` functions.

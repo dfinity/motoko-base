@@ -49,20 +49,15 @@ Documentation
 
 The documentation can be generated in `doc/` by running
 
-    make
+    ./make_docs.sh
 
-which creates `_out/index.html`. This requires `asciidoctor` and `perl` to be
-installed.
-
-Note that the documentation tool relies on a very peculiar coding convention.
-See `doc/README.md` for details. This convention is not necessarily the best
-convention!
+which creates `_out/html/index.html`.
 
 The `next-moc` branch
 ---------------------
 
 The `next-moc` branch contains changes that make base compatible with the
-in-development version of `moc`. This repositorie's public CI does _not_ run
+in-development version of `moc`. This repository's public CI does _not_ run
 on that branch.
 
 External contributions are best made against `master`.

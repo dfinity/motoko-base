@@ -73,11 +73,11 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
     Prim.debugPrint(debug_show(i));
     c.add(i);
   };
-  assert (c.len() == len);
+  assert (c.size() == len);
   assert (c.toArray().len() == len);
-  assert (natIterEq(c.iter(), natArrayIter(c.clone().toArray())));
+  assert (natIterEq(c.vals(), natArrayIter(c.clone().toArray())));
   assert (c.toVarArray().len() == len);
-  assert (natIterEq(c.iter(), natVarArrayIter(c.clone().toVarArray())));
+  assert (natIterEq(c.vals(), natVarArrayIter(c.clone().toVarArray())));
 };
 
 // regression test: initially-empty buffers grow, element-by-element

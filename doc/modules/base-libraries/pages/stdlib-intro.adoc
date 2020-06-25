@@ -20,8 +20,8 @@ Give a local module name to introduce, in this example `P` for
 the imported module:
 
 ....
-import P "mo:base/Prelude";
-P.printLn("hello world");
+import Debug "mo:base/Debug";
+Debug.print("hello world");
 ....
 
 This example illustrates how to import {proglang} code—indicated by using the `mo:` prefix—using the `base/` base library path and the module name `prelude`.
