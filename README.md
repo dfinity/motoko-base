@@ -49,7 +49,7 @@ Documentation
 
 The documentation can be generated in `doc/` by running
 
-    make
+    ./make_docs.sh
 
 which creates `_out/html/index.html`.
 
