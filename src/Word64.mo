@@ -106,6 +106,26 @@ module {
   /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
   public func bitrotRight(x : Word64, y : Word64) : Word64 { x <>> y };
 
+  /// Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
+  public func bitTest(x : Word64, p : Nat) : Bool {
+    Prim.btstWord64(x, Prim.natToWord64 p);
+  };
+
+  /// Returns the value of setting bit `p mod 64` in `x` to `1`.
+  public func bitSet(x : Word64, p : Nat) : Word64 {
+    x | (1 << Prim.natToWord64 p);
+  };
+
+  /// Returns the value of clearing bit `p mod 64` in `x` to `0`.
+  public func bitClear(x : Word64, p : Nat) : Word64 {
+    x & -(1 << Prim.natToWord64 p);
+  };
+
+  /// Returns the value of flipping bit `p mod 64` in `x`.
+  public func bitFlip(x : Word64, p : Nat) : Word64 {
+    x ^ (1 << Prim.natToWord64 p);
+  };
+
   /// Returns the count of non-zero bits in `x`.
   public let popcnt : (x : Word64) -> Word64 = Prim.popcntWord64;
 
@@ -114,8 +134,5 @@ module {
 
   /// Returns the count of trailing zero bits in `x`.
   public let ctz : (x : Word64) -> Word64 = Prim.ctzWord64;
-
-  /// Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
-  public let btst : (x : Word64, y: Word64) -> Bool = Prim.btstWord64;
 
 }
