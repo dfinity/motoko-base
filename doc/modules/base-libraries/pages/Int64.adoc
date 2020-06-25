@@ -1,0 +1,207 @@
+[[module.Int64]]
+= Int64
+
+64-bit signed integers with checked arithmetic
+
+Most operations are available as built-in operators (`1 + 1`).
+
+[[value.toInt]]
+== toInt
+
+Conversion.
+
+[source,motoko]
+----
+let toInt : (Int64) -> Int
+----
+
+[[value.fromInt]]
+== fromInt
+
+Conversion. Traps on overflow/underflow.
+
+[source,motoko]
+----
+let fromInt : (Int) -> Int64
+----
+
+[[value.toText]]
+== toText
+
+Returns the Text representation of `x`.
+
+[source,motoko]
+----
+func toText(x : Int64) : Text
+----
+
+[[value.abs]]
+== abs
+
+Returns the absolute value of `x`. Traps when `x = Traps when `x = -2^63.`
+
+[source,motoko]
+----
+func abs(x : Int64) : Int64
+----
+
+[[value.min]]
+== min
+
+Returns the minimum of `x` and `y`.
+
+[source,motoko]
+----
+func min(x : Int64, y : Int64) : Int64
+----
+
+[[value.max]]
+== max
+
+Returns the maximum of `x` and `y`.
+
+[source,motoko]
+----
+func max(x : Int64, y : Int64) : Int64
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Int64, y : Int64) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Int64, y : Int64) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Int64, y : Int64) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Int64, y : Int64) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Int64, y : Int64) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Int64, y : Int64) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Int64, y : Int64) : {#less : (); #equal : (); #greater : ()}
+----
+
+[[value.neg]]
+== neg
+
+Returns the negation of `x`, `-x`. Traps on overflow.
+
+[source,motoko]
+----
+func neg(x : Int64) : Int64
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+
+[source,motoko]
+----
+func add(x : Int64, y : Int64) : Int64
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+
+[source,motoko]
+----
+func sub(x : Int64, y : Int64) : Int64
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+
+[source,motoko]
+----
+func mul(x : Int64, y : Int64) : Int64
+----
+
+[[value.div]]
+== div
+
+Returns the division of `x by y`, `x / y`. Traps on division by zero.
+
+[source,motoko]
+----
+func div(x : Int64, y : Int64) : Int64
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+
+[source,motoko]
+----
+func rem(x : Int64, y : Int64) : Int64
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+
+[source,motoko]
+----
+func pow(x : Int64, y : Int64) : Int64
+----
+

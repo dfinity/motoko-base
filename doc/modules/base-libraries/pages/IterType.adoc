@@ -1,0 +1,15 @@
+[[module.IterType]]
+= IterType
+
+Iterator type -- break cycle module def
+
+[[type.Iter]]
+== Iter
+
+
+
+[source,motoko]
+----
+type Iter<T> = { next : () -> ?T }
+----
+

@@ -1,0 +1,59 @@
+[[module.Heap]]
+= Heap
+
+Priority Queue
+
+This module provides purely-functional priority queue based on leftist heap
+
+[[class.Heap]]
+== Heap
+
+
+
+[source,motoko]
+----
+class Heap<T>(ord : (T, T) -> O.Order)
+----
+
+
+
+[[value.put]]
+=== put
+
+
+
+[source,motoko]
+----
+func put(x : T)
+----
+
+[[value.peekMin]]
+=== peekMin
+
+
+
+[source,motoko]
+----
+func peekMin() : ?T
+----
+
+[[value.deleteMin]]
+=== deleteMin
+
+
+
+[source,motoko]
+----
+func deleteMin()
+----
+
+[[value.fromList]]
+=== fromList
+
+
+
+[source,motoko]
+----
+func fromList(a : L.List<T>)
+----
+

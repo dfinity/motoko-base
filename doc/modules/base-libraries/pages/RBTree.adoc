@@ -1,0 +1,139 @@
+[[module.RBTree]]
+= RBTree
+
+Red-Black Trees
+
+[[type.Color]]
+== Color
+
+
+
+[source,motoko]
+----
+type Color = {#R : (); #B : ()}
+----
+
+[[type.Tree]]
+== Tree
+
+
+
+[source,motoko]
+----
+type Tree<X, Y> = {#node : (Color, Tree<X, Y>, (X, ?Y), Tree<X, Y>); #leaf : ()}
+----
+
+[[class.RBTree]]
+== RBTree
+
+
+
+[source,motoko]
+----
+class RBTree<X, Y>(compareTo : (X, X) -> O.Order)
+----
+
+
+
+[[value.share]]
+=== share
+
+Get non-OO, purely-functional representation:
+for drawing, pretty-printing and non-OO contexts
+(e.g., async args and results):
+
+[source,motoko]
+----
+func share() : Tree<X, Y>
+----
+
+[[value.get]]
+=== get
+
+
+
+[source,motoko]
+----
+func get(x : X) : ?Y
+----
+
+[[value.replace]]
+=== replace
+
+
+
+[source,motoko]
+----
+func replace(x : X, y : Y) : ?Y
+----
+
+[[value.put]]
+=== put
+
+
+
+[source,motoko]
+----
+func put(x : X, y : Y)
+----
+
+[[value.delete]]
+=== delete
+
+
+
+[source,motoko]
+----
+func delete(x : X) : ?Y
+----
+
+[[value.entries]]
+=== entries
+
+
+
+[source,motoko]
+----
+func entries() : I.Iter<(X, Y)>
+----
+
+[[value.entriesRev]]
+=== entriesRev
+
+
+
+[source,motoko]
+----
+func entriesRev() : I.Iter<(X, Y)>
+----
+
+[[value.iter]]
+== iter
+
+
+
+[source,motoko]
+----
+func iter<X, Y>(t : Tree<X, Y>, dir : {#fwd : (); #bwd : ()}) : I.Iter<(X, Y)>
+----
+
+[[value.height]]
+== height
+
+
+
+[source,motoko]
+----
+func height<X, Y>(t : Tree<X, Y>) : Nat
+----
+
+[[value.size]]
+== size
+
+
+
+[source,motoko]
+----
+func size<X, Y>(t : Tree<X, Y>) : Nat
+----
+

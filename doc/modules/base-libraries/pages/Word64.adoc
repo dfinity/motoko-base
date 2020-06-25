@@ -1,0 +1,339 @@
+[[module.Word64]]
+= Word64
+
+64-bit binary unsigned integers with modular arithmetic
+
+Most operations are available as built-in operators (e.g. `1 + 1`).
+
+[[value.toNat]]
+== toNat
+
+Conversion.
+
+[source,motoko]
+----
+let toNat : (Word64) -> Nat
+----
+
+[[value.fromNat]]
+== fromNat
+
+Conversion. Wraps around.
+
+[source,motoko]
+----
+let fromNat : (Nat) -> Word64
+----
+
+[[value.toInt]]
+== toInt
+
+Conversion. Returns `x mod 2^64`.
+
+[source,motoko]
+----
+let toInt : (Word64) -> Int
+----
+
+[[value.fromInt]]
+== fromInt
+
+Conversion. Returns `x mod 2^64`.
+
+[source,motoko]
+----
+let fromInt : (Int) -> Word64
+----
+
+[[value.toText]]
+== toText
+
+Returns the Text representation of `x`.
+
+[source,motoko]
+----
+func toText(x : Word64) : Text
+----
+
+[[value.min]]
+== min
+
+Returns the minimum of `x` and `y`.
+
+[source,motoko]
+----
+func min(x : Word64, y : Word64) : Word64
+----
+
+[[value.max]]
+== max
+
+Returns the maximum of `x` and `y`.
+
+[source,motoko]
+----
+func max(x : Word64, y : Word64) : Word64
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Word64, y : Word64) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Word64, y : Word64) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Word64, y : Word64) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Word64, y : Word64) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Word64, y : Word64) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Word64, y : Word64) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Word64, y : Word64) : {#less : (); #equal : (); #greater : ()}
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `(x + y) mod 2^64`.
+
+[source,motoko]
+----
+func add(x : Word64, y : Word64) : Word64
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `(2^64 + x - y) mod 2^64`.
+
+[source,motoko]
+----
+func sub(x : Word64, y : Word64) : Word64
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `(x * y) mod 2^64`.
+
+[source,motoko]
+----
+func mul(x : Word64, y : Word64) : Word64
+----
+
+[[value.div]]
+== div
+
+Returns the truncated quotient of `x and y`, `floor (x / y)`.
+Traps when `y` is 0.
+
+[source,motoko]
+----
+func div(x : Word64, y : Word64) : Word64
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of the division of 'x' by `y`, `x - y * floor ( x / y)`.
+Traps when `y` is 0.
+
+[source,motoko]
+----
+func rem(x : Word64, y : Word64) : Word64
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `(x ** y) mod 2^64`.
+
+[source,motoko]
+----
+func pow(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitnot]]
+== bitnot
+
+Returns the bitwise negation of `x`, `^x`.
+
+[source,motoko]
+----
+func bitnot(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitand]]
+== bitand
+
+Returns the bitwise and of `x` and `y`, `x & y`.
+
+[source,motoko]
+----
+func bitand(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitor]]
+== bitor
+
+Returns the bitwise or of `x` and `y`, `x \| y`.
+
+[source,motoko]
+----
+func bitor(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitxor]]
+== bitxor
+
+Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+
+[source,motoko]
+----
+func bitxor(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitshiftLeft]]
+== bitshiftLeft
+
+Returns the bitwise shift left of `x` by `y`, `x << y`.
+
+[source,motoko]
+----
+func bitshiftLeft(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitshiftRight]]
+== bitshiftRight
+
+Returns the bitwise shift right of `x` by `y`, `x >> y`.
+
+[source,motoko]
+----
+func bitshiftRight(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitshiftRightSigned]]
+== bitshiftRightSigned
+
+Returns the signed shift right of `x` by `y`, `x +>> y`.
+
+[source,motoko]
+----
+func bitshiftRightSigned(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitrotLeft]]
+== bitrotLeft
+
+Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+
+[source,motoko]
+----
+func bitrotLeft(x : Word64, y : Word64) : Word64
+----
+
+[[value.bitrotRight]]
+== bitrotRight
+
+Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+
+[source,motoko]
+----
+func bitrotRight(x : Word64, y : Word64) : Word64
+----
+
+[[value.popcnt]]
+== popcnt
+
+Returns the count of non-zero bits in `x`.
+
+[source,motoko]
+----
+let popcnt : (Word64) -> Word64
+----
+
+[[value.clz]]
+== clz
+
+Returns the count of leading zero bits in `x`.
+
+[source,motoko]
+----
+let clz : (Word64) -> Word64
+----
+
+[[value.ctz]]
+== ctz
+
+Returns the count of trailing zero bits in `x`.
+
+[source,motoko]
+----
+let ctz : (Word64) -> Word64
+----
+
+[[value.btst]]
+== btst
+
+Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
+
+[source,motoko]
+----
+let btst : (Word64, Word64) -> Bool
+----
+

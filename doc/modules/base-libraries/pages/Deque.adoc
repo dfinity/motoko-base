@@ -1,0 +1,97 @@
+[[module.Deque]]
+= Deque
+
+Double-ended Queue
+
+This module provides a purely-functional double-ended queue.
+
+[[type.Deque]]
+== Deque
+
+
+
+[source,motoko]
+----
+type Deque<T> = (List<T>, List<T>)
+----
+
+[[value.empty]]
+== empty
+
+
+
+[source,motoko]
+----
+func empty<T>() : Deque<T>
+----
+
+[[value.isEmpty]]
+== isEmpty
+
+
+
+[source,motoko]
+----
+func isEmpty<T>(q : Deque<T>) : Bool
+----
+
+[[value.pushFront]]
+== pushFront
+
+
+
+[source,motoko]
+----
+func pushFront<T>(q : Deque<T>, x : T) : Deque<T>
+----
+
+[[value.peekFront]]
+== peekFront
+
+
+
+[source,motoko]
+----
+func peekFront<T>(q : Deque<T>) : ?T
+----
+
+[[value.popFront]]
+== popFront
+
+
+
+[source,motoko]
+----
+func popFront<T>(q : Deque<T>) : Deque<T>
+----
+
+[[value.pushBack]]
+== pushBack
+
+
+
+[source,motoko]
+----
+func pushBack<T>(q : Deque<T>, x : T) : Deque<T>
+----
+
+[[value.peekBack]]
+== peekBack
+
+
+
+[source,motoko]
+----
+func peekBack<T>(q : Deque<T>) : ?T
+----
+
+[[value.popBack]]
+== popBack
+
+
+
+[source,motoko]
+----
+func popBack<T>(q : Deque<T>) : Deque<T>
+----
+

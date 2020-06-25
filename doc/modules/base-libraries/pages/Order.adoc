@@ -1,0 +1,45 @@
+[[module.Order]]
+= Order
+
+Order
+
+[[type.Order]]
+== Order
+
+A type to represent an order.
+
+[source,motoko]
+----
+type Order = {#less : (); #equal : (); #greater : ()}
+----
+
+[[value.isLess]]
+== isLess
+
+Check if an order is #less.
+
+[source,motoko]
+----
+func isLess(order : Order) : Bool
+----
+
+[[value.isEqual]]
+== isEqual
+
+Check if an order is #equal.
+
+[source,motoko]
+----
+func isEqual(order : Order) : Bool
+----
+
+[[value.isGreater]]
+== isGreater
+
+Check if an order is #greater.
+
+[source,motoko]
+----
+func isGreater(order : Order) : Bool
+----
+
