@@ -1,4 +1,9 @@
-/// Booleans
+/// Functions on Booleans.
+
+/// While boolean operators `_ and _` and `_ or _` are short-circuiting,
+/// avoiding computation of the right argument when possible, the functions
+/// `logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
+/// of their arguments.
 
 import Prim "mo:prim";
 module {
@@ -13,5 +18,14 @@ module {
 
   /// Returns `x != y`.
   public func notEqual(x : Bool, y : Bool) : Bool { x != y };
+
+  /// Returns `x and y`.
+  public func logand(x : Bool, y : Bool) : Bool { x and y };
+
+  /// Returns `x or y`.
+  public func logor(x : Bool, y : Bool) : Bool { x or y };
+
+  /// Returns `not x`.
+  public func lognot(x : Bool) : Bool { not x };
 
 }
