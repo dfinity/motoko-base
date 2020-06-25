@@ -1,10 +1,13 @@
-/// Error type, argument to throw, parameter of catch
+/// The `Error` type is the argument to `throw`, parameter of `catch`.
+/// The `Error` type is opaque.
+/// Its values are constructed and accessed with the following operations.
 
 import Prim "mo:prim";
 
 module {
 
-  /// Error codes (user and system)
+  /// Error codes (user and system), where module `Prim` defines:
+  /// ```motoko
   /// type ErrorCode = {
   ///   // Fatal error.
   ///   #system_fatal;
@@ -19,15 +22,16 @@ module {
   ///   // Future error code (with unrecognized numeric code)
   ///   #future : Nat32;
   /// };
+  /// ```
   public type ErrorCode = Prim.ErrorCode;
 
-  /// Create an error from message with ErrorCode #canister_reject.
-  public let error : Text -> Error = Prim.error;
+  /// Create an error from message `m` with code #canister_reject.
+  public let error : (m : Text) -> Error = Prim.error;
 
-  /// Return the ErrorCode of an error.
-  public let errorCode : Error -> ErrorCode = Prim.errorCode;
+  /// Returns the code of an error `e`.
+  public let errorCode : ( e : Error) -> ErrorCode = Prim.errorCode;
 
-  /// Return the message of an error.
-  public let errorMessage : Error -> Text = Prim.errorMessage;
+  /// Returns the message of an error `e`.
+  public let errorMessage : ( e: Error) -> Text = Prim.errorMessage;
 
 }
