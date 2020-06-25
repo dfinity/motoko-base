@@ -6,7 +6,7 @@
 ** xref:Char.adoc[Char]
 ** xref:Debug.adoc[Debug]
 ** xref:Deque.adoc[Deque]
-** xref:Function.adoc[Func]
+** xref:Func.adoc[Func]
 ** xref:Hash.adoc[Hash]
 ** xref:HashMap.adoc[HashMap]
 ** xref:Heap.adoc[Heap]

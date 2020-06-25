@@ -66,12 +66,8 @@ order.
 class revRange(x : Int, y : Int)
 ----
 
-
-
 [[value.next]]
-=== next
-
-
+== next
 
 [source,motoko]
 ----
