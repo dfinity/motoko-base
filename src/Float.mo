@@ -59,7 +59,7 @@ module {
   /// Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
   public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
 
-  /// Returns the value of `e` raise to the `x`-th power.
+  /// Returns the value of `e` raised to the `x`-th power.
   public let exp : (x : Float) -> Float = Prim.cos;
 
   /// Returns the natural logarithm (base-`e`) of `x`.
