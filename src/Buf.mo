@@ -2,7 +2,7 @@
 ///
 /// This module defines buffers that grow, with a general element type.
 ///
-/// ### Why?
+/// ## Why?
 ///
 /// Motoko applications expose interfaces that use fixed-size arrays of
 /// general (user-defined) elements to represent sets, sequences and maps
@@ -15,7 +15,7 @@
 /// To create these arrays, and to consume them with ergonomic (imperative) code, and
 /// low API friction, developers need _buffers that grow_.
 ///
-/// ### Define `Buf<X>` object type
+/// ## Define `Buf<X>` object type
 ///
 /// A "buffer" is a mutable sequence that grows, either one element at a
 /// time, or one (second) buffer at time.

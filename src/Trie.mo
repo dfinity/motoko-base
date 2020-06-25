@@ -4,7 +4,6 @@
 /// history independent.
 ///
 /// Background
-/// ------------------
 ///
 /// See this POPL 1989 paper (Section 6):
 ///
