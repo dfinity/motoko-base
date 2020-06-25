@@ -32,11 +32,11 @@ module {
   /// Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
 
-  /// Return the smaller value of `x` and `y`.
-  public let min : (Float, Float) -> Float = Prim.floatMin;
+  /// Returns the smaller value of `x` and `y`.
+  public let min : (x : Float, y :  Float) -> Float = Prim.floatMin;
 
-  /// Return the larger value of `x` and `y`.
-  public let max : (Float, Float) -> Float = Prim.floatMax;
+  /// Returns the larger value of `x` and `y`.
+  public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
 
   /// Returns the sine of the radian angle `x`.
   public let sin : (x : Float) -> Float = Prim.sin;
