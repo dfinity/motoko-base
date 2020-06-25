@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html><head title="Motoko docs"><meta charset="UTF-8"/><link href="styles.css" rel="stylesheet"/></head><div class="index-container"><h1 class="index-header">Index of modules</h1><ul class="index-listing"><li class="index-item"><a class="index-item-link" href="Array.html">Array</a><div class="index-item-comment"><p>Functions on Arrays</p>
+</div></li><li class="index-item"><a class="index-item-link" href="AssocList.html">AssocList</a><div class="index-item-comment"><p>Association Lists, a la functional programming, in Motoko.</p>
+<p>Implements the same interface as <code>Trie</code>, but as a linked-list of key-value
+pairs.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Blob.html">Blob</a><div class="index-item-comment"><p>Binary blobs</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Buf.html">Buf</a><div class="index-item-comment"><p>Growing buffers</p>
+<p>This module defines buffers that grow, with a general element type.</p>
+<h3 id="Why">Why?</h3>
+
+<p>Motoko applications expose interfaces that use fixed-size arrays of
+general (user-defined) elements to represent sets, sequences and maps
+of application-specific elements.</p>
+<p>The <code>Array</code> module focuses on Motoko's builtin arrays, whose size is
+each fixed.  They do not permit general growth/appending, which is the
+focus here.</p>
+<p>To create these arrays, and to consume them with ergonomic (imperative) code, and
+low API friction, developers need <em>buffers that grow</em>.</p>
+<h3 id="Define-Buf-lt-X-gt-object-type">Define <code>Buf&lt;X&gt;</code> object type</h3>
+
+<p>A &quot;buffer&quot; is a mutable sequence that grows, either one element at a
+time, or one (second) buffer at time.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Char.html">Char</a><div class="index-item-comment"><p>Characters</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Debug.html">Debug</a><div class="index-item-comment"><p>Debugging aids</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Deque.html">Deque</a><div class="index-item-comment"><p>Double-ended Queue</p>
+<p>This module provides a purely-functional double-ended queue.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Func.html">Func</a><div class="index-item-comment"><p>Functions on functions</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Hash.html">Hash</a><div class="index-item-comment"><p>Hash values</p>
+</div></li><li class="index-item"><a class="index-item-link" href="HashMap.html">HashMap</a><div class="index-item-comment"><p>Mutable hash map (aka Hashtable)</p>
+<p>This module defines an imperative hash map (hash table), with a general key and value type.</p>
+<p>It has a minimal object-oriented interface: get, set, swap, delete, count and iter.</p>
+<p>The class is parameterized by the key's equality and hash functions,
+and an initial capacity.  However, as with <code>Buf</code>, no array allocation
+happens until the first <code>set</code> (or <code>swap</code>).</p>
+<p>Internally, table growth policy is very simple, for now:
+ Double an initial capacity when the expected
+ bucket list beyond a certain constant.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Heap.html">Heap</a><div class="index-item-comment"><p>Priority Queue</p>
+<p>This module provides purely-functional priority queue based on leftist heap</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Int.html">Int</a><div class="index-item-comment"><p>Integer numbers</p>
+<p>Most operations on natural numbers (e.g. addition) are available as built-in operators (<code>1 + 1</code>).
+This module provides equivalent functions and conversion functions.</p>
+<p>The conversions <code>toInt*</code> will trap if the number is out of bounds.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Int16.html">Int16</a><div class="index-item-comment"><p>16-bit signed integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Int32.html">Int32</a><div class="index-item-comment"><p>32-bit signed integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Int64.html">Int64</a><div class="index-item-comment"><p>64-bit signed integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Int8.html">Int8</a><div class="index-item-comment"><p>8-bit signed integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Iter.html">Iter</a><div class="index-item-comment"><p>Iterators</p>
+</div></li><li class="index-item"><a class="index-item-link" href="IterType.html">IterType</a><div class="index-item-comment"><p>Iterator type -- break cycle module def</p>
+</div></li><li class="index-item"><a class="index-item-link" href="List.html">List</a><div class="index-item-comment"><p>Purely-functional, singly-linked lists.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Nat.html">Nat</a><div class="index-item-comment"><p>Natural numbers</p>
+<p>Most operations on natural numbers (e.g. addition) are available as built-in operators (<code>1 + 1</code>).
+This module provides conversion functions.</p>
+<p>The conversions <code>toNat*</code> will trap if the number is out of bounds; the conversions <code>toWord*</code> will wrap-around.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Nat16.html">Nat16</a><div class="index-item-comment"><p>16-bit unsigned integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Nat32.html">Nat32</a><div class="index-item-comment"><p>32-bit unsigned integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Nat64.html">Nat64</a><div class="index-item-comment"><p>64-bit unsigned integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Nat8.html">Nat8</a><div class="index-item-comment"><p>8-bit unsigned integers with checked arithmetic</p>
+<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="None.html">None</a><div class="index-item-comment"><p>The absent value</p>
+<p>The <code>None</code> type represents a type with <em>no</em> value, often used to mark dead
+code.</p>
+<p>For example, the type <code>[None]</code> has only empty lists.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Option.html">Option</a><div class="index-item-comment"><p>Typesafe nulls</p>
+<p>Optional values can be seen as a typesafe <code>null</code>. A value of type ?(Int) can
+be constructed with either <code>null</code> or <code>?(42)</code>. The simplest way to get at
+the contents of an optional is to use pattern matching:</p>
+<pre class="motoko"><code class="motoko">let optionalInt1 : ?(Int) = ?(42);
+let optionalInt2 : ?(Int) = null;
+
+let int1orZero : Int = switch(optionalInt1) {
+  case null 0;
+  case ?(int) int;
+};
+assertEquals(int1OrZero, 42);
+
+let int2orZero : Int = switch(optionalInt2) {
+  case null 0;
+  case ?(int) int;
+};
+assertEquals(int2OrZero, 0);</code></pre>
+
+<p>The functions in this module capture some common operations when working
+with optionals that can be more succinct than using pattern matching.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Order.html">Order</a><div class="index-item-comment"><p>Order</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Prelude.html">Prelude</a><div class="index-item-comment"><p>General utilities</p>
+<p>This prelude file proposes standard library features that <em>may</em>
+belong in the <em>language</em> (compiler-internal) prelude sometime, after
+some further experience and discussion.  Until then, they live here.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Principal.html">Principal</a><div class="index-item-comment"><p>IC principals (User and canister IDs)</p>
+</div></li><li class="index-item"><a class="index-item-link" href="RBTree.html">RBTree</a><div class="index-item-comment"><p>Red-Black Trees</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Result.html">Result</a><div class="index-item-comment"><p>Error handling with the Result type.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Text.html">Text</a><div class="index-item-comment"><p>Text values</p>
+<p>This type describes a valid, human-readable text. It does not contain arbitrary
+binary data.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Trie.html">Trie</a><div class="index-item-comment"><p>Functional map</p>
+<p>Functional maps (and sets) whose representation is &quot;canonical&quot;, and
+history independent.</p>
+<h2 id="Background">Background</h2>
+
+<p>See this POPL 1989 paper (Section 6):</p>
+<ul><li><a href="https://dl.acm.org/citation.cfm?id=75305">&quot;Incremental computation via function caching&quot;, Pugh &amp; Teitelbaum</a>.</li><li><a href="http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf">Public copy here</a>.</li></ul>
+
+<p>By contrast, other usual functional representations of maps (AVL
+Trees, Red-Black Trees) do not enjoy history independence, and are
+each more complex to implement (e.g., each requires &quot;rebalancing&quot;;
+these trees never do).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="TrieMap.html">TrieMap</a><div class="index-item-comment"><p>Functional map</p>
+<p>This module defines an imperative hash map, with a general key and value type.  It matches the interface and semantics of HashMap.  Unlike HashMap, its internal representation uses a functional hash trie (see <code>trie.mo</code>).</p>
+<p>This class permits us to compare the performance of two representations of hash-based maps, where tries (as binary trees) permit more efficient, constant-time, cloning compared with ordinary tables.  This property is nice for supporting transactional workflows where map mutations may be provisional, and where we may expect some mutations to be uncommitted, or to &quot;roll back&quot;.</p>
+<p>For now, this class does not permit a direct <code>clone</code> operation (neither does <code>HashMap</code>), but it does permit creating iterators via <code>iter()</code>.  The effect is similar: Each iterator costs <code>O(1)</code> to create, but represents a fixed view of the mapping that does not interfere with mutations (it will <em>not</em> view subsequent insertions or mutations, if any).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="TrieSet.html">TrieSet</a><div class="index-item-comment"><p>Functional set</p>
+<p>Sets are partial maps from element type to unit type,
+i.e., the partial map represents the set with its domain.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Word16.html">Word16</a><div class="index-item-comment"><p>16-bit binary unsigned integers with modular arithmetic</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Word32.html">Word32</a><div class="index-item-comment"><p>32-bit binary unsigned integers with modular arithmetic</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Word64.html">Word64</a><div class="index-item-comment"><p>64-bit binary unsigned integers with modular arithmetic</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Word8.html">Word8</a><div class="index-item-comment"><p>8-bit binary unsigned integers with modular arithmetic</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+</div></li></ul></div></html>
