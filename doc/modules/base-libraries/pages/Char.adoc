@@ -1,14 +1,15 @@
-// Do not edit; This file was machine-generated
+[[module.Char]]
+= Char
+
+Characters
+
+[[value.isDigit]]
+== isDigit
 
 
-[#mod-Char]
-= `Char` -- Characters
 
-
-[#Char_isDigit]
-== `isDigit`
-
-
-[listing]
-isDigit : Char -> Bool
+[source,motoko]
+----
+func isDigit(char : Char) : Bool
+----
 

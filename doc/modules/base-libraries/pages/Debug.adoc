@@ -1,18 +1,17 @@
-// Do not edit; This file was machine-generated
+[[module.Debug]]
+= Debug
 
+Debugging aids
 
-[#mod-Debug]
-= `Debug` -- Debugging aids
+[[value.print]]
+== print
 
-
-[#Debug_print]
-== `print`
 This prints a text (which typically does not include a final newline) to the
 debug output. Where this debug output is stored and shown depends on the
 environment the program runs in.
 
-
-
-[listing]
-print : Text -> ()
+[source,motoko]
+----
+let print : (Text) -> ()
+----
 

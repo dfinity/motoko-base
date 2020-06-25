@@ -1,7 +1,195 @@
-// Do not edit; This file was machine-generated
+[[module.Array]]
+= Array
+
+Functions on Arrays
+
+[[value.equal]]
+== equal
 
 
-[#mod-Array]
-= `Array` -- Arrays
 
+[source,motoko]
+----
+func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool
+----
+
+[[value.append]]
+== append
+
+
+
+[source,motoko]
+----
+func append<A>(xs : [A], ys : [A]) : [A]
+----
+
+[[value.apply]]
+== apply
+
+
+
+[source,motoko]
+----
+func apply<A, B>(xs : [A], fs : [(A) -> B]) : [B]
+----
+
+[[value.chain]]
+== chain
+
+
+
+[source,motoko]
+----
+func chain<A, B>(xs : [A], f : (A) -> [B]) : [B]
+----
+
+[[value.filter]]
+== filter
+
+
+
+[source,motoko]
+----
+func filter<A>(f : (A) -> Bool, xs : [A]) : [A]
+----
+
+[[value.foldLeft]]
+== foldLeft
+
+
+
+[source,motoko]
+----
+func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B
+----
+
+[[value.foldRight]]
+== foldRight
+
+
+
+[source,motoko]
+----
+func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B
+----
+
+[[value.find]]
+== find
+
+
+
+[source,motoko]
+----
+func find<A>(xs : [A], f : (A) -> Bool) : ?A
+----
+
+[[value.freeze]]
+== freeze
+
+
+
+[source,motoko]
+----
+func freeze<A>(xs : [var A]) : [A]
+----
+
+[[value.flatten]]
+== flatten
+
+
+
+[source,motoko]
+----
+func flatten<A>(xs : [[A]]) : [A]
+----
+
+[[value.map]]
+== map
+
+
+
+[source,motoko]
+----
+func map<A, B>(xs : [A], f : (A) -> B) : [B]
+----
+
+[[value.mapEntries]]
+== mapEntries
+
+
+
+[source,motoko]
+----
+func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B]
+----
+
+[[value.make]]
+== make
+
+
+
+[source,motoko]
+----
+func make<A>(x : A) : [A]
+----
+
+[[value.vals]]
+== vals
+
+
+
+[source,motoko]
+----
+func vals<A>(xs : [A]) : I.Iter<A>
+----
+
+[[value.keys]]
+== keys
+
+
+
+[source,motoko]
+----
+func keys<A>(xs : [A]) : I.Iter<Nat>
+----
+
+[[value.thaw]]
+== thaw
+
+
+
+[source,motoko]
+----
+func thaw<A>(xs : [A]) : [var A]
+----
+
+[[value.init]]
+== init
+
+
+
+[source,motoko]
+----
+func init<A>(len : Nat, x : A) : [var A]
+----
+
+[[value.tabulate]]
+== tabulate
+
+
+
+[source,motoko]
+----
+func tabulate<A>(len : Nat, gen : (Nat) -> A) : [A]
+----
+
+[[value.tabulateVar]]
+== tabulateVar
+
+
+
+[source,motoko]
+----
+func tabulateVar<A>(len : Nat, gen : (Nat) -> A) : [var A]
+----
 

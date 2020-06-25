@@ -1,96 +1,580 @@
-// Do not edit; This file was machine-generated
+[[module.Trie]]
+= Trie
+
+Functional map
+
+Functional maps (and sets) whose representation is "canonical", and
+history independent.
+
+Background
+------------------
+
+See this POPL 1989 paper (Section 6):
+
+ - ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
+ - [Public copy here](http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf).
+
+By contrast, other usual functional representations of maps (AVL
+Trees, Red-Black Trees) do not enjoy history independence, and are
+each more complex to implement (e.g., each requires "rebalancing";
+these trees never do).
 
 
-[#mod-Trie]
-= `Trie` -- Functional map
+[[value.MAX_LEAF_SIZE]]
+== MAX_LEAF_SIZE
 
 
-[#Trie_List]
-== `List` (type)
+
+[source,motoko]
+----
+let MAX_LEAF_SIZE
+----
+
+[[type.List]]
+== List
 
 
-....
-type List<T> = List.List<T>;public type AssocList<K,V> = AssocList.AssocList<K,V>;
 
-....
+[source,motoko]
+----
+type List<T> = List.List<T>
+----
 
-[#Trie_Key]
-== `Key` (type)
-
-
-....
-type Key<K> = {  /* `hash` permits fast inequality checks, and permits collisions */
-  hash: Hash.Hash;
-  /* `key` permits percise equality checks, but only used after equal hashes. */
-  key: K;
-};
-
-....
-
-[#Trie_Leaf]
-== `Leaf` (type)
+[[type.AssocList]]
+== AssocList
 
 
-....
-type Leaf<K,V> = {  count   : Nat ;
-  keyvals : AssocList<Key<K>,V> ;
-};
 
-....
+[source,motoko]
+----
+type AssocList<K, V> = AssocList.AssocList<K, V>
+----
 
-[#Trie_Branch]
-== `Branch` (type)
-
-
-....
-type Branch<K,V> = {  count : Nat ;
-  left  : Trie<K,V> ;
-  right : Trie<K,V> ;
-};
-
-....
-
-[#Trie_Trie]
-== `Trie` (type)
+[[type.Key]]
+== Key
 
 
-....
-type Trie<K,V> = {  #empty  ;
-  #leaf   : Leaf<K,V> ;
-  #branch : Branch<K,V> ;
-};
 
-....
+[source,motoko]
+----
+type Key<K> = { hash : Hash.Hash; key : K }
+----
 
-[#Trie_Trie2D]
-== `Trie2D` (type)
+[[value.equalKey]]
+== equalKey
+
+Equality function for two `Key<K>`s, in terms of equality of `K`'s.
+
+[source,motoko]
+----
+func equalKey<K>(keq : (K, K) -> Bool) : ((Key<K>, Key<K>) -> Bool)
+----
+
+[[type.Leaf]]
+== Leaf
+
+leaf nodes of trie consist of key-value pairs as a list.
+
+[source,motoko]
+----
+type Leaf<K, V> = { size : Nat; keyvals : AssocList<Key<K>, V> }
+----
+
+[[type.Branch]]
+== Branch
+
+branch nodes of the trie discriminate on a bit position of the keys' hashes.
+we never store this bitpos; rather,
+we enforce a style where this position is always known from context.
+
+[source,motoko]
+----
+type Branch<K, V> = { size : Nat; left : Trie<K, V>; right : Trie<K, V> }
+----
+
+[[type.Trie]]
+== Trie
+
+binary hash tries: either empty, a leaf node, or a branch node
+
+[source,motoko]
+----
+type Trie<K, V> = {#empty : (); #leaf : Leaf<K, V>; #branch : Branch<K, V>}
+----
+
+[[value.isValid]]
+== isValid
 
 
-....
-type Trie2D<K1, K2, V> = Trie<K1, Trie<K2,V> >;
-....
 
-[#Trie_Trie3D]
-== `Trie3D` (type)
+[source,motoko]
+----
+func isValid<K, V>(t : Trie<K, V>, enforceNormal : Bool) : Bool
+----
+
+[[type.Trie2D]]
+== Trie2D
+
+Two-dimensional trie
+---------------------
+A 2D trie is just a trie that maps dimension-1 keys to another
+layer of tries, each keyed on the dimension-2 keys.
+
+[source,motoko]
+----
+type Trie2D<K1, K2, V> = Trie<K1, Trie<K2, V>>
+----
+
+[[type.Trie3D]]
+== Trie3D
+
+Three-dimensional trie
+---------------------
+A 3D trie is just a trie that maps dimension-1 keys to another
+layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
+
+[source,motoko]
+----
+type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V>>
+----
+
+[[value.empty]]
+== empty
+
+An empty trie.
+
+[source,motoko]
+----
+func empty<K, V>() : Trie<K, V>
+----
+
+[[value.size]]
+== size
+
+ Get the number of key-value pairs in the trie, in constant time.
+
+[source,motoko]
+----
+func size<K, V>(t : Trie<K, V>) : Nat
+----
+
+[[value.branch]]
+== branch
+
+Construct a branch node, computing the size stored there.
+
+[source,motoko]
+----
+func branch<K, V>(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V>
+----
+
+[[value.leaf]]
+== leaf
+
+Construct a leaf node, computing the size stored there.
+
+This helper function automatically enforces the MAX_LEAF_SIZE
+by constructing branches as necessary; to do so, it also needs the bitpos
+of the leaf.
+
+[source,motoko]
+----
+func leaf<K, V>(kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
+----
+
+[[value.fromList]]
+== fromList
 
 
-....
-type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V> >;
-....
 
-[#Trie_TrieBuild]
-== `TrieBuild` (type)
+[source,motoko]
+----
+func fromList<K, V>(kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
+----
+
+[[value.fromSizedList]]
+== fromSizedList
 
 
-....
-type TrieBuild<K,V> = {  #skip ;
-  #insert : (K, ?Hash.Hash, V) ;
-  #seq : {
-    count : Nat ;
-    left  : TrieBuild<K,V> ;
-    right : TrieBuild<K,V> ;
-  } ;
-};
 
-....
+[source,motoko]
+----
+func fromSizedList<K, V>(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
+----
+
+[[value.clone]]
+== clone
+
+Purely-functional representation permits _O(1)_-time copy, via persistent sharing.
+
+[source,motoko]
+----
+func clone<K, V>(t : Trie<K, V>) : Trie<K, V>
+----
+
+[[value.replace]]
+== replace
+
+replace the given key's value option with the given one, returning the previous one
+
+[source,motoko]
+----
+func replace<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : ?V) : (Trie<K, V>, ?V)
+----
+
+[[value.put]]
+== put
+
+put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
+
+[source,motoko]
+----
+func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie<K, V>, ?V)
+----
+
+[[value.find]]
+== find
+
+ find the given key's value in the trie, or return null if nonexistent
+
+[source,motoko]
+----
+func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V
+----
+
+[[value.splitAssocList]]
+== splitAssocList
+
+
+
+[source,motoko]
+----
+func splitAssocList<K, V>(al : AssocList<Key<K>, V>, bitpos : Nat) : (AssocList<Key<K>, V>, AssocList<Key<K>, V>)
+----
+
+[[value.splitSizedList]]
+== splitSizedList
+
+
+
+[source,motoko]
+----
+func splitSizedList<K, V>(l : AssocList<Key<K>, V>, bitpos : Nat) : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>)
+----
+
+[[value.merge]]
+== merge
+
+  merge tries, preferring the right trie where there are collisions
+  in common keys. note: the `disj` operation generalizes this `merge`
+  operation in various ways, and does not (in general) lose
+  information; this operation is a simpler, special case.
+
+  See also:
+
+  - [`disj`](#value.disj)
+  - [`join`](#value.join)
+  - [`prod`](#value.prod)
+
+[source,motoko]
+----
+func merge<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V>
+----
+
+[[value.mergeDisjoint]]
+== mergeDisjoint
+
+like `merge`, it merges tries, but unlike `merge`, it signals a
+dynamic error if there are collisions in common keys between the
+left and right inputs.
+
+[source,motoko]
+----
+func mergeDisjoint<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V>
+----
+
+[[value.diff]]
+== diff
+
+The key-value pairs of the final trie consists of those pairs of
+the left trie whose keys are not present in the right trie; the
+values of the right trie are irrelevant.
+
+[source,motoko]
+----
+func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool) : Trie<K, V>
+----
+
+[[value.disj]]
+== disj
+
+This operation generalizes the notion of "set union" to finite maps.
+
+Produces a "disjunctive image" of the two tries, where the values of
+matching keys are combined with the given binary operator.
+
+For unmatched key-value pairs, the operator is still applied to
+create the value in the image.  To accomodate these various
+situations, the operator accepts optional values, but is never
+applied to (null, null).
+
+Implements the database idea of an ["outer join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
+
+See also:
+
+- [`join`](#value.join)
+- [`merge`](#value.merge)
+- [`prod`](#value.prod)
+
+[source,motoko]
+----
+func disj<K, V, W, X>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool, vbin : (?V, ?W) -> X) : Trie<K, X>
+----
+
+[[value.join]]
+== join
+
+This operation generalizes the notion of "set intersection" to
+finite maps.  Produces a "conjuctive image" of the two tries, where
+the values of matching keys are combined with the given binary
+operator, and unmatched key-value pairs are not present in the output.
+
+Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
+
+See also:
+
+- [`disj`](#value.disj)
+- [`merge`](#value.merge)
+- [`prod`](#value.prod)
+
+[source,motoko]
+----
+func join<K, V, W, X>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool, vbin : (V, W) -> X) : Trie<K, X>
+----
+
+[[value.foldUp]]
+== foldUp
+
+This operation gives a recursor for the internal structure of
+tries.  Many common operations are instantiations of this function,
+either as clients, or as hand-specialized versions (e.g., see , map,
+mapFilter, some and all below).
+
+[source,motoko]
+----
+func foldUp<K, V, X>(t : Trie<K, V>, bin : (X, X) -> X, leaf : (K, V) -> X, empty : X) : X
+----
+
+[[value.prod]]
+== prod
+
+Conditional _catesian product_, where the given
+operation `op` _conditionally_ creates output elements in the
+resulting trie.
+
+The keyed structure of the input tries are not relevant for this
+operation: all pairs are considered, regardless of keys matching or
+not.  Moreover, the resulting trie may use keys that are unrelated to
+these input keys.
+
+See also:
+
+- [`disj`](#value.disj)
+- [`join`](#value.join)
+- [`merge`](#value.merge)
+
+[source,motoko]
+----
+func prod<K1, V1, K2, V2, K3, V3>(tl : Trie<K1, V1>, tr : Trie<K2, V2>, op : (K1, V1, K2, V2) -> ?(Key<K3>, V3), k3_eq : (K3, K3) -> Bool) : Trie<K3, V3>
+----
+
+[[value.Build]]
+== Build
+
+
+
+[source,motoko]
+----
+let Build
+----
+
+[[value.fold]]
+== fold
+
+
+
+[source,motoko]
+----
+func fold<K, V, X>(t : Trie<K, V>, f : (K, V, X) -> X, x : X) : X
+----
+
+[[value.some]]
+== some
+
+
+
+[source,motoko]
+----
+func some<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool
+----
+
+[[value.all]]
+== all
+
+
+
+[source,motoko]
+----
+func all<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool
+----
+
+[[value.nth]]
+== nth
+
+
+
+[source,motoko]
+----
+func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V)
+----
+
+[[value.toArray]]
+== toArray
+
+
+
+[source,motoko]
+----
+func toArray<K, V, W>(t : Trie<K, V>, f : (K, V) -> W) : [W]
+----
+
+[[value.isEmpty]]
+== isEmpty
+
+
+
+[source,motoko]
+----
+func isEmpty<K, V>(t : Trie<K, V>) : Bool
+----
+
+[[value.filter]]
+== filter
+
+
+
+[source,motoko]
+----
+func filter<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Trie<K, V>
+----
+
+[[value.mapFilter]]
+== mapFilter
+
+
+
+[source,motoko]
+----
+func mapFilter<K, V, W>(t : Trie<K, V>, f : (K, V) -> ?W) : Trie<K, W>
+----
+
+[[value.equalStructure]]
+== equalStructure
+
+
+
+[source,motoko]
+----
+func equalStructure<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, keq : (K, K) -> Bool, veq : (V, V) -> Bool) : Bool
+----
+
+[[value.replaceThen]]
+== replaceThen
+
+
+
+[source,motoko]
+----
+func replaceThen<K, V, X>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v2 : V, success : (Trie<K, V>, V) -> X, fail : () -> X) : X
+----
+
+[[value.putFresh]]
+== putFresh
+
+
+
+[source,motoko]
+----
+func putFresh<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : Trie<K, V>
+----
+
+[[value.put2D]]
+== put2D
+
+
+
+[source,motoko]
+----
+func put2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool, v : V) : Trie2D<K1, K2, V>
+----
+
+[[value.put3D]]
+== put3D
+
+
+
+[source,motoko]
+----
+func put3D<K1, K2, K3, V>(t : Trie3D<K1, K2, K3, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool, k3 : Key<K3>, k3_eq : (K3, K3) -> Bool, v : V) : Trie3D<K1, K2, K3, V>
+----
+
+[[value.remove]]
+== remove
+
+
+
+[source,motoko]
+----
+func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V)
+----
+
+[[value.removeThen]]
+== removeThen
+
+
+
+[source,motoko]
+----
+func removeThen<K, V, X>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, success : (Trie<K, V>, V) -> X, fail : () -> X) : X
+----
+
+[[value.remove2D]]
+== remove2D
+
+
+
+[source,motoko]
+----
+func remove2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool) : (Trie2D<K1, K2, V>, ?V)
+----
+
+[[value.remove3D]]
+== remove3D
+
+
+
+[source,motoko]
+----
+func remove3D<K1, K2, K3, V>(t : Trie3D<K1, K2, K3, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool, k3 : Key<K3>, k3_eq : (K3, K3) -> Bool) : (Trie3D<K1, K2, K3, V>, ?V)
+----
+
+[[value.mergeDisjoint2D]]
+== mergeDisjoint2D
+
+
+
+[source,motoko]
+----
+func mergeDisjoint2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1_eq : (K1, K1) -> Bool, k2_eq : (K2, K2) -> Bool) : Trie<K2, V>
+----
 

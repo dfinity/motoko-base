@@ -1,14 +1,15 @@
-// Do not edit; This file was machine-generated
+[[module.Principal]]
+= Principal
+
+IC principals (User and canister IDs)
+
+[[value.hash]]
+== hash
 
 
-[#mod-Principal]
-= `Principal` -- IC principals (User and canister IDs)
 
-
-[#Principal_hash]
-== `hash`
-
-
-[listing]
-hash : Principal -> Word32
+[source,motoko]
+----
+func hash(principal : Principal) : Hash.Hash
+----
 

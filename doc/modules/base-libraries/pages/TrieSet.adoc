@@ -1,16 +1,118 @@
-// Do not edit; This file was machine-generated
+[[module.TrieSet]]
+= TrieSet
+
+Functional set
+
+Sets are partial maps from element type to unit type,
+i.e., the partial map represents the set with its domain.
+
+[[type.Hash]]
+== Hash
 
 
-[#mod-TrieSet]
-= `TrieSet` -- Functional set
+
+[source,motoko]
+----
+type Hash = Hash.Hash
+----
+
+[[type.Set]]
+== Set
 
 
-[#TrieSet_Hash]
-== `Hash` (type)
+
+[source,motoko]
+----
+type Set<T> = Trie.Trie<T, ()>
+----
+
+[[value.empty]]
+== empty
 
 
-....
-type Hash = Hash.Hash;public type Set<T> = Trie.Trie<T,()>;
 
-....
+[source,motoko]
+----
+func empty<T>() : Set<T>
+----
+
+[[value.put]]
+== put
+
+
+
+[source,motoko]
+----
+func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.delete]]
+== delete
+
+
+
+[source,motoko]
+----
+func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.equal]]
+== equal
+
+
+
+[source,motoko]
+----
+func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool
+----
+
+[[value.size]]
+== size
+
+
+
+[source,motoko]
+----
+func size<T>(s : Set<T>) : Nat
+----
+
+[[value.mem]]
+== mem
+
+
+
+[source,motoko]
+----
+func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool
+----
+
+[[value.union]]
+== union
+
+
+
+[source,motoko]
+----
+func union<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.diff]]
+== diff
+
+
+
+[source,motoko]
+----
+func diff<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.intersect]]
+== intersect
+
+
+
+[source,motoko]
+----
+func intersect<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+----
 

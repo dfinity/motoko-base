@@ -1,119 +1,171 @@
-// Do not edit; This file was machine-generated
+[[module.Option]]
+= Option
 
+Typesafe nulls
 
-[#mod-Option]
-= `Option` -- Optional values
+Optional values can be seen as a typesafe `null`. A value of type ?(Int) can
+be constructed with either `null` or `?(42)`. The simplest way to get at
+the contents of an optional is to use pattern matching:
 
+```motoko
+let optionalInt1 : ?(Int) = ?(42);
+let optionalInt2 : ?(Int) = null;
 
-[#Option_isSome]
-== `isSome`
-Returns true if the argument is not `null`.
+let int1orZero : Int = switch(optionalInt1) {
+  case null 0;
+  case ?(int) int;
+};
+assertEquals(int1OrZero, 42);
 
+let int2orZero : Int = switch(optionalInt2) {
+  case null 0;
+  case ?(int) int;
+};
+assertEquals(int2OrZero, 0);
+```
 
+The functions in this module capture some common operations when working
+with optionals that can be more succinct than using pattern matching.
 
-[listing]
-isSome : ?Any -> Bool
+[[value.get]]
+== get
 
-[#Option_isNull]
-== `isNull`
-Returns true if the argument is `null`.
+Unwraps an optional value, with a default value, i.e. `get(?x, d) = x` and
+`get(null, d) = d`.
 
+[source,motoko]
+----
+func get<T>(x : ?T, default : T) : T
+----
 
+[[value.getMapped]]
+== getMapped
 
-[listing]
-isNull : ?Any -> Bool
+Unwraps an optional value using a function, or returns the default, i.e.
+`option(?x, f, d) = f x` and `option(null, f, d) = d`.
 
-[#Option_unwrapOr]
-== `unwrapOr`
-Unwraps an optional value, with a default value, i.e. `unwrap(?x, d) = x` and `unwrap(null, d) = d`.
+[source,motoko]
+----
+func getMapped<A, B>(x : ?A, f : (A) -> B, default : B) : B
+----
 
+[[value.map]]
+== map
 
+Applies a function to the wrapped value. `null`'s are left untouched.
+```
+map(f, ?(x)) = ?(f(x))
+map(f, null) = null
+```
 
-[listing]
-unwrapOr : <T> (?T, default : T) -> T
+[source,motoko]
+----
+func map<A, B>(f : (A) -> B, x : ?A) : ?B
+----
 
-[#Option_option]
-== `option`
-Unwraps an optional value using a function, or returns the default, i.e. `option(?x, f, d) = f x` and `option(null, f, d) = d`.
+[[value.apply]]
+== apply
 
+Applies an optional function to an optional value. Returns `null` if at
+least one of the arguments is `null`.
 
+[source,motoko]
+----
+func apply<A, B>(x : ?A, f : ?((A) -> B)) : ?B
+----
 
-[listing]
-option : <A,B>(?A, f : A -> B, default : B) -> B
+[[value.chain]]
+== chain
 
-[#Option_map]
-== `map`
-Applies a function to the wrapped value.
+Applies a function to an optional value. Returns `null` if the argument is
+`null`, or the function returns `null`.
 
+NOTE: Together with [`make`](#value.make), this forms a “monad”.
 
+[source,motoko]
+----
+func chain<A, B>(x : ?A, f : (A) -> ?B) : ?B
+----
 
-[listing]
-map : <A, B>(f: A->B, x: ?A) -> ?B
+[[value.flatten]]
+== flatten
 
-[#Option_apply]
-== `apply`
-Applies an optional function to an optional value. Returns `null` if at least one of the arguments is `null`.
-
-
-
-[listing]
-apply : <A, B>(?(A -> B), ?A) -> ?B
-
-[#Option_bind]
-== `bind`
-Applies an function to an optional value. Returns `null` if the argument is `null`, or the function returns `null`.
-
-NOTE: Together with <<Option_pure,`pure`>>, this forms a “monad”.
-
-
-
-[listing]
-bind : <A, B>(?A, A -> ?B) -> ?B
-
-[#Option_join]
-== `join`
 Given an optional optional value, removes one layer of optionality.
+```
+flatten(?(?(42)))) = ?(42)
+flatten(?(null))) = null
+flatten(null)) = null
+```
 
+[source,motoko]
+----
+func flatten<A>(x : ?(?A)) : ?A
+----
 
+[[value.make]]
+== make
 
-[listing]
-join : <A> ??A -> ?A
-
-[#Option_pure]
-== `pure`
 Creates an optional value from a definite value.
+```
+make(42) = ?(42)
+```
 
+[source,motoko]
+----
+func make<A>(x : A) : ?A
+----
 
+[[value.isSome]]
+== isSome
 
-[listing]
-pure : <A> A -> ?A
+Returns true if the argument is not `null`, otherwise returns false.
 
-[#Option_assertSome]
-== `assertSome`
+[source,motoko]
+----
+func isSome(x : ?Any) : Bool
+----
+
+[[value.isNull]]
+== isNull
+
+Returns true if the argument is `null`, otherwise returns false.
+
+[source,motoko]
+----
+func isNull(x : ?Any) : Bool
+----
+
+[[value.assertSome]]
+== assertSome
+
 Asserts that the value is not `null`; fails otherwise.
+Deprecated.
 
+[source,motoko]
+----
+func assertSome(x : ?Any)
+----
 
+[[value.assertNull]]
+== assertNull
 
-[listing]
-assertSome : ?Any -> ()
-
-[#Option_assertNull]
-== `assertNull`
 Asserts that the value _is_ `null`; fails otherwise.
+Deprecated.
 
+[source,motoko]
+----
+func assertNull(x : ?Any)
+----
 
+[[value.unwrap]]
+== unwrap
 
-[listing]
-assertNull : ?Any -> ()
-
-[#Option_unwrap]
-== `unwrap`
 Unwraps an optional value, i.e. `unwrap(?x) = x`.
 
 WARNING: `unwrap(x)` will fail if the argument is `null`, and is generally considered bad style. Use `switch x` instead.
 
-
-
-[listing]
-unwrap : <T>?T -> T
+[source,motoko]
+----
+func unwrap<T>(x : ?T) : T
+----
 

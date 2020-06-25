@@ -1,19 +1,48 @@
-// Do not edit; This file was machine-generated
+[[module.Text]]
+= Text
 
-
-[#mod-Text]
-= `Text` -- Text values
+Text values
 
 This type describes a valid, human-readable text. It does not contain arbitrary
 binary data.
 
-
-[#Text_toIter]
-== `toIter`
-Creates an <<mod-Iter,iterator>> that traverses the characters of the text.
+[[value.append]]
+== append
 
 
 
-[listing]
-toIter : Text -> Iter.Iter<Char>
+[source,motoko]
+----
+func append(x : Text, y : Text) : Text
+----
+
+[[value.toIter]]
+== toIter
+
+Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text.
+
+[source,motoko]
+----
+func toIter(text : Text) : Iter.Iter<Char>
+----
+
+[[value.equal]]
+== equal
+
+
+
+[source,motoko]
+----
+func equal(x : Text, y : Text) : Bool
+----
+
+[[value.hash]]
+== hash
+
+WARNING: This only hashes the lowest 32 bits of the `Int`
+
+[source,motoko]
+----
+func hash(t : Text) : Hash.Hash
+----
 
