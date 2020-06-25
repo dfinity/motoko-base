@@ -72,3 +72,14 @@ Debug.print("Float");
   assert(Float.fromInt64(10000000000) == 1e10);
   assert(Float.fromInt64(-10000000000) == -1e10);
 };
+
+
+{
+  Debug.print("  Pi: " # Float.toText(Float.pi));
+  Debug.print("  arccos(-1.0): " # Float.toText(Float.arccos(-1.)));
+};
+
+{
+  Debug.print("  e: " # debug_show(Float.toText(pi)));
+  Debug.print("  exp(1): " # debug_show(Float.toText(1)));
+};

@@ -5,6 +5,9 @@ import Int "Int";
 
 module {
 
+  /// Conversion.
+  let toText : Float -> Text = Prim.floatToText;
+
   /// Ratio of the circumference of a circle to its diameter.
   public let pi : Float = 3.141592653589793238;
 
@@ -60,7 +63,7 @@ module {
   public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
 
   /// Returns the value of `e` raised to the `x`-th power.
-  public let exp : (x : Float) -> Float = Prim.cos;
+  public let exp : (x : Float) -> Float = Prim.exp;
 
   /// Returns the natural logarithm (base-`e`) of `x`.
   public let log : (x : Float) -> Float = Prim.tan;
