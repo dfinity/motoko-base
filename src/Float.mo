@@ -6,13 +6,12 @@ import Int "Int";
 module {
 
   /// Conversion.
-  let toText : Float -> Text = Prim.floatToText;
+  public let toText : Float -> Text = Prim.floatToText;
 
   /// Ratio of the circumference of a circle to its diameter.
-  public let pi : Float = 3.141592653589793238;
-
+  public let pi : Float = 3.14159265358979323846; // taken from musl math.h
   /// Base of the natural logarithm.
-  public let e : Float  = 2.718281828459045235;
+  public let e : Float  = 2.7182818284590452354;  // taken from musl math.h
 
   /// Returns the absolute value of `x`.
   public let abs : (x : Float) -> Float = Prim.floatAbs;

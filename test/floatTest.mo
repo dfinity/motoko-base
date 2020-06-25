@@ -77,9 +77,13 @@ Debug.print("Float");
 {
   Debug.print("  Pi: " # Float.toText(Float.pi));
   Debug.print("  arccos(-1.0): " # Float.toText(Float.arccos(-1.)));
+
+  assert(Float.pi == Float.arccos(-1.));
 };
 
 {
-  Debug.print("  e: " # debug_show(Float.toText(pi)));
-  Debug.print("  exp(1): " # debug_show(Float.toText(1)));
+  Debug.print("  e: " # debug_show(Float.toText(Float.e)));
+  Debug.print("  exp(1): " # debug_show(Float.toText(Float.exp(1))));
+
+  assert(Float.e == Float.exp(1));
 };
