@@ -35,7 +35,7 @@ module {
   /// Return the smaller value of `x` and `y`.
   public let min : (Float, Float) -> Float = Prim.floatMin;
 
-  /// Return the larger value of `x` and `y`.
+  /// Returns the larger value of `x` and `y`.
   public let max : (Float, Float) -> Float = Prim.floatMax;
 
   /// Returns the sine of the radian angle `x`.
