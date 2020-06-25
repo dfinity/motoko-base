@@ -35,8 +35,13 @@ jobs:
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: pushd doc && ./make_docs.sh && popd
-    # - name: Upload docs
-    #   uses: actions/upload-artifact@v1
-    #   with:
-    #     name: reference documentation
-    #     path: doc/_out/
+    - name: Upload docs
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+#     on:
+#       push:
+#         branches:
+#           - master
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: docs/_out/html # The folder the action should deploy.
