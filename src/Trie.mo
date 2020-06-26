@@ -1,4 +1,4 @@
-/// **Functional map**
+/// Functional map
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
 /// history independent.
