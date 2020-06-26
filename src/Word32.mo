@@ -112,27 +112,27 @@ module {
   };
 
   /// Returns the value of setting bit `p mod 32` in `x` to `1`.
-  public func bitSet(x : Word32, p : Nat) : Word32 {
+  public func bitset(x : Word32, p : Nat) : Word32 {
     x | (1 << Prim.natToWord32 p);
   };
 
   /// Returns the value of clearing bit `p mod 32` in `x` to `0`.
-  public func bitClear(x : Word32, p : Nat) : Word32 {
-    x & -(1 << Prim.natToWord32 p);
+  public func bitclear(x : Word32, p : Nat) : Word32 {
+    x & ^(1 << Prim.natToWord32 p);
   };
 
   /// Returns the value of flipping bit `p mod 32` in `x`.
-  public func bitFlip(x : Word32, p : Nat) : Word32 {
+  public func bitflip(x : Word32, p : Nat) : Word32 {
     x ^ (1 << Prim.natToWord32 p);
   };
 
   /// Returns the count of non-zero bits in `x`.
-  public let popcnt : (x : Word32) -> Word32 = Prim.popcntWord32;
+  public let bitcountNonZero : (x : Word32) -> Word32 = Prim.popcntWord32;
 
   /// Returns the count of leading zero bits in `x`.
-  public let clz : (x : Word32) -> Word32 = Prim.clzWord32;
+  public let bitcountLeadingZero : (x : Word32) -> Word32 = Prim.clzWord32;
 
   /// Returns the count of trailing zero bits in `x`.
-  public let ctz : (x : Word32) -> Word32 = Prim.ctzWord32;
+  public let bitcountTrailingZero : (x : Word32) -> Word32 = Prim.ctzWord32;
 
 }

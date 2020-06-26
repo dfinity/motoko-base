@@ -112,27 +112,27 @@ module {
   };
 
   /// Returns the value of setting bit `p mod 64` in `x` to `1`.
-  public func bitSet(x : Word64, p : Nat) : Word64 {
+  public func bitset(x : Word64, p : Nat) : Word64 {
     x | (1 << Prim.natToWord64 p);
   };
 
   /// Returns the value of clearing bit `p mod 64` in `x` to `0`.
-  public func bitClear(x : Word64, p : Nat) : Word64 {
-    x & -(1 << Prim.natToWord64 p);
+  public func bitclear(x : Word64, p : Nat) : Word64 {
+    x & ^(1 << Prim.natToWord64 p);
   };
 
   /// Returns the value of flipping bit `p mod 64` in `x`.
-  public func bitFlip(x : Word64, p : Nat) : Word64 {
+  public func bitflip(x : Word64, p : Nat) : Word64 {
     x ^ (1 << Prim.natToWord64 p);
   };
 
   /// Returns the count of non-zero bits in `x`.
-  public let popcnt : (x : Word64) -> Word64 = Prim.popcntWord64;
+  public let bitcountNonZero : (x : Word64) -> Word64 = Prim.popcntWord64;
 
   /// Returns the count of leading zero bits in `x`.
-  public let clz : (x : Word64) -> Word64 = Prim.clzWord64;
+  public let bitcountLeadingZero : (x : Word64) -> Word64 = Prim.clzWord64;
 
   /// Returns the count of trailing zero bits in `x`.
-  public let ctz : (x : Word64) -> Word64 = Prim.ctzWord64;
+  public let bitcountTrailingZero : (x : Word64) -> Word64 = Prim.ctzWord64;
 
 }
