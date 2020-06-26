@@ -36,8 +36,7 @@ module {
 
   /// Returns the order of `x` and `y`, where `false < true`.
   public func compare(x : Bool, y : Bool) : {#less; #equal; #greater} {
-    if x (if y #equal else #greater)
-    else (if y #less else #equal)
+    if (x == y) #equal else if (x) #greater else #less
   };
 
 }
