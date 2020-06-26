@@ -19,7 +19,6 @@ module {
   /// Returns `x or y`.
   public func logor(x : Bool, y : Bool) : Bool { x or y };
 
-
   /// Returns exclusive or of `x` and `y`, `x != y`.
   public func logxor(x : Bool, y : Bool) : Bool {
     x != y
