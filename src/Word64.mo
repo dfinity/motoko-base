@@ -107,7 +107,7 @@ module {
   public func bitrotRight(x : Word64, y : Word64) : Word64 { x <>> y };
 
   /// Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
-  public func bitTest(x : Word64, p : Nat) : Bool {
+  public func bittest(x : Word64, p : Nat) : Bool {
     Prim.btstWord64(x, Prim.natToWord64 p);
   };
 
