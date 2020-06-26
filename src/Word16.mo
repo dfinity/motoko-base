@@ -106,16 +106,33 @@ module {
   /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
   public func bitrotRight(x : Word16, y : Word16) : Word16 { x <>> y };
 
+  /// Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
+  public func bittest(x : Word16, p : Nat) : Bool {
+    Prim.btstWord16(x, Prim.natToWord16 p);
+  };
+
+  /// Returns the value of setting bit `p mod 16` in `x` to `1`.
+  public func bitset(x : Word16, p : Nat) : Word16 {
+    x | (1 << Prim.natToWord16 p);
+  };
+
+  /// Returns the value of clearing bit `p mod 16` in `x` to `0`.
+  public func bitclear(x : Word16, p : Nat) : Word16 {
+    x & ^(1 << Prim.natToWord16 p);
+  };
+
+  /// Returns the value of flipping bit `p mod 16` in `x`.
+  public func bitflip(x : Word16, p : Nat) : Word16 {
+    x ^ (1 << Prim.natToWord16 p);
+  };
+
   /// Returns the count of non-zero bits in `x`.
-  public let popcnt : (x : Word16) -> Word16 = Prim.popcntWord16;
+  public let bitcountNonZero : (x : Word16) -> Word16 = Prim.popcntWord16;
 
   /// Returns the count of leading zero bits in `x`.
-  public let clz : (x : Word16) -> Word16 = Prim.clzWord16;
+  public let bitcountLeadingZero : (x : Word16) -> Word16 = Prim.clzWord16;
 
   /// Returns the count of trailing zero bits in `x`.
-  public let ctz : (x : Word16) -> Word16 = Prim.ctzWord16;
-
-  /// Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
-  public let btst : (x : Word16, y: Word16) -> Bool = Prim.btstWord16;
+  public let bitcountTrailingZero : (x : Word16) -> Word16 = Prim.ctzWord16;
 
 }
