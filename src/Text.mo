@@ -9,8 +9,8 @@ import Prim "mo:prim";
 
 module {
 
-  // remove?
-  public func append(x : Text, y : Text) : Text =
+  /// Returns the concatenation of `x` and `y`, `x # y`.
+  public func concat(x : Text, y : Text) : Text =
     x # y;
 
   /// Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text.
