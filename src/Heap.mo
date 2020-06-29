@@ -3,9 +3,8 @@
 /// This module provides purely-functional priority queue based on leftist heap
 
 import O "Order";
-import L "List";
-import A "Array";
 import P "Prelude";
+import L "List";
 import I "Iter";
 
 module {
