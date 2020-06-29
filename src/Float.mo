@@ -53,7 +53,7 @@ module {
   /// Returns the arc cosine of `x` in radians.
   public let arccos : (x : Float) -> Float = Prim.arccos;
 
-  /// Returns the arc tangent in `x` in radians.
+  /// Returns the arc tangent of `x` in radians.
   public let arctan : (x : Float) -> Float = Prim.arctan;
 
   /// Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
