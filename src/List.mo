@@ -200,10 +200,10 @@ module {
   };
 
   /// Fold the list left-to-right using the given function (`f`).
-  public func foldLeft<T, S>(l : List<T>, a:S, f:(T,S) -> S) : S {
+  public func foldLeft<T, S>(l : List<T>, a : S, f : (S, T) -> S) : S {
     switch l {
-      case null     { a };
-      case (?(h,t)) { foldLeft<T,S>(t, f(h,a), f) };
+      case null a;
+      case (?(h, t)) foldLeft(t, f(a, h), f);
     };
   };
 
