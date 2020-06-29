@@ -1,9 +1,7 @@
 /// Integer numbers
 ///
-/// Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-/// This module provides equivalent functions and conversion functions.
-///
-/// The conversions `toInt*` will trap if the number is out of bounds.
+/// Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+/// This module provides equivalent functions and `Text` conversion.
 
 import Prim "mo:prim";
 import Prelude "Prelude";
@@ -79,7 +77,6 @@ module {
       ]);
   };
 
-
   /// Returns `x == y`.
   public func equal(x : Int, y : Int) : Bool { x == y };
 
@@ -118,9 +115,11 @@ module {
   public func mul(x : Int, y : Int) : Int { x * y };
 
   /// Returns the division of `x` by `y`,  `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Int, y : Int) : Int { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Int, y : Int) : Int { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.

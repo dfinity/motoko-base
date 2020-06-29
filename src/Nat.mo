@@ -1,9 +1,7 @@
 /// Natural numbers
 ///
-/// Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-/// This module provides conversion functions.
-///
-/// The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
+/// Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+/// This module provides equivalent functions and `Text` conversion.
 
 import Int "Int";
 import Order "Order";
@@ -52,7 +50,8 @@ module {
   /// Returns the sum of `x` and `y`, `x + y`.
   public func add(x : Nat, y : Nat) : Nat { x + y };
 
-  /// Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+  /// Returns the difference of `x` and `y`, `x - y`.
+  /// Traps on underflow.
   public func sub(x : Nat, y : Nat) : Nat { x - y };
 
   /// Returns the product of `x` and `y`, `x * y`.
