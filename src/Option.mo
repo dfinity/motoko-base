@@ -46,10 +46,10 @@ public func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B =
 
 /// Applies a function to the wrapped value. `null`'s are left untouched.
 /// ```
-/// map(f, ?(x)) = ?(f(x))
-/// map(f, null) = null
+/// map(?(x), f) = ?(f(x))
+/// map(null, f) = null
 /// ```
-public func map<A, B>(f : A->B, x : ?A) : ?B =
+public func map<A, B>(x : ?A, f : A -> B) : ?B =
   switch x {
     case null null;
     case (?x_) ?f(x_);
