@@ -5,7 +5,7 @@ module {
 
   public let hash : Blob -> Word32 = Prim.hashBlob;
 
-    /// Returns `x == y`.
+  /// Returns `x == y`.
   public func equal(x : Blob, y : Blob) : Bool { x == y };
 
   /// Returns `x != y`.

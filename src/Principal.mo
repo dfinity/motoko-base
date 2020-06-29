@@ -5,9 +5,17 @@ import Blob "Blob";
 import Hash "Hash";
 module {
 
+  /// Conversion.
+  public let fromActor : (a : actor {}) -> Principal = Prim.principalOfActor;
+
+  /// Conversion.
+  public let toBlob : (p : Principal) -> Blob = Prim.blobOfPrincipal;
+
+  /// Conversion.
+  public func toText(p : Principal) : Text = debug_show(p);
+
   public func hash(principal : Principal) : Hash.Hash =
     Blob.hash (Prim.blobOfPrincipal principal);
-
 
   /// Returns `x == y`.
   public func equal(x : Principal, y : Principal) : Bool { x == y };
