@@ -91,7 +91,7 @@ module {
 
   /// Call the given function on each list element and collect the results
   /// in a new list.
-  public func map<T,S>(l : List<T>, f:T -> S) : List<S> {
+  public func map<T,S>(l : List<T>, f : T -> S) : List<S> {
     switch l {
       case null     { null };
       case (?(h,t)) { ?(f(h),map<T,S>(t,f)) };
@@ -100,7 +100,7 @@ module {
 
   /// Create a new list with only those elements of the original list for which
   /// the given function (often called the _predicate_) returns true.
-  public func filter<T>(l : List<T>, f:T -> Bool) : List<T> {
+  public func filter<T>(l : List<T>, f : T -> Bool) : List<T> {
     switch l {
       case null { null };
       case (?(h,t)) {
@@ -120,7 +120,7 @@ module {
   ///
   /// In some languages, this operation is also known as a `partition`
   /// function.
-  public func partition<T>(l : List<T>, f:T -> Bool) : (List<T>, List<T>) {
+  public func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>) {
     switch l {
       case null { (null, null) };
       case (?(h,t)) {
@@ -137,7 +137,7 @@ module {
 
   /// Call the given function on each list element, and collect the non-null results
   /// in a new list.
-  public func mapFilter<T,S>(l : List<T>, f:T -> ?S) : List<S> {
+  public func mapFilter<T,S>(l : List<T>, f : T -> ?S) : List<S> {
     switch l {
       case null { null };
       case (?(h,t)) {
@@ -208,7 +208,7 @@ module {
   };
 
   /// Fold the list right-to-left using the given function (`f`).
-  public func foldRight<T,S>(l : List<T>, a:S, f:(T,S) -> S) : S {
+  public func foldRight<T,S>(l : List<T>, a : S, f : (T, S) -> S) : S {
     switch l {
       case null     { a };
       case (?(h,t)) { f(h, foldRight<T,S>(t, a, f)) };
@@ -226,7 +226,7 @@ module {
 
   /// Return true if there exists a list element for which
   /// the given predicate `f` is true.
-  public func some<T>(l: List<T>, f:T -> Bool) : Bool {
+  public func some<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null     { false };
       case (?(h,t)) { f(h) or some<T>(t, f)};
@@ -245,7 +245,7 @@ module {
   /// Merge two ordered lists into a single ordered list.
   /// This function requires both list to be ordered as specified
   /// by the given relation `lte`.
-  public func merge<T>(l1: List<T>, l2: List<T>, lte:(T,T) -> Bool) : List<T> {
+  public func merge<T>(l1 : List<T>, l2 : List<T>, lte : (T, T) -> Bool) : List<T> {
     switch (l1, l2) {
       case (null, _) { l2 };
       case (_, null) { l1 };
