@@ -19,8 +19,8 @@ public class Heap<T>(ord : (T, T) -> O.Order) {
         heap
     };
 
-    /// Put purely-functional representation into class
-    public func unshare(t: Tree<T>) {
+    /// Put purely-functional representation into class. Need to make sure the tree is constructed with the same compare function
+    public func unsafeUnshare(t: Tree<T>) {
         heap := t;
     };
 
@@ -102,7 +102,7 @@ public func fromIter<T>(iter: I.Iter<T>, ord: (T, T) -> O.Order) : Heap<T> {
     let list = I.toList(I.map(iter, func (x : T) : Tree<T> = ?(1, x, null, null)));
     if (not L.isNil(list)) {
         let t = build(list);
-        heap.unshare(t);
+        heap.unsafeUnshare(t);
     };
     heap
 };
