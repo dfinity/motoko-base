@@ -1,6 +1,8 @@
 /// 16-bit binary unsigned integers with modular arithmetic
 ///
 /// Most operations are available as built-in operators (e.g. `1 | 1`).
+
+import Nat "Nat";
 import Prim "mo:prim";
 
 module {
@@ -19,7 +21,7 @@ module {
 
   /// Returns the Text representation of `x`.
   public func toText(x : Word16) : Text {
-    Prim.natToText(toNat(x))
+    Nat.toText(toNat(x))
   };
 
   /// Returns the minimum of `x` and `y`.
