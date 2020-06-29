@@ -203,7 +203,7 @@ Debug.print("Option");
       x % 2 == 0;
     };
 
-    let actual = Option.map<Int, Bool>(isEven, null);
+    let actual = Option.map<Int, Bool>(null, isEven);
     let expected : ?Bool = null;
 
     switch (actual, expected) {
@@ -223,7 +223,7 @@ Debug.print("Option");
       x % 2 == 0;
     };
 
-    let actual = Option.map<Int, Bool>(isEven, ?0);
+    let actual = Option.map<Int, Bool>(?0, isEven);
     let expected = ?true;
 
     switch (actual, expected) {
