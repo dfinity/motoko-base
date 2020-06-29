@@ -53,7 +53,7 @@ module {
   };
 
   public func filter<A>(xs : [A], f : A -> Bool) : [A] {
-    let ys : Buf.Buf<A> = Buf.Buf(xs.size());
+    let ys : Buf.Buf<A> = Buf.Buf(xs.len());
     for (x in xs.vals()) {
       if (f(x)) {
         ys.add(x);
@@ -63,7 +63,7 @@ module {
   };
 
   public func filterMap<A, B>(xs : [A], f : A -> ?B) : [B] {
-    let ys : Buf.Buf<B> = Buf.Buf(16);
+    let ys : Buf.Buf<B> = Buf.Buf(xs.len());
     for (x in xs.vals()) {
       switch (f(x)) {
         case null {};
