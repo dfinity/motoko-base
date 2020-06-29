@@ -53,8 +53,7 @@ module {
   };
 
   public func filter<A>(xs : [A], f : A -> Bool) : [A] {
-    // TODO figure out a good starting size here? xs.size() / 2?
-    let ys : Buf.Buf<A> = Buf.Buf(16);
+    let ys : Buf.Buf<A> = Buf.Buf(xs.size());
     for (x in xs.vals()) {
       if (f(x)) {
         ys.add(x);
