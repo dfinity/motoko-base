@@ -5,54 +5,82 @@ import Int "Int";
 
 module {
 
-  public let pi : Float = 3.141592653589793238;
-  public let e : Float  = 2.718281828459045235;
+  /// Ratio of the circumference of a circle to its diameter.
+  public let pi : Float = 3.14159265358979323846; // taken from musl math.h
 
-  public let abs : Float -> Float = Prim.floatAbs;
-  public let sqrt : Float -> Float = Prim.floatSqrt;
+  /// Base of the natural logarithm.
+  public let e : Float  = 2.7182818284590452354;  // taken from musl math.h
 
-  public let ceil : Float -> Float = Prim.floatCeil;
-  public let floor : Float -> Float = Prim.floatFloor;
-  public let trunc : Float -> Float = Prim.floatTrunc;
-  public let nearest : Float -> Float = Prim.floatNearest;
-  public let copySign : (Float, Float) -> Float = Prim.floatCopySign;
+  /// Returns the absolute value of `x`.
+  public let abs : (x : Float) -> Float = Prim.floatAbs;
 
-  public let min : (Float, Float) -> Float = Prim.floatMin;
-  public let max : (Float, Float) -> Float = Prim.floatMax;
+  /// Returns the square root of `x`.
+  public let sqrt : (x : Float) -> Float = Prim.floatSqrt;
 
-  /// Returns the sine of radian angle.
-  public let sin : Float -> Float = Prim.sin;
-  /// Returns the cosine of a radian angle.
-  public let cos : Float -> Float = Prim.cos;
-  /// Returns the tangent of a radian angle.
-  public let tan : Float -> Float = Prim.tan;
+  /// Returns the smallest integral float greater than or equal to `x`.
+  public let ceil : (x : Float) -> Float = Prim.floatCeil;
 
-  /// Returns the arc sine in radians.
-  public let arcsin: Float -> Float = Prim.arcsin;
-  /// Returns the arc cosine in radians.
-  public let arccos : Float -> Float = Prim.arccos;
-  /// Returns the arc tangent in radians.
-  public let arctan : Float -> Float = Prim.arctan;
-  /// Returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
-  public let arctan2 : (x : Float, y : Float) -> Float = Prim.arctan2;
+  /// Returns the largest integral float less than or equal to `x`.
+  public let floor : (x : Float) -> Float = Prim.floatFloor;
 
-  // Returns the value of `e` raise to the `x`-th power.
+  /// Returns the nearest integral float not greater in magnitude than `x`.
+  public let trunc : (x : Float) -> Float = Prim.floatTrunc;
+
+  /// Returns the nearest integral float to `x`.
+  public let nearest : (x : Float) -> Float = Prim.floatNearest;
+
+  /// Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
+  public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
+
+  /// Returns the smaller value of `x` and `y`.
+  public let min : (x : Float, y :  Float) -> Float = Prim.floatMin;
+
+  /// Returns the larger value of `x` and `y`.
+  public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
+
+  /// Returns the sine of the radian angle `x`.
+  public let sin : (x : Float) -> Float = Prim.sin;
+
+  /// Returns the cosine of the radian angle `x`.
+  public let cos : (x : Float) -> Float = Prim.cos;
+
+  /// Returns the tangent of the radian angle `x`.
+  public let tan : (x : Float) -> Float = Prim.tan;
+
+  /// Returns the arc sine of `x` in radians.
+  public let arcsin: (x : Float) -> Float = Prim.arcsin;
+
+  /// Returns the arc cosine of `x` in radians.
+  public let arccos : (x : Float) -> Float = Prim.arccos;
+
+  /// Returns the arc tangent in `x` in radians.
+  public let arctan : (x : Float) -> Float = Prim.arctan;
+
+  /// Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
+  public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
+
+  /// Returns the value of `e` raised to the `x`-th power.
   public let exp : (x : Float) -> Float = Prim.exp;
 
-  // Returns the natural logarithm (base-`e`) of x.
+  /// Returns the natural logarithm (base-`e`) of `x`.
   public let log : (x : Float) -> Float = Prim.log;
 
-  // Conversion.
+  /// Conversion.
+  public let toText : Float -> Text = Prim.floatToText;
+
+  /// Conversion.
   public let toInt64 : Float -> Int64 = Prim.floatToInt64;
-  // Conversion.
+
+  /// Conversion.
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
-  // Conversion via Int64.
+
+  /// Conversion via Int64.
   public let toInt : Float -> Int =
     func (x : Float) : Int = Prim.int64ToInt(toInt64(x));
-  // Conversion via Int64. May trap.
+
+  /// Conversion via Int64. May trap.
   public let fromInt : Int -> Float =
     func (x : Int) : Float = fromInt64(Prim.intToInt64(x));
-
 
   /// Returns `x == y`.
   public func equal(x : Float, y : Float) : Bool { x == y };
