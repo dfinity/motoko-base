@@ -1,6 +1,6 @@
 /// 8-bit signed integers with checked arithmetic
 ///
-/// Most operations are available as built-in operators (`1 + 1`).
+/// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Int "Int";
 import Prim "mo:prim";
 
@@ -69,10 +69,12 @@ module {
   /// Returns the product of `x` and `y`, `x * y`. Traps on overflow.
   public func mul(x : Int8, y : Int8) : Int8 { x * y };
 
-  /// Returns the division of `x by y`, `x / y`. Traps on division by zero.
+  /// Returns the division of `x by y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Int8, y : Int8) : Int8 { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Int8, y : Int8) : Int8 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
