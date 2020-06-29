@@ -63,7 +63,7 @@ module {
   public let exp : (x : Float) -> Float = Prim.exp;
 
   /// Returns the natural logarithm (base-`e`) of `x`.
-  public let log : (x : Float) -> Float = Prim.tan;
+  public let log : (x : Float) -> Float = Prim.log;
 
   /// Conversion.
   public let toText : Float -> Text = Prim.floatToText;
