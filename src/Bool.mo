@@ -34,7 +34,7 @@ module {
   public func notEqual(x : Bool, y : Bool) : Bool { x != y };
 
   /// Returns the order of `x` and `y`, where `false < true`.
-  public func compare(x : Bool, y : Bool) : {#less; #equal; #greater} {
+  public func compare(x : Bool, y : Bool) : {#less; #equal; #greater } {
     if (x == y) #equal else if (x) #greater else #less
   };
 
