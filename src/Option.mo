@@ -55,6 +55,22 @@ public func map<A, B>(x : ?A, f : A -> B) : ?B =
     case (?x_) ?f(x_);
   };
 
+/// Applies a function to the wrapped value, but discards the result. Use
+/// `iterate` if you're only interested in the side effect `f` produces.
+///
+/// ```
+/// var counter : Nat = 0;
+/// iterate(?(5), func (x : Nat) { counter += x });
+/// assert(counter == 5);
+/// iterate(null, func (x : Nat) { counter += x });
+/// assert(counter == 5);
+/// ```
+public func iterate<A>(x : ?A, f : A -> ()) =
+  switch x {
+    case null {};
+    case (?x_) f(x_);
+  };
+
 /// Applies an optional function to an optional value. Returns `null` if at
 /// least one of the arguments is `null`.
 public func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B {

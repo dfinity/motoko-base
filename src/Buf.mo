@@ -19,8 +19,7 @@
 ///
 /// A "buffer" is a mutable sequence that grows, either one element at a
 /// time, or one (second) buffer at time.
-import P "Prelude";
-import A "Array";
+import Prim "mo:prim";
 
 module {
 
@@ -40,7 +39,7 @@ public class Buf<X> (initCapacity : Nat) {
           (if (initCapacity > 0) initCapacity else 1)
         else
           2 * elems.len();
-      let elems2 = A.init<X>(size, elem);
+      let elems2 = Prim.Array_init<X>(size, elem);
       var i = 0;
       label l loop {
         if (i >= count) break l;
@@ -101,14 +100,14 @@ public class Buf<X> (initCapacity : Nat) {
 
   public func toArray() : [X] =
     // immutable clone of array
-    A.tabulate<X>(
+    Prim.Array_tabulate<X>(
       count,
       func(x: Nat): X { elems[x] }
     );
 
   public func toVarArray() : [var X] = {
     if (count == 0) { [var] } else {
-      let a = A.init<X>(count, elems[0]);
+      let a = Prim.Array_init<X>(count, elems[0]);
       var i = 0;
       label l loop {
         if (i >= count) break l;

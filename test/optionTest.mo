@@ -237,7 +237,17 @@ Debug.print("Option");
   };
 
 };
+{
+  Debug.print("  iterate");
 
+  {
+    var witness = 0;
+    Option.iterate<Nat>(?(1), func (x : Nat) { witness += 1; });
+    assert(witness == 1);
+    Option.iterate<Nat>(null, func (x : Nat) { witness += 1; });
+    assert(witness == 1);
+  };
+};
 {
   Debug.print("  make");
 
