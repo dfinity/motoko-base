@@ -1,6 +1,6 @@
 /// 32-bit unsigned integers with checked arithmetic
 ///
-/// Most operations are available as built-in operators (`1 + 1`).
+/// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Nat "Nat";
 import Prim "mo:prim";
 
@@ -61,10 +61,12 @@ module {
   /// Returns the product of `x` and `y`, `x * y`. Traps on overflow.
   public func mul(x : Nat32, y : Nat32) : Nat32 { x * y };
 
-  /// Returns the division of `x by y`, `x / y`. Traps on division by zero.
+  /// Returns the division of `x by y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Nat32, y : Nat32) : Nat32 { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Nat32, y : Nat32) : Nat32 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
