@@ -164,12 +164,8 @@ module {
   ///
   /// In some languages, this operation is also known as a `list join`.
   public func flatten<T>(l : List<List<T>>) : List<T> {
-    // tail recursive, but requires "two passes"
-      // 1/2: fold from left to right, reverse-appending the sublists...
-      let r = foldLeft<List<T>, List<T>>(l, null, func(a,b) { reverseAppend<T>(a,b) });
-      // 2/2: ...re-reverse the elements, to their original order:
-      reverse<T>(r)
-    };
+    foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a,b) });
+  };
 
   // Internal utility-function
   func reverseAppend<T>(l1 : List<T>, l2 : List<T>) : List<T> {
