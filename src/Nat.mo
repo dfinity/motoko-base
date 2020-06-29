@@ -58,10 +58,12 @@ module {
   /// Returns the product of `x` and `y`, `x * y`.
   public func mul(x : Nat, y : Nat) : Nat { x * y };
 
-  /// Returns the division of `x` by `y`, `x / y`. Traps on division by zero.
+  /// Returns the division of `x` by `y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Nat, y : Nat) : Nat { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Nat, y : Nat) : Nat { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.

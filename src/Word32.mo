@@ -1,8 +1,6 @@
 /// 32-bit binary unsigned integers with modular arithmetic
 ///
-/// Most operations are available as built-in operators (e.g. `1 + 1`).
-import Nat "Nat";
-import Int "Int";
+/// Most operations are available as built-in operators (e.g. `1 | 1`).
 import Prim "mo:prim";
 
 module {
@@ -21,7 +19,7 @@ module {
 
   /// Returns the Text representation of `x`.
   public func toText(x : Word32) : Text {
-    Nat.toText(toNat(x))
+    Prim.natToText(toNat(x))
   };
 
   /// Returns the minimum of `x` and `y`.
@@ -68,12 +66,12 @@ module {
   /// Returns the product of `x` and `y`, `(x * y) mod 2^32`.
   public func mul(x : Word32, y : Word32) : Word32 { x * y };
 
-  /// Returns the truncated quotient of `x and y`, `floor (x / y)`.
-  /// Traps when `y` is 0.
+  /// Returns the division of `x` by `y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Word32, y : Word32) : Word32 { x / y };
 
-  /// Returns the remainder of the division of 'x' by `y`, `x - y * floor ( x / y)`.
-  /// Traps when `y` is 0.
+  /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Word32, y : Word32) : Word32 { x % y };
 
   /// Returns `x` to the power of `y`, `(x ** y) mod 2^32`.
