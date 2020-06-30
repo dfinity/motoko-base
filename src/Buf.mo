@@ -33,12 +33,12 @@ public class Buf<X> (initCapacity : Nat) {
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
   public func add(elem : X) {
-    if (count == elems.len()) {
+    if (count == elems.size()) {
       let size =
         if (count == 0)
           (if (initCapacity > 0) initCapacity else 1)
         else
-          2 * elems.len();
+          2 * elems.size();
       let elems2 = Prim.Array_init<X>(size, elem);
       var i = 0;
       label l loop {
@@ -77,7 +77,7 @@ public class Buf<X> (initCapacity : Nat) {
     count := 0;
 
   public func clone() : Buf<X> {
-    let c = Buf<X>(elems.len());
+    let c = Buf<X>(elems.size());
     var i = 0;
     label l loop {
       if (i >= count) break l;
