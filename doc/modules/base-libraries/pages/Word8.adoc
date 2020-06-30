@@ -32,7 +32,7 @@ Conversion. Returns `x mod 2^8`.
 
 [source,motoko]
 ----
-let toInt : (Word8) -> Int
+let toInt : ((x : Word8)) -> Int
 ----
 
 [[value.fromInt]]
@@ -42,7 +42,7 @@ Conversion. Returns `x mod 2^8`.
 
 [source,motoko]
 ----
-let fromInt : (Int) -> Word8
+let fromInt : ((x : Int)) -> Word8
 ----
 
 [[value.toText]]
@@ -297,43 +297,73 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 func bitrotRight(x : Word8, y : Word8) : Word8
 ----
 
-[[value.popcnt]]
-== popcnt
+[[value.bittest]]
+== bittest
+
+Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
+
+[source,motoko]
+----
+func bittest(x : Word8, p : Nat) : Bool
+----
+
+[[value.bitset]]
+== bitset
+
+Returns the value of setting bit `p mod 8` in `x` to `1`.
+
+[source,motoko]
+----
+func bitset(x : Word8, p : Nat) : Word8
+----
+
+[[value.bitclear]]
+== bitclear
+
+Returns the value of clearing bit `p mod 8` in `x` to `0`.
+
+[source,motoko]
+----
+func bitclear(x : Word8, p : Nat) : Word8
+----
+
+[[value.bitflip]]
+== bitflip
+
+Returns the value of flipping bit `p mod 8` in `x`.
+
+[source,motoko]
+----
+func bitflip(x : Word8, p : Nat) : Word8
+----
+
+[[value.bitcountNonZero]]
+== bitcountNonZero
 
 Returns the count of non-zero bits in `x`.
 
 [source,motoko]
 ----
-let popcnt : (Word8) -> Word8
+let bitcountNonZero : ((x : Word8)) -> Word8
 ----
 
-[[value.clz]]
-== clz
+[[value.bitcountLeadingZero]]
+== bitcountLeadingZero
 
 Returns the count of leading zero bits in `x`.
 
 [source,motoko]
 ----
-let clz : (Word8) -> Word8
+let bitcountLeadingZero : ((x : Word8)) -> Word8
 ----
 
-[[value.ctz]]
-== ctz
+[[value.bitcountTrailingZero]]
+== bitcountTrailingZero
 
 Returns the count of trailing zero bits in `x`.
 
 [source,motoko]
 ----
-let ctz : (Word8) -> Word8
-----
-
-[[value.btst]]
-== btst
-
-Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
-
-[source,motoko]
-----
-let btst : (Word8, Word8) -> Bool
+let bitcountTrailingZero : ((x : Word8)) -> Word8
 ----
 

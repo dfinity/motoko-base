@@ -32,7 +32,7 @@ Conversion. Returns `x mod 2^32`.
 
 [source,motoko]
 ----
-let toInt : (Word32) -> Int
+let toInt : ((x : Word32)) -> Int
 ----
 
 [[value.fromInt]]
@@ -42,7 +42,7 @@ Conversion. Returns `x mod 2^32`.
 
 [source,motoko]
 ----
-let fromInt : (Int) -> Word32
+let fromInt : ((x : Int)) -> Word32
 ----
 
 [[value.toText]]
@@ -297,43 +297,73 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 func bitrotRight(x : Word32, y : Word32) : Word32
 ----
 
-[[value.popcnt]]
-== popcnt
+[[value.bittest]]
+== bittest
+
+Returns the value of bit `p mod 32` in `x`, `(x & 2^(p mod 32)) == 2^(p mod 32)`.
+
+[source,motoko]
+----
+func bittest(x : Word32, p : Nat) : Bool
+----
+
+[[value.bitset]]
+== bitset
+
+Returns the value of setting bit `p mod 32` in `x` to `1`.
+
+[source,motoko]
+----
+func bitset(x : Word32, p : Nat) : Word32
+----
+
+[[value.bitclear]]
+== bitclear
+
+Returns the value of clearing bit `p mod 32` in `x` to `0`.
+
+[source,motoko]
+----
+func bitclear(x : Word32, p : Nat) : Word32
+----
+
+[[value.bitflip]]
+== bitflip
+
+Returns the value of flipping bit `p mod 32` in `x`.
+
+[source,motoko]
+----
+func bitflip(x : Word32, p : Nat) : Word32
+----
+
+[[value.bitcountNonZero]]
+== bitcountNonZero
 
 Returns the count of non-zero bits in `x`.
 
 [source,motoko]
 ----
-let popcnt : (Word32) -> Word32
+let bitcountNonZero : ((x : Word32)) -> Word32
 ----
 
-[[value.clz]]
-== clz
+[[value.bitcountLeadingZero]]
+== bitcountLeadingZero
 
 Returns the count of leading zero bits in `x`.
 
 [source,motoko]
 ----
-let clz : (Word32) -> Word32
+let bitcountLeadingZero : ((x : Word32)) -> Word32
 ----
 
-[[value.ctz]]
-== ctz
+[[value.bitcountTrailingZero]]
+== bitcountTrailingZero
 
 Returns the count of trailing zero bits in `x`.
 
 [source,motoko]
 ----
-let ctz : (Word32) -> Word32
-----
-
-[[value.btst]]
-== btst
-
-Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
-
-[source,motoko]
-----
-let btst : (Word32, Word32) -> Bool
+let bitcountTrailingZero : ((x : Word32)) -> Word32
 ----
 

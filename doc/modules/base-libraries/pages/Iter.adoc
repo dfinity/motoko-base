@@ -45,7 +45,7 @@ class range(x : Nat, y : Int)
 
 
 
-[[value.next-nat]]
+[[value.next]]
 === next
 
 
@@ -66,8 +66,12 @@ order.
 class revRange(x : Int, y : Int)
 ----
 
-[[value.next-int]]
-== next
+
+
+[[value.next]]
+=== next
+
+
 
 [source,motoko]
 ----
