@@ -105,7 +105,7 @@ Debug.print("Array");
 
   let xs = [ "a", "b", "c" ];
 
-  let actual = Array.foldLeft<Text, Text>(xs, "", Text.append);
+  let actual = Array.foldLeft<Text, Text>(xs, "", Text.concat);
   let expected = "abc";
 
   assert(actual == expected);
@@ -116,7 +116,7 @@ Debug.print("Array");
 
   let xs = [ "a", "b", "c" ];
 
-  let actual = Array.foldRight<Text, Text>(xs, "", Text.append);
+  let actual = Array.foldRight<Text, Text>(xs, "", Text.concat);
   let expected = "abc";
 
   assert(actual == expected);
