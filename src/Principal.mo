@@ -17,10 +17,7 @@ module {
   public func hash(principal : Principal) : Hash.Hash =
     Blob.hash (Prim.blobOfPrincipal principal);
 
-  public let fromActor : (actor {}) -> Principal =
-    Prim.principalOfActor;
-
-  public func fromText(t : Text) : Principal = fromActor(actor(t))
+  public func fromText(t : Text) : Principal = fromActor(actor(t));
 
   /// Returns `x == y`.
   public func equal(x : Principal, y : Principal) : Bool { x == y };
