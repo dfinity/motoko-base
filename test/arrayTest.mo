@@ -1,11 +1,11 @@
 import Array "mo:base/Array";
-import Prelude "mo:base/Prelude";
+import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 
-Prelude.printLn("Array");
+Debug.print("Array");
 
 {
-  Prelude.printLn("  append");
+  Debug.print("  append");
 
   let actual = Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]);
   let expected = [ 1, 2, 3, 4, 5, 6 ];
@@ -18,7 +18,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  apply");
+  Debug.print("  apply");
 
   let ask = func (x : Text) : Text {
     x # "?";
@@ -28,7 +28,7 @@ Prelude.printLn("Array");
     x # "!";
   };
 
-  let actual = Array.apply<Text, Text>([ ask, exclaim ], [ "good", "bad" ]);
+  let actual = Array.apply<Text, Text>([ "good", "bad" ], [ ask, exclaim ]);
   let expected = [ "good?", "bad?", "good!", "bad!" ];
 
   assert(actual.len() == expected.len());
@@ -39,13 +39,13 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  bind");
+  Debug.print("  chain");
 
   let purePlusOne = func (x : Int) : [Int] {
     [ x + 1 ];
   };
 
-  let actual = Array.bind<Int, Int>([ 0, 1, 2 ], purePlusOne);
+  let actual = Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
   let expected = [ 1, 2, 3 ];
 
   assert(actual.len() == expected.len());
@@ -56,25 +56,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  enumerate");
-
-  let xs = [ "a", "b", "c" ];
-  let ys = Array.enumerate<Text>(xs);
-
-  assert(xs.len() == ys.len());
-
-  assert(ys[0].0 == xs[0]);
-  assert(ys[0].1 == 0);
-
-  assert(ys[1].0 == xs[1]);
-  assert(ys[1].1 == 1);
-
-  assert(ys[2].0 == xs[2]);
-  assert(ys[2].1 == 2);
-};
-
-{
-  Prelude.printLn("  filter");
+  Debug.print("  filter");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -91,7 +73,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  find");
+  Debug.print("  find");
 
   type Element = {
     key : Text;
@@ -104,9 +86,9 @@ Prelude.printLn("Array");
     { key = "c"; value = 2; },
   ];
 
-  let b : ?Element = Array.find<Element>(func (x : Element) : Bool {
+  let b : ?Element = Array.find<Element>(xs, func (x : Element) : Bool {
     x.key == "b";
-  }, xs);
+  });
 
   switch (b) {
     case (?element) {
@@ -119,29 +101,29 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  foldl");
+  Debug.print("  foldLeft");
 
   let xs = [ "a", "b", "c" ];
 
-  let actual = Array.foldl<Text, Text>(Text.append, "", xs);
+  let actual = Array.foldLeft<Text, Text>(xs, "", Text.append);
   let expected = "abc";
 
   assert(actual == expected);
 };
 
 {
-  Prelude.printLn("  foldr");
+  Debug.print("  foldRight");
 
   let xs = [ "a", "b", "c" ];
 
-  let actual = Array.foldr<Text, Text>(Text.append, "", xs);
+  let actual = Array.foldRight<Text, Text>(xs, "", Text.append);
   let expected = "abc";
 
   assert(actual == expected);
 };
 
 {
-  Prelude.printLn("  freeze");
+  Debug.print("  freeze");
 
   var xs : [var Int] = [ var 1, 2, 3 ];
 
@@ -156,11 +138,11 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  join");
+  Debug.print("  flatten");
 
   let xs = [ [ 1, 2, 3 ] ];
 
-  let actual = Array.join<Int>(xs);
+  let actual = Array.flatten<Int>(xs);
   let expected : [Int] = [ 1, 2, 3 ];
 
   assert(actual.len() == expected.len());
@@ -171,13 +153,13 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  map");
+  Debug.print("  map");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
   };
 
-  let actual = Array.map<Int, Bool>(isEven, [ 1, 2, 3, 4, 5, 6 ]);
+  let actual = Array.map<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
   let expected = [ false, true, false, true, false, true ];
 
   assert(actual.len() == expected.len());
@@ -188,7 +170,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  mapWithIndex");
+  Debug.print("  mapEntries");
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -196,12 +178,10 @@ Prelude.printLn("Array");
 
   let xs = [ 1, 2, 3, 4, 5, 6 ];
 
-  let actual = Array.mapWithIndex<Int, (Bool, Bool)>(
-    func (value : Int, index : Nat) : (Bool, Bool) {
+  let actual = Array.mapEntries<Int, (Bool, Bool)>(
+    xs, func (value : Int, index : Nat) : (Bool, Bool) {
       (isEven value, isEven index)
-    },
-    xs
-  );
+    });
 
   let expected = [
     (false, true),
@@ -221,9 +201,9 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  pure");
+  Debug.print("  make");
 
-  let actual = Array.pure<Int>(0);
+  let actual = Array.make<Int>(0);
   let expected = [0];
 
   assert(actual.len() == expected.len());
@@ -234,7 +214,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  thaw");
+  Debug.print("  thaw");
 
   let xs : [Int] = [ 1, 2, 3 ];
 
@@ -249,7 +229,7 @@ Prelude.printLn("Array");
 };
 
 {
-  Prelude.printLn("  tabulateVar");
+  Debug.print("  tabulateVar");
 
   // regression test for (fixed) issues in base cases, where func was called too often:
 

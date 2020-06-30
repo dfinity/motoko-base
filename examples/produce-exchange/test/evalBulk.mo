@@ -123,11 +123,11 @@ actor class Test() = this {
       Debug.print "\nRetailer queries\n====================================\n";
 
       // do some queries
-      await retailerQueryAll(s, pka, ? Result.assertUnwrapAny<T.UserId>(uida));
-      await retailerQueryAll(s, pkb, ? Result.assertUnwrapAny<T.UserId>(uidb));
-      await retailerQueryAll(s, pkc, ? Result.assertUnwrapAny<T.UserId>(uidc));
-      await retailerQueryAll(s, pkd, ? Result.assertUnwrapAny<T.UserId>(uidd));
-      await retailerQueryAll(s, pke, ? Result.assertUnwrapAny<T.UserId>(uide));
+      await retailerQueryAll(s, pka, ? Result.unwrapOk uida);
+      await retailerQueryAll(s, pkb, ? Result.unwrapOk uidb);
+      await retailerQueryAll(s, pkc, ? Result.unwrapOk uidc);
+      await retailerQueryAll(s, pkd, ? Result.unwrapOk uidd);
+      await retailerQueryAll(s, pke, ? Result.unwrapOk uide);
 
       Debug.print "\nQuery counts\n----------------\n";
       let counts = await s.getCounts();
@@ -148,7 +148,7 @@ func retailerQueryAll(server:A.Server, pk:Text, r:?T.UserId) : async () {
   Debug.print "------------------------------------\n";
 
   Debug.print "\n## Query begin:\n";
-  let res = Result.assertUnwrapAny<T.QueryAllResults>(
+  let res = Result.unwrapOk(
     await server.retailerQueryAll(pk, retailerId, null, null)
   );
   Debug.print "\n## Query end.";
