@@ -3,8 +3,7 @@
 /// Functional maps (and sets) whose representation is "canonical", and
 /// history independent.
 ///
-/// Background
-/// ------------------
+/// **Background**
 ///
 /// See this POPL 1989 paper (Section 6):
 ///

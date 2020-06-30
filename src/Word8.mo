@@ -1,8 +1,8 @@
 /// 8-bit binary unsigned integers with modular arithmetic
 ///
-/// Most operations are available as built-in operators (e.g. `1 + 1`).
+/// Most operations are available as built-in operators (e.g. `1 | 1`).
+
 import Nat "Nat";
-import Int "Int";
 import Prim "mo:prim";
 
 module {
@@ -53,7 +53,7 @@ module {
   public func greaterOrEqual(x : Word8, y : Word8) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Word8, y : Word8) : { #less; #equal; #greater} {
+  public func compare(x : Word8, y : Word8) : { #less; #equal; #greater } {
     if (x < y) #less
     else if (x == y) #equal
     else #greater
@@ -68,12 +68,12 @@ module {
   /// Returns the product of `x` and `y`, `(x * y) mod 2^8`.
   public func mul(x : Word8, y : Word8) : Word8 { x * y };
 
-  /// Returns the truncated quotient of `x and y`, `floor (x / y)`.
-  /// Traps when `y` is 0.
+  /// Returns the division of `x` by `y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Word8, y : Word8) : Word8 { x / y };
 
-  /// Returns the remainder of the division of 'x' by `y`, `x - y * floor ( x / y)`.
-  /// Traps when `y` is 0.
+  /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Word8, y : Word8) : Word8 { x % y };
 
   /// Returns `x` to the power of `y`, `(x ** y) mod 2^8`.
@@ -106,16 +106,33 @@ module {
   /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
   public func bitrotRight(x : Word8, y : Word8) : Word8 { x <>> y };
 
+  /// Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
+  public func bittest(x : Word8, p : Nat) : Bool {
+    Prim.btstWord8(x, Prim.natToWord8 p);
+  };
+
+  /// Returns the value of setting bit `p mod 8` in `x` to `1`.
+  public func bitset(x : Word8, p : Nat) : Word8 {
+    x | (1 << Prim.natToWord8 p);
+  };
+
+  /// Returns the value of clearing bit `p mod 8` in `x` to `0`.
+  public func bitclear(x : Word8, p : Nat) : Word8 {
+    x & ^(1 << Prim.natToWord8 p);
+  };
+
+  /// Returns the value of flipping bit `p mod 8` in `x`.
+  public func bitflip(x : Word8, p : Nat) : Word8 {
+    x ^ (1 << Prim.natToWord8 p);
+  };
+
   /// Returns the count of non-zero bits in `x`.
-  public let popcnt : (x : Word8) -> Word8 = Prim.popcntWord8;
+  public let bitcountNonZero : (x : Word8) -> Word8 = Prim.popcntWord8;
 
   /// Returns the count of leading zero bits in `x`.
-  public let clz : (x : Word8) -> Word8 = Prim.clzWord8;
+  public let bitcountLeadingZero : (x : Word8) -> Word8 = Prim.clzWord8;
 
   /// Returns the count of trailing zero bits in `x`.
-  public let ctz : (x : Word8) -> Word8 = Prim.ctzWord8;
-
-  /// Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
-  public let btst : (x : Word8, y: Word8) -> Bool = Prim.btstWord8;
+  public let bitcountTrailingZero : (x : Word8) -> Word8 = Prim.ctzWord8;
 
 }

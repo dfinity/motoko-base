@@ -182,7 +182,7 @@ func debugDumpInventory(server:A.Server, pk:T.PublicKey, p:T.ProducerId) : async
     Debug.print (debug_show i # ". " # debug_show items[i] # "\n");
   };
   Debug.print "(list end)\n";
-  items.len()
+  items.size()
 };
 
 func debugDumpRoutes(server:A.Server, pk:T.PublicKey, t:T.TransporterId) : async Nat {
@@ -193,7 +193,7 @@ func debugDumpRoutes(server:A.Server, pk:T.PublicKey, t:T.TransporterId) : async
     Debug.print (debug_show i # ". " # debug_show items[i] # "\n");
   };
   Debug.print "(list end)\n";
-  items.len()
+  items.size()
 };
 
 func retailerQueryAll(server:A.Server, pk:Text, r:?T.UserId) : async () {
@@ -206,7 +206,7 @@ func retailerQueryAll(server:A.Server, pk:Text, r:?T.UserId) : async () {
   );
   Debug.print "\n## Query end.";
 
-  Debug.print ("\n## Query results (" # debug_show res.len() # ")\n");
+  Debug.print ("\n## Query results (" # debug_show res.size() # ")\n");
   for (info in res.vals()) {
     Debug.print "- ";
     Debug.print (debug_show info);

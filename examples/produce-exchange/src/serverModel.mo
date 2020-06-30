@@ -336,7 +336,7 @@ public class Model() {
       case (#add reqs)
       #add (
         Array.tabulate<Result<T.EntId, T.IdErr>>(
-          reqs.len(),
+          reqs.size(),
           func(i:Nat):Result<T.EntId, T.IdErr> =
             Result.mapOk<L.Resp, T.EntId, T.IdErr>(
               evalReq(#add(reqs[i])),
@@ -363,7 +363,7 @@ public class Model() {
    */
   public func evalBulkArray(reqs:[L.BulkReq]) : [L.BulkResp] {
     Array.tabulate<L.BulkResp>(
-      reqs.len(),
+      reqs.size(),
       func(i:Nat):L.BulkResp = evalBulk(reqs[i])
     )
   };
@@ -820,6 +820,7 @@ secondary maps.
     },
     func(info:T.ProducerInfo):?M.ProducerDoc =
       Option.map<M.RegionDoc, M.ProducerDoc>(
+        regionTable.getDoc(info.region),
         func (regionDoc: M.RegionDoc): M.ProducerDoc = {
           id=info.id;
           public_key=info.public_key;
@@ -829,7 +830,6 @@ secondary maps.
           inventory=Table.empty<T.InventoryId, M.InventoryDoc>();
           reserved=Table.empty<T.ReservedInventoryId, M.ReservedInventoryDoc>();
         },
-        regionTable.getDoc(info.region),
       )
     );
 
@@ -932,6 +932,7 @@ secondary maps.
       },
       func(info:T.RetailerInfo):?M.RetailerDoc =
         Option.map<M.RegionDoc, M.RetailerDoc>(
+          regionTable.getDoc(info.region),
           func (regionDoc: M.RegionDoc): M.RetailerDoc = {
             id=info.id;
             public_key=info.public_key;
@@ -940,7 +941,6 @@ secondary maps.
             region=regionDoc;
             reserved=Map.empty<T.ReservedInventoryId, (M.ReservedInventoryDoc, M.ReservedRouteDoc)>();
           },
-          regionTable.getDoc(info.region),
         )
       );
 
@@ -2287,7 +2287,7 @@ than the MVP goals, however.
     : [Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>]
   {
     let a = Array.init<?(Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>)>(
-      array.len(),
+      array.size(),
       null
     );
     for (i in array.keys()) {
@@ -2297,7 +2297,7 @@ than the MVP goals, however.
     };
     let results =
       Array.tabulate<Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>>(
-        array.len(),
+        array.size(),
         func(i:Nat):Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>{
           Option.unwrap<Result<(T.ReservedRouteId, T.ReservedInventoryId), T.IdErr>>(a[i])
         });

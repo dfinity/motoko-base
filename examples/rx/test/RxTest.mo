@@ -50,7 +50,7 @@ func assertEqualEvent(
 
   let disposable = sequence.subscribe(observer);
 
-  assert (events.len() == 4);
+  assert (events.size() == 4);
   assertEqualEvent(events[0], #next 1);
   assertEqualEvent(events[1], #next 2);
   assertEqualEvent(events[2], #next 3);
@@ -78,7 +78,7 @@ func assertEqualEvent(
 
   let disposable = sequence.subscribe(observer);
 
-  assert (events.len() == 1);
+  assert (events.size() == 1);
   assertEqualEvent(events[0], #completed);
 };
 
@@ -103,6 +103,6 @@ func assertEqualEvent(
 
   let disposable = sequence.subscribe(observer);
 
-  assert (events.len() == 1);
+  assert (events.size() == 1);
   assertEqualEvent(events[0], #error { description = "Error"; });
 };

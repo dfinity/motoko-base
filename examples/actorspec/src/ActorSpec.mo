@@ -70,7 +70,7 @@ module {
 
   func printGroups(groups_ : [Group], indent : Text) {
     for (group in groups_.vals()) {
-      let isDescribe = group.groups.len() > 0;
+      let isDescribe = group.groups.size() > 0;
       let newline = if isDescribe "\n" else "";
       let status = group.status;
       let statusText = if (isDescribe) {

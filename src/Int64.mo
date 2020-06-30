@@ -1,6 +1,6 @@
 /// 64-bit signed integers with checked arithmetic
 ///
-/// Most operations are available as built-in operators (`1 + 1`).
+/// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Int "Int";
 import Prim "mo:prim";
 
@@ -17,7 +17,7 @@ module {
     Int.toText(toInt(x))
   };
 
-  /// Returns the absolute value of `x`. Traps when `x = Traps when `x = -2^63.`
+  /// Returns the absolute value of `x`. Traps when `x = -2^63`.
   public func abs(x : Int64) : Int64 {
     fromInt(Int.abs(toInt(x)))
   };
@@ -51,7 +51,7 @@ module {
   public func greaterOrEqual(x : Int64, y : Int64) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Int64, y : Int64) : { #less; #equal; #greater} {
+  public func compare(x : Int64, y : Int64) : { #less; #equal; #greater } {
     if (x < y) #less
     else if (x == y) #equal
     else #greater
@@ -69,10 +69,12 @@ module {
   /// Returns the product of `x` and `y`, `x * y`. Traps on overflow.
   public func mul(x : Int64, y : Int64) : Int64 { x * y };
 
-  /// Returns the division of `x by y`, `x / y`. Traps on division by zero.
+  /// Returns the division of `x by y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Int64, y : Int64) : Int64 { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Int64, y : Int64) : Int64 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.

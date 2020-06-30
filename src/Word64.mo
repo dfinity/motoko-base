@@ -1,8 +1,8 @@
 /// 64-bit binary unsigned integers with modular arithmetic
 ///
-/// Most operations are available as built-in operators (e.g. `1 + 1`).
+/// Most operations are available as built-in operators (e.g. `1 | 1`).
+
 import Nat "Nat";
-import Int "Int";
 import Prim "mo:prim";
 
 module {
@@ -53,7 +53,7 @@ module {
   public func greaterOrEqual(x : Word64, y : Word64) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Word64, y : Word64) : { #less; #equal; #greater} {
+  public func compare(x : Word64, y : Word64) : { #less; #equal; #greater } {
     if (x < y) #less
     else if (x == y) #equal
     else #greater
@@ -68,12 +68,12 @@ module {
   /// Returns the product of `x` and `y`, `(x * y) mod 2^64`.
   public func mul(x : Word64, y : Word64) : Word64 { x * y };
 
-  /// Returns the truncated quotient of `x and y`, `floor (x / y)`.
-  /// Traps when `y` is 0.
+  /// Returns the division of `x` by `y`, `x / y`.
+  /// Traps when `y` is zero.
   public func div(x : Word64, y : Word64) : Word64 { x / y };
 
-  /// Returns the remainder of the division of 'x' by `y`, `x - y * floor ( x / y)`.
-  /// Traps when `y` is 0.
+  /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Traps when `y` is zero.
   public func rem(x : Word64, y : Word64) : Word64 { x % y };
 
   /// Returns `x` to the power of `y`, `(x ** y) mod 2^64`.
@@ -106,16 +106,33 @@ module {
   /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
   public func bitrotRight(x : Word64, y : Word64) : Word64 { x <>> y };
 
+  /// Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
+  public func bittest(x : Word64, p : Nat) : Bool {
+    Prim.btstWord64(x, Prim.natToWord64 p);
+  };
+
+  /// Returns the value of setting bit `p mod 64` in `x` to `1`.
+  public func bitset(x : Word64, p : Nat) : Word64 {
+    x | (1 << Prim.natToWord64 p);
+  };
+
+  /// Returns the value of clearing bit `p mod 64` in `x` to `0`.
+  public func bitclear(x : Word64, p : Nat) : Word64 {
+    x & ^(1 << Prim.natToWord64 p);
+  };
+
+  /// Returns the value of flipping bit `p mod 64` in `x`.
+  public func bitflip(x : Word64, p : Nat) : Word64 {
+    x ^ (1 << Prim.natToWord64 p);
+  };
+
   /// Returns the count of non-zero bits in `x`.
-  public let popcnt : (x : Word64) -> Word64 = Prim.popcntWord64;
+  public let bitcountNonZero : (x : Word64) -> Word64 = Prim.popcntWord64;
 
   /// Returns the count of leading zero bits in `x`.
-  public let clz : (x : Word64) -> Word64 = Prim.clzWord64;
+  public let bitcountLeadingZero : (x : Word64) -> Word64 = Prim.clzWord64;
 
   /// Returns the count of trailing zero bits in `x`.
-  public let ctz : (x : Word64) -> Word64 = Prim.ctzWord64;
-
-  /// Returns the result of testing bit `y` in `x`, `(x & 2^y) == 2^y`.
-  public let btst : (x : Word64, y: Word64) -> Bool = Prim.btstWord64;
+  public let bitcountTrailingZero : (x : Word64) -> Word64 = Prim.ctzWord64;
 
 }

@@ -344,7 +344,7 @@ func retailerQueryAll(server:A.Server, pk:Text, r:?T.UserId) : async () {
   );
   Debug.print "\n## Query end.";
 
-  Debug.print ("\n## Query results (" # debug_show res.len() # ")\n");
+  Debug.print ("\n## Query results (" # debug_show res.size() # ")\n");
   for (info in res.vals()) {
     Debug.print "- ";
     Debug.print (debug_show info);

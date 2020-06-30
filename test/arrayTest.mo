@@ -10,7 +10,7 @@ Debug.print("Array");
   let actual = Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]);
   let expected = [ 1, 2, 3, 4, 5, 6 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -31,7 +31,7 @@ Debug.print("Array");
   let actual = Array.apply<Text, Text>([ "good", "bad" ], [ ask, exclaim ]);
   let expected = [ "good?", "bad?", "good!", "bad!" ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -48,7 +48,7 @@ Debug.print("Array");
   let actual = Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
   let expected = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -65,7 +65,7 @@ Debug.print("Array");
   let actual = Array.filter<Nat>(isEven, [ 1, 2, 3, 4, 5, 6 ]);
   let expected = [ 2, 4, 6 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -105,7 +105,7 @@ Debug.print("Array");
 
   let xs = [ "a", "b", "c" ];
 
-  let actual = Array.foldLeft<Text, Text>(xs, "", Text.append);
+  let actual = Array.foldLeft<Text, Text>(xs, "", Text.concat);
   let expected = "abc";
 
   assert(actual == expected);
@@ -116,7 +116,7 @@ Debug.print("Array");
 
   let xs = [ "a", "b", "c" ];
 
-  let actual = Array.foldRight<Text, Text>(xs, "", Text.append);
+  let actual = Array.foldRight<Text, Text>(xs, "", Text.concat);
   let expected = "abc";
 
   assert(actual == expected);
@@ -130,7 +130,7 @@ Debug.print("Array");
   let actual = Array.freeze<Int>(xs);
   let expected : [Int] = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -145,7 +145,7 @@ Debug.print("Array");
   let actual = Array.flatten<Int>(xs);
   let expected : [Int] = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -162,7 +162,7 @@ Debug.print("Array");
   let actual = Array.map<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
   let expected = [ false, true, false, true, false, true ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -192,7 +192,7 @@ Debug.print("Array");
     (true, false),
   ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i].0 == expected[i].0);
@@ -206,7 +206,7 @@ Debug.print("Array");
   let actual = Array.make<Int>(0);
   let expected = [0];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -221,7 +221,7 @@ Debug.print("Array");
   let actual = Array.thaw<Int>(xs);
   var expected : [Int] = [ 1, 2, 3 ];
 
-  assert(actual.len() == expected.len());
+  assert(actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
