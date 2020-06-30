@@ -28,4 +28,82 @@ module {
     return x
   };
 
+  public func join(ts : Iter.Iter<Text>) : Text {
+     var r = "";
+     for (t in ts) {
+       r #= t
+     };
+     return r;
+  };
+
+  public func joinWith(sep : Text, ts : Iter.Iter<Text>) : Text {
+    var r = "";
+    let next = ts.next;
+    switch (next()) {
+      case null { return r; };
+      case (? t) {
+        r #= t;
+      }
+    };
+    loop {
+      switch (next()) {
+        case null { return r; };
+        case (? t) {
+          r #= sep;
+          r #= t;
+        }
+      }
+    }
+  };    
+
+  public func implode(cs : Iter.Iter<Char>) : Text {
+    var r = "";
+    for (c in cs) {
+      r #= Prim.charToText(c);
+    };
+    return r;
+  };
+
+  public func explode(t : Text) : Iter.Iter<Char> { 
+    t.chars();
+  };
+
+  public func map(t : Text, f : Char -> Char) : Text {
+    var r = "";
+    for (c in t.chars()) {
+      r #= Prim.charToText(f(c));
+    };
+    return r;
+  };
+  
+  public func translate(t : Text, f : Char -> Text) : Text {
+    var r = "";
+    for (c in t.chars()) {
+      r #= f(c);
+    };
+    return r;
+  };
+
+  public func fields(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
+    var getc = t.chars().next;
+    var field = "";
+    object {
+      public func next() : ?Text{ 
+        loop {
+          switch (getc()) {
+            case (? c) {
+              if (p(c)) { let r = field; field := ""; return ? r }
+              else field #= Prim.charToText(c);
+            };
+            case null { 
+              let r = field; 
+              field := ""; 
+              return if (r == "") null else ? r; 
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
