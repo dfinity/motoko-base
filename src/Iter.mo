@@ -129,7 +129,7 @@ module {
   /// ```
   public func fromArray<A>(xs : [A]) : Iter<A> {
     var ix : Nat = 0;
-    let size = xs.len();
+    let size = xs.size();
     object {
       public func next() : ?A {
         if (ix >= size) {

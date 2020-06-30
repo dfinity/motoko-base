@@ -1,7 +1,7 @@
 Reference manual generation
 ===========================
 
-This directory contains the tools to create the reference manual.
+This directory contains the setup to create the reference manual.
 
 ## Building
 

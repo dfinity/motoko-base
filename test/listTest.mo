@@ -99,7 +99,7 @@ type X = Nat;
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let actual = List.toArray<Nat>(list);
 
-    assert (actual.len() == expected.len());
+    assert (actual.size() == expected.size());
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);
@@ -113,7 +113,7 @@ type X = Nat;
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let actual = List.toVarArray<Nat>(list);
 
-    assert (actual.len() == expected.len());
+    assert (actual.size() == expected.size());
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);

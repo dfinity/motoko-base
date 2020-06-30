@@ -17,6 +17,8 @@ module {
   public func hash(principal : Principal) : Hash.Hash =
     Blob.hash (Prim.blobOfPrincipal principal);
 
+  public func fromText(t : Text) : Principal = fromActor(actor(t));
+
   /// Returns `x == y`.
   public func equal(x : Principal, y : Principal) : Bool { x == y };
 
@@ -41,5 +43,4 @@ module {
     else if (x == y) #equal
     else #greater
   };
-
 }

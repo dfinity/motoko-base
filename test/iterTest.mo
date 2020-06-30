@@ -20,7 +20,7 @@ Debug.print("Iter");
       for (i in Iter.revRange(range)) {
           x := x # Int.toText(i);
       };
-      assert(x == revExpected);      
+      assert(x == revExpected);
   };
 };
 
@@ -120,7 +120,7 @@ Debug.print("Iter");
   let expected = [1, 2, 3];
   let actual = Iter.toArray<Nat>(expected.vals());
 
-  assert (actual.len() == expected.len());
+  assert (actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
@@ -133,7 +133,7 @@ Debug.print("Iter");
   let expected = [var 1, 2, 3];
   let actual = Iter.toArrayMut<Nat>(expected.vals());
 
-  assert (actual.len() == expected.len());
+  assert (actual.size() == expected.size());
 
   for (i in actual.keys()) {
     assert(actual[i] == expected[i]);
