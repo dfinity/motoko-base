@@ -69,11 +69,11 @@ module {
   public func formatToText
     (x : Float, fmt : { #fix : Word8; #exp : Word8; #gen : Word8; #hex : Word8; #exact }) : Text =
     switch fmt {
-      case (#fix prec) Prim.formatFloatToText(x, prec, 0);
-      case (#exp prec) Prim.formatFloatToText(x, prec, 1);
-      case (#gen prec) Prim.formatFloatToText(x, prec, 2);
-      case (#hex prec) Prim.formatFloatToText(x, prec, 3);
-      case (#exact) Prim.formatFloatToText(x, 17, 2);
+      case (#fix prec) Prim.floatToFormattedText(x, prec, 0);
+      case (#exp prec) Prim.floatToFormattedText(x, prec, 1);
+      case (#gen prec) Prim.floatToFormattedText(x, prec, 2);
+      case (#hex prec) Prim.floatToFormattedText(x, prec, 3);
+      case (#exact) Prim.floatToFormattedText(x, 17, 2);
     };
 
   /// Conversion.
