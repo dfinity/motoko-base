@@ -54,7 +54,7 @@ module {
         }
       }
     }
-  };    
+  };
 
   public func implode(cs : Iter.Iter<Char>) : Text {
     var r = "";
@@ -64,7 +64,7 @@ module {
     return r;
   };
 
-  public func explode(t : Text) : Iter.Iter<Char> { 
+  public func explode(t : Text) : Iter.Iter<Char> {
     t.chars();
   };
 
@@ -75,7 +75,7 @@ module {
     };
     return r;
   };
-  
+
   public func translate(t : Text, f : Char -> Text) : Text {
     var r = "";
     for (c in t.chars()) {
@@ -86,24 +86,66 @@ module {
 
   public func fields(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
     var getc = t.chars().next;
+    var state : { #init; #resume; #done} = #init;
     var field = "";
     object {
-      public func next() : ?Text{ 
-        loop {
-          switch (getc()) {
-            case (? c) {
-              if (p(c)) { let r = field; field := ""; return ? r }
-              else field #= Prim.charToText(c);
-            };
-            case null { 
-              let r = field; 
-              field := ""; 
-              return if (r == "") null else ? r; 
+      public func next() : ?Text {
+        switch state {
+	  case (#done) { return null };
+          case (#init) {
+            loop {
+              switch (getc()) {
+                case (? c) {
+                  if (p(c)) {
+                    let r = field;
+		    field := "";
+                    state := #resume;
+		    return ? r
+	          }
+                  else field #= Prim.charToText(c);
+                };
+                case null {
+                  state := #done;
+                  return if (field == "") null else ? field;
+                }
+              }
+            }
+          };
+	  case (#resume) {
+            loop {
+              switch (getc()) {
+                case (? c) {
+                  if (p(c)) {
+                    let r = field;
+		    field := "";
+                    state := #resume;
+		    return ? r
+	          }
+                  else field #= Prim.charToText(c);
+                };
+                case null {
+                  state := #done;
+                  return ? field;
+                }
+              }
             }
           }
         }
       }
     }
-  }
+  };
+
+  public func tokens(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
+    let fs = fields(t, p);
+    object {
+      public func next() : ? Text {
+        switch (fs.next()) {
+	  case (? "") next();
+          case ot ot;
+	}
+      }
+    }
+  };
+
 
 }
