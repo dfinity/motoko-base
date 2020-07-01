@@ -67,7 +67,7 @@ module {
 
   /// Formatting.
   public func formatToText
-    (x : Float, fmt : { #fix : Word8; #fix : Word8; #fix : Word8; #fix : Word8; #exact }) : Text =
+    (x : Float, fmt : { #fix : Word8; #exp : Word8; #gen : Word8; #hex : Word8; #exact }) : Text =
     switch fmt {
       case (#fix prec) Prim.formatFloatToText(x, prec, 0);
       case (#exp prec) Prim.formatFloatToText(x, prec, 1);
