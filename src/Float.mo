@@ -65,6 +65,17 @@ module {
   /// Returns the natural logarithm (base-`e`) of `x`.
   public let log : (x : Float) -> Float = Prim.log;
 
+  /// Formatting.
+  public func formatToText
+    (x : Float, fmt : { #fix : Word8; #fix : Word8; #fix : Word8; #fix : Word8; #exact }) : Text =
+    switch fmt {
+      case (#fix prec) Prim.formatFloatToText(x, prec, 0);
+      case (#exp prec) Prim.formatFloatToText(x, prec, 1);
+      case (#gen prec) Prim.formatFloatToText(x, prec, 2);
+      case (#hex prec) Prim.formatFloatToText(x, prec, 3);
+      case (#exact) Prim.formatFloatToText(x, 17, 2);
+    };
+
   /// Conversion.
   public let toText : Float -> Text = Prim.floatToText;
 
