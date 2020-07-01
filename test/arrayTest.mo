@@ -1,9 +1,9 @@
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
-import Suite "mo:base/Test/Suite";
-import M "mo:base/Test/Matchers";
-import T "mo:base/Test/Testable";
+import Suite "mo:test/Suite";
+import M "mo:test/Matchers";
+import T "mo:test/Testable";
 
 let findTest = {
   type Element = {
