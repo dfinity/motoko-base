@@ -75,6 +75,13 @@ Debug.print("Float");
 
 
 {
+  Debug.print("  format");
+
+  assert(Float.format(20.12345678901, #exact) == "20.12345678901");
+};
+
+
+{
   Debug.print("  Pi: " # Float.toText(Float.pi));
   Debug.print("  arccos(-1.0): " # Float.toText(Float.arccos(-1.)));
 
