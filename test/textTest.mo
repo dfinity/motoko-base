@@ -110,13 +110,19 @@ Debug.print("Text");
     { input = ("bc","abcd"); expected = true },
     { input = ("","abc"); expected = true },
     { input = ("bc","ab"); expected = false },
-    { input = ("cb","abc"); expected = true },
+    { input = ("cb","abc"); expected = false },
     { input = ("abc","abcd"); expected = true },
-    { input = ("abc","abc"); expected = true },
+    { input = ("qrst","abcdefghijklmnopqrstuvwxyz"); expected = true },
+    { input = ("abcdefg","abcdefghijklmnopqrstuvwxyz"); expected = true },
+    { input = ("xyz","abcdefghijklmnopqrstuvwxyz"); expected = true },
+    { input = ("lkj","abcdefghijklmnopqrstuvwxyz"); expected = false },
+    { input = ("xyz",""); expected = false },
+
   ];
 
   for (t in tests.vals()) {
     Debug.print (debug_show(t));
+
     let actual = Text.isSubtext(t.input.0,t.input.1);
     assert (actual == t.expected);
   };

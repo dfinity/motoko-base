@@ -222,6 +222,7 @@ module {
 
   public func isSubtext(t1 : Text, t2 : Text) : Bool {
     let s1 = t1.size();
+    if (s1 == 0) return true;
     let s2 = t2.size();
     if (s1 > s2) return false;
     let buff = Prim.Array_init(s1, ' ');
@@ -234,9 +235,10 @@ module {
     };
     var front = 0;
     var back = s1 - 1;
-    var diff = s2 - s1;
-    while (diff > 0) {
-      let cs2 =
+    loop {
+      //let view = Prim.Array_tabulate<Char>(s1, func i = buff[(front+i) % s1]);
+      //Prim.debugPrint(debug_show(view));
+      let cs =
         object {
           var i = 0;
           public func next() : (? Char) {
@@ -248,12 +250,11 @@ module {
 	    else null
           }
 	};
-      if (iter_isPrefix(t1.chars(), cs2)) return true;
-      diff -= 1;
+      if (iter_isPrefix(t1.chars(), cs)) return true;
       back := (back + 1) % s1;
       buff[back] := switch (cs2.next()) {
         case (? c) { c };
-	case _ { /* assert (diff == 0); */ ' '}
+	case _ { return false; }
       };
       front := (front + 1) % s1;
     };
