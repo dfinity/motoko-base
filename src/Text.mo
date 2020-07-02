@@ -165,7 +165,7 @@ module {
       public func next() : ? Text {
         switch (fs.next()) {
           case (? "") next();
-	  case ot ot;
+          case ot ot;
         }
       }
     }
@@ -207,4 +207,57 @@ module {
       }
     }
   };
+
+  public func iter_isPrefix(cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
+    loop {
+      switch (cs1.next(), cs2.next()) {
+        case (null, _) { return true };
+        case (?c1, null) { return false };
+        case (?c1, ?c2) {
+          if (c1 != c2) return false;
+        }
+      }
+    }
+  };
+
+  public func isSubtext(t1 : Text, t2 : Text) : Bool {
+    let s1 = t1.size();
+    let s2 = t2.size();
+    if (s1 > s2) return false;
+    let buff = Prim.Array_init(s1, ' ');
+    let cs2 = t2.chars();
+    for (i in buff.keys()) {
+      switch (cs2.next()) {
+        case (? c) { buff[i] := c };
+        case _ { assert false };
+      }
+    };
+    var front = 0;
+    var back = s1 - 1;
+    var diff = s2 - s1;
+    while (diff > 0) {
+      let cs2 =
+        object {
+          var i = 0;
+          public func next() : (? Char) {
+            if (i < s1) {
+	      let c2 = buff[(front + i) % s1];
+	      i += 1;
+	      (? c2)
+	    }
+	    else null
+          }
+	};
+      if (iter_isPrefix(t1.chars(), cs2)) return true;
+      diff -= 1;
+      back := (back + 1) % s1;
+      buff[back] := switch (cs2.next()) {
+        case (? c) { c };
+	case _ { /* assert (diff == 0); */ ' '}
+      };
+      front := (front + 1) % s1;
+    };
+    return false;
+  };
+
 }

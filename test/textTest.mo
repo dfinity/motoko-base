@@ -104,20 +104,20 @@ Debug.print("Text");
 
 
 {
-  Debug.print("  isSuffix");
+  Debug.print("  isSubtext");
 
   let tests = [
-    { input = ("",""); expected = true },
+    { input = ("bc","abcd"); expected = true },
     { input = ("","abc"); expected = true },
     { input = ("bc","ab"); expected = false },
-    { input = ("c","abc"); expected = true },
-    { input = ("abc","abcd"); expected = false },
+    { input = ("cb","abc"); expected = true },
+    { input = ("abc","abcd"); expected = true },
     { input = ("abc","abc"); expected = true },
   ];
 
   for (t in tests.vals()) {
     Debug.print (debug_show(t));
-    let actual = Text.isSuffix(t.input.0,t.input.1);
+    let actual = Text.isSubtext(t.input.0,t.input.1);
     assert (actual == t.expected);
   };
 
