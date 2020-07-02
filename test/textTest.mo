@@ -82,3 +82,43 @@ Debug.print("Text");
   };
 
 };
+
+{
+  Debug.print("  isPrefix");
+
+  let tests = [
+    { input = ("",""); expected = true },
+    { input = ("","abc"); expected = true },
+    { input = ("abc","ab"); expected = false },
+    { input = ("abc","abc"); expected = true },
+    { input = ("abc","abcd"); expected = true },
+  ];
+
+  for (t in tests.vals()) {
+    Debug.print (debug_show(t));
+    let actual = Text.isPrefix(t.input.0,t.input.1);
+    assert (actual == t.expected);
+  };
+
+};
+
+
+{
+  Debug.print("  isSuffix");
+
+  let tests = [
+    { input = ("",""); expected = true },
+    { input = ("","abc"); expected = true },
+    { input = ("bc","ab"); expected = false },
+    { input = ("c","abc"); expected = true },
+    { input = ("abc","abcd"); expected = false },
+    { input = ("abc","abc"); expected = true },
+  ];
+
+  for (t in tests.vals()) {
+    Debug.print (debug_show(t));
+    let actual = Text.isSuffix(t.input.0,t.input.1);
+    assert (actual == t.expected);
+  };
+
+};

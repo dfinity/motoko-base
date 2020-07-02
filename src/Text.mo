@@ -115,17 +115,17 @@ module {
     object {
       public func next() : ?Text {
         switch state {
-	  case (#done) { return null };
+          case (#done) { return null };
           case (#init) {
             loop {
               switch (getc()) {
                 case (? c) {
                   if (p(c)) {
                     let r = field;
-		    field := "";
+                    field := "";
                     state := #resume;
-		    return ? r
-	          }
+                    return ? r
+                  }
                   else field #= Prim.charToText(c);
                 };
                 case null {
@@ -135,16 +135,16 @@ module {
               }
             }
           };
-	  case (#resume) {
+          case (#resume) {
             loop {
               switch (getc()) {
                 case (? c) {
                   if (p(c)) {
                     let r = field;
-		    field := "";
+                    field := "";
                     state := #resume;
-		    return ? r
-	          }
+                    return ? r
+                  }
                   else field #= Prim.charToText(c);
                 };
                 case null {
@@ -164,10 +164,47 @@ module {
     object {
       public func next() : ? Text {
         switch (fs.next()) {
-	  case (? "") next();
-          case ot ot;
-	}
+          case (? "") next();
+	  case ot ot;
+        }
       }
     }
-  }
+  };
+
+  public func isPrefix(t1 : Text, t2 : Text) : Bool {
+    var cs1 = t1.chars();
+    var cs2 = t2.chars();
+    loop {
+      switch (cs1.next(), cs2.next()) {
+        case (null, _) { return true };
+        case (?c1, null) { return false };
+        case (?c1, ?c2) {
+          if (c1 != c2) return false;
+        }
+      }
+    }
+  };
+
+  public func isSuffix(t1 : Text, t2 : Text) : Bool {
+    let s1 = t1.size();
+    if (s1 == 0) return true;
+    let s2 = t2.size();
+    if (s1 > s2) return false;
+    var cs2 = t2.chars();
+    var diff = s2 - s1;
+    while (diff > 0)  {
+      ignore cs2.next();
+      diff -= 1;
+    };
+    let cs1 = t1.chars();
+    loop {
+      switch (cs1.next(), cs2.next()) {
+        case (null, null) { return true };
+        case (?c1, ?c2) {
+          if (c1 != c2) return false;
+        };
+        case _ { assert false };
+      }
+    }
+  };
 }
