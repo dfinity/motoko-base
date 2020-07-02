@@ -78,10 +78,10 @@ Debug.print("Float");
   Debug.print("  format");
 
   assert(Float.formatToText(20.12345678901, #exact) == "20.12345678901");
-  assert(Float.formatToText(20.12345678901, #fix (6 : Nat8)) == "20.123457");
-  assert(Float.formatToText(20.12345678901, #exp (9 : Nat8)) == "2.012345679e+01");
-  assert(Float.formatToText(20.12345678901, #gen (12 : Nat8)) == "20.123456789");
-  assert(Float.formatToText(20.12345678901, #hex (10 : Nat8)) == "0x1.41f9add374p+4");
+  assert(Float.formatToText(20.12345678901, #fix 6) == "20.123457");
+  assert(Float.formatToText(20.12345678901, #exp 9) == "2.012345679e+01");
+  assert(Float.formatToText(20.12345678901, #gen 12) == "20.123456789");
+  assert(Float.formatToText(20.12345678901, #hex 10) == "0x1.41f9add374p+4");
 };
 
 
