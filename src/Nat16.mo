@@ -46,7 +46,7 @@ module {
   public func greaterOrEqual(x : Nat16, y : Nat16) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Nat16, y : Nat16) : { #less; #equal; #greater} {
+  public func compare(x : Nat16, y : Nat16) : { #less; #equal; #greater } {
     if (x < y) #less
     else if (x == y) #equal
     else #greater

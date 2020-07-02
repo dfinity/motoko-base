@@ -5,9 +5,9 @@ import Iter "mo:base/Iter";
 Debug.print("Text");
 
 {
-  Debug.print("  append");
+  Debug.print("  concat");
 
-  let actual = Text.append("x", "y");
+  let actual = Text.concat("x", "y");
   let expected = "xy";
 
   assert(actual == expected);

@@ -51,7 +51,7 @@ module {
   public func greaterOrEqual(x : Int32, y : Int32) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Int32, y : Int32) : { #less; #equal; #greater} {
+  public func compare(x : Int32, y : Int32) : { #less; #equal; #greater } {
     if (x < y) #less
     else if (x == y) #equal
     else #greater
