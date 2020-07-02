@@ -65,8 +65,14 @@ module {
   /// Returns the natural logarithm (base-`e`) of `x`.
   public let log : (x : Float) -> Float = Prim.log;
 
-  /// Formatting.
-  public func formatToText
+  /// Formatting. `format(x, fmt)` formats `x` to `Text` according  to the
+  /// formatting directive `fmt`, which can take following forms:
+  /// - `#fix prec` as fixed-point format with `prec` digits
+  /// - `#exp prec` as exponential format with `prec` digits
+  /// - `#gen prec` as generic format with `prec` digits
+  /// - `#hex prec` as hexadecimal format with `prec` digits
+  /// - `#exact` as exact format that can round-trip via `fromText`.
+  public func format
     (x : Float, fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }) : Text =
     switch fmt {
       case (#fix prec) Prim.floatToFormattedText(x, prec, 0);
