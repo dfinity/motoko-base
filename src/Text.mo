@@ -268,7 +268,7 @@ module {
     let cs2 = t2.chars();
     loop {
       switch (cs1.next(), cs2.next()) {
-        case (null, null) { return #equal};
+        case (null, null) { return #equal };
         case (null, ? _) { return #less };
         case (? _, null) { return #greater };
         case (? c1, ? c2) {
