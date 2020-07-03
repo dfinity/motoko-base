@@ -148,11 +148,11 @@ Debug.print("Text");
   for (t in tests.vals()) {
     Debug.print (debug_show(t));
 
-    let actual = Text.collate(t.input.0,t.input.1, Char.compare);
+    let actual = Text.collate(t.input.0, t.input.1, Char.compare);
     assert (Order.equal(actual, t.expected));
 
     // sanity check against Text.compare;
-    let comparison = Text.compare(t.input.0,t.input.1);
+    let comparison = Text.compare(t.input.0, t.input.1);
     assert (Order.equal(actual, comparison));
   };
 
