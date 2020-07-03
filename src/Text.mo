@@ -244,18 +244,18 @@ module {
           var i = 0;
           public func next() : (? Char) {
             if (i < s1) {
-	      let c2 = buff[(front + i) % s1];
-	      i += 1;
-	      (? c2)
-	    }
-	    else null
+              let c2 = buff[(front + i) % s1];
+              i += 1;
+              (? c2)
+            }
+            else null
           }
-	};
+        };
       if (iter_isPrefix(t1.chars(), cs)) return true;
       back := (back + 1) % s1;
       buff[back] := switch (cs2.next()) {
         case (? c) { c };
-	case _ { return false; }
+        case _ { return false; }
       };
       front := (front + 1) % s1;
     };
@@ -270,12 +270,12 @@ module {
       switch (cs1.next(), cs2.next()) {
         case (null, null) { return #equal};
         case (null, ? _) { return #less };
-	case (? _, null) { return #greater };
+        case (? _, null) { return #greater };
         case (? c1, ? c2) {
           switch (Char.compare(c1, c2)) {
             case (#equal) { }; // continue
-	    case other { return other; }
-	  }
+            case other { return other; }
+          }
         }
       }
     }
