@@ -292,12 +292,12 @@ module {
       switch (cs1.next(), cs2.next()) {
         case (null, null) { return #equal };
         case (null, ? _) { return #less };
-	case (? _, null) { return #greater };
+        case (? _, null) { return #greater };
         case (? c1, ? c2) {
           switch (Char.compare(c1, c2)) {
             case (#equal) { }; // continue
-	    case other { return other; }
-	  }
+            case other { return other; }
+          }
         }
       }
     }
