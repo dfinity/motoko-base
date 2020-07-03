@@ -1,6 +1,8 @@
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
+import Char "mo:base/Char";
+import Order "mo:base/Order";
 
 Debug.print("Text");
 
@@ -117,7 +119,6 @@ Debug.print("Text");
     { input = ("xyz","abcdefghijklmnopqrstuvwxyz"); expected = true },
     { input = ("lkj","abcdefghijklmnopqrstuvwxyz"); expected = false },
     { input = ("xyz",""); expected = false },
-
   ];
 
   for (t in tests.vals()) {
@@ -125,6 +126,30 @@ Debug.print("Text");
 
     let actual = Text.isSubtext(t.input.0,t.input.1);
     assert (actual == t.expected);
+  };
+
+};
+
+{
+  Debug.print("  collate");
+
+  let tests = [
+    { input = ("",""); expected = #equal },
+    { input = ("","a"); expected = #less },
+    { input = ("abc","abc"); expected = #equal },
+    { input = ("abc","abd"); expected = #less },
+    { input = ("abc","abb"); expected = #greater },
+    { input = ("abc","abcd"); expected = #less },
+    { input = ("","abcd"); expected = #less },
+    { input = ("abcd","abc"); expected = #greater },
+    { input = ("xxxxabcd","xxxxabc"); expected = #greater },
+  ];
+
+  for (t in tests.vals()) {
+    Debug.print (debug_show(t));
+
+    let actual = Text.collate(t.input.0,t.input.1,Char.compare);
+    assert (Order.equal(actual,t.expected));
   };
 
 };

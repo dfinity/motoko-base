@@ -3,6 +3,7 @@
 /// This type describes a valid, human-readable text. It does not contain arbitrary
 /// binary data.
 
+import Char "Char";
 import Iter "Iter";
 import Hash "Hash";
 import Prim "mo:prim";
@@ -260,5 +261,47 @@ module {
     };
     return false;
   };
+
+  // TBR: Is this actually the same as compare above, or not ?
+  public func compareAlt(t1 : Text, t2 : Text) : { #less; #equal; #greater } {
+    let cs1 = t1.chars();
+    let cs2 = t2.chars();
+    loop {
+      switch (cs1.next(), cs2.next()) {
+        case (null, null) { return #equal};
+        case (null, ? _) { return #less };
+	case (? _, null) { return #greater };
+        case (? c1, ? c2) {
+          switch (Char.compare(c1, c2)) {
+            case (#equal) { }; // continue
+	    case other { return other; }
+	  }
+        }
+      }
+    }
+  };
+
+  public func collate(
+    t1 : Text,
+    t2 : Text,
+    cmp : (Char,Char)-> { #less; #equal; #greater })
+    : { #less; #equal; #greater } {
+    let cs1 = t1.chars();
+    let cs2 = t2.chars();
+    loop {
+      switch (cs1.next(), cs2.next()) {
+        case (null, null) { return #equal };
+        case (null, ? _) { return #less };
+	case (? _, null) { return #greater };
+        case (? c1, ? c2) {
+          switch (Char.compare(c1, c2)) {
+            case (#equal) { }; // continue
+	    case other { return other; }
+	  }
+        }
+      }
+    }
+  };
+
 
 }
