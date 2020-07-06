@@ -52,7 +52,61 @@ module {
     else #greater
   };
 
+  /// Returns `t.size()`, the number of characters in `ts`.
+  public func size(t : Text) : Nat { t.size(); };
 
+  /// Returns the i-th character in `ts`. O(size(t)). May trap.
+  public func sub(t : Text, i : Nat) : Char {
+    let cs = t.chars();
+    var n : Int = i - 1;
+    loop {
+      while (n > 0) {
+	switch (cs.next()) {
+	  case null assert false;
+	  case (? _) ();
+	};
+      };
+      switch (cs.next()) {
+	case null assert false;
+	case (? c) { return c };
+      };
+    };
+  };
+
+  /// Returns:
+  /// - when `jo` is `null`, the subtext of `t` between characters `i` and characters `t.size()-1`.
+  ///   Traps when `t.size() < i`.
+  /// - when `jo` is  `? j`: the subtext of `t` between characters `i` and `i+j-1`.
+  ///   Traps when `t.size < i + j`.
+  public func extract(t : Text, i : Nat, jo : ? Nat) : Text {
+    var r = "";
+    var j = switch jo { case (? j) j; case null (t.size()) };
+     let cs = t.chars();
+     var n = i;
+     while (n > 0) {
+       switch (cs.next()) {
+         case null (assert false);
+	 case (? _) ();
+       };
+       n -= 1;
+     };
+     n := i + j;
+     while (n > 0) {
+       switch (cs.next()) {
+         case null (assert false);
+	 case (? c) { r #= Prim.charToText(c) }
+       };
+       n -= 1;
+     };
+     return r;
+  };
+
+  /// Returns the subtext of `t` between characters `i` and `i+j-1`. Equivalent to `extract(t, i, ?j)`. Traps when `t.size < i + j`. _O_(`size(t)`).
+  public func subtext(t : Text, i : Nat, j: Nat) : Text {
+    extract(t, i, ? j);
+  };
+
+  /// Returns the concatenation of text values in `ts`.
   public func join(ts : Iter.Iter<Text>) : Text {
      var r = "";
      for (t in ts) {
@@ -61,6 +115,7 @@ module {
      return r;
   };
 
+  /// Returns the concatenation of text values in `ts`, separated by `sep`.
   public func joinWith(sep : Text, ts : Iter.Iter<Text>) : Text {
     var r = "";
     let next = ts.next;
@@ -81,6 +136,10 @@ module {
     }
   };
 
+  /// Returns the text value of size 1 containing the single character `c`;
+  public let text : (c : Char) -> Text = Prim.charToText;
+
+  /// Returns the text value containing the sequence of characters in `cs`.
   public func implode(cs : Iter.Iter<Char>) : Text {
     var r = "";
     for (c in cs) {
@@ -89,10 +148,12 @@ module {
     return r;
   };
 
+  /// Returns an iter enumerating the sequence of characters in `t` (from first to last).
   public func explode(t : Text) : Iter.Iter<Char> {
     t.chars();
   };
 
+  /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate single-character text values.
   public func map(t : Text, f : Char -> Char) : Text {
     var r = "";
     for (c in t.chars()) {
@@ -101,6 +162,7 @@ module {
     return r;
   };
 
+  /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
   public func translate(t : Text, f : Char -> Text) : Text {
     var r = "";
     for (c in t.chars()) {
@@ -109,6 +171,10 @@ module {
     return r;
   };
 
+  /// Returns the sequence of fields in `t`, derived from left to right.
+  /// A _field_ is a possibly empty, maximal subtext of `t` not containing a delimiter.
+  /// A _delimiter_ is any character matching the predicate `p`.
+  /// Two fields are separated by exactly one delimiter.
   public func fields(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
     var getc = t.chars().next;
     var state : { #init; #resume; #done} = #init;
@@ -160,6 +226,10 @@ module {
     }
   };
 
+  /// Returns the sequence of tokens in `t`, derived from left to right.
+  /// A _token_ is a non-empty maximal subtext of `t` not containing a delimiter.
+  /// A _delimiter_ is any character matching the predicate `p`.
+  /// Two tokens may be separated by more than one delimiter.
   public func tokens(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
     let fs = fields(t, p);
     object {
@@ -172,6 +242,7 @@ module {
     }
   };
 
+  /// Returns `true` if `t1` is a prefix of `t2`, otherwise returns `false`.
   public func isPrefix(t1 : Text, t2 : Text) : Bool {
     var cs1 = t1.chars();
     var cs2 = t2.chars();
@@ -186,6 +257,7 @@ module {
     }
   };
 
+  /// Returns `true` if `t1` is a suffix of `t2`, otherwise returns `false`.
   public func isSuffix(t1 : Text, t2 : Text) : Bool {
     let s1 = t1.size();
     if (s1 == 0) return true;
@@ -209,7 +281,7 @@ module {
     }
   };
 
-  public func iter_isPrefix(cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
+  private func iter_isPrefix(cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
     loop {
       switch (cs1.next(), cs2.next()) {
         case (null, _) { return true };
@@ -221,6 +293,7 @@ module {
     }
   };
 
+  /// Returns `true` if `t1` is a subtext of `t2`, otherwise returns `false`.
   public func isSubtext(t1 : Text, t2 : Text) : Bool {
     let s1 = t1.size();
     if (s1 == 0) return true;
@@ -262,6 +335,7 @@ module {
     return false;
   };
 
+  /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func collate(
     t1 : Text,
     t2 : Text,

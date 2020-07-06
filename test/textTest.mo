@@ -15,17 +15,6 @@ Debug.print("Text");
   assert(actual == expected);
 };
 
-
-{
-  Debug.print("  join");
-
-  let actual = Text.join((["aaa", "", "c", "dd"].vals()));
-  let expected = "aaacdd";
-
-  assert(actual == expected);
-};
-
-
 {
   Debug.print("  join");
 
