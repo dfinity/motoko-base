@@ -66,7 +66,7 @@ module {
   public let log : (x : Float) -> Float = Prim.log;
 
   /// Formatting. `format(x, fmt)` formats `x` to `Text` according  to the
-  /// formatting directive `fmt`, which can take following forms:
+  /// formatting directive `fmt`, which can take one of the following forms:
   /// - `#fix prec` as fixed-point format with `prec` digits
   /// - `#exp prec` as exponential format with `prec` digits
   /// - `#gen prec` as generic format with `prec` digits
