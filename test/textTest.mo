@@ -37,7 +37,6 @@ func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
 
 Suite.run(Suite.suite("size",
 [
- // size
  Suite.test(
    "size-0",
    Text.size(""),
@@ -63,7 +62,6 @@ Suite.run(Suite.suite("size",
 
 Suite.run(Suite.suite("size",
 [
- // size
  Suite.test(
    "size-0",
    Text.size(""),
@@ -106,7 +104,6 @@ Suite.run(Suite.suite("sub",
 
 Suite.run(Suite.suite("extract",
 [
- // size
  Suite.test(
    "extract-0",
    Text.extract("", 0, ? 0),
@@ -132,7 +129,6 @@ Suite.run(Suite.suite("extract",
 
 Suite.run(Suite.suite("subtext",
 [
- // size
  Suite.test(
    "subtext-0",
    Text.subtext("", 0, 0),
@@ -158,7 +154,6 @@ Suite.run(Suite.suite("subtext",
 
 Suite.run(Suite.suite("explode",
 [
- // size
  Suite.test(
    "explode-0",
    Text.explode(""),
@@ -167,10 +162,14 @@ Suite.run(Suite.suite("explode",
    "explode-1",
    Text.explode("a"),
    M.equals(iterT (['a']))),
+ Suite.test(
+   "explode-2",
+   Text.explode("abc"),
+   M.equals(iterT (['a','b','c']))),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    Suite.test(
-   "explode-2",
+   "implode-2",
    Text.explode(Text.join(Array.map(a, Char.toText).vals())),
    M.equals(iterT a))
  },
@@ -193,32 +192,94 @@ Suite.run(Suite.suite("implode",
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    Suite.test(
-   "explode-2",
+   "implode-3",
    Text.implode(a.vals()),
    M.equals(T.text (Text.join(Array.map(a, Char.toText).vals()))))
  },
 ]));
 
 
+Suite.run(Suite.suite("concat",
+[
+ Suite.test(
+   "concat-0",
+   Text.concat("",""),
+   M.equals(T.text(""))),
+ Suite.test(
+   "concat-1",
+   Text.concat("","b"),
+   M.equals(T.text "b")),
+ Suite.test(
+   "concat-2",
+   Text.concat("a","b"),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "concat-3",
+   Text.concat("abcdefghijklmno","pqrstuvwxyz"),
+   M.equals(T.text "abcdefghijklmnopqrstuvwxyz")),
+]));
 
-{
-  Debug.print("  concat");
+Suite.run(Suite.suite("join",
+[
+ Suite.test(
+   "join-0",
+   Text.join((["",""].vals())),
+   M.equals(T.text(""))),
+ Suite.test(
+   "join-1",
+   Text.join((["","b"].vals())),
+   M.equals(T.text "b")),
+ Suite.test(
+   "join-2",
+   Text.join((["a","bb","ccc","dddd"].vals())),
+   M.equals(T.text "abbcccdddd")),
+ {
+   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
+   Suite.test(
+   "join-3",
+   Text.join(Array.map(a, Char.toText).vals()),
+   M.equals(T.text (Text.implode(a.vals()))))
+ },
+ Suite.test(
+   "join-4",
+   Text.join(([].vals())),
+   M.equals(T.text "")),
+ Suite.test(
+   "join-5",
+   Text.join((["aaa"].vals())),
+   M.equals(T.text "aaa")),
+]));
 
-  let actual = Text.concat("x", "y");
-  let expected = "xy";
-
-  assert(actual == expected);
-};
-
-{
-  Debug.print("  join");
-
-  let actual = Text.joinWith(";",(["aaa", "", "c", "dd"].vals()));
-  let expected = "aaa;;c;dd";
-
-  assert(actual == expected);
-};
-
+Suite.run(Suite.suite("joinWith",
+[
+ Suite.test(
+   "joinWith-0",
+   Text.joinWith(",",(["",""].vals())),
+   M.equals(T.text(","))),
+ Suite.test(
+   "joinWith-1",
+   Text.joinWith(",",(["","b"].vals())),
+   M.equals(T.text ",b")),
+ Suite.test(
+   "joinWith-2",
+   Text.joinWith(",",(["a","bb","ccc","dddd"].vals())),
+   M.equals(T.text "a,bb,ccc,dddd")),
+ {
+   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
+   Suite.test(
+   "joinWith-3",
+   Text.joinWith("", Array.map(a, Char.toText).vals()),
+   M.equals(T.text (Text.implode(a.vals()))))
+  },
+ Suite.test(
+   "joinWith-4",
+   Text.joinWith(",",([].vals())),
+   M.equals(T.text "")),
+ Suite.test(
+   "joinWith-5",
+   Text.joinWith(",",(["aaa"].vals())),
+   M.equals(T.text "aaa")),
+]));
 
 {
   Debug.print("  fields");
