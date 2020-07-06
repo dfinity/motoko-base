@@ -63,7 +63,7 @@ module {
       while (n > 0) {
 	switch (cs.next()) {
 	  case null assert false;
-	  case (? _) { n -= 1 };
+	  case (? c) n -= 1;
 	};
       };
       switch (cs.next()) {

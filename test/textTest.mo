@@ -3,6 +3,8 @@ import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Char "mo:base/Char";
 import Order "mo:base/Order";
+import Array "mo:base/Array";
+import Word32 "mo:base/Word32";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
@@ -15,6 +17,23 @@ func charT(c : Char): T.TestableItem<Char> = {
   display = Text.text;
   equals = Char.equal;
 };
+
+// TODO: generalize and move to Iter.mo
+func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
+  item = c.vals();
+  display = Text.implode;
+  equals = func (cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
+     loop {
+       switch (cs1.next(),cs2.next()) {
+         case (null,null) return true;
+	 case (? c1, ? c2)
+	   if (c1 != c2) return false;
+	 case (_,_) return false;
+       }
+     }
+  };
+};
+
 
 Suite.run(Suite.suite("size",
 [
@@ -134,6 +153,50 @@ Suite.run(Suite.suite("subtext",
    "subtext-3",
    Text.subtext("a☃c", 1, 2),
    M.equals(T.text "☃c")),
+]));
+
+
+Suite.run(Suite.suite("explode",
+[
+ // size
+ Suite.test(
+   "explode-0",
+   Text.explode(""),
+   M.equals(iterT([]))),
+ Suite.test(
+   "explode-1",
+   Text.explode("a"),
+   M.equals(iterT (['a']))),
+ {
+   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
+   Suite.test(
+   "explode-2",
+   Text.explode(Text.join(Array.map(a, Char.toText).vals())),
+   M.equals(iterT a))
+ },
+]));
+
+Suite.run(Suite.suite("implode",
+[
+ Suite.test(
+   "implode-0",
+   Text.implode(([].vals())),
+   M.equals(T.text(""))),
+ Suite.test(
+   "implode-1",
+   Text.implode((['a'].vals())),
+   M.equals(T.text "a")),
+ Suite.test(
+   "implode-2",
+   Text.implode((['a', 'b', 'c'].vals())),
+   M.equals(T.text "abc")),
+ {
+   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
+   Suite.test(
+   "explode-2",
+   Text.implode(a.vals()),
+   M.equals(T.text (Text.join(Array.map(a, Char.toText).vals()))))
+ },
 ]));
 
 
