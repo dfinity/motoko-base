@@ -1,80 +1,11 @@
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
+import Suite "mo:matchers/Suite";
+import M "mo:matchers/Matchers";
+import T "mo:matchers/Testable";
 
-Debug.print("Array");
-
-{
-  Debug.print("  append");
-
-  let actual = Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]);
-  let expected = [ 1, 2, 3, 4, 5, 6 ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  apply");
-
-  let ask = func (x : Text) : Text {
-    x # "?";
-  };
-
-  let exclaim = func (x : Text) : Text {
-    x # "!";
-  };
-
-  let actual = Array.apply<Text, Text>([ "good", "bad" ], [ ask, exclaim ]);
-  let expected = [ "good?", "bad?", "good!", "bad!" ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  chain");
-
-  let purePlusOne = func (x : Int) : [Int] {
-    [ x + 1 ];
-  };
-
-  let actual = Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
-  let expected = [ 1, 2, 3 ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  filter");
-
-  let isEven = func (x : Int) : Bool {
-    x % 2 == 0;
-  };
-
-  let actual = Array.filter<Nat>(isEven, [ 1, 2, 3, 4, 5, 6 ]);
-  let expected = [ 2, 4, 6 ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  find");
-
+let findTest = {
   type Element = {
     key : Text;
     value : Int;
@@ -86,91 +17,28 @@ Debug.print("Array");
     { key = "c"; value = 2; },
   ];
 
-  let b : ?Element = Array.find<Element>(xs, func (x : Element) : Bool {
+  let actual : ?Element = Array.find<Element>(xs, func (x : Element) : Bool {
     x.key == "b";
   });
 
-  switch (b) {
-    case (?element) {
-      assert(element.key == "b" and element.value == 1);
+  let elementTestable : T.Testable<Element> = {
+    display = func (e : Element) : Text {
+      "{ key = " # T.textTestable.display(e.key) # ";" #
+      " value = " # T.intTestable.display(e.value) #
+      " }"
     };
-    case (_) {
-      assert(false);
-    };
-  };
-};
-
-{
-  Debug.print("  foldLeft");
-
-  let xs = [ "a", "b", "c" ];
-
-  let actual = Array.foldLeft<Text, Text>(xs, "", Text.concat);
-  let expected = "abc";
-
-  assert(actual == expected);
-};
-
-{
-  Debug.print("  foldRight");
-
-  let xs = [ "a", "b", "c" ];
-
-  let actual = Array.foldRight<Text, Text>(xs, "", Text.concat);
-  let expected = "abc";
-
-  assert(actual == expected);
-};
-
-{
-  Debug.print("  freeze");
-
-  var xs : [var Int] = [ var 1, 2, 3 ];
-
-  let actual = Array.freeze<Int>(xs);
-  let expected : [Int] = [ 1, 2, 3 ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  flatten");
-
-  let xs = [ [ 1, 2, 3 ] ];
-
-  let actual = Array.flatten<Int>(xs);
-  let expected : [Int] = [ 1, 2, 3 ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  map");
-
-  let isEven = func (x : Int) : Bool {
-    x % 2 == 0;
+    equals = func (e1 : Element, e2 : Element) : Bool =
+      e1.key == e2.key and e1.value == e2.value;
   };
 
-  let actual = Array.map<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
-  let expected = [ false, true, false, true, false, true ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
+  Suite.test(
+    "find",
+    actual,
+    M.equals<?Element>(T.optional(elementTestable, ?({ key = "b"; value = 1 })))
+  )
 };
 
-{
-  Debug.print("  mapEntries");
+let mapEntriesTest = {
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -192,50 +60,104 @@ Debug.print("Array");
     (true, false),
   ];
 
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i].0 == expected[i].0);
-    assert(actual[i].1 == expected[i].1);
-  };
+  Suite.test(
+    "mapEntries",
+    actual,
+    M.equals<[(Bool, Bool)]>(T.array(T.tuple2Testable(T.boolTestable, T.boolTestable), expected))
+  )
 };
 
-{
-  Debug.print("  make");
+let suite = Suite.suite("Array", [
+  Suite.test(
+    "append",
+    Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]),
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3, 4, 5, 6 ]))),
+  Suite.test(
+    "apply",
+    {
+      let ask = func (x : Text) : Text { x # "?" };
+      let exclaim = func (x : Text) : Text { x # "!" };
+      Array.apply<Text, Text>([ "good", "bad" ], [ ask, exclaim ]);
+    },
+    M.equals(T.array(T.textTestable, [ "good?", "bad?", "good!", "bad!" ]))
+  ),
+  Suite.test(
+    "chain",
+    {
+      let purePlusOne = func (x : Int) : [Int] { [ x + 1 ] };
+      Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
+    },
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
+  ),
+  Suite.test(
+    "filter",
+    {
+      let isEven = func (x : Int) : Bool { x % 2 == 0 };
+      Array.filter<Nat>(isEven, [ 1, 2, 3, 4, 5, 6 ]);
+    },
+    M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
+  ),
+  findTest,
+  Suite.test(
+    "foldLeft",
+    Array.foldLeft<Text, Text>([ "a", "b", "c" ], "", Text.concat),
+    M.equals(T.text("abc"))
+  ),
+  Suite.test(
+    "foldRight",
+    Array.foldRight<Text, Text>([ "a", "b", "c" ], "", Text.concat),
+    M.equals(T.text("abc"))
+  ),
+  Suite.test(
+    "freeze",
+    {
+      var xs : [var Int] = [ var 1, 2, 3 ];
+      Array.freeze<Int>(xs);
+    },
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
+  ),
+  Suite.test(
+    "flatten",
+    Array.flatten<Int>([ [ 1, 2, 3 ] ]),
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
+  ),
+  Suite.test(
+    "map",
+    {
+      let isEven = func (x : Int) : Bool {
+        x % 2 == 0;
+      };
 
-  let actual = Array.make<Int>(0);
-  let expected = [0];
+      Array.map<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
+    },
+    M.equals(T.array<Bool>(T.boolTestable, [ false, true, false, true, false, true ]))
+  ),
+  mapEntriesTest,
+  Suite.test(
+    "make",
+    Array.make<Int>(0),
+    M.equals(T.array<Int>(T.intTestable, [0]))
+  ),
+  Suite.test(
+    "thaw",
+    {
+      let xs : [Int] = [ 1, 2, 3 ];
+      Array.freeze(Array.thaw(xs))
+    },
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3]))
+  ),
+  Suite.test(
+    "tabulateVar",
+    {
+      // regression test for (fixed) issues in base cases, where func was called too often:
+      let test0 = Array.tabulateVar<Nat>(0, func (i:Nat) { assert(false); 0 });
+      let test1 = Array.tabulateVar<Nat>(1, func (i:Nat) { assert(i < 1); 0 });
+      let test2 = Array.tabulateVar<Nat>(2, func (i:Nat) { assert(i < 2); 0 });
+      let test3 = Array.tabulateVar<Nat>(3, func (i:Nat) { assert(i < 3); 0 });
+      0
+    },
+    M.equals(T.nat(0))
+  )
+]);
 
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  thaw");
-
-  let xs : [Int] = [ 1, 2, 3 ];
-
-  let actual = Array.thaw<Int>(xs);
-  var expected : [Int] = [ 1, 2, 3 ];
-
-  assert(actual.size() == expected.size());
-
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
-};
-
-{
-  Debug.print("  tabulateVar");
-
-  // regression test for (fixed) issues in base cases, where func was called too often:
-
-  let test0 = Array.tabulateVar<Nat>(0, func (i:Nat) { assert(false); 0 });
-  let test1 = Array.tabulateVar<Nat>(1, func (i:Nat) { assert(i < 1); 0 });
-  let test2 = Array.tabulateVar<Nat>(2, func (i:Nat) { assert(i < 2); 0 });
-  let test3 = Array.tabulateVar<Nat>(3, func (i:Nat) { assert(i < 3); 0 });
-
-};
+Suite.run(suite);
