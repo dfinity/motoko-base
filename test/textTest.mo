@@ -254,15 +254,15 @@ Suite.run(Suite.suite("joinWith",
 [
  Suite.test(
    "joinWith-0",
-   Text.joinWith(",",(["",""].vals())),
+   Text.joinWith(",", (["",""].vals())),
    M.equals(T.text(","))),
  Suite.test(
    "joinWith-1",
-   Text.joinWith(",",(["","b"].vals())),
+   Text.joinWith(",", (["","b"].vals())),
    M.equals(T.text ",b")),
  Suite.test(
    "joinWith-2",
-   Text.joinWith(",",(["a","bb","ccc","dddd"].vals())),
+   Text.joinWith(",", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "a,bb,ccc,dddd")),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
@@ -273,11 +273,11 @@ Suite.run(Suite.suite("joinWith",
   },
  Suite.test(
    "joinWith-4",
-   Text.joinWith(",",([].vals())),
+   Text.joinWith(",", ([].vals())),
    M.equals(T.text "")),
  Suite.test(
    "joinWith-5",
-   Text.joinWith(",",(["aaa"].vals())),
+   Text.joinWith(",", (["aaa"].vals())),
    M.equals(T.text "aaa")),
 ]));
 
