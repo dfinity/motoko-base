@@ -55,15 +55,15 @@ module {
   /// Returns `t.size()`, the number of characters in `ts`.
   public func size(t : Text) : Nat { t.size(); };
 
-  /// Returns the i-th character in `ts`. O(size(t)). May trap.
+  /// Returns the `i`-th character in `ts`. _O_(`size(t)`). May trap.
   public func sub(t : Text, i : Nat) : Char {
     let cs = t.chars();
-    var n : Int = i - 1;
+    var n : Int = i;
     loop {
       while (n > 0) {
 	switch (cs.next()) {
 	  case null assert false;
-	  case (? _) ();
+	  case (? _) { n -= 1 };
 	};
       };
       switch (cs.next()) {
@@ -90,7 +90,7 @@ module {
        };
        n -= 1;
      };
-     n := i + j;
+     n := j;
      while (n > 0) {
        switch (cs.next()) {
          case null (assert false);
