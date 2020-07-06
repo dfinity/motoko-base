@@ -71,7 +71,7 @@ module {
   /// - `#exp prec` as exponential format with `prec` digits
   /// - `#gen prec` as generic format with `prec` digits
   /// - `#hex prec` as hexadecimal format with `prec` digits
-  /// - `#exact` as exact format that can round-trip via `fromText`.
+  /// - `#exact` as exact format that can be decoded without loss.
   public func format
     (x : Float, fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }) : Text =
     switch fmt {
