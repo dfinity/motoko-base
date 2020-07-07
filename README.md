@@ -14,7 +14,7 @@ If you build your project using the [vessel package manager] then, add this entr
 ```
   {
     "name": "base",
-    "repo": "https://github.com/dfinity-lab/motoko-base",
+    "repo": "https://github.com/dfinity/motoko-base",
     "version": "master",
     "dependencies": []
   }
