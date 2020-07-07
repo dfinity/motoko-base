@@ -376,7 +376,7 @@ Suite.run(Suite.suite("joinWith",
 };
 
 {
-  Debug.print("  collate");
+  Debug.print("  compareWith");
 
   let tests = [
     { input = ("",""); expected = #equal },
@@ -393,7 +393,7 @@ Suite.run(Suite.suite("joinWith",
   for (t in tests.vals()) {
     Debug.print (debug_show(t));
 
-    let actual = Text.collate(t.input.0, t.input.1, Char.compare);
+    let actual = Text.compareWith(t.input.0, t.input.1, Char.compare);
     assert (Order.equal(actual, t.expected));
 
     // sanity check against Text.compare;

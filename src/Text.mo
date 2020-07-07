@@ -336,7 +336,7 @@ module {
   };
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
-  public func collate(
+  public func compareWith(
     t1 : Text,
     t2 : Text,
     cmp : (Char,Char)-> { #less; #equal; #greater })
