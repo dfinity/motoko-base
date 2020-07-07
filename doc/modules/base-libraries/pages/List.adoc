@@ -212,7 +212,7 @@ Fold the list left-to-right using the given function (`f`).
 
 [source,motoko]
 ----
-func foldLeft<T, S>(l : List<T>, a : S, f : (T, S) -> S) : S
+func foldLeft<T, S>(l : List<T>, a : S, f : (S, T) -> S) : S
 ----
 
 [[value.foldRight]]

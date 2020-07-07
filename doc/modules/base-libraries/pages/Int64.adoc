@@ -3,7 +3,7 @@
 
 64-bit signed integers with checked arithmetic
 
-Most operations are available as built-in operators (`1 + 1`).
+Most operations are available as built-in operators (e.g. `1 + 1`).
 
 [[value.toInt]]
 == toInt
@@ -38,7 +38,7 @@ func toText(x : Int64) : Text
 [[value.abs]]
 == abs
 
-Returns the absolute value of `x`. Traps when `x = Traps when `x = -2^63.`
+Returns the absolute value of `x`. Traps when `x = -2^63`.
 
 [source,motoko]
 ----
@@ -178,7 +178,8 @@ func mul(x : Int64, y : Int64) : Int64
 [[value.div]]
 == div
 
-Returns the division of `x by y`, `x / y`. Traps on division by zero.
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----
@@ -189,6 +190,7 @@ func div(x : Int64, y : Int64) : Int64
 == rem
 
 Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----

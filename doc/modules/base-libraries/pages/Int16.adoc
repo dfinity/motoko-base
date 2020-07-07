@@ -3,7 +3,7 @@
 
 16-bit signed integers with checked arithmetic
 
-Most operations are available as built-in operators (`1 + 1`).
+Most operations are available as built-in operators (e.g. `1 + 1`).
 
 [[value.toInt]]
 == toInt
@@ -178,7 +178,8 @@ func mul(x : Int16, y : Int16) : Int16
 [[value.div]]
 == div
 
-Returns the division of `x by y`, `x / y`. Traps on division by zero.
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----
@@ -189,6 +190,7 @@ func div(x : Int16, y : Int16) : Int16
 == rem
 
 Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----

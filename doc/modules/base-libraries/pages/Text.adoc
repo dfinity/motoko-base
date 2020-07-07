@@ -6,14 +6,14 @@ Text values
 This type describes a valid, human-readable text. It does not contain arbitrary
 binary data.
 
-[[value.append]]
-== append
+[[value.concat]]
+== concat
 
-
+Returns the concatenation of `x` and `y`, `x # y`.
 
 [source,motoko]
 ----
-func append(x : Text, y : Text) : Text
+func concat(x : Text, y : Text) : Text
 ----
 
 [[value.toIter]]
@@ -26,16 +26,6 @@ Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the 
 func toIter(text : Text) : Iter.Iter<Char>
 ----
 
-[[value.equal]]
-== equal
-
-
-
-[source,motoko]
-----
-func equal(x : Text, y : Text) : Bool
-----
-
 [[value.hash]]
 == hash
 
@@ -44,5 +34,75 @@ WARNING: This only hashes the lowest 32 bits of the `Int`
 [source,motoko]
 ----
 func hash(t : Text) : Hash.Hash
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Text, y : Text) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Text, y : Text) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Text, y : Text) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Text, y : Text) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Text, y : Text) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Text, y : Text) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Text, y : Text) : {#less : (); #equal : (); #greater : ()}
 ----
 

@@ -3,10 +3,8 @@
 
 Natural numbers
 
-Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-This module provides conversion functions.
-
-The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
+Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+This module provides equivalent functions and `Text` conversion.
 
 [[value.toText]]
 == toText
@@ -121,7 +119,8 @@ func add(x : Nat, y : Nat) : Nat
 [[value.sub]]
 == sub
 
-Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+Returns the difference of `x` and `y`, `x - y`.
+Traps on underflow.
 
 [source,motoko]
 ----
@@ -141,7 +140,8 @@ func mul(x : Nat, y : Nat) : Nat
 [[value.div]]
 == div
 
-Returns the division of `x` by `y`, `x / y`. Traps on division by zero.
+Returns the division of `x` by `y`, `x / y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----
@@ -152,6 +152,7 @@ func div(x : Nat, y : Nat) : Nat
 == rem
 
 Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----

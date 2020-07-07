@@ -6,7 +6,7 @@ Characters
 [[value.isDigit]]
 == isDigit
 
-
+Is a character a digit between 0 and 9.
 
 [source,motoko]
 ----

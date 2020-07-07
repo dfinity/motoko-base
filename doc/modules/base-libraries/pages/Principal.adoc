@@ -3,6 +3,36 @@
 
 IC principals (User and canister IDs)
 
+[[value.fromActor]]
+== fromActor
+
+Conversion.
+
+[source,motoko]
+----
+let fromActor : ((a : actor {  })) -> Principal
+----
+
+[[value.toBlob]]
+== toBlob
+
+Conversion.
+
+[source,motoko]
+----
+let toBlob : ((p : Principal)) -> Blob
+----
+
+[[value.toText]]
+== toText
+
+Conversion.
+
+[source,motoko]
+----
+func toText(p : Principal) : Text
+----
+
 [[value.hash]]
 == hash
 
@@ -11,5 +41,85 @@ IC principals (User and canister IDs)
 [source,motoko]
 ----
 func hash(principal : Principal) : Hash.Hash
+----
+
+[[value.fromText]]
+== fromText
+
+
+
+[source,motoko]
+----
+func fromText(t : Text) : Principal
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Principal, y : Principal) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Principal, y : Principal) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Principal, y : Principal) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Principal, y : Principal) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Principal, y : Principal) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Principal, y : Principal) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Principal, y : Principal) : {#less : (); #equal : (); #greater : ()}
 ----
 

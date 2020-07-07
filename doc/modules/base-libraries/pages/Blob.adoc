@@ -13,3 +13,73 @@ Binary blobs
 let hash : (Blob) -> Word32
 ----
 
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Blob, y : Blob) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Blob, y : Blob) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Blob, y : Blob) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Blob, y : Blob) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Blob, y : Blob) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Blob, y : Blob) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Blob, y : Blob) : {#less : (); #equal : (); #greater : ()}
+----
+

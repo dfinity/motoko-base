@@ -3,7 +3,7 @@
 
 32-bit binary unsigned integers with modular arithmetic
 
-Most operations are available as built-in operators (e.g. `1 + 1`).
+Most operations are available as built-in operators (e.g. `1 | 1`).
 
 [[value.toNat]]
 == toNat
@@ -178,8 +178,8 @@ func mul(x : Word32, y : Word32) : Word32
 [[value.div]]
 == div
 
-Returns the truncated quotient of `x and y`, `floor (x / y)`.
-Traps when `y` is 0.
+Returns the division of `x` by `y`, `x / y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----
@@ -189,8 +189,8 @@ func div(x : Word32, y : Word32) : Word32
 [[value.rem]]
 == rem
 
-Returns the remainder of the division of 'x' by `y`, `x - y * floor ( x / y)`.
-Traps when `y` is 0.
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
 
 [source,motoko]
 ----
