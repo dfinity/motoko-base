@@ -26,9 +26,9 @@ func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
      loop {
        switch (cs1.next(),cs2.next()) {
          case (null,null) return true;
-	 case (? c1, ? c2)
-	   if (c1 != c2) return false;
-	 case (_,_) return false;
+         case (? c1, ? c2)
+           if (c1 != c2) return false;
+         case (_,_) return false;
        }
      }
   };
