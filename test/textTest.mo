@@ -331,45 +331,69 @@ Suite.run(Suite.suite("joinWith",
 };
 
 {
-  Debug.print("  isPrefix");
+  Debug.print("  startsWith");
 
   let tests = [
-    { input = ("",""); expected = true },
-    { input = ("","abc"); expected = true },
-    { input = ("abc","ab"); expected = false },
-    { input = ("abc","abc"); expected = true },
-    { input = ("abc","abcd"); expected = true },
+    { input = ("", ""); expected = true },
+    { input = ("abc", ""); expected = true },
+    { input = ("ab", "abc"); expected = false },
+    { input = ("abc", "abc"); expected = true },
+    { input = ("abcd", "abc"); expected = true },
   ];
 
   for (t in tests.vals()) {
     Debug.print (debug_show(t));
-    let actual = Text.isPrefix(t.input.0,t.input.1);
+    let actual = Text.startsWith(t.input.0,t.input.1);
     assert (actual == t.expected);
   };
 
 };
 
+Suite.run(Suite.suite("endsWith",
+[
+ Suite.test(
+   "endsWith-0",
+   Text.endsWith("",""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "endsWith-1",
+   Text.endsWith("a","b"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "endsWith-2",
+   Text.endsWith("abc","abc"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "endsWith-3",
+   Text.endsWith("abcd","cd"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "endsWith-4",
+   Text.endsWith("abcdefghijklmnopqrstuvwxyz","pqrstuvwxyz"),
+   M.equals(T.bool true)),
+]));
+
 
 {
-  Debug.print("  isSubtext");
+  Debug.print("  contains");
 
   let tests = [
-    { input = ("bc","abcd"); expected = true },
-    { input = ("","abc"); expected = true },
-    { input = ("bc","ab"); expected = false },
-    { input = ("cb","abc"); expected = false },
-    { input = ("abc","abcd"); expected = true },
-    { input = ("qrst","abcdefghijklmnopqrstuvwxyz"); expected = true },
-    { input = ("abcdefg","abcdefghijklmnopqrstuvwxyz"); expected = true },
-    { input = ("xyz","abcdefghijklmnopqrstuvwxyz"); expected = true },
-    { input = ("lkj","abcdefghijklmnopqrstuvwxyz"); expected = false },
-    { input = ("xyz",""); expected = false },
+    { input = ("abcd","bc"); expected = true },
+    { input = ("abc", ""); expected = true },
+    { input = ("ab", "bc"); expected = false },
+    { input = ("abc", "cb"); expected = false },
+    { input = ("abcd", "abc"); expected = true },
+    { input = ("abcdefghijklmnopqrstuvwxyz", "qrst"); expected = true },
+    { input = ("abcdefghijklmnopqrstuvwxyz", "abcdefg"); expected = true },
+    { input = ("abcdefghijklmnopqrstuvwxyz", "xyz"); expected = true },
+    { input = ("abcdefghijklmnopqrstuvwxyz", "lkj",); expected = false },
+    { input = ("", "xyz"); expected = false },
   ];
 
   for (t in tests.vals()) {
     Debug.print (debug_show(t));
 
-    let actual = Text.isSubtext(t.input.0,t.input.1);
+    let actual = Text.contains(t.input.0,t.input.1);
     assert (actual == t.expected);
   };
 

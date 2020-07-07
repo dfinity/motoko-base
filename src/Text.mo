@@ -242,14 +242,14 @@ module {
     }
   };
 
-  /// Returns `true` if `t1` is a prefix of `t2`, otherwise returns `false`.
-  public func isPrefix(t1 : Text, t2 : Text) : Bool {
+  /// Returns `true` if `t1` starts with prefix `t2`, otherwise returns `false`.
+  public func startsWith(t1 : Text, t2 : Text) : Bool {
     var cs1 = t1.chars();
     var cs2 = t2.chars();
     loop {
       switch (cs1.next(), cs2.next()) {
-        case (null, _) { return true };
-        case (?c1, null) { return false };
+        case (null, ?c2) { return false };
+        case (_, null) { return true };
         case (?c1, ?c2) {
           if (c1 != c2) return false;
         }
@@ -257,35 +257,35 @@ module {
     }
   };
 
-  /// Returns `true` if `t1` is a suffix of `t2`, otherwise returns `false`.
-  public func isSuffix(t1 : Text, t2 : Text) : Bool {
-    let s1 = t1.size();
-    if (s1 == 0) return true;
+  /// Returns `true` if `t1` ends with suffix `t2`, otherwise returns `false`.
+  public func endsWith(t1 : Text, t2 : Text) : Bool {
     let s2 = t2.size();
-    if (s1 > s2) return false;
-    var cs2 = t2.chars();
-    var diff = s2 - s1;
+    if (s2 == 0) return true;
+    let s1 = t1.size();
+    if (s2 > s1) return false;
+    var cs1 = t1.chars();
+    var diff = s1 - s2;
     while (diff > 0)  {
-      ignore cs2.next();
+      ignore cs1.next();
       diff -= 1;
     };
-    let cs1 = t1.chars();
+    let cs2 = t2.chars();
     loop {
-      switch (cs1.next(), cs2.next()) {
+      switch (cs2.next(), cs1.next()) {
         case (null, null) { return true };
-        case (?c1, ?c2) {
-          if (c1 != c2) return false;
+        case (?c2, ?c1) {
+          if (c2 != c1) return false;
         };
         case _ { assert false };
       }
     }
   };
 
-  private func iter_isPrefix(cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
+  private func iter_startsWith(cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
     loop {
       switch (cs1.next(), cs2.next()) {
-        case (null, _) { return true };
-        case (?c1, null) { return false };
+        case (_, null) { return true };
+        case (null, ?c2) { return false };
         case (?c1, ?c2) {
           if (c1 != c2) return false;
         }
@@ -293,44 +293,42 @@ module {
     }
   };
 
-  /// Returns `true` if `t1` is a subtext of `t2`, otherwise returns `false`.
-  public func isSubtext(t1 : Text, t2 : Text) : Bool {
-    let s1 = t1.size();
-    if (s1 == 0) return true;
+  /// Returns `true` if `t1` contains `t2` as a subsequence, otherwise returns `false`.
+  public func contains(t1 : Text, t2 : Text) : Bool {
     let s2 = t2.size();
-    if (s1 > s2) return false;
-    let buff = Prim.Array_init(s1, ' ');
-    let cs2 = t2.chars();
+    if (s2 == 0) return true;
+    let s1 = t1.size();
+    if (s2 > s1) return false;
+    let buff = Prim.Array_init(s2, ' ');
+    let cs1 = t1.chars();
     for (i in buff.keys()) {
-      switch (cs2.next()) {
+      switch (cs1.next()) {
         case (? c) { buff[i] := c };
         case _ { assert false };
       }
     };
     var front = 0;
-    var back = s1 - 1;
+    var back = s2 - 1;
     loop {
-      //let view = Prim.Array_tabulate<Char>(s1, func i = buff[(front+i) % s1]);
-      //Prim.debugPrint(debug_show(view));
       let cs =
         object {
           var i = 0;
           public func next() : (? Char) {
-            if (i < s1) {
-              let c2 = buff[(front + i) % s1];
+            if (i < s2) {
+              let c1 = buff[(front + i) % s2];
               i += 1;
-              (? c2)
+              (? c1)
             }
             else null
           }
         };
-      if (iter_isPrefix(t1.chars(), cs)) return true;
-      back := (back + 1) % s1;
-      buff[back] := switch (cs2.next()) {
+      if (iter_startsWith(cs, t2.chars())) return true;
+      back := (back + 1) % s2;
+      buff[back] := switch (cs1.next()) {
         case (? c) { c };
         case _ { return false; }
       };
-      front := (front + 1) % s1;
+      front := (front + 1) % s2;
     };
     return false;
   };
