@@ -62,3 +62,7 @@ on that branch.
 
 External contributions are best made against `master`.
 
+Contributing
+------------
+
+Please read the [Interface Design Guide for Motoko Base Library](doc/design.md) before making a pull request
