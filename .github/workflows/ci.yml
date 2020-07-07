@@ -1,6 +1,10 @@
 
 name: "build"
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 jobs:
   tests:
     if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
