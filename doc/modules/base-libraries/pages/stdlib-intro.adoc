@@ -7,7 +7,7 @@ For various practical language engineering reasons, the design of {proglang} str
 Instead, whenever possible, the {proglang} base library provides the types and operations that make the language feel complete.
 __**However**, this base library is still currently under development, and is still incomplete__.
 
-This section describes a _selected subset_ of modules from the {proglang} base library, with an emphasis on the modules that support core features and the libraries that are referenced in the examples.
+This section describes a subset of modules from the {proglang} base library, with an emphasis on the modules that support core features and the libraries that are referenced in the examples.
 The libraries documented in this section are the most stable and least likely to change.
 However, all of the base library APIs are subject to change over time to varying degrees.
 You should note, in particular, that the size and number of modules and functions included in the base library may increase dramatically as {proglang} evolves.
@@ -40,7 +40,6 @@ The compiler itself contains a *prelude* in every program, effectively extending
 In addition to these built-in compiler definitions, the prelude of the base library contributes some additional functions in a supplemental Prelude module.
 
 In contrast to the definitions in other modules, the compiler prelude definitions are always present, and do _not_ require any `import` declaration to bring them into the current scope.
-<<<<<<< HEAD
 
 == Modules for data types and data structures
 
@@ -79,5 +78,3 @@ xref:TrieSet{outfilesuffix}[TrieSet]
 === Utilities
 xref:Prelude{outfilesuffix}[Prelude]
 xref:Debug{outfilesuffix}[Debug]
-=======
->>>>>>> master
