@@ -307,6 +307,30 @@ Suite.run(Suite.suite("joinWith",
 
 
 {
+  Debug.print("  split");
+
+  let tests = [
+    { input = "aaa;;c;dd"; expected = ["aaa","","c","dd"] },
+    { input = ""; expected = [] },
+    { input = ";"; expected = ["",""] }
+  ];
+
+  for ({input;expected} in tests.vals()) {
+    Debug.print(debug_show(input));
+    let actual =
+      Iter.toArray(Text.split(input, (#char ';')));
+      Debug.print(debug_show(actual));
+
+    assert (actual.size() == expected.size());
+
+    for (i in actual.keys()) {
+        assert(actual[i] == expected[i]);
+    };
+  };
+
+};
+
+{
   Debug.print("  tokens");
 
   let tests = [

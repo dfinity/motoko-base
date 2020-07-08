@@ -61,14 +61,14 @@ module {
     var n : Int = i;
     loop {
       while (n > 0) {
-	switch (cs.next()) {
-	  case null assert false;
-	  case (?c) n -= 1;
-	};
+        switch (cs.next()) {
+          case null assert false;
+          case (?c) n -= 1;
+        };
       };
       switch (cs.next()) {
-	case null assert false;
-	case (?c) { return c };
+        case null assert false;
+        case (?c) { return c };
       };
     };
   };
@@ -86,7 +86,7 @@ module {
      while (n > 0) {
        switch (cs.next()) {
          case null (assert false);
-	 case (?_) ();
+         case (?_) ();
        };
        n -= 1;
      };
@@ -94,7 +94,7 @@ module {
      while (n > 0) {
        switch (cs.next()) {
          case null (assert false);
-	 case (?c) { r #= Prim.charToText(c) }
+         case (?c) { r #= Prim.charToText(c) }
        };
        n -= 1;
      };
@@ -217,6 +217,183 @@ module {
                 case null {
                   state := #done;
                   return ?field;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+
+  /// Returns the sequence of fields in `t`, derived from left to right.
+  /// A _field_ is a possibly empty, maximal subtext of `t` not containing a delimiter.
+  /// A _delimiter_ is any character matching the predicate `p`.
+  /// Two fields are separated by exactly one delimiter.
+
+//  public type Record = { char: Char; text: Text; pred: Char -> Bool };
+  public type Pattern = { #char : Char; #text : Text; #pred : (Char -> Bool) }; //parsing BUG
+
+  private func take(n : Nat, cs : Iter.Iter<Char>) : Iter.Iter<Char> {
+    var i = n;
+    object {
+      public func next() : ?Char {
+        if (i == 0) return null;
+        i -= 1;
+        return cs.next();
+      }
+    }
+  };
+
+
+  private func singleton(c : Char) : Iter.Iter<Char> {
+    var s = ?c;
+    object {
+      public func next() : ?Char {
+        let temp = s;
+        s := null;
+	return temp
+      }
+    }
+  };
+
+  private func empty() : Iter.Iter<Char> {
+    object {
+      public func next() : ?Char = null;
+    };
+  };
+
+  private func append(i1 : Iter.Iter<Char>, i2 : Iter.Iter<Char>) : Iter.Iter<Char> {
+    var i = i1;
+    var done = false;
+    object {
+      public func next() : ?Char {
+        switch (i.next()) {
+	 case null {
+	   if done return null;
+	   i := i2;
+	   done := true;
+	   return i.next();
+	 };
+	 case o { return o };
+        }
+      }
+    }
+  };
+
+
+  private type Match = {#success; #fail : Iter.Iter<Char>};
+
+  public func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
+     switch pat {
+       case (#char p) {
+         func (cs : Iter.Iter<Char>) : Match {
+           switch (cs.next()) {
+             case (?c) { if (p == c) #success else (#fail (singleton(c))) };
+             case null { #fail (empty()) };
+           }
+         }
+       };
+       case (#pred p) {
+         func (cs : Iter.Iter<Char>) : Match {
+           var buf = "";
+           loop {
+             switch (cs.next()) {
+               case (?c)  {
+                 buf #= fromChar c;
+                 if (not (p(c))) {
+		   return #fail (buf.chars());
+		 };
+               };
+               case null { return #success };
+             }
+           }
+         }
+       };
+       case (#text p) {
+         func (cs : Iter.Iter<Char>) : Match {
+           var i = 0;
+           let ds = p.chars();
+           loop {
+             switch (ds.next()) {
+               case (?d)  {
+	         switch (cs.next()) {
+                   case (?c) {
+		     i += 1;
+                     if (c != d) {
+		       return #fail (take(i, p.chars()))
+		     }
+		   };
+		   case null {
+		     return #fail (take(i-1, p.chars()));
+		   }
+		 }
+               };
+               case null { return #success };
+             }
+           }
+         }
+       }
+     }
+  };
+
+  public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
+    let match = matchOfPattern p;
+    var cs = t.chars();
+    var state : { #init; #resume; #done} = #init;
+    var field = "";
+    object {
+      public func next() : ?Text {
+        switch state {
+          case (#done) { return null };
+          case (#init) {
+            loop {
+              switch (match(cs)) {
+                case (#success) {
+ 		  //Prim.debugPrint("success" # field);
+                  let r = field;
+                  field := "";
+                  state := #resume;
+                  return ?r
+                };
+                case (#fail cs1) {
+                  switch (cs1.next()) {
+		    case (? c) {
+                      field #= fromChar c;
+		      cs := append(cs1, cs);
+     		      //Prim.debugPrint("failure" # field);
+		    };
+		    case null {
+		      return if (field == "") null else ?field;
+		    }
+		  }
+		}
+              }
+            }
+          };
+          case (#resume) {
+            loop {
+              switch (match(cs)) {
+                case (#success) {
+   	          //Prim.debugPrint("success" # field);
+                  let r = field;
+                  field := "";
+                  state := #resume; // TBD
+                  return ?r
+                };
+                case (#fail cs1) {
+                  switch (cs1.next()) {
+		    case (? c) {
+                      field #= fromChar c;
+		      cs := append(cs1, cs);
+       		      //Prim.debugPrint("failure" # field);
+		    };
+		    case null {
+		      state := #done;
+		      return ? field;
+		    }
+		  }
                 }
               }
             }
