@@ -35,14 +35,12 @@ in `test`. This will expect `dfx` to be installed and in your `$PATH`, and call
 `moc` via the wrapper in `./bin/moc`. You can add that wrapper to your PATH, if
 you want.
 
-Running the tests requires `wasmtime` to be installed.
+Running the tests also requires `wasmtime` and `vessel` to be installed.
 
 If you installed `moc` some other way, you can instruct the `Makefile` to use
 that compiler:
 
     make MOC=moc
-
-Similarly, you can run `make` in `examples/`.
 
 Documentation
 -------------
