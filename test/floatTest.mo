@@ -77,11 +77,11 @@ Debug.print("Float");
 {
   Debug.print("  format");
 
-  assert(Float.format(20.12345678901, #exact) == "20.12345678901");
-  assert(Float.format(20.12345678901, #fix 6) == "20.123457");
-  assert(Float.format(20.12345678901, #exp 9) == "2.012345679e+01");
-  assert(Float.format(20.12345678901, #gen 12) == "20.123456789");
-  assert(Float.format(20.12345678901, #hex 10) == "0x1.41f9add374p+4");
+  assert(Float.format(#exact, 20.12345678901) == "20.12345678901");
+  assert(Float.format(#fix 6, 20.12345678901) == "20.123457");
+  assert(Float.format(#exp 9, 20.12345678901) == "2.012345679e+01");
+  assert(Float.format(#gen 12, 20.12345678901) == "20.123456789");
+  assert(Float.format(#hex 10, 20.12345678901) == "0x1.41f9add374p+4");
 };
 
 
