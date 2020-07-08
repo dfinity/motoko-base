@@ -1,2 +1,5 @@
 _build
 _out
+
+.DS_Store
+**/.DS_Store
