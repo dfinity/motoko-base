@@ -63,12 +63,12 @@ module {
       while (n > 0) {
 	switch (cs.next()) {
 	  case null assert false;
-	  case (? c) n -= 1;
+	  case (?c) n -= 1;
 	};
       };
       switch (cs.next()) {
 	case null assert false;
-	case (? c) { return c };
+	case (?c) { return c };
       };
     };
   };
@@ -76,17 +76,17 @@ module {
   /// Returns:
   /// - when `jo` is `null`, the subtext of `t` between characters `i` and characters `t.size()-1`.
   ///   Traps when `t.size() < i`.
-  /// - when `jo` is  `? j`: the subtext of `t` between characters `i` and `i+j-1`.
+  /// - when `jo` is  `?j`: the subtext of `t` between characters `i` and `i+j-1`.
   ///   Traps when `t.size < i + j`.
-  public func extract(t : Text, i : Nat, jo : ? Nat) : Text {
+  public func extract(t : Text, i : Nat, jo : ?Nat) : Text {
     var r = "";
-    var j = switch jo { case (? j) j; case null (t.size()) };
+    var j = switch jo { case (?j) j; case null (t.size()) };
      let cs = t.chars();
      var n = i;
      while (n > 0) {
        switch (cs.next()) {
          case null (assert false);
-	 case (? _) ();
+	 case (?_) ();
        };
        n -= 1;
      };
@@ -94,7 +94,7 @@ module {
      while (n > 0) {
        switch (cs.next()) {
          case null (assert false);
-	 case (? c) { r #= Prim.charToText(c) }
+	 case (?c) { r #= Prim.charToText(c) }
        };
        n -= 1;
      };
@@ -103,7 +103,7 @@ module {
 
   /// Returns the subtext of `t` between characters `i` and `i+j-1`. Equivalent to `extract(t, i, ?j)`. Traps when `t.size < i + j`. _O_(`size(t)`).
   public func subtext(t : Text, i : Nat, j: Nat) : Text {
-    extract(t, i, ? j);
+    extract(t, i, ?j);
   };
 
   /// Returns the concatenation of text values in `ts`.
@@ -121,14 +121,14 @@ module {
     let next = ts.next;
     switch (next()) {
       case null { return r; };
-      case (? t) {
+      case (?t) {
         r #= t;
       }
     };
     loop {
       switch (next()) {
         case null { return r; };
-        case (? t) {
+        case (?t) {
           r #= sep;
           r #= t;
         }
@@ -137,7 +137,7 @@ module {
   };
 
   /// Returns the text value of size 1 containing the single character `c`;
-  public let text : (c : Char) -> Text = Prim.charToText;
+  public let fromChar : (c : Char) -> Text = Prim.charToText;
 
   /// Returns the text value containing the sequence of characters in `cs`.
   public func implode(cs : Iter.Iter<Char>) : Text {
@@ -186,18 +186,18 @@ module {
           case (#init) {
             loop {
               switch (getc()) {
-                case (? c) {
+                case (?c) {
                   if (p(c)) {
                     let r = field;
                     field := "";
                     state := #resume;
-                    return ? r
+                    return ?r
                   }
                   else field #= Prim.charToText(c);
                 };
                 case null {
                   state := #done;
-                  return if (field == "") null else ? field;
+                  return if (field == "") null else ?field;
                 }
               }
             }
@@ -205,18 +205,18 @@ module {
           case (#resume) {
             loop {
               switch (getc()) {
-                case (? c) {
+                case (?c) {
                   if (p(c)) {
                     let r = field;
                     field := "";
                     state := #resume;
-                    return ? r
+                    return ?r
                   }
                   else field #= Prim.charToText(c);
                 };
                 case null {
                   state := #done;
-                  return ? field;
+                  return ?field;
                 }
               }
             }
@@ -233,9 +233,9 @@ module {
   public func tokens(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
     let fs = fields(t, p);
     object {
-      public func next() : ? Text {
+      public func next() : ?Text {
         switch (fs.next()) {
-          case (? "") next();
+          case (?"") next();
           case ot ot;
         }
       }
@@ -303,7 +303,7 @@ module {
     let cs1 = t1.chars();
     for (i in buff.keys()) {
       switch (cs1.next()) {
-        case (? c) { buff[i] := c };
+        case (?c) { buff[i] := c };
         case _ { assert false };
       }
     };
@@ -313,11 +313,11 @@ module {
       let cs =
         object {
           var i = 0;
-          public func next() : (? Char) {
+          public func next() : (?Char) {
             if (i < s2) {
               let c1 = buff[(front + i) % s2];
               i += 1;
-              (? c1)
+              (?c1)
             }
             else null
           }
@@ -325,7 +325,7 @@ module {
       if (iter_startsWith(cs, t2.chars())) return true;
       back := (back + 1) % s2;
       buff[back] := switch (cs1.next()) {
-        case (? c) { c };
+        case (?c) { c };
         case _ { return false; }
       };
       front := (front + 1) % s2;
@@ -337,16 +337,16 @@ module {
   public func compareWith(
     t1 : Text,
     t2 : Text,
-    cmp : (Char,Char)-> { #less; #equal; #greater })
+    cmp : (Char, Char)-> { #less; #equal; #greater })
     : { #less; #equal; #greater } {
     let cs1 = t1.chars();
     let cs2 = t2.chars();
     loop {
       switch (cs1.next(), cs2.next()) {
         case (null, null) { return #equal };
-        case (null, ? _) { return #less };
-        case (? _, null) { return #greater };
-        case (? c1, ? c2) {
+        case (null, ?_) { return #less };
+        case (?_, null) { return #greater };
+        case (?c1, ?c2) {
           switch (Char.compare(c1, c2)) {
             case (#equal) { }; // continue
             case other { return other; }

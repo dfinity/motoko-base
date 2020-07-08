@@ -14,7 +14,7 @@ Debug.print("Text");
 
 func charT(c : Char): T.TestableItem<Char> = {
   item = c;
-  display = Text.text;
+  display = Text.fromChar;
   equals = Char.equal;
 };
 
@@ -28,7 +28,7 @@ func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
          case (null,null) return true;
          case (? c1, ? c2)
            if (c1 != c2) return false;
-         case (_,_) return false;
+         case (_, _) return false;
        }
      }
   };
