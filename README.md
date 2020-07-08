@@ -15,7 +15,7 @@ If you build your project using the [vessel package manager] then, add this entr
   {
     "name": "base",
     "repo": "https://github.com/dfinity/motoko-base",
-    "version": "master",
+    "version": "dfx-0.5.10",
     "dependencies": []
   }
 ```
