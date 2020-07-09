@@ -34,6 +34,22 @@ func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
   };
 };
 
+// TODO: generalize and move to Iter.mo
+func textIterT(c : [Text]): T.TestableItem<Iter.Iter<Text>> = {
+  item = c.vals();
+  display = func (ts: Iter.Iter<Text>) : Text { Text.joinWith(",", ts) } ; // TBR
+  equals = func (cs1 : Iter.Iter<Text>, cs2 : Iter.Iter<Text>) : Bool {
+     loop {
+       switch (cs1.next(), cs2.next()) {
+         case (null,null) return true;
+         case (? c1, ? c2)
+           if (c1 != c2) return false;
+         case (_, _) return false;
+       }
+     }
+  };
+};
+
 
 Suite.run(Suite.suite("size",
 [
@@ -280,6 +296,169 @@ Suite.run(Suite.suite("joinWith",
    Text.joinWith(",", (["aaa"].vals())),
    M.equals(T.text "aaa")),
 ]));
+
+
+Suite.run(Suite.suite("split",
+[
+ Suite.test(
+   "split-char-empty",
+   Text.split("", #char ';'),
+   M.equals(textIterT([]))),
+ Suite.test(
+   "split-char-none",
+   Text.split("abc", #char ';'),
+   M.equals(textIterT(["abc"]))),
+ Suite.test(
+   "split-char-empties2",
+   Text.split(";", #char ';'),
+   M.equals(textIterT(["",""]))),
+ Suite.test(
+   "split-char-empties3",
+   Text.split(";;", #char ';'),
+   M.equals(textIterT(["","",""]))),
+ Suite.test(
+   "split-char-singles",
+   Text.split("a;b;;c;;;d", #char ';'),
+   M.equals(textIterT(["a","b","","c","","","d"]))),
+ Suite.test(
+   "split-char-mixed",
+   Text.split("a;;;ab;;abc;", #char ';'),
+   M.equals(textIterT(["a","","","ab","","abc",""]))),
+ {
+   let a = Array.tabulate<Text>(1000,func _ = "abc");
+   let t = Text.joinWith(";", a.vals());
+   Suite.test(
+     "split-char-large",
+     Text.split(t, #char ';'),
+     M.equals(textIterT a))
+ },
+/* crashes due stackoverflow - lack of tail recursion in append/add?
+ Suite.test(
+   "split-char-mixed",
+   Text.split("a;;;ab;;abc;", #char ';'),
+   M.equals(textIterT(["a","","","ab","","abc",""]))),
+ {
+   let a = Array.tabulate<Text>(3000,func _ = "abc");
+   let t = Text.joinWith("!", a.vals());
+   Suite.test(
+     "split-char-large",
+     Text.split(t, #char ';'),
+     M.equals(textIterT a))
+ },
+*/
+]));
+
+
+{
+let pat : Text.Pattern = #pred (func c = { c == ';' or c == '!' }) ;
+Suite.run(Suite.suite("split",
+[
+ Suite.test(
+   "split-pred-empty",
+   Text.split("", pat),
+   M.equals(textIterT([]))),
+ Suite.test(
+   "split-pred-none",
+   Text.split("abc", pat),
+   M.equals(textIterT(["abc"]))),
+ Suite.test(
+   "split-pred-empties2",
+   Text.split(";", pat),
+   M.equals(textIterT(["",""]))),
+ Suite.test(
+   "split-pred-empties3",
+   Text.split(";!", pat),
+   M.equals(textIterT(["","",""]))),
+ Suite.test(
+   "split-pred-singles",
+   Text.split("a;b;!c!;;d", pat),
+   M.equals(textIterT(["a","b","","c","","","d"]))),
+ Suite.test(
+   "split-pred-mixed",
+   Text.split("a;!;ab;!abc;", pat),
+   M.equals(textIterT(["a","","","ab","","abc",""]))),
+ {
+   let a = Array.tabulate<Text>(1000,func _ = "abc");
+   let t = Text.joinWith(";", a.vals());
+   Suite.test(
+     "split-pred-large",
+     Text.split(t, pat),
+     M.equals(textIterT a))
+ },
+/* crashes due stackoverflow - lack of tail recursion in append/add?
+ Suite.test(
+   "split-pred-mixed",
+   Text.split("a;;;ab;;abc;", pat),
+   M.equals(textIterT(["a","","","ab","","abc",""]))),
+ {
+   let a = Array.tabulate<Text>(3000,func _ = "abc");
+   let t = Text.joinWith("!", a.vals());
+   Suite.test(
+     "split-char-large",
+     Text.split(t, pat),
+     M.equals(textIterT a))
+ },
+*/
+]))
+};
+
+
+{
+let pat : Text.Pattern = #text "PAT" ;
+Suite.run(Suite.suite("split",
+[
+ Suite.test(
+   "split-pat-empty",
+   Text.split("", pat),
+   M.equals(textIterT([]))),
+ Suite.test(
+   "split-pat-none",
+   Text.split("abc", pat),
+   M.equals(textIterT(["abc"]))),
+ Suite.test(
+   "split-pat-empties2",
+   Text.split("PAT", pat),
+   M.equals(textIterT(["",""]))),
+ Suite.test(
+   "split-pat-empties3",
+   Text.split("PATPAT", pat),
+   M.equals(textIterT(["","",""]))),
+ Suite.test(
+   "split-pat-singles",
+   Text.split("aPATbPATPATcPATPATPATd", pat),
+   M.equals(textIterT(["a","b","","c","","","d"]))),
+ Suite.test(
+   "split-pat-mixed",
+   Text.split("aPATPATPATabPATPATabcPAT", pat),
+   M.equals(textIterT(["a","","","ab","","abc",""]))),
+ {
+   let a = Array.tabulate<Text>(1000,func _ = "abc");
+   let t = Text.joinWith("PAT", a.vals());
+   Suite.test(
+     "split-pat-large",
+     Text.split(t, pat),
+     M.equals(textIterT a))
+ },
+/* crashes due stackoverflow - lack of tail recursion in append/add?
+ Suite.test(
+   "split-pat-mixed",
+   Text.split("aPATPATPATabPATPATabcPAT", pat),
+   M.equals(textIterT(["a","","","ab","","abc",""]))),
+ {
+   let a = Array.tabulate<Text>(3000,func _ = "abc");
+   let t = Text.joinWith("!", a.vals());
+   Suite.test(
+     "split-pat-large",
+     Text.split(t, pat),
+     M.equals(textIterT a))
+ },
+*/
+]))
+};
+
+
+
+
 
 {
   Debug.print("  fields");

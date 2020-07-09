@@ -227,10 +227,6 @@ module {
   };
 
 
-  /// Returns the sequence of fields in `t`, derived from left to right.
-  /// A _field_ is a possibly empty, maximal subtext of `t` not containing a delimiter.
-  /// A _delimiter_ is any character matching the predicate `p`.
-  /// Two fields are separated by exactly one delimiter.
 
 //  public type Record = { char: Char; text: Text; pred: Char -> Bool };
   public type Pattern = { #char : Char; #text : Text; #pred : (Char -> Bool) }; //parsing BUG
@@ -245,7 +241,6 @@ module {
       }
     }
   };
-
 
   private func singleton(c : Char) : Iter.Iter<Char> {
     var s = ?c;
@@ -354,6 +349,13 @@ module {
      }
   };
 
+  /// Returns the sequence of fields in `t`, derived from left to right, separated by text matching pattern `p`.
+  /// A _field_ is a possibly empty, maximal subtext of `t` not containing a match for `p`.
+  /// A _match_ is any sequence of characters matching the pattern `p`, where
+  /// * `#char c` matches the single character sequence, `c`.
+  /// * `#pred p` matches any single character sequence `c` satisfying predicate `p(c)`.
+  /// * `#text t1` matches multi-character text sequence `t1`.
+  /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern p;
     var cs = t.chars();
@@ -367,7 +369,6 @@ module {
             loop {
               switch (match(cs)) {
                 case (#success) {
- 		  Prim.debugPrint("success1" # field);
                   let r = field;
                   field := "";
                   state := #resume;
@@ -378,7 +379,6 @@ module {
 		    case (? c) {
                       field #= fromChar c;
 		      cs := append(cs1, cs);
-     		      Prim.debugPrint("failure1" # field);
 		    };
 		    case null {
  		      state := #done;
@@ -396,10 +396,8 @@ module {
             loop {
               switch (match(cs)) {
                 case (#success) {
-   	          Prim.debugPrint("success2" # field);
                   let r = field;
                   field := "";
-                  state := #resume; // TBD
                   return ?r
                 };
                 case (#fail cs1) {
@@ -407,7 +405,6 @@ module {
 		    case (? c) {
                       field #= fromChar c;
 		      cs := append(cs1, cs);
-       		      Prim.debugPrint("failure2" # field);
 		    };
 		    case null {
 		      state := #done;
