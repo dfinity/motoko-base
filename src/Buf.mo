@@ -32,6 +32,7 @@ public class Buf<X> (initCapacity : Nat) {
   var count : Nat = 0;
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
+  /// Adds a single element to the Buffer
   public func add(elem : X) {
     if (count == elems.size()) {
       let size =
@@ -52,6 +53,8 @@ public class Buf<X> (initCapacity : Nat) {
     count += 1;
   };
 
+  /// Removes the item that was inserted last and returns it or `null` if no
+  /// elements had been added to the Buffer.
   public func removeLast() : ?X {
     if (count == 0) null
     else {
@@ -60,7 +63,8 @@ public class Buf<X> (initCapacity : Nat) {
     };
   };
 
-  public func append(b:Buf<X>) {
+  /// Adds all elements in `b` to the current one.
+  public func append(b : Buf<X>) {
     let i = b.vals();
     loop {
       switch (i.next()) {
@@ -70,12 +74,15 @@ public class Buf<X> (initCapacity : Nat) {
     };
   };
 
+  /// Returns the current number of elements.
   public func size() : Nat =
     count;
 
+  /// Resets the buffer.
   public func clear() =
     count := 0;
 
+  /// Returns a copy of this buffer.
   public func clone() : Buf<X> {
     let c = Buf<X>(elems.size());
     var i = 0;
@@ -87,6 +94,7 @@ public class Buf<X> (initCapacity : Nat) {
     c
   };
 
+  /// Returns an [Iter](Iter.html#type.Iter) over the elements of this Buffer.
   public func vals() : { next : () -> ?X } = object {
     var pos = 0;
     public func next() : ?X {
@@ -98,6 +106,7 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
+  /// Creates an Array containing this Buffer's elements
   public func toArray() : [X] =
     // immutable clone of array
     Prim.Array_tabulate<X>(
@@ -105,6 +114,7 @@ public class Buf<X> (initCapacity : Nat) {
       func(x: Nat): X { elems[x] }
     );
 
+  /// Creates a mutable Array containing this Buffer's elements
   public func toVarArray() : [var X] = {
     if (count == 0) { [var] } else {
       let a = Prim.Array_init<X>(count, elems[0]);
@@ -118,10 +128,12 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
+  /// Gets 0-indexed Element for `offset`. Traps if the index is out of bounds.
   public func get(offset : Nat) : X {
     elems[offset]
   };
 
+  /// Gets 0-indexed Element for `offset`.
   public func getOpt(offset : Nat) : ?X {
     if (offset < count) {
       ?elems[offset]
@@ -131,6 +143,8 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
+  /// Overwrites the 0-indexed Element for `offset` with `elem`. Traps if the
+  /// index is out of bounds.
   public func put(offset : Nat, elem : X) {
     elems[offset] := elem;
   };
