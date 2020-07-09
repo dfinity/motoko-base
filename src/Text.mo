@@ -266,15 +266,39 @@ module {
 
   private func append(i1 : Iter.Iter<Char>, i2 : Iter.Iter<Char>) : Iter.Iter<Char> {
     var i = i1;
+    var state = 0;
+    object {
+      public func next() : ?Char {
+        if (state > 1) return null;
+        switch (i.next()) {
+	  case null {
+	    switch state {
+	      case 0 {
+		i := i2;
+		state := 1;
+		return i.next();
+	      };
+	      case _ {
+		state := 2;
+		return null;
+	      };
+	    }
+	  };
+	  case o { return o };
+        }
+      }
+    }
+  };
+
+  private func add(i : Iter.Iter<Char>, c : Char) : Iter.Iter<Char> {
     var done = false;
     object {
       public func next() : ?Char {
+        if done return null;
         switch (i.next()) {
 	 case null {
-	   if done return null;
-	   i := i2;
 	   done := true;
-	   return i.next();
+	   return ? c
 	 };
 	 case o { return o };
         }
@@ -283,7 +307,7 @@ module {
   };
 
 
-  private type Match = {#success; #fail : Iter.Iter<Char>};
+  private type Match = { #success; #fail : Iter.Iter<Char> };
 
   public func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
      switch pat {
@@ -297,17 +321,9 @@ module {
        };
        case (#pred p) {
          func (cs : Iter.Iter<Char>) : Match {
-           var buf = "";
-           loop {
-             switch (cs.next()) {
-               case (?c)  {
-                 buf #= fromChar c;
-                 if (not (p(c))) {
-		   return #fail (buf.chars());
-		 };
-               };
-               case null { return #success };
-             }
+           switch (cs.next()) {
+             case (?c) { if (p(c)) #success else (#fail (singleton(c))) };
+             case null { #fail (empty()) };
            }
          }
        };
@@ -320,13 +336,13 @@ module {
                case (?d)  {
 	         switch (cs.next()) {
                    case (?c) {
-		     i += 1;
                      if (c != d) {
-		       return #fail (take(i, p.chars()))
-		     }
+		       return #fail (add(take(i, p.chars()),c))
+		     };
+		     i += 1;
 		   };
 		   case null {
-		     return #fail (take(i-1, p.chars()));
+		     return #fail (take(i, p.chars()));
 		   }
 		 }
                };
@@ -351,7 +367,7 @@ module {
             loop {
               switch (match(cs)) {
                 case (#success) {
- 		  //Prim.debugPrint("success" # field);
+ 		  Prim.debugPrint("success1" # field);
                   let r = field;
                   field := "";
                   state := #resume;
@@ -362,10 +378,14 @@ module {
 		    case (? c) {
                       field #= fromChar c;
 		      cs := append(cs1, cs);
-     		      //Prim.debugPrint("failure" # field);
+     		      Prim.debugPrint("failure1" # field);
 		    };
 		    case null {
-		      return if (field == "") null else ?field;
+ 		      state := #done;
+		      if (field == "")
+	                return null
+		      else
+		        return ?field;
 		    }
 		  }
 		}
@@ -376,7 +396,7 @@ module {
             loop {
               switch (match(cs)) {
                 case (#success) {
-   	          //Prim.debugPrint("success" # field);
+   	          Prim.debugPrint("success2" # field);
                   let r = field;
                   field := "";
                   state := #resume; // TBD
@@ -387,7 +407,7 @@ module {
 		    case (? c) {
                       field #= fromChar c;
 		      cs := append(cs1, cs);
-       		      //Prim.debugPrint("failure" # field);
+       		      Prim.debugPrint("failure2" # field);
 		    };
 		    case null {
 		      state := #done;

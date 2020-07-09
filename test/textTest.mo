@@ -307,19 +307,37 @@ Suite.run(Suite.suite("joinWith",
 
 
 {
-  Debug.print("  split");
+   Debug.print("  split");
 
   let tests = [
+    { input = "abcde"; expected = ["abcde"] },
     { input = "aaa;;c;dd"; expected = ["aaa","","c","dd"] },
     { input = ""; expected = [] },
     { input = ";"; expected = ["",""] }
   ];
 
   for ({input;expected} in tests.vals()) {
-    Debug.print(debug_show(input));
+    Debug.print(debug_show(input)); 
     let actual =
       Iter.toArray(Text.split(input, (#char ';')));
-      Debug.print(debug_show(actual));
+    Debug.print(debug_show(actual));
+
+    let actual1 =
+      Iter.toArray(Text.split(input, (#pred (func c = c == ';'))));
+    Debug.print(debug_show(actual1));
+
+    let actual2 = {
+      let input1 : Text = Text.translate(input,func c = if  (c == ';') "ABC" else Text.fromChar c);
+      Iter.toArray(Text.split(input1, #text "ABC"));
+    };
+    Debug.print(debug_show(actual2));
+
+
+    let actual3 = {
+      let input1 : Text = Text.translate(input,func c = if  (c == ';') "ABC" else Text.fromChar c);
+      Iter.toArray(Text.split(input1, #text "XYZ"));
+    };
+    Debug.print(debug_show(actual3));
 
     assert (actual.size() == expected.size());
 
