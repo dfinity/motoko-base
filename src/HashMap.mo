@@ -73,7 +73,7 @@ public class HashMap<K,V> (
     };
   };
 
-  /// Insert the value `v` at key `k`. Overwrites a existing entry with key `k`
+  /// Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
   public func put(k : K, v : V) = ignore replace(k, v);
 
   /// Insert the value `v` at key `k` and returns the previous value stored at
