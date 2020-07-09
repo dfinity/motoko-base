@@ -24,7 +24,7 @@ func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
   display = Text.implode;
   equals = func (cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
      loop {
-       switch (cs1.next(),cs2.next()) {
+       switch (cs1.next(), cs2.next()) {
          case (null,null) return true;
          case (? c1, ? c2)
            if (c1 != c2) return false;
@@ -332,20 +332,14 @@ Suite.run(Suite.suite("split",
      Text.split(t, #char ';'),
      M.equals(textIterT a))
  },
-/* crashes due stackoverflow - lack of tail recursion in append/add?
- Suite.test(
-   "split-char-mixed",
-   Text.split("a;;;ab;;abc;", #char ';'),
-   M.equals(textIterT(["a","","","ab","","abc",""]))),
  {
-   let a = Array.tabulate<Text>(3000,func _ = "abc");
-   let t = Text.joinWith("!", a.vals());
+   let a = Array.tabulate<Text>(100000,func _ = "abc");
+   let t = Text.joinWith(";", a.vals());
    Suite.test(
-     "split-char-large",
+     "split-char-very-large",
      Text.split(t, #char ';'),
      M.equals(textIterT a))
  },
-*/
 ]));
 
 
@@ -385,20 +379,14 @@ Suite.run(Suite.suite("split",
      Text.split(t, pat),
      M.equals(textIterT a))
  },
-/* crashes due stackoverflow - lack of tail recursion in append/add?
- Suite.test(
-   "split-pred-mixed",
-   Text.split("a;;;ab;;abc;", pat),
-   M.equals(textIterT(["a","","","ab","","abc",""]))),
  {
-   let a = Array.tabulate<Text>(3000,func _ = "abc");
-   let t = Text.joinWith("!", a.vals());
+   let a = Array.tabulate<Text>(10000,func _ = "abc");
+   let t = Text.joinWith(";", a.vals());
    Suite.test(
-     "split-char-large",
+     "split-pred-very-large",
      Text.split(t, pat),
      M.equals(textIterT a))
  },
-*/
 ]))
 };
 
@@ -439,26 +427,16 @@ Suite.run(Suite.suite("split",
      Text.split(t, pat),
      M.equals(textIterT a))
  },
-/* crashes due stackoverflow - lack of tail recursion in append/add?
- Suite.test(
-   "split-pat-mixed",
-   Text.split("aPATPATPATabPATPATabcPAT", pat),
-   M.equals(textIterT(["a","","","ab","","abc",""]))),
  {
-   let a = Array.tabulate<Text>(3000,func _ = "abc");
-   let t = Text.joinWith("!", a.vals());
+   let a = Array.tabulate<Text>(10000,func _ = "abc");
+   let t = Text.joinWith("PAT", a.vals());
    Suite.test(
-     "split-pat-large",
+     "split-pat-very-large",
      Text.split(t, pat),
      M.equals(textIterT a))
  },
-*/
 ]))
 };
-
-
-
-
 
 {
   Debug.print("  fields");

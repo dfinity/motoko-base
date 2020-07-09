@@ -358,7 +358,16 @@ module {
   /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern p;
-    var cs = t.chars();
+    var buff = empty();
+    let chars = t.chars();
+    var cs = object {
+        public func next() : ?Char {
+          switch (buff.next()) {
+	    case null (chars.next());
+            case oc oc;
+	  }
+	};
+      };
     var state : { #init; #resume; #done} = #init;
     var field = "";
     object {
@@ -378,7 +387,7 @@ module {
                   switch (cs1.next()) {
 		    case (? c) {
                       field #= fromChar c;
-		      cs := append(cs1, cs);
+		      buff := cs1;
 		    };
 		    case null {
  		      state := #done;
@@ -404,7 +413,7 @@ module {
                   switch (cs1.next()) {
 		    case (? c) {
                       field #= fromChar c;
-		      cs := append(cs1, cs);
+		      buff := cs1;
 		    };
 		    case null {
 		      state := #done;
