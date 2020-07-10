@@ -282,31 +282,21 @@ module {
     }
   };
 
-  private func add(i : Iter.Iter<Char>, c : Char) : Iter.Iter<Char> {
-    var done = false;
-    object {
-      public func next() : ?Char {
-        if done return null;
-        switch (i.next()) {
-         case null {
-           done := true;
-           return ? c
-         };
-         case o { return o };
-        }
-      }
-    }
+  private type Match = {
+    /// #success on complete match
+    #success;
+    /// #fail(cs,c) on partial match of cs, but failing match on c
+    #fail : (cs: Iter.Iter<Char>, c : Char);
+    /// #empy(cs) on partial match of cs and empty stream
+    #empty : (cs :Iter.Iter<Char> )
   };
-
-
-  private type Match = { #success; #fail : Iter.Iter<Char>; #empty : Iter.Iter<Char> };
 
   public func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
      switch pat {
        case (#char p) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
-             case (?c) { if (p == c) #success else (#fail (singleton(c))) };
+             case (?c) { if (p == c) #success else #fail (empty(), c) };
              case null #empty (empty());
            }
          }
@@ -314,7 +304,7 @@ module {
        case (#predicate p) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
-             case (?c) { if (p(c)) #success else (#fail (singleton(c))) };
+             case (?c) { if (p(c)) #success else #fail (empty(), c) };
              case null { #empty (empty()) };
            }
          }
@@ -329,7 +319,7 @@ module {
                  switch (cs.next()) {
                    case (?c) {
                      if (c != d) {
-                       return #fail (add(take(i, p.chars()),c))
+                       return #fail (take(i, p.chars()), c)
                      };
                      i += 1;
                    };
@@ -356,86 +346,72 @@ module {
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern p;
     var buff = empty();
+    var char = null : ?Char;
     let chars = t.chars();
     var cs = object {
         public func next() : ?Char {
           switch (buff.next()) {
-            case null (chars.next());
+            case null {
+	      switch char {
+	        case (?c) {
+		  char := null;
+		  return ?c;
+		};
+		case null {
+		  return chars.next();
+                };
+              }
+	    };
             case oc oc;
           }
         };
       };
-    var state : { #init; #resume; #done} = #init;
+    var state = 0;
     var field = "";
     object {
       public func next() : ?Text {
         switch state {
-          case (#done) { return null };
-          case (#init) {
+          case (0 or 1) {
             loop {
               switch (match(cs)) {
                 case (#success) {
                   let r = field;
                   field := "";
-                  state := #resume;
+                  state := 1;
                   return ?r
                 };
                 case (#empty cs1) {
                   for (c in cs1) {
                     field #= fromChar c;
                   };
-                  state := #done;
-                  if (field == "") return null
-                  else return ?field
+                  let r =
+		    if (state == 0 and field == "")
+		      null
+                    else ?field;
+		  state := 2;
+		  return r;
                 };
-                case (#fail cs1) {
-                  switch (cs1.next()) {
-                    case (?c) {
-                      field #= fromChar c;
-                      buff := cs1;
+                case (#fail (cs1, c)) {
+		  buff := cs1;
+                  char := ?c;
+                  switch (cs.next()) {
+                    case (?ci) {
+                      field #= fromChar ci;
                     };
                     case null {
-                      state := #done;
-                      if (field == "")
-                        return null
-                      else
-                        return ?field;
+		      let r =
+		         if (state == 0 and field == "")
+ 		           null
+                         else ?field;
+		      state := 2;
+		      return r;
                     }
                   }
                 }
               }
             }
           };
-          case (#resume) {
-            loop {
-              switch (match(cs)) {
-                case (#success) {
-                  let r = field;
-                  field := "";
-                  return ?r
-                };
-                case (#empty cs1) {
-                  for (c in cs1) {
-                    field #= fromChar c;
-                  };
-                  state := #done;
-                  return ?field
-                };
-                case (#fail cs1) {
-                  switch (cs1.next()) {
-                    case (?c) {
-                      field #= fromChar c;
-                      buff := cs1;
-                    };
-                    case null {
-                      state := #done;
-                      return ? field;
-                    }
-                  }
-                }
-              }
-            }
-          }
+          case _ { return null };
         }
       }
     }
@@ -465,11 +441,22 @@ module {
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern p;
     var buff = empty();
+    var char = null : ?Char;
     let chars = t.chars();
     var cs = object {
         public func next() : ?Char {
           switch (buff.next()) {
-            case null (chars.next());
+            case null {
+	      switch char {
+	        case (?c) {
+		  char := null;
+		  return ?c;
+		};
+		case null {
+		  return chars.next();
+                };
+              }
+	    };
             case oc oc;
           }
         };
@@ -482,14 +469,14 @@ module {
         case (#empty cs1) {
           return false;
         };
-        case (#fail cs1) {
-          switch (cs1.next()) {
-            case (?c) {
-              buff := cs1;
-            };
+        case (#fail (cs1, c)) {
+	  buff := cs1;
+	  char := ?c;
+          switch (cs.next()) {
             case null {
               return false
-            }
+            };
+            case _ { }; //continue
           }
         }
       }
