@@ -445,6 +445,7 @@ module {
     }
   };
 
+/* WIP
   /// Returns true if `t` contains a match for pattern `p`.
   /// A _match_ is any sequence of characters matching the pattern `p`, where
   /// * `#char c` matches the single character sequence, `c`.
@@ -481,7 +482,7 @@ module {
     }
   };
 
-
+*/
 
   /// Returns `true` if `t1` starts with prefix `t2`, otherwise returns `false`.
   public func startsWith(t1 : Text, t2 : Text) : Bool {
