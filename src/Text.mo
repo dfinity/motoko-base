@@ -445,13 +445,12 @@ module {
     }
   };
 
-/* WIP
   /// Returns true if `t` contains a match for pattern `p`.
   /// A _match_ is any sequence of characters matching the pattern `p`, where
   /// * `#char c` matches the single character sequence, `c`.
   /// * `#pred p` matches any single character sequence `c` satisfying predicate `p(c)`.
   /// * `#text t1` matches multi-character text sequence `t1`.
-  public func ccontainsMatch(t : Text, p : Pattern) : Iter.Iter<Text> {
+  public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern p;
     var buff = empty();
     let chars = t.chars();
@@ -482,7 +481,6 @@ module {
     }
   };
 
-*/
 
   /// Returns `true` if `t1` starts with prefix `t2`, otherwise returns `false`.
   public func startsWith(t1 : Text, t2 : Text) : Bool {
@@ -521,58 +519,6 @@ module {
         case _ { assert false };
       }
     }
-  };
-
-  private func iter_startsWith(cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
-    loop {
-      switch (cs1.next(), cs2.next()) {
-        case (_, null) { return true };
-        case (null, ?c2) { return false };
-        case (?c1, ?c2) {
-          if (c1 != c2) return false;
-        }
-      }
-    }
-  };
-
-  /// Returns `true` if `t1` contains `t2` as a subsequence, otherwise returns `false`.
-  public func contains(t1 : Text, t2 : Text) : Bool {
-    let s2 = t2.size();
-    if (s2 == 0) return true;
-    let s1 = t1.size();
-    if (s2 > s1) return false;
-    let buff = Prim.Array_init(s2, ' ');
-    let cs1 = t1.chars();
-    for (i in buff.keys()) {
-      switch (cs1.next()) {
-        case (?c) { buff[i] := c };
-        case _ { assert false };
-      }
-    };
-    var front = 0;
-    var back = s2 - 1;
-    loop {
-      let cs =
-        object {
-          var i = 0;
-          public func next() : (?Char) {
-            if (i < s2) {
-              let c1 = buff[(front + i) % s2];
-              i += 1;
-              (?c1)
-            }
-            else null
-          }
-        };
-      if (iter_startsWith(cs, t2.chars())) return true;
-      back := (back + 1) % s2;
-      buff[back] := switch (cs1.next()) {
-        case (?c) { c };
-        case _ { return false; }
-      };
-      front := (front + 1) % s2;
-    };
-    return false;
   };
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.

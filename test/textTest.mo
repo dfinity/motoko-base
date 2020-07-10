@@ -573,30 +573,46 @@ Suite.run(Suite.suite("endsWith",
 ]));
 
 
-{
-  Debug.print("  contains");
+Suite.run(Suite.suite("contains",
+[
+ Suite.test(
+   "contains-start",
+   Text.contains("abcd", #text "ab"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "contains-empty",
+   Text.contains("abc", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "contains-false",
+   Text.contains("ab", #text "bc" ),
+   M.equals(T.bool false)),
+ Suite.test(
+   "contains-exact",
+   Text.contains("abc", #text "abc"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "contains-within",
+   Text.contains("abcdefghijklmnopqrstuvwxyz", #text "qrst"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "contains-front",
+   Text.contains("abcdefghijklmnopqrstuvwxyz", #text "abcdefg"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "contains-end",
+   Text.contains("abcdefghijklmnopqrstuvwxyz", #text "xyz"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "contains-false",
+   Text.contains("abcdefghijklmnopqrstuvwxyz", #text "lkj"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "contains-empty-nonempty",
+   Text.contains("", #text "xyz"),
+   M.equals(T.bool false)),
+]));
 
-  let tests = [
-    { input = ("abcd","bc"); expected = true },
-    { input = ("abc", ""); expected = true },
-    { input = ("ab", "bc"); expected = false },
-    { input = ("abc", "cb"); expected = false },
-    { input = ("abcd", "abc"); expected = true },
-    { input = ("abcdefghijklmnopqrstuvwxyz", "qrst"); expected = true },
-    { input = ("abcdefghijklmnopqrstuvwxyz", "abcdefg"); expected = true },
-    { input = ("abcdefghijklmnopqrstuvwxyz", "xyz"); expected = true },
-    { input = ("abcdefghijklmnopqrstuvwxyz", "lkj",); expected = false },
-    { input = ("", "xyz"); expected = false },
-  ];
-
-  for (t in tests.vals()) {
-    Debug.print (debug_show(t));
-
-    let actual = Text.contains(t.input.0,t.input.1);
-    assert (actual == t.expected);
-  };
-
-};
 
 {
   Debug.print("  compareWith");
