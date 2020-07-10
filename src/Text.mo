@@ -299,7 +299,7 @@ module {
   };
 
 
-  private type Match = { #success; #fail : Iter.Iter<Char> };
+  private type Match = { #success; #fail : Iter.Iter<Char>; #empty : Iter.Iter<Char> };
 
   public func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
      switch pat {
@@ -307,7 +307,7 @@ module {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
              case (?c) { if (p == c) #success else (#fail (singleton(c))) };
-             case null { #fail (empty()) };
+             case null #empty (empty());
            }
          }
        };
@@ -315,7 +315,7 @@ module {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
              case (?c) { if (p(c)) #success else (#fail (singleton(c))) };
-             case null { #fail (empty()) };
+             case null { #empty (empty()) };
            }
          }
        };
@@ -334,7 +334,7 @@ module {
                      i += 1;
                    };
                    case null {
-                     return #fail (take(i, p.chars()));
+                     return #empty (take(i, p.chars()));
                    }
                  }
                };
@@ -380,6 +380,14 @@ module {
                   state := #resume;
                   return ?r
                 };
+		case (#empty cs1) {
+		  for (c in cs1) {
+		    field #= fromChar c;
+		  };
+		  state := #done;
+		  if (field == "") return null
+		  else return ?field
+		};
                 case (#fail cs1) {
                   switch (cs1.next()) {
                     case (?c) {
@@ -406,6 +414,13 @@ module {
                   field := "";
                   return ?r
                 };
+		case (#empty cs1) {
+		  for (c in cs1) {
+		    field #= fromChar c;
+		  };
+		  state := #done;
+		  return ?field
+		};
                 case (#fail cs1) {
                   switch (cs1.next()) {
                     case (?c) {
@@ -463,6 +478,9 @@ module {
       switch (match(cs)) {
 	case (#success) {
 	  return true
+	};
+        case (#empty cs1) {
+	  return false;
 	};
 	case (#fail cs1) {
 	  switch (cs1.next()) {
