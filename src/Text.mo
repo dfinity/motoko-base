@@ -248,7 +248,7 @@ module {
       public func next() : ?Char {
         let temp = s;
         s := null;
-	return temp
+        return temp
       }
     }
   };
@@ -266,20 +266,20 @@ module {
       public func next() : ?Char {
         if (state > 1) return null;
         switch (i.next()) {
-	  case null {
-	    switch state {
-	      case 0 {
-		i := i2;
-		state := 1;
-		return i.next();
-	      };
-	      case _ {
-		state := 2;
-		return null;
-	      };
-	    }
-	  };
-	  case o { return o };
+          case null {
+            switch state {
+              case 0 {
+                i := i2;
+                state := 1;
+                return i.next();
+              };
+              case _ {
+                state := 2;
+                return null;
+              };
+            }
+          };
+          case o { return o };
         }
       }
     }
@@ -291,11 +291,11 @@ module {
       public func next() : ?Char {
         if done return null;
         switch (i.next()) {
-	 case null {
-	   done := true;
-	   return ? c
-	 };
-	 case o { return o };
+         case null {
+           done := true;
+           return ? c
+         };
+         case o { return o };
         }
       }
     }
@@ -329,17 +329,17 @@ module {
            loop {
              switch (ds.next()) {
                case (?d)  {
-	         switch (cs.next()) {
+                 switch (cs.next()) {
                    case (?c) {
                      if (c != d) {
-		       return #fail (add(take(i, p.chars()),c))
-		     };
-		     i += 1;
-		   };
-		   case null {
-		     return #fail (take(i, p.chars()));
-		   }
-		 }
+                       return #fail (add(take(i, p.chars()),c))
+                     };
+                     i += 1;
+                   };
+                   case null {
+                     return #fail (take(i, p.chars()));
+                   }
+                 }
                };
                case null { return #success };
              }
@@ -363,10 +363,10 @@ module {
     var cs = object {
         public func next() : ?Char {
           switch (buff.next()) {
-	    case null (chars.next());
+            case null (chars.next());
             case oc oc;
-	  }
-	};
+          }
+        };
       };
     var state : { #init; #resume; #done} = #init;
     var field = "";
@@ -385,19 +385,19 @@ module {
                 };
                 case (#fail cs1) {
                   switch (cs1.next()) {
-		    case (? c) {
+                    case (?c) {
                       field #= fromChar c;
-		      buff := cs1;
-		    };
-		    case null {
- 		      state := #done;
-		      if (field == "")
-	                return null
-		      else
-		        return ?field;
-		    }
-		  }
-		}
+                      buff := cs1;
+                    };
+                    case null {
+                      state := #done;
+                      if (field == "")
+                        return null
+                      else
+                        return ?field;
+                    }
+                  }
+                }
               }
             }
           };
@@ -411,15 +411,15 @@ module {
                 };
                 case (#fail cs1) {
                   switch (cs1.next()) {
-		    case (? c) {
+                    case (?c) {
                       field #= fromChar c;
-		      buff := cs1;
-		    };
-		    case null {
-		      state := #done;
-		      return ? field;
-		    }
-		  }
+                      buff := cs1;
+                    };
+                    case null {
+                      state := #done;
+                      return ? field;
+                    }
+                  }
                 }
               }
             }
@@ -444,6 +444,44 @@ module {
       }
     }
   };
+
+  /// Returns true if `t` contains a match for pattern `p`.
+  /// A _match_ is any sequence of characters matching the pattern `p`, where
+  /// * `#char c` matches the single character sequence, `c`.
+  /// * `#pred p` matches any single character sequence `c` satisfying predicate `p(c)`.
+  /// * `#text t1` matches multi-character text sequence `t1`.
+  public func ccontainsMatch(t : Text, p : Pattern) : Iter.Iter<Text> {
+    let match = matchOfPattern p;
+    var buff = empty();
+    let chars = t.chars();
+    var cs = object {
+        public func next() : ?Char {
+          switch (buff.next()) {
+	    case null (chars.next());
+            case oc oc;
+	  }
+	};
+      };
+    loop {
+      switch (match(cs)) {
+	case (#success) {
+	  return true
+	};
+	case (#fail cs1) {
+	  switch (cs1.next()) {
+	    case (?c) {
+	      buff := cs1;
+	    };
+	    case null {
+	      return false
+	    }
+	  }
+        }
+      }
+    }
+  };
+
+
 
   /// Returns `true` if `t1` starts with prefix `t2`, otherwise returns `false`.
   public func startsWith(t1 : Text, t2 : Text) : Bool {

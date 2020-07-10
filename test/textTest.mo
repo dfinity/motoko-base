@@ -474,7 +474,7 @@ Suite.run(Suite.suite("split",
   ];
 
   for ({input;expected} in tests.vals()) {
-    Debug.print(debug_show(input)); 
+    Debug.print(debug_show(input));
     let actual =
       Iter.toArray(Text.split(input, (#char ';')));
     Debug.print(debug_show(actual));
