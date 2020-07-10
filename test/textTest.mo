@@ -439,73 +439,6 @@ Suite.run(Suite.suite("split",
 };
 
 {
-  Debug.print("  fields");
-
-  let tests = [
-    { input = "aaa;;c;dd"; expected = ["aaa","","c","dd"] },
-    { input = ""; expected = [] },
-    { input = ";"; expected = ["",""] }
-  ];
-
-  for ({input;expected} in tests.vals()) {
-
-    let actual =
-      Iter.toArray(Text.fields(input, func c  { c == ';'}));
-      Debug.print(debug_show(actual));
-
-    assert (actual.size() == expected.size());
-
-    for (i in actual.keys()) {
-        assert(actual[i] == expected[i]);
-    };
-  };
-
-};
-
-
-{
-   Debug.print("  split");
-
-  let tests = [
-    { input = "abcde"; expected = ["abcde"] },
-    { input = "aaa;;c;dd"; expected = ["aaa","","c","dd"] },
-    { input = ""; expected = [] },
-    { input = ";"; expected = ["",""] }
-  ];
-
-  for ({input;expected} in tests.vals()) {
-    Debug.print(debug_show(input));
-    let actual =
-      Iter.toArray(Text.split(input, (#char ';')));
-    Debug.print(debug_show(actual));
-
-    let actual1 =
-      Iter.toArray(Text.split(input, (#predicate (func c = c == ';'))));
-    Debug.print(debug_show(actual1));
-
-    let actual2 = {
-      let input1 : Text = Text.translate(input,func c = if  (c == ';') "ABC" else Text.fromChar c);
-      Iter.toArray(Text.split(input1, #text "ABC"));
-    };
-    Debug.print(debug_show(actual2));
-
-
-    let actual3 = {
-      let input1 : Text = Text.translate(input,func c = if  (c == ';') "ABC" else Text.fromChar c);
-      Iter.toArray(Text.split(input1, #text "XYZ"));
-    };
-    Debug.print(debug_show(actual3));
-
-    assert (actual.size() == expected.size());
-
-    for (i in actual.keys()) {
-        assert(actual[i] == expected[i]);
-    };
-  };
-
-};
-
-{
   Debug.print("  tokens");
 
   let tests = [
@@ -529,46 +462,70 @@ Suite.run(Suite.suite("split",
 
 };
 
-{
-  Debug.print("  startsWith");
 
-  let tests = [
-    { input = ("", ""); expected = true },
-    { input = ("abc", ""); expected = true },
-    { input = ("ab", "abc"); expected = false },
-    { input = ("abc", "abc"); expected = true },
-    { input = ("abcd", "abc"); expected = true },
-  ];
+Suite.run(Suite.suite("startsWith",
+[
+ Suite.test(
+   "startsWith-both-empty",
+   Text.startsWith("", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-empty-text",
+   Text.startsWith("", #text "abc"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "startsWith-empty-pat",
+   Text.startsWith("abc", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-1",
+   Text.startsWith("a", #text "b"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "startsWith-2",
+   Text.startsWith("abc", #text "abc"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-3",
+   Text.startsWith("abcd", #text "ab"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-4",
+   Text.startsWith("abcdefghijklmnopqrstuvwxyz",#text "abcdefghijklmno"),
+   M.equals(T.bool true)),
+]));
 
-  for (t in tests.vals()) {
-    Debug.print (debug_show(t));
-    let actual = Text.startsWith(t.input.0,t.input.1);
-    assert (actual == t.expected);
-  };
 
-};
 
 Suite.run(Suite.suite("endsWith",
 [
  Suite.test(
-   "endsWith-0",
-   Text.endsWith("",""),
+   "endsWith-both-empty",
+   Text.endsWith("", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "endsWith-empty-text",
+   Text.endsWith("", #text "abc"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "endsWith-empty-pat",
+   Text.endsWith("abc", #text ""),
    M.equals(T.bool true)),
  Suite.test(
    "endsWith-1",
-   Text.endsWith("a","b"),
+   Text.endsWith("a", #text "b"),
    M.equals(T.bool false)),
  Suite.test(
    "endsWith-2",
-   Text.endsWith("abc","abc"),
+   Text.endsWith("abc", #text "abc"),
    M.equals(T.bool true)),
  Suite.test(
    "endsWith-3",
-   Text.endsWith("abcd","cd"),
+   Text.endsWith("abcd", #text "cd"),
    M.equals(T.bool true)),
  Suite.test(
    "endsWith-4",
-   Text.endsWith("abcdefghijklmnopqrstuvwxyz","pqrstuvwxyz"),
+   Text.endsWith("abcdefghijklmnopqrstuvwxyz",#text "pqrstuvwxyz"),
    M.equals(T.bool true)),
 ]));
 

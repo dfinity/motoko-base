@@ -483,7 +483,7 @@ module {
     }
   };
 
-
+/*
   /// Returns `true` if `t1` starts with prefix `t2`, otherwise returns `false`.
   public func startsWith(t1 : Text, t2 : Text) : Bool {
     var cs1 = t1.chars();
@@ -498,28 +498,38 @@ module {
       }
     }
   };
+*/
 
-  /// Returns `true` if `t1` ends with suffix `t2`, otherwise returns `false`.
-  public func endsWith(t1 : Text, t2 : Text) : Bool {
-    let s2 = t2.size();
+  /// Returns `true` if `t1` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  public func startsWith(t1 : Text, p : Pattern) : Bool {
+    var cs1 = t1.chars();
+    let match = matchOfPattern p;
+    switch (match(cs1)) {
+      case (#success) true;
+      case _ false;
+    }
+  };
+
+  /// Returns `true` if `t1` ends with a suffix matching pattern `p`, otherwise returns `false`.
+  public func endsWith(t1 : Text, p : Pattern) : Bool {
+    let s2 = switch p {
+      case (#char _) 1;
+      case (#predicate _) 1;
+      case (#text t) t.size();
+    };
     if (s2 == 0) return true;
     let s1 = t1.size();
     if (s2 > s1) return false;
+    let match = matchOfPattern p;
     var cs1 = t1.chars();
     var diff = s1 - s2;
     while (diff > 0)  {
       ignore cs1.next();
       diff -= 1;
     };
-    let cs2 = t2.chars();
-    loop {
-      switch (cs2.next(), cs1.next()) {
-        case (null, null) { return true };
-        case (?c2, ?c1) {
-          if (c2 != c1) return false;
-        };
-        case _ { assert false };
-      }
+    switch (match(cs1)) {
+      case (#success) true;
+      case _ false;
     }
   };
 
