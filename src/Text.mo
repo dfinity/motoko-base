@@ -287,7 +287,7 @@ module {
     #success;
     /// #fail(cs,c) on partial match of cs, but failing match on c
     #fail : (cs: Iter.Iter<Char>, c : Char);
-    /// #empy(cs) on partial match of cs and empty stream
+    /// #empty(cs) on partial match of cs and empty stream
     #empty : (cs :Iter.Iter<Char> )
   };
 
