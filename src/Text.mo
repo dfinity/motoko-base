@@ -380,14 +380,14 @@ module {
                   state := #resume;
                   return ?r
                 };
-		case (#empty cs1) {
-		  for (c in cs1) {
-		    field #= fromChar c;
-		  };
-		  state := #done;
-		  if (field == "") return null
-		  else return ?field
-		};
+                case (#empty cs1) {
+                  for (c in cs1) {
+                    field #= fromChar c;
+                  };
+                  state := #done;
+                  if (field == "") return null
+                  else return ?field
+                };
                 case (#fail cs1) {
                   switch (cs1.next()) {
                     case (?c) {
@@ -414,13 +414,13 @@ module {
                   field := "";
                   return ?r
                 };
-		case (#empty cs1) {
-		  for (c in cs1) {
-		    field #= fromChar c;
-		  };
-		  state := #done;
-		  return ?field
-		};
+                case (#empty cs1) {
+                  for (c in cs1) {
+                    field #= fromChar c;
+                  };
+                  state := #done;
+                  return ?field
+                };
                 case (#fail cs1) {
                   switch (cs1.next()) {
                     case (?c) {
@@ -469,28 +469,28 @@ module {
     var cs = object {
         public func next() : ?Char {
           switch (buff.next()) {
-	    case null (chars.next());
+            case null (chars.next());
             case oc oc;
-	  }
-	};
+          }
+        };
       };
     loop {
       switch (match(cs)) {
-	case (#success) {
-	  return true
-	};
+        case (#success) {
+          return true
+        };
         case (#empty cs1) {
-	  return false;
-	};
-	case (#fail cs1) {
-	  switch (cs1.next()) {
-	    case (?c) {
-	      buff := cs1;
-	    };
-	    case null {
-	      return false
-	    }
-	  }
+          return false;
+        };
+        case (#fail cs1) {
+          switch (cs1.next()) {
+            case (?c) {
+              buff := cs1;
+            };
+            case null {
+              return false
+            }
+          }
         }
       }
     }
