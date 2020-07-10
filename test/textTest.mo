@@ -344,7 +344,7 @@ Suite.run(Suite.suite("split",
 
 
 {
-let pat : Text.Pattern = #pred (func c = { c == ';' or c == '!' }) ;
+let pat : Text.Pattern = #predicate (func c = { c == ';' or c == '!' }) ;
 Suite.run(Suite.suite("split",
 [
  Suite.test(
@@ -480,7 +480,7 @@ Suite.run(Suite.suite("split",
     Debug.print(debug_show(actual));
 
     let actual1 =
-      Iter.toArray(Text.split(input, (#pred (func c = c == ';'))));
+      Iter.toArray(Text.split(input, (#predicate (func c = c == ';'))));
     Debug.print(debug_show(actual1));
 
     let actual2 = {

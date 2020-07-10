@@ -226,10 +226,7 @@ module {
     }
   };
 
-
-
-//  public type Record = { char: Char; text: Text; pred: Char -> Bool };
-  public type Pattern = { #char : Char; #text : Text; #pred : (Char -> Bool) }; //parsing BUG
+  public type Pattern = { #char : Char; #text : Text; #predicate : (Char -> Bool) };
 
   private func take(n : Nat, cs : Iter.Iter<Char>) : Iter.Iter<Char> {
     var i = n;
@@ -314,7 +311,7 @@ module {
            }
          }
        };
-       case (#pred p) {
+       case (#predicate p) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
              case (?c) { if (p(c)) #success else (#fail (singleton(c))) };
@@ -353,7 +350,7 @@ module {
   /// A _field_ is a possibly empty, maximal subtext of `t` not containing a match for `p`.
   /// A _match_ is any sequence of characters matching the pattern `p`, where
   /// * `#char c` matches the single character sequence, `c`.
-  /// * `#pred p` matches any single character sequence `c` satisfying predicate `p(c)`.
+  /// * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
   /// * `#text t1` matches multi-character text sequence `t1`.
   /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
@@ -448,7 +445,7 @@ module {
   /// Returns true if `t` contains a match for pattern `p`.
   /// A _match_ is any sequence of characters matching the pattern `p`, where
   /// * `#char c` matches the single character sequence, `c`.
-  /// * `#pred p` matches any single character sequence `c` satisfying predicate `p(c)`.
+  /// * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
   /// * `#text t1` matches multi-character text sequence `t1`.
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern p;
