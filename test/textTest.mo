@@ -344,7 +344,7 @@ Suite.run(Suite.suite("split",
 
 
 {
-let pat : Text.Pattern = #predicate (func c = { c == ';' or c == '!' }) ;
+let pat : Text.Pattern = #predicate (func (c : Char) : Bool { c == ';' or c == '!' }) ;
 Suite.run(Suite.suite("split",
 [
  Suite.test(
