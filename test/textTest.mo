@@ -450,7 +450,7 @@ Suite.run(Suite.suite("split",
   for ({input;expected} in tests.vals()) {
 
     let actual =
-      Iter.toArray(Text.tokens(input, func c  { c == ';'}));
+      Iter.toArray(Text.tokens(input, #char ';'));
       Debug.print(debug_show(actual));
 
     assert (actual.size() == expected.size());

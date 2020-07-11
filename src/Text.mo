@@ -171,61 +171,6 @@ module {
     return r;
   };
 
-  /// Returns the sequence of fields in `t`, derived from left to right.
-  /// A _field_ is a possibly empty, maximal subtext of `t` not containing a delimiter.
-  /// A _delimiter_ is any character matching the predicate `p`.
-  /// Two fields are separated by exactly one delimiter.
-  public func fields(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
-    var getc = t.chars().next;
-    var state : { #init; #resume; #done} = #init;
-    var field = "";
-    object {
-      public func next() : ?Text {
-        switch state {
-          case (#done) { return null };
-          case (#init) {
-            loop {
-              switch (getc()) {
-                case (?c) {
-                  if (p(c)) {
-                    let r = field;
-                    field := "";
-                    state := #resume;
-                    return ?r
-                  }
-                  else field #= Prim.charToText(c);
-                };
-                case null {
-                  state := #done;
-                  return if (field == "") null else ?field;
-                }
-              }
-            }
-          };
-          case (#resume) {
-            loop {
-              switch (getc()) {
-                case (?c) {
-                  if (p(c)) {
-                    let r = field;
-                    field := "";
-                    state := #resume;
-                    return ?r
-                  }
-                  else field #= Prim.charToText(c);
-                };
-                case null {
-                  state := #done;
-                  return ?field;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  };
-
   public type Pattern = { #char : Char; #text : Text; #predicate : (Char -> Bool) };
 
   private func take(n : Nat, cs : Iter.Iter<Char>) : Iter.Iter<Char> {
@@ -239,47 +184,10 @@ module {
     }
   };
 
-  private func singleton(c : Char) : Iter.Iter<Char> {
-    var s = ?c;
-    object {
-      public func next() : ?Char {
-        let temp = s;
-        s := null;
-        return temp
-      }
-    }
-  };
-
   private func empty() : Iter.Iter<Char> {
     object {
       public func next() : ?Char = null;
     };
-  };
-
-  private func append(i1 : Iter.Iter<Char>, i2 : Iter.Iter<Char>) : Iter.Iter<Char> {
-    var i = i1;
-    var state = 0;
-    object {
-      public func next() : ?Char {
-        if (state > 1) return null;
-        switch (i.next()) {
-          case null {
-            switch state {
-              case 0 {
-                i := i2;
-                state := 1;
-                return i.next();
-              };
-              case _ {
-                state := 2;
-                return null;
-              };
-            }
-          };
-          case o { return o };
-        }
-      }
-    }
   };
 
   private type Match = {
@@ -291,7 +199,7 @@ module {
     #empty : (cs :Iter.Iter<Char> )
   };
 
-  public func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
+  private func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
      switch pat {
        case (#char p) {
          func (cs : Iter.Iter<Char>) : Match {
@@ -418,11 +326,10 @@ module {
   };
 
   /// Returns the sequence of tokens in `t`, derived from left to right.
-  /// A _token_ is a non-empty maximal subtext of `t` not containing a delimiter.
-  /// A _delimiter_ is any character matching the predicate `p`.
-  /// Two tokens may be separated by more than one delimiter.
-  public func tokens(t : Text, p : Char -> Bool) : Iter.Iter<Text> {
-    let fs = fields(t, p);
+  /// A _token_ is a non-empty maximal subsequence of `t` not containing a subsequence matching pattern 'p'.
+  /// Two tokens may be separated by one or more matches of 'p'.
+  public func tokens(t : Text, p : Pattern) : Iter.Iter<Text> {
+    let fs = split(t, p);
     object {
       public func next() : ?Text {
         switch (fs.next()) {
@@ -482,23 +389,6 @@ module {
       }
     }
   };
-
-/*
-  /// Returns `true` if `t1` starts with prefix `t2`, otherwise returns `false`.
-  public func startsWith(t1 : Text, t2 : Text) : Bool {
-    var cs1 = t1.chars();
-    var cs2 = t2.chars();
-    loop {
-      switch (cs1.next(), cs2.next()) {
-        case (null, ?c2) { return false };
-        case (_, null) { return true };
-        case (?c1, ?c2) {
-          if (c1 != c2) return false;
-        }
-      }
-    }
-  };
-*/
 
   /// Returns `true` if `t1` starts with a prefix matching pattern `p`, otherwise returns `false`.
   public func startsWith(t1 : Text, p : Pattern) : Bool {
