@@ -383,7 +383,7 @@ module {
             case null {
               return false
             };
-            case _ { }; //continue
+            case _ { }; // continue
           }
         }
       }
