@@ -249,6 +249,34 @@ module {
      }
   };
 
+  private class CharBuffer(cs : Iter.Iter<Char>) : Iter.Iter<Char> = {
+
+    var buff : Iter.Iter<Char> = empty();
+    var char : ?Char = null;
+
+    public func pushBack(cs0: Iter.Iter<Char>, c : Char) {
+       buff := cs0;
+       char := ?c;
+    };
+
+    public func next() : ?Char {
+      switch (buff.next()) {
+        case null {
+          switch char {
+            case (?c) {
+              char := null;
+              return ?c;
+            };
+            case null {
+              return cs.next();
+            };
+          }
+        };
+        case oc oc;
+      }
+    };
+  };
+
   /// Returns the sequence of fields in `t`, derived from left to right, separated by text matching pattern `p`.
   /// A _field_ is a possibly empty, maximal subtext of `t` not containing a match for `p`.
   /// A _match_ is any sequence of characters matching the pattern `p`, where
@@ -258,27 +286,7 @@ module {
   /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern p;
-    var buff = empty();
-    var char = null : ?Char;
-    let chars = t.chars();
-    var cs = object {
-        public func next() : ?Char {
-          switch (buff.next()) {
-            case null {
-              switch char {
-                case (?c) {
-                  char := null;
-                  return ?c;
-                };
-                case null {
-                  return chars.next();
-                };
-              }
-            };
-            case oc oc;
-          }
-        };
-      };
+    let cs = CharBuffer(t.chars());
     var state = 0;
     var field = "";
     object {
@@ -305,8 +313,7 @@ module {
                   return r;
                 };
                 case (#fail (cs1, c)) {
-                  buff := cs1;
-                  char := ?c;
+                  cs.pushBack(cs1,c);
                   switch (cs.next()) {
                     case (?ci) {
                       field #= fromChar ci;
@@ -352,27 +359,7 @@ module {
   /// * `#text t1` matches multi-character text sequence `t1`.
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern p;
-    var buff = empty();
-    var char = null : ?Char;
-    let chars = t.chars();
-    var cs = object {
-        public func next() : ?Char {
-          switch (buff.next()) {
-            case null {
-              switch char {
-                case (?c) {
-                  char := null;
-                  return ?c;
-                };
-                case null {
-                  return chars.next();
-                };
-              }
-            };
-            case oc oc;
-          }
-        };
-      };
+    let cs = CharBuffer(t.chars());
     loop {
       switch (match(cs)) {
         case (#success) {
@@ -382,8 +369,7 @@ module {
           return false;
         };
         case (#fail (cs1, c)) {
-          buff := cs1;
-          char := ?c;
+          cs.pushBack(cs1, c);
           switch (cs.next()) {
             case null {
               return false
@@ -435,27 +421,7 @@ module {
       case (#text t) t.size();
       case (#predicate _ or #char _) 1;
     };
-    var buff = empty();
-    var char = null : ?Char;
-    let chars = t.chars();
-    var cs = object {
-      public func next() : ?Char {
-        switch (buff.next()) {
-          case null {
-            switch char {
-              case (?c) {
-                char := null;
-                return ?c;
-              };
-              case null {
-                return chars.next();
-              };
-            }
-          };
-          case oc oc;
-        }
-      };
-    };
+    let cs = CharBuffer(t.chars());
     var res = "";
     label l
     loop {
@@ -473,8 +439,7 @@ module {
           break l;
         };
         case (#fail (cs1, c)) {
-          buff := cs1;
-          char := ?c;
+          cs.pushBack(cs1, c);
         }
       };
       switch (cs.next()) {
