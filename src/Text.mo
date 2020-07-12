@@ -260,16 +260,16 @@ module {
         public func next() : ?Char {
           switch (buff.next()) {
             case null {
-	      switch char {
-	        case (?c) {
-		  char := null;
-		  return ?c;
-		};
-		case null {
-		  return chars.next();
+              switch char {
+                case (?c) {
+                  char := null;
+                  return ?c;
+                };
+                case null {
+                  return chars.next();
                 };
               }
-	    };
+            };
             case oc oc;
           }
         };
@@ -293,26 +293,26 @@ module {
                     field #= fromChar c;
                   };
                   let r =
-		    if (state == 0 and field == "")
-		      null
+                    if (state == 0 and field == "")
+                      null
                     else ?field;
-		  state := 2;
-		  return r;
+                  state := 2;
+                  return r;
                 };
                 case (#fail (cs1, c)) {
-		  buff := cs1;
+                  buff := cs1;
                   char := ?c;
                   switch (cs.next()) {
                     case (?ci) {
                       field #= fromChar ci;
                     };
                     case null {
-		      let r =
-		         if (state == 0 and field == "")
- 		           null
+                      let r =
+                         if (state == 0 and field == "")
+                           null
                          else ?field;
-		      state := 2;
-		      return r;
+                      state := 2;
+                      return r;
                     }
                   }
                 }
@@ -354,16 +354,16 @@ module {
         public func next() : ?Char {
           switch (buff.next()) {
             case null {
-	      switch char {
-	        case (?c) {
-		  char := null;
-		  return ?c;
-		};
-		case null {
-		  return chars.next();
+              switch char {
+                case (?c) {
+                  char := null;
+                  return ?c;
+                };
+                case null {
+                  return chars.next();
                 };
               }
-	    };
+            };
             case oc oc;
           }
         };
@@ -377,8 +377,8 @@ module {
           return false;
         };
         case (#fail (cs1, c)) {
-	  buff := cs1;
-	  char := ?c;
+          buff := cs1;
+          char := ?c;
           switch (cs.next()) {
             case null {
               return false
@@ -426,53 +426,62 @@ module {
   /// Returns `t` with all subsequences of characters matching pattern `p` replaced by text `r`
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern p;
+    let size = switch p {
+      case (#text t) t.size();
+      case (#predicate _ or #char _) 1;
+    };
     var buff = empty();
     var char = null : ?Char;
     let chars = t.chars();
     var cs = object {
-        public func next() : ?Char {
-          switch (buff.next()) {
-            case null {
-	      switch char {
-	        case (?c) {
-		  char := null;
-		  return ?c;
-		};
-		case null {
-		  return chars.next();
-                };
-              }
-	    };
-            case oc oc;
-          }
-        };
+      public func next() : ?Char {
+        switch (buff.next()) {
+          case null {
+            switch char {
+              case (?c) {
+                char := null;
+                return ?c;
+              };
+              case null {
+                return chars.next();
+              };
+            }
+          };
+          case oc oc;
+        }
       };
+    };
     var res = "";
+    label l
     loop {
       switch (match(cs)) {
         case (#success) {
           res #= r;
+          if (size > 0) {
+            continue l;
+          }
         };
         case (#empty cs1) {
           for (c1 in cs1) {
-	    res #= fromChar c1;
-	  };
-	  return res
+            res #= fromChar c1;
+          };
+          break l;
         };
         case (#fail (cs1, c)) {
-	  buff := cs1;
-	  char := ?c;
+          buff := cs1;
+          char := ?c;
         }
       };
       switch (cs.next()) {
         case null {
-      	  return res;
+          break l;
         };
-    	case (?c1) {
-	  res #= fromChar c1;
+        case (?c1) {
+         res #= fromChar c1;
         }; // continue
       }
-    }
+    };
+    return res;
   };
 
 

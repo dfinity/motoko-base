@@ -598,6 +598,10 @@ Suite.run(Suite.suite("replace",
    "replace-delete",
    Text.replace("abcdabghijabmnopqrstuabwxab", #text "ab", ""),
    M.equals(T.text "cdghijmnopqrstuwx")),
+ Suite.test(
+   "replace-pred",
+   Text.replace("abcdefghijklmnopqrstuvwxyz", #predicate (func (c : Char) : Bool { c < 'm'}), ""),
+   M.equals(T.text "mnopqrstuvwxyz")),
 ]));
 
 
