@@ -423,6 +423,59 @@ module {
     }
   };
 
+  /// Returns `t` with all subsequences of characters matching pattern `p` replaced by text `r`
+  public func replace(t : Text, p : Pattern, r : Text) : Text {
+    let match = matchOfPattern p;
+    var buff = empty();
+    var char = null : ?Char;
+    let chars = t.chars();
+    var cs = object {
+        public func next() : ?Char {
+          switch (buff.next()) {
+            case null {
+	      switch char {
+	        case (?c) {
+		  char := null;
+		  return ?c;
+		};
+		case null {
+		  return chars.next();
+                };
+              }
+	    };
+            case oc oc;
+          }
+        };
+      };
+    var res = "";
+    loop {
+      switch (match(cs)) {
+        case (#success) {
+          res #= r;
+        };
+        case (#empty cs1) {
+          for (c1 in cs1) {
+	    res #= fromChar c1;
+	  };
+	  return res
+        };
+        case (#fail (cs1, c)) {
+	  buff := cs1;
+	  char := ?c;
+        }
+      };
+      switch (cs.next()) {
+        case null {
+      	  return res;
+        };
+    	case (?c1) {
+	  res #= fromChar c1;
+        }; // continue
+      }
+    }
+  };
+
+
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(
     t1 : Text,

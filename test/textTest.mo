@@ -571,6 +571,37 @@ Suite.run(Suite.suite("contains",
 ]));
 
 
+Debug.print ("replace");
+Suite.run(Suite.suite("replace",
+[
+ Suite.test(
+   "replace-start",
+   Text.replace("abcd", #text "ab", "AB"),
+   M.equals(T.text "ABcd")),
+ Suite.test(
+   "replace-empty",
+   Text.replace("abc", #text "", "AB"),
+   M.equals(T.text "ABaABbABcAB")),
+ Suite.test(
+   "replace-none",
+   Text.replace("ab", #text "bc", "AB"),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "replace-exact",
+   Text.replace("ab", #text "ab", "AB"),
+   M.equals(T.text "AB")),
+ Suite.test(
+   "replace-several",
+   Text.replace("abcdabghijabmnopqrstuabwxab", #text "ab", "AB"),
+   M.equals(T.text "ABcdABghijABmnopqrstuABwxAB")),
+ Suite.test(
+   "replace-delete",
+   Text.replace("abcdabghijabmnopqrstuabwxab", #text "ab", ""),
+   M.equals(T.text "cdghijmnopqrstuwx")),
+]));
+
+
+
 {
   Debug.print("  compareWith");
 
