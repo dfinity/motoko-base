@@ -3,6 +3,11 @@
 /// This type describes a valid, human-readable text. It does not contain arbitrary
 /// binary data.
 
+
+// TODO:
+// [] factor out buffer object
+// [] stripLeft stripRight (for future trimLeft, trimRight using Char.isWhiteSpace
+
 import Char "Char";
 import Iter "Iter";
 import Hash "Hash";
