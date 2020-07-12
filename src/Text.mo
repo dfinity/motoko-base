@@ -204,6 +204,13 @@ module {
     #empty : (cs :Iter.Iter<Char> )
   };
 
+  private func sizeOfPattern(pat : Pattern) : Nat = {
+    switch pat {
+      case (#text t) t.size();
+      case (#predicate _ or #char _) 1;
+    }
+  };
+
   private func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
      switch pat {
        case (#char p) {
@@ -417,10 +424,7 @@ module {
   /// Returns `t` with all subsequences of characters matching pattern `p` replaced by text `r`
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern p;
-    let size = switch p {
-      case (#text t) t.size();
-      case (#predicate _ or #char _) 1;
-    };
+    let size = sizeOfPattern p;
     let cs = CharBuffer(t.chars());
     var res = "";
     label l
@@ -454,6 +458,23 @@ module {
     return res;
   };
 
+  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  public func stripLeft(t : Text, p : Pattern) : Text {
+    let cs = t.chars();
+    if (sizeOfPattern(p) == 0) return t;
+    let match = matchOfPattern p;
+    loop {
+      switch (match(cs)) {
+        case (#success) { }; // continue
+        case (#empty cs1) {
+	  return implode(cs1) # implode(cs)
+	};
+	case (#fail (cs1, c)) {
+          return implode(cs1) # fromChar c # implode cs
+	}
+      }
+    }
+  };
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(

@@ -571,7 +571,6 @@ Suite.run(Suite.suite("contains",
 ]));
 
 
-Debug.print ("replace");
 Suite.run(Suite.suite("replace",
 [
  Suite.test(
@@ -604,6 +603,30 @@ Suite.run(Suite.suite("replace",
    M.equals(T.text "mnopqrstuvwxyz")),
 ]));
 
+
+Suite.run(Suite.suite("stripLeft",
+[
+ Suite.test(
+   "stripLeft-none",
+   Text.stripLeft("cd", #text "ab"),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "stripLeft-one",
+   Text.stripLeft("abcd", #text "ab"),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "stripLeft-two",
+   Text.stripLeft("abababcd", #text "ab", ),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "stripLeft-only",
+   Text.stripLeft("ababababab", #text "ab", ),
+   M.equals(T.text "")),
+ Suite.test(
+   "stripLeft-empty",
+   Text.stripLeft("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+]));
 
 
 {
