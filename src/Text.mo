@@ -458,8 +458,27 @@ module {
     return res;
   };
 
-  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  /// Returns the suffix of `t` obtained by stripping all leading matches of pattern `p`.
   public func stripLeft(t : Text, p : Pattern) : Text {
+    let cs = t.chars();
+    if (sizeOfPattern(p) == 0) return t;
+    let match = matchOfPattern p;
+    loop {
+      switch (match(cs)) {
+        case (#success) { }; // continue
+        case (#empty cs1) {
+	  return implode(cs1) # implode(cs)
+	};
+	case (#fail (cs1, c)) {
+          return implode(cs1) # fromChar c # implode cs
+	}
+      }
+    }
+  };
+
+
+  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  public func stripRight(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     if (sizeOfPattern(p) == 0) return t;
     let match = matchOfPattern p;
