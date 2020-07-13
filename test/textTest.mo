@@ -628,6 +628,36 @@ Suite.run(Suite.suite("stripLeft",
    M.equals(T.text "abcdef")),
 ]));
 
+Suite.run(Suite.suite("stripRight",
+[
+ Suite.test(
+   "stripRight-exact",
+   Text.stripRight("cd", #text "cd"),
+   M.equals(T.text "")),
+ Suite.test(
+   "stripRight-one",
+   Text.stripRight("abcd", #text "cd"),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "stripRight-two",
+   Text.stripRight("abcdcdcd", #text "cd", ),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "stripRight-only",
+   Text.stripRight("cdcdcdcdcdcdcd", #text "cd", ),
+   M.equals(T.text "")),
+ Suite.test(
+   "stripRight-empty-pat",
+   Text.stripRight("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+ Suite.test(
+   "stripRight-empty",
+   Text.stripRight("", #text "cd"),
+   M.equals(T.text "")),
+]));
+
+
+
 
 {
   Debug.print("  compareWith");

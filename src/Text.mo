@@ -3,11 +3,6 @@
 /// This type describes a valid, human-readable text. It does not contain arbitrary
 /// binary data.
 
-
-// TODO:
-// [] factor out buffer object
-// [] stripLeft stripRight (for future trimLeft, trimRight using Char.isWhiteSpace
-
 import Char "Char";
 import Iter "Iter";
 import Hash "Hash";
@@ -388,28 +383,28 @@ module {
     }
   };
 
-  /// Returns `true` if `t1` starts with a prefix matching pattern `p`, otherwise returns `false`.
-  public func startsWith(t1 : Text, p : Pattern) : Bool {
-    var cs1 = t1.chars();
+  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  public func startsWith(t : Text, p : Pattern) : Bool {
+    var cs = t.chars();
     let match = matchOfPattern p;
-    switch (match(cs1)) {
+    switch (match(cs)) {
       case (#success) true;
       case _ false;
     }
   };
 
-  /// Returns `true` if `t1` ends with a suffix matching pattern `p`, otherwise returns `false`.
-  public func endsWith(t1 : Text, p : Pattern) : Bool {
+  /// Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
+  public func endsWith(t : Text, p : Pattern) : Bool {
     let s2 = switch p {
       case (#char _) 1;
       case (#predicate _) 1;
       case (#text t) t.size();
     };
     if (s2 == 0) return true;
-    let s1 = t1.size();
+    let s1 = t.size();
     if (s2 > s1) return false;
     let match = matchOfPattern p;
-    var cs1 = t1.chars();
+    var cs1 = t.chars();
     var diff = s1 - s2;
     while (diff > 0)  {
       ignore cs1.next();
@@ -477,23 +472,35 @@ module {
   };
 
 
-  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  /// Returns the prefix of `t` obtained by stripping all trailing matches of pattern `p`.
   public func stripRight(t : Text, p : Pattern) : Text {
-    let cs = t.chars();
-    if (sizeOfPattern(p) == 0) return t;
+    let cs = CharBuffer(t.chars());
+    let size = sizeOfPattern(p);
+    if (size == 0) return t;
     let match = matchOfPattern p;
+    var matchSize = 0;
+    label l
     loop {
       switch (match(cs)) {
-        case (#success) { }; // continue
+        case (#success) {
+	  matchSize += size;
+	}; // continue
         case (#empty cs1) {
-	  return implode(cs1) # implode(cs)
+	  switch (cs1.next()) {
+	    case null break l;
+	    case (? _)  return t;
+	  }
 	};
 	case (#fail (cs1, c)) {
-          return implode(cs1) # fromChar c # implode cs
+          matchSize := 0;
+	  cs.pushBack(cs1, c);
+	  ignore cs.next();
 	}
       }
-    }
+    };
+    extract(t, 0, ? (t.size() - matchSize));
   };
+
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(
