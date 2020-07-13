@@ -400,11 +400,7 @@ module {
 
   /// Returns `true` if `t` ends with a suffix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
   public func endsWith(t : Text, p : Pattern) : Bool {
-    let s2 = switch p {
-      case (#char _) 1;
-      case (#predicate _) 1;
-      case (#text t) t.size();
-    };
+    let s2 = sizeOfPattern p;
     if (s2 == 0) return true;
     let s1 = t.size();
     if (s2 > s1) return false;
@@ -458,6 +454,39 @@ module {
     return res;
   };
 
+
+
+  /// Returns the suffix of `t` obtained by eliding any single leading match of [pattern](#type.Pattern) `p`.
+  public func stripStart(t : Text, p : Pattern) : Text {
+    let s = sizeOfPattern p;
+    if (s == 0) return t;
+    var cs = t.chars();
+    let match = matchOfPattern p;
+    switch (match(cs)) {
+      case (#success) return fromIter(cs);
+      case _ return t;
+    }
+  };
+
+  /// Returns the prefix of `t` obtained by eliding any single trailing match of [pattern](#type.Pattern) `p`.
+  public func stripEnd(t : Text, p : Pattern) : Text {
+    let s2 = sizeOfPattern p;
+    if (s2 == 0) return t;
+    let s1 = t.size();
+    if (s2 > s1) return t;
+    let match = matchOfPattern p;
+    var cs1 = t.chars();
+    var diff = s1 - s2;
+    while (diff > 0)  {
+      ignore cs1.next();
+      diff -= 1;
+    };
+    switch (match(cs1)) {
+      case (#success) return extract(t, 0, ? (s1 - s2));
+      case _ return t;
+    }
+  };
+
   /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
   public func trimStartMatches(t : Text, p : Pattern) : Text {
     let cs = t.chars();
@@ -479,7 +508,6 @@ module {
       }
     }
   };
-
 
   /// Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](#type.Pattern) `p`.
   public func trimEndMatches(t : Text, p : Pattern) : Text {

@@ -10,6 +10,8 @@ import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
+let {run;test;suite} = Suite;
+
 func charT(c : Char): T.TestableItem<Char> = {
   item = c;
   display = Text.fromChar;
@@ -627,6 +629,67 @@ Suite.run(Suite.suite("replace",
    "replace-pred",
    Text.replace("abcdefghijklmnopqrstuvwxyz", #predicate (func (c : Char) : Bool { c < 'm'}), ""),
    M.equals(T.text "mnopqrstuvwxyz")),
+]));
+
+Suite.run(Suite.suite("stripStart",
+[
+ Suite.test(
+   "stripStart-none",
+   Text.stripStart("cd", #text "ab"),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "stripStart-one",
+   Text.stripStart("abcd", #text "ab"),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "stripStart-two",
+   Text.stripStart("abababcd", #text "ab", ),
+   M.equals(T.text "ababcd")),
+ Suite.test(
+   "stripStart-only",
+   Text.stripStart("ababababab", #text "ab", ),
+   M.equals(T.text "abababab")),
+ Suite.test(
+   "stripStart-empty",
+   Text.stripStart("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+ Suite.test(
+   "stripStart-tooshort",
+   Text.stripStart("abcdef", #text "abcdefg"),
+   M.equals(T.text "abcdef")),
+]));
+
+
+Suite.run(Suite.suite("stripEnd",
+[
+ Suite.test(
+   "stripEnd-exact",
+   Text.stripEnd("cd", #text "cd"),
+   M.equals(T.text "")),
+ Suite.test(
+   "stripEnd-one",
+   Text.stripEnd("abcd", #text "cd"),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "stripEnd-three",
+   Text.stripEnd("abcdcdcd", #text "cd", ),
+   M.equals(T.text "abcdcd")),
+ Suite.test(
+   "stripEnd-many",
+   Text.stripEnd("cdcdcdcdcdcdcd", #text "cd", ),
+   M.equals(T.text "cdcdcdcdcdcd")),
+ Suite.test(
+   "stripEnd-empty-pat",
+   Text.stripEnd("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+ Suite.test(
+   "stripEnd-empty",
+   Text.stripEnd("", #text "cd"),
+   M.equals(T.text "")),
+ Suite.test(
+   "stripEnd-tooshort",
+   Text.stripEnd("bcdef", #text "abcdef"),
+   M.equals(T.text "bcdef")),
 ]));
 
 
