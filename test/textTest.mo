@@ -639,11 +639,11 @@ Suite.run(Suite.suite("stripRight",
    Text.stripRight("abcd", #text "cd"),
    M.equals(T.text "ab")),
  Suite.test(
-   "stripRight-two",
+   "stripRight-three",
    Text.stripRight("abcdcdcd", #text "cd", ),
    M.equals(T.text "ab")),
  Suite.test(
-   "stripRight-only",
+   "stripRight-many",
    Text.stripRight("cdcdcdcdcdcdcd", #text "cd", ),
    M.equals(T.text "")),
  Suite.test(
