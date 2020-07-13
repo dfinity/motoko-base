@@ -421,7 +421,7 @@ module {
     }
   };
 
-  /// Returns `t` with all subsequences of characters matching [pattern](#type.Pattern) `p` replaced by text `r`.
+  /// Returns `t` with all matches of [pattern](#type.Pattern) `p` replaced by text `r`.
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern p;
     let size = sizeOfPattern p;
