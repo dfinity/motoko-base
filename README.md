@@ -14,8 +14,8 @@ If you build your project using the [vessel package manager] then, add this entr
 ```
   {
     "name": "base",
-    "repo": "https://github.com/dfinity-lab/motoko-base",
-    "version": "master",
+    "repo": "https://github.com/dfinity/motoko-base",
+    "version": "dfx-0.5.10",
     "dependencies": []
   }
 ```
@@ -35,14 +35,12 @@ in `test`. This will expect `dfx` to be installed and in your `$PATH`, and call
 `moc` via the wrapper in `./bin/moc`. You can add that wrapper to your PATH, if
 you want.
 
-Running the tests requires `wasmtime` to be installed.
+Running the tests also requires `wasmtime` and `vessel` to be installed.
 
 If you installed `moc` some other way, you can instruct the `Makefile` to use
 that compiler:
 
     make MOC=moc
-
-Similarly, you can run `make` in `examples/`.
 
 Documentation
 -------------
@@ -62,3 +60,7 @@ on that branch.
 
 External contributions are best made against `master`.
 
+Contributing
+------------
+
+Please read the [Interface Design Guide for Motoko Base Library](doc/design.md) before making a pull request.

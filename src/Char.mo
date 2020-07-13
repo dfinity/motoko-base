@@ -5,8 +5,10 @@ module {
   /// Convert a character to a word.
   public let toWord32 : Char -> Word32 = Prim.charToWord32;
 
-  /// Convert a word to a character. Traps if argument not in range [0 .. 0x1FFFFF] of valid Unicode code points.
-  public let fromWord32 : Word32 -> Char = Prim.word32ToChar;
+  /// Convert a word to a character.
+  /// Traps if `w` is not a valid Unicode scalar value.
+  /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+  public let fromWord32 : (w : Word32)-> Char = Prim.word32ToChar;
 
   /// Convert a character to text.
   public let toText : Char -> Text = Prim.charToText;

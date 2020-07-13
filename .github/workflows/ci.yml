@@ -1,6 +1,10 @@
 
 name: "build"
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 jobs:
   tests:
     if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
@@ -28,8 +32,6 @@ jobs:
        chmod +x /home/runner/bin/vessel
     - name: "test"
       run: make -C test
-    - name: "examples"
-      run: make -C examples
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: pushd doc && ./make_docs.sh && popd
