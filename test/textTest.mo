@@ -21,7 +21,7 @@ func charT(c : Char): T.TestableItem<Char> = {
 // TODO: generalize and move to Iter.mo
 func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
   item = c.vals();
-  display = Text.implode;
+  display = Text.fromIter;
   equals = func (cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
      loop {
        switch (cs1.next(), cs2.next()) {
@@ -168,48 +168,48 @@ Suite.run(Suite.suite("subtext",
 ]));
 
 
-Suite.run(Suite.suite("explode",
+Suite.run(Suite.suite("toIter",
 [
  Suite.test(
-   "explode-0",
-   Text.explode(""),
+   "toIter-0",
+   Text.toIter(""),
    M.equals(iterT([]))),
  Suite.test(
-   "explode-1",
-   Text.explode("a"),
+   "toIter-1",
+   Text.toIter("a"),
    M.equals(iterT (['a']))),
  Suite.test(
-   "explode-2",
-   Text.explode("abc"),
+   "toIter-2",
+   Text.toIter("abc"),
    M.equals(iterT (['a','b','c']))),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    Suite.test(
-   "implode-2",
-   Text.explode(Text.join(Array.map(a, Char.toText).vals())),
+   "fromIter-2",
+   Text.toIter(Text.join(Array.map(a, Char.toText).vals())),
    M.equals(iterT a))
  },
 ]));
 
-Suite.run(Suite.suite("implode",
+Suite.run(Suite.suite("fromIter",
 [
  Suite.test(
-   "implode-0",
-   Text.implode(([].vals())),
+   "fromIter-0",
+   Text.fromIter(([].vals())),
    M.equals(T.text(""))),
  Suite.test(
-   "implode-1",
-   Text.implode((['a'].vals())),
+   "fromIter-1",
+   Text.fromIter((['a'].vals())),
    M.equals(T.text "a")),
  Suite.test(
-   "implode-2",
-   Text.implode((['a', 'b', 'c'].vals())),
+   "fromIter-2",
+   Text.fromIter((['a', 'b', 'c'].vals())),
    M.equals(T.text "abc")),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    Suite.test(
-   "implode-3",
-   Text.implode(a.vals()),
+   "fromIter-3",
+   Text.fromIter(a.vals()),
    M.equals(T.text (Text.join(Array.map(a, Char.toText).vals()))))
  },
 ]));
@@ -254,7 +254,7 @@ Suite.run(Suite.suite("join",
    Suite.test(
    "join-3",
    Text.join(Array.map(a, Char.toText).vals()),
-   M.equals(T.text (Text.implode(a.vals()))))
+   M.equals(T.text (Text.fromIter(a.vals()))))
  },
  Suite.test(
    "join-4",
@@ -285,7 +285,7 @@ Suite.run(Suite.suite("joinWith",
    Suite.test(
    "joinWith-3",
    Text.joinWith("", Array.map(a, Char.toText).vals()),
-   M.equals(T.text (Text.implode(a.vals()))))
+   M.equals(T.text (Text.fromIter(a.vals()))))
   },
  Suite.test(
    "joinWith-4",
@@ -604,55 +604,55 @@ Suite.run(Suite.suite("replace",
 ]));
 
 
-Suite.run(Suite.suite("stripLeft",
+Suite.run(Suite.suite("trimStartMatches",
 [
  Suite.test(
-   "stripLeft-none",
-   Text.stripLeft("cd", #text "ab"),
+   "trimStartMatches-none",
+   Text.trimStartMatches("cd", #text "ab"),
    M.equals(T.text "cd")),
  Suite.test(
-   "stripLeft-one",
-   Text.stripLeft("abcd", #text "ab"),
+   "trimStartMatches-one",
+   Text.trimStartMatches("abcd", #text "ab"),
    M.equals(T.text "cd")),
  Suite.test(
-   "stripLeft-two",
-   Text.stripLeft("abababcd", #text "ab", ),
+   "trimStartMatches-two",
+   Text.trimStartMatches("abababcd", #text "ab", ),
    M.equals(T.text "cd")),
  Suite.test(
-   "stripLeft-only",
-   Text.stripLeft("ababababab", #text "ab", ),
+   "trimStartMatches-only",
+   Text.trimStartMatches("ababababab", #text "ab", ),
    M.equals(T.text "")),
  Suite.test(
-   "stripLeft-empty",
-   Text.stripLeft("abcdef", #text ""),
+   "trimStartMatches-empty",
+   Text.trimStartMatches("abcdef", #text ""),
    M.equals(T.text "abcdef")),
 ]));
 
-Suite.run(Suite.suite("stripRight",
+Suite.run(Suite.suite("trimEndMatches",
 [
  Suite.test(
-   "stripRight-exact",
-   Text.stripRight("cd", #text "cd"),
+   "trimEndMatches-exact",
+   Text.trimEndMatches("cd", #text "cd"),
    M.equals(T.text "")),
  Suite.test(
-   "stripRight-one",
-   Text.stripRight("abcd", #text "cd"),
+   "trimEndMatches-one",
+   Text.trimEndMatches("abcd", #text "cd"),
    M.equals(T.text "ab")),
  Suite.test(
-   "stripRight-three",
-   Text.stripRight("abcdcdcd", #text "cd", ),
+   "trimEndMatches-three",
+   Text.trimEndMatches("abcdcdcd", #text "cd", ),
    M.equals(T.text "ab")),
  Suite.test(
-   "stripRight-many",
-   Text.stripRight("cdcdcdcdcdcdcd", #text "cd", ),
+   "trimEndMatches-many",
+   Text.trimEndMatches("cdcdcdcdcdcdcd", #text "cd", ),
    M.equals(T.text "")),
  Suite.test(
-   "stripRight-empty-pat",
-   Text.stripRight("abcdef", #text ""),
+   "trimEndMatches-empty-pat",
+   Text.trimEndMatches("abcdef", #text ""),
    M.equals(T.text "abcdef")),
  Suite.test(
-   "stripRight-empty",
-   Text.stripRight("", #text "cd"),
+   "trimEndMatches-empty",
+   Text.trimEndMatches("", #text "cd"),
    M.equals(T.text "")),
 ]));
 

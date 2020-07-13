@@ -1,7 +1,11 @@
 /// Text values
 ///
-/// This type describes a valid, human-readable text. It does not contain arbitrary
-/// binary data.
+/// This type represents human-readable text as sequences of characters of type [`Char`](Char.html) .
+/// If `t` is a value of type `Text`, then:
+/// * `t.chars()` returns an _iterator_ of type `Iter<Char>` enumerating its characters from first to last.
+/// * `t.size()` returns the _size_ (or length) of `t` (and `t.chars()`) as a `Nat`.
+///
+/// This module defines additional operations on `Text` values.
 
 import Char "Char";
 import Iter "Iter";
@@ -10,15 +14,29 @@ import Prim "mo:prim";
 
 module {
 
-  /// Returns the concatenation of `x` and `y`, `x # y`.
-  public func concat(x : Text, y : Text) : Text =
-    x # y;
+  /// Conversion.
+  /// Returns the text value of size 1 containing the single character `c`.
+  public let fromChar : (c : Char) -> Text = Prim.charToText;
 
-  /// Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text.
-  public func toIter(text : Text) : Iter.Iter<Char> =
-    text.chars();
+  /// Conversion.
+  /// Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text `t`.
+  public func toIter(t : Text) : Iter.Iter<Char> =
+    t.chars();
 
-  /// WARNING: This only hashes the lowest 32 bits of the `Int`
+  /// Conversion.
+  /// Returns the text value containing the sequence of characters in `cs`.
+  public func fromIter(cs : Iter.Iter<Char>) : Text {
+    var r = "";
+    for (c in cs) {
+      r #= Prim.charToText(c);
+    };
+    return r;
+  };
+
+  /// Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
+  public func size(t : Text) : Nat { t.size(); };
+
+  /// Returns a hash obtained by the `xor`-ing the (`Word32`) values of all characters in `t`.
   public func hash(t : Text) : Hash.Hash {
     var x = 0 : Word32;
     for (c in t.chars()) {
@@ -27,33 +45,34 @@ module {
     return x
   };
 
-  /// Returns `x == y`.
-  public func equal(x : Text, y : Text) : Bool { x == y };
+  /// Returns the concatenation of `t1` and `t2`, `t1 # t2`.
+  public func concat(t1 : Text, t2 : Text) : Text =
+    t1 # t2;
 
-  /// Returns `x != y`.
-  public func notEqual(x : Text, y : Text) : Bool { x != y };
+  /// Returns `t1 == t2`.
+  public func equal(t1 : Text, t2 : Text) : Bool { t1 == t2 };
 
-  /// Returns `x < y`.
-  public func less(x : Text, y : Text) : Bool { x < y };
+  /// Returns `t1 != t2`.
+  public func notEqual(t1 : Text, t2 : Text) : Bool { t1 != t2 };
 
-  /// Returns `x <= y`.
-  public func lessOrEqual(x : Text, y : Text) : Bool { x <= y };
+  /// Returns `t1 < t2`.
+  public func less(t1 : Text, t2 : Text) : Bool { t1 < t2 };
 
-  /// Returns `x > y`.
-  public func greater(x : Text, y : Text) : Bool { x > y };
+  /// Returns `t1 <= t2`.
+  public func lessOrEqual(t1 : Text, t2 : Text) : Bool { t1 <= t2 };
 
-  /// Returns `x >= y`.
-  public func greaterOrEqual(x : Text, y : Text) : Bool { x >= y };
+  /// Returns `t1 > t2`.
+  public func greater(t1 : Text, t2 : Text) : Bool { t1 > t2 };
 
-  /// Returns the order of `x` and `y`.
-  public func compare(x : Text, y : Text) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
+  /// Returns `t1 >= t2`.
+  public func greaterOrEqual(t1 : Text, t2 : Text) : Bool { t1 >= t2 };
+
+  /// Returns the order of `t1` and `t1`.
+  public func compare(t1 : Text, t2 : Text) : { #less; #equal; #greater } {
+    if (t1 < t2) #less
+    else if (t1 == t2) #equal
     else #greater
   };
-
-  /// Returns `t.size()`, the number of characters in `ts`.
-  public func size(t : Text) : Nat { t.size(); };
 
   /// Returns the `i`-th character in `ts`. _O_(`size(t)`). May trap.
   public func sub(t : Text, i : Nat) : Char {
@@ -80,25 +99,27 @@ module {
   ///   Traps when `t.size < i + j`.
   public func extract(t : Text, i : Nat, jo : ?Nat) : Text {
     var r = "";
-    var j = switch jo { case (?j) j; case null (t.size()) };
-     let cs = t.chars();
-     var n = i;
-     while (n > 0) {
-       switch (cs.next()) {
-         case null (assert false);
-         case (?_) ();
-       };
-       n -= 1;
-     };
-     n := j;
-     while (n > 0) {
-       switch (cs.next()) {
-         case null (assert false);
-         case (?c) { r #= Prim.charToText(c) }
-       };
-       n -= 1;
-     };
-     return r;
+    let size = t.size();
+    var j = switch jo { case (?j) j; case null size };
+    if (i == 0 and j == size) return t;
+    let cs = t.chars();
+    var n = i;
+    while (n > 0) {
+      switch (cs.next()) {
+        case null (assert false);
+        case (?_) ();
+      };
+      n -= 1;
+    };
+    n := j;
+    while (n > 0) {
+      switch (cs.next()) {
+        case null (assert false);
+        case (?c) { r #= Prim.charToText(c) }
+      };
+      n -= 1;
+    };
+    return r;
   };
 
   /// Returns the subtext of `t` between characters `i` and `i+j-1`. Equivalent to `extract(t, i, ?j)`. Traps when `t.size < i + j`. _O_(`size(t)`).
@@ -136,22 +157,6 @@ module {
     }
   };
 
-  /// Returns the text value of size 1 containing the single character `c`;
-  public let fromChar : (c : Char) -> Text = Prim.charToText;
-
-  /// Returns the text value containing the sequence of characters in `cs`.
-  public func implode(cs : Iter.Iter<Char>) : Text {
-    var r = "";
-    for (c in cs) {
-      r #= Prim.charToText(c);
-    };
-    return r;
-  };
-
-  /// Returns an iter enumerating the sequence of characters in `t` (from first to last).
-  public func explode(t : Text) : Iter.Iter<Char> {
-    t.chars();
-  };
 
   /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate single-character text values.
   public func map(t : Text, f : Char -> Char) : Text {
@@ -171,6 +176,14 @@ module {
     return r;
   };
 
+
+  /// A pattern `p` describes a sequence of characters. A pattern has one of the following forms:
+  ///
+  /// * `#char c` matches the single character sequence, `c`.
+  /// * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
+  /// * `#text t` matches multi-character text sequence `t`.
+  ///
+  /// A _match_ for `p` is any sequence of characters matching the pattern `p`.
   public type Pattern = { #char : Char; #text : Text; #predicate : (Char -> Bool) };
 
   private func take(n : Nat, cs : Iter.Iter<Char>) : Iter.Iter<Char> {
@@ -279,12 +292,8 @@ module {
     };
   };
 
-  /// Returns the sequence of fields in `t`, derived from left to right, separated by text matching pattern `p`.
-  /// A _field_ is a possibly empty, maximal subtext of `t` not containing a match for `p`.
-  /// A _match_ is any sequence of characters matching the pattern `p`, where
-  /// * `#char c` matches the single character sequence, `c`.
-  /// * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
-  /// * `#text t1` matches multi-character text sequence `t1`.
+  /// Returns the sequence of fields in `t`, derived from start to end,
+  /// separated by text matching [pattern](#type.Pattern) `p`.
   /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern p;
@@ -339,9 +348,9 @@ module {
     }
   };
 
-  /// Returns the sequence of tokens in `t`, derived from left to right.
-  /// A _token_ is a non-empty maximal subsequence of `t` not containing a subsequence matching pattern 'p'.
-  /// Two tokens may be separated by one or more matches of 'p'.
+  /// Returns the sequence of tokens in `t`, derived from start to end.
+  /// A _token_ is a non-empty maximal subsequence of `t` not containing a match for [pattern](#type.Pattern) `p`.
+  /// Two tokens may be separated by one or more matches of `p`.
   public func tokens(t : Text, p : Pattern) : Iter.Iter<Text> {
     let fs = split(t, p);
     object {
@@ -354,11 +363,7 @@ module {
     }
   };
 
-  /// Returns true if `t` contains a match for pattern `p`.
-  /// A _match_ is any sequence of characters matching the pattern `p`, where
-  /// * `#char c` matches the single character sequence, `c`.
-  /// * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
-  /// * `#text t1` matches multi-character text sequence `t1`.
+  /// Returns true if `t` contains a match for [pattern](#type.Pattern) `p`.
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern p;
     let cs = CharBuffer(t.chars());
@@ -383,7 +388,7 @@ module {
     }
   };
 
-  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
+  /// Returns `true` if `t` starts with a prefix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
   public func startsWith(t : Text, p : Pattern) : Bool {
     var cs = t.chars();
     let match = matchOfPattern p;
@@ -393,7 +398,7 @@ module {
     }
   };
 
-  /// Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
+  /// Returns `true` if `t` ends with a suffix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
   public func endsWith(t : Text, p : Pattern) : Bool {
     let s2 = switch p {
       case (#char _) 1;
@@ -416,7 +421,7 @@ module {
     }
   };
 
-  /// Returns `t` with all subsequences of characters matching pattern `p` replaced by text `r`
+  /// Returns `t` with all subsequences of characters matching [pattern](#type.Pattern) `p` replaced by text `r`.
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern p;
     let size = sizeOfPattern p;
@@ -453,27 +458,31 @@ module {
     return res;
   };
 
-  /// Returns the suffix of `t` obtained by stripping all leading matches of pattern `p`.
-  public func stripLeft(t : Text, p : Pattern) : Text {
+  /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
+  public func trimStartMatches(t : Text, p : Pattern) : Text {
     let cs = t.chars();
-    if (sizeOfPattern(p) == 0) return t;
+    let size = sizeOfPattern(p);
+    if (size == 0) return t;
+    var matchSize = 0;
     let match = matchOfPattern p;
     loop {
       switch (match(cs)) {
-        case (#success) { }; // continue
+        case (#success) {
+          matchSize += size;
+        }; // continue
         case (#empty cs1) {
-          return implode(cs1) # implode(cs)
+          return if (matchSize == 0) t else fromIter(cs1) # fromIter(cs)
         };
         case (#fail (cs1, c)) {
-          return implode(cs1) # fromChar c # implode cs
+          return if (matchSize == 0) t else fromIter(cs1) # fromChar c # fromIter cs
         }
       }
     }
   };
 
 
-  /// Returns the prefix of `t` obtained by stripping all trailing matches of pattern `p`.
-  public func stripRight(t : Text, p : Pattern) : Text {
+  /// Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](#type.Pattern) `p`.
+  public func trimEndMatches(t : Text, p : Pattern) : Text {
     let cs = CharBuffer(t.chars());
     let size = sizeOfPattern(p);
     if (size == 0) return t;
@@ -488,7 +497,7 @@ module {
         case (#empty cs1) {
           switch (cs1.next()) {
             case null break l;
-            case (? _)  return t;
+            case (?_)  return t;
           }
         };
         case (#fail (cs1, c)) {
@@ -498,7 +507,7 @@ module {
         }
       }
     };
-    extract(t, 0, ? (t.size() - matchSize));
+    extract(t, 0, ? (t.size() - matchSize))
   };
 
 
@@ -524,6 +533,5 @@ module {
       }
     }
   };
-
 
 }
