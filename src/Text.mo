@@ -456,24 +456,24 @@ module {
 
 
 
-  /// Returns the suffix of `t` obtained by eliding any single leading match of [pattern](#type.Pattern) `p`.
-  public func stripStart(t : Text, p : Pattern) : Text {
+  /// Returns the optioned suffix of `t` obtained by eliding exactly one leading match of [pattern](#type.Pattern) `p`, otherwise `null`.
+  public func stripStart(t : Text, p : Pattern) : ?Text {
     let s = sizeOfPattern p;
-    if (s == 0) return t;
+    if (s == 0) return ?t;
     var cs = t.chars();
     let match = matchOfPattern p;
     switch (match(cs)) {
-      case (#success) return fromIter(cs);
-      case _ return t;
+      case (#success) return ?fromIter(cs);
+      case _ return null;
     }
   };
 
-  /// Returns the prefix of `t` obtained by eliding any single trailing match of [pattern](#type.Pattern) `p`.
-  public func stripEnd(t : Text, p : Pattern) : Text {
+  /// Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of [pattern](#type.Pattern) `p`, otherwise `null`.
+  public func stripEnd(t : Text, p : Pattern) : ?Text {
     let s2 = sizeOfPattern p;
-    if (s2 == 0) return t;
+    if (s2 == 0) return ?t;
     let s1 = t.size();
-    if (s2 > s1) return t;
+    if (s2 > s1) return null;
     let match = matchOfPattern p;
     var cs1 = t.chars();
     var diff = s1 - s2;
@@ -482,8 +482,8 @@ module {
       diff -= 1;
     };
     switch (match(cs1)) {
-      case (#success) return extract(t, 0, ? (s1 - s2));
-      case _ return t;
+      case (#success) return ?extract(t, 0, ? (s1 - s2));
+      case _ return null;
     }
   };
 

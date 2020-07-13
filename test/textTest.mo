@@ -25,6 +25,8 @@ func ordT(o : Order.Order): T.TestableItem<Order.Order> = {
   equals = Order.equal;
 };
 
+func optTextT(ot : ?Text): T.TestableItem<?Text> = T.optional(T.textTestable, ot);
+
 // TODO: generalize and move to Iter.mo
 func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
   item = c.vals();
@@ -636,27 +638,27 @@ run(suite("stripStart",
  test(
    "stripStart-none",
    Text.stripStart("cd", #text "ab"),
-   M.equals(T.text "cd")),
+   M.equals(optTextT (null))),
  test(
    "stripStart-one",
    Text.stripStart("abcd", #text "ab"),
-   M.equals(T.text "cd")),
+   M.equals(optTextT (?"cd"))),
  test(
    "stripStart-two",
    Text.stripStart("abababcd", #text "ab", ),
-   M.equals(T.text "ababcd")),
+   M.equals(optTextT (?"ababcd"))),
  test(
    "stripStart-only",
    Text.stripStart("ababababab", #text "ab", ),
-   M.equals(T.text "abababab")),
+   M.equals(optTextT (?"abababab"))),
  test(
    "stripStart-empty",
    Text.stripStart("abcdef", #text ""),
-   M.equals(T.text "abcdef")),
+   M.equals(optTextT(?"abcdef"))),
  test(
    "stripStart-tooshort",
    Text.stripStart("abcdef", #text "abcdefg"),
-   M.equals(T.text "abcdef")),
+   M.equals(optTextT(null))),
 ]));
 
 
@@ -665,31 +667,31 @@ run(suite("stripEnd",
  test(
    "stripEnd-exact",
    Text.stripEnd("cd", #text "cd"),
-   M.equals(T.text "")),
+   M.equals(optTextT (?""))),
  test(
    "stripEnd-one",
    Text.stripEnd("abcd", #text "cd"),
-   M.equals(T.text "ab")),
+   M.equals(optTextT (?"ab"))),
  test(
    "stripEnd-three",
    Text.stripEnd("abcdcdcd", #text "cd", ),
-   M.equals(T.text "abcdcd")),
+   M.equals(optTextT (?"abcdcd"))),
  test(
    "stripEnd-many",
    Text.stripEnd("cdcdcdcdcdcdcd", #text "cd", ),
-   M.equals(T.text "cdcdcdcdcdcd")),
+   M.equals(optTextT (?"cdcdcdcdcdcd"))),
  test(
    "stripEnd-empty-pat",
    Text.stripEnd("abcdef", #text ""),
-   M.equals(T.text "abcdef")),
+   M.equals(optTextT (?"abcdef"))),
  test(
    "stripEnd-empty",
    Text.stripEnd("", #text "cd"),
-   M.equals(T.text "")),
+   M.equals(optTextT null)),
  test(
    "stripEnd-tooshort",
    Text.stripEnd("bcdef", #text "abcdef"),
-   M.equals(T.text "bcdef")),
+   M.equals(optTextT null)),
 ]));
 
 
