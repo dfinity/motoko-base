@@ -717,5 +717,3 @@ Suite.run(Suite.suite("compareWith",
    M.equals(ordT (#greater)))
 ]))
 };
-
-
