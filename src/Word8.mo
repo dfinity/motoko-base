@@ -14,9 +14,6 @@ module {
   public let fromNat : Nat -> Word8  = Prim.natToWord8;
 
   /// Conversion. Returns `x mod 2^8`.
-  public let toInt: (x : Word8) -> Int = Prim.word8ToInt;
-
-  /// Conversion. Returns `x mod 2^8`.
   public let fromInt : (x : Int) -> Word8  = Prim.intToWord8;
 
   /// Returns the Text representation of `x`.

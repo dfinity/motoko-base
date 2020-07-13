@@ -12,6 +12,8 @@ all: $(TEST_TARGETS) $(OUTDIR)/import_all.checked
 
 STDLIB_FILES= $(wildcard $(STDLIB)/*.mo)
 
+VESSEL_PKGS= $(shell vessel sources)
+
 $(OUTDIR):
 	@mkdir $@
 
@@ -22,10 +24,10 @@ $(OUTDIR)/import_all.mo: $(STDLIB_FILES) | $(OUTDIR)
 	done
 
 $(OUTDIR)/%.wasm: %.mo | $(OUTDIR)
-	$(MOC) -c --package base $(STDLIB) -wasi-system-api -o $@ $<
+	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.wasm: $(OUTDIR)/%.mo | $(OUTDIR)
-	$(MOC) -c --package base $(STDLIB) -wasi-system-api -o $@ $<
+	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.checked: $(OUTDIR)/%.wasm
 	wasmtime $(WASMTIME_OPTIONS) $<

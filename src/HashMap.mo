@@ -2,7 +2,7 @@
 ///
 /// This module defines an imperative hash map (hash table), with a general key and value type.
 ///
-/// It has a minimal object-oriented interface: get, set, swap, delete, count and iter.
+/// It has a minimal object-oriented interface: get, set, swap, delete, count and entries.
 ///
 /// The class is parameterized by the key's equality and hash functions,
 /// and an initial capacity.  However, as with `Buf`, no array allocation
@@ -25,6 +25,8 @@ module {
 // key-val list type
 type KVs<K,V> = AssocList.AssocList<K,V>;
 
+/// An imperative HashMap with a minimal object-oriented interface.
+/// Maps keys of type `K` to values of type `V`.
 public class HashMap<K,V> (
   initCapacity: Nat,
   keyEq: (K,K) -> Bool,
@@ -33,16 +35,21 @@ public class HashMap<K,V> (
   var table : [var KVs<K,V>] = [var];
   var _count : Nat = 0;
 
+  /// Returns the number of entries in this HashMap.
   public func size() : Nat = _count;
 
-  public func delete(k:K) = ignore remove(k);
+  /// Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
+  /// exist.
+  public func delete(k : K) = ignore remove(k);
 
-  public func remove(k:K) : ?V {
+  /// Removes the entry with the key `k` and returns the associated value if it
+  /// existed or `null` otherwise.
+  public func remove(k : K) : ?V {
     let h = Prim.word32ToNat(keyHash(k));
     let m = table.size();
     let pos = h % m;
     if (m > 0) {
-      let (kvs2, ov) = AssocList.replace<K,V>(table[pos], k, keyEq, null);
+      let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, null);
       table[pos] := kvs2;
       switch(ov){
       case null { };
@@ -54,6 +61,8 @@ public class HashMap<K,V> (
     };
   };
 
+  /// Gets the entry with the key `k` and returns its associated value if it
+  /// existed or `null` otherwise.
   public func get(k:K) : ?V {
     let h = Prim.word32ToNat(keyHash(k));
     let m = table.size();
@@ -64,8 +73,11 @@ public class HashMap<K,V> (
     };
   };
 
-  public func put(k:K, v:V) = ignore replace(k, v);
+  /// Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
+  public func put(k : K, v : V) = ignore replace(k, v);
 
+  /// Insert the value `v` at key `k` and returns the previous value stored at
+  /// `k` or null if it didn't exist.
   public func replace(k:K, v:V) : ?V {
     if (_count >= table.size()) {
       let size =
@@ -105,6 +117,8 @@ public class HashMap<K,V> (
     ov
   };
 
+  /// Returns an [`Iter`](Iter.html#type.Iter) over the key value pairs in this
+  /// HashMap. Does _not_ modify the HashMap.
   public func entries() : Iter.Iter<(K,V)> {
     if (table.size() == 0) {
       object { public func next() : ?(K,V) { null } }

@@ -67,7 +67,7 @@ module {
     }
   };
 
-  /// Reverse the list; tail recursive.
+  /// Reverses the list
   public func reverse<T>(l : List<T>) : List<T> {
     func rec(l : List<T>, r : List<T>) : List<T> {
       switch l {
@@ -115,11 +115,8 @@ module {
 
   /// Create two new lists from the results of a given function (`f`).
   /// The first list only includes the elements for which the given
-  /// function `f` returns true and tThe second list only includes
+  /// function `f` returns true and the second list only includes
   /// the elements for which the function returns false.
-  ///
-  /// In some languages, this operation is also known as a `partition`
-  /// function.
   public func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>) {
     switch l {
       case null { (null, null) };
@@ -167,15 +164,7 @@ module {
     foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a,b) });
   };
 
-  // Internal utility-function
-  func reverseAppend<T>(l1 : List<T>, l2 : List<T>) : List<T> {
-    switch l1 {
-    case null     { l2 };
-    case (?(h,t)) { reverseAppend<T>(t, ?(h,l2)) };
-    }
-  };
-
-  /// Take the `n` number of elements from the prefix of the given list.
+  /// Returns the first `n` elements of the given list.
   /// If the given list has fewer than `n` elements, this function returns
   /// a copy of the full input list.
   public func take<T>(l : List<T>, n:Nat) : List<T> {
@@ -186,7 +175,7 @@ module {
     }
   };
 
-  /// Drop all but the first  `n` elements from the given list.
+  /// Drop all but the first `n` elements from the given list.
   public func drop<T>(l : List<T>, n:Nat) : List<T> {
     switch (l, n) {
       case (l_,     0) { l_ };
@@ -256,9 +245,6 @@ module {
   };
 
   /// Compare two lists using lexicographic ordering specified by the given relation `lte`.
-
-  // To do: Eventually, follow `collate` design from Standard ML Basis, with real sum
-  // types, use 3-valued `order` type here.
   public func compare<T>(l1: List<T>, l2: List<T>, compElm:(T,T) -> Order.Order) : Order.Order {
     switch (l1, l2) {
       case (null, null) { #equal };

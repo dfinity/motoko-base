@@ -2,6 +2,7 @@
 
 import Prim "mo:prim";
 import I "IterType";
+import Buf "Buf";
 
 module {
   public func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool {
@@ -51,14 +52,25 @@ module {
     ys;
   };
 
-  public func filter<A>(f : A -> Bool, xs : [A]) : [A] {
-    var ys : [A] = [];
+  public func filter<A>(xs : [A], f : A -> Bool) : [A] {
+    let ys : Buf.Buf<A> = Buf.Buf(xs.size());
     for (x in xs.vals()) {
       if (f(x)) {
-        ys := append<A>(ys, [x]);
+        ys.add(x);
       };
     };
-    ys;
+    ys.toArray();
+  };
+
+  public func filterMap<A, B>(xs : [A], f : A -> ?B) : [B] {
+    let ys : Buf.Buf<B> = Buf.Buf(xs.size());
+    for (x in xs.vals()) {
+      switch (f(x)) {
+        case null {};
+        case (?y) ys.add(y);
+      }
+    };
+    ys.toArray();
   };
 
   public func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B {

@@ -1,6 +1,10 @@
 
 name: "build"
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 jobs:
   tests:
     if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
@@ -22,10 +26,12 @@ jobs:
        echo "::add-path::/home/runner/bin"
     - name: "dfx cache install"
       run: dfx cache install
+    - name: "install vessel"
+      run: |
+       wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/v0.4.1/vessel-linux64
+       chmod +x /home/runner/bin/vessel
     - name: "test"
       run: make -C test
-    - name: "examples"
-      run: make -C examples
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: pushd doc && ./make_docs.sh && popd
