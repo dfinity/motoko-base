@@ -21,7 +21,7 @@ func charT(c : Char): T.TestableItem<Char> = {
 // TODO: generalize and move to Iter.mo
 func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
   item = c.vals();
-  display = Text.implode;
+  display = Text.fromIter;
   equals = func (cs1 : Iter.Iter<Char>, cs2 : Iter.Iter<Char>) : Bool {
      loop {
        switch (cs1.next(), cs2.next()) {
@@ -168,48 +168,48 @@ Suite.run(Suite.suite("subtext",
 ]));
 
 
-Suite.run(Suite.suite("explode",
+Suite.run(Suite.suite("toIter",
 [
  Suite.test(
-   "explode-0",
-   Text.explode(""),
+   "toIter-0",
+   Text.toIter(""),
    M.equals(iterT([]))),
  Suite.test(
-   "explode-1",
-   Text.explode("a"),
+   "toIter-1",
+   Text.toIter("a"),
    M.equals(iterT (['a']))),
  Suite.test(
-   "explode-2",
-   Text.explode("abc"),
+   "toIter-2",
+   Text.toIter("abc"),
    M.equals(iterT (['a','b','c']))),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    Suite.test(
-   "implode-2",
-   Text.explode(Text.join(Array.map(a, Char.toText).vals())),
+   "fromIter-2",
+   Text.toIter(Text.join(Array.map(a, Char.toText).vals())),
    M.equals(iterT a))
  },
 ]));
 
-Suite.run(Suite.suite("implode",
+Suite.run(Suite.suite("fromIter",
 [
  Suite.test(
-   "implode-0",
-   Text.implode(([].vals())),
+   "fromIter-0",
+   Text.fromIter(([].vals())),
    M.equals(T.text(""))),
  Suite.test(
-   "implode-1",
-   Text.implode((['a'].vals())),
+   "fromIter-1",
+   Text.fromIter((['a'].vals())),
    M.equals(T.text "a")),
  Suite.test(
-   "implode-2",
-   Text.implode((['a', 'b', 'c'].vals())),
+   "fromIter-2",
+   Text.fromIter((['a', 'b', 'c'].vals())),
    M.equals(T.text "abc")),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    Suite.test(
-   "implode-3",
-   Text.implode(a.vals()),
+   "fromIter-3",
+   Text.fromIter(a.vals()),
    M.equals(T.text (Text.join(Array.map(a, Char.toText).vals()))))
  },
 ]));
@@ -254,7 +254,7 @@ Suite.run(Suite.suite("join",
    Suite.test(
    "join-3",
    Text.join(Array.map(a, Char.toText).vals()),
-   M.equals(T.text (Text.implode(a.vals()))))
+   M.equals(T.text (Text.fromIter(a.vals()))))
  },
  Suite.test(
    "join-4",
@@ -285,7 +285,7 @@ Suite.run(Suite.suite("joinWith",
    Suite.test(
    "joinWith-3",
    Text.joinWith("", Array.map(a, Char.toText).vals()),
-   M.equals(T.text (Text.implode(a.vals()))))
+   M.equals(T.text (Text.fromIter(a.vals()))))
   },
  Suite.test(
    "joinWith-4",
@@ -344,7 +344,7 @@ Suite.run(Suite.suite("split",
 
 
 {
-let pat : Text.Pattern = #pred (func c = { c == ';' or c == '!' }) ;
+let pat : Text.Pattern = #predicate (func (c : Char) : Bool { c == ';' or c == '!' }) ;
 Suite.run(Suite.suite("split",
 [
  Suite.test(
@@ -439,73 +439,6 @@ Suite.run(Suite.suite("split",
 };
 
 {
-  Debug.print("  fields");
-
-  let tests = [
-    { input = "aaa;;c;dd"; expected = ["aaa","","c","dd"] },
-    { input = ""; expected = [] },
-    { input = ";"; expected = ["",""] }
-  ];
-
-  for ({input;expected} in tests.vals()) {
-
-    let actual =
-      Iter.toArray(Text.fields(input, func c  { c == ';'}));
-      Debug.print(debug_show(actual));
-
-    assert (actual.size() == expected.size());
-
-    for (i in actual.keys()) {
-        assert(actual[i] == expected[i]);
-    };
-  };
-
-};
-
-
-{
-   Debug.print("  split");
-
-  let tests = [
-    { input = "abcde"; expected = ["abcde"] },
-    { input = "aaa;;c;dd"; expected = ["aaa","","c","dd"] },
-    { input = ""; expected = [] },
-    { input = ";"; expected = ["",""] }
-  ];
-
-  for ({input;expected} in tests.vals()) {
-    Debug.print(debug_show(input));
-    let actual =
-      Iter.toArray(Text.split(input, (#char ';')));
-    Debug.print(debug_show(actual));
-
-    let actual1 =
-      Iter.toArray(Text.split(input, (#pred (func c = c == ';'))));
-    Debug.print(debug_show(actual1));
-
-    let actual2 = {
-      let input1 : Text = Text.translate(input,func c = if  (c == ';') "ABC" else Text.fromChar c);
-      Iter.toArray(Text.split(input1, #text "ABC"));
-    };
-    Debug.print(debug_show(actual2));
-
-
-    let actual3 = {
-      let input1 : Text = Text.translate(input,func c = if  (c == ';') "ABC" else Text.fromChar c);
-      Iter.toArray(Text.split(input1, #text "XYZ"));
-    };
-    Debug.print(debug_show(actual3));
-
-    assert (actual.size() == expected.size());
-
-    for (i in actual.keys()) {
-        assert(actual[i] == expected[i]);
-    };
-  };
-
-};
-
-{
   Debug.print("  tokens");
 
   let tests = [
@@ -517,7 +450,7 @@ Suite.run(Suite.suite("split",
   for ({input;expected} in tests.vals()) {
 
     let actual =
-      Iter.toArray(Text.tokens(input, func c  { c == ';'}));
+      Iter.toArray(Text.tokens(input, #char ';'));
       Debug.print(debug_show(actual));
 
     assert (actual.size() == expected.size());
@@ -529,46 +462,70 @@ Suite.run(Suite.suite("split",
 
 };
 
-{
-  Debug.print("  startsWith");
 
-  let tests = [
-    { input = ("", ""); expected = true },
-    { input = ("abc", ""); expected = true },
-    { input = ("ab", "abc"); expected = false },
-    { input = ("abc", "abc"); expected = true },
-    { input = ("abcd", "abc"); expected = true },
-  ];
+Suite.run(Suite.suite("startsWith",
+[
+ Suite.test(
+   "startsWith-both-empty",
+   Text.startsWith("", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-empty-text",
+   Text.startsWith("", #text "abc"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "startsWith-empty-pat",
+   Text.startsWith("abc", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-1",
+   Text.startsWith("a", #text "b"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "startsWith-2",
+   Text.startsWith("abc", #text "abc"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-3",
+   Text.startsWith("abcd", #text "ab"),
+   M.equals(T.bool true)),
+ Suite.test(
+   "startsWith-4",
+   Text.startsWith("abcdefghijklmnopqrstuvwxyz",#text "abcdefghijklmno"),
+   M.equals(T.bool true)),
+]));
 
-  for (t in tests.vals()) {
-    Debug.print (debug_show(t));
-    let actual = Text.startsWith(t.input.0,t.input.1);
-    assert (actual == t.expected);
-  };
 
-};
 
 Suite.run(Suite.suite("endsWith",
 [
  Suite.test(
-   "endsWith-0",
-   Text.endsWith("",""),
+   "endsWith-both-empty",
+   Text.endsWith("", #text ""),
+   M.equals(T.bool true)),
+ Suite.test(
+   "endsWith-empty-text",
+   Text.endsWith("", #text "abc"),
+   M.equals(T.bool false)),
+ Suite.test(
+   "endsWith-empty-pat",
+   Text.endsWith("abc", #text ""),
    M.equals(T.bool true)),
  Suite.test(
    "endsWith-1",
-   Text.endsWith("a","b"),
+   Text.endsWith("a", #text "b"),
    M.equals(T.bool false)),
  Suite.test(
    "endsWith-2",
-   Text.endsWith("abc","abc"),
+   Text.endsWith("abc", #text "abc"),
    M.equals(T.bool true)),
  Suite.test(
    "endsWith-3",
-   Text.endsWith("abcd","cd"),
+   Text.endsWith("abcd", #text "cd"),
    M.equals(T.bool true)),
  Suite.test(
    "endsWith-4",
-   Text.endsWith("abcdefghijklmnopqrstuvwxyz","pqrstuvwxyz"),
+   Text.endsWith("abcdefghijklmnopqrstuvwxyz",#text "pqrstuvwxyz"),
    M.equals(T.bool true)),
 ]));
 
@@ -612,6 +569,94 @@ Suite.run(Suite.suite("contains",
    Text.contains("", #text "xyz"),
    M.equals(T.bool false)),
 ]));
+
+
+Suite.run(Suite.suite("replace",
+[
+ Suite.test(
+   "replace-start",
+   Text.replace("abcd", #text "ab", "AB"),
+   M.equals(T.text "ABcd")),
+ Suite.test(
+   "replace-empty",
+   Text.replace("abc", #text "", "AB"),
+   M.equals(T.text "ABaABbABcAB")),
+ Suite.test(
+   "replace-none",
+   Text.replace("ab", #text "bc", "AB"),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "replace-exact",
+   Text.replace("ab", #text "ab", "AB"),
+   M.equals(T.text "AB")),
+ Suite.test(
+   "replace-several",
+   Text.replace("abcdabghijabmnopqrstuabwxab", #text "ab", "AB"),
+   M.equals(T.text "ABcdABghijABmnopqrstuABwxAB")),
+ Suite.test(
+   "replace-delete",
+   Text.replace("abcdabghijabmnopqrstuabwxab", #text "ab", ""),
+   M.equals(T.text "cdghijmnopqrstuwx")),
+ Suite.test(
+   "replace-pred",
+   Text.replace("abcdefghijklmnopqrstuvwxyz", #predicate (func (c : Char) : Bool { c < 'm'}), ""),
+   M.equals(T.text "mnopqrstuvwxyz")),
+]));
+
+
+Suite.run(Suite.suite("trimStartMatches",
+[
+ Suite.test(
+   "trimStartMatches-none",
+   Text.trimStartMatches("cd", #text "ab"),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "trimStartMatches-one",
+   Text.trimStartMatches("abcd", #text "ab"),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "trimStartMatches-two",
+   Text.trimStartMatches("abababcd", #text "ab", ),
+   M.equals(T.text "cd")),
+ Suite.test(
+   "trimStartMatches-only",
+   Text.trimStartMatches("ababababab", #text "ab", ),
+   M.equals(T.text "")),
+ Suite.test(
+   "trimStartMatches-empty",
+   Text.trimStartMatches("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+]));
+
+Suite.run(Suite.suite("trimEndMatches",
+[
+ Suite.test(
+   "trimEndMatches-exact",
+   Text.trimEndMatches("cd", #text "cd"),
+   M.equals(T.text "")),
+ Suite.test(
+   "trimEndMatches-one",
+   Text.trimEndMatches("abcd", #text "cd"),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "trimEndMatches-three",
+   Text.trimEndMatches("abcdcdcd", #text "cd", ),
+   M.equals(T.text "ab")),
+ Suite.test(
+   "trimEndMatches-many",
+   Text.trimEndMatches("cdcdcdcdcdcdcd", #text "cd", ),
+   M.equals(T.text "")),
+ Suite.test(
+   "trimEndMatches-empty-pat",
+   Text.trimEndMatches("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+ Suite.test(
+   "trimEndMatches-empty",
+   Text.trimEndMatches("", #text "cd"),
+   M.equals(T.text "")),
+]));
+
+
 
 
 {
