@@ -462,11 +462,11 @@ module {
       switch (match(cs)) {
         case (#success) { }; // continue
         case (#empty cs1) {
-	  return implode(cs1) # implode(cs)
-	};
-	case (#fail (cs1, c)) {
+          return implode(cs1) # implode(cs)
+        };
+        case (#fail (cs1, c)) {
           return implode(cs1) # fromChar c # implode cs
-	}
+        }
       }
     }
   };
@@ -483,19 +483,19 @@ module {
     loop {
       switch (match(cs)) {
         case (#success) {
-	  matchSize += size;
-	}; // continue
+          matchSize += size;
+        }; // continue
         case (#empty cs1) {
-	  switch (cs1.next()) {
-	    case null break l;
-	    case (? _)  return t;
-	  }
-	};
-	case (#fail (cs1, c)) {
+          switch (cs1.next()) {
+            case null break l;
+            case (? _)  return t;
+          }
+        };
+        case (#fail (cs1, c)) {
           matchSize := 0;
-	  cs.pushBack(cs1, c);
-	  ignore cs.next();
-	}
+          cs.pushBack(cs1, c);
+          ignore cs.next();
+        }
       }
     };
     extract(t, 0, ? (t.size() - matchSize));
