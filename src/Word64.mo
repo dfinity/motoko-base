@@ -14,9 +14,6 @@ module {
   public let fromNat : Nat -> Word64  = Prim.natToWord64;
 
   /// Conversion. Returns `x mod 2^64`.
-  public let toInt: (x : Word64) -> Int = Prim.word64ToInt;
-
-  /// Conversion. Returns `x mod 2^64`.
   public let fromInt : (x : Int) -> Word64  = Prim.intToWord64;
 
   /// Returns the Text representation of `x`.
