@@ -32,7 +32,7 @@ public class Buf<X> (initCapacity : Nat) {
   var count : Nat = 0;
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
-  /// Adds a single element to the Buffer
+  /// Adds a single element to the buffer.
   public func add(elem : X) {
     if (count == elems.size()) {
       let size =
@@ -63,7 +63,7 @@ public class Buf<X> (initCapacity : Nat) {
     };
   };
 
-  /// Adds all elements in `b` to the current one.
+  /// Adds all elements in buffer `b` to this buffer.
   public func append(b : Buf<X>) {
     let i = b.vals();
     loop {
@@ -94,7 +94,7 @@ public class Buf<X> (initCapacity : Nat) {
     c
   };
 
-  /// Returns an [Iter](Iter.html#type.Iter) over the elements of this Buffer.
+  /// Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
   public func vals() : { next : () -> ?X } = object {
     var pos = 0;
     public func next() : ?X {
@@ -106,7 +106,7 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
-  /// Creates an Array containing this Buffer's elements
+  /// Creates a new array containing this buffer's elements.
   public func toArray() : [X] =
     // immutable clone of array
     Prim.Array_tabulate<X>(
@@ -114,7 +114,7 @@ public class Buf<X> (initCapacity : Nat) {
       func(x: Nat): X { elems[x] }
     );
 
-  /// Creates a mutable Array containing this Buffer's elements
+  /// Creates a mutable array containing this buffer's elements.
   public func toVarArray() : [var X] = {
     if (count == 0) { [var] } else {
       let a = Prim.Array_init<X>(count, elems[0]);
@@ -128,25 +128,26 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
-  /// Gets 0-indexed Element for `offset`. Traps if the index is out of bounds.
-  public func get(offset : Nat) : X {
-    elems[offset]
+  /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
+  public func get(i : Nat) : X {
+    assert(i < count);
+    elems[i]
   };
 
-  /// Gets 0-indexed Element for `offset`.
-  public func getOpt(offset : Nat) : ?X {
-    if (offset < count) {
-      ?elems[offset]
+  /// Gets the 'i'-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
+  public func getOpt(i : Nat) : ?X {
+    if (i < count) {
+      ?elems[i]
     }
     else {
       null
     }
   };
 
-  /// Overwrites the 0-indexed Element for `offset` with `elem`. Traps if the
-  /// index is out of bounds.
-  public func put(offset : Nat, elem : X) {
-    elems[offset] := elem;
+  /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
+  /// index is out of bounds. Indexing is zero-based.
+  public func put(i : Nat, elem : X) {
+    elems[i] := elem;
   };
 };
 
