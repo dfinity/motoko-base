@@ -15,7 +15,7 @@ import List "List";
 /// An imperative hash-based map with a minimal object-oriented interface.
 /// Maps keys of type `K` to values of type `V`.
 ///
-/// See also: [`HashMap`](HashMap.html), with a matching iterface.
+/// See also: [`HashMap`](HashMap.html), with a matching interface.
 /// Unlike HashMap, the iterators are persistent (pure), clones are cheap and the maps have an efficient persistent representation.
 module {
 public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
