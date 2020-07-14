@@ -1,10 +1,10 @@
 import Prim "mo:prim";
-import B "mo:base/Buf";
+import B "mo:base/Buffer";
 import I "mo:base/Iter";
 import O "mo:base/Option";
 
 // test repeated growing
-let a = B.Buf<Nat>(3);
+let a = B.Buffer<Nat>(3);
 for (i in I.range(0, 123)) {
   a.add(i);
 };
@@ -14,7 +14,7 @@ for (i in I.range(0, 123)) {
 
 
 // test repeated appending
-let b = B.Buf<Nat>(3);
+let b = B.Buffer<Nat>(3);
 for (i in I.range(0, 123)) {
   b.append(a);
 };
@@ -67,7 +67,7 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
 {
   let bigLen = 100;
   let len = 3;
-  let c = B.Buf<Nat>(bigLen);
+  let c = B.Buffer<Nat>(bigLen);
   assert (len < bigLen);
   for (i in I.range(0, len - 1)) {
     Prim.debugPrint(debug_show(i));
@@ -82,7 +82,7 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
 
 // regression test: initially-empty buffers grow, element-by-element
 {
-  let c = B.Buf<Nat>(0);
+  let c = B.Buffer<Nat>(0);
   assert (c.toArray().size() == 0);
   assert (c.toVarArray().size() == 0);
   c.add(0);

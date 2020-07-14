@@ -28,7 +28,7 @@ module {
 /// The argument `initCapacity` gives the initial capacity.  Under the
 /// interface, the mutable array grows by doubling when this initial
 /// capacity is exhausted.
-public class Buf<X> (initCapacity : Nat) {
+public class Buffer<X> (initCapacity : Nat) {
   var count : Nat = 0;
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
@@ -64,7 +64,7 @@ public class Buf<X> (initCapacity : Nat) {
   };
 
   /// Adds all elements in buffer `b` to this buffer.
-  public func append(b : Buf<X>) {
+  public func append(b : Buffer<X>) {
     let i = b.vals();
     loop {
       switch (i.next()) {
@@ -83,8 +83,8 @@ public class Buf<X> (initCapacity : Nat) {
     count := 0;
 
   /// Returns a copy of this buffer.
-  public func clone() : Buf<X> {
-    let c = Buf<X>(elems.size());
+  public func clone() : Buffer<X> {
+    let c = Buffer<X>(elems.size());
     var i = 0;
     label l loop {
       if (i >= count) break l;
