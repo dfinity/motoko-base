@@ -12,17 +12,25 @@ import I "Iter";
 import Hash "Hash";
 import List "List";
 
+/// An imperative hash-based map with a minimal object-oriented interface.
+/// Maps keys of type `K` to values of type `V`.
+///
+/// See also: [`HashMap`](HashMap.html), with a matching iterface.
+/// Unlike HashMap, the iterators are persistent (pure), clones are cheap and the maps have an efficient persistent representation.
 module {
 public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
 
   var map = T.empty<K, V>();
   var _size : Nat = 0;
 
+  /// Returns the number of entries in the map.
   public func size() : Nat = _size;
 
+  /// Associate a key and value, overwriting any prior association the key.
   public func put(k:K, v:V) =
     ignore replace(k, v);
 
+  /// [`Put`](TrieMap.html#put) the key and value, _and_ return the (optional) prior value for the key.
   public func replace(k:K, v:V) : ?V {
     let keyObj = {key=k; hash=hashOf(k);};
     let (map2, ov) =
@@ -35,14 +43,17 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
     ov
   };
 
+  /// Get the (optional) value associated with the given key.
   public func get(k:K) : ?V = {
     let keyObj = {key=k; hash=hashOf(k);};
     T.find<K,V>(map, keyObj, isEq)
   };
 
+  /// Delete the (optional) value associated with the given key.
   public func delete(k:K) =
     ignore remove(k);
 
+  /// [`Delete`](TrieMap.html#delete) and return the (optional) value associated with the given key.
   public func remove(k:K) : ?V = {
     let keyObj = {key=k; hash=hashOf(k);};
     let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
@@ -54,8 +65,9 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
     ov
   };
 
-  /// notably, each iterator gets a _persistent view_ of the mapping,
-  /// by virtue of the trie being a persistent data structure.
+  /// Returns an [`Iter`](Iter.html#type.Iter) over the entries.
+  ///
+  /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
   public func entries() : I.Iter<(K,V)> = object {
     var stack = ?(map, null) : List.List<T.Trie<K,V>>;
     public func next() : ?(K,V) {
@@ -88,8 +100,7 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
   };
 
 
-/// clone cannot be an efficient object method,
-/// ...but is still useful in tests, and beyond.
+/// Clone the map, given its key operations.
 public func clone<K,V>
   (h:TrieMap<K,V>,
    keyEq: (K,K) -> Bool,
@@ -101,7 +112,7 @@ public func clone<K,V>
   h2
 };
 
-/// Clone from any iterator of key-value pairs
+/// Clone an iterator of key-value pairs.
 public func fromEntries<K, V>(entries:I.Iter<(K, V)>,
                               keyEq: (K,K) -> Bool,
                               keyHash: K -> Hash.Hash) : TrieMap<K,V> {
@@ -112,6 +123,7 @@ public func fromEntries<K, V>(entries:I.Iter<(K, V)>,
   h
 };
 
+/// Transform (map) the values of a map, retaining its keys.
 public func map<K, V1, V2>
   (h:TrieMap<K,V1>,
    keyEq: (K,K) -> Bool,
@@ -126,6 +138,7 @@ public func map<K, V1, V2>
   h2
 };
 
+/// Transform and filter the values of a map, retaining its keys.
 public func mapFilter<K, V1, V2>
   (h:TrieMap<K,V1>,
    keyEq: (K,K) -> Bool,
