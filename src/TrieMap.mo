@@ -30,7 +30,7 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
   public func put(k:K, v:V) =
     ignore replace(k, v);
 
-  /// [`Put`](TrieMap.html#put) the key and value, _and_ return the (optional) prior value for the key.
+  /// [`Put`](#value.put) the key and value, _and_ return the (optional) prior value for the key.
   public func replace(k:K, v:V) : ?V {
     let keyObj = {key=k; hash=hashOf(k);};
     let (map2, ov) =
@@ -53,7 +53,7 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
   public func delete(k:K) =
     ignore remove(k);
 
-  /// [`Delete`](TrieMap.html#delete) and return the (optional) value associated with the given key.
+  /// [`Delete`](#value.delete) and return the (optional) value associated with the given key.
   public func remove(k:K) : ?V = {
     let keyObj = {key=k; hash=hashOf(k);};
     let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
