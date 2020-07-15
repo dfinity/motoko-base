@@ -451,7 +451,7 @@ module {
   };
 
   /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
-  public func trimStartMatches(t : Text, p : Pattern) : Text {
+  public func trimStart(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     let size = sizeOfPattern(p);
     if (size == 0) return t;
@@ -473,7 +473,7 @@ module {
   };
 
   /// Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](#type.Pattern) `p`.
-  public func trimEndMatches(t : Text, p : Pattern) : Text {
+  public func trimEnd(t : Text, p : Pattern) : Text {
     let cs = CharBuffer(t.chars());
     let size = sizeOfPattern(p);
     if (size == 0) return t;
