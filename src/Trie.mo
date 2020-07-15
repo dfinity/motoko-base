@@ -4,7 +4,7 @@
 ///
 /// ## Background
 ///
-/// From Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
+/// The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 ///
 ///
 import Prim "mo:prim";
@@ -25,30 +25,30 @@ module {
 /// A hash trie is a binary trie, where each (internal) branch node
 /// represents having distinguished its key-value pairs on a single bit of
 /// the keys.
-/// 
+///
 /// By following paths in the trie, we determine an increasingly smaller
 /// and smaller subset of the keys.
-/// 
+///
 /// Each leaf node consists of an association list of key-value pairs.
-/// 
+///
 /// We say that a leaf is valid if it contains no more than MAX_LEAF_SIZE
 /// key-value pairs.
-/// 
+///
 /// Each non-empty trie node stores a size; we discuss that more below.
-/// 
+///
 /// ### Adaptive depth
-/// 
+///
 /// For small mappings, the trie structure consists of a single
 /// leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
-/// 
+///
 /// By construction, the algorithms enforce an invariant that no
 /// leaf ever contains more than MAX_LEAF_SIZE key-value pairs: the
 /// function `leaf` accepts a list, but subdivides it with branches until
 /// it can actually construct valid leaves.  Ongce distinguished, subsets
 /// of keys tend to remain distinguished by the presence of these branches.
-/// 
+///
 /// ### Cached sizes
-/// 
+///
 /// At each branch and leaf, we use a stored size to support a
 /// memory-efficient `toArray` function, which itself relies on
 /// per-element projection via `nth`; in turn, `nth` directly uses the
@@ -56,26 +56,15 @@ module {
 /// algorithmic efficiently.  Notably, leaves are generally lists of
 /// key-value pairs, and we do not store a size for each Cons cell in the
 /// list.
-/// 
+///
 
-public let MAX_LEAF_SIZE = 8; // to do -- further profiling and tuning
+let MAX_LEAF_SIZE = 8; // to do -- further profiling and tuning
 
-public type List<T> = List.List<T>;
-public type AssocList<K,V> = AssocList.AssocList<K,V>;
-
-//// A `Key` for the trie has an associated hash value
-public type Key<K> = {
-  /// `hash` permits fast inequality checks, and permits collisions
-  hash: Hash.Hash;
-  /// `key` permits percise equality checks, but only used after equal hashes.
-  key: K;
-};
-
-/// Equality function for two `Key<K>`s, in terms of equality of `K`'s.
-public func equalKey<K>(keq:(K,K) -> Bool) : ((Key<K>,Key<K>) -> Bool) = {
-  func (key1:Key<K>, key2:Key<K>) : Bool =
-    label profile_trie_equalKey : Bool
-  (Hash.equal(key1.hash, key2.hash) and keq(key1.key, key2.key))
+/// binary hash tries: either empty, a leaf node, or a branch node
+public type Trie<K,V> = {
+  #empty  ;
+  #leaf   : Leaf<K,V> ;
+  #branch : Branch<K,V> ;
 };
 
 /// leaf nodes of trie consist of key-value pairs as a list.
@@ -93,11 +82,23 @@ public type Branch<K,V> = {
   right : Trie<K,V> ;
 };
 
-/// binary hash tries: either empty, a leaf node, or a branch node
-public type Trie<K,V> = {
-  #empty  ;
-  #leaf   : Leaf<K,V> ;
-  #branch : Branch<K,V> ;
+public type AssocList<K,V> = AssocList.AssocList<K,V>;
+
+//// A `Key` for the trie has an associated hash value
+public type Key<K> = {
+  /// `hash` permits fast inequality checks, and permits collisions
+  hash: Hash.Hash;
+  /// `key` permits percise equality checks, but only used after equal hashes.
+  key: K;
+};
+
+public type List<T> = List.List<T>;
+
+/// Equality function for two `Key<K>`s, in terms of equality of `K`'s.
+public func equalKey<K>(keq:(K,K) -> Bool) : ((Key<K>,Key<K>) -> Bool) = {
+  func (key1:Key<K>, key2:Key<K>) : Bool =
+    label profile_trie_equalKey : Bool
+  (Hash.equal(key1.hash, key2.hash) and keq(key1.key, key2.key))
 };
 
 /// checks the invariants of the trie structure, including the placement of keys at trie paths
@@ -411,7 +412,7 @@ public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
  };
 
 ///   merge tries, preferring the right trie where there are collisions
-///   in common keys. 
+///   in common keys.
 ///
 ///   note: the `disj` operation generalizes this `merge`
 ///   operation in various ways, and does not (in general) lose
@@ -759,19 +760,19 @@ public func disj<K,V,W,X>(
   ///
   /// This module provides optimized variants of normal tries, for
   /// more efficient join queries.
-  /// 
+  ///
   /// The central insight is that for (unmaterialized) join query results, we
   /// do not need to actually build any resulting trie of the resulting
   /// data, but rather, just need a collection of what would be in that
   /// trie.  Since query results can be large (quadratic in the DB size),
   /// avoiding the construction of this trie provides a considerable savings.
-  /// 
+  ///
   /// To get this savings, we use an ADT for the operations that _would_ build this trie,
   /// if evaluated. This structure specializes a rope: a balanced tree representing a
   /// sequence.  It is only as balanced as the tries from which we generate
   /// these build ASTs.  They have no intrinsic balance properties of their
   /// own.
-  /// 
+  ///
   public module Build {
 
     /// The build of a trie, as an AST for a simple DSL.
@@ -794,7 +795,7 @@ public func disj<K,V,W,X>(
       case (#seq(seq)) seq.size;
       }
     };
-    
+
     /// Build sequence of two sub-builds
     public func seq<K,V>(l:Build<K,V>, r:Build<K,V>) : Build<K,V> =
       label profile_trie_seq : Build<K,V> {
@@ -802,19 +803,9 @@ public func disj<K,V,W,X>(
       #seq { size = sum; left = l; right = r }
     };
 
-    /*
-     `prod`
-     ---------------
-
-     Like `prod`, except do not actually do the put calls, just
-     record them, as a (binary tree) data structure, isomorphic to the
-     recursion of this function (which is balanced, in expectation).
-
-     See also:
-
-     - [`prod`](#prod)
-
-     */
+    /// Like [`prod`](#prod), except do not actually do the put calls, just
+    /// record them, as a (binary tree) data structure, isomorphic to the
+    /// recursion of this function (which is balanced, in expectation).
     public func prod<K1,V1,K2,V2,K3,V3>(
       tl    :Trie<K1,V1>,
       tr    :Trie<K2,V2>,
@@ -837,7 +828,7 @@ public func disj<K,V,W,X>(
         seq<K3, V3>(a, b)
       };
 
-      /*- "`foldUp` squared" (imagine two nested loops): */
+      /// double-nested folds
       foldUp<K1, V1, Build<K3, V3>>(
         tl, outer_bin,
         func (k1:K1, v1:V1) : Build<K3,V3> {
@@ -856,13 +847,9 @@ public func disj<K,V,W,X>(
       )
     };
 
-    /*
-     `nth`
-     --------
-     Project the nth key-value pair from the trie build.
-
-     This position is meaningful only when the build contains multiple uses of one or more keys, otherwise it is not.
-     */
+    /// Project the nth key-value pair from the trie build.
+    ///
+    /// This position is meaningful only when the build contains multiple uses of one or more keys, otherwise it is not.
     public func nth<K,V>(tb:Build<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth : (?(K, ?Hash.Hash, V)) {
       func rec(tb:Build<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
         switch tb {
@@ -884,14 +871,9 @@ public func disj<K,V,W,X>(
       rec(tb, i)
     };
 
-    /*
-     `projectInner`
-     --------------
-
-     Like [`mergeDisjoint`](#mergedisjoint), except that it avoids the
-     work of actually merging any tries; rather, just record the work for
-     latter (if ever).
-     */
+    /// Like [`mergeDisjoint`](#mergedisjoint), except that it avoids the
+    /// work of actually merging any tries; rather, just record the work for
+    /// latter (if ever).
     public func projectInner<K1,K2,V>(t : Trie<K1,Build<K2,V>>)
       : Build<K2,V>
     {
@@ -902,31 +884,7 @@ public func disj<K,V,W,X>(
         #skip )
     };
 
-/*
-DEPRECATED version.
-    /*
-     `buildToArray`
-     --------
-     Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-     */
-    public func buildToArray<K,V,W>(tb:Build<K,V>,f:(K,V)->W):[W] =
-      label profile_triebuild_toArray_begin : [W] {
-      let a = A.tabulate<W> (
-        size<K,V>(tb),
-        func (i:Nat) : W = label profile_triebuild_toArray_nth : W {
-          let (k,_,v) = Option.unwrap<(K,?Hash.Hash,V)>(nth<K,V>(tb, i));
-          f(k, v)
-        }
-      );
-      label profile_triebuild_toArray_end : [W]
-      a
-    };
-*/
-    /*
-     `toArray`
-     --------
-     Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-     */
+    /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
     public func toArray<K,V,W>(tb:Build<K,V>,f:(K,V)->W):[W] {
       let c = size<K,V>(tb);
       let a = A.init<?W>(c, null);
@@ -944,12 +902,8 @@ DEPRECATED version.
 
   };
 
-  /*
-   `fold`
-   ---------
-   Fold over the key-value pairs of the trie, using an accumulator.
-   The key-value pairs have no reliable or meaningful ordering.
-   */
+  /// Fold over the key-value pairs of the trie, using an accumulator.
+  /// The key-value pairs have no reliable or meaningful ordering.
   public func fold<K,V,X>(t:Trie<K,V>, f:(K,V,X)->X, x:X) : X {
     func rec(t:Trie<K,V>, x:X) : X {
       switch t {
@@ -967,11 +921,7 @@ DEPRECATED version.
   };
 
 
-  /*
-   `some`
-   --------
-   Test whether a given key-value pair is present, or not.
-   */
+  /// Test whether a given key-value pair is present, or not.
   public func some<K,V>(t:Trie<K,V>, f:(K,V)->Bool) : Bool {
     func rec(t:Trie<K,V>) : Bool {
       switch t {
@@ -987,11 +937,7 @@ DEPRECATED version.
     rec(t)
   };
 
-  /*
-   `all`
-   ---------
-   Test whether all key-value pairs have a given property.
-   */
+  /// Test whether all key-value pairs have a given property.
   public func all<K,V>(t:Trie<K,V>, f:(K,V)->Bool) : Bool {
     func rec(t:Trie<K,V>) : Bool {
       switch t {
@@ -1007,15 +953,10 @@ DEPRECATED version.
     rec(t)
   };
 
-  /*
-   `nth`
-   --------
-   Project the nth key-value pair from the trie.
-
-   Note: This position is not meaningful; it's only here so that we
-   can inject tries into arrays given the A.tabulate interface for
-   doing so.
-   */
+   /// Project the nth key-value pair from the trie.
+   ///
+   /// Note: This position is not meaningful; it's only here so that we
+   /// can inject tries into arrays using functions like [Array.tabulate](Array.html#value.tabulate).
   public func nth<K,V>(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth : (?(Key<K>, V)) {
     func rec(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
       switch t {
@@ -1035,33 +976,28 @@ DEPRECATED version.
   };
 
 
-  /*
-   `toArray`
-   --------
-   Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-
-   ### Implementation notes:
-
-   we use this function repeatedly in the Produce Exchange example
-   application, often on very large tries.
-
-   Performance Profiling shows that it is important that this be
-   memory efficient, and reasonably time efficient, at large scales.
-
-   To do so, we use a single array allocation (for the returned array) and we
-   sacrifice some efficiency in reading the input trie, and instead use function `nth` to
-   project each element with an independent trie traversal.
-
-   This approach is somewhat forced on us by the type signature of
-   A.tabulate, and the desire to only allocate one array; that requirement rules
-   out iterative mutation of an optionally-null array, since an imperative
-   approach which would give us the wrong return type.
-
-   Since we want to  statically rule out null output elements, and since the AS type system
-   cannot do that for an imperative approach unless we assume more about
-   the type W (e.g., the existence of "default values"), we settle for using `nth`.
-
-   */
+   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
+   ///
+   /// ### Implementation notes:
+   ///
+   /// we use this function repeatedly in the Produce Exchange example
+   /// application, often on very large tries.
+   ///
+   /// Performance Profiling shows that it is important that this be
+   /// memory efficient, and reasonably time efficient, at large scales.
+   ///
+   /// To do so, we use a single array allocation (for the returned array) and we
+   /// sacrifice some efficiency in reading the input trie, and instead use function `nth` to
+   /// project each element with an independent trie traversal.
+   ///
+   /// This approach is somewhat forced on us by the type signature of
+   /// A.tabulate, and the desire to only allocate one array; that requirement rules
+   /// out iterative mutation of an optionally-null array, since an imperative
+   /// approach which would give us the wrong return type.
+   ///
+   /// Since we want to  statically rule out null output elements, and since the AS type system
+   /// cannot do that for an imperative approach unless we assume more about
+   /// the type W (e.g., the existence of "default values"), we settle for using `nth`.
   public func toArray<K,V,W>(t:Trie<K,V>,f:(K,V)->W):[W] =
     label profile_trie_toArray_begin : [W] {
     let a = A.tabulate<W> (
@@ -1075,22 +1011,13 @@ DEPRECATED version.
     a
   };
 
-  /*
-   `isEmpty`
-   -----------
-   specialized foldUp operation.
-   Test for "deep emptiness": subtrees that have branching structure,
-   but no leaves.  These can result from naive filtering operations;
-   filter uses this function to avoid creating such subtrees.
-   */
+  /// Test for "deep emptiness": subtrees that have branching structure,
+  /// but no leaves.  These can result from naive filtering operations;
+  /// filter uses this function to avoid creating such subtrees.
   public func isEmpty<K,V>(t:Trie<K,V>) : Bool =
     size<K,V>(t) == 0;
 
-  /*
-   `filter`
-   -----------
-   filter the key-value pairs by a given predicate.
-   */
+  /// filter the key-value pairs by a given predicate.
   public func filter<K,V>(t:Trie<K,V>, f:(K,V)->Bool) : Trie<K,V> {
     func rec(t:Trie<K,V>, bitpos:Nat) : Trie<K,V> {
       switch t {
@@ -1120,11 +1047,7 @@ DEPRECATED version.
     rec(t, 0)
   };
 
-  /*
-   `mapFilter`
-   -----------
-   map and filter the key-value pairs by a given predicate.
-   */
+  /// map and filter the key-value pairs by a given predicate.
   public func mapFilter<K,V,W>(t:Trie<K,V>, f:(K,V)->?W) : Trie<K,W> {
     func rec(t:Trie<K,V>, bitpos:Nat) : Trie<K,W> {
       switch t {
@@ -1159,18 +1082,13 @@ DEPRECATED version.
     rec(t, 0)
   };
 
-  /*
-   `equalStructure`
-   ------------------
-
-   Test for equality, but naively, based on structure.
-   Does not attempt to remove "junk" in the tree;
-   For instance, a "smarter" approach would equate
-     `#bin{left=#empty;right=#empty}`
-   with
-     `#empty`.
-   We do not observe that equality here.
-   */
+  /// Test for equality, but naively, based on structure.
+  /// Does not attempt to remove "junk" in the tree;
+  /// For instance, a "smarter" approach would equate
+  ///   `#bin{left=#empty;right=#empty}`
+  /// with
+  ///   `#empty`.
+  /// We do not observe that equality here.
   public func equalStructure<K,V>(
     tl:Trie<K,V>,
     tr:Trie<K,V>,
@@ -1196,13 +1114,9 @@ DEPRECATED version.
     rec(tl,tr)
   };
 
-  /*
-   `replaceThen`
-   ------------
-   replace the given key's value in the trie,
-   and only if successful, do the success continuation,
-   otherwise, return the failure value
-   */
+  /// replace the given key's value in the trie,
+  /// and only if successful, do the success continuation,
+  /// otherwise, return the failure value
   public func replaceThen<K,V,X>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v2:V,
                          success: (Trie<K,V>, V) -> X,
                          fail: () -> X)
@@ -1215,11 +1129,7 @@ DEPRECATED version.
     }
   };
 
-  /*
-   `putFresh`
-   ----------------
-   put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
-   */
+  /// put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
   public func putFresh<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:V) : Trie<K,V> {
     let (t2, none) = replace<K,V>(t, k, k_eq, ?v);
     switch none {
@@ -1229,11 +1139,7 @@ DEPRECATED version.
     t2
   };
 
-  /*
-   `put2D`
-   ---------------
-   put the given key's value in the 2D trie; return the new 2D trie.
-   */
+  /// put the given key's value in the 2D trie; return the new 2D trie.
   public func put2D<K1,K2,V>(t : Trie2D<K1,K2,V>,
                               k1:Key<K1>, k1_eq:(K1,K1)->Bool,
                               k2:Key<K2>, k2_eq:(K2,K2)->Bool,
@@ -1249,11 +1155,7 @@ DEPRECATED version.
     updated_outer;
   };
 
-  /*
-   `put3D`
-   ---------------
-   put the given key's value in the trie; return the new trie;
-   */
+  /// put the given key's value in the trie; return the new trie;
   public func put3D<K1,K2,K3,V>
     (t : Trie3D<K1,K2,K3,V>,
      k1:Key<K1>, k1_eq:(K1,K1)->Bool,
@@ -1284,22 +1186,14 @@ DEPRECATED version.
     updated_outer;
   };
 
-  /*
-   `remove`
-   -------------
-   remove the given key's value in the trie; return the new trie
-   */
+  /// remove the given key's value in the trie; return the new trie
   public func remove<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool) : (Trie<K,V>, ?V) {
     replace<K,V>(t, k, k_eq, null)
   };
 
-  /*
-   `removeThen`
-   ------------
-   remove the given key's value in the trie,
-   and only if successful, do the success continuation,
-   otherwise, return the failure value
-   */
+  /// remove the given key's value in the trie,
+  /// and only if successful, do the success continuation,
+  /// otherwise, return the failure value
   public func removeThen<K,V,X>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool,
                          success: (Trie<K,V>, V) -> X,
                          fail: () -> X)
@@ -1313,37 +1207,8 @@ DEPRECATED version.
   };
 
 
-  /*
-   `remove2D`
-   --------------
-   remove the given key-key pair's value in the 2D trie; return the
-   new trie, and the prior value, if any.
-   */
-  public func remove2D<K1,K2,V>(t : Trie2D<K1,K2,V>,
-                         k1:Key<K1>, k1_eq:(K1,K1)->Bool,
-                         k2:Key<K2>, k2_eq:(K2,K2)->Bool)
-    : (Trie2D<K1,K2,V>, ?V)
-  {
-    switch (find<K1,Trie<K2,V>>(t, k1, k1_eq)) {
-    case (null)   {
-           (t, null)
-         };
-    case (?inner) {
-           let (updated_inner, ov) = remove<K2,V>(inner, k2, k2_eq);
-           let (updated_outer, _) = {
-             put<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner)
-           };
-           (updated_outer, ov)
-         };
-    }
-  };
-
-  /*
-   `remove3D`
-   ---------------
-   remove the given key-key pair's value in the 3D trie; return the
-   new trie, and the prior value, if any.
-   */
+  /// remove the given key-key pair's value in the 3D trie; return the
+  /// new trie, and the prior value, if any.
   public func remove3D<K1,K2,K3,V>
     (t : Trie3D<K1,K2,K3,V>,
      k1:Key<K1>, k1_eq:(K1,K1)->Bool,
@@ -1368,15 +1233,9 @@ DEPRECATED version.
 
 
 
-  /*
-   `mergeDisjoint2D`
-   --------------
-
-   Like [`mergeDisjoint`](#mergedisjoint), except instead of merging a
-   pair, it merges the collection of dimension-2 sub-trees of a 2D
-   trie.
-
-   */
+   /// Like [`mergeDisjoint`](#mergedisjoint), except instead of merging a
+   /// pair, it merges the collection of dimension-2 sub-trees of a 2D
+   /// trie.
   public func mergeDisjoint2D<K1,K2,V>(t : Trie2D<K1,K2,V>, k1_eq:(K1,K1)->Bool, k2_eq:(K2,K2)->Bool)
     : Trie<K2,V>
   {
@@ -1387,15 +1246,4 @@ DEPRECATED version.
       #empty )
   };
 
-
-/*
-
-Future work
-=============
-
-Iterator objects
--------------------
-for use in 'for ... in ...' patterns
-
-*/
 }
