@@ -97,18 +97,15 @@ module {
     return r;
   };
 
-  /// Returns the concatenation of text values in `ts`.
-  public func join(ts : Iter.Iter<Text>) : Text {
-     var r = "";
-     for (t in ts) {
-       r #= t
-     };
-     return r;
-  };
-
   /// Returns the concatenation of text values in `ts`, separated by `sep`.
-  public func joinWith(sep : Text, ts : Iter.Iter<Text>) : Text {
+  public func join(sep : Text, ts : Iter.Iter<Text>) : Text {
     var r = "";
+    if (sep.size() == 0) {
+      for (t in ts) {
+        r #= t
+      };
+      return r;
+    };
     let next = ts.next;
     switch (next()) {
       case null { return r; };
@@ -548,12 +545,11 @@ module {
               }
             }
           };
-	  return extract(t, start, t.size() - matchSize - start);
+          return extract(t, start, t.size() - matchSize - start);
         }
       }
     }
   };
-
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(

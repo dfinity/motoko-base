@@ -46,7 +46,7 @@ func iterT(c : [Char]): T.TestableItem<Iter.Iter<Char>> = {
 // TODO: generalize and move to Iter.mo
 func textIterT(c : [Text]): T.TestableItem<Iter.Iter<Text>> = {
   item = c.vals();
-  display = func (ts: Iter.Iter<Text>) : Text { Text.joinWith(",", ts) };
+  display = func (ts: Iter.Iter<Text>) : Text { Text.join(",", ts) };
      // not this will only print the remainder of cs1 below
   equals = func (ts1 : Iter.Iter<Text>, ts2 : Iter.Iter<Text>) : Bool {
      loop {
@@ -129,7 +129,7 @@ run(suite("toIter",
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
    "fromIter-2",
-   Text.toIter(Text.join(Array.map(a, Char.toText).vals())),
+   Text.toIter(Text.join("", Array.map(a, Char.toText).vals())),
    M.equals(iterT a))
  },
 ]));
@@ -153,7 +153,7 @@ run(suite("fromIter",
    test(
    "fromIter-3",
    Text.fromIter(a.vals()),
-   M.equals(T.text (Text.join(Array.map(a, Char.toText).vals()))))
+   M.equals(T.text (Text.join("", Array.map(a, Char.toText).vals()))))
  },
 ]));
 
@@ -182,61 +182,61 @@ run(suite("join",
 [
  test(
    "join-0",
-   Text.join((["",""].vals())),
+   Text.join("", (["",""].vals())),
    M.equals(T.text(""))),
  test(
    "join-1",
-   Text.join((["","b"].vals())),
+   Text.join("", (["","b"].vals())),
    M.equals(T.text "b")),
  test(
    "join-2",
-   Text.join((["a","bb","ccc","dddd"].vals())),
+   Text.join("", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "abbcccdddd")),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
    "join-3",
-   Text.join(Array.map(a, Char.toText).vals()),
+   Text.join("", Array.map(a, Char.toText).vals()),
    M.equals(T.text (Text.fromIter(a.vals()))))
  },
  test(
    "join-4",
-   Text.join(([].vals())),
+   Text.join("", ([].vals())),
    M.equals(T.text "")),
  test(
    "join-5",
-   Text.join((["aaa"].vals())),
+   Text.join("", (["aaa"].vals())),
    M.equals(T.text "aaa")),
 ]));
 
-run(suite("joinWith",
+run(suite("join",
 [
  test(
-   "joinWith-0",
-   Text.joinWith(",", (["",""].vals())),
+   "join-0",
+   Text.join(",", (["",""].vals())),
    M.equals(T.text(","))),
  test(
-   "joinWith-1",
-   Text.joinWith(",", (["","b"].vals())),
+   "join-1",
+   Text.join(",", (["","b"].vals())),
    M.equals(T.text ",b")),
  test(
-   "joinWith-2",
-   Text.joinWith(",", (["a","bb","ccc","dddd"].vals())),
+   "join-2",
+   Text.join(",", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "a,bb,ccc,dddd")),
  {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
-   "joinWith-3",
-   Text.joinWith("", Array.map(a, Char.toText).vals()),
+   "join-3",
+   Text.join("", Array.map(a, Char.toText).vals()),
    M.equals(T.text (Text.fromIter(a.vals()))))
   },
  test(
-   "joinWith-4",
-   Text.joinWith(",", ([].vals())),
+   "join-4",
+   Text.join(",", ([].vals())),
    M.equals(T.text "")),
  test(
-   "joinWith-5",
-   Text.joinWith(",", (["aaa"].vals())),
+   "join-5",
+   Text.join(",", (["aaa"].vals())),
    M.equals(T.text "aaa")),
 ]));
 
@@ -269,7 +269,7 @@ run(suite("split",
    M.equals(textIterT(["a","","","ab","","abc",""]))),
  {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
-   let t = Text.joinWith(";", a.vals());
+   let t = Text.join(";", a.vals());
    test(
      "split-char-large",
      Text.split(t, #char ';'),
@@ -277,7 +277,7 @@ run(suite("split",
  },
  {
    let a = Array.tabulate<Text>(100000,func _ = "abc");
-   let t = Text.joinWith(";", a.vals());
+   let t = Text.join(";", a.vals());
    test(
      "split-char-very-large",
      Text.split(t, #char ';'),
@@ -316,7 +316,7 @@ run(suite("split",
    M.equals(textIterT(["a","","","ab","","abc",""]))),
  {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
-   let t = Text.joinWith(";", a.vals());
+   let t = Text.join(";", a.vals());
    test(
      "split-pred-large",
      Text.split(t, pat),
@@ -324,7 +324,7 @@ run(suite("split",
  },
  {
    let a = Array.tabulate<Text>(10000,func _ = "abc");
-   let t = Text.joinWith(";", a.vals());
+   let t = Text.join(";", a.vals());
    test(
      "split-pred-very-large",
      Text.split(t, pat),
@@ -364,7 +364,7 @@ run(suite("split",
    M.equals(textIterT(["a","","","ab","","abc",""]))),
  {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
-   let t = Text.joinWith("PAT", a.vals());
+   let t = Text.join("PAT", a.vals());
    test(
      "split-pat-large",
      Text.split(t, pat),
@@ -372,7 +372,7 @@ run(suite("split",
  },
  {
    let a = Array.tabulate<Text>(10000,func _ = "abc");
-   let t = Text.joinWith("PAT", a.vals());
+   let t = Text.join("PAT", a.vals());
    test(
      "split-pat-very-large",
      Text.split(t, pat),
@@ -410,7 +410,7 @@ run(suite("tokens",
    M.equals(textIterT(["a","ab","abc"]))),
  {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
-   let t = Text.joinWith(";;", a.vals());
+   let t = Text.join(";;", a.vals());
    test(
      "tokens-char-large",
      Text.tokens(t, #char ';'),
@@ -418,7 +418,7 @@ run(suite("tokens",
  },
  {
    let a = Array.tabulate<Text>(100000,func _ = "abc");
-   let t = Text.joinWith(";;", a.vals());
+   let t = Text.join(";;", a.vals());
    test(
      "tokens-char-very-large",
      Text.tokens(t, #char ';'),
