@@ -26,7 +26,7 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
   /// Returns the number of entries in the map.
   public func size() : Nat = _size;
 
-  /// Associate a key and value, overwriting any prior association the key.
+  /// Associate a key and value, overwriting any prior association for the key.
   public func put(k:K, v:V) =
     ignore replace(k, v);
 
