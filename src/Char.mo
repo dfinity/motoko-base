@@ -2,26 +2,26 @@
 import Prim "mo:prim";
 module {
 
-  /// Convert a character to a word.
-  public let toWord32 : Char -> Word32 = Prim.charToWord32;
+  /// Convert character `c` to a word containing its Unicode scalar value.
+  public let toWord32 : (c : Char) -> Word32 = Prim.charToWord32;
 
-  /// Convert a word to a character.
+  /// Convert word `w` to a character.
   /// Traps if `w` is not a valid Unicode scalar value.
   /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
   public let fromWord32 : (w : Word32)-> Char = Prim.word32ToChar;
 
-  /// Convert a character to text.
-  public let toText : Char -> Text = Prim.charToText;
+  /// Convert character `c` to single character text.
+  public let toText : (c : Char) -> Text = Prim.charToText;
 
-  // not exposed pendig multi-char implementation.
+  // Not exposed pending multi-char implementation.
   private let toUpper : (c : Char) -> Char = Prim.charToUpper;
 
-  // not exposed pending multi-char implementation.
+  // Not exposed pending multi-char implementation.
   private let toLower : (c : Char) -> Char = Prim.charToLower;
 
-  /// Is a character a digit between 0 and 9.
-  public func isDigit(char : Char) : Bool {
-    Prim.charToWord32(char) - Prim.charToWord32('0') <= (9 : Word32)
+  /// Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
+  public func isDigit(c : Char) : Bool {
+    Prim.charToWord32(c) - Prim.charToWord32('0') <= (9 : Word32)
   };
 
   /// Returns the Unicode _White_Space_ property of `c`.
