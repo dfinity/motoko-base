@@ -628,58 +628,85 @@ run(suite("stripEnd",
 ]));
 
 
-run(suite("trimStartMatches",
+run(suite("trimStart",
 [
  test(
-   "trimStartMatches-none",
-   Text.trimStartMatches("cd", #text "ab"),
+   "trimStart-none",
+   Text.trimStart("cd", #text "ab"),
    M.equals(T.text "cd")),
  test(
-   "trimStartMatches-one",
-   Text.trimStartMatches("abcd", #text "ab"),
+   "trimStart-one",
+   Text.trimStart("abcd", #text "ab"),
    M.equals(T.text "cd")),
  test(
-   "trimStartMatches-two",
-   Text.trimStartMatches("abababcd", #text "ab", ),
+   "trimStart-two",
+   Text.trimStart("abababcd", #text "ab", ),
    M.equals(T.text "cd")),
  test(
-   "trimStartMatches-only",
-   Text.trimStartMatches("ababababab", #text "ab", ),
+   "trimStart-only",
+   Text.trimStart("ababababab", #text "ab", ),
    M.equals(T.text "")),
  test(
-   "trimStartMatches-empty",
-   Text.trimStartMatches("abcdef", #text ""),
+   "trimStart-empty",
+   Text.trimStart("abcdef", #text ""),
    M.equals(T.text "abcdef")),
 ]));
 
-run(suite("trimEndMatches",
+run(suite("trimEnd",
 [
  test(
-   "trimEndMatches-exact",
-   Text.trimEndMatches("cd", #text "cd"),
+   "trimEnd-exact",
+   Text.trimEnd("cd", #text "cd"),
    M.equals(T.text "")),
  test(
-   "trimEndMatches-one",
-   Text.trimEndMatches("abcd", #text "cd"),
+   "trimEnd-one",
+   Text.trimEnd("abcd", #text "cd"),
    M.equals(T.text "ab")),
  test(
-   "trimEndMatches-three",
-   Text.trimEndMatches("abcdcdcd", #text "cd", ),
+   "trimEnd-three",
+   Text.trimEnd("abcdcdcd", #text "cd", ),
    M.equals(T.text "ab")),
  test(
-   "trimEndMatches-many",
-   Text.trimEndMatches("cdcdcdcdcdcdcd", #text "cd", ),
+   "trimEnd-many",
+   Text.trimEnd("cdcdcdcdcdcdcd", #text "cd", ),
    M.equals(T.text "")),
  test(
-   "trimEndMatches-empty-pat",
-   Text.trimEndMatches("abcdef", #text ""),
+   "trimEnd-empty-pat",
+   Text.trimEnd("abcdef", #text ""),
    M.equals(T.text "abcdef")),
  test(
-   "trimEndMatches-empty",
-   Text.trimEndMatches("", #text "cd"),
+   "trimEnd-empty",
+   Text.trimEnd("", #text "cd"),
    M.equals(T.text "")),
 ]));
 
+run(suite("trim",
+[
+ test(
+   "trim-exact",
+   Text.trim("cd", #text "cd"),
+   M.equals(T.text "")),
+ test(
+   "trim-one",
+   Text.trim("cdabcd", #text "cd"),
+   M.equals(T.text "ab")),
+  test(
+   "trim-three",
+   Text.trim("cdcdcdabcdcdcd", #text "cd", ),
+   M.equals(T.text "ab")),
+ test(
+   "trim-many",
+   Text.trim("cdcdcdcdcdcdcd", #text "cd", ),
+   M.equals(T.text "")),
+ test(
+   "trim-empty-pat",
+   Text.trim("abcdef", #text ""),
+   M.equals(T.text "abcdef")),
+ test(
+   "trim-empty",
+   Text.trim("", #text "cd"),
+   M.equals(T.text "")),
+]));
 
 {
 let cmp = Char.compare;

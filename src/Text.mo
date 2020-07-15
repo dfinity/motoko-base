@@ -74,12 +74,19 @@ module {
     else #greater
   };
 
-  private func extract(t : Text, i :Nat) : Text {
+
+  private func extract(t : Text, i : Nat, j : Nat) : Text {
     let size = t.size();
-    if (i >= size) return t;
+    if (i == 0 and j == size) return t;
+    assert (j <= size);
     let cs = t.chars();
     var r = "";
     var n = i;
+    while (n > 0) {
+      ignore cs.next();
+      n -= 1;
+    };
+    n := j;
     while (n > 0) {
       switch (cs.next()) {
         case null (assert false);
@@ -445,7 +452,7 @@ module {
       diff -= 1;
     };
     switch (match(cs1)) {
-      case (#success) return ?extract(t, s1 - s2);
+      case (#success) return ?extract(t, 0, s1 - s2);
       case _ return null;
     }
   };
@@ -488,7 +495,7 @@ module {
         case (#empty cs1) {
           switch (cs1.next()) {
             case null break l;
-            case (?_)  return t;
+            case (?_) return t;
           }
         };
         case (#fail (cs1, c)) {
@@ -498,8 +505,55 @@ module {
         }
       }
     };
-    extract(t, t.size() - matchSize)
+    extract(t, 0, t.size() - matchSize)
   };
+
+  /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
+  public func trim(t : Text, p : Pattern) : Text {
+    let cs = t.chars();
+    let size = sizeOfPattern(p);
+    if (size == 0) return t;
+    var matchSize = 0;
+    let match = matchOfPattern p;
+    loop {
+      switch (match(cs)) {
+        case (#success) {
+          matchSize += size;
+        }; // continue
+        case (#empty cs1) {
+          return if (matchSize == 0) t else fromIter(cs1)
+        };
+        case (#fail (cs1, c)) {
+          let start = matchSize;
+          let cs2 = CharBuffer(cs);
+          cs2.pushBack(cs1, c);
+          ignore cs2.next();
+          matchSize := 0;
+          label l
+          loop {
+            switch (match(cs2)) {
+              case (#success) {
+                matchSize += size;
+              }; // continue
+              case (#empty cs3) {
+                switch (cs1.next()) {
+                  case null break l;
+                  case (?_) return t;
+                }
+              };
+              case (#fail (cs3, c1)) {
+                matchSize := 0;
+                cs2.pushBack(cs3, c1);
+                ignore cs2.next();
+              }
+            }
+          };
+	  return extract(t, start, t.size() - matchSize - start);
+        }
+      }
+    }
+  };
+
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(
