@@ -200,7 +200,7 @@ public func branch<K,V>(l:Trie<K,V>, r:Trie<K,V>) : Trie<K,V> = label profile_tr
 /// by constructing branches as necessary; to do so, it also needs the bitpos
 /// of the leaf.
 public func leaf<K,V>(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> = label trie_leaf : Trie<K,V> {
-   fromSizedList<K,V>(null, kvs, bitpos)
+   fromList<K,V>(null, kvs, bitpos)
  };
 
 module ListUtil {
@@ -234,35 +234,7 @@ module ListUtil {
   };
 };
 
-// to do -- drop this
-public func _fromList<K,V>(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
-   label profile_trie_fromList_begin : (Trie<K,V>) {
-   func rec(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> {
-     if ( List.isNil<(Key<K>,V)>(kvs) )
-     label profile_trie_fromList_end_empty : (Trie<K,V>) {
-       #empty
-     }
-     else if ( ListUtil.lenIsEqLessThan<(Key<K>,V)>(kvs, MAX_LEAF_SIZE - 1) )
-     label profile_trie_fromList_end_validleaf : (Trie<K,V>) {
-       let len = List.size<(Key<K>,V)>(kvs);
-       #leaf{size=len;keyvals=kvs}
-     }
-     else if ( bitpos >= 31 )
-     label profile_trie_fromList_end_bitposIs31 : (Trie<K,V>) {
-       let len = List.size<(Key<K>,V)>(kvs);
-       #leaf{size=len;keyvals=kvs}
-     }
-     else /* too many keys for a leaf, so introduce a branch */
-     label profile_trie_fromList_branch : (Trie<K,V>) {
-       let (l, r) = splitAssocList<K,V>(kvs, bitpos);
-       branch<K,V>(rec(l, bitpos + 1), rec(r, bitpos + 1))
-     }
-   };
-   rec(kvs, bitpos)
- };
-
-// to do -- rename `fromList`
-public func fromSizedList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
+public func fromList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
    label profile_trie_fromList_begin : (Trie<K,V>) {
    func rec(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> {
      switch kvc {
@@ -284,7 +256,7 @@ public func fromSizedList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : 
        }
      };
      };
-     let (ls, l, rs, r) = splitSizedList<K,V>(kvs, bitpos);
+     let (ls, l, rs, r) = splitList<K,V>(kvs, bitpos);
      if ( ls == 0 and rs == 0 ) {
        #empty
      } else if (rs == 0 and ls <= MAX_LEAF_SIZE) {
@@ -376,8 +348,7 @@ public func find<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K) -> Bool) : ?V = label 
 
 
 
-// to do -- private
-public func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
+func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
    : (AssocList<Key<K>,V>, AssocList<Key<K>,V>) =
    label profile_trie_splitAssocList : (AssocList<Key<K>,V>, AssocList<Key<K>,V>)
  {
@@ -389,10 +360,9 @@ public func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
    )
  };
 
-// to do -- private
-public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
+func splitList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
    : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>) =
-   label profile_trie_splitSizedList : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>)
+   label profile_trie_splitList : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>)
  {
    func rec(l : AssocList<Key<K>,V>) : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>) =
      label profile_trie_sized_split_rec : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>) {
@@ -1206,6 +1176,27 @@ public func disj<K,V,W,X>(
     }
   };
 
+
+  /// remove the given key-key pair's value in the 2D trie; return the
+  /// new trie, and the prior value, if any.
+  public func remove2D<K1,K2,V>(t : Trie2D<K1,K2,V>,
+                         k1:Key<K1>, k1_eq:(K1,K1)->Bool,
+                         k2:Key<K2>, k2_eq:(K2,K2)->Bool)
+    : (Trie2D<K1,K2,V>, ?V)
+  {
+    switch (find<K1,Trie<K2,V>>(t, k1, k1_eq)) {
+    case (null)   {
+           (t, null)
+         };
+    case (?inner) {
+           let (updated_inner, ov) = remove<K2,V>(inner, k2, k2_eq);
+           let (updated_outer, _) = {
+             put<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner)
+           };
+           (updated_outer, ov)
+         };
+    }
+  };
 
   /// remove the given key-key pair's value in the 3D trie; return the
   /// new trie, and the prior value, if any.
