@@ -2,7 +2,7 @@
 
 import Prim "mo:prim";
 import I "IterType";
-import Buf "Buf";
+import Buffer "Buffer";
 
 module {
   public func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool {
@@ -53,7 +53,7 @@ module {
   };
 
   public func filter<A>(xs : [A], f : A -> Bool) : [A] {
-    let ys : Buf.Buf<A> = Buf.Buf(xs.size());
+    let ys : Buffer.Buffer<A> = Buffer.Buffer(xs.size());
     for (x in xs.vals()) {
       if (f(x)) {
         ys.add(x);
@@ -63,7 +63,7 @@ module {
   };
 
   public func filterMap<A, B>(xs : [A], f : A -> ?B) : [B] {
-    let ys : Buf.Buf<B> = Buf.Buf(xs.size());
+    let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
     for (x in xs.vals()) {
       switch (f(x)) {
         case null {};
