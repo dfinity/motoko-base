@@ -74,44 +74,12 @@ module {
     else #greater
   };
 
-  /// Returns the `i`-th character in `ts`. _O_(`size(t)`). May trap.
-  public func sub(t : Text, i : Nat) : Char {
-    let cs = t.chars();
-    var n : Int = i;
-    loop {
-      while (n > 0) {
-        switch (cs.next()) {
-          case null assert false;
-          case (?c) n -= 1;
-        };
-      };
-      switch (cs.next()) {
-        case null assert false;
-        case (?c) { return c };
-      };
-    };
-  };
-
-  /// Returns:
-  /// - when `jo` is `null`, the subtext of `t` between characters `i` and characters `t.size()-1`.
-  ///   Traps when `t.size() < i`.
-  /// - when `jo` is  `?j`: the subtext of `t` between characters `i` and `i+j-1`.
-  ///   Traps when `t.size < i + j`.
-  public func extract(t : Text, i : Nat, jo : ?Nat) : Text {
-    var r = "";
+  private func extract(t : Text, i :Nat) : Text {
     let size = t.size();
-    var j = switch jo { case (?j) j; case null size };
-    if (i == 0 and j == size) return t;
+    if (i >= size) return t;
     let cs = t.chars();
+    var r = "";
     var n = i;
-    while (n > 0) {
-      switch (cs.next()) {
-        case null (assert false);
-        case (?_) ();
-      };
-      n -= 1;
-    };
-    n := j;
     while (n > 0) {
       switch (cs.next()) {
         case null (assert false);
@@ -120,11 +88,6 @@ module {
       n -= 1;
     };
     return r;
-  };
-
-  /// Returns the subtext of `t` between characters `i` and `i+j-1`. Equivalent to `extract(t, i, ?j)`. Traps when `t.size < i + j`. _O_(`size(t)`).
-  public func subtext(t : Text, i : Nat, j: Nat) : Text {
-    extract(t, i, ?j);
   };
 
   /// Returns the concatenation of text values in `ts`.
@@ -482,7 +445,7 @@ module {
       diff -= 1;
     };
     switch (match(cs1)) {
-      case (#success) return ?extract(t, 0, ? (s1 - s2));
+      case (#success) return ?extract(t, s1 - s2);
       case _ return null;
     }
   };
@@ -535,7 +498,7 @@ module {
         }
       }
     };
-    extract(t, 0, ? (t.size() - matchSize))
+    extract(t, t.size() - matchSize)
   };
 
 
