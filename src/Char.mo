@@ -13,10 +13,28 @@ module {
   /// Convert a character to text.
   public let toText : Char -> Text = Prim.charToText;
 
+  // not exposed pendig multi-char implementation.
+  private let toUpper : (c : Char) -> Char = Prim.charToUpper;
+
+  // not exposed pending multi-char implementation.
+  private let toLower : (c : Char) -> Char = Prim.charToLower;
+
   /// Is a character a digit between 0 and 9.
   public func isDigit(char : Char) : Bool {
     Prim.charToWord32(char) - Prim.charToWord32('0') <= (9 : Word32)
   };
+
+  /// Returns the Unicode _White_Space_ property of `c`.
+  public let isWhitespace : (c : Char) -> Bool = Prim.charIsWhitespace;
+
+  /// Returns the Unicode _Lowercase_ property of `c`.
+  public let isLowercase : (c : Char) -> Bool = Prim.charIsLowercase;
+
+  /// Returns the Unicode _Uppercase_ property of `c`.
+  public let isUppercase : (c : Char) -> Bool = Prim.charIsUppercase;
+
+  /// Returns the Unicode _Alphabetic_ property of `c`.
+  public let isAlphabetic : (c : Char) -> Bool = Prim.charIsAlphabetic;
 
   /// Returns `x == y`.
   public func equal(x : Char, y : Char) : Bool { x == y };
@@ -42,23 +60,5 @@ module {
     else if (x == y) #equal
     else #greater
   };
-
-  // not exposed pendig multi-char implementation.
-  private let toUpper : (c : Char) -> Char = Prim.charToUpper;
-
-  // not exposed pending multi-char implementation.
-  private let toLower : (c : Char) -> Char = Prim.charToLower;
-
-  /// Returns the Unicode _White_Space_ property of `c`.
-  public let isWhitespace : (c : Char) -> Bool = Prim.charIsWhitespace;
-
-  /// Returns the Unicode _Lowercase_ property of `c`.
-  public let isLowercase : (c : Char) -> Bool = Prim.charIsLowercase;
-
-  /// Returns the Unicode _Uppercase_ property of `c`.
-  public let isUppercase : (c : Char) -> Bool = Prim.charIsUppercase;
-
-  /// Returns the Unicode _Alphabetic_ property of `c`.
-  public let isAlphabetic : (c : Char) -> Bool = Prim.charIsAlphabetic;
 
 }
