@@ -43,4 +43,22 @@ module {
     else #greater
   };
 
+  // not exposed pendig multi-char implementation.
+  private let toUpper : (c : Char) -> Char = Prim.charToUpper;
+
+  // not exposed pending multi-char implementation.
+  private let toLower : (c : Char) -> Char = Prim.charToLower;
+
+  /// Returns the Unicode _White_Space_ property of `c`.
+  public let isWhitespace : (c : Char) -> Bool = Prim.charIsWhitespace;
+
+  /// Returns the Unicode _Lowercase_ property of `c`.
+  public let isLowercase : (c : Char) -> Bool = Prim.charIsLowercase;
+
+  /// Returns the Unicode _Uppercase_ property of `c`.
+  public let isUppercase : (c : Char) -> Bool = Prim.charIsUppercase;
+
+  /// Returns the Unicode _Alphabetic_ property of `c`.
+  public let isAlphabetic : (c : Char) -> Bool = Prim.charIsAlphabetic;
+
 }
