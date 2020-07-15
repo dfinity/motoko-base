@@ -463,7 +463,7 @@ module {
           matchSize += size;
         }; // continue
         case (#empty cs1) {
-          return if (matchSize == 0) t else fromIter(cs1) # fromIter(cs)
+          return if (matchSize == 0) t else fromIter(cs1)
         };
         case (#fail (cs1, c)) {
           return if (matchSize == 0) t else fromIter(cs1) # fromChar c # fromIter cs
@@ -500,7 +500,6 @@ module {
     };
     extract(t, t.size() - matchSize)
   };
-
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(
