@@ -1,19 +1,11 @@
-/// Functional map
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
-/// history independent.
+/// independent of their operation history (unlike other popular search trees).
 ///
-/// **Background**
+/// ## Background
 ///
-/// See this POPL 1989 paper (Section 6):
+/// From Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 ///
-///  - ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
-///  - [Public copy here](http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf).
-///
-/// By contrast, other usual functional representations of maps (AVL
-/// Trees, Red-Black Trees) do not enjoy history independence, and are
-/// each more complex to implement (e.g., each requires "rebalancing";
-/// these trees never do).
 ///
 import Prim "mo:prim";
 import P "Prelude";
@@ -25,56 +17,48 @@ import List "List";
 import AssocList "AssocList";
 
 module {
-/*
-Representation
-=====================
 
-A hash trie is a binary trie, where each (internal) branch node
-represents having distinguished its key-value pairs on a single bit of
-the keys.
+///
+/// ## Representation
+///
+///
+/// A hash trie is a binary trie, where each (internal) branch node
+/// represents having distinguished its key-value pairs on a single bit of
+/// the keys.
+/// 
+/// By following paths in the trie, we determine an increasingly smaller
+/// and smaller subset of the keys.
+/// 
+/// Each leaf node consists of an association list of key-value pairs.
+/// 
+/// We say that a leaf is valid if it contains no more than MAX_LEAF_SIZE
+/// key-value pairs.
+/// 
+/// Each non-empty trie node stores a size; we discuss that more below.
+/// 
+/// ### Adaptive depth
+/// 
+/// For small mappings, the trie structure consists of a single
+/// leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
+/// 
+/// By construction, the algorithms enforce an invariant that no
+/// leaf ever contains more than MAX_LEAF_SIZE key-value pairs: the
+/// function `leaf` accepts a list, but subdivides it with branches until
+/// it can actually construct valid leaves.  Ongce distinguished, subsets
+/// of keys tend to remain distinguished by the presence of these branches.
+/// 
+/// ### Cached sizes
+/// 
+/// At each branch and leaf, we use a stored size to support a
+/// memory-efficient `toArray` function, which itself relies on
+/// per-element projection via `nth`; in turn, `nth` directly uses the
+/// O(1)-time function `size` for achieving an acceptable level of
+/// algorithmic efficiently.  Notably, leaves are generally lists of
+/// key-value pairs, and we do not store a size for each Cons cell in the
+/// list.
+/// 
 
-By following paths in the trie, we determine an increasingly smaller
-and smaller subset of the keys.
-
-Each leaf node consists of an association list of key-value pairs.
-
-We say that a leaf is valid if it contains no more than MAX_LEAF_SIZE
-key-value pairs.
-
-Each non-empty trie node stores a size; we discuss that more below.
-
-### Adaptive depth
-
-For small mappings, this "trie" structure just consists of a single
-leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
-
-By construction, the algorithms below enforce the invariant that no
-leaf ever contains more than MAX_LEAF_SIZE key-value pairs: the
-function `leaf` accepts a list, but subdivides it with branches until
-it can actually construct valid leaves.  Ongce distinguished, subsets
-of keys tend to remain distinguished by the presence of these branches.
-
-### Cached sizes
-
-At each branch and leaf, we use a stored size to support a
-memory-efficient `toArray` function, which itself relies on
-per-element projection via `nth`; in turn, `nth` directly uses the
-O(1)-time function `size` for achieving an acceptable level of
-algorithmic efficiently.  Notably, leaves are generally lists of
-key-value pairs, and we do not store a size for each Cons cell in the
-list.
-
-
-### Details
-
-Below, we define the types used in the representation:
-
-*/
-
-//let MAX_LEAF_SIZE = 4; // worse than 8, slightly
-public let MAX_LEAF_SIZE = 8; // <-- beats both 4 and 16 for me, now
-//let MAX_LEAF_SIZE = 16;
-//let MAX_LEAF_SIZE = 32;
+public let MAX_LEAF_SIZE = 8; // to do -- further profiling and tuning
 
 public type List<T> = List.List<T>;
 public type AssocList<K,V> = AssocList.AssocList<K,V>;
@@ -116,6 +100,7 @@ public type Trie<K,V> = {
   #branch : Branch<K,V> ;
 };
 
+/// checks the invariants of the trie structure, including the placement of keys at trie paths
 public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
   func rec(t:Trie<K,V>, bitpos:?Hash.Hash, bits:Hash.Hash, mask:Hash.Hash) : Bool {
     switch t {
@@ -170,15 +155,11 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
 };
 
 
-/// Two-dimensional trie
-/// ---------------------
-/// A 2D trie is just a trie that maps dimension-1 keys to another
+/// A 2D trie maps dimension-1 keys to another
 /// layer of tries, each keyed on the dimension-2 keys.
 public type Trie2D<K1, K2, V> = Trie<K1, Trie<K2,V> >;
 
-/// Three-dimensional trie
-/// ---------------------
-/// A 3D trie is just a trie that maps dimension-1 keys to another
+/// A 3D trie maps dimension-1 keys to another
 /// layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
 public type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V> >;
 
@@ -252,7 +233,8 @@ module ListUtil {
   };
 };
 
-public func fromList<K,V>(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
+// to do -- drop this
+public func _fromList<K,V>(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
    label profile_trie_fromList_begin : (Trie<K,V>) {
    func rec(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> {
      if ( List.isNil<(Key<K>,V)>(kvs) )
@@ -278,7 +260,7 @@ public func fromList<K,V>(kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
    rec(kvs, bitpos)
  };
 
-
+// to do -- rename `fromList`
 public func fromSizedList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> =
    label profile_trie_fromList_begin : (Trie<K,V>) {
    func rec(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : Trie<K,V> {
@@ -315,7 +297,9 @@ public func fromSizedList<K,V>(kvc:?Nat, kvs:AssocList<Key<K>,V>, bitpos:Nat) : 
    rec(kvc, kvs, bitpos)
  };
 
-/// Purely-functional representation permits _O(1)_-time copy, via persistent sharing.
+/// clone the trie efficiently, via sharing.
+///
+/// Purely-functional representation permits _O(1)_ copy, via persistent sharing.
 public func clone<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
 
 /// replace the given key's value option with the given one, returning the previous one
@@ -391,7 +375,7 @@ public func find<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K) -> Bool) : ?V = label 
 
 
 
-
+// to do -- private
 public func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
    : (AssocList<Key<K>,V>, AssocList<Key<K>,V>) =
    label profile_trie_splitAssocList : (AssocList<Key<K>,V>, AssocList<Key<K>,V>)
@@ -404,6 +388,7 @@ public func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
    )
  };
 
+// to do -- private
 public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
    : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>) =
    label profile_trie_splitSizedList : (Nat, AssocList<Key<K>,V>, Nat, AssocList<Key<K>,V>)
@@ -426,7 +411,9 @@ public func splitSizedList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
  };
 
 ///   merge tries, preferring the right trie where there are collisions
-///   in common keys. note: the `disj` operation generalizes this `merge`
+///   in common keys. 
+///
+///   note: the `disj` operation generalizes this `merge`
 ///   operation in various ways, and does not (in general) lose
 ///   information; this operation is a simpler, special case.
 ///
@@ -768,32 +755,26 @@ public func disj<K,V,W,X>(
   };
 
 
-  /*
-   Build: An ADT for "Trie Builds"
-   ========================================
-
-   This module provides optimized variants of normal tries, for
-   (much!) more efficient PX retailer queries.
-
-   The central insight is that for (unmaterialized) query results, we
-   do not need to actually build any resulting trie of the resulting
-   data, but rather, just need a collection of what would be in that
-   trie.  Since query results can be large (quadratic in the DB size!),
-   avoiding the construction of this trie provides a considerable savings.
-
-   To get this savings, we use an ADT for the operations that _would_ build this trie,
-   if evaluated. This structure specializes a rope: a balanced tree representing a
-   sequence.  It is only as balanced as the tries from which we generate
-   these build ASTs.  They have no intrinsic balance properties of their
-   own.
-
-   */
+  /// Represent the construction of tries as data.
+  ///
+  /// This module provides optimized variants of normal tries, for
+  /// more efficient join queries.
+  /// 
+  /// The central insight is that for (unmaterialized) join query results, we
+  /// do not need to actually build any resulting trie of the resulting
+  /// data, but rather, just need a collection of what would be in that
+  /// trie.  Since query results can be large (quadratic in the DB size),
+  /// avoiding the construction of this trie provides a considerable savings.
+  /// 
+  /// To get this savings, we use an ADT for the operations that _would_ build this trie,
+  /// if evaluated. This structure specializes a rope: a balanced tree representing a
+  /// sequence.  It is only as balanced as the tries from which we generate
+  /// these build ASTs.  They have no intrinsic balance properties of their
+  /// own.
+  /// 
   public module Build {
 
-    /* Commands for building tries.
-
-     For PL academics: Imagine commands for the IMP imperative language,
-     but where global memory consists of a single (anonymous) global trie */
+    /// The build of a trie, as an AST for a simple DSL.
     public type Build<K,V> = {
       #skip ;
       #put : (K, ?Hash.Hash, V) ;
@@ -804,6 +785,7 @@ public func disj<K,V,W,X>(
       } ;
     };
 
+    /// Size of the build, measured in `#put` operations
     public func size<K,V>(tb:Build<K,V>) : Nat =
       label profile_trie_buildSize : Nat {
       switch tb {
@@ -812,7 +794,8 @@ public func disj<K,V,W,X>(
       case (#seq(seq)) seq.size;
       }
     };
-
+    
+    /// Build sequence of two sub-builds
     public func seq<K,V>(l:Build<K,V>, r:Build<K,V>) : Build<K,V> =
       label profile_trie_seq : Build<K,V> {
       let sum = size<K,V>(l) + size<K,V>(r);
