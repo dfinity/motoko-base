@@ -508,7 +508,7 @@ module {
     extract(t, 0, t.size() - matchSize)
   };
 
-  /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
+  /// Returns the suffix of `t` obtained by eliding all leading and trailing matches of [pattern](#type.Pattern) `p`.
   public func trim(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     let size = sizeOfPattern(p);
