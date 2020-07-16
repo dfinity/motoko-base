@@ -13,6 +13,9 @@ module {
   /// Conversion. Wraps around.
   public let fromNat : Nat -> Word64  = Prim.natToWord64;
 
+  /// Conversion. Return a value between `-2^63` and `2^63-1`
+  public func toInt(x : Word64) : Int = Prim.int64ToInt(Prim.word64ToInt64(x));
+
   /// Conversion. Returns `x mod 2^64`.
   public let fromInt : (x : Int) -> Word64  = Prim.intToWord64;
 
