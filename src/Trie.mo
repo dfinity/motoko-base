@@ -1,3 +1,4 @@
+/// Functional maps
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
 /// independent of their operation history (unlike other popular search trees).
@@ -92,7 +93,7 @@ public type Key<K> = {
   key: K;
 };
 
-public type List<T> = List.List<T>;
+type List<T> = List.List<T>;
 
 /// Equality function for two `Key<K>`s, in terms of equality of `K`'s.
 public func equalKey<K>(keq:(K,K) -> Bool) : ((Key<K>,Key<K>) -> Bool) = {
