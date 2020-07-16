@@ -13,6 +13,9 @@ module {
   /// Conversion. Wraps around.
   public let fromNat : Nat -> Word16  = Prim.natToWord16;
 
+  /// Conversion. Return a value between `-2^15` and `2^15-1`
+  public func toInt(x : Word16) : Int = Prim.int16ToInt(Prim.word16ToInt16(x));
+
   /// Conversion. Returns `x mod 2^16`.
   public let fromInt : (x : Int) -> Word16  = Prim.intToWord16;
 

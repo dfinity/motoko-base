@@ -13,6 +13,9 @@ module {
   /// Conversion. Wraps around.
   public let fromNat : Nat -> Word32  = Prim.natToWord32;
 
+  /// Conversion. Return a value between `-2^31` and `2^31-1`
+  public func toInt(x : Word32) : Int = Prim.int32ToInt(Prim.word32ToInt32(x));
+
   /// Conversion. Returns `x mod 2^32`.
   public let fromInt : (x : Int) -> Word32  = Prim.intToWord32;
 
