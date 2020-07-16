@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
+    - name: Check if Git tag exists
+      run: echo "::set-env name=HEAD_TAG::$(git tag --points-at HEAD)"
     - uses: cachix/install-nix-action@v10
     - name: "install dependencies"
       run: |
@@ -37,11 +39,12 @@ jobs:
       run: pushd doc && ./make_docs.sh && popd
     - name: Upload docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
-#     on:
-#       push:
-#         branches:
-#           - master
+      on:
+        push:
+          branches:
+            - master
+      if: env.HEAD_TAG != ''
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: doc/_out/html/ # The folder the action should deploy.
+        BRANCH: gh-pages
+        FOLDER: doc/_out/html/
