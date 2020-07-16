@@ -1,9 +1,7 @@
 import List "List";
 import P "Prelude";
 
-/// Double-ended Queue
-///
-/// This module provides a purely-functional double-ended queue.
+/// Functions for persistent, double-ended queues.
 module {
     type List<T> = List.List<T>;
 
