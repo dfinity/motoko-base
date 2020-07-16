@@ -13,6 +13,9 @@ module {
   /// Conversion. Wraps around.
   public let fromNat : Nat -> Word8  = Prim.natToWord8;
 
+  /// Conversion. Return a value between `-128` and `127`
+  public func toInt(x : Word8) : Int = Prim.int8ToInt(Prim.word8ToInt8(x));
+
   /// Conversion. Returns `x mod 2^8`.
   public let fromInt : (x : Int) -> Word8  = Prim.intToWord8;
 
