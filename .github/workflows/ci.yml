@@ -39,11 +39,7 @@ jobs:
       run: pushd doc && ./make_docs.sh && popd
     - name: Upload docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
-      on:
-        push:
-          branches:
-            - master
-      if: env.HEAD_TAG != ''
+      if: env.HEAD_TAG != '' && github.ref == 'refs/heads/master'
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
