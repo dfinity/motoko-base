@@ -24,7 +24,7 @@ jobs:
     - name: "install dfx"
       run: |
        wget https://sdk.dfinity.org/install.sh
-       yes Y | DFX_VERSION=0.5.10 sh install.sh
+       yes Y | DFX_VERSION=0.5.13 sh install.sh
        echo "::add-path::/home/runner/bin"
     - name: "dfx cache install"
       run: dfx cache install
