@@ -27,7 +27,7 @@ public type Set<T> = Trie.Trie<T,()>;
     let (s2, _) = Trie.put<T,()>(s, {key=x; hash=xh}, eq, ());
     s2
   };
-  /// Delete an element into the set.
+  /// Delete an element from the set.
   public func delete<T>(s:Set<T>, x:T, xh:Hash, eq:(T,T)->Bool) : Set<T> = {
     let (s2, _) = Trie.remove<T,()>(s, {key=x; hash=xh}, eq);
     s2
