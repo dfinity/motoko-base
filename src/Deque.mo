@@ -36,11 +36,11 @@ module {
       };
     };
     /// Remove the first element on the front end of the queue; traps when empty.
-    public func popFront<T>(q: Deque<T>) : Deque<T> {
+    public func popFront<T>(q: Deque<T>) : ?(T, Deque<T>) {
       switch q {
-      case (?(x, f), r) check(f, r);
-      case (null, ?(x, r)) check(null, r);
-      case _ P.unreachable();
+      case (?(x, f), r) ?(x, check(f, r));
+      case (null, ?(x, r)) ?(x, check(null, r));
+      case _ null;
       };
     };
     /// Insert a new element on the back end of the queue
@@ -55,11 +55,11 @@ module {
       };
     };
     /// Remove the first element on the back end of the queue; traps when empty.
-    public func popBack<T>(q: Deque<T>) : Deque<T> {
+    public func popBack<T>(q: Deque<T>) : ?(Deque<T>, T) {
       switch q {
-      case (f, ?(x, r)) check(f, r);
-      case (?(x, f), null) check(f, null);
-      case _ P.unreachable();
+      case (f, ?(x, r)) ?(check(f, r), x);
+      case (?(x, f), null) ?(check(f, null), x);
+      case _ null;
       };
     };
 };
