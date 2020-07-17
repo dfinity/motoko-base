@@ -4,9 +4,14 @@
 <p>Implements the same interface as <code>Trie</code>, but as a linked-list of key-value
 pairs.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Blob.html">Blob</a><div class="index-item-comment"><p>Binary blobs</p>
-</div></li><li class="index-item"><a class="index-item-link" href="Buf.html">Buf</a><div class="index-item-comment"><p>Growing buffers</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Bool.html">Bool</a><div class="index-item-comment"><p>Boolean type and operations.</p>
+<p>While boolean operators <code>_ and _</code> and <code>_ or _</code> are short-circuiting,
+avoiding computation of the right argument when possible, the functions
+<code>logand(_, _)</code> and <code>logor(_, _)</code> are <em>strict</em> and will always evaluate <em>both</em>
+of their arguments.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Buffer.html">Buffer</a><div class="index-item-comment"><p>Growing buffers</p>
 <p>This module defines buffers that grow, with a general element type.</p>
-<h3 id="Why">Why?</h3>
+<h2 id="Why">Why?</h2>
 
 <p>Motoko applications expose interfaces that use fixed-size arrays of
 general (user-defined) elements to represent sets, sequences and maps
@@ -16,7 +21,7 @@ each fixed.  They do not permit general growth/appending, which is the
 focus here.</p>
 <p>To create these arrays, and to consume them with ergonomic (imperative) code, and
 low API friction, developers need <em>buffers that grow</em>.</p>
-<h3 id="Define-Buf-lt-X-gt-object-type">Define <code>Buf&lt;X&gt;</code> object type</h3>
+<h2 id="Define-Buf-lt-X-gt-object-type">Define <code>Buf&lt;X&gt;</code> object type</h2>
 
 <p>A &quot;buffer&quot; is a mutable sequence that grows, either one element at a
 time, or one (second) buffer at time.</p>
@@ -24,11 +29,18 @@ time, or one (second) buffer at time.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Debug.html">Debug</a><div class="index-item-comment"><p>Debugging aids</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Deque.html">Deque</a><div class="index-item-comment"><p>Double-ended Queue</p>
 <p>This module provides a purely-functional double-ended queue.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Error.html">Error</a><div class="index-item-comment"><p>Error values and inspection.
+The <code>Error</code> type is the argument to <code>throw</code>, parameter of <code>catch</code>.
+The <code>Error</code> type is opaque.</p>
+</div></li><li class="index-item"><a class="index-item-link" href="Float.html">Float</a><div class="index-item-comment"><p>64-bit Floating-point numbers</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Func.html">Func</a><div class="index-item-comment"><p>Functions on functions</p>
+<p>The functions in this module are rather useless on their own but they're
+commonly used when programming in a functional style with higher-order
+functions.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Hash.html">Hash</a><div class="index-item-comment"><p>Hash values</p>
 </div></li><li class="index-item"><a class="index-item-link" href="HashMap.html">HashMap</a><div class="index-item-comment"><p>Mutable hash map (aka Hashtable)</p>
 <p>This module defines an imperative hash map (hash table), with a general key and value type.</p>
-<p>It has a minimal object-oriented interface: get, set, swap, delete, count and iter.</p>
+<p>It has a minimal object-oriented interface: get, set, swap, delete, count and entries.</p>
 <p>The class is parameterized by the key's equality and hash functions,
 and an initial capacity.  However, as with <code>Buf</code>, no array allocation
 happens until the first <code>set</code> (or <code>swap</code>).</p>
@@ -38,32 +50,30 @@ happens until the first <code>set</code> (or <code>swap</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Heap.html">Heap</a><div class="index-item-comment"><p>Priority Queue</p>
 <p>This module provides purely-functional priority queue based on leftist heap</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Int.html">Int</a><div class="index-item-comment"><p>Integer numbers</p>
-<p>Most operations on natural numbers (e.g. addition) are available as built-in operators (<code>1 + 1</code>).
-This module provides equivalent functions and conversion functions.</p>
-<p>The conversions <code>toInt*</code> will trap if the number is out of bounds.</p>
+<p>Most operations on integers (e.g. addition) are available as built-in operators (e.g. <code>1 + 1</code>).
+This module provides equivalent functions and <code>Text</code> conversion.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Int16.html">Int16</a><div class="index-item-comment"><p>16-bit signed integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Int32.html">Int32</a><div class="index-item-comment"><p>32-bit signed integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Int64.html">Int64</a><div class="index-item-comment"><p>64-bit signed integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Int8.html">Int8</a><div class="index-item-comment"><p>8-bit signed integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Iter.html">Iter</a><div class="index-item-comment"><p>Iterators</p>
 </div></li><li class="index-item"><a class="index-item-link" href="IterType.html">IterType</a><div class="index-item-comment"><p>Iterator type -- break cycle module def</p>
 </div></li><li class="index-item"><a class="index-item-link" href="List.html">List</a><div class="index-item-comment"><p>Purely-functional, singly-linked lists.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Nat.html">Nat</a><div class="index-item-comment"><p>Natural numbers</p>
-<p>Most operations on natural numbers (e.g. addition) are available as built-in operators (<code>1 + 1</code>).
-This module provides conversion functions.</p>
-<p>The conversions <code>toNat*</code> will trap if the number is out of bounds; the conversions <code>toWord*</code> will wrap-around.</p>
+<p>Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. <code>1 + 1</code>).
+This module provides equivalent functions and <code>Text</code> conversion.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Nat16.html">Nat16</a><div class="index-item-comment"><p>16-bit unsigned integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Nat32.html">Nat32</a><div class="index-item-comment"><p>32-bit unsigned integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Nat64.html">Nat64</a><div class="index-item-comment"><p>64-bit unsigned integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Nat8.html">Nat8</a><div class="index-item-comment"><p>8-bit unsigned integers with checked arithmetic</p>
-<p>Most operations are available as built-in operators (<code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="None.html">None</a><div class="index-item-comment"><p>The absent value</p>
 <p>The <code>None</code> type represents a type with <em>no</em> value, often used to mark dead
 code.</p>
@@ -98,13 +108,15 @@ some further experience and discussion.  Until then, they live here.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="RBTree.html">RBTree</a><div class="index-item-comment"><p>Red-Black Trees</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Result.html">Result</a><div class="index-item-comment"><p>Error handling with the Result type.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Text.html">Text</a><div class="index-item-comment"><p>Text values</p>
-<p>This type describes a valid, human-readable text. It does not contain arbitrary
-binary data.</p>
+<p>This type represents human-readable text as sequences of characters of type <a href="Char.html"><code>Char</code></a> .
+If <code>t</code> is a value of type <code>Text</code>, then:</p>
+<ul><li><code>t.chars()</code> returns an <em>iterator</em> of type <code>Iter&lt;Char&gt;</code> enumerating its characters from first to last.</li><li><code>t.size()</code> returns the <em>size</em> (or length) of <code>t</code> (and <code>t.chars()</code>) as a <code>Nat</code>.</li></ul>
+
+<p>This module defines additional operations on <code>Text</code> values.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Trie.html">Trie</a><div class="index-item-comment"><p>Functional map</p>
 <p>Functional maps (and sets) whose representation is &quot;canonical&quot;, and
 history independent.</p>
-<h2 id="Background">Background</h2>
-
+<p><strong>Background</strong></p>
 <p>See this POPL 1989 paper (Section 6):</p>
 <ul><li><a href="https://dl.acm.org/citation.cfm?id=75305">&quot;Incremental computation via function caching&quot;, Pugh &amp; Teitelbaum</a>.</li><li><a href="http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf">Public copy here</a>.</li></ul>
 
@@ -120,11 +132,11 @@ these trees never do).</p>
 <p>Sets are partial maps from element type to unit type,
 i.e., the partial map represents the set with its domain.</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Word16.html">Word16</a><div class="index-item-comment"><p>16-bit binary unsigned integers with modular arithmetic</p>
-<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 | 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Word32.html">Word32</a><div class="index-item-comment"><p>32-bit binary unsigned integers with modular arithmetic</p>
-<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 | 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Word64.html">Word64</a><div class="index-item-comment"><p>64-bit binary unsigned integers with modular arithmetic</p>
-<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 | 1</code>).</p>
 </div></li><li class="index-item"><a class="index-item-link" href="Word8.html">Word8</a><div class="index-item-comment"><p>8-bit binary unsigned integers with modular arithmetic</p>
-<p>Most operations are available as built-in operators (e.g. <code>1 + 1</code>).</p>
+<p>Most operations are available as built-in operators (e.g. <code>1 | 1</code>).</p>
 </div></li></ul></div></html>
