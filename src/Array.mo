@@ -36,14 +36,6 @@ module {
       };
     };
   };
-  /// Transform each array value using a corresponding function from an array
-  public func apply<A, B>(xs : [A], fs : [A -> B]) : [B] {
-    var ys : [B] = [];
-    for (f in fs.vals()) {
-      ys := append<B>(ys, map<A, B>(xs, f));
-    };
-    ys;
-  };
   /// Transform each array value into zero or more output values, appended in order
   public func chain<A, B>(xs : [A], f : A -> [B]) : [B] {
     var ys : [B] = [];
