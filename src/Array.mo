@@ -156,7 +156,7 @@ module {
   public func init<A>(size : Nat,  initVal : A) : [var A] {
     Prim.Array_init<A>(size, initVal);
   };
-  /// Initialize a mutable array an initial value.
+  /// Initialize a mutable array of the given size, and use the `gen` function to produce the initial value for every index.
   public func tabulate<A>(size : Nat,  gen : Nat -> A) : [A] {
     Prim.Array_tabulate<A>(size, gen);
   };
