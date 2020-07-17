@@ -62,7 +62,7 @@ public class RBTree<X, Y>(compareTo:(X, X) -> O.Order) {
   /// iterator is persistent, like the tree itself
   public func entries() : I.Iter<(X, Y)> = iter(tree, #fwd);
 
-  /// An iterator for the key-value entries of the map, in desecending key order.
+  /// An iterator for the key-value entries of the map, in descending key order.
   ///
   /// iterator is persistent, like the tree itself
   public func entriesRev() : I.Iter<(X, Y)> = iter(tree, #bwd);
