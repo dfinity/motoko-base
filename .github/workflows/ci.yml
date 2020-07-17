@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
+    - name: Check if Git tag exists
+      run: echo "::set-env name=HEAD_TAG::$(git tag --points-at HEAD)"
     - uses: cachix/install-nix-action@v10
     - name: "install dependencies"
       run: |
@@ -35,8 +37,10 @@ jobs:
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: pushd doc && ./make_docs.sh && popd
-    # - name: Upload docs
-    #   uses: actions/upload-artifact@v1
-    #   with:
-    #     name: reference documentation
-    #     path: doc/_out/
+    - name: Upload docs
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      if: env.HEAD_TAG != '' && github.ref == 'refs/heads/master'
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: doc/_out/html/
