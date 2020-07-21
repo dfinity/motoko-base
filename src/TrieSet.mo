@@ -14,6 +14,7 @@
 //   in the future, we might avoid this via https://dfinity.atlassian.net/browse/AST-32
 import Trie "Trie";
 import Hash "Hash";
+import List "List";
 
 module {
 public type Hash = Hash.Hash;
@@ -69,5 +70,20 @@ public type Set<T> = Trie.Trie<T,()>;
     let s3 = Trie.join<T,(),(),()>(s1, s2, eq, noop);
     s3
   };
+
+  //// Construct a set from an array.
+  public func fromArray<T>(arr: [T], elemHash: T -> Hash, eq: (T, T) -> Bool): Set<T> {
+    let assocList = List.zipWith<T, (), (Trie.Key<T>, ())>(
+      List.fromArray(arr),
+      List.tabulate<()>(arr.size(), func(_: Nat): (){}),
+      func(t: T, _: ()): (Trie.Key<T>, ()) { ({key=t; hash=elemHash(t)}, ()) }
+    );
+    Trie.fromList<T, ()>(null, assocList, 0)
+  };
+
+  //// Returns the set as an array.
+  public func toArray<T>(s: Set<T>): [T] {
+    Trie.toArray<T, (), T>(s, func (t: T, _: ()): T { t })
+  }
 
 }
