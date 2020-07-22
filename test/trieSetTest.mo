@@ -5,7 +5,7 @@ import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
-let set1 = TrieSet.fromArray<Nat>([ 1, 2, 3 ], Word32.fromNat, Nat.equal);
+let set1 = TrieSet.fromArray<Nat>([ 1, 2, 3 ], Word32.fromNat);
 
 let suite = Suite.suite("TrieSet fromArray", [
   Suite.test(

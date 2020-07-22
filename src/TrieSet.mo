@@ -72,10 +72,10 @@ public type Set<T> = Trie.Trie<T,()>;
   };
 
   //// Construct a set from an array.
-  public func fromArray<T>(arr: [T], elemHash: T -> Hash, eq: (T, T) -> Bool): Set<T> {
+  public func fromArray<T>(arr: [T], elemHash: T -> Hash): Set<T> {
     let assocList =
       List.tabulate<(Trie.Key<T>, ())>(
-        arr.size(), 
+        arr.size(),
         func ix = ({ key = arr[ix]; hash = elemHash(arr[ix])}, ())
       );
     Trie.fromList<T, ()>(null, assocList, 0)
