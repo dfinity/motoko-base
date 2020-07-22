@@ -1,7 +1,8 @@
+/// Functions for persistent, double-ended queues.
+
 import List "List";
 import P "Prelude";
 
-/// Functions for persistent, double-ended queues.
 module {
     type List<T> = List.List<T>;
 
@@ -35,7 +36,7 @@ module {
       case _ null;
       };
     };
-    /// Remove the first element on the front end of the queue; traps when empty.
+    /// Remove the first element on the front end of the queue; Returns null when empty.
     public func popFront<T>(q: Deque<T>) : ?(T, Deque<T>) {
       switch q {
       case (?(x, f), r) ?(x, check(f, r));
@@ -54,7 +55,7 @@ module {
       case _ null;
       };
     };
-    /// Remove the first element on the back end of the queue; traps when empty.
+    /// Remove the first element on the back end of the queue; Returns null when empty.
     public func popBack<T>(q: Deque<T>) : ?(Deque<T>, T) {
       switch q {
       case (f, ?(x, r)) ?(check(f, r), x);
