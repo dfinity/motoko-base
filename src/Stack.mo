@@ -1,7 +1,6 @@
-/// Stack
+/// Stack collection (LIFO discipline).
 ///
-/// Minimal last-in-first-out (LIFO) collection, with a class-based type arg.
-///
+/// Minimal LIFO (last in first out) implementation, as a class.
 /// See [deque](Deque.html) for mixed LIFO/FIFO behavior.
 ///
 import List "mo:base/List";
