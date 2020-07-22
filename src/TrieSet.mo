@@ -73,17 +73,17 @@ public type Set<T> = Trie.Trie<T,()>;
 
   //// Construct a set from an array.
   public func fromArray<T>(arr: [T], elemHash: T -> Hash, eq: (T, T) -> Bool): Set<T> {
-    let assocList = List.zipWith<T, (), (Trie.Key<T>, ())>(
-      List.fromArray(arr),
-      List.tabulate<()>(arr.size(), func(_: Nat): (){}),
-      func(t: T, _: ()): (Trie.Key<T>, ()) { ({key=t; hash=elemHash(t)}, ()) }
-    );
+    let assocList =
+      List.tabulate<(Trie.Key<T>, ())>(
+        arr.size(), 
+        func ix = ({ key = arr[ix]; hash = elemHash(arr[ix])}, ())
+      );
     Trie.fromList<T, ()>(null, assocList, 0)
   };
 
   //// Returns the set as an array.
   public func toArray<T>(s: Set<T>): [T] {
-    Trie.toArray<T, (), T>(s, func (t: T, _: ()): T { t })
+    Trie.toArray(s, func (t: T, _: ()): T { t })
   }
 
 }
