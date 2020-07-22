@@ -75,6 +75,17 @@ Debug.print("Float");
 
 
 {
+  Debug.print("  format");
+
+  assert(Float.format(#exact, 20.12345678901) == "20.12345678901");
+  assert(Float.format(#fix 6, 20.12345678901) == "20.123457");
+  assert(Float.format(#exp 9, 20.12345678901) == "2.012345679e+01");
+  assert(Float.format(#gen 12, 20.12345678901) == "20.123456789");
+  assert(Float.format(#hex 10, 20.12345678901) == "0x1.41f9add374p+4");
+};
+
+
+{
   Debug.print("  Pi: " # Float.toText(Float.pi));
   Debug.print("  arccos(-1.0): " # Float.toText(Float.arccos(-1.)));
 
