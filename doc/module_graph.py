@@ -2,9 +2,6 @@
 #
 # Use like so (from the `motoko-base/` directory):
 # python3 doc/module_graph.py | dot -Tsvg > module_graph.svg && xdg-open module_graph.svg
-#
-# If you want to create a shareable link instead:
-# python3 doc/module_graph.py | dot -Tsvg > module_graph.svg && doc/make_data_uri.sh module_graph.svg
 
 import subprocess
 import glob
