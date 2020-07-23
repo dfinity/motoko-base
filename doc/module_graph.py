@@ -1,7 +1,7 @@
 # Requires Python 3 and Graphviz to be installed
 
 # Use like so (from the `motoko-base/` directory):
-# python3 doc/module_graph.py | dot -Tpng > module-graph.png && xdg-open module-graph.png
+# python3 doc/module_graph.py | dot -Tsvg > module-graph.png && xdg-open module-graph.svg
 
 import subprocess
 import glob
