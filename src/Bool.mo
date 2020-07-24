@@ -1,5 +1,5 @@
 /// Boolean type and operations.
-
+///
 /// While boolean operators `_ and _` and `_ or _` are short-circuiting,
 /// avoiding computation of the right argument when possible, the functions
 /// `logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
@@ -34,7 +34,7 @@ module {
   public func notEqual(x : Bool, y : Bool) : Bool { x != y };
 
   /// Returns the order of `x` and `y`, where `false < true`.
-  public func compare(x : Bool, y : Bool) : {#less; #equal; #greater} {
+  public func compare(x : Bool, y : Bool) : {#less; #equal; #greater } {
     if (x == y) #equal else if (x) #greater else #less
   };
 

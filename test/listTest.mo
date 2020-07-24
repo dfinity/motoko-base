@@ -60,6 +60,19 @@ type X = Nat;
   assert (List.size<X>(l3) == 2);
 
   {
+    Debug.print("  flatten");
+
+    let expected : List.List<Nat> = ?(1, ?(2, ?(3, null)));
+    // [[1, 2], [3]]
+    let nested : List.List<List.List<Nat>> =
+      ?(?(1, ?(2, null)), ?(?(3, null), null));
+    let actual = List.flatten<Nat>(nested);
+
+    assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+
+  };
+
+  {
     Debug.print("  fromArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
@@ -86,7 +99,7 @@ type X = Nat;
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let actual = List.toArray<Nat>(list);
 
-    assert (actual.len() == expected.len());
+    assert (actual.size() == expected.size());
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);
@@ -100,7 +113,7 @@ type X = Nat;
     let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
     let actual = List.toVarArray<Nat>(list);
 
-    assert (actual.len() == expected.len());
+    assert (actual.size() == expected.size());
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);

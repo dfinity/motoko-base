@@ -2,7 +2,7 @@
 ///
 /// This module defines buffers that grow, with a general element type.
 ///
-/// ### Why?
+/// ## Why?
 ///
 /// Motoko applications expose interfaces that use fixed-size arrays of
 /// general (user-defined) elements to represent sets, sequences and maps
@@ -15,12 +15,11 @@
 /// To create these arrays, and to consume them with ergonomic (imperative) code, and
 /// low API friction, developers need _buffers that grow_.
 ///
-/// ### Define `Buf<X>` object type
+/// ## Define `Buf<X>` object type
 ///
 /// A "buffer" is a mutable sequence that grows, either one element at a
 /// time, or one (second) buffer at time.
-import P "Prelude";
-import A "Array";
+import Prim "mo:prim";
 
 module {
 
@@ -29,18 +28,19 @@ module {
 /// The argument `initCapacity` gives the initial capacity.  Under the
 /// interface, the mutable array grows by doubling when this initial
 /// capacity is exhausted.
-public class Buf<X> (initCapacity : Nat) {
+public class Buffer<X> (initCapacity : Nat) {
   var count : Nat = 0;
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
+  /// Adds a single element to the buffer.
   public func add(elem : X) {
-    if (count == elems.len()) {
+    if (count == elems.size()) {
       let size =
         if (count == 0)
           (if (initCapacity > 0) initCapacity else 1)
         else
-          2 * elems.len();
-      let elems2 = A.init<X>(size, elem);
+          2 * elems.size();
+      let elems2 = Prim.Array_init<X>(size, elem);
       var i = 0;
       label l loop {
         if (i >= count) break l;
@@ -53,6 +53,8 @@ public class Buf<X> (initCapacity : Nat) {
     count += 1;
   };
 
+  /// Removes the item that was inserted last and returns it or `null` if no
+  /// elements had been added to the Buffer.
   public func removeLast() : ?X {
     if (count == 0) null
     else {
@@ -61,7 +63,8 @@ public class Buf<X> (initCapacity : Nat) {
     };
   };
 
-  public func append(b:Buf<X>) {
+  /// Adds all elements in buffer `b` to this buffer.
+  public func append(b : Buffer<X>) {
     let i = b.vals();
     loop {
       switch (i.next()) {
@@ -71,14 +74,17 @@ public class Buf<X> (initCapacity : Nat) {
     };
   };
 
+  /// Returns the current number of elements.
   public func size() : Nat =
     count;
 
+  /// Resets the buffer.
   public func clear() =
     count := 0;
 
-  public func clone() : Buf<X> {
-    let c = Buf<X>(elems.len());
+  /// Returns a copy of this buffer.
+  public func clone() : Buffer<X> {
+    let c = Buffer<X>(elems.size());
     var i = 0;
     label l loop {
       if (i >= count) break l;
@@ -88,6 +94,7 @@ public class Buf<X> (initCapacity : Nat) {
     c
   };
 
+  /// Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
   public func vals() : { next : () -> ?X } = object {
     var pos = 0;
     public func next() : ?X {
@@ -99,16 +106,18 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
+  /// Creates a new array containing this buffer's elements.
   public func toArray() : [X] =
     // immutable clone of array
-    A.tabulate<X>(
+    Prim.Array_tabulate<X>(
       count,
       func(x: Nat): X { elems[x] }
     );
 
+  /// Creates a mutable array containing this buffer's elements.
   public func toVarArray() : [var X] = {
     if (count == 0) { [var] } else {
-      let a = A.init<X>(count, elems[0]);
+      let a = Prim.Array_init<X>(count, elems[0]);
       var i = 0;
       label l loop {
         if (i >= count) break l;
@@ -119,21 +128,26 @@ public class Buf<X> (initCapacity : Nat) {
     }
   };
 
-  public func get(offset : Nat) : X {
-    elems[offset]
+  /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
+  public func get(i : Nat) : X {
+    assert(i < count);
+    elems[i]
   };
 
-  public func getOpt(offset : Nat) : ?X {
-    if (offset < count) {
-      ?elems[offset]
+  /// Gets the 'i'-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
+  public func getOpt(i : Nat) : ?X {
+    if (i < count) {
+      ?elems[i]
     }
     else {
       null
     }
   };
 
-  public func put(offset : Nat, elem : X) {
-    elems[offset] := elem;
+  /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
+  /// index is out of bounds. Indexing is zero-based.
+  public func put(i : Nat, elem : X) {
+    elems[i] := elem;
   };
 };
 

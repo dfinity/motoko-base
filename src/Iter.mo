@@ -1,7 +1,7 @@
 /// Iterators
 
 import Array "Array";
-import Buffer "Buf";
+import Buffer "Buffer";
 import List "List";
 
 module {
@@ -129,7 +129,7 @@ module {
   /// ```
   public func fromArray<A>(xs : [A]) : Iter<A> {
     var ix : Nat = 0;
-    let size = xs.len();
+    let size = xs.size();
     object {
       public func next() : ?A {
         if (ix >= size) {
@@ -161,7 +161,7 @@ module {
   /// assertEquals([1, 2, 3], toArray(iter));
   /// ```
   public func toArray<A>(xs : Iter<A>) : [A] {
-    let buffer = Buffer.Buf<A>(8);
+    let buffer = Buffer.Buffer<A>(8);
     iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
     return buffer.toArray()
   };
