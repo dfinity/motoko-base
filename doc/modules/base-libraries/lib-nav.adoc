@@ -3,7 +3,7 @@
 ** xref:AssocList.adoc[AssocList]
 ** xref:Blob.adoc[Blob]
 ** xref:Bool.adoc[Bool]
-** xref:Buf.adoc[Buf]
+** xref:Buffer.adoc[Buffer]
 ** xref:Char.adoc[Char]
 ** xref:Debug.adoc[Debug]
 ** xref:Deque.adoc[Deque]
