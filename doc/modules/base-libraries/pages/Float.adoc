@@ -30,7 +30,7 @@ Returns the absolute value of `x`.
 
 [source,motoko]
 ----
-let abs : ((x : Float)) -> Float
+let abs : (x : Float) -> Float
 ----
 
 [[value.sqrt]]
@@ -40,7 +40,7 @@ Returns the square root of `x`.
 
 [source,motoko]
 ----
-let sqrt : ((x : Float)) -> Float
+let sqrt : (x : Float) -> Float
 ----
 
 [[value.ceil]]
@@ -50,7 +50,7 @@ Returns the smallest integral float greater than or equal to `x`.
 
 [source,motoko]
 ----
-let ceil : ((x : Float)) -> Float
+let ceil : (x : Float) -> Float
 ----
 
 [[value.floor]]
@@ -60,7 +60,7 @@ Returns the largest integral float less than or equal to `x`.
 
 [source,motoko]
 ----
-let floor : ((x : Float)) -> Float
+let floor : (x : Float) -> Float
 ----
 
 [[value.trunc]]
@@ -70,7 +70,7 @@ Returns the nearest integral float not greater in magnitude than `x`.
 
 [source,motoko]
 ----
-let trunc : ((x : Float)) -> Float
+let trunc : (x : Float) -> Float
 ----
 
 [[value.nearest]]
@@ -80,7 +80,7 @@ Returns the nearest integral float to `x`.
 
 [source,motoko]
 ----
-let nearest : ((x : Float)) -> Float
+let nearest : (x : Float) -> Float
 ----
 
 [[value.copySign]]
@@ -120,7 +120,7 @@ Returns the sine of the radian angle `x`.
 
 [source,motoko]
 ----
-let sin : ((x : Float)) -> Float
+let sin : (x : Float) -> Float
 ----
 
 [[value.cos]]
@@ -130,7 +130,7 @@ Returns the cosine of the radian angle `x`.
 
 [source,motoko]
 ----
-let cos : ((x : Float)) -> Float
+let cos : (x : Float) -> Float
 ----
 
 [[value.tan]]
@@ -140,7 +140,7 @@ Returns the tangent of the radian angle `x`.
 
 [source,motoko]
 ----
-let tan : ((x : Float)) -> Float
+let tan : (x : Float) -> Float
 ----
 
 [[value.arcsin]]
@@ -150,7 +150,7 @@ Returns the arc sine of `x` in radians.
 
 [source,motoko]
 ----
-let arcsin : ((x : Float)) -> Float
+let arcsin : (x : Float) -> Float
 ----
 
 [[value.arccos]]
@@ -160,17 +160,17 @@ Returns the arc cosine of `x` in radians.
 
 [source,motoko]
 ----
-let arccos : ((x : Float)) -> Float
+let arccos : (x : Float) -> Float
 ----
 
 [[value.arctan]]
 == arctan
 
-Returns the arc tangent in `x` in radians.
+Returns the arc tangent of `x` in radians.
 
 [source,motoko]
 ----
-let arctan : ((x : Float)) -> Float
+let arctan : (x : Float) -> Float
 ----
 
 [[value.arctan2]]
@@ -190,7 +190,7 @@ Returns the value of `e` raised to the `x`-th power.
 
 [source,motoko]
 ----
-let exp : ((x : Float)) -> Float
+let exp : (x : Float) -> Float
 ----
 
 [[value.log]]
@@ -200,7 +200,23 @@ Returns the natural logarithm (base-`e`) of `x`.
 
 [source,motoko]
 ----
-let log : ((x : Float)) -> Float
+let log : (x : Float) -> Float
+----
+
+[[value.format]]
+== format
+
+Formatting. `format(fmt, x)` formats `x` to `Text` according  to the
+formatting directive `fmt`, which can take one of the following forms:
+- `#fix prec` as fixed-point format with `prec` digits
+- `#exp prec` as exponential format with `prec` digits
+- `#gen prec` as generic format with `prec` digits
+- `#hex prec` as hexadecimal format with `prec` digits
+- `#exact` as exact format that can be decoded without loss.
+
+[source,motoko]
+----
+func format(fmt : {#fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact}, x : Float) : Text
 ----
 
 [[value.toText]]
@@ -210,7 +226,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toText : (Float) -> Text
+let toText : Float -> Text
 ----
 
 [[value.toInt64]]
@@ -220,7 +236,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toInt64 : (Float) -> Int64
+let toInt64 : Float -> Int64
 ----
 
 [[value.fromInt64]]
@@ -230,7 +246,7 @@ Conversion.
 
 [source,motoko]
 ----
-let fromInt64 : (Int64) -> Float
+let fromInt64 : Int64 -> Float
 ----
 
 [[value.toInt]]
@@ -240,7 +256,7 @@ Conversion via Int64.
 
 [source,motoko]
 ----
-let toInt : (Float) -> Int
+let toInt : Float -> Int
 ----
 
 [[value.fromInt]]
@@ -250,7 +266,7 @@ Conversion via Int64. May trap.
 
 [source,motoko]
 ----
-let fromInt : (Int) -> Float
+let fromInt : Int -> Float
 ----
 
 [[value.equal]]
@@ -320,7 +336,7 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Float, y : Float) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Float, y : Float) : {#less; #equal; #greater}
 ----
 
 [[value.neq]]

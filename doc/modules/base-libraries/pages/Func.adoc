@@ -18,7 +18,7 @@ compose(f, g)(x) = f(g(x))
 
 [source,motoko]
 ----
-func compose<A, B, C>(f : (B) -> C, g : (A) -> B) : (A) -> C
+func compose<A, B, C>(f : B -> C, g : A -> B) : A -> C
 ----
 
 [[value.identity]]
@@ -49,6 +49,6 @@ const(true)(20) = true
 
 [source,motoko]
 ----
-func const<A, B>(x : A) : (B) -> A
+func const<A, B>(x : A) : B -> A
 ----
 

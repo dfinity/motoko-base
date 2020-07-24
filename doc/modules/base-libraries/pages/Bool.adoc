@@ -85,6 +85,6 @@ Returns the order of `x` and `y`, where `false < true`.
 
 [source,motoko]
 ----
-func compare(x : Bool, y : Bool) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Bool, y : Bool) : {#less; #equal; #greater}
 ----
 

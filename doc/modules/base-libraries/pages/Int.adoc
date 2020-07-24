@@ -13,7 +13,7 @@ Returns the absolute value of the number
 
 [source,motoko]
 ----
-let abs : (Int) -> Nat
+let abs : Int -> Nat
 ----
 
 [[value.toText]]
@@ -23,7 +23,7 @@ let abs : (Int) -> Nat
 
 [source,motoko]
 ----
-let toText : (Int) -> Text
+let toText : Int -> Text
 ----
 
 [[value.min]]
@@ -133,7 +133,7 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Int, y : Int) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Int, y : Int) : {#less; #equal; #greater}
 ----
 
 [[value.neq]]

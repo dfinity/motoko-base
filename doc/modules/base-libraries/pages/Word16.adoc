@@ -12,7 +12,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toNat : (Word16) -> Nat
+let toNat : Word16 -> Nat
 ----
 
 [[value.fromNat]]
@@ -22,17 +22,17 @@ Conversion. Wraps around.
 
 [source,motoko]
 ----
-let fromNat : (Nat) -> Word16
+let fromNat : Nat -> Word16
 ----
 
 [[value.toInt]]
 == toInt
 
-Conversion. Returns `x mod 2^16`.
+Conversion. Return a value between `-2^15` and `2^15-1`
 
 [source,motoko]
 ----
-let toInt : ((x : Word16)) -> Int
+func toInt(x : Word16) : Int
 ----
 
 [[value.fromInt]]
@@ -42,7 +42,7 @@ Conversion. Returns `x mod 2^16`.
 
 [source,motoko]
 ----
-let fromInt : ((x : Int)) -> Word16
+let fromInt : (x : Int) -> Word16
 ----
 
 [[value.toText]]
@@ -142,7 +142,7 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Word16, y : Word16) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Word16, y : Word16) : {#less; #equal; #greater}
 ----
 
 [[value.add]]
@@ -344,7 +344,7 @@ Returns the count of non-zero bits in `x`.
 
 [source,motoko]
 ----
-let bitcountNonZero : ((x : Word16)) -> Word16
+let bitcountNonZero : (x : Word16) -> Word16
 ----
 
 [[value.bitcountLeadingZero]]
@@ -354,7 +354,7 @@ Returns the count of leading zero bits in `x`.
 
 [source,motoko]
 ----
-let bitcountLeadingZero : ((x : Word16)) -> Word16
+let bitcountLeadingZero : (x : Word16) -> Word16
 ----
 
 [[value.bitcountTrailingZero]]
@@ -364,6 +364,6 @@ Returns the count of trailing zero bits in `x`.
 
 [source,motoko]
 ----
-let bitcountTrailingZero : ((x : Word16)) -> Word16
+let bitcountTrailingZero : (x : Word16) -> Word16
 ----
 

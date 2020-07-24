@@ -12,6 +12,6 @@ environment the program runs in.
 
 [source,motoko]
 ----
-let print : (Text) -> ()
+let print : Text -> ()
 ----
 

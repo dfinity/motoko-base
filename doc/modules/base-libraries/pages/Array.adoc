@@ -30,7 +30,7 @@ func append<A>(xs : [A], ys : [A]) : [A]
 
 [source,motoko]
 ----
-func apply<A, B>(xs : [A], fs : [(A) -> B]) : [B]
+func apply<A, B>(xs : [A], fs : [A -> B]) : [B]
 ----
 
 [[value.chain]]
@@ -40,7 +40,7 @@ func apply<A, B>(xs : [A], fs : [(A) -> B]) : [B]
 
 [source,motoko]
 ----
-func chain<A, B>(xs : [A], f : (A) -> [B]) : [B]
+func chain<A, B>(xs : [A], f : A -> [B]) : [B]
 ----
 
 [[value.filter]]
@@ -50,7 +50,17 @@ func chain<A, B>(xs : [A], f : (A) -> [B]) : [B]
 
 [source,motoko]
 ----
-func filter<A>(f : (A) -> Bool, xs : [A]) : [A]
+func filter<A>(xs : [A], f : A -> Bool) : [A]
+----
+
+[[value.filterMap]]
+== filterMap
+
+
+
+[source,motoko]
+----
+func filterMap<A, B>(xs : [A], f : A -> ?B) : [B]
 ----
 
 [[value.foldLeft]]
@@ -80,7 +90,7 @@ func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B
 
 [source,motoko]
 ----
-func find<A>(xs : [A], f : (A) -> Bool) : ?A
+func find<A>(xs : [A], f : A -> Bool) : ?A
 ----
 
 [[value.freeze]]
@@ -110,7 +120,7 @@ func flatten<A>(xs : [[A]]) : [A]
 
 [source,motoko]
 ----
-func map<A, B>(xs : [A], f : (A) -> B) : [B]
+func map<A, B>(xs : [A], f : A -> B) : [B]
 ----
 
 [[value.mapEntries]]
@@ -180,7 +190,7 @@ func init<A>(len : Nat, x : A) : [var A]
 
 [source,motoko]
 ----
-func tabulate<A>(len : Nat, gen : (Nat) -> A) : [A]
+func tabulate<A>(len : Nat, gen : Nat -> A) : [A]
 ----
 
 [[value.tabulateVar]]
@@ -190,6 +200,6 @@ func tabulate<A>(len : Nat, gen : (Nat) -> A) : [A]
 
 [source,motoko]
 ----
-func tabulateVar<A>(len : Nat, gen : (Nat) -> A) : [var A]
+func tabulateVar<A>(len : Nat, gen : Nat -> A) : [var A]
 ----
 

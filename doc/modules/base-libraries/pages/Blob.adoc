@@ -10,7 +10,7 @@ Binary blobs
 
 [source,motoko]
 ----
-let hash : (Blob) -> Word32
+let hash : Blob -> Word32
 ----
 
 [[value.equal]]
@@ -80,6 +80,6 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Blob, y : Blob) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Blob, y : Blob) : {#less; #equal; #greater}
 ----
 

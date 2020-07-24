@@ -38,7 +38,7 @@ Create an error from message `m` with code #canister_reject.
 
 [source,motoko]
 ----
-let reject : ((m : Text)) -> Error
+let reject : (m : Text) -> Error
 ----
 
 [[value.code]]
@@ -48,7 +48,7 @@ Returns the code of an error `e`.
 
 [source,motoko]
 ----
-let code : ((e : Error)) -> ErrorCode
+let code : (e : Error) -> ErrorCode
 ----
 
 [[value.message]]
@@ -58,6 +58,6 @@ Returns the message of an error `e`.
 
 [source,motoko]
 ----
-let message : ((e : Error)) -> Text
+let message : (e : Error) -> Text
 ----
 

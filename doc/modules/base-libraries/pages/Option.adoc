@@ -46,7 +46,7 @@ Unwraps an optional value using a function, or returns the default, i.e.
 
 [source,motoko]
 ----
-func getMapped<A, B>(x : ?A, f : (A) -> B, default : B) : B
+func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B
 ----
 
 [[value.map]]
@@ -60,7 +60,7 @@ map(null, f) = null
 
 [source,motoko]
 ----
-func map<A, B>(x : ?A, f : (A) -> B) : ?B
+func map<A, B>(x : ?A, f : A -> B) : ?B
 ----
 
 [[value.iterate]]
@@ -79,7 +79,7 @@ assert(counter == 5);
 
 [source,motoko]
 ----
-func iterate<A>(x : ?A, f : (A) -> ())
+func iterate<A>(x : ?A, f : A -> ())
 ----
 
 [[value.apply]]
@@ -90,7 +90,7 @@ least one of the arguments is `null`.
 
 [source,motoko]
 ----
-func apply<A, B>(x : ?A, f : ?((A) -> B)) : ?B
+func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B
 ----
 
 [[value.chain]]
@@ -103,7 +103,7 @@ NOTE: Together with [`make`](#value.make), this forms a “monad”.
 
 [source,motoko]
 ----
-func chain<A, B>(x : ?A, f : (A) -> ?B) : ?B
+func chain<A, B>(x : ?A, f : A -> ?B) : ?B
 ----
 
 [[value.flatten]]
@@ -118,7 +118,7 @@ flatten(null)) = null
 
 [source,motoko]
 ----
-func flatten<A>(x : ?(?A)) : ?A
+func flatten<A>(x : ??A) : ?A
 ----
 
 [[value.make]]

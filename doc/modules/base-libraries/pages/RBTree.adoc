@@ -10,7 +10,7 @@ Red-Black Trees
 
 [source,motoko]
 ----
-type Color = {#R : (); #B : ()}
+type Color = {#R; #B}
 ----
 
 [[type.Tree]]
@@ -20,7 +20,7 @@ type Color = {#R : (); #B : ()}
 
 [source,motoko]
 ----
-type Tree<X, Y> = {#node : (Color, Tree<X, Y>, (X, ?Y), Tree<X, Y>); #leaf : ()}
+type Tree<X, Y> = {#node : (Color, Tree<X, Y>, (X, ?Y), Tree<X, Y>); #leaf}
 ----
 
 [[class.RBTree]]
@@ -114,7 +114,7 @@ func entriesRev() : I.Iter<(X, Y)>
 
 [source,motoko]
 ----
-func iter<X, Y>(t : Tree<X, Y>, dir : {#fwd : (); #bwd : ()}) : I.Iter<(X, Y)>
+func iter<X, Y>(t : Tree<X, Y>, dir : {#fwd; #bwd}) : I.Iter<(X, Y)>
 ----
 
 [[value.height]]

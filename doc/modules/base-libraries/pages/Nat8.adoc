@@ -12,7 +12,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toNat : (Nat8) -> Nat
+let toNat : Nat8 -> Nat
 ----
 
 [[value.fromNat]]
@@ -22,7 +22,7 @@ Conversion. Traps on overflow/underflow.
 
 [source,motoko]
 ----
-let fromNat : (Nat) -> Nat8
+let fromNat : Nat -> Nat8
 ----
 
 [[value.toText]]
@@ -122,7 +122,7 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Nat8, y : Nat8) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Nat8, y : Nat8) : {#less; #equal; #greater}
 ----
 
 [[value.add]]

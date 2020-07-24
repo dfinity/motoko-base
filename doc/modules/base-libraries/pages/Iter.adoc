@@ -45,7 +45,7 @@ class range(x : Nat, y : Int)
 
 
 
-[[value.nat.next]]
+[[value.next]]
 === next
 
 
@@ -68,7 +68,7 @@ class revRange(x : Int, y : Int)
 
 
 
-[[value.int.next]]
+[[value.next]]
 === next
 
 
@@ -124,7 +124,7 @@ assertEqual(null, mappedIter.next());
 
 [source,motoko]
 ----
-func map<A, B>(xs : Iter<A>, f : (A) -> B) : Iter<B>
+func map<A, B>(xs : Iter<A>, f : A -> B) : Iter<B>
 ----
 
 [[value.make]]

@@ -1,10 +1,10 @@
 [[module.AssocList]]
 = AssocList
 
-Association Lists, a la functional programming, in Motoko.
+Lists of key-value entries ("associations").
 
-Implements the same interface as `Trie`, but as a linked-list of key-value
-pairs.
+Implements the same operations as [`Trie`](Trie.html), but uses as a
+linked-list of entries and no hashing.
 
 [[type.AssocList]]
 == AssocList
@@ -40,7 +40,7 @@ func replace<K, V>(al : AssocList<K, V>, k : K, k_eq : (K, K) -> Bool, ov : ?V) 
 [[value.diff]]
 == diff
 
-The key-value pairs of the final list consist of those pairs of
+The entries of the final list consist of those pairs of
 the left list whose keys are not present in the right list; the
 values of the right list are irrelevant.
 
@@ -52,7 +52,7 @@ func diff<K, V, W>(al1 : AssocList<K, V>, al2 : AssocList<K, W>, keq : (K, K) ->
 [[value.mapAppend]]
 == mapAppend
 
-
+Transform and combine the entries of two association lists.
 
 [source,motoko]
 ----
@@ -62,7 +62,7 @@ func mapAppend<K, V, W, X>(al1 : AssocList<K, V>, al2 : AssocList<K, W>, vbin : 
 [[value.disjDisjoint]]
 == disjDisjoint
 
-
+Specialied version of [`disj`](AssocList.html#value.disj), optimized for disjoint sub-spaces of keyspace (no matching keys).
 
 [source,motoko]
 ----
@@ -76,7 +76,7 @@ This operation generalizes the notion of "set union" to finite maps.
 Produces a "disjunctive image" of the two lists, where the values of
 matching keys are combined with the given binary operator.
 
-For unmatched key-value pairs, the operator is still applied to
+For unmatched entries, the operator is still applied to
 create the value in the image.  To accomodate these various
 situations, the operator accepts optional values, but is never
 applied to (null, null).
@@ -92,7 +92,7 @@ func disj<K, V, W, X>(al1 : AssocList<K, V>, al2 : AssocList<K, W>, keq : (K, K)
 This operation generalizes the notion of "set intersection" to
 finite maps.  Produces a "conjuctive image" of the two lists, where
 the values of matching keys are combined with the given binary
-operator, and unmatched key-value pairs are not present in the output.
+operator, and unmatched entries are not present in the output.
 
 [source,motoko]
 ----
@@ -102,7 +102,7 @@ func join<K, V, W, X>(al1 : AssocList<K, V>, al2 : AssocList<K, W>, keq : (K, K)
 [[value.fold]]
 == fold
 
-
+Fold the entries based on the recursive list structure.
 
 [source,motoko]
 ----

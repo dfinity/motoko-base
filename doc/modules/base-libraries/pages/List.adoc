@@ -92,7 +92,7 @@ func get<T>(l : List<T>, n : Nat) : ?T
 [[value.reverse]]
 == reverse
 
-Reverse the list; tail recursive.
+Reverses the list
 
 [source,motoko]
 ----
@@ -109,7 +109,7 @@ and the `iter` function in OCaml.
 
 [source,motoko]
 ----
-func iterate<T>(l : List<T>, f : (T) -> ())
+func iterate<T>(l : List<T>, f : T -> ())
 ----
 
 [[value.map]]
@@ -120,7 +120,7 @@ in a new list.
 
 [source,motoko]
 ----
-func map<T, S>(l : List<T>, f : (T) -> S) : List<S>
+func map<T, S>(l : List<T>, f : T -> S) : List<S>
 ----
 
 [[value.filter]]
@@ -131,7 +131,7 @@ the given function (often called the _predicate_) returns true.
 
 [source,motoko]
 ----
-func filter<T>(l : List<T>, f : (T) -> Bool) : List<T>
+func filter<T>(l : List<T>, f : T -> Bool) : List<T>
 ----
 
 [[value.partition]]
@@ -139,15 +139,12 @@ func filter<T>(l : List<T>, f : (T) -> Bool) : List<T>
 
 Create two new lists from the results of a given function (`f`).
 The first list only includes the elements for which the given
-function `f` returns true and tThe second list only includes
+function `f` returns true and the second list only includes
 the elements for which the function returns false.
-
-In some languages, this operation is also known as a `partition`
-function.
 
 [source,motoko]
 ----
-func partition<T>(l : List<T>, f : (T) -> Bool) : (List<T>, List<T>)
+func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>)
 ----
 
 [[value.mapFilter]]
@@ -158,7 +155,7 @@ in a new list.
 
 [source,motoko]
 ----
-func mapFilter<T, S>(l : List<T>, f : (T) -> ?S) : List<S>
+func mapFilter<T, S>(l : List<T>, f : T -> ?S) : List<S>
 ----
 
 [[value.append]]
@@ -186,7 +183,7 @@ func flatten<T>(l : List<List<T>>) : List<T>
 [[value.take]]
 == take
 
-Take the `n` number of elements from the prefix of the given list.
+Returns the first `n` elements of the given list.
 If the given list has fewer than `n` elements, this function returns
 a copy of the full input list.
 
@@ -198,7 +195,7 @@ func take<T>(l : List<T>, n : Nat) : List<T>
 [[value.drop]]
 == drop
 
-Drop all but the first  `n` elements from the given list.
+Drop all but the first `n` elements from the given list.
 
 [source,motoko]
 ----
@@ -233,7 +230,7 @@ if such an element exists.
 
 [source,motoko]
 ----
-func find<T>(l : List<T>, f : (T) -> Bool) : ?T
+func find<T>(l : List<T>, f : T -> Bool) : ?T
 ----
 
 [[value.some]]
@@ -244,7 +241,7 @@ the given predicate `f` is true.
 
 [source,motoko]
 ----
-func some<T>(l : List<T>, f : (T) -> Bool) : Bool
+func some<T>(l : List<T>, f : T -> Bool) : Bool
 ----
 
 [[value.all]]
@@ -255,7 +252,7 @@ elements.
 
 [source,motoko]
 ----
-func all<T>(l : List<T>, f : (T) -> Bool) : Bool
+func all<T>(l : List<T>, f : T -> Bool) : Bool
 ----
 
 [[value.merge]]
@@ -301,7 +298,7 @@ a list index to a list element.
 
 [source,motoko]
 ----
-func tabulate<T>(n : Nat, f : (Nat) -> T) : List<T>
+func tabulate<T>(n : Nat, f : Nat -> T) : List<T>
 ----
 
 [[value.make]]

@@ -48,7 +48,7 @@ between10And20(21) = #err("Not smaller than 20.");
 
 [source,motoko]
 ----
-func chain<R1, R2, Error>(x : Result<R1, Error>, y : (R1) -> Result<R2, Error>) : Result<R2, Error>
+func chain<R1, R2, Error>(x : Result<R1, Error>, y : R1 -> Result<R2, Error>) : Result<R2, Error>
 ----
 
 [[value.mapOk]]
@@ -58,7 +58,7 @@ Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
 
 [source,motoko]
 ----
-func mapOk<Ok1, Ok2, Error>(x : Result<Ok1, Error>, f : (Ok1) -> Ok2) : Result<Ok2, Error>
+func mapOk<Ok1, Ok2, Error>(x : Result<Ok1, Error>, f : Ok1 -> Ok2) : Result<Ok2, Error>
 ----
 
 [[value.mapErr]]
@@ -68,7 +68,7 @@ Maps the `Err` type/value, leaving any `Ok` type/value unchanged.
 
 [source,motoko]
 ----
-func mapErr<Ok, Error1, Error2>(x : Result<Ok, Error1>, f : (Error1) -> Error2) : Result<Ok, Error2>
+func mapErr<Ok, Error1, Error2>(x : Result<Ok, Error1>, f : Error1 -> Error2) : Result<Ok, Error2>
 ----
 
 [[value.fromOption]]
@@ -93,7 +93,7 @@ Maps the `Ok` type/value from the optional value, or else use the given error va
 
 [source,motoko]
 ----
-func fromSomeMap<R1, R2, E>(x : ?R1, f : (R1) -> R2, err : E) : Result<R2, E>
+func fromSomeMap<R1, R2, E>(x : ?R1, f : R1 -> R2, err : E) : Result<R2, E>
 ----
 
 [[value.fromSome]]

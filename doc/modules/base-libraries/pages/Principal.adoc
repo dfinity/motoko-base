@@ -10,7 +10,7 @@ Conversion.
 
 [source,motoko]
 ----
-let fromActor : ((a : actor {  })) -> Principal
+let fromActor : (a : actor {  }) -> Principal
 ----
 
 [[value.toBlob]]
@@ -20,7 +20,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toBlob : ((p : Principal)) -> Blob
+let toBlob : (p : Principal) -> Blob
 ----
 
 [[value.toText]]
@@ -120,6 +120,6 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Principal, y : Principal) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Principal, y : Principal) : {#less; #equal; #greater}
 ----
 

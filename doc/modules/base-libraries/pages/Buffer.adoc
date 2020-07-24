@@ -1,5 +1,5 @@
-[[module.Buf]]
-= Buf
+[[module.Buffer]]
+= Buffer
 
 Growing buffers
 
@@ -23,8 +23,8 @@ low API friction, developers need _buffers that grow_.
 A "buffer" is a mutable sequence that grows, either one element at a
 time, or one (second) buffer at time.
 
-[[class.Buf]]
-== Buf
+[[class.Buffer]]
+== Buffer
 
 Create a buffer represented internally by an mutable array.
 
@@ -34,7 +34,7 @@ capacity is exhausted.
 
 [source,motoko]
 ----
-class Buf<X>(initCapacity : Nat)
+class Buffer<X>(initCapacity : Nat)
 ----
 
 
@@ -42,7 +42,7 @@ class Buf<X>(initCapacity : Nat)
 [[value.add]]
 === add
 
-
+Adds a single element to the buffer.
 
 [source,motoko]
 ----
@@ -52,7 +52,8 @@ func add(elem : X)
 [[value.removeLast]]
 === removeLast
 
-
+Removes the item that was inserted last and returns it or `null` if no
+elements had been added to the Buffer.
 
 [source,motoko]
 ----
@@ -62,17 +63,17 @@ func removeLast() : ?X
 [[value.append]]
 === append
 
-
+Adds all elements in buffer `b` to this buffer.
 
 [source,motoko]
 ----
-func append(b : Buf<X>)
+func append(b : Buffer<X>)
 ----
 
 [[value.size]]
 === size
 
-
+Returns the current number of elements.
 
 [source,motoko]
 ----
@@ -82,7 +83,7 @@ func size() : Nat
 [[value.clear]]
 === clear
 
-
+Resets the buffer.
 
 [source,motoko]
 ----
@@ -92,17 +93,17 @@ func clear()
 [[value.clone]]
 === clone
 
-
+Returns a copy of this buffer.
 
 [source,motoko]
 ----
-func clone() : Buf<X>
+func clone() : Buffer<X>
 ----
 
 [[value.vals]]
 === vals
 
-
+Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
 
 [source,motoko]
 ----
@@ -112,7 +113,7 @@ func vals() : { next : () -> ?X }
 [[value.toArray]]
 === toArray
 
-
+Creates a new array containing this buffer's elements.
 
 [source,motoko]
 ----
@@ -122,7 +123,7 @@ func toArray() : [X]
 [[value.toVarArray]]
 === toVarArray
 
-
+Creates a mutable array containing this buffer's elements.
 
 [source,motoko]
 ----
@@ -132,30 +133,31 @@ func toVarArray() : [var X]
 [[value.get]]
 === get
 
-
+Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
 
 [source,motoko]
 ----
-func get(offset : Nat) : X
+func get(i : Nat) : X
 ----
 
 [[value.getOpt]]
 === getOpt
 
-
+Gets the 'i'-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
 
 [source,motoko]
 ----
-func getOpt(offset : Nat) : ?X
+func getOpt(i : Nat) : ?X
 ----
 
 [[value.put]]
 === put
 
-
+Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
+index is out of bounds. Indexing is zero-based.
 
 [source,motoko]
 ----
-func put(offset : Nat, elem : X)
+func put(i : Nat, elem : X)
 ----
 

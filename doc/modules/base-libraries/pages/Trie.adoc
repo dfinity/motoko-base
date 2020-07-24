@@ -1,42 +1,47 @@
 [[module.Trie]]
 = Trie
 
-Functional map
+Functional maps
 
 Functional maps (and sets) whose representation is "canonical", and
-history independent.
+independent of their operation history (unlike other popular search trees).
 
-**Background**
+## Background
 
-See this POPL 1989 paper (Section 6):
-
- - ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
- - [Public copy here](http://matthewhammer.org/courses/csci7000-s17/readings/Pugh89.pdf).
-
-By contrast, other usual functional representations of maps (AVL
-Trees, Red-Black Trees) do not enjoy history independence, and are
-each more complex to implement (e.g., each requires "rebalancing";
-these trees never do).
+The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 
 
-[[value.MAX_LEAF_SIZE]]
-== MAX_LEAF_SIZE
 
+[[type.Trie]]
+== Trie
 
+binary hash tries: either empty, a leaf node, or a branch node
 
 [source,motoko]
 ----
-let MAX_LEAF_SIZE
+type Trie<K, V> = {#empty; #leaf : Leaf<K, V>; #branch : Branch<K, V>}
 ----
 
-[[type.List]]
-== List
+[[type.Leaf]]
+== Leaf
 
-
+leaf nodes of trie consist of key-value pairs as a list.
 
 [source,motoko]
 ----
-type List<T> = List.List<T>
+type Leaf<K, V> = { size : Nat; keyvals : AssocList<Key<K>, V> }
+----
+
+[[type.Branch]]
+== Branch
+
+branch nodes of the trie discriminate on a bit position of the keys' hashes.
+we never store this bitpos; rather,
+we enforce a style where this position is always known from context.
+
+[source,motoko]
+----
+type Branch<K, V> = { size : Nat; left : Trie<K, V>; right : Trie<K, V> }
 ----
 
 [[type.AssocList]]
@@ -69,42 +74,10 @@ Equality function for two `Key<K>`s, in terms of equality of `K`'s.
 func equalKey<K>(keq : (K, K) -> Bool) : ((Key<K>, Key<K>) -> Bool)
 ----
 
-[[type.Leaf]]
-== Leaf
-
-leaf nodes of trie consist of key-value pairs as a list.
-
-[source,motoko]
-----
-type Leaf<K, V> = { size : Nat; keyvals : AssocList<Key<K>, V> }
-----
-
-[[type.Branch]]
-== Branch
-
-branch nodes of the trie discriminate on a bit position of the keys' hashes.
-we never store this bitpos; rather,
-we enforce a style where this position is always known from context.
-
-[source,motoko]
-----
-type Branch<K, V> = { size : Nat; left : Trie<K, V>; right : Trie<K, V> }
-----
-
-[[type.Trie]]
-== Trie
-
-binary hash tries: either empty, a leaf node, or a branch node
-
-[source,motoko]
-----
-type Trie<K, V> = {#empty : (); #leaf : Leaf<K, V>; #branch : Branch<K, V>}
-----
-
 [[value.isValid]]
 == isValid
 
-
+checks the invariants of the trie structure, including the placement of keys at trie paths
 
 [source,motoko]
 ----
@@ -114,9 +87,7 @@ func isValid<K, V>(t : Trie<K, V>, enforceNormal : Bool) : Bool
 [[type.Trie2D]]
 == Trie2D
 
-Two-dimensional trie
----------------------
-A 2D trie is just a trie that maps dimension-1 keys to another
+A 2D trie maps dimension-1 keys to another
 layer of tries, each keyed on the dimension-2 keys.
 
 [source,motoko]
@@ -127,9 +98,7 @@ type Trie2D<K1, K2, V> = Trie<K1, Trie<K2, V>>
 [[type.Trie3D]]
 == Trie3D
 
-Three-dimensional trie
----------------------
-A 3D trie is just a trie that maps dimension-1 keys to another
+A 3D trie maps dimension-1 keys to another
 layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
 
 [source,motoko]
@@ -188,23 +157,15 @@ func leaf<K, V>(kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
 
 [source,motoko]
 ----
-func fromList<K, V>(kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
-----
-
-[[value.fromSizedList]]
-== fromSizedList
-
-
-
-[source,motoko]
-----
-func fromSizedList<K, V>(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
+func fromList<K, V>(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
 ----
 
 [[value.clone]]
 == clone
 
-Purely-functional representation permits _O(1)_-time copy, via persistent sharing.
+clone the trie efficiently, via sharing.
+
+Purely-functional representation permits _O(1)_ copy, via persistent sharing.
 
 [source,motoko]
 ----
@@ -241,31 +202,13 @@ func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie
 func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V
 ----
 
-[[value.splitAssocList]]
-== splitAssocList
-
-
-
-[source,motoko]
-----
-func splitAssocList<K, V>(al : AssocList<Key<K>, V>, bitpos : Nat) : (AssocList<Key<K>, V>, AssocList<Key<K>, V>)
-----
-
-[[value.splitSizedList]]
-== splitSizedList
-
-
-
-[source,motoko]
-----
-func splitSizedList<K, V>(l : AssocList<Key<K>, V>, bitpos : Nat) : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>)
-----
-
 [[value.merge]]
 == merge
 
   merge tries, preferring the right trie where there are collisions
-  in common keys. note: the `disj` operation generalizes this `merge`
+  in common keys.
+
+  note: the `disj` operation generalizes this `merge`
   operation in various ways, and does not (in general) lose
   information; this operation is a simpler, special case.
 
@@ -390,6 +333,22 @@ func prod<K1, V1, K2, V2, K3, V3>(tl : Trie<K1, V1>, tr : Trie<K2, V2>, op : (K1
 [[value.Build]]
 == Build
 
+Represent the construction of tries as data.
+
+This module provides optimized variants of normal tries, for
+more efficient join queries.
+
+The central insight is that for (unmaterialized) join query results, we
+do not need to actually build any resulting trie of the resulting
+data, but rather, just need a collection of what would be in that
+trie.  Since query results can be large (quadratic in the DB size),
+avoiding the construction of this trie provides a considerable savings.
+
+To get this savings, we use an ADT for the operations that _would_ build this trie,
+if evaluated. This structure specializes a rope: a balanced tree representing a
+sequence.  It is only as balanced as the tries from which we generate
+these build ASTs.  They have no intrinsic balance properties of their
+own.
 
 
 [source,motoko]
@@ -400,7 +359,8 @@ let Build
 [[value.fold]]
 == fold
 
-
+Fold over the key-value pairs of the trie, using an accumulator.
+The key-value pairs have no reliable or meaningful ordering.
 
 [source,motoko]
 ----
@@ -410,7 +370,7 @@ func fold<K, V, X>(t : Trie<K, V>, f : (K, V, X) -> X, x : X) : X
 [[value.some]]
 == some
 
-
+Test whether a given key-value pair is present, or not.
 
 [source,motoko]
 ----
@@ -420,7 +380,7 @@ func some<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool
 [[value.all]]
 == all
 
-
+Test whether all key-value pairs have a given property.
 
 [source,motoko]
 ----
@@ -430,7 +390,10 @@ func all<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool
 [[value.nth]]
 == nth
 
+Project the nth key-value pair from the trie.
 
+Note: This position is not meaningful; it's only here so that we
+can inject tries into arrays using functions like [Array.tabulate](Array.html#value.tabulate).
 
 [source,motoko]
 ----
@@ -440,7 +403,28 @@ func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V)
 [[value.toArray]]
 == toArray
 
+Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
 
+### Implementation notes:
+
+we use this function repeatedly in the Produce Exchange example
+application, often on very large tries.
+
+Performance Profiling shows that it is important that this be
+memory efficient, and reasonably time efficient, at large scales.
+
+To do so, we use a single array allocation (for the returned array) and we
+sacrifice some efficiency in reading the input trie, and instead use function `nth` to
+project each element with an independent trie traversal.
+
+This approach is somewhat forced on us by the type signature of
+A.tabulate, and the desire to only allocate one array; that requirement rules
+out iterative mutation of an optionally-null array, since an imperative
+approach which would give us the wrong return type.
+
+Since we want to  statically rule out null output elements, and since the AS type system
+cannot do that for an imperative approach unless we assume more about
+the type W (e.g., the existence of "default values"), we settle for using `nth`.
 
 [source,motoko]
 ----
@@ -450,7 +434,9 @@ func toArray<K, V, W>(t : Trie<K, V>, f : (K, V) -> W) : [W]
 [[value.isEmpty]]
 == isEmpty
 
-
+Test for "deep emptiness": subtrees that have branching structure,
+but no leaves.  These can result from naive filtering operations;
+filter uses this function to avoid creating such subtrees.
 
 [source,motoko]
 ----
@@ -460,7 +446,7 @@ func isEmpty<K, V>(t : Trie<K, V>) : Bool
 [[value.filter]]
 == filter
 
-
+filter the key-value pairs by a given predicate.
 
 [source,motoko]
 ----
@@ -470,7 +456,7 @@ func filter<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Trie<K, V>
 [[value.mapFilter]]
 == mapFilter
 
-
+map and filter the key-value pairs by a given predicate.
 
 [source,motoko]
 ----
@@ -480,7 +466,13 @@ func mapFilter<K, V, W>(t : Trie<K, V>, f : (K, V) -> ?W) : Trie<K, W>
 [[value.equalStructure]]
 == equalStructure
 
-
+Test for equality, but naively, based on structure.
+Does not attempt to remove "junk" in the tree;
+For instance, a "smarter" approach would equate
+  `#bin{left=#empty;right=#empty}`
+with
+  `#empty`.
+We do not observe that equality here.
 
 [source,motoko]
 ----
@@ -490,7 +482,9 @@ func equalStructure<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, keq : (K, K) -> Bool
 [[value.replaceThen]]
 == replaceThen
 
-
+replace the given key's value in the trie,
+and only if successful, do the success continuation,
+otherwise, return the failure value
 
 [source,motoko]
 ----
@@ -500,7 +494,7 @@ func replaceThen<K, V, X>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v2 
 [[value.putFresh]]
 == putFresh
 
-
+put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
 
 [source,motoko]
 ----
@@ -510,7 +504,7 @@ func putFresh<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : 
 [[value.put2D]]
 == put2D
 
-
+put the given key's value in the 2D trie; return the new 2D trie.
 
 [source,motoko]
 ----
@@ -520,7 +514,7 @@ func put2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> B
 [[value.put3D]]
 == put3D
 
-
+put the given key's value in the trie; return the new trie;
 
 [source,motoko]
 ----
@@ -530,7 +524,7 @@ func put3D<K1, K2, K3, V>(t : Trie3D<K1, K2, K3, V>, k1 : Key<K1>, k1_eq : (K1, 
 [[value.remove]]
 == remove
 
-
+remove the given key's value in the trie; return the new trie
 
 [source,motoko]
 ----
@@ -540,7 +534,9 @@ func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, 
 [[value.removeThen]]
 == removeThen
 
-
+remove the given key's value in the trie,
+and only if successful, do the success continuation,
+otherwise, return the failure value
 
 [source,motoko]
 ----
@@ -550,7 +546,8 @@ func removeThen<K, V, X>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, succ
 [[value.remove2D]]
 == remove2D
 
-
+remove the given key-key pair's value in the 2D trie; return the
+new trie, and the prior value, if any.
 
 [source,motoko]
 ----
@@ -560,7 +557,8 @@ func remove2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1 : Key<K1>, k1_eq : (K1, K1) -
 [[value.remove3D]]
 == remove3D
 
-
+remove the given key-key pair's value in the 3D trie; return the
+new trie, and the prior value, if any.
 
 [source,motoko]
 ----
@@ -570,7 +568,9 @@ func remove3D<K1, K2, K3, V>(t : Trie3D<K1, K2, K3, V>, k1 : Key<K1>, k1_eq : (K
 [[value.mergeDisjoint2D]]
 == mergeDisjoint2D
 
-
+Like [`mergeDisjoint`](#mergedisjoint), except instead of merging a
+pair, it merges the collection of dimension-2 sub-trees of a 2D
+trie.
 
 [source,motoko]
 ----

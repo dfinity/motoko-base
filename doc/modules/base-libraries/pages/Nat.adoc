@@ -13,7 +13,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toText : (Nat) -> Text
+let toText : Nat -> Text
 ----
 
 [[value.min]]
@@ -103,7 +103,7 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Nat, y : Nat) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Nat, y : Nat) : {#less; #equal; #greater}
 ----
 
 [[value.add]]

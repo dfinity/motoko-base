@@ -10,7 +10,7 @@ A type to represent an order.
 
 [source,motoko]
 ----
-type Order = {#less : (); #equal : (); #greater : ()}
+type Order = {#less; #equal; #greater}
 ----
 
 [[value.isLess]]
@@ -41,5 +41,15 @@ Check if an order is #greater.
 [source,motoko]
 ----
 func isGreater(order : Order) : Bool
+----
+
+[[value.equal]]
+== equal
+
+Returns true if only if  `o1` and `o2` are the same ordering.
+
+[source,motoko]
+----
+func equal(o1 : Order, o2 : Order) : Bool
 ----
 

@@ -12,7 +12,7 @@ Conversion.
 
 [source,motoko]
 ----
-let toInt : (Int16) -> Int
+let toInt : Int16 -> Int
 ----
 
 [[value.fromInt]]
@@ -22,7 +22,7 @@ Conversion. Traps on overflow/underflow.
 
 [source,motoko]
 ----
-let fromInt : (Int) -> Int16
+let fromInt : Int -> Int16
 ----
 
 [[value.toText]]
@@ -132,7 +132,7 @@ Returns the order of `x` and `y`.
 
 [source,motoko]
 ----
-func compare(x : Int16, y : Int16) : {#less : (); #equal : (); #greater : ()}
+func compare(x : Int16, y : Int16) : {#less; #equal; #greater}
 ----
 
 [[value.neg]]
