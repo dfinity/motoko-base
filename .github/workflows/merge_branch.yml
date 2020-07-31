@@ -12,6 +12,6 @@ jobs:
         uses: devmasx/merge-branch@v1.3.0
         with:
           type: now
-          from_branch: master
+          from_branch: sync-next-moc
           target_branch: next-moc
           github_token: ${{ secrets.GITHUB_TOKEN }}
