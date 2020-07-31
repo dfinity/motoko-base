@@ -73,15 +73,6 @@ let suite = Suite.suite("Array", [
     Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]),
     M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3, 4, 5, 6 ]))),
   Suite.test(
-    "apply",
-    {
-      let ask = func (x : Text) : Text { x # "?" };
-      let exclaim = func (x : Text) : Text { x # "!" };
-      Array.apply<Text, Text>([ "good", "bad" ], [ ask, exclaim ]);
-    },
-    M.equals(T.array(T.textTestable, [ "good?", "bad?", "good!", "bad!" ]))
-  ),
-  Suite.test(
     "chain",
     {
       let purePlusOne = func (x : Int) : [Int] { [ x + 1 ] };

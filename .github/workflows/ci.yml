@@ -21,10 +21,11 @@ jobs:
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --update
         ls -l /nix/var/nix/profiles/per-user/root/channels/
         nix-env --install --attr wasmtime --file '<nixpkgs>'
+        nix-env --install --attr graphviz --file '<nixpkgs>'
     - name: "install dfx"
       run: |
        wget https://sdk.dfinity.org/install.sh
-       yes Y | DFX_VERSION=0.5.10 sh install.sh
+       yes Y | DFX_VERSION=0.5.13 sh install.sh
        echo "::add-path::/home/runner/bin"
     - name: "dfx cache install"
       run: dfx cache install
@@ -34,6 +35,8 @@ jobs:
        chmod +x /home/runner/bin/vessel
     - name: "test"
       run: make -C test
+    - name: "graph dependencies"
+      run: python3 doc/module_graph.py | dot -Tsvg > module_graph.svg && file module_graph.svg
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: pushd doc && ./make_docs.sh && popd
