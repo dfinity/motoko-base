@@ -1,0 +1,17 @@
+name: Sync master and next-moc
+on:
+  push:
+    branches:
+      - master
+jobs:
+  sync-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Merge master -> next-moc
+        uses: devmasx/merge-branch@v1.3.0
+        with:
+          type: now
+          from_branch: master
+          target_branch: next-moc
+          github_token: ${{ secrets.GITHUB_TOKEN }}
