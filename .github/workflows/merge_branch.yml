@@ -2,7 +2,7 @@ name: Sync master and next-moc
 on:
   push:
     branches:
-      - master
+      - sync-next-moc
 jobs:
   sync-branch:
     runs-on: ubuntu-latest
