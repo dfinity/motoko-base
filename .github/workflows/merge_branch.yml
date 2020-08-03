@@ -13,6 +13,6 @@ jobs:
         with:
           stable_branch: 'master'
           development_branch: 'next-moc'
-          allow_ff: false
+          allow_ff: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
