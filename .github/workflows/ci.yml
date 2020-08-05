@@ -25,6 +25,7 @@ jobs:
     - name: "install Motoko binaries"
       run: |
        wget https://download.dfinity.systems/motoko/0.4/x86_64-linux/motoko-0.4.tar.gz
+       mkdir -p /home/runner/bin
        tar -xf motoko-0.4.tar.gz -C /home/runner/bin
        echo "::add-path::/home/runner/bin"
     - name: "dfx cache install"
