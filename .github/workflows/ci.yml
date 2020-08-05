@@ -28,8 +28,6 @@ jobs:
        mkdir -p /home/runner/bin
        tar -xf motoko-0.4.tar.gz -C /home/runner/bin
        echo "::add-path::/home/runner/bin"
-    - name: "dfx cache install"
-      run: dfx cache install
     - name: "install vessel"
       run: |
        wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/v0.5.0-alpha/vessel-linux64
