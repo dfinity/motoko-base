@@ -22,10 +22,10 @@ jobs:
         ls -l /nix/var/nix/profiles/per-user/root/channels/
         nix-env --install --attr wasmtime --file '<nixpkgs>'
         nix-env --install --attr graphviz --file '<nixpkgs>'
-    - name: "install dfx"
+    - name: "install Motoko binaries"
       run: |
-       wget https://sdk.dfinity.org/install.sh
-       yes Y | DFX_VERSION=0.6.1 sh install.sh
+       wget https://download.dfinity.systems/motoko/0.4/x86_64-linux/motoko-0.4.tar.gz
+       tar -xf motoko-0.4.tar.gz -C /home/runner/bin
        echo "::add-path::/home/runner/bin"
     - name: "dfx cache install"
       run: dfx cache install

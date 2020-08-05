@@ -31,9 +31,7 @@ In `test/`, run
 
     make
 
-in `test`. This will expect `dfx` to be installed and in your `$PATH`, and call
-`moc` via the wrapper in `./bin/moc`. You can add that wrapper to your PATH, if
-you want.
+in `test`. This will expect `moc` to be installed and in your `$PATH`.
 
 Running the tests also requires `wasmtime` and `vessel` to be installed.
 
