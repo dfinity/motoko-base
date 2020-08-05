@@ -6,7 +6,7 @@ Functions on Arrays
 [[value.equal]]
 == equal
 
-
+Test if two arrays contain equal values
 
 [source,motoko]
 ----
@@ -16,27 +16,17 @@ func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool
 [[value.append]]
 == append
 
-
+Append the values of two input arrays
 
 [source,motoko]
 ----
 func append<A>(xs : [A], ys : [A]) : [A]
 ----
 
-[[value.apply]]
-== apply
-
-
-
-[source,motoko]
-----
-func apply<A, B>(xs : [A], fs : [A -> B]) : [B]
-----
-
 [[value.chain]]
 == chain
 
-
+Transform each array value into zero or more output values, appended in order
 
 [source,motoko]
 ----
@@ -46,7 +36,7 @@ func chain<A, B>(xs : [A], f : A -> [B]) : [B]
 [[value.filter]]
 == filter
 
-
+Output array contains each array-value if and only if the predicate is true; ordering retained.
 
 [source,motoko]
 ----
@@ -56,7 +46,7 @@ func filter<A>(xs : [A], f : A -> Bool) : [A]
 [[value.filterMap]]
 == filterMap
 
-
+Output array contains each transformed optional value; ordering retained.
 
 [source,motoko]
 ----
@@ -66,7 +56,7 @@ func filterMap<A, B>(xs : [A], f : A -> ?B) : [B]
 [[value.foldLeft]]
 == foldLeft
 
-
+Aggregate and transform values into a single output value, by increasing indices.
 
 [source,motoko]
 ----
@@ -76,7 +66,7 @@ func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B
 [[value.foldRight]]
 == foldRight
 
-
+Aggregate and transform values into a single output value, by decreasing indices.
 
 [source,motoko]
 ----
@@ -86,7 +76,7 @@ func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B
 [[value.find]]
 == find
 
-
+Returns optional first value for which predicate is true
 
 [source,motoko]
 ----
@@ -96,7 +86,7 @@ func find<A>(xs : [A], f : A -> Bool) : ?A
 [[value.freeze]]
 == freeze
 
-
+Transform mutable array into immutable array
 
 [source,motoko]
 ----
@@ -106,7 +96,7 @@ func freeze<A>(xs : [var A]) : [A]
 [[value.flatten]]
 == flatten
 
-
+Transform an array of arrays into a single array, with retained array-value order.
 
 [source,motoko]
 ----
@@ -116,7 +106,7 @@ func flatten<A>(xs : [[A]]) : [A]
 [[value.map]]
 == map
 
-
+Transform each value using a function, with retained array-value order.
 
 [source,motoko]
 ----
@@ -126,7 +116,7 @@ func map<A, B>(xs : [A], f : A -> B) : [B]
 [[value.mapEntries]]
 == mapEntries
 
-
+Transform each entry (index-value pair) using a function.
 
 [source,motoko]
 ----
@@ -136,7 +126,7 @@ func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B]
 [[value.make]]
 == make
 
-
+Make an array from a single value.
 
 [source,motoko]
 ----
@@ -146,7 +136,7 @@ func make<A>(x : A) : [A]
 [[value.vals]]
 == vals
 
-
+Returns `xs.vals()`.
 
 [source,motoko]
 ----
@@ -156,7 +146,7 @@ func vals<A>(xs : [A]) : I.Iter<A>
 [[value.keys]]
 == keys
 
-
+Returns `xs.keys()`.
 
 [source,motoko]
 ----
@@ -166,7 +156,7 @@ func keys<A>(xs : [A]) : I.Iter<Nat>
 [[value.thaw]]
 == thaw
 
-
+Transform an immutable array into a mutable array.
 
 [source,motoko]
 ----
@@ -176,30 +166,30 @@ func thaw<A>(xs : [A]) : [var A]
 [[value.init]]
 == init
 
-
+Initialize a mutable array with `size` copies of the initial value.
 
 [source,motoko]
 ----
-func init<A>(len : Nat, x : A) : [var A]
+func init<A>(size : Nat, initVal : A) : [var A]
 ----
 
 [[value.tabulate]]
 == tabulate
 
-
+Initialize a mutable array of the given size, and use the `gen` function to produce the initial value for every index.
 
 [source,motoko]
 ----
-func tabulate<A>(len : Nat, gen : Nat -> A) : [A]
+func tabulate<A>(size : Nat, gen : Nat -> A) : [A]
 ----
 
 [[value.tabulateVar]]
 == tabulateVar
 
-
+Initialize a mutable array using a generation function
 
 [source,motoko]
 ----
-func tabulateVar<A>(len : Nat, gen : Nat -> A) : [var A]
+func tabulateVar<A>(size : Nat, gen : Nat -> A) : [var A]
 ----
 

@@ -1,14 +1,12 @@
 [[module.Deque]]
 = Deque
 
-Double-ended Queue
-
-This module provides a purely-functional double-ended queue.
+Functions for persistent, double-ended queues.
 
 [[type.Deque]]
 == Deque
 
-
+Double-ended queue
 
 [source,motoko]
 ----
@@ -18,7 +16,7 @@ type Deque<T> = (List<T>, List<T>)
 [[value.empty]]
 == empty
 
-
+Empty queue
 
 [source,motoko]
 ----
@@ -28,7 +26,7 @@ func empty<T>() : Deque<T>
 [[value.isEmpty]]
 == isEmpty
 
-
+True when the queue is empty
 
 [source,motoko]
 ----
@@ -38,7 +36,7 @@ func isEmpty<T>(q : Deque<T>) : Bool
 [[value.pushFront]]
 == pushFront
 
-
+Insert a new element on the front end of the queue
 
 [source,motoko]
 ----
@@ -48,7 +46,7 @@ func pushFront<T>(q : Deque<T>, x : T) : Deque<T>
 [[value.peekFront]]
 == peekFront
 
-
+Inspect the (optional) first element on the front end of the queue
 
 [source,motoko]
 ----
@@ -58,17 +56,17 @@ func peekFront<T>(q : Deque<T>) : ?T
 [[value.popFront]]
 == popFront
 
-
+Remove the first element on the front end of the queue; Returns null when empty.
 
 [source,motoko]
 ----
-func popFront<T>(q : Deque<T>) : Deque<T>
+func popFront<T>(q : Deque<T>) : ?(T, Deque<T>)
 ----
 
 [[value.pushBack]]
 == pushBack
 
-
+Insert a new element on the back end of the queue
 
 [source,motoko]
 ----
@@ -78,7 +76,7 @@ func pushBack<T>(q : Deque<T>, x : T) : Deque<T>
 [[value.peekBack]]
 == peekBack
 
-
+Inspect the (optional) first element on the back end of the queue
 
 [source,motoko]
 ----
@@ -88,10 +86,10 @@ func peekBack<T>(q : Deque<T>) : ?T
 [[value.popBack]]
 == popBack
 
-
+Remove the first element on the back end of the queue; Returns null when empty.
 
 [source,motoko]
 ----
-func popBack<T>(q : Deque<T>) : Deque<T>
+func popBack<T>(q : Deque<T>) : ?(Deque<T>, T)
 ----
 

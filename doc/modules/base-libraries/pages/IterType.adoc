@@ -1,7 +1,7 @@
 [[module.IterType]]
 = IterType
 
-Iterator type -- break cycle module def
+The Iterator type
 
 [[type.Iter]]
 == Iter
