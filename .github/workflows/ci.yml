@@ -22,16 +22,15 @@ jobs:
         ls -l /nix/var/nix/profiles/per-user/root/channels/
         nix-env --install --attr wasmtime --file '<nixpkgs>'
         nix-env --install --attr graphviz --file '<nixpkgs>'
-    - name: "install dfx"
+    - name: "install Motoko binaries"
       run: |
-       wget https://sdk.dfinity.org/install.sh
-       yes Y | DFX_VERSION=0.6.1 sh install.sh
+       wget https://download.dfinity.systems/motoko/0.4/x86_64-linux/motoko-0.4.tar.gz
+       mkdir -p /home/runner/bin
+       tar -xf motoko-0.4.tar.gz -C /home/runner/bin
        echo "::add-path::/home/runner/bin"
-    - name: "dfx cache install"
-      run: dfx cache install
     - name: "install vessel"
       run: |
-       wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/v0.4.1/vessel-linux64
+       wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/v0.5.0-alpha/vessel-linux64
        chmod +x /home/runner/bin/vessel
     - name: "test"
       run: make -C test
