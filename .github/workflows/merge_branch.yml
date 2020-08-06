@@ -9,8 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Merge master -> next-moc
-        uses: .github/actions/
-        id: sync-branch
+        uses: ./.github/actions/sync-branch
         with:
           stable_branch: 'master'
           development_branch: 'next-moc'
