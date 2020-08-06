@@ -2,17 +2,17 @@ name: Sync master and next-moc
 on:
   push:
     branches:
-      - master
+      - sync-next-moc
 jobs:
   sync-branch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - name: Merge master -> next-moc
-        uses: robotology/gh-action-nightly-merge@v1.2.0
+        uses: .github/actions/sync-branch
         with:
           stable_branch: 'master'
           development_branch: 'next-moc'
-          allow_ff: true
+          use_rebase: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

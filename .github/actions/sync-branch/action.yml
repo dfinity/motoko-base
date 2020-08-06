@@ -1,0 +1,33 @@
+name: 'Sync Branch'
+description: 'Automatically sync between two branches. Inspired from robotology/gh-action-nightly-merge'
+inputs:
+  stable_branch:
+    description: 'Name of the stable branch'
+    required: false
+    default: 'master'
+  development_branch:
+    description: 'Name of the development branch'
+    required: false
+    default: 'next-moc'
+  use_rebase:
+    description: 'Use rebase or merge'
+    required: false
+    default: true
+  user_name:
+    description: 'User name for git commits'
+    required: false
+    default: 'GitHub Sync Branch'
+  user_email:
+    description: 'User email for git commits'
+    required: false
+    default: 'actions@github.com'    
+  push_token:
+    description: 'Environment variable containing the token to use for push'
+    required: false
+    default: 'GITHUB_TOKEN'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.myInput }}
