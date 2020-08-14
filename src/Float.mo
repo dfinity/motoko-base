@@ -82,20 +82,20 @@ module {
       case (#exact) Prim.floatToFormattedText(x, 17, 2);
     };
 
-  /// Conversion.
+  /// Conversion to Text. Use `format(fmt, x)` for more detailed control.
   public let toText : Float -> Text = Prim.floatToText;
 
-  /// Conversion.
+  /// Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
   public let toInt64 : Float -> Int64 = Prim.floatToInt64;
 
-  /// Conversion.
+  /// Conversion from Int64.
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
 
-  /// Conversion via Int64.
+  /// Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
   public let toInt : Float -> Int =
     func (x : Float) : Int = Prim.int64ToInt(toInt64(x));
 
-  /// Conversion via Int64. May trap.
+  /// Conversion from Int via Int64. May trap.
   public let fromInt : Int -> Float =
     func (x : Int) : Float = fromInt64(Prim.intToInt64(x));
 
