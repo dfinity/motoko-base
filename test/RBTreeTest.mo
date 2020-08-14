@@ -32,6 +32,9 @@ let unsort =
 
 var t = RBT.RBTree<Nat, Text>(Nat.compare);
 
+assert RBT.size(t.share()) == 0;
+assert RBT.height(t.share()) == 0;
+
 for ((num, lab) in unsort.vals()) {
   Debug.print (Nat.toText num);
   Debug.print lab;
@@ -44,8 +47,14 @@ for ((num, lab) in t.entries()) {
  i += 1;
 }};
 
+assert RBT.size(t.share()) == 9;
+assert RBT.height(t.share()) < 5;
+
 { var i = 9;
 for ((num, lab) in t.entriesRev()) {
   assert(num == i);
   i -= 1;
 }};
+
+assert RBT.size(t.share()) == 9;
+assert RBT.height(t.share()) < 5;

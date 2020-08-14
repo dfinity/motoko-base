@@ -158,7 +158,7 @@ public func height<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
     case (#leaf) 0;
     case (#node(_, l, _, r)) {
-           Nat.max(height(l), height(r))
+           Nat.max(height(l), height(r)) + 1
          }
   }
 };
@@ -167,7 +167,7 @@ public func size<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
     case (#leaf) 0;
     case (#node(_, l, _, r)) {
-           size(l) + size(r)
+           size(l) + size(r) + 1
          };
   }
 };
