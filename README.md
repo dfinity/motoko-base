@@ -15,7 +15,7 @@ If you build your project using the [vessel package manager] then, add this entr
   {
     "name": "base",
     "repo": "https://github.com/dfinity/motoko-base",
-    "version": "dfx-0.5.10",
+    "version": "dfx-0.5.13",
     "dependencies": []
   }
 ```
@@ -23,6 +23,8 @@ If you build your project using the [vessel package manager] then, add this entr
 The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch name (among other things).  There are no dependencies.  See [vessel package manager] docs for more details.
 
 [vessel package manager]: https://github.com/kritzcreek/vessel
+
+Note: The base library version above advances with the Motoko compiler in a dependent way when new primitive operations appear in the `Prim` module, or they change names.  Mismatched versions result in those primitive operations being unrecognized by the compiler (compiler either too old, or too new, depending), rather than a more explicit "version mismatch"-style error.
 
 Building/testing
 ----------------
