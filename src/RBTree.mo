@@ -153,7 +153,6 @@ func getRec<X, Y>(x:X, compareTo:(X, X) -> O.Order, t:Tree<X, Y>) : ?Y {
   }
 };
 
-
 public func height<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
     case (#leaf) 0;

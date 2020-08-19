@@ -24,9 +24,11 @@ $(OUTDIR)/import_all.mo: $(STDLIB_FILES) | $(OUTDIR)
 	done
 
 $(OUTDIR)/%.wasm: %.mo | $(OUTDIR)
+	$(MOC) --version
 	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.wasm: $(OUTDIR)/%.mo | $(OUTDIR)
+	$(MOC) --version
 	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.checked: $(OUTDIR)/%.wasm
