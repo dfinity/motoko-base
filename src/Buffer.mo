@@ -97,8 +97,9 @@ public class Buffer<X> (initCapacity : Nat) {
   /// Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
   public func vals() : { next : () -> ?X } = object {
     var pos = 0;
+    var valsCount = count;
     public func next() : ?X {
-      if (pos == count) { null } else {
+      if (pos == valsCount) { null } else {
         let elem = ?elems[pos];
         pos += 1;
         elem
