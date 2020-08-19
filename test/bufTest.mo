@@ -2,6 +2,7 @@ import Prim "mo:prim";
 import B "mo:base/Buffer";
 import I "mo:base/Iter";
 import O "mo:base/Option";
+import Debug "mo:base/Debug";
 
 // test repeated growing
 let a = B.Buffer<Nat>(3);
@@ -91,4 +92,22 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
   c.add(0);
   assert (c.toArray().size() == 2);
   assert (c.toVarArray().size() == 2);
+};
+
+// regression test: self-append does not diverge
+{
+  let c = B.Buffer<Nat>(0);
+  let d = B.Buffer<Nat>(0);
+
+  c.add(1); d.add(1);
+  c.add(2); d.add(2);
+  c.add(3); d.add(3);
+
+  Debug.print "append test 1: cloning avoids the issue"
+  d.append(d.clone());
+  Debug.print "append test 2: cloning not necessary"
+  c.append(c);
+  Debug.print "success"
+
+  // to do -- two buffers are equal
 };
