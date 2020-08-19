@@ -103,11 +103,11 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
   c.add(2); d.add(2);
   c.add(3); d.add(3);
 
-  Debug.print "append test 1: cloning avoids the issue"
+  Debug.print "append test 1: cloning avoids the issue";
   d.append(d.clone());
-  Debug.print "append test 2: cloning not necessary"
+  Debug.print "append test 2: cloning not necessary";
   c.append(c);
-  Debug.print "success"
+  Debug.print "success";
 
   // to do -- two buffers are equal
 };
