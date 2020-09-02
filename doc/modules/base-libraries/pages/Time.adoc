@@ -19,8 +19,6 @@ Note: While an implementation will likely try to keep the system time close to t
 let time : () -> Nat64
 ----
 
-== Example
-
 The following example illustrates using the system time:
 
 ....
