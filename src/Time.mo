@@ -12,6 +12,7 @@ module {
     /// Note: While an implementation will likely try to keep the system time close to the real time, this is not formally guaranteed.
     public let now : () -> Int =
       func () : Int = Prim.nat64ToNat(Prim.time());
+    ///
     /// The following example illustrates using the system time:
     ///
     /// ```motoko
