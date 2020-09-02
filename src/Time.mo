@@ -16,17 +16,17 @@ module {
     /// The following example illustrates using the system time:
     ///
     /// ```motoko
-    /// import Nat64 = "mo:base/Nat64";
+    /// import Int = "mo:base/Int";
     /// import Time = "mo:base/Time";
     ///
     /// actor {
-    ///    var lastTime = Time.time();
+    ///    var lastTime = Time.now();
     ///    public func greet(name : Text) : async Text {
-    ///        let now = Time.time();
-    ///        let elapsedSeconds = (now - lastTime)/(1000_000_000: Nat64);
+    ///        let now = Time.now();
+    ///        let elapsedSeconds = (now - lastTime)/1000_000_000;
     ///        lastTime := now;
     ///        return "Hello, " # name # "!" #
-    ///          " I was last called " # Nat64.toText(elapsedSeconds) # " seconds ago";
+    ///          " I was last called " # Int.toText(elapsedSeconds) # " seconds ago";
     ///    };
     /// };
     /// ```
