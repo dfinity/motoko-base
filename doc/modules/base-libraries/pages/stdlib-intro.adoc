@@ -56,7 +56,7 @@ The base library provides one module for most basic types such as integers (`Int
 - link:Func{outfilesuffix}[Func]
 - link:Array{outfilesuffix}[Array]
 - link:Blob{outfilesuffix}[Blob=+1]
-- link:Principal{outfilesuffix{[Principal]
+- link:Principal{outfilesuffix}[Principal]
 - link:Ord{outfilesuffix}[Ord]
 
 === Complex data structures
