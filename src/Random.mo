@@ -1,4 +1,4 @@
-
+// TODO ADD EXAMPLE!
 
 module Rand {
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
@@ -19,4 +19,7 @@ module Rand {
     let bytes = await raw_rand();
     return 9
   }
+
+  // TODO Gaussian?
+  // TODO Buffering entropy?
 }
