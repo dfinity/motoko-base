@@ -21,6 +21,7 @@ module Rand {
     return 9
   }
 
-  // TODO Gaussian?
+  // TODO Gaussian? n-times coin toss, use popCount
   // TODO Buffering entropy?
+  // TODO State also how much entropy is consumed.
 }
