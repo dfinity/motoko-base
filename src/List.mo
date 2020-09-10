@@ -175,7 +175,7 @@ module {
     }
   };
 
-  /// Drop all but the first `n` elements from the given list.
+  /// Drop the first `n` elements from the given list.
   public func drop<T>(l : List<T>, n:Nat) : List<T> {
     switch (l, n) {
       case (l_,     0) { l_ };
