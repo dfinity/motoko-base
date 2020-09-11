@@ -12,4 +12,22 @@ module {
     /// Note: While an implementation will likely try to keep the system time close to the real time, this is not formally guaranteed.
     public let now : () -> Int =
       func () : Int = Prim.nat64ToNat(Prim.time());
+    ///
+    /// The following example illustrates using the system time:
+    ///
+    /// ```motoko
+    /// import Int = "mo:base/Int";
+    /// import Time = "mo:base/Time";
+    ///
+    /// actor {
+    ///    var lastTime = Time.now();
+    ///    public func greet(name : Text) : async Text {
+    ///        let now = Time.now();
+    ///        let elapsedSeconds = (now - lastTime)/1000_000_000;
+    ///        lastTime := now;
+    ///        return "Hello, " # name # "!" #
+    ///          " I was last called " # Int.toText(elapsedSeconds) # " seconds ago";
+    ///    };
+    /// };
+    /// ```
 }
