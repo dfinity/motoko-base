@@ -9,14 +9,14 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
-If you build your project using the [vessel package manager] then, add this entry to your `package-set.json` file:
+If you build your project using the [vessel package manager] your package-set most likely already includes base, but if it doesn't or you want to override its version add an entry like so to your `package-set.dhall`:
 
 ```
   {
-    "name": "base",
-    "repo": "https://github.com/dfinity/motoko-base",
-    "version": "dfx-0.5.10",
-    "dependencies": []
+    name = "base",
+    repo = "https://github.com/dfinity/motoko-base",
+    version = "dfx-0.5.10",
+    dependencies = [] : List Text
   }
 ```
 
