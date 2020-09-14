@@ -1,4 +1,5 @@
-// TODO ADD EXAMPLE!
+import Prim "mo:prim";
+import P "Prelude"
 
 module Rand {
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
@@ -6,13 +7,21 @@ module Rand {
   /// Evenly distributes outcomes in the numeric range [0 .. 255].
   public func byte() : async Nat8 { 
     let bytes = await raw_rand();
-    return 7
+    let it = bytes.bytes();
+    switch (it.next()) {
+      case (?w) Prim.word8ToNat8 w;
+      case _ P.unreachable();
+    }
   };
 
   /// Simulates a coin toss. Both outcomes have equal probability.
   public func coin() : async Bool { 
     let bytes = await raw_rand();
-    return false
+    let it = bytes.bytes();
+    switch (it.next()) {
+      case (?w) w > (127 : Word8);
+      case _ P.unreachable();
+    }
   };
 
   /// Evenly distributes outcomes in the numeric range [from .. to].
@@ -24,4 +33,5 @@ module Rand {
   // TODO Gaussian? n-times coin toss, use popCount
   // TODO Buffering entropy?
   // TODO State also how much entropy is consumed.
+  // TODO ADD EXAMPLE!
 }
