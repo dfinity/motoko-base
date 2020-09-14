@@ -6,13 +6,17 @@ module Rand {
   let it : [var {next : () -> ?Word8}] = [var { next = func () : ?Word8 = null }];
 
   /// Evenly distributes outcomes in the numeric range [0 .. 255].
-  public func byte() : async Nat8 { 
-    let bytes = await raw_rand();
-    it[0] := bytes.bytes();
-
+  public func byte() : async Nat8 {
     switch (it[0].next()) {
       case (?w) Prim.word8ToNat8 w;
-      case _ P.unreachable();
+      case null {
+        let bytes = await raw_rand();
+        it[0] := bytes.bytes();
+        switch (it[0].next()) {
+          case null { P.unreachable() };
+          case (?w) Prim.word8ToNat8 w;
+        }
+      }
     }
   };
 
