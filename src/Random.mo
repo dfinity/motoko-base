@@ -3,12 +3,14 @@ import P "Prelude"
 
 module Rand {
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
+  let it : [var {next : () -> ?Word8}] = [var { next = func () : ?Word8 = null }];
 
   /// Evenly distributes outcomes in the numeric range [0 .. 255].
   public func byte() : async Nat8 { 
     let bytes = await raw_rand();
-    let it = bytes.bytes();
-    switch (it.next()) {
+    it[0] := bytes.bytes();
+
+    switch (it[0].next()) {
       case (?w) Prim.word8ToNat8 w;
       case _ P.unreachable();
     }
