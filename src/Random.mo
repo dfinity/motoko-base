@@ -20,26 +20,8 @@ module Random {
     }
   };
 
-  /// Threading through an iterator that provides the randomness
-  /// How to write such a thing?
-  public func byteT(it : {next : () -> ?Word8}) : async (Nat8/*, {next : () -> ?Word8}*/) {
-    switch (it.next()) {
-      case (?w) (Prim.word8ToNat8 w/*, it*/);
-      case null {
-        let bytes = await raw_rand();
-        let it = bytes.bytes();
-        switch (it.next()) {
-          case null { P.unreachable() };
-          case (?w) (Prim.word8ToNat8 w/*, it*/)
-        }
-
-      };
-    }
-  };
-
-
   /// Simulates a coin toss. Both outcomes have equal probability.
-  public func coin() : async Bool { 
+  public func coin() : async Bool {
     let bytes = await raw_rand();
     let it = bytes.bytes();
     switch (it.next()) {
@@ -48,14 +30,14 @@ module Random {
     }
   };
 
-  /// Evenly distributes outcomes in the numeric range [from .. to].
-  public func range(from : Nat, to : Nat) : async Nat { 
+  /// Uniformly distributes outcomes in the numeric range [0 .. 2^n - 1].
+  public func range(p : Nat8) : async Nat {
     let bytes = await raw_rand();
     return 9 // FIXME
   };
 
   /// Obtains a full blob (32 bytes) worth of entropy.
-  public func blob() : async Blob { 
+  public func blob() : async Blob {
     let bytes = await raw_rand();
     return bytes
   };
