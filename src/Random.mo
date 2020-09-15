@@ -52,6 +52,12 @@ module Random {
   public func range(from : Nat, to : Nat) : async Nat { 
     let bytes = await raw_rand();
     return 9 // FIXME
+  };
+
+  /// Obtains a full blob (32 bytes) worth of entropy.
+  public func blob() : async Blob { 
+    let bytes = await raw_rand();
+    return bytes
   }
 
   // TODO Gaussian? n-times coin toss, use popCount
