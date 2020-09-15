@@ -58,9 +58,21 @@ module Random {
   public func blob() : async Blob { 
     let bytes = await raw_rand();
     return bytes
+  };
+
+  public func binomialNat8(n : Nat8) : async Nat8 {
+    let bytes = await raw_rand();
+    var nn = n;
+    var result : Word8 = 0;
+    for (i in bytes.bytes()) {
+        result += if (nn >= (8 : Nat8))
+        { Prim.popcntWord8(i) }
+        else { Prim.popcntWord8(i & (-1 << Prim.nat8ToWord8 (8 - nn))) };
+        nn -= 8;
+    };
+    Prim.word8ToNat8 result
   }
 
-  // TODO Gaussian? n-times coin toss, use popCount
   // TODO Buffering entropy?
   // TODO State also how much entropy is consumed (in docs).
   // TODO ADD EXAMPLE!
