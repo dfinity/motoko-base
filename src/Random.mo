@@ -30,7 +30,7 @@ module Random {
     public func range(p : Nat8) : ?Nat {
       var pp = p;
       var acc : Nat = 0;
-      label l for (i in it) {
+      for (i in it) {
         if (8 : Nat8 <= pp)
         { acc := acc * 256 + Prim.word8ToNat(i) }
         else if (0 : Nat8 == pp)
@@ -46,7 +46,23 @@ module Random {
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
-    // TODO: public func binomialNat8(n : Nat8) : ?Nat8 { }
+    public func binomialNat8(n : Nat8) : ?Nat8 {
+      var nn = n;
+      var acc : Word8 = 0;
+      for (i in it) {
+        if (8 : Nat8 <= nn)
+        { acc += Prim.popcntWord8(i) }
+        else if (0 : Nat8 == nn)
+        { return ?Prim.word8ToNat8 acc }
+        else {
+          let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
+          let residue = Prim.popcntWord8(i & mask);
+          return ?Prim.word8ToNat8(acc + residue)
+        };
+        nn -= 8
+      };
+      null
+    }
   };
 
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
