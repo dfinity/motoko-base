@@ -10,7 +10,7 @@ module Random {
   public class Finite(entropy : Blob) {
     let it : { next : () -> ?Word8 } = entropy.bytes();
 
-    /// Evenly distributes outcomes in the numeric range [0 .. 255].
+    /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     public func byte() : ?Nat8 {
       switch (it.next()) {
         case (?w) ?Prim.word8ToNat8 w;
@@ -67,11 +67,19 @@ module Random {
 
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
 
+  /// Uniformly distributes outcomes in the numeric range [0 .. 255].
+  public func byte() : async Nat8 {
+    let bytes = await raw_rand();
+    switch (bytes.bytes().next()) {
+      case (?w) Prim.word8ToNat8 w;
+      case _ P.unreachable();
+    }
+  };
+
   /// Simulates a coin toss. Both outcomes have equal probability.
   public func coin() : async Bool {
     let bytes = await raw_rand();
-    let it = bytes.bytes();
-    switch (it.next()) {
+    switch (bytes.bytes().next()) {
       case (?w) w > (127 : Word8);
       case _ P.unreachable();
     }
