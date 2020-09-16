@@ -122,6 +122,23 @@ module Random {
 
   // TODO State also how much entropy is consumed (in docs).
   // TODO ADD EXAMPLE!
+  /*
+      import Random "mo:base/Random";
+
+      actor Die {
+        /// roll a fair die
+        /// each outcome in the range [1 .. 6] has the same probability
+        public func roll() : async Nat {
+          loop {
+            let d = await Random.range(3);
+            if (d >= 1 and d <= 6) { return d };
+          }
+        }
+      };
+
+      Die.roll()
+  */
+
   // TODO Cyclic class
   // Bool iterator (derived) for coin flips
   // explain that all bets must be closed before asking for entropy (in the same round?).
