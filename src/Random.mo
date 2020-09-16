@@ -1,7 +1,7 @@
 import Prim "mo:prim";
 import P "Prelude"
 
-module Random {
+module {
 
   /// Drawing from a finite supply of entropy `Finite` provides
   /// methods to obtain random values. When the entropy is used up,
