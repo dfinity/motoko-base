@@ -6,9 +6,9 @@ module Random {
   /// Drawing from a finite supply of entropy `Finite` provides
   /// methods to obtain random values. When the entropy is used up,
   /// `null` is returned. Otherwise the outcomes' distributions are
-  /// stated  for each  method.
+  /// stated for each method.
   public class Finite(entropy : Blob) {
-    let it : {next : () -> ?Word8} = entropy.bytes();
+    let it : { next : () -> ?Word8 } = entropy.bytes();
 
     /// Evenly distributes outcomes in the numeric range [0 .. 255].
     public func byte() : ?Nat8 {
@@ -77,7 +77,7 @@ module Random {
     }
   };
 
-  /// Obtains a full blob (32 bytes) worth of entropy.
+  /// Obtains a full blob (32 bytes) worth of fresh entropy.
   public let blob : shared () -> async Blob = raw_rand;
 
   /// Uniformly distributes outcomes in the numeric range [0 .. 2^n - 1].
@@ -123,4 +123,6 @@ module Random {
   // TODO State also how much entropy is consumed (in docs).
   // TODO ADD EXAMPLE!
   // TODO Cyclic class
+  // Bool iterator (derived) for coin flips
+  // explain that all bets must be closed before asking for entropy (in the same round?).
 }
