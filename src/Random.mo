@@ -18,12 +18,31 @@ module {
       }
     };
 
+    /// Bool iterator splitting up a byte of entropy into 8 bits
+    let bit : { next : () -> ?Bool } = {
+      var mask = 0x80  : Word8;
+      var byte = 0x00  : Word8;
+      next = func () : ?Bool {
+        if (0 : Word8  == mask) {
+          switch (it.next()) {
+            case null null;
+            case (?w) {
+              byte := w;
+              mask := 0x40;
+              ?(0 : Word8 != byte & (0x80 : Word8))
+            }
+          }
+        } else {
+          let m = mask;
+          mask >>= (1 : Word8);
+          ?(0 : Word8 != byte & m)
+        }
+      }
+    };
+
     /// Simulates a coin toss. Both outcomes have equal probability.
     public func coin() : ?Bool {
-      switch (it.next()) {
-        case (?w) ?(127 : Word8 < w);
-        case null null
-      }
+      bit.next()
     };
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 2^n - 1].
@@ -148,6 +167,5 @@ module {
   */
 
   // TODO Cyclic class
-  // Bool iterator (derived) for coin flips
   // explain that all bets must be closed before asking for entropy (in the same round?).
 }
