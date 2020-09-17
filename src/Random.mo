@@ -20,10 +20,10 @@ module {
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
     let bit : { next : () -> ?Bool } = {
-      var mask = 0x80  : Word8;
-      var byte = 0x00  : Word8;
+      var mask = 0x80 : Word8;
+      var byte = 0x00 : Word8;
       next = func () : ?Bool {
-        if (0 : Word8  == mask) {
+        if (0 : Word8 == mask) {
           switch (it.next()) {
             case null null;
             case (?w) {
@@ -108,10 +108,10 @@ module {
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
     let bit : { next : () -> ?Bool } = {
-      var mask = 0x80  : Word8;
-      var byte = 0x00  : Word8;
+      var mask = 0x80 : Word8;
+      var byte = 0x00 : Word8;
       next = func () : ?Bool {
-        if (0 : Word8  == mask) {
+        if (0 : Word8 == mask) {
           switch (it.next()) {
             case null P.unreachable();
             case (?w) {
@@ -180,7 +180,13 @@ module {
   /// Uniformly distributes outcomes in the numeric range [0 .. 255].
   public func byte() : async Nat8 {
     let bytes = await raw_rand();
-    switch (bytes.bytes().next()) {
+    byteFrom bytes
+  };
+
+  /// Distributes outcomes in the numeric range [0 .. 255].
+  /// Seed blob must contain at least a byte.
+  public func byteFrom(seed : Blob) : Nat8 {
+    switch (seed.bytes().next()) {
       case (?w) Prim.word8ToNat8 w;
       case _ P.unreachable();
     }
@@ -189,7 +195,13 @@ module {
   /// Simulates a coin toss. Both outcomes have equal probability.
   public func coin() : async Bool {
     let bytes = await raw_rand();
-    switch (bytes.bytes().next()) {
+    coinFrom bytes
+  };
+
+  /// Simulates a coin toss.
+  /// Seed blob must contain at least a byte.
+  public func coinFrom(seed : Blob) : Bool {
+    switch (seed.bytes().next()) {
       case (?w) w > (127 : Word8);
       case _ P.unreachable();
     }
@@ -201,9 +213,15 @@ module {
   /// Uniformly distributes outcomes in the numeric range [0 .. 2^n - 1].
   public func range(p : Nat8) : async Nat {
     let bytes = await raw_rand();
+    rangeFrom(p, bytes)
+  };
+
+  /// Distributes outcomes in the numeric range [0 .. 2^n - 1].
+  /// Seed blob must contain at least ((p+7) / 8) bytes.
+  public func rangeFrom(p : Nat8, seed : Blob) : Nat {
     var pp = p;
     var acc : Nat = 0;
-    label l for (i in bytes.bytes()) {
+    label l for (i in seed.bytes()) {
       if (8 : Nat8 <= pp)
       { acc := acc * 256 + Prim.word8ToNat(i) }
       else if (0 : Nat8 == pp)
@@ -221,9 +239,15 @@ module {
   /// Counts the number of heads in `n` fair coin tosses.
   public func binomialNat8(n : Nat8) : async Nat8 {
     let bytes = await raw_rand();
+    binomialNat8From(n, bytes)
+  };
+
+  /// Counts the number of heads in `n` coin tosses.
+  /// Seed blob must contain at least ((p+7) / 8) bytes.
+  public func binomialNat8From(n : Nat8, seed : Blob) : Nat8 {
     var nn = n;
     var acc : Word8 = 0;
-    label l for (i in bytes.bytes()) {
+    label l for (i in seed.bytes()) {
       if (8 : Nat8 <= nn)
       { acc += Prim.popcntWord8(i) }
       else if (0 : Nat8 == nn)
@@ -257,6 +281,5 @@ module {
       Die.roll()
   */
 
-  // TODO Cyclic class
   // explain that all bets must be closed before asking for entropy (in the same round?).
 }
