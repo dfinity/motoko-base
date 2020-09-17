@@ -65,7 +65,7 @@ module {
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
-    public func binomialNat8(n : Nat8) : ?Nat8 {
+    public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
       var acc : Word8 = 0;
       for (i in it) {
@@ -156,7 +156,7 @@ module {
     };
 
     /// Counts the number of heads in `n` coin tosses.
-    public func binomialNat8(n : Nat8) : Nat8 {
+    public func binomial(n : Nat8) : Nat8 {
       var nn = n;
       var acc : Word8 = 0;
       for (i in it) {
@@ -237,14 +237,14 @@ module {
   };
 
   /// Counts the number of heads in `n` fair coin tosses.
-  public func binomialNat8(n : Nat8) : async Nat8 {
+  public func binomial(n : Nat8) : async Nat8 {
     let bytes = await raw_rand();
-    binomialNat8From(n, bytes)
+    binomialFrom(n, bytes)
   };
 
   /// Counts the number of heads in `n` coin tosses.
   /// Seed blob must contain at least ((p+7) / 8) bytes.
-  public func binomialNat8From(n : Nat8, seed : Blob) : Nat8 {
+  public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
     var nn = n;
     var acc : Word8 = 0;
     label l for (i in seed.bytes()) {
