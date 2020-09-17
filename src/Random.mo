@@ -1,3 +1,23 @@
+/// A module for obtaining randomness on the Internet Computer (IC).
+///
+/// Dealing with randomness on a deterministic computing platform, such
+/// as the IC, is intricate. Some basic rules need to be followed by the
+/// user of this module to obtain (and maintain) the benefits of crypto-
+/// graphic randomness:
+/// - cryptographic entropy (randomness source) is only obtainable
+///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
+/// - all bets must be closed *before* entropy is being asked for in
+///   order to decide them
+/// - this implies that the same entropy (i.e. `Blob`) - or surplus entropy
+///   not utilised yet - cannot be used for a new round of bets without
+///   losing the cryptographic guarantees.
+///
+/// Concretely, the below classes `Finite` and `Cyclic`, as well as the
+/// `*From` methods risk the carrying-over of state from previous rounds.
+/// These are provided for performance (and convenience) reasons, and need
+/// special care when used. Similar caveats apply for user-defined (pseudo)
+/// random number generators.
+
 import Prim "mo:prim";
 import P "Prelude"
 
@@ -280,6 +300,4 @@ module {
 
       Die.roll()
   */
-
-  // explain that all bets must be closed before asking for entropy (in the same round?).
 }
