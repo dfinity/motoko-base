@@ -32,8 +32,6 @@ For example, if you have created a {proglang} program named types.mo in the same
 import Types "./types";
 ....
 
-[[compiler-prelude]]
-
 == Modules for data types and data structures
 
 The base library provides one module for most basic types such as integers (`Int`) and characters (`Char`) to perform common operations. There are also modules for more advanced data structures such as `Trie` data structures and utility modules for performing common tasks such as iteration (`Iter` and debugging (`Debug`).
