@@ -34,10 +34,6 @@ import Types "./types";
 
 [[compiler-prelude]]
 
-== The compiler primitives and prelude
-
-There are two modules that have a slightly special status in a {proglang} program, since they are intrinsically part of the compiler, as opposed to originating from a library that is  presented as source code. The primitives are usually imported as `import Prim "mo:prim"` and contain special-purpose routines dealing with built-in data types. The compiler prelude provides higher-level abstractions and helpers that serve as a bridge between {proglang}’s surface syntax and the compiler’s inner workings. The prelude is regularly imported as `import P "Prelude"`.
-
 == Modules for data types and data structures
 
 The base library provides one module for most basic types such as integers (`Int`) and characters (`Char`) to perform common operations. There are also modules for more advanced data structures such as `Trie` data structures and utility modules for performing common tasks such as iteration (`Iter` and debugging (`Debug`).
