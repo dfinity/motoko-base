@@ -15,8 +15,8 @@ You should note, in particular, that the size and number of modules and function
 == Importing from the base library
 
 To import from the base library, use the `import` keyword.
-Give a local module name to introduce, in this example `P` for
-"`**P**relude`", and a URL where the `import` declaration may locate
+Give a local module name to introduce, in this example `Debug` for
+"`**Debug**ging`", and a URL where the `import` declaration may locate
 the imported module:
 
 ....
@@ -33,13 +33,10 @@ import Types "./types";
 ....
 
 [[compiler-prelude]]
-== Using predefined compiler prelude function
 
-The compiler itself contains a *prelude* in every program, effectively extending the language definition with a set of types and declarations that are always available.
+== The compiler primitives and prelude
 
-In addition to these built-in compiler definitions, the prelude of the base library contributes some additional functions in a supplemental Prelude module.
-
-In contrast to the definitions in other modules, the compiler prelude definitions are always present, and do _not_ require any `import` declaration to bring them into the current scope.
+There are two modules that have a slightly special status in a {proglang} program, since they are intrinsically part of the compiler, as opposed to originating from a library that is  presented as source code. The primitives are usually imported as `import Prim "mo:prim"` and contain special-purpose routines dealing with built-in data types. The compiler prelude provides higher-level abstractions and helpers that serve as a bridge between {proglang}’s surface syntax and the compiler’s inner workings. The prelude is regularly imported as `import P "Prelude"`.
 
 == Modules for data types and data structures
 
