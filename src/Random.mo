@@ -21,7 +21,8 @@
 /// random number generators.
 
 import Prim "mo:prim";
-import P "Prelude"
+import P "Prelude";
+import I "Iter"
 
 module {
 
@@ -32,7 +33,7 @@ module {
   /// guaranteed only when the supplied entropy is originally obtained
   /// by the `blob()` call, and is never reused.
   public class Finite(entropy : Blob) {
-    let it : { next : () -> ?Word8 } = entropy.bytes();
+    let it : I.Iter<Word8> = entropy.bytes();
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     public func byte() : ?Nat8 {
@@ -43,7 +44,7 @@ module {
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
-    let bit : { next : () -> ?Bool } = {
+    let bit : I.Iter<Bool> = {
       var mask = 0x80 : Word8;
       var byte = 0x00 : Word8;
       next = func () : ?Bool {
@@ -113,7 +114,7 @@ module {
   /// When the entropy is used up the same pool of entropy is reused,
   /// thus the uniformity of the distributions is *not* guaranteed.
   public class Cyclic(entropy : Blob) {
-    let it : { next : () -> ?Word8 } = {
+    let it : I.Iter<Word8> = {
       var inner = entropy.bytes();
       next = func () : ?Word8 =
       switch (inner.next()) {
@@ -131,7 +132,7 @@ module {
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
-    let bit : { next : () -> ?Bool } = {
+    let bit : I.Iter<Bool> = {
       var mask = 0x80 : Word8;
       var byte = 0x00 : Word8;
       next = func () : ?Bool {
