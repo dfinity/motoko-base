@@ -1,5 +1,7 @@
 /// A module for obtaining randomness on the Internet Computer (IC).
 ///
+/// This module provides the fundamentals for user abstractions to build on.
+///
 /// Dealing with randomness on a deterministic computing platform, such
 /// as the IC, is intricate. Some basic rules need to be followed by the
 /// user of this module to obtain (and maintain) the benefits of crypto-
@@ -23,10 +25,12 @@ import P "Prelude"
 
 module {
 
-  /// Drawing from a finite supply of entropy `Finite` provides
+  /// Drawing from a finite supply of entropy, `Finite` provides
   /// methods to obtain random values. When the entropy is used up,
   /// `null` is returned. Otherwise the outcomes' distributions are
-  /// stated for each method.
+  /// stated for each method. The uniformity of outcomes is
+  /// guaranteed only when the supplied entropy is originally obtained
+  /// by the `blob()` call, and is never reused.
   public class Finite(entropy : Blob) {
     let it : { next : () -> ?Word8 } = entropy.bytes();
 
@@ -104,7 +108,7 @@ module {
     }
   };
 
-  /// Drawing from a finite supply of entropy in a cyclic fashion
+  /// Drawing from a non-empty finite supply of entropy in a cyclic fashion,
   /// `Cyclic` provides methods to obtain (initially) random values.
   /// When the entropy is used up the same pool of entropy is reused,
   /// thus the uniformity of the distributions is *not* guaranteed.
