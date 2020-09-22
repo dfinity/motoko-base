@@ -36,6 +36,7 @@ module {
     let it : I.Iter<Word8> = entropy.bytes();
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
+    /// Consumes 1 byte of entropy.
     public func byte() : ?Nat8 {
       switch (it.next()) {
         case (?w) ?Prim.word8ToNat8 w;
@@ -66,11 +67,13 @@ module {
     };
 
     /// Simulates a coin toss. Both outcomes have equal probability.
+    /// Consumes 1 bit of entropy (amortised).
     public func coin() : ?Bool {
       bit.next()
     };
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
+    /// Consumes  ⌈p/8⌉ bytes of entropy.
     public func range(p : Nat8) : ?Nat {
       var pp = p;
       var acc : Nat = 0;
@@ -90,6 +93,7 @@ module {
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
+    /// Consumes  ⌈p/8⌉ bytes of entropy.
     public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
       var acc : Word8 = 0;
@@ -181,7 +185,4 @@ module {
     };
     P.unreachable()
   }
-
-  // TODO State also how much entropy is consumed (in docs).
-  // TODO ADD EXAMPLE : for now it is here https://github.com/ggreif/ic101/blob/master/src/ic101/die.mo
 }
