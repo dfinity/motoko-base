@@ -163,21 +163,7 @@ module {
 
     /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
     public func range(p : Nat8) : Nat {
-      var pp = p;
-      var acc : Nat = 0;
-      for (i in it) {
-        if (8 : Nat8 <= pp)
-        { acc := acc * 256 + Prim.word8ToNat(i) }
-        else if (0 : Nat8 == pp)
-        { return acc }
-        else {
-          acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8 pp);
-          let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
-          return acc + Prim.word8ToNat(i & mask)
-        };
-        pp -= 8
-      };
-      P.unreachable()
+      rangeIter(p, it)
     };
 
     /// Counts the number of heads in `n` coin tosses.
@@ -227,13 +213,18 @@ module {
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
+    rangeIter(p, seed.bytes())
+  };
+
+  // internal worker method, expects iterator with sufficient supply
+  func rangeIter(p : Nat8, it : I.Iter<Word8>) : Nat {
     var pp = p;
     var acc : Nat = 0;
-    label l for (i in seed.bytes()) {
+    for (i in it) {
       if (8 : Nat8 <= pp)
       { acc := acc * 256 + Prim.word8ToNat(i) }
       else if (0 : Nat8 == pp)
-      { break l }
+      { return acc }
       else {
         acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8 pp);
         let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
@@ -241,7 +232,7 @@ module {
       };
       pp -= 8
     };
-    acc
+    P.unreachable()
   };
 
   /// Counts the number of heads in `n` fair coin tosses.
@@ -255,7 +246,7 @@ module {
     binomialIter(n, seed.bytes())
   };
 
-  /// internal worker method, expects iterator with sufficient supply
+  // internal worker method, expects iterator with sufficient supply
   func binomialIter(n : Nat8, it : I.Iter<Word8>) : Nat8 {
     var nn = n;
     var acc : Word8 = 0;
