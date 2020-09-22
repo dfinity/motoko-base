@@ -20,7 +20,6 @@
 /// A "buffer" is a mutable sequence that grows, either one element at a
 /// time, or one (second) buffer at time.
 import Prim "mo:prim";
-import A "mo:base/Array";
 
 module {
 
@@ -34,14 +33,20 @@ public class Buffer<X> (initCapacity : Nat) {
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
   /// Get purely-functional representation
-  public func share() : ([X], Nat) {
-      (A.freeze elems, count)
+  public func share() : [X] {
+      Prim.Array_tabulate<X>(count, func i = elems[i])
   };
 
-  /// Put purely-functional representation into class. Need to make sure the count and elems are consistent
-  public func unsafeUnshare(t : [X], c : Nat) {
-      elems := A.thaw(t);
-      count := c;
+  /// Put purely-functional representation into class.
+  public func unshare(xs : [X]) {
+      count := xs.size();
+      if (count == 0) {
+          elems := [var];
+      };
+      let elems := Prim.Array_init<X>(count, xs[0]);
+      for (i in elems.keys()) {
+          elems[i] := xs[i];
+      };
   };
 
   /// Adds a single element to the buffer.
