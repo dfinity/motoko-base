@@ -14,7 +14,7 @@
 ///   not utilised yet - cannot be used for a new round of bets without
 ///   losing the cryptographic guarantees.
 ///
-/// Concretely, the below classes `Finite` and `Cyclic`, as well as the
+/// Concretely, the below class `Finite`, as well as the
 /// `*From` methods risk the carrying-over of state from previous rounds.
 /// These are provided for performance (and convenience) reasons, and need
 /// special care when used. Similar caveats apply for user-defined (pseudo)
@@ -109,75 +109,7 @@ module {
     }
   };
 
-  /// Drawing from a non-empty finite supply of entropy in a cyclic fashion,
-  /// `Cyclic` provides methods to obtain (initially) random values.
-  /// When the entropy is used up the same pool of entropy is reused,
-  /// thus the uniformity of the distributions is *not* guaranteed.
-  public class Cyclic(entropy : Blob) {
-    let it : I.Iter<Word8> = {
-      var inner = entropy.bytes();
-      next = func () : ?Word8 =
-      switch (inner.next()) {
-        case null { inner := entropy.bytes(); inner.next() };
-        case w w
-      }
-    };
-
-    /// Distributes outcomes in the numeric range [0 .. 255].
-    public func byte() : Nat8 {
-      switch (it.next()) {
-        case (?w) Prim.word8ToNat8 w;
-        case _ P.unreachable();
-      }
-    };
-
-    /// Bool iterator splitting up a byte of entropy into 8 bits
-    let bit : I.Iter<Bool> = {
-      var mask = 0x80 : Word8;
-      var byte = 0x00 : Word8;
-      next = func () : ?Bool {
-        if (0 : Word8 == mask) {
-          switch (it.next()) {
-            case null P.unreachable();
-            case (?w) {
-              byte := w;
-              mask := 0x40;
-              ?(0 : Word8 != byte & (0x80 : Word8))
-            }
-          }
-        } else {
-          let m = mask;
-          mask >>= (1 : Word8);
-          ?(0 : Word8 != byte & m)
-        }
-      }
-    };
-
-    /// Simulates a coin toss.
-    public func coin() : Bool {
-      switch (bit.next()) {
-        case (?w) w;
-        case _ P.unreachable();
-      }
-    };
-
-    /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
-    public func range(p : Nat8) : Nat {
-      rangeIter(p, it)
-    };
-
-    /// Counts the number of heads in `n` coin tosses.
-    public func binomial(n : Nat8) : Nat8 {
-      binomialIter(n, it)
-    }
-  };
-
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
-
-  /// Uniformly distributes outcomes in the numeric range [0 .. 255].
-  public func byte() : async Nat8 {
-    byteFrom (await raw_rand())
-  };
 
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
@@ -186,11 +118,6 @@ module {
       case (?w) Prim.word8ToNat8 w;
       case _ P.unreachable();
     }
-  };
-
-  /// Simulates a coin toss. Both outcomes have equal probability.
-  public func coin() : async Bool {
-    coinFrom (await raw_rand())
   };
 
   /// Simulates a coin toss.
@@ -204,11 +131,6 @@ module {
 
   /// Obtains a full blob (32 bytes) worth of fresh entropy.
   public let blob : shared () -> async Blob = raw_rand;
-
-  /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
-  public func range(p : Nat8) : async Nat {
-    rangeFrom(p, await raw_rand())
-  };
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
@@ -233,11 +155,6 @@ module {
       pp -= 8
     };
     P.unreachable()
-  };
-
-  /// Counts the number of heads in `n` fair coin tosses.
-  public func binomial(n : Nat8) : async Nat8 {
-    binomialFrom(n, await raw_rand())
   };
 
   /// Counts the number of heads in `n` coin tosses.
