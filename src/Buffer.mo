@@ -43,7 +43,7 @@ public class Buffer<X> (initCapacity : Nat) {
       if (count == 0) {
           elems := [var];
       };
-      let elems := Prim.Array_init<X>(count, xs[0]);
+      elems := Prim.Array_init<X>(count, xs[0]);
       for (i in elems.keys()) {
           elems[i] := xs[i];
       };
