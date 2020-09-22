@@ -182,21 +182,7 @@ module {
 
     /// Counts the number of heads in `n` coin tosses.
     public func binomial(n : Nat8) : Nat8 {
-      var nn = n;
-      var acc : Word8 = 0;
-      for (i in it) {
-        if (8 : Nat8 <= nn)
-        { acc += Prim.popcntWord8(i) }
-        else if (0 : Nat8 == nn)
-        { return Prim.word8ToNat8 acc }
-        else {
-          let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
-          let residue = Prim.popcntWord8(i & mask);
-          return Prim.word8ToNat8(acc + residue)
-        };
-        nn -= 8
-      };
-      P.unreachable()
+      binomialIter(n, it)
     }
   };
 
@@ -266,13 +252,18 @@ module {
   /// Counts the number of heads in `n` coin tosses.
   /// Seed blob must contain at least ((n+7) / 8) bytes.
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
+    binomialIter(n, seed.bytes())
+  };
+
+  /// internal worker method, expects iterator with sufficient supply
+  func binomialIter(n : Nat8, it : I.Iter<Word8>) : Nat8 {
     var nn = n;
     var acc : Word8 = 0;
-    label l for (i in seed.bytes()) {
+    for (i in it) {
       if (8 : Nat8 <= nn)
       { acc += Prim.popcntWord8(i) }
       else if (0 : Nat8 == nn)
-      { break l }
+      { return Prim.word8ToNat8 acc }
       else {
         let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
         let residue = Prim.popcntWord8(i & mask);
@@ -280,7 +271,7 @@ module {
       };
       nn -= 8
     };
-    Prim.word8ToNat8 acc
+    P.unreachable()
   }
 
   // TODO State also how much entropy is consumed (in docs).
