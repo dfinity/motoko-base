@@ -35,6 +35,17 @@ public class HashMap<K,V> (
   var table : [var KVs<K,V>] = [var];
   var _count : Nat = 0;
 
+  /// Get purely-functional representation
+  public func share() : ([KVs<K,V>], Nat) {
+      (A.freeze table, _count)
+  };
+
+  /// Put purely-functional representation into class. Need to make sure the tree is constructed with the same Eq and Hash functions
+  public func unsafeUnshare(t : [KVs<K,V>], count : Nat) {
+      table := A.thaw(t);
+      _count := count;
+  };
+
   /// Returns the number of entries in this HashMap.
   public func size() : Nat = _count;
 

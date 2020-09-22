@@ -25,10 +25,15 @@ public class RBTree<X, Y>(compareTo:(X, X) -> O.Order) {
   /// Tree as share data.
   ///
   /// Get non-OO, purely-functional representation:
-  /// for drawing, pretty-printing and non-OO contexts
+  /// for drawing, pretty-printing, upgrades and non-OO contexts
   /// (e.g., async args and results):
   public func share() : Tree<X, Y> {
     tree
+  };
+
+  /// Put purely-functional representation into class. Need to make sure the tree is constructed with the same compare function
+  public func unsafeUnshare(t: Tree<X, Y>) {
+      tree := t;
   };
 
   /// Get the value associated with a given key.
