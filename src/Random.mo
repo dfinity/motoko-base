@@ -73,7 +73,7 @@ module {
     };
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
-    /// Consumes  ⌈p/8⌉ bytes of entropy.
+    /// Consumes ⌈p/8⌉ bytes of entropy.
     public func range(p : Nat8) : ?Nat {
       var pp = p;
       var acc : Nat = 0;
@@ -93,7 +93,7 @@ module {
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
-    /// Consumes  ⌈p/8⌉ bytes of entropy.
+    /// Consumes ⌈p/8⌉ bytes of entropy.
     public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
       var acc : Word8 = 0;
