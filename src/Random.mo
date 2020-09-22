@@ -204,8 +204,7 @@ module {
 
   /// Uniformly distributes outcomes in the numeric range [0 .. 255].
   public func byte() : async Nat8 {
-    let bytes = await raw_rand();
-    byteFrom bytes
+    byteFrom (await raw_rand())
   };
 
   /// Distributes outcomes in the numeric range [0 .. 255].
@@ -219,8 +218,7 @@ module {
 
   /// Simulates a coin toss. Both outcomes have equal probability.
   public func coin() : async Bool {
-    let bytes = await raw_rand();
-    coinFrom bytes
+    coinFrom (await raw_rand())
   };
 
   /// Simulates a coin toss.
@@ -237,8 +235,7 @@ module {
 
   /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
   public func range(p : Nat8) : async Nat {
-    let bytes = await raw_rand();
-    rangeFrom(p, bytes)
+    rangeFrom(p, await raw_rand())
   };
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
@@ -263,8 +260,7 @@ module {
 
   /// Counts the number of heads in `n` fair coin tosses.
   public func binomial(n : Nat8) : async Nat8 {
-    let bytes = await raw_rand();
-    binomialFrom(n, bytes)
+    binomialFrom(n, await raw_rand())
   };
 
   /// Counts the number of heads in `n` coin tosses.
