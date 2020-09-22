@@ -65,7 +65,7 @@ module {
       bit.next()
     };
 
-    /// Uniformly distributes outcomes in the numeric range [0 .. 2^n - 1].
+    /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
     public func range(p : Nat8) : ?Nat {
       var pp = p;
       var acc : Nat = 0;
@@ -156,7 +156,7 @@ module {
       }
     };
 
-    /// Distributes outcomes in the numeric range [0 .. 2^n - 1].
+    /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
     public func range(p : Nat8) : Nat {
       var pp = p;
       var acc : Nat = 0;
@@ -230,13 +230,13 @@ module {
   /// Obtains a full blob (32 bytes) worth of fresh entropy.
   public let blob : shared () -> async Blob = raw_rand;
 
-  /// Uniformly distributes outcomes in the numeric range [0 .. 2^n - 1].
+  /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
   public func range(p : Nat8) : async Nat {
     let bytes = await raw_rand();
     rangeFrom(p, bytes)
   };
 
-  /// Distributes outcomes in the numeric range [0 .. 2^n - 1].
+  /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
     var pp = p;
@@ -263,7 +263,7 @@ module {
   };
 
   /// Counts the number of heads in `n` coin tosses.
-  /// Seed blob must contain at least ((p+7) / 8) bytes.
+  /// Seed blob must contain at least ((n+7) / 8) bytes.
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
     var nn = n;
     var acc : Word8 = 0;
