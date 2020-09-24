@@ -3,23 +3,23 @@
 
 Typesafe nulls
 
-Optional values can be seen as a typesafe `null`. A value of type ?(Int) can
-be constructed with either `null` or `?(42)`. The simplest way to get at
-the contents of an optional is to use pattern matching:
+Optional values can be seen as a typesafe `null`. A value of type `?Int` can
+be constructed with either `null` or `?42`. The simplest way to get at the
+contents of an optional is to use pattern matching:
 
 ```motoko
-let optionalInt1 : ?(Int) = ?(42);
-let optionalInt2 : ?(Int) = null;
+let optionalInt1 : ?Int = ?42;
+let optionalInt2 : ?Int = null;
 
 let int1orZero : Int = switch(optionalInt1) {
   case null 0;
-  case ?(int) int;
+  case (?int) int;
 };
 assertEquals(int1OrZero, 42);
 
 let int2orZero : Int = switch(optionalInt2) {
   case null 0;
-  case ?(int) int;
+  case (?int) int;
 };
 assertEquals(int2OrZero, 0);
 ```

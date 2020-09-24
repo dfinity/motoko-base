@@ -195,7 +195,7 @@ func take<T>(l : List<T>, n : Nat) : List<T>
 [[value.drop]]
 == drop
 
-Drop all but the first `n` elements from the given list.
+Drop the first `n` elements from the given list.
 
 [source,motoko]
 ----

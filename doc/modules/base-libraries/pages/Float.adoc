@@ -222,7 +222,7 @@ func format(fmt : {#fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact}, 
 [[value.toText]]
 == toText
 
-Conversion.
+Conversion to Text. Use `format(fmt, x)` for more detailed control.
 
 [source,motoko]
 ----
@@ -232,7 +232,7 @@ let toText : Float -> Text
 [[value.toInt64]]
 == toInt64
 
-Conversion.
+Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
 
 [source,motoko]
 ----
@@ -242,7 +242,7 @@ let toInt64 : Float -> Int64
 [[value.fromInt64]]
 == fromInt64
 
-Conversion.
+Conversion from Int64.
 
 [source,motoko]
 ----
@@ -252,7 +252,7 @@ let fromInt64 : Int64 -> Float
 [[value.toInt]]
 == toInt
 
-Conversion via Int64.
+Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
 
 [source,motoko]
 ----
@@ -262,7 +262,7 @@ let toInt : Float -> Int
 [[value.fromInt]]
 == fromInt
 
-Conversion via Int64. May trap.
+Conversion from Int via Int64. May trap.
 
 [source,motoko]
 ----

@@ -33,6 +33,7 @@
 ** xref:Principal.adoc[Principal]
 ** xref:RBTree.adoc[RBTree]
 ** xref:Result.adoc[Result]
+** xref:Stack.adoc[Stack]
 ** xref:Time.adoc[Time]
 ** xref:Text.adoc[Text]
 ** xref:Trie.adoc[Trie]
