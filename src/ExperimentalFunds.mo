@@ -24,8 +24,9 @@ module {
   /// Given `u`, returns the currently available `amount` of unit `u`.
   /// The amount available is the amount received in the current call,
   /// minus the cumulative amount `accept`ed by this call.
-  /// On return to the sender, any remaining available amount is automatically
-  /// refunded to the sender.
+  /// On exit from the current shared function or async expression via `return` or `throw`
+  /// any remaining available amount is automatically
+  /// refunded to the caller/context.
   public let available : (u : Unit) -> (amount : Nat64) = Prim.fundsAvailable;
 
   /// Transfers `amount` from `available(u)` to `balance(u)`,
