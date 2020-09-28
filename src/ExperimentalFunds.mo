@@ -29,7 +29,7 @@ module {
   public let available : (u : Unit) -> (amount : Nat64) = Prim.fundsAvailable;
 
   /// Transfers `amount` from `available(u)` to `balance(u)`,
-  /// trapping on underflow.
+  /// Traps if trying to accept more fund than are available.
   public let accept : (u : Unit, amount : Nat64) -> () = Prim.fundsAccept;
 
   /// Indicates additional `amount` of unit `u` to be transferred in
