@@ -34,7 +34,7 @@ module {
   };
 
   /// Transfers `amount` from `available(u)` to `balance(u)`,
-  /// Traps if trying to accept more fund than are available.
+  /// Traps if trying to accept more funds than are available.
   public func accept(u : Unit, amount : Nat) {
     Prim.fundsAccept(u, Prim.natToNat64(amount))
   };
