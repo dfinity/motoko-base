@@ -2,14 +2,16 @@
 ///
 /// Provides imperative operations for observing funds, transferring funds and
 /// observing refunds of various units.
-/// The two currently support units are `#cycle` and `#icpt`. Usage of the Internet Computer
-/// is charged for in Cycles. ICPTs are Internet Computer tokens.
-
-/// This low-level API is experimental and likely to change or even disappear.
+///
+/// The two currently supported units are `#cycle` and `#icpt`.
+/// Usage of the Internet Computer is measured, and paid for, in unit *Cycle*.
+/// *ICPT*  is the unit of Internet Computer Tokens.
+///
+/// **WARNING:** This low-level API is **experimental** and likely to change or even disappear.
 /// More units may be added. Moreover, dedicated syntactic support for
 /// manipulating funds may be added to the language in future, obsoleting this library.
 ///
-/// Note: since unit `#cycle` is used to measure computation, the value of
+/// **NOTE:** Since unit `#cycle` also measures computation, the value of
 /// `balance(#cycle)` generally decreases from one call to the next.
 
 import Prim "mo:prim";
@@ -35,7 +37,7 @@ module {
 
   /// Transfers `amount` from `available(u)` to `balance(u)`,
   /// Traps if trying to accept more funds than are available.
-  public func accept(u : Unit, amount : Nat) {
+  public func accept(u : Unit, amount : Nat) : () {
     Prim.fundsAccept(u, Prim.natToNat64(amount))
   };
 
@@ -46,18 +48,17 @@ module {
   /// the last call is deducted from `balance(u)`.
   /// If this total exceeds `balance(u)`, the caller traps, aborting the call.
   ///
-  /// Note: the implicit register of added amounts is reset to zero on entry to
+  /// Note: the implicit, per unit register of added amounts is reset to zero on entry to
   /// a shared function and after each shared function call or resume from an await.
-  public func add(u : Unit, amount : Nat) {
+  public func add(u : Unit, amount : Nat) : () {
     Prim.fundsAdd(u, Prim.natToNat64(amount))
   };
 
   /// Reports `amount` of unit `u` refunded in the last `await` of the current
   /// context, or `0` if no await has occurred yet.
-  /// Calling `refunded(u)` is solely informational and does not affect,
-  /// e.g. `balance(u)`.
+  /// Calling `refunded(u)` is solely informational and does not affect `balance(u)`.
   /// Instead, refunds are automatically added to the current balance,
-  /// whether or not `refunded` is called.
+  /// whether or not `refunded` is used to observe them.
   public func refunded(u: Unit) : (amount : Nat) {
     Prim.nat64ToNat(Prim.fundsRefunded(u))
   };
