@@ -45,7 +45,7 @@ class range(x : Nat, y : Int)
 
 
 
-[[value.next]]
+[[range.value.next]]
 === next
 
 
@@ -68,7 +68,7 @@ class revRange(x : Int, y : Int)
 
 
 
-[[value.next]]
+[[revRange.value.next]]
 === next
 
 
