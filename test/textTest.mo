@@ -86,30 +86,6 @@ run(suite("size",
 ]));
 
 
-run(suite("size",
-[
- test(
-   "size-0",
-   Text.size(""),
-   M.equals(T.nat 0)),
- test(
-   "size-1",
-   Text.size("a"),
-   M.equals(T.nat 1)),
- test(
-   "size-2",
-   Text.size("abcdefghijklmnopqrstuvwxyz"),
-   M.equals(T.nat 26)),
- test(
-   "size-3",
-   Text.size("☃"),
-   M.equals(T.nat 1)),
- test(
-   "size-4",
-   Text.size("☃☃"),
-   M.equals(T.nat 2)),
-]));
-
 
 run(suite("toIter",
 [
