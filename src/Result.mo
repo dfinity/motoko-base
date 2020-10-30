@@ -1,7 +1,9 @@
 /// Error handling with the Result type.
 
+import Prim "mo:prim";
 import P "Prelude";
 import Array "Array";
+import List "List";
 import Order "Order";
 
 module {
@@ -177,6 +179,58 @@ public func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ()) {
     case (#ok ok) f(ok);
     case _ ();
   }
+};
+
+/// Maps a Result-returning function over an Array and returns either
+/// the first error or an array of successful values.
+///
+/// ```motoko
+/// func makeNatural(x : Int) : Result<Nat, Text> =
+///   if (x >= 0) {
+///     #ok(Int.abs(x))
+///   } else {
+///     #err(Int.toText(x) # " is not a natural number.")
+///   };
+///
+/// traverseArray([0, 1, 2], makeNatural) = #ok([0, 1, 2]);
+/// traverseArray([-1, 0, 1], makeNatural) = #err("-1 is not a natural number.");
+/// ```
+public func traverseArray<A, R, E>(xs : [A], f : A -> Result<R, E>) : Result<[R], E> {
+  let len : Nat = xs.size();
+  var target : [var R] = [var];
+  var i : Nat = 0;
+  var init = false;
+  while (i < len) {
+    switch (f(xs[i])) {
+      case (#err err) return #err(err);
+      case (#ok ok) {
+        if (not init) {
+          init := true;
+          target := Array.init(len, ok);
+        } else {
+          target[i] := ok
+        }
+      };
+    };
+    i += 1;
+  };
+  #ok(Array.freeze(target))
+};
+
+/// Like [`traverseArray`](#value.traverseArray) but for Lists.
+public func traverseList<A, R, E>(xs : List.List<A>, f : A -> Result<R, E>) : Result<List.List<R>, E> {
+  func go(xs : List.List<A>, acc : List.List<R>) : Result<List.List<R>, E> {
+    switch xs {
+      case null #ok(acc);
+      case (?(head, tail)) {
+        switch (f(head)) {
+          case (#err err) #err(err);
+          case (#ok ok) go(tail, ?(ok, acc));
+        };
+      };
+    }
+  };
+  mapOk(go(xs, null), func (xs : List.List<R>) : List.List<R> = List.reverse(xs))
 };
 
 /// Extract and return the value `v` of an `#ok v` result.
