@@ -151,19 +151,6 @@ public func fromSome<Ok>(o:?Ok):Result<Ok,None> {
   }
 };
 
-/// a result that consists of an array of Ok results from an array of results, or the first error in the result array, if any.
-public func toArrayOk<R,E>(x:[Result<R,E>]) : Result<[R],E> {
-  // return early with the first Err result, if any
-  for (i in x.keys()) {
-    switch (x[i]) {
-      case (#err e) { return #err(e) };
-      case (#ok _) { };
-    }
-  };
-  // all of the results are Ok; tabulate them.
-  #ok(Array.tabulate<R>(x.size(), func (i:Nat):R {unwrapOk(x[i]) }))
-};
-
 /// Applies a function to a successful value, but discards the result. Use
 /// `iterate` if you're only interested in the side effect `f` produces.
 ///
