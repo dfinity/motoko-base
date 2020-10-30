@@ -134,15 +134,6 @@ public func fromOption<R, E>(x : ?R, err : E) : Result<R, E> {
   }
 };
 
-/// Maps the `Ok` type/value from the optional value, or else use the given error value.
-/// (Deprecate?)
-public func fromSomeMap<R1, R2, E>(x:?R1, f:R1->R2, err:E):Result<R2,E> {
-  switch x {
-    case (? x) {#ok (f x)};
-    case null {#err err};
-  }
-};
-
 /// Applies a function to a successful value, but discards the result. Use
 /// `iterate` if you're only interested in the side effect `f` produces.
 ///
