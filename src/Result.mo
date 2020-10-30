@@ -143,14 +143,6 @@ public func fromSomeMap<R1, R2, E>(x:?R1, f:R1->R2, err:E):Result<R2,E> {
   }
 };
 
-/// asserts that the option is Some(_) form.
-public func fromSome<Ok>(o:?Ok):Result<Ok,None> {
-  switch(o) {
-    case (?o) (#ok o);
-    case _ P.unreachable();
-  }
-};
-
 /// Applies a function to a successful value, but discards the result. Use
 /// `iterate` if you're only interested in the side effect `f` produces.
 ///
@@ -220,31 +212,11 @@ public func traverseList<A, R, E>(xs : List.List<A>, f : A -> Result<R, E>) : Re
   mapOk(go(xs, null), func (xs : List.List<R>) : List.List<R> = List.reverse(xs))
 };
 
-/// Extract and return the value `v` of an `#ok v` result.
-/// Traps if its argument is an `#err` result.
-/// Recommended for testing only, not for production code.
-public func unwrapOk<Ok,Error>(r:Result<Ok,Error>):Ok {
-  switch(r) {
-    case (#err e) P.unreachable();
-    case (#ok r) r;
-  }
-};
-
 // Whether this Result is an `#ok`
 public func isOk(r : Result<Any, Any>) : Bool {
   switch r {
     case (#ok _) true;
     case (#err _) false;
-  }
-};
-
-/// Extract and return the value `v` of an `#err v` result.
-/// Traps if its argument is an `#ok` result.
-/// Recommended for testing only, not for production code.
-public func unwrapErr<Ok,Error>(r:Result<Ok,Error>):Error {
-  switch(r) {
-    case (#err e) e;
-    case (#ok r) P.unreachable();
   }
 };
 
