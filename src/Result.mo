@@ -134,6 +134,18 @@ public func fromOption<R, E>(x : ?R, err : E) : Result<R, E> {
   }
 };
 
+/// Create an option from a result, turning all #err into `null`.
+/// ```
+/// fromOption(#ok(x)) = ?x
+/// fromOption(#err(e)) = null
+/// ```
+public func toOption<R, E>(r : Result<R, E>) : ?R {
+  switch r {
+    case (#ok x) {?x};
+    case (#err _) {null};
+  }
+};
+
 /// Applies a function to a successful value, but discards the result. Use
 /// `iterate` if you're only interested in the side effect `f` produces.
 ///
