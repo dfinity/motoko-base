@@ -89,10 +89,10 @@ let suite = Suite.suite("Array", [
     M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
   ),
   Suite.test(
-    "filterMap",
+    "mapFilter",
     {
       let isEven = func (x : Nat) : ?Nat { if (x % 2 == 0) ?x else null };
-      Array.filterMap([ 1, 2, 3, 4, 5, 6 ], isEven);
+      Array.mapFilter([ 1, 2, 3, 4, 5, 6 ], isEven);
     },
     M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
   ),
