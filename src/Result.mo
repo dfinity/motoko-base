@@ -2,6 +2,7 @@
 
 import P "Prelude";
 import Array "Array";
+import Order "Order";
 
 module {
 
@@ -22,6 +23,36 @@ module {
 public type Result<Ok, Err> = {
   #ok : Ok;
   #err : Err;
+};
+
+// Compares two Result's for equality.
+public func equal<Ok, Err>(
+  eqOk : (Ok, Ok) -> Bool,
+  eqErr : (Err, Err) -> Bool,
+  r1 : Result<Ok, Err>,
+  r2 : Result<Ok, Err>
+) : Bool {
+  switch (r1, r2) {
+    case (#ok ok1, #ok ok2) eqOk(ok1, ok2);
+    case (#err err1, #err err2) eqErr(err1, err2);
+    case _ false;
+  };
+};
+
+// Compares two Results. `#ok` is larger than `#err`. This ordering is
+// arbitrary, but it lets you for example use Results as keys in ordered maps.
+public func compare<Ok, Err>(
+  compareOk : (Ok, Ok) -> Order.Order,
+  compareErr : (Err, Err) -> Order.Order,
+  r1 : Result<Ok, Err>,
+  r2 : Result<Ok, Err>
+) : Order.Order {
+  switch (r1, r2) {
+    case (#ok ok1, #ok ok2) compareOk(ok1, ok2);
+    case (#err err1, #err err2) compareErr(err1, err2);
+    case (#ok _, _) #greater;
+    case (#err _, _) #less;
+  };
 };
 
 /// Allows sequencing of `Result` values and functions that return
