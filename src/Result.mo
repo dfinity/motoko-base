@@ -162,6 +162,23 @@ public func toArrayOk<R,E>(x:[Result<R,E>]) : Result<[R],E> {
   #ok(Array.tabulate<R>(x.size(), func (i:Nat):R {unwrapOk(x[i]) }))
 };
 
+/// Applies a function to a successful value, but discards the result. Use
+/// `iterate` if you're only interested in the side effect `f` produces.
+///
+/// ```
+/// var counter : Nat = 0;
+/// iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
+/// assert(counter == 5);
+/// iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
+/// assert(counter == 5);
+/// ```
+public func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ()) {
+  switch res {
+    case (#ok ok) f(ok);
+    case _ ();
+  }
+};
+
 /// Extract and return the value `v` of an `#ok v` result.
 /// Traps if its argument is an `#err` result.
 /// Recommended for testing only, not for production code.
