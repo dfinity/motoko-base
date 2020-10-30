@@ -243,6 +243,14 @@ public func unwrapOk<Ok,Error>(r:Result<Ok,Error>):Ok {
   }
 };
 
+// Whether this Result is an `#ok`
+public func isOk(r : Result<Any, Any>) : Bool {
+  switch r {
+    case (#ok _) true;
+    case (#err _) false;
+  }
+};
+
 /// Extract and return the value `v` of an `#err v` result.
 /// Traps if its argument is an `#ok` result.
 /// Recommended for testing only, not for production code.
@@ -250,6 +258,14 @@ public func unwrapErr<Ok,Error>(r:Result<Ok,Error>):Error {
   switch(r) {
     case (#err e) e;
     case (#ok r) P.unreachable();
+  }
+};
+
+// Whether this Result is an `#err`
+public func isErr(r : Result<Any, Any>) : Bool {
+  switch r {
+    case (#ok _) false;
+    case (#err _) true;
   }
 };
 
