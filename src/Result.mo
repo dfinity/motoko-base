@@ -81,6 +81,22 @@ public func chain<R1, R2, Error>(
   }
 };
 
+/// Flattens a nested Result.
+///
+/// ```motoko
+/// assert(flatten<Nat, Text>(#ok(#ok(10))) == #ok(10))
+/// assert(flatten<Nat, Text>(#err("Wrong") == #err("Wrong"))
+/// assert(flatten<Nat, Text>(#ok(#err("Wrong")) == #err("Wrong"))
+/// ```
+public func flatten<Ok, Error>(
+  result : Result<Result<Ok, Error>, Error>
+) : Result<Ok, Error> {
+  switch result {
+    case (#ok ok) ok;
+    case (#err err) #err(err);
+  }
+};
+
 
 /// Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
 public func mapOk<Ok1, Ok2, Error>(
