@@ -53,63 +53,10 @@ let iterate = Suite.suite("iterate", {
   tests
 });
 
-func arrayRes(itm : Result.Result<[Nat], Text>) : T.TestableItem<Result.Result<[Nat], Text>> {
-  let resT = T.resultTestable(T.arrayTestable<Nat>(T.intTestable), T.textTestable);
-  { display = resT.display; equals = resT.equals; item = itm }
-};
-
-let traverseArray = Suite.suite("traverseArray", [
-  Suite.test("empty array",
-    Result.traverseArray<Int, Nat, Text>([], makeNatural), 
-    M.equals(arrayRes(#ok([])))
-  ),
-
-  Suite.test("success",
-    Result.traverseArray<Int, Nat, Text>([ 1, 2, 3 ], makeNatural), 
-    M.equals(arrayRes(#ok([1, 2, 3])))
-  ),
-
-  Suite.test("fail fast",
-    Result.traverseArray<Int, Nat, Text>([ -1, 2, 3 ], makeNatural), 
-    M.equals(arrayRes(#err("-1 is not a natural number.")))
-  ),
-
-  Suite.test("fail last",
-    Result.traverseArray<Int, Nat, Text>([ 1, 2, -3 ], makeNatural), 
-    M.equals(arrayRes(#err("-3 is not a natural number.")))
-  ),
-]);
-
-func listRes(itm : Result.Result<List.List<Nat>, Text>) : T.TestableItem<Result.Result<List.List<Nat>, Text>> {
-  let resT = T.resultTestable(T.listTestable<Nat>(T.intTestable), T.textTestable);
-  { display = resT.display; equals = resT.equals; item = itm }
-};
-
-let traverseList = Suite.suite("traverseList", [
-  Suite.test("empty list",
-    Result.traverseList<Int, Nat, Text>(List.nil(), makeNatural),
-    M.equals(listRes(#ok(List.nil())))
-  ),
-  Suite.test("success",
-    Result.traverseList<Int, Nat, Text>(?(1, ?(2, ?(3, null))), makeNatural),
-    M.equals(listRes(#ok(?(1, ?(2, ?(3, null))))))
-  ),
-  Suite.test("fail fast",
-    Result.traverseList<Int, Nat, Text>(?(-1, ?(2, ?(3, null))), makeNatural),
-    M.equals(listRes(#err("-1 is not a natural number.")))
-  ),
-  Suite.test("fail last",
-    Result.traverseList<Int, Nat, Text>(?(1, ?(2, ?(-3, null))), makeNatural),
-    M.equals(listRes(#err("-3 is not a natural number.")))
-  ),
-]);
-
 let suite = Suite.suite("Result", [
   chain,
   flatten,
   iterate,
-  traverseArray,
-  traverseList
 ]);
 
 Suite.run(suite);

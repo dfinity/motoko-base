@@ -1,8 +1,10 @@
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
+import Int "mo:base/Int";
+import Result "mo:base/Result";
 import Text "mo:base/Text";
-import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
+import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 
 let findTest = {
@@ -67,7 +69,35 @@ let mapEntriesTest = {
   )
 };
 
+func makeNatural(x : Int) : Result.Result<Nat, Text> =
+  if (x >= 0) { #ok(Int.abs(x)) } else { #err(Int.toText(x) # " is not a natural number.") };
+
+func arrayRes(itm : Result.Result<[Nat], Text>) : T.TestableItem<Result.Result<[Nat], Text>> {
+  let resT = T.resultTestable(T.arrayTestable<Nat>(T.intTestable), T.textTestable);
+  { display = resT.display; equals = resT.equals; item = itm }
+};
+
+let mapResult = Suite.suite("mapResult", [
+  Suite.test("empty array",
+    Array.mapResult<Int, Nat, Text>([], makeNatural),
+    M.equals(arrayRes(#ok([])))
+  ),
+  Suite.test("success",
+    Array.mapResult<Int, Nat, Text>([ 1, 2, 3 ], makeNatural),
+    M.equals(arrayRes(#ok([1, 2, 3])))
+  ),
+  Suite.test("fail fast",
+    Array.mapResult<Int, Nat, Text>([ -1, 2, 3 ], makeNatural),
+    M.equals(arrayRes(#err("-1 is not a natural number.")))
+  ),
+  Suite.test("fail last",
+    Array.mapResult<Int, Nat, Text>([ 1, 2, -3 ], makeNatural),
+    M.equals(arrayRes(#err("-3 is not a natural number.")))
+  ),
+]);
+
 let suite = Suite.suite("Array", [
+  mapResult,
   Suite.test(
     "append",
     Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]),

@@ -1,5 +1,11 @@
 import List "mo:base/List";
 import Debug "mo:base/Debug";
+import Int "mo:base/Int";
+import Result "mo:base/Result";
+import Suite "mo:matchers/Suite";
+import M "mo:matchers/Matchers";
+import T "mo:matchers/Testable";
+
 
 type X = Nat;
 
@@ -119,3 +125,32 @@ type X = Nat;
       assert(actual[i] == expected[i]);
     };
   };
+
+func makeNatural(x : Int) : Result.Result<Nat, Text> =
+  if (x >= 0) { #ok(Int.abs(x)) } else { #err(Int.toText(x) # " is not a natural number.") };
+
+func listRes(itm : Result.Result<List.List<Nat>, Text>) : T.TestableItem<Result.Result<List.List<Nat>, Text>> {
+  let resT = T.resultTestable(T.listTestable<Nat>(T.intTestable), T.textTestable);
+  { display = resT.display; equals = resT.equals; item = itm }
+};
+
+let mapResult = Suite.suite("mapResult", [
+  Suite.test("empty list",
+    List.mapResult<Int, Nat, Text>(List.nil(), makeNatural),
+    M.equals(listRes(#ok(List.nil())))
+  ),
+  Suite.test("success",
+    List.mapResult<Int, Nat, Text>(?(1, ?(2, ?(3, null))), makeNatural),
+    M.equals(listRes(#ok(?(1, ?(2, ?(3, null))))))
+  ),
+  Suite.test("fail fast",
+    List.mapResult<Int, Nat, Text>(?(-1, ?(2, ?(3, null))), makeNatural),
+    M.equals(listRes(#err("-1 is not a natural number.")))
+  ),
+  Suite.test("fail last",
+    List.mapResult<Int, Nat, Text>(?(1, ?(2, ?(-3, null))), makeNatural),
+    M.equals(listRes(#err("-3 is not a natural number.")))
+  ),
+]);
+
+Suite.run(Suite.suite("List", [ mapResult ]));
