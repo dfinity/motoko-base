@@ -159,3 +159,4 @@ Asserts that its argument is an `#err` result, traps otherwise.
 ----
 func assertErr(r : Result<Any, Any>)
 ----
+
