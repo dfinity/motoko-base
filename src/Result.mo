@@ -1,7 +1,8 @@
 /// Error handling with the Result type.
 
+import Prim "mo:prim";
 import P "Prelude";
-import Array "Array";
+import Order "Order";
 
 module {
 
@@ -22,6 +23,36 @@ module {
 public type Result<Ok, Err> = {
   #ok : Ok;
   #err : Err;
+};
+
+// Compares two Result's for equality.
+public func equal<Ok, Err>(
+  eqOk : (Ok, Ok) -> Bool,
+  eqErr : (Err, Err) -> Bool,
+  r1 : Result<Ok, Err>,
+  r2 : Result<Ok, Err>
+) : Bool {
+  switch (r1, r2) {
+    case (#ok ok1, #ok ok2) eqOk(ok1, ok2);
+    case (#err err1, #err err2) eqErr(err1, err2);
+    case _ false;
+  };
+};
+
+// Compares two Results. `#ok` is larger than `#err`. This ordering is
+// arbitrary, but it lets you for example use Results as keys in ordered maps.
+public func compare<Ok, Err>(
+  compareOk : (Ok, Ok) -> Order.Order,
+  compareErr : (Err, Err) -> Order.Order,
+  r1 : Result<Ok, Err>,
+  r2 : Result<Ok, Err>
+) : Order.Order {
+  switch (r1, r2) {
+    case (#ok ok1, #ok ok2) compareOk(ok1, ok2);
+    case (#err err1, #err err2) compareErr(err1, err2);
+    case (#ok _, _) #greater;
+    case (#err _, _) #less;
+  };
 };
 
 /// Allows sequencing of `Result` values and functions that return
@@ -47,6 +78,22 @@ public func chain<R1, R2, Error>(
   switch x {
     case (#err e) (#err e);
     case (#ok r) (y r);
+  }
+};
+
+/// Flattens a nested Result.
+///
+/// ```motoko
+/// assert(flatten<Nat, Text>(#ok(#ok(10))) == #ok(10))
+/// assert(flatten<Nat, Text>(#err("Wrong") == #err("Wrong"))
+/// assert(flatten<Nat, Text>(#ok(#err("Wrong")) == #err("Wrong"))
+/// ```
+public func flatten<Ok, Error>(
+  result : Result<Result<Ok, Error>, Error>
+) : Result<Ok, Error> {
+  switch result {
+    case (#ok ok) ok;
+    case (#err err) #err(err);
   }
 };
 
@@ -85,53 +132,48 @@ public func fromOption<R, E>(x : ?R, err : E) : Result<R, E> {
   }
 };
 
-/// Maps the `Ok` type/value from the optional value, or else use the given error value.
-/// (Deprecate?)
-public func fromSomeMap<R1, R2, E>(x:?R1, f:R1->R2, err:E):Result<R2,E> {
-  switch x {
-    case (? x) {#ok (f x)};
-    case null {#err err};
+/// Create an option from a result, turning all #err into `null`.
+/// ```
+/// fromOption(#ok(x)) = ?x
+/// fromOption(#err(e)) = null
+/// ```
+public func toOption<R, E>(r : Result<R, E>) : ?R {
+  switch r {
+    case (#ok x) {?x};
+    case (#err _) {null};
   }
 };
 
-/// asserts that the option is Some(_) form.
-public func fromSome<Ok>(o:?Ok):Result<Ok,None> {
-  switch(o) {
-    case (?o) (#ok o);
-    case _ P.unreachable();
+/// Applies a function to a successful value, but discards the result. Use
+/// `iterate` if you're only interested in the side effect `f` produces.
+///
+/// ```
+/// var counter : Nat = 0;
+/// iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
+/// assert(counter == 5);
+/// iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
+/// assert(counter == 5);
+/// ```
+public func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ()) {
+  switch res {
+    case (#ok ok) f(ok);
+    case _ ();
   }
 };
 
-/// a result that consists of an array of Ok results from an array of results, or the first error in the result array, if any.
-public func toArrayOk<R,E>(x:[Result<R,E>]) : Result<[R],E> {
-  // return early with the first Err result, if any
-  for (i in x.keys()) {
-    switch (x[i]) {
-      case (#err e) { return #err(e) };
-      case (#ok _) { };
-    }
-  };
-  // all of the results are Ok; tabulate them.
-  #ok(Array.tabulate<R>(x.size(), func (i:Nat):R {unwrapOk(x[i]) }))
-};
-
-/// Extract and return the value `v` of an `#ok v` result.
-/// Traps if its argument is an `#err` result.
-/// Recommended for testing only, not for production code.
-public func unwrapOk<Ok,Error>(r:Result<Ok,Error>):Ok {
-  switch(r) {
-    case (#err e) P.unreachable();
-    case (#ok r) r;
+// Whether this Result is an `#ok`
+public func isOk(r : Result<Any, Any>) : Bool {
+  switch r {
+    case (#ok _) true;
+    case (#err _) false;
   }
 };
 
-/// Extract and return the value `v` of an `#err v` result.
-/// Traps if its argument is an `#ok` result.
-/// Recommended for testing only, not for production code.
-public func unwrapErr<Ok,Error>(r:Result<Ok,Error>):Error {
-  switch(r) {
-    case (#err e) e;
-    case (#ok r) P.unreachable();
+// Whether this Result is an `#err`
+public func isErr(r : Result<Any, Any>) : Bool {
+  switch r {
+    case (#ok _) false;
+    case (#err _) true;
   }
 };
 

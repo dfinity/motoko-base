@@ -3,6 +3,7 @@
 import Prim "mo:prim";
 import I "IterType";
 import Buffer "Buffer";
+import Result "Result";
 
 module {
   /// Test if two arrays contain equal values
@@ -120,6 +121,43 @@ module {
       f(xs[i], i);
     });
   };
+
+  /// Maps a Result-returning function over an Array and returns either
+  /// the first error or an array of successful values.
+  ///
+  /// ```motoko
+  /// func makeNatural(x : Int) : Result.Result<Nat, Text> =
+  ///   if (x >= 0) {
+  ///     #ok(Int.abs(x))
+  ///   } else {
+  ///     #err(Int.toText(x) # " is not a natural number.")
+  ///   };
+  ///
+  /// mapResult([0, 1, 2], makeNatural) = #ok([0, 1, 2]);
+  /// mapResult([-1, 0, 1], makeNatural) = #err("-1 is not a natural number.");
+  /// ```
+  public func mapResult<A, R, E>(xs : [A], f : A -> Result.Result<R, E>) : Result.Result<[R], E> {
+    let len : Nat = xs.size();
+    var target : [var R] = [var];
+    var i : Nat = 0;
+    var isInit = false;
+    while (i < len) {
+      switch (f(xs[i])) {
+        case (#err err) return #err(err);
+        case (#ok ok) {
+          if (not isInit) {
+            isInit := true;
+            target := init(len, ok);
+          } else {
+            target[i] := ok
+          }
+        };
+      };
+      i += 1;
+    };
+    #ok(freeze(target))
+  };
+
   /// Make an array from a single value.
   public func make<A>(x: A) : [A] {
     [x];

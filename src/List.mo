@@ -3,6 +3,7 @@
 import Array "Array";
 import Option "Option";
 import Order "Order";
+import Result "Result";
 
 module {
 
@@ -144,6 +145,23 @@ module {
         }
       };
     };
+  };
+
+  /// Maps a Result-returning function over a List and returns either
+  /// the first error or a list of successful values.
+  public func mapResult<A, R, E>(xs : List<A>, f : A -> Result.Result<R, E>) : Result.Result<List<R>, E> {
+    func go(xs : List<A>, acc : List<R>) : Result.Result<List<R>, E> {
+      switch xs {
+        case null #ok(acc);
+        case (?(head, tail)) {
+          switch (f(head)) {
+            case (#err err) #err(err);
+            case (#ok ok) go(tail, ?(ok, acc));
+          };
+        };
+      }
+    };
+    Result.mapOk(go(xs, null), func (xs : List<R>) : List<R> = reverse(xs))
   };
 
   /// Append the elements from one list to another list.
