@@ -128,6 +128,8 @@
 
   - `map`: map function over container (may change type for polymorphic containers)
 
+  - `mapFilter`: map filtering function (returns option) over container (may change type for polymorphic containers)
+
   - `fold`, `foldLeft`, `foldRight`: fold unordered or ordered collection (have the same argument order, but their callback type differs in its order of arguments)
 
   - `filter`: narrow collections
