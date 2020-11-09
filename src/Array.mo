@@ -56,7 +56,7 @@ module {
     ys.toArray();
   };
   /// Output array contains each transformed optional value; ordering retained.
-  public func filterMap<A, B>(xs : [A], f : A -> ?B) : [B] {
+  public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
     let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
     for (x in xs.vals()) {
       switch (f(x)) {
