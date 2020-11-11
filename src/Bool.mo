@@ -10,7 +10,7 @@ module {
 
   /// Conversion.
   public func toText(x : Bool) : Text {
-    if x "true" else "false"
+    if x { "true" } else { "false" }
   };
 
   /// Returns `x and y`.
@@ -35,7 +35,7 @@ module {
 
   /// Returns the order of `x` and `y`, where `false < true`.
   public func compare(x : Bool, y : Bool) : {#less; #equal; #greater } {
-    if (x == y) #equal else if (x) #greater else #less
+    if (x == y) { #equal } else if (x) { #greater } else { #less }
   };
 
 }

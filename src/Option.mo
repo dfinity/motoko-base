@@ -33,7 +33,7 @@ module {
 public func get<T>(x : ?T, default : T) : T =
   switch x {
     case null { default };
-    case (?x_) x_;
+    case (?x_) { x_ };
   };
 
 /// Unwraps an optional value using a function, or returns the default, i.e.
@@ -41,7 +41,7 @@ public func get<T>(x : ?T, default : T) : T =
 public func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B =
   switch x {
     case null { default };
-    case (?x_) f(x_);
+    case (?x_) { f(x_) };
   };
 
 /// Applies a function to the wrapped value. `null`'s are left untouched.
@@ -51,8 +51,8 @@ public func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B =
 /// ```
 public func map<A, B>(x : ?A, f : A -> B) : ?B =
   switch x {
-    case null null;
-    case (?x_) ?f(x_);
+    case null { null };
+    case (?x_) { ?f(x_) };
   };
 
 /// Applies a function to the wrapped value, but discards the result. Use
@@ -68,7 +68,7 @@ public func map<A, B>(x : ?A, f : A -> B) : ?B =
 public func iterate<A>(x : ?A, f : A -> ()) =
   switch x {
     case null {};
-    case (?x_) f(x_);
+    case (?x_) { f(x_) };
   };
 
 /// Applies an optional function to an optional value. Returns `null` if at
@@ -120,15 +120,15 @@ public func make<A>(x: A) : ?A = ?x;
 /// Returns true if the argument is not `null`, otherwise returns false.
 public func isSome(x : ?Any) : Bool =
   switch x {
-    case null false;
-    case _ true;
+    case null { false };
+    case _ { true };
   };
 
 /// Returns true if the argument is `null`, otherwise returns false.
 public func isNull(x : ?Any) : Bool =
   switch x {
-    case null true;
-    case _ false;
+    case null { true };
+    case _ { false };
   };
 
 /// Asserts that the value is not `null`; fails otherwise.
@@ -153,6 +153,6 @@ public func assertNull(x : ?Any) =
 public func unwrap<T>(x : ?T) : T =
   switch x {
     case null { P.unreachable() };
-    case (?x_) x_;
+    case (?x_) { x_ };
   };
 }
