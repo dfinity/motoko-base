@@ -1,37 +1,48 @@
 
 name: "build"
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 jobs:
   tests:
+    if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
-    - uses: cachix/install-nix-action@v7
+    - name: Check if Git tag exists
+      run: echo "::set-env name=HEAD_TAG::$(git tag --points-at HEAD)"
+    - uses: cachix/install-nix-action@v10
     - name: "install dependencies"
       run: |
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --add https://nixos.org/channels/nixos-20.03 nixpkgs
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --update
         ls -l /nix/var/nix/profiles/per-user/root/channels/
-        nix-env --install --attr asciidoctor --file '<nixpkgs>'
         nix-env --install --attr wasmtime --file '<nixpkgs>'
-    - name: "install dfx"
+        nix-env --install --attr graphviz --file '<nixpkgs>'
+    - name: "install Motoko binaries"
       run: |
-       wget https://sdk.dfinity.org/install.sh
-       yes Y | sh install.sh
+       wget https://download.dfinity.systems/motoko/0.4.5/x86_64-linux/motoko-0.4.5.tar.gz
+       mkdir -p /home/runner/bin
+       tar -xf motoko-0.4.5.tar.gz -C /home/runner/bin
        echo "::add-path::/home/runner/bin"
-    - name: "dfx cache install"
-      run: dfx cache install
+    - name: "install vessel"
+      run: |
+       wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/v0.5.1/vessel-linux64
+       chmod +x /home/runner/bin/vessel
     - name: "test"
-      if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
       run: make -C test
-    - name: "examples"
-      if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
-      run: make -C examples
+    - name: "graph dependencies"
+      run: python3 doc/module_graph.py | dot -Tsvg > module_graph.svg && file module_graph.svg
     - name: "docs"
-      run: make -C doc
+      if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
+      run: pushd doc && ./make_docs.sh && popd
     - name: Upload docs
-      uses: actions/upload-artifact@v1
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      if: env.HEAD_TAG != '' && github.ref == 'refs/heads/master'
       with:
-        name: reference documentation
-        path: doc/_out/
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: doc/_out/html/

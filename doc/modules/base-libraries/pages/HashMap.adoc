@@ -1,0 +1,7 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-HashMap]
+= `HashMap` -- Mutable hash map
+
+

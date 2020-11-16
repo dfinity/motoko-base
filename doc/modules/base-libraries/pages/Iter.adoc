@@ -1,0 +1,15 @@
+// Do not edit; This file was machine-generated
+
+
+[#mod-Iter]
+= `Iter` -- Iterators
+
+
+[#Iter_Iter]
+== `Iter` (type)
+
+
+....
+type Iter<T> = {next : () -> ?T};
+....
+

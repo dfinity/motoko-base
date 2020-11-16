@@ -9,14 +9,14 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
-If you build your project using the [vessel package manager] then, add this entry to your `package-set.json` file:
+If you build your project using the [vessel package manager] your package-set most likely already includes base, but if it doesn't or you want to override its version add an entry like so to your `package-set.dhall`:
 
 ```
   {
-    "name": "base",
-    "repo": "https://github.com/dfinity-lab/motoko-base",
-    "version": "master",
-    "dependencies": []
+    name = "base",
+    repo = "https://github.com/dfinity/motoko-base",
+    version = "dfx-0.5.10",
+    dependencies = [] : List Text
   }
 ```
 
@@ -31,39 +31,34 @@ In `test/`, run
 
     make
 
-in `test`. This will expect `dfx` to be installed and in your `$PATH`, and call
-`moc` via the wrapper in `./bin/moc`. You can add that wrapper to your PATH, if
-you want.
+in `test`. This will expect `moc` to be installed and in your `$PATH`.
 
-Running the tests requires `wasmtime` to be installed.
+Running the tests also requires `wasmtime` and `vessel` to be installed.
 
 If you installed `moc` some other way, you can instruct the `Makefile` to use
 that compiler:
 
     make MOC=moc
 
-Similarly, you can run `make` in `examples/`.
-
 Documentation
 -------------
 
 The documentation can be generated in `doc/` by running
 
-    make
+    ./make_docs.sh
 
-which creates `_out/index.html`. This requires `asciidoctor` and `perl` to be
-installed.
-
-Note that the documentation tool relies on a very peculiar coding convention.
-See `doc/README.md` for details. This convention is not necessarily the best
-convention!
+which creates `_out/html/index.html`.
 
 The `next-moc` branch
 ---------------------
 
 The `next-moc` branch contains changes that make base compatible with the
-in-development version of `moc`. This repositorie's public CI does _not_ run
+in-development version of `moc`. This repository's public CI does _not_ run
 on that branch.
 
 External contributions are best made against `master`.
 
+Contributing
+------------
+
+Please read the [Interface Design Guide for Motoko Base Library](doc/design.md) before making a pull request.

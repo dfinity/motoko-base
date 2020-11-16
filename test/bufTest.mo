@@ -1,10 +1,10 @@
 import Prim "mo:prim";
-import B "mo:base/Buf";
+import B "mo:base/Buffer";
 import I "mo:base/Iter";
 import O "mo:base/Option";
 
 // test repeated growing
-let a = B.Buf<Nat>(3);
+let a = B.Buffer<Nat>(3);
 for (i in I.range(0, 123)) {
   a.add(i);
 };
@@ -14,7 +14,7 @@ for (i in I.range(0, 123)) {
 
 
 // test repeated appending
-let b = B.Buf<Nat>(3);
+let b = B.Buffer<Nat>(3);
 for (i in I.range(0, 123)) {
   b.append(a);
 };
@@ -30,7 +30,7 @@ O.assertNull(a.removeLast());
 
 func natArrayIter(elems:[Nat]) : I.Iter<Nat> = object {
   var pos = 0;
-  let count = elems.len();
+  let count = elems.size();
   public func next() : ?Nat {
     if (pos == count) { null } else {
       let elem = ?elems[pos];
@@ -42,7 +42,7 @@ func natArrayIter(elems:[Nat]) : I.Iter<Nat> = object {
 
 func natVarArrayIter(elems:[var Nat]) : I.Iter<Nat> = object {
   var pos = 0;
-  let count = elems.len();
+  let count = elems.size();
   public func next() : ?Nat {
     if (pos == count) { null } else {
       let elem = ?elems[pos];
@@ -67,28 +67,28 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
 {
   let bigLen = 100;
   let len = 3;
-  let c = B.Buf<Nat>(bigLen);
+  let c = B.Buffer<Nat>(bigLen);
   assert (len < bigLen);
   for (i in I.range(0, len - 1)) {
     Prim.debugPrint(debug_show(i));
     c.add(i);
   };
-  assert (c.len() == len);
-  assert (c.toArray().len() == len);
-  assert (natIterEq(c.iter(), natArrayIter(c.clone().toArray())));
-  assert (c.toVarArray().len() == len);
-  assert (natIterEq(c.iter(), natVarArrayIter(c.clone().toVarArray())));
+  assert (c.size() == len);
+  assert (c.toArray().size() == len);
+  assert (natIterEq(c.vals(), natArrayIter(c.clone().toArray())));
+  assert (c.toVarArray().size() == len);
+  assert (natIterEq(c.vals(), natVarArrayIter(c.clone().toVarArray())));
 };
 
 // regression test: initially-empty buffers grow, element-by-element
 {
-  let c = B.Buf<Nat>(0);
-  assert (c.toArray().len() == 0);
-  assert (c.toVarArray().len() == 0);
+  let c = B.Buffer<Nat>(0);
+  assert (c.toArray().size() == 0);
+  assert (c.toVarArray().size() == 0);
   c.add(0);
-  assert (c.toArray().len() == 1);
-  assert (c.toVarArray().len() == 1);
+  assert (c.toArray().size() == 1);
+  assert (c.toVarArray().size() == 1);
   c.add(0);
-  assert (c.toArray().len() == 2);
-  assert (c.toVarArray().len() == 2);
+  assert (c.toArray().size() == 2);
+  assert (c.toVarArray().size() == 2);
 };

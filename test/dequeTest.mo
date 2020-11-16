@@ -11,7 +11,13 @@ import D "mo:base/Debug";
     };
     for (i in Iter.range(0, 100)) {
         let x = Deque.peekFront(l);
-        l := Deque.removeFront(l);
+        switch (Deque.popFront(l)) {
+          case (?(y, l2)) { l := l2;
+             switch x {
+               case null assert false;
+               case (?x) assert (x == y) } };
+          case null { assert false };
+        };
         assert(O.unwrap(x) == i);
     };
     O.assertNull(Deque.peekFront<Nat>(l));
@@ -26,7 +32,13 @@ import D "mo:base/Debug";
     label F for (i in Iter.revRange(100, -100)) {
         if (i == 0) continue F;
         let x = Deque.peekBack(l);
-        l := Deque.removeBack(l);
+        switch (Deque.popBack(l)) {
+          case (?(l2, y)) { l := l2;
+             switch x {
+               case null assert false;
+               case (?x) assert (x == y) } };
+          case null { assert false };
+        };
         assert(O.unwrap(x) == i);
     };
 };
