@@ -199,8 +199,8 @@ public func mapFilter<K, V1, V2>
     switch (mapFn(k, v1)) {
       case null { };
       case (?v2) {
-             h2.put(k,v2);
-           };
+        h2.put(k,v2);
+      };
     }
   };
   h2
