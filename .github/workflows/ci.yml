@@ -18,10 +18,6 @@ jobs:
         nix-path: nixpkgs=channel:release-20.09
     - name: "install dependencies"
       run: |
-        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
-        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --add https://nixos.org/channels/nixos-20.03 nixpkgs
-        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --update
-        ls -l /nix/var/nix/profiles/per-user/root/channels/
         nix-env --install --attr wasmtime --file '<nixpkgs>'
         nix-env --install --attr graphviz --file '<nixpkgs>'
     - name: "install Motoko binaries"
