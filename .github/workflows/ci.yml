@@ -18,7 +18,7 @@ jobs:
         nix_path: nixpkgs=channel:nixos-20.09
     - name: "install dependencies"
       run: |
-        nix-channel update
+        nix-channel --update
         nix-env --install wasmtime
         nix-env --install graphviz
     - name: "install Motoko binaries"
