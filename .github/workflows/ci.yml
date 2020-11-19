@@ -16,10 +16,9 @@ jobs:
     - uses: cachix/install-nix-action@v12
     - name: "install dependencies"
       run: |
-        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
-        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --add https://nixos.org/channels/nixos-20.09 nixpkgs
-        sudo -H /nix/var/nix/profiles/default/bin/nix-channel --update
-        ls -l /nix/var/nix/profiles/per-user/root/channels/
+        nix-channel --list
+        nix-channel --add https://nixos.org/channels/nixos-20.09 nixpkgs
+        nix-channel --update
         nix-env --install wasmtime
         nix-env --install graphviz
     - name: "install Motoko binaries"
