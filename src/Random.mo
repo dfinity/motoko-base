@@ -45,10 +45,10 @@ module {
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
-    let bit : I.Iter<Bool> = {
+    let bit : I.Iter<Bool> = object {
       var mask = 0x80 : Word8;
       var byte = 0x00 : Word8;
-      next = func () : ?Bool {
+      public func next() : ?Bool {
         if (0 : Word8 == mask) {
           switch (it.next()) {
             case null null;
