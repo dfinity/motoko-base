@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Check if Git tag exists
       run: echo "name=HEAD_TAG::$(git tag --points-at HEAD)" >> $GITHUB_ENV
-    - uses: cachix/install-nix-action@v10
+    - uses: cachix/install-nix-action@v12
     - name: "install dependencies"
       run: |
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
