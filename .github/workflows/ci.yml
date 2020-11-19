@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Check if Git tag exists
-      run: echo "::set-env name=HEAD_TAG::$(git tag --points-at HEAD)"
+      run: echo "name=HEAD_TAG::$(git tag --points-at HEAD)" >> $GITHUB_ENV
     - uses: cachix/install-nix-action@v10
     - name: "install dependencies"
       run: |
