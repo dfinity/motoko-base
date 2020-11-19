@@ -18,8 +18,8 @@ jobs:
         nix_path: nixpkgs=channel:nixos-20.09
     - name: "install dependencies"
       run: |
-        nix-env --install --attr wasmtime
-        nix-env --install --attr graphviz
+        nix-env --install wasmtime
+        nix-env --install graphviz
     - name: "install Motoko binaries"
       run: |
        wget https://download.dfinity.systems/motoko/0.4.5/x86_64-linux/motoko-0.4.5.tar.gz
