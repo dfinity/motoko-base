@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Check if Git tag exists
-      run: echo "::set-env name=HEAD_TAG::$(git tag --points-at HEAD)"
+      run: echo "name=HEAD_TAG::$(git tag --points-at HEAD)" >> $GITHUB_ENV
     - uses: cachix/install-nix-action@v10
     - name: "install dependencies"
       run: |
@@ -27,7 +27,7 @@ jobs:
        wget https://download.dfinity.systems/motoko/0.4.5/x86_64-linux/motoko-0.4.5.tar.gz
        mkdir -p /home/runner/bin
        tar -xf motoko-0.4.5.tar.gz -C /home/runner/bin
-       echo "::add-path::/home/runner/bin"
+       echo "/home/runner/bin" >> $GITHUB_PATH
     - name: "install vessel"
       run: |
        wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/v0.5.1/vessel-linux64
