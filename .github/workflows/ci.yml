@@ -16,7 +16,6 @@ jobs:
     - uses: cachix/install-nix-action@v12
     - name: "install dependencies"
       run: |
-        nix-channel --list
         nix-channel --add https://nixos.org/channels/nixos-20.09 nixpkgs
         nix-channel --update
         nix-env --install wasmtime
