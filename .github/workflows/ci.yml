@@ -15,7 +15,7 @@ jobs:
       run: echo "name=HEAD_TAG::$(git tag --points-at HEAD)" >> $GITHUB_ENV
     - uses: cachix/install-nix-action@v12
       with:
-        nix-path: nixpkgs=channel:release-20.09
+        nix_path: nixpkgs=channel:release-20.09
     - name: "install dependencies"
       run: |
         sudo -H /nix/var/nix/profiles/default/bin/nix-channel --list
