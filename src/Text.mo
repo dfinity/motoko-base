@@ -297,8 +297,7 @@ module {
                   let r =
                     if (state == 0 and field == "") {
                       null
-                    }
-                    else { 
+                    } else {
                       ?field
                     };
                   state := 2;
@@ -314,8 +313,7 @@ module {
                       let r =
                          if (state == 0 and field == "") {
                            null
-                         }
-                         else {
+                         } else {
                            ?field
                          };
                       state := 2;
