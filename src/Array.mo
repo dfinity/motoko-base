@@ -1,8 +1,9 @@
 /// Functions on Arrays
 
-import Prim "mo:prim";
-import I "IterType";
 import Buffer "Buffer";
+import I "IterType";
+import Option "Option";
+import Prim "mo:prim";
 import Result "Result";
 
 module {
@@ -61,7 +62,7 @@ module {
     for (x in xs.vals()) {
       switch (f(x)) {
         case null {};
-        case (?y) ys.add(y);
+        case (?y) { ys.add(y) };
       }
     };
     ys.toArray();
@@ -143,8 +144,8 @@ module {
     var isInit = false;
     while (i < len) {
       switch (f(xs[i])) {
-        case (#err err) return #err(err);
-        case (#ok ok) {
+        case (#err(err)) return #err(err);
+        case (#ok(ok)) {
           if (not isInit) {
             isInit := true;
             target := init(len, ok);
@@ -194,14 +195,22 @@ module {
   // copy from iter.mo, but iter depends on array
   class range(x : Nat, y : Int) {
     var i = x;
-    public func next() : ?Nat { if (i > y) null else {let j = i; i += 1; ?j} };
+    public func next() : ?Nat { 
+      if (i > y) {
+         null 
+      } else {
+        let j = i; 
+        i += 1; 
+        ?j
+      }
+    };
   };
   /// Initialize a mutable array using a generation function
   public func tabulateVar<A>(size : Nat,  gen : Nat -> A) : [var A] {
     if (size == 0) { return [var] };
-    let xs = Prim.Array_init<A>(size, gen 0);
+    let xs = Prim.Array_init<A>(size, gen(0));
     for (i in range(1, size - 1)) {
-      xs[i] := gen i;
+      xs[i] := gen(i);
     };
     return xs;
   };

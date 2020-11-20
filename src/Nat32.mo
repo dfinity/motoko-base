@@ -19,12 +19,12 @@ module {
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Nat32, y : Nat32) : Nat32 {
-    if (x < y) x else y
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max( x : Nat32, y : Nat32) : Nat32 {
-    if (x < y) y else x
+    if (x < y) { y } else { x }
   };
 
   /// Returns `x == y`.
@@ -47,9 +47,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Nat32, y : Nat32) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
   /// Returns the sum of `x` and `y`, `x + y`. Traps on overflow.

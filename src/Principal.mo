@@ -15,7 +15,7 @@ module {
   public func toText(p : Principal) : Text = debug_show(p);
 
   public func hash(principal : Principal) : Hash.Hash =
-    Blob.hash (Prim.blobOfPrincipal principal);
+    Blob.hash (Prim.blobOfPrincipal(principal));
 
   public func fromText(t : Text) : Principal = fromActor(actor(t));
 
@@ -39,8 +39,8 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Principal, y : Principal) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 }

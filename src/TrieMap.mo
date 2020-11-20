@@ -44,7 +44,7 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
   };
 
   /// Get the (optional) value associated with the given key.
-  public func get(k:K) : ?V = {
+  public func get(k:K) : ?V {
     let keyObj = {key=k; hash=hashOf(k);};
     T.find<K,V>(map, keyObj, isEq)
   };
@@ -54,7 +54,7 @@ public class TrieMap<K,V> (isEq:(K, K) -> Bool, hashOf: K -> Hash.Hash) {
     ignore remove(k);
 
   /// [`Delete`](#value.delete) and return the (optional) value associated with the given key.
-  public func remove(k:K) : ?V = {
+  public func remove(k:K) : ?V {
     let keyObj = {key=k; hash=hashOf(k);};
     let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
     map := t;

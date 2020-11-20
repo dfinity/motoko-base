@@ -32,5 +32,5 @@ module {
   /// const(true)(20) = true
   /// ```
   public func const<A, B>(x : A) : B -> A =
-    func _ = x;
+    func (_) = x;
 }

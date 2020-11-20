@@ -17,7 +17,7 @@ module {
     };
 
     let isNegative = x < 0;
-    var int = if isNegative (-x) else x;
+    var int = if isNegative { -x } else { x };
 
     var text = "";
     let base = 10;
@@ -25,32 +25,32 @@ module {
     while (int > 0) {
       let rem = int % base;
       text := (switch (rem) {
-        case 0 "0";
-        case 1 "1";
-        case 2 "2";
-        case 3 "3";
-        case 4 "4";
-        case 5 "5";
-        case 6 "6";
-        case 7 "7";
-        case 8 "8";
-        case 9 "9";
-        case _ Prelude.unreachable();
+        case 0 { "0" };
+        case 1 { "1" };
+        case 2 { "2" };
+        case 3 { "3" };
+        case 4 { "4" };
+        case 5 { "5" };
+        case 6 { "6" };
+        case 7 { "7" };
+        case 8 { "8" };
+        case 9 { "9" };
+        case _ { Prelude.unreachable() };
       }) # text;
       int := int / base;
     };
 
-    return if isNegative ("-" # text) else text;
+    return if isNegative { "-" # text } else { text };
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Int, y : Int) : Int {
-    if (x < y) x else y;
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max(x : Int, y : Int) : Int {
-    if (x < y) y else x;
+    if (x < y) { y } else { x };
   };
 
   // TODO: (re)move me?
@@ -97,9 +97,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Int, y : Int) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
   /// Returns the negation of `x`, `-x` .

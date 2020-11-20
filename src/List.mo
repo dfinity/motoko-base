@@ -152,11 +152,11 @@ module {
   public func mapResult<A, R, E>(xs : List<A>, f : A -> Result.Result<R, E>) : Result.Result<List<R>, E> {
     func go(xs : List<A>, acc : List<R>) : Result.Result<List<R>, E> {
       switch xs {
-        case null #ok(acc);
+        case null { #ok(acc) };
         case (?(head, tail)) {
           switch (f(head)) {
-            case (#err err) #err(err);
-            case (#ok ok) go(tail, ?(ok, acc));
+            case (#err(err)) { #err(err) };
+            case (#ok(ok)) { go(tail, ?(ok, acc)) };
           };
         };
       }
@@ -205,8 +205,8 @@ module {
   /// Fold the list left-to-right using the given function (`f`).
   public func foldLeft<T, S>(l : List<T>, a : S, f : (S, T) -> S) : S {
     switch l {
-      case null a;
-      case (?(h, t)) foldLeft(t, f(a, h), f);
+      case null { a };
+      case (?(h, t)) { foldLeft(t, f(a, h), f) };
     };
   };
 
@@ -270,8 +270,11 @@ module {
       case (_, null) { #greater };
       case (?(h1,t1), ?(h2,t2)) {
              let hOrder = compElm(h1, h2);
-             if (Order.isEqual(hOrder)) compare<T>(t1, t2, compElm)
-             else hOrder
+             if (Order.isEqual(hOrder)) {
+               compare<T>(t1, t2, compElm) 
+             } else { 
+               hOrder 
+             }
            };
     };
   };
@@ -303,7 +306,7 @@ module {
 
   /// Create a list of the given length with the same value in each position.
   public func replicate<X>(n : Nat, x : X) : List<X> =
-    tabulate<X>(n, func _ { x });
+    tabulate<X>(n, func (_) { x });
 
   /// Create a list of pairs from a pair of lists.
   ///
@@ -323,10 +326,10 @@ module {
     f : (X, Y) -> Z
   ) : List<Z> {
     switch (pop<X>(xs)) {
-      case (null, _) null;
+      case (null, _) { null };
       case (?x, xt) {
         switch (pop<Y>(ys)) {
-          case (null, _) null;
+          case (null, _) { null };
           case (?y, yt) {
             push<Z>(f(x, y), zipWith<X, Y, Z>(xt, yt, f))
           }

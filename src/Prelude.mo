@@ -15,15 +15,15 @@ module {
 /// Each have calls are well-typed in all typing contexts, which
 /// trap in all execution contexts.
 
-public func nyi() : None =
+public func nyi() : None
   { assert false ; loop { } };
 
-public func xxx() : None =
+public func xxx() : None
   { assert false ; loop { } };
 
 /// Mark unreachable code with the `unreachable` function.
 ///
 /// Calls are well-typed in all typing contexts, and they
 /// trap in all execution contexts.
-public func unreachable() : None = { assert false ; loop { } };
+public func unreachable() : None { assert false ; loop { } };
 }
