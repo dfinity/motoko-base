@@ -29,9 +29,10 @@ module {
     Prim.nat64ToNat(Prim.cyclesAvailable())
   };
 
-  /// Transfers `amount` from `available()` to `balance()`, returning `remainder` available.
-  /// Traps if trying to accept more cycles than are available.
-  public func accept(amount : Nat) : (remainder : Nat) {
+  /// Transfers up to `amount` from `available()` to `balance()`
+  /// Returns the amount actually transferred, which may be less than 
+  /// requested, e.g. if less is available, or if canister balance limits are reached
+  public func accept(amount : Nat) : (accepted : Nat) {
     Prim.nat64ToNat(Prim.cyclesAccept(Prim.natToNat64(amount)));
   };
 
