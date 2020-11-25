@@ -81,13 +81,15 @@ public class HashMap<K,V> (
   public func replace(k:K, v:V) : ?V {
     if (_count >= table.size()) {
       let size =
-        if (_count == 0)
-          if (initCapacity > 0)
+        if (_count == 0) {
+          if (initCapacity > 0) {
             initCapacity
-          else
+          } else {
             1
-        else
+          }
+        } else {
           table.size() * 2;
+        };
       let table2 = A.init<KVs<K,V>>(size, null);
       for (i in table.keys()) {
         var kvs = table[i];

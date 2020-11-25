@@ -26,12 +26,12 @@ module {
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Word32, y : Word32) : Word32 {
-    if (x < y) x else y
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max( x : Word32, y : Word32) : Word32 {
-    if (x < y) y else x
+    if (x < y) { y } else { x }
   };
 
   /// Returns `x == y`.
@@ -54,9 +54,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Word32, y : Word32) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
   /// Returns the sum of `x` and `y`, `(x + y) mod 2^32`.
@@ -108,22 +108,22 @@ module {
 
   /// Returns the value of bit `p mod 32` in `x`, `(x & 2^(p mod 32)) == 2^(p mod 32)`.
   public func bittest(x : Word32, p : Nat) : Bool {
-    Prim.btstWord32(x, Prim.natToWord32 p);
+    Prim.btstWord32(x, Prim.natToWord32(p));
   };
 
   /// Returns the value of setting bit `p mod 32` in `x` to `1`.
   public func bitset(x : Word32, p : Nat) : Word32 {
-    x | (1 << Prim.natToWord32 p);
+    x | (1 << Prim.natToWord32(p));
   };
 
   /// Returns the value of clearing bit `p mod 32` in `x` to `0`.
   public func bitclear(x : Word32, p : Nat) : Word32 {
-    x & ^(1 << Prim.natToWord32 p);
+    x & ^(1 << Prim.natToWord32(p));
   };
 
   /// Returns the value of flipping bit `p mod 32` in `x`.
   public func bitflip(x : Word32, p : Nat) : Word32 {
-    x ^ (1 << Prim.natToWord32 p);
+    x ^ (1 << Prim.natToWord32(p));
   };
 
   /// Returns the count of non-zero bits in `x`.

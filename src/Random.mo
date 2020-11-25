@@ -20,9 +20,10 @@
 /// special care when used. Similar caveats apply for user-defined (pseudo)
 /// random number generators.
 
-import Prim "mo:prim";
+import I "Iter";
+import Option "Option";
 import P "Prelude";
-import I "Iter"
+import Prim "mo:prim";
 
 module {
 
@@ -38,20 +39,17 @@ module {
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     /// Consumes 1 byte of entropy.
     public func byte() : ?Nat8 {
-      switch (it.next()) {
-        case (?w) ?Prim.word8ToNat8 w;
-        case null null
-      }
+      Option.map(it.next(), Prim.word8ToNat8)
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
-    let bit : I.Iter<Bool> = {
+    let bit : I.Iter<Bool> = object {
       var mask = 0x80 : Word8;
       var byte = 0x00 : Word8;
-      next = func () : ?Bool {
+      public func next() : ?Bool {
         if (0 : Word8 == mask) {
           switch (it.next()) {
-            case null null;
+            case null { null };
             case (?w) {
               byte := w;
               mask := 0x40;
@@ -83,7 +81,7 @@ module {
         else if (0 : Nat8 == pp)
         { return ?acc }
         else {
-          acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8 pp);
+          acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8(pp));
           let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
           return ?(acc + Prim.word8ToNat(i & mask))
         };
@@ -101,7 +99,7 @@ module {
         if (8 : Nat8 <= nn)
         { acc += Prim.popcntWord8(i) }
         else if (0 : Nat8 == nn)
-        { return ?Prim.word8ToNat8 acc }
+        { return ?Prim.word8ToNat8(acc) }
         else {
           let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
           let residue = Prim.popcntWord8(i & mask);
@@ -119,8 +117,8 @@ module {
   /// Seed blob must contain at least a byte.
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.bytes().next()) {
-      case (?w) Prim.word8ToNat8 w;
-      case _ P.unreachable();
+      case (?w) { Prim.word8ToNat8(w) };
+      case _ { P.unreachable() };
     }
   };
 
@@ -128,8 +126,8 @@ module {
   /// Seed blob must contain at least a byte.
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.bytes().next()) {
-      case (?w) w > (127 : Word8);
-      case _ P.unreachable();
+      case (?w) { w > (127 : Word8) };
+      case _ { P.unreachable() };
     }
   };
 
@@ -152,7 +150,7 @@ module {
       else if (0 : Nat8 == pp)
       { return acc }
       else {
-        acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8 pp);
+        acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8(pp));
         let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
         return acc + Prim.word8ToNat(i & mask)
       };
@@ -175,7 +173,7 @@ module {
       if (8 : Nat8 <= nn)
       { acc += Prim.popcntWord8(i) }
       else if (0 : Nat8 == nn)
-      { return Prim.word8ToNat8 acc }
+      { return Prim.word8ToNat8(acc) }
       else {
         let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
         let residue = Prim.popcntWord8(i & mask);

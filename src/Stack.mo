@@ -3,7 +3,7 @@
 /// Minimal LIFO (last in first out) implementation, as a class.
 /// See [deque](Deque.html) for mixed LIFO/FIFO behavior.
 ///
-import List "mo:base/List";
+import List "List";
 module {
   public class Stack<T>() {
     var stack : List.List<T> = List.nil<T>();

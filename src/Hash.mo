@@ -34,9 +34,9 @@ module {
   public func debugPrintBits(bits : Hash) {
     for (j in Iter.range(0, length - 1)) {
       if (bit(bits, j)) {
-        Prim.debugPrint "1"
+        Prim.debugPrint("1")
       } else {
-        Prim.debugPrint "0"
+        Prim.debugPrint("0")
       }
     }
   };
@@ -44,9 +44,9 @@ module {
   public func debugPrintBitsRev(bits : Hash) {
     for (j in Iter.revRange(length - 1, 0)) {
       if (bit(bits, Prim.abs(j))) {
-        Prim.debugPrint "1"
+        Prim.debugPrint("1")
       } else {
-        Prim.debugPrint "0"
+        Prim.debugPrint("0")
       }
     }
   };

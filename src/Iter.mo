@@ -31,14 +31,14 @@ module {
   /// ```
   public class range(x : Nat, y : Int) {
     var i = x;
-    public func next() : ?Nat { if (i > y) null else {let j = i; i += 1; ?j} };
+    public func next() : ?Nat { if (i > y) { null } else {let j = i; i += 1; ?j} };
   };
 
   /// Like [`range`](#value.range) but produces the values in the opposite
   /// order.
   public class revRange(x : Int, y : Int) {
       var i = x;
-      public func next() : ?Int { if (i < y) null else {let j = i; i -= 1; ?j} };
+      public func next() : ?Int { if (i < y) { null } else {let j = i; i -= 1; ?j} };
   };
 
   /// Calls a function `f` on every value produced by an iterator and discards

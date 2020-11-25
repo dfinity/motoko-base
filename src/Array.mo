@@ -1,8 +1,10 @@
 /// Functions on Arrays
 
-import Prim "mo:prim";
-import I "IterType";
 import Buffer "Buffer";
+import I "IterType";
+import Option "Option";
+import Prim "mo:prim";
+import Result "Result";
 
 module {
   /// Test if two arrays contain equal values
@@ -55,12 +57,12 @@ module {
     ys.toArray();
   };
   /// Output array contains each transformed optional value; ordering retained.
-  public func filterMap<A, B>(xs : [A], f : A -> ?B) : [B] {
+  public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
     let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
     for (x in xs.vals()) {
       switch (f(x)) {
         case null {};
-        case (?y) ys.add(y);
+        case (?y) { ys.add(y) };
       }
     };
     ys.toArray();
@@ -120,6 +122,43 @@ module {
       f(xs[i], i);
     });
   };
+
+  /// Maps a Result-returning function over an Array and returns either
+  /// the first error or an array of successful values.
+  ///
+  /// ```motoko
+  /// func makeNatural(x : Int) : Result.Result<Nat, Text> =
+  ///   if (x >= 0) {
+  ///     #ok(Int.abs(x))
+  ///   } else {
+  ///     #err(Int.toText(x) # " is not a natural number.")
+  ///   };
+  ///
+  /// mapResult([0, 1, 2], makeNatural) = #ok([0, 1, 2]);
+  /// mapResult([-1, 0, 1], makeNatural) = #err("-1 is not a natural number.");
+  /// ```
+  public func mapResult<A, R, E>(xs : [A], f : A -> Result.Result<R, E>) : Result.Result<[R], E> {
+    let len : Nat = xs.size();
+    var target : [var R] = [var];
+    var i : Nat = 0;
+    var isInit = false;
+    while (i < len) {
+      switch (f(xs[i])) {
+        case (#err(err)) return #err(err);
+        case (#ok(ok)) {
+          if (not isInit) {
+            isInit := true;
+            target := init(len, ok);
+          } else {
+            target[i] := ok
+          }
+        };
+      };
+      i += 1;
+    };
+    #ok(freeze(target))
+  };
+
   /// Make an array from a single value.
   public func make<A>(x: A) : [A] {
     [x];
@@ -156,14 +195,22 @@ module {
   // copy from iter.mo, but iter depends on array
   class range(x : Nat, y : Int) {
     var i = x;
-    public func next() : ?Nat { if (i > y) null else {let j = i; i += 1; ?j} };
+    public func next() : ?Nat { 
+      if (i > y) {
+         null 
+      } else {
+        let j = i; 
+        i += 1; 
+        ?j
+      }
+    };
   };
   /// Initialize a mutable array using a generation function
   public func tabulateVar<A>(size : Nat,  gen : Nat -> A) : [var A] {
     if (size == 0) { return [var] };
-    let xs = Prim.Array_init<A>(size, gen 0);
+    let xs = Prim.Array_init<A>(size, gen(0));
     for (i in range(1, size - 1)) {
-      xs[i] := gen i;
+      xs[i] := gen(i);
     };
     return xs;
   };

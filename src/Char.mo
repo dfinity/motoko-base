@@ -8,7 +8,7 @@ module {
   /// Convert word `w` to a character.
   /// Traps if `w` is not a valid Unicode scalar value.
   /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
-  public let fromWord32 : (w : Word32)-> Char = Prim.word32ToChar;
+  public let fromWord32 : (w : Word32) -> Char = Prim.word32ToChar;
 
   /// Convert character `c` to single character text.
   public let toText : (c : Char) -> Text = Prim.charToText;
@@ -56,9 +56,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Char, y : Char) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
 }

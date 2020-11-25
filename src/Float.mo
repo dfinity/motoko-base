@@ -75,11 +75,11 @@ module {
   public func format
     (fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text =
     switch fmt {
-      case (#fix prec) Prim.floatToFormattedText(x, prec, 0);
-      case (#exp prec) Prim.floatToFormattedText(x, prec, 1);
-      case (#gen prec) Prim.floatToFormattedText(x, prec, 2);
-      case (#hex prec) Prim.floatToFormattedText(x, prec, 3);
-      case (#exact) Prim.floatToFormattedText(x, 17, 2);
+      case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
+      case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
+      case (#gen(prec)) { Prim.floatToFormattedText(x, prec, 2) };
+      case (#hex(prec)) { Prim.floatToFormattedText(x, prec, 3) };
+      case (#exact) { Prim.floatToFormattedText(x, 17, 2) };
     };
 
   /// Conversion to Text. Use `format(fmt, x)` for more detailed control.
@@ -119,9 +119,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Float, y : Float) : { #less; #equal; #greater} {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
   /// Returns the negation of `x`, `-x` .

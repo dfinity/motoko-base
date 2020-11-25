@@ -36,10 +36,11 @@ public class Buffer<X> (initCapacity : Nat) {
   public func add(elem : X) {
     if (count == elems.size()) {
       let size =
-        if (count == 0)
-          (if (initCapacity > 0) initCapacity else 1)
-        else
-          2 * elems.size();
+        if (count == 0) {
+          if (initCapacity > 0) { initCapacity } else { 1 }
+        } else {
+          2 * elems.size()
+        };
       let elems2 = Prim.Array_init<X>(size, elem);
       var i = 0;
       label l loop {
@@ -56,8 +57,9 @@ public class Buffer<X> (initCapacity : Nat) {
   /// Removes the item that was inserted last and returns it or `null` if no
   /// elements had been added to the Buffer.
   public func removeLast() : ?X {
-    if (count == 0) null
-    else {
+    if (count == 0) { 
+      null 
+    } else {
       count -= 1;
       ?elems[count]
     };
@@ -69,7 +71,7 @@ public class Buffer<X> (initCapacity : Nat) {
     loop {
       switch (i.next()) {
       case null return;
-      case (?x) add(x);
+      case (?x) { add(x) };
       };
     };
   };
@@ -115,7 +117,7 @@ public class Buffer<X> (initCapacity : Nat) {
     );
 
   /// Creates a mutable array containing this buffer's elements.
-  public func toVarArray() : [var X] = {
+  public func toVarArray() : [var X] {
     if (count == 0) { [var] } else {
       let a = Prim.Array_init<X>(count, elems[0]);
       var i = 0;

@@ -75,14 +75,29 @@ type IterRep<X, Y> = List.List<{#tr:Tree<X, Y>; #xy:(X, ?Y)}>;
 /// An iterator for the entries of the map, in ascending (`#fwd`) or descending (`#bwd`) order.
 public func iter<X, Y>(t:Tree<X, Y>, dir:{#fwd; #bwd}) : I.Iter<(X, Y)> {
   object {
-    var trees : IterRep<X, Y> = ?(#tr t, null);
+    var trees : IterRep<X, Y> = ?(#tr(t), null);
     public func next() : ?(X, Y) {
       switch (dir, trees) {
       case (_, null) { null };
-      case (_, ?(#tr(#leaf), ts))                     { trees := ts; next() };
-      case (_, ?(#xy xy, ts))                         { trees := ts; switch (xy.1) { case null next(); case (?y) ?(xy.0, y) } };
-      case (#fwd, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr l, ?(#xy xy, ?(#tr r, ts))); next() };
-      case (#bwd, ?(#tr(#node(_, l, xy, r)), ts))     { trees := ?(#tr r, ?(#xy xy, ?(#tr l, ts))); next() };
+      case (_, ?(#tr(#leaf), ts)){ 
+        trees := ts; 
+        next() 
+      };
+      case (_, ?(#xy(xy), ts)) { 
+        trees := ts; 
+        switch (xy.1) { 
+          case null { next() };
+          case (?y) { ?(xy.0, y) } 
+        } 
+      };
+      case (#fwd, ?(#tr(#node(_, l, xy, r)), ts)) { 
+        trees := ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts))); 
+        next() 
+      };
+      case (#bwd, ?(#tr(#node(_, l, xy, r)), ts)) { 
+        trees := ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts))); 
+        next() 
+      };
       }
     };
   }
@@ -118,10 +133,10 @@ func bal<X, Y>(color:Color, lt:Tree<X, Y>, kv:(X, ?Y), rt:Tree<X, Y>) : Tree<X, 
   // thank you, algebraic pattern matching!
   // following notes from [Ravi Chugh](https://www.classes.cs.uchicago.edu/archive/2019/spring/22300-1/lectures/RedBlackTrees/index.html)
   switch (color, lt, kv, rt) {
-  case (#B, #node(#R, #node(#R, a, x, b), y, c), z, d) #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
-  case (#B, #node(#R, a, x, #node(#R, b, y, c)), z, d) #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
-  case (#B, a, x, #node(#R, #node(#R, b, y, c), z, d)) #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
-  case (#B, a, x, #node(#R, b, y, #node(#R, c, z, d))) #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
+  case (#B, #node(#R, #node(#R, a, x, b), y, c), z, d) { #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d)) };
+  case (#B, #node(#R, a, x, #node(#R, b, y, c)), z, d) { #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d)) };
+  case (#B, a, x, #node(#R, #node(#R, b, y, c), z, d)) { #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d)) };
+  case (#B, a, x, #node(#R, b, y, #node(#R, c, z, d))) { #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d)) };
   case _ { #node(color, lt, kv, rt) };
   }
 };
@@ -173,7 +188,7 @@ func getRec<X, Y>(x:X, compareTo:(X, X) -> O.Order, t:Tree<X, Y>) : ?Y {
 
 func height<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
-    case (#leaf) 0;
+    case (#leaf) { 0 };
     case (#node(_, l, _, r)) {
            Nat.max(height(l), height(r)) + 1
          }
@@ -183,7 +198,7 @@ func height<X, Y>(t:Tree<X, Y>) : Nat {
 /// The size of the tree as the number of key-value entries.
 public func size<X, Y>(t:Tree<X, Y>) : Nat {
   switch t {
-    case (#leaf) 0;
+    case (#leaf) { 0 };
     case (#node(_, l, _, r)) {
            size(l) + size(r) + 1
          };

@@ -25,9 +25,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Blob, y : Blob) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
 }

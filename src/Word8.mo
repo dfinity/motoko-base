@@ -26,12 +26,12 @@ module {
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Word8, y : Word8) : Word8 {
-    if (x < y) x else y
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max( x : Word8, y : Word8) : Word8 {
-    if (x < y) y else x
+    if (x < y) { y } else { x }
   };
 
   /// Returns `x == y`.
@@ -54,9 +54,9 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Word8, y : Word8) : { #less; #equal; #greater } {
-    if (x < y) #less
-    else if (x == y) #equal
-    else #greater
+    if (x < y) { #less }
+    else if (x == y) { #equal }
+    else { #greater }
   };
 
   /// Returns the sum of `x` and `y`, `(x + y) mod 2^8`.
@@ -108,22 +108,22 @@ module {
 
   /// Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
   public func bittest(x : Word8, p : Nat) : Bool {
-    Prim.btstWord8(x, Prim.natToWord8 p);
+    Prim.btstWord8(x, Prim.natToWord8(p));
   };
 
   /// Returns the value of setting bit `p mod 8` in `x` to `1`.
   public func bitset(x : Word8, p : Nat) : Word8 {
-    x | (1 << Prim.natToWord8 p);
+    x | (1 << Prim.natToWord8(p));
   };
 
   /// Returns the value of clearing bit `p mod 8` in `x` to `0`.
   public func bitclear(x : Word8, p : Nat) : Word8 {
-    x & ^(1 << Prim.natToWord8 p);
+    x & ^(1 << Prim.natToWord8(p));
   };
 
   /// Returns the value of flipping bit `p mod 8` in `x`.
   public func bitflip(x : Word8, p : Nat) : Word8 {
-    x ^ (1 << Prim.natToWord8 p);
+    x ^ (1 << Prim.natToWord8(p));
   };
 
   /// Returns the count of non-zero bits in `x`.
