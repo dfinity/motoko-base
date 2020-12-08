@@ -158,6 +158,17 @@ in a new list.
 func mapFilter<T, S>(l : List<T>, f : T -> ?S) : List<S>
 ----
 
+[[value.mapResult]]
+== mapResult
+
+Maps a Result-returning function over a List and returns either
+the first error or a list of successful values.
+
+[source,motoko]
+----
+func mapResult<A, R, E>(xs : List<A>, f : A -> Result.Result<R, E>) : Result.Result<List<R>, E>
+----
+
 [[value.append]]
 == append
 

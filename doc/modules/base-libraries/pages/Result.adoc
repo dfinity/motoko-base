@@ -26,6 +26,26 @@ switch(createUser(myUser)) {
 type Result<Ok, Err> = {#ok : Ok; #err : Err}
 ----
 
+[[value.equal]]
+== equal
+
+
+
+[source,motoko]
+----
+func equal<Ok, Err>(eqOk : (Ok, Ok) -> Bool, eqErr : (Err, Err) -> Bool, r1 : Result<Ok, Err>, r2 : Result<Ok, Err>) : Bool
+----
+
+[[value.compare]]
+== compare
+
+
+
+[source,motoko]
+----
+func compare<Ok, Err>(compareOk : (Ok, Ok) -> Order.Order, compareErr : (Err, Err) -> Order.Order, r1 : Result<Ok, Err>, r2 : Result<Ok, Err>) : Order.Order
+----
+
 [[value.chain]]
 == chain
 
@@ -49,6 +69,22 @@ between10And20(21) = #err("Not smaller than 20.");
 [source,motoko]
 ----
 func chain<R1, R2, Error>(x : Result<R1, Error>, y : R1 -> Result<R2, Error>) : Result<R2, Error>
+----
+
+[[value.flatten]]
+== flatten
+
+Flattens a nested Result.
+
+```motoko
+assert(flatten<Nat, Text>(#ok(#ok(10))) == #ok(10))
+assert(flatten<Nat, Text>(#err("Wrong") == #err("Wrong"))
+assert(flatten<Nat, Text>(#ok(#err("Wrong")) == #err("Wrong"))
+```
+
+[source,motoko]
+----
+func flatten<Ok, Error>(result : Result<Result<Ok, Error>, Error>) : Result<Ok, Error>
 ----
 
 [[value.mapOk]]
@@ -85,59 +121,57 @@ fromOption(null, e) = #err(e)
 func fromOption<R, E>(x : ?R, err : E) : Result<R, E>
 ----
 
-[[value.fromSomeMap]]
-== fromSomeMap
+[[value.toOption]]
+== toOption
 
-Maps the `Ok` type/value from the optional value, or else use the given error value.
-(Deprecate?)
-
-[source,motoko]
-----
-func fromSomeMap<R1, R2, E>(x : ?R1, f : R1 -> R2, err : E) : Result<R2, E>
-----
-
-[[value.fromSome]]
-== fromSome
-
-asserts that the option is Some(_) form.
+Create an option from a result, turning all #err into `null`.
+```
+fromOption(#ok(x)) = ?x
+fromOption(#err(e)) = null
+```
 
 [source,motoko]
 ----
-func fromSome<Ok>(o : ?Ok) : Result<Ok, None>
+func toOption<R, E>(r : Result<R, E>) : ?R
 ----
 
-[[value.toArrayOk]]
-== toArrayOk
+[[value.iterate]]
+== iterate
 
-a result that consists of an array of Ok results from an array of results, or the first error in the result array, if any.
+Applies a function to a successful value, but discards the result. Use
+`iterate` if you're only interested in the side effect `f` produces.
+
+```
+var counter : Nat = 0;
+iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
+assert(counter == 5);
+iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
+assert(counter == 5);
+```
 
 [source,motoko]
 ----
-func toArrayOk<R, E>(x : [Result<R, E>]) : Result<[R], E>
+func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ())
 ----
 
-[[value.unwrapOk]]
-== unwrapOk
+[[value.isOk]]
+== isOk
 
-Extract and return the value `v` of an `#ok v` result.
-Traps if its argument is an `#err` result.
-Recommended for testing only, not for production code.
+
 
 [source,motoko]
 ----
-func unwrapOk<Ok, Error>(r : Result<Ok, Error>) : Ok
+func isOk(r : Result<Any, Any>) : Bool
 ----
 
-[[value.unwrapErr]]
-== unwrapErr
+[[value.isErr]]
+== isErr
 
-Extract and return the value `v` of an `#err v` result.
-Traps if its argument is an `#ok` result.
-Recommended for testing only, not for production code.
+
 
 [source,motoko]
 ----
-func unwrapErr<Ok, Error>(r : Result<Ok, Error>) : Error
+func isErr(r : Result<Any, Any>) : Bool
 ----
 
 [[value.assertOk]]

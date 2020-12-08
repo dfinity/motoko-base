@@ -68,7 +68,7 @@ class revRange(x : Int, y : Int)
 
 
 
-[[revrange.value.next]]
+[[value.next]]
 === next
 
 

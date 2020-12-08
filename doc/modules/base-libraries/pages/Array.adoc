@@ -43,14 +43,14 @@ Output array contains each array-value if and only if the predicate is true; ord
 func filter<A>(xs : [A], f : A -> Bool) : [A]
 ----
 
-[[value.filterMap]]
-== filterMap
+[[value.mapFilter]]
+== mapFilter
 
 Output array contains each transformed optional value; ordering retained.
 
 [source,motoko]
 ----
-func filterMap<A, B>(xs : [A], f : A -> ?B) : [B]
+func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B]
 ----
 
 [[value.foldLeft]]
@@ -121,6 +121,29 @@ Transform each entry (index-value pair) using a function.
 [source,motoko]
 ----
 func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B]
+----
+
+[[value.mapResult]]
+== mapResult
+
+Maps a Result-returning function over an Array and returns either
+the first error or an array of successful values.
+
+```motoko
+func makeNatural(x : Int) : Result.Result<Nat, Text> =
+  if (x >= 0) {
+    #ok(Int.abs(x))
+  } else {
+    #err(Int.toText(x) # " is not a natural number.")
+  };
+
+mapResult([0, 1, 2], makeNatural) = #ok([0, 1, 2]);
+mapResult([-1, 0, 1], makeNatural) = #err("-1 is not a natural number.");
+```
+
+[source,motoko]
+----
+func mapResult<A, R, E>(xs : [A], f : A -> Result.Result<R, E>) : Result.Result<[R], E>
 ----
 
 [[value.make]]
