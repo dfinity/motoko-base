@@ -3,7 +3,7 @@ import Nat "mo:base/Nat";
 
 Debug.print("Nat");
 
-{
+do {
   Debug.print("  add");
 
   assert(Nat.add(1, Nat.add(2, 3)) == Nat.add(1, Nat.add(2, 3)));
@@ -13,7 +13,7 @@ Debug.print("Nat");
   assert(Nat.add(1, 2) == Nat.add(2, 1));
 };
 
-{
+do {
   Debug.print("  toText");
 
   assert(Nat.toText(0) == "0");

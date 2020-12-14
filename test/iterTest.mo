@@ -6,7 +6,7 @@ import Debug "mo:base/Debug";
 
 Debug.print("Iter");
 
-{
+do {
   Debug.print("  range");
 
   let tests = [((0,-1), "", "0-1"), ((0,0), "0", "0"), ((0, 5), "012345", ""), ((5, 0), "", "543210")];
@@ -24,7 +24,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  iterate");
 
   let xs = [ "a", "b", "c", "d", "e", "f" ];
@@ -41,7 +41,7 @@ Debug.print("Iter");
   assert(z == 15);
 };
 
-{
+do {
   Debug.print("  map");
 
   let isEven = func (x : Int) : Bool {
@@ -59,7 +59,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  make");
 
   let x = 1;
@@ -71,7 +71,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  fromArray");
 
   let expected = [1, 2, 3];
@@ -85,7 +85,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  fromArrayMut");
 
   let expected = [var 1, 2, 3];
@@ -99,7 +99,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  fromList");
 
   let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
@@ -114,7 +114,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  toArray");
 
   let expected = [1, 2, 3];
@@ -127,7 +127,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  toArrayMut");
 
   let expected = [var 1, 2, 3];
@@ -140,7 +140,7 @@ Debug.print("Iter");
   };
 };
 
-{
+do {
   Debug.print("  toList");
 
   let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));

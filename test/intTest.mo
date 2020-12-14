@@ -3,7 +3,7 @@ import Int "mo:base/Int";
 
 Debug.print("Int");
 
-{
+do {
   Debug.print("  add");
 
   assert(Int.add(1, Int.add(2, 3)) == Int.add(1, Int.add(2, 3)));
@@ -13,7 +13,7 @@ Debug.print("Int");
   assert(Int.add(1, 2) == Int.add(2, 1));
 };
 
-{
+do {
   Debug.print("  toText");
 
   assert(Int.toText(0) == "0");

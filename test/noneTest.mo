@@ -4,7 +4,7 @@ import Debug "mo:base/Debug";
 
 Debug.print("None");
 
-{
+do {
   Debug.print("  impossible");
 
   func showNone(x : None) : Text {
