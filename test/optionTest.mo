@@ -3,10 +3,10 @@ import Debug "mo:base/Debug";
 
 Debug.print("Option");
 
-{
+do {
   Debug.print("  apply");
 
-  {
+  do {
     Debug.print("    null function, null value");
 
     let actual = Option.apply<Int, Bool>(null, null);
@@ -22,7 +22,7 @@ Debug.print("Option");
     };
   };
 
-  {
+  do {
     Debug.print("    null function, non-null value");
 
      let actual = Option.apply<Int, Bool>(?0, null);
@@ -38,7 +38,7 @@ Debug.print("Option");
     };
   };
 
-  {
+  do {
     Debug.print("    non-null function, null value");
 
      let isEven = func (x : Int) : Bool {
@@ -58,8 +58,8 @@ Debug.print("Option");
     };
   };
 
-  {
-    Debug.print("    non-null function, non-null value");
+  do {
+   Debug.print("    non-null function, non-null value");
 
    let isEven = func (x : Int) : Bool {
       x % 2 == 0;
@@ -80,10 +80,10 @@ Debug.print("Option");
 
  };
 
-{
+do {
   Debug.print("  bind");
 
-  {
+  do {
     Debug.print("    null value to null value");
 
     let safeInt = func (x : Int) : ?Int {
@@ -107,7 +107,7 @@ Debug.print("Option");
     };
   };
 
-  {
+  do {
     Debug.print("    non-null value to null value");
 
     let safeInt = func (x : Int) : ?Int {
@@ -131,7 +131,7 @@ Debug.print("Option");
     };
   };
 
-  {
+  do {
     Debug.print("    non-null value to non-null value");
 
     let safeInt = func (x : Int) : ?Int {
@@ -157,10 +157,10 @@ Debug.print("Option");
 
 };
 
-{
+do {
   Debug.print("  flatten");
 
-  {
+  do {
     Debug.print("    null value");
 
     let actual = Option.flatten<Int>(?null);
@@ -176,7 +176,7 @@ Debug.print("Option");
     };
   };
 
-  {
+  do {
     Debug.print("    non-null value");
     let actual = Option.flatten<Int>(??0);
     let expected = ?0;
@@ -193,10 +193,10 @@ Debug.print("Option");
 
 };
 
-{
+do {
   Debug.print("  map");
 
-  {
+  do {
     Debug.print("    null value");
 
     let isEven = func (x : Int) : Bool {
@@ -216,7 +216,7 @@ Debug.print("Option");
     };
   };
 
-  {
+  do {
     Debug.print("    non-null value");
 
     let isEven = func (x : Int) : Bool {
@@ -237,10 +237,10 @@ Debug.print("Option");
   };
 
 };
-{
+do {
   Debug.print("  iterate");
 
-  {
+  do {
     var witness = 0;
     Option.iterate<Nat>(?(1), func (x : Nat) { witness += 1; });
     assert(witness == 1);
@@ -248,7 +248,8 @@ Debug.print("Option");
     assert(witness == 1);
   };
 };
-{
+
+do {
   Debug.print("  make");
 
   let actual = Option.make<Int>(0);

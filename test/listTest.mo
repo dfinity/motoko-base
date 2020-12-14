@@ -65,7 +65,7 @@ type X = Nat;
   assert (List.size<X>(l2) == 1);
   assert (List.size<X>(l3) == 2);
 
-  {
+  do {
     Debug.print("  flatten");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, null)));
@@ -78,7 +78,7 @@ type X = Nat;
 
   };
 
-  {
+  do {
     Debug.print("  fromArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
@@ -88,7 +88,7 @@ type X = Nat;
     assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
   };
 
-  {
+  do {
     Debug.print("  fromVarArray");
 
     let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
@@ -98,7 +98,7 @@ type X = Nat;
     assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
   };
 
-  {
+  do {
     Debug.print("  toArray");
 
     let expected = [1, 2, 3];
@@ -112,7 +112,7 @@ type X = Nat;
     };
   };
 
-  {
+  do {
     Debug.print("  toVarArray");
 
     let expected = [var 1, 2, 3];

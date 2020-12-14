@@ -7,7 +7,7 @@ import M "mo:matchers/Matchers";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 
-let findTest = {
+let findTest = do {
   type Element = {
     key : Text;
     value : Int;
@@ -40,7 +40,7 @@ let findTest = {
   )
 };
 
-let mapEntriesTest = {
+let mapEntriesTest = do {
 
   let isEven = func (x : Int) : Bool {
     x % 2 == 0;
@@ -104,7 +104,7 @@ let suite = Suite.suite("Array", [
     M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3, 4, 5, 6 ]))),
   Suite.test(
     "chain",
-    {
+    do {
       let purePlusOne = func (x : Int) : [Int] { [ x + 1 ] };
       Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
     },
@@ -112,7 +112,7 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "filter",
-    {
+    do {
       let isEven = func (x : Nat) : Bool { x % 2 == 0 };
       Array.filter([ 1, 2, 3, 4, 5, 6 ], isEven);
     },
@@ -120,7 +120,7 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "mapFilter",
-    {
+    do {
       let isEven = func (x : Nat) : ?Nat { if (x % 2 == 0) ?x else null };
       Array.mapFilter([ 1, 2, 3, 4, 5, 6 ], isEven);
     },
@@ -139,7 +139,7 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "freeze",
-    {
+    do {
       var xs : [var Int] = [ var 1, 2, 3 ];
       Array.freeze<Int>(xs);
     },
@@ -152,7 +152,7 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "map",
-    {
+    do {
       let isEven = func (x : Int) : Bool {
         x % 2 == 0;
       };
@@ -169,7 +169,7 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "thaw",
-    {
+    do {
       let xs : [Int] = [ 1, 2, 3 ];
       Array.freeze(Array.thaw(xs))
     },
@@ -177,7 +177,7 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "tabulateVar",
-    {
+    do {
       // regression test for (fixed) issues in base cases, where func was called too often:
       let test0 = Array.tabulateVar<Nat>(0, func (i:Nat) { assert(false); 0 });
       let test1 = Array.tabulateVar<Nat>(1, func (i:Nat) { assert(i < 1); 0 });

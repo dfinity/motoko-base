@@ -127,7 +127,7 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
                  //and
                  ((k.hash & mask) == bits)
                  or
-                 ({ Prim.debugPrint("\nmalformed hash!:\n");
+                 (do { Prim.debugPrint("\nmalformed hash!:\n");
                      Prim.debugPrintInt(Prim.word32ToNat(k.hash));
                      Prim.debugPrint("\n (key hash) != (path bits): \n");
                      Prim.debugPrintInt(Prim.word32ToNat(bits));
@@ -138,7 +138,7 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
                    })
                }
              ) or
-           ({ Prim.debugPrint("one or more hashes are malformed"); false })
+           (do { Prim.debugPrint("one or more hashes are malformed"); false })
            )
          };
     case (#branch(b)) {
@@ -149,7 +149,7 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
            let mask1 = mask | (Prim.natToWord32(1) << bitpos1);
            let bits1 = bits | (Prim.natToWord32(1) << bitpos1);
            let sum = size<K,V>(b.left) + size<K,V>(b.right);
-           (b.size == sum or { Prim.debugPrint("malformed size"); false })
+           (b.size == sum or (do { Prim.debugPrint("malformed size"); false }))
            and
            rec(b.left,  ?bitpos1, bits,  mask1)
            and

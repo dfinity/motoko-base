@@ -4,7 +4,7 @@ import Text "mo:base/Text";
 
 Debug.print("Function");
 
-{
+do {
   Debug.print("  compose");
 
   func isEven(x : Int) : Bool { x % 2 == 0; };
@@ -15,7 +15,7 @@ Debug.print("Function");
   assert(isOdd(1));
 };
 
-{
+do {
   Debug.print("  const");
 
   assert(Function.const<Bool, Text>(true)("abc"));
