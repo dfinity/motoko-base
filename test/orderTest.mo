@@ -3,7 +3,7 @@ import Debug "mo:base/Debug";
 
 Debug.print("Order");
 
-{
+do {
   Debug.print("  isLess");
 
   assert(Order.isLess(#less));
@@ -11,7 +11,7 @@ Debug.print("Order");
   assert(not Order.isLess(#greater));
 };
 
-{
+do {
   Debug.print("  isEqual");
 
   assert(not Order.isEqual(#less));
@@ -19,7 +19,7 @@ Debug.print("Order");
   assert(not Order.isEqual(#greater));
 };
 
-{
+do {
   Debug.print("  isGreater");
 
   assert(not Order.isGreater(#less));

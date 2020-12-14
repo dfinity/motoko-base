@@ -40,7 +40,7 @@ for ((num, lab) in unsort.vals()) {
   t.put(num, lab);
 };
 
-{ var i = 1;
+do { var i = 1;
 for ((num, lab) in t.entries()) {
   assert(num == i);
  i += 1;
@@ -48,7 +48,7 @@ for ((num, lab) in t.entries()) {
 
 assert RBT.size(t.share()) == 9;
 
-{ var i = 9;
+do { var i = 9;
 for ((num, lab) in t.entriesRev()) {
   assert(num == i);
   i -= 1;

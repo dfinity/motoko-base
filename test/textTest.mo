@@ -101,12 +101,12 @@ run(suite("toIter",
    "toIter-2",
    Text.toIter("abc"),
    M.equals(iterT (['a','b','c']))),
- {
+ do {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
-   "fromIter-2",
-   Text.toIter(Text.join("", Array.map(a, Char.toText).vals())),
-   M.equals(iterT a))
+     "fromIter-2",
+     Text.toIter(Text.join("", Array.map(a, Char.toText).vals())),
+     M.equals(iterT a))
  },
 ]));
 
@@ -124,7 +124,7 @@ run(suite("fromIter",
    "fromIter-2",
    Text.fromIter((['a', 'b', 'c'].vals())),
    M.equals(T.text "abc")),
- {
+ do {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
    "fromIter-3",
@@ -168,7 +168,7 @@ run(suite("join",
    "join-2",
    Text.join("", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "abbcccdddd")),
- {
+ do {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
    "join-3",
@@ -199,7 +199,7 @@ run(suite("join",
    "join-2",
    Text.join(",", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "a,bb,ccc,dddd")),
- {
+ do {
    let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+Word32.fromInt(i % 26)));
    test(
    "join-3",
@@ -243,7 +243,7 @@ run(suite("split",
    "split-char-mixed",
    Text.split("a;;;ab;;abc;", #char ';'),
    M.equals(textIterT(["a","","","ab","","abc",""]))),
- {
+ do {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
    let t = Text.join(";", a.vals());
    test(
@@ -251,7 +251,7 @@ run(suite("split",
      Text.split(t, #char ';'),
      M.equals(textIterT a))
  },
- {
+ do {
    let a = Array.tabulate<Text>(100000,func _ = "abc");
    let t = Text.join(";", a.vals());
    test(
@@ -262,7 +262,7 @@ run(suite("split",
 ]));
 
 
-{
+do {
 let pat : Text.Pattern = #predicate (func (c : Char) : Bool { c == ';' or c == '!' }) ;
 run(suite("split",
 [
@@ -290,7 +290,7 @@ run(suite("split",
    "split-pred-mixed",
    Text.split("a;!;ab;!abc;", pat),
    M.equals(textIterT(["a","","","ab","","abc",""]))),
- {
+ do {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
    let t = Text.join(";", a.vals());
    test(
@@ -298,7 +298,7 @@ run(suite("split",
      Text.split(t, pat),
      M.equals(textIterT a))
  },
- {
+ do {
    let a = Array.tabulate<Text>(10000,func _ = "abc");
    let t = Text.join(";", a.vals());
    test(
@@ -310,7 +310,7 @@ run(suite("split",
 };
 
 
-{
+do {
 let pat : Text.Pattern = #text "PAT" ;
 run(suite("split",
 [
@@ -338,7 +338,7 @@ run(suite("split",
    "split-pat-mixed",
    Text.split("aPATPATPATabPATPATabcPAT", pat),
    M.equals(textIterT(["a","","","ab","","abc",""]))),
- {
+ do {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
    let t = Text.join("PAT", a.vals());
    test(
@@ -346,7 +346,7 @@ run(suite("split",
      Text.split(t, pat),
      M.equals(textIterT a))
  },
- {
+ do {
    let a = Array.tabulate<Text>(10000,func _ = "abc");
    let t = Text.join("PAT", a.vals());
    test(
@@ -384,7 +384,7 @@ run(suite("tokens",
    "tokens-char-mixed",
    Text.tokens("a;;;ab;;abc;", #char ';'),
    M.equals(textIterT(["a","ab","abc"]))),
- {
+ do {
    let a = Array.tabulate<Text>(1000,func _ = "abc");
    let t = Text.join(";;", a.vals());
    test(
@@ -392,7 +392,7 @@ run(suite("tokens",
      Text.tokens(t, #char ';'),
      M.equals(textIterT a))
  },
- {
+ do {
    let a = Array.tabulate<Text>(100000,func _ = "abc");
    let t = Text.join(";;", a.vals());
    test(
@@ -684,7 +684,7 @@ run(suite("trim",
    M.equals(T.text "")),
 ]));
 
-{
+do {
 let cmp = Char.compare;
 run(suite("compareWith",
 [
