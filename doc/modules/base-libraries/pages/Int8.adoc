@@ -1,0 +1,209 @@
+[[module.Int8]]
+= Int8
+
+8-bit signed integers with checked arithmetic
+
+Most operations are available as built-in operators (e.g. `1 + 1`).
+
+[[value.toInt]]
+== toInt
+
+Conversion.
+
+[source,motoko]
+----
+let toInt : Int8 -> Int
+----
+
+[[value.fromInt]]
+== fromInt
+
+Conversion. Traps on overflow/underflow.
+
+[source,motoko]
+----
+let fromInt : Int -> Int8
+----
+
+[[value.toText]]
+== toText
+
+Returns the Text representation of `x`.
+
+[source,motoko]
+----
+func toText(x : Int8) : Text
+----
+
+[[value.abs]]
+== abs
+
+Returns the absolute value of `x`. Traps when `x = -2^7`.
+
+[source,motoko]
+----
+func abs(x : Int8) : Int8
+----
+
+[[value.min]]
+== min
+
+Returns the minimum of `x` and `y`.
+
+[source,motoko]
+----
+func min(x : Int8, y : Int8) : Int8
+----
+
+[[value.max]]
+== max
+
+Returns the maximum of `x` and `y`.
+
+[source,motoko]
+----
+func max(x : Int8, y : Int8) : Int8
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Int8, y : Int8) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Int8, y : Int8) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Int8, y : Int8) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Int8, y : Int8) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Int8, y : Int8) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Int8, y : Int8) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Int8, y : Int8) : {#less; #equal; #greater}
+----
+
+[[value.neg]]
+== neg
+
+Returns the negation of `x`, `-x`. Traps on overflow.
+
+[source,motoko]
+----
+func neg(x : Int8) : Int8
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+
+[source,motoko]
+----
+func add(x : Int8, y : Int8) : Int8
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+
+[source,motoko]
+----
+func sub(x : Int8, y : Int8) : Int8
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+
+[source,motoko]
+----
+func mul(x : Int8, y : Int8) : Int8
+----
+
+[[value.div]]
+== div
+
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func div(x : Int8, y : Int8) : Int8
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func rem(x : Int8, y : Int8) : Int8
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+
+[source,motoko]
+----
+func pow(x : Int8, y : Int8) : Int8
+----
+

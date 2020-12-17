@@ -1,98 +1,210 @@
-// Do not edit; This file was machine-generated
+[[module.Int]]
+= Int
 
+Integer numbers
 
-[#mod-Int]
-= `Int` -- Integer numbers
+Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+This module provides equivalent functions and `Text` conversion.
 
-Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-This module provides conversion functions.
+[[value.abs]]
+== abs
 
-The conversions `toInt*` will trap if the number is out of bounds.
-
-
-[#Int_abs]
-== `abs`
 Returns the absolute value of the number
 
+[source,motoko]
+----
+let abs : Int -> Nat
+----
+
+[[value.toText]]
+== toText
 
 
-[listing]
-abs : Int -> Nat
 
-[#Int_toText]
-== `toText`
+[source,motoko]
+----
+let toText : Int -> Text
+----
 
+[[value.min]]
+== min
 
-[listing]
-toText : Int -> Text
+Returns the minimum of `x` and `y`.
 
-[#Int_fromInt8]
-== `fromInt8`
+[source,motoko]
+----
+func min(x : Int, y : Int) : Int
+----
 
+[[value.max]]
+== max
 
-[listing]
-fromInt8 : Int8  -> Int
+Returns the maximum of `x` and `y`.
 
-[#Int_fromInt16]
-== `fromInt16`
+[source,motoko]
+----
+func max(x : Int, y : Int) : Int
+----
 
-
-[listing]
-fromInt16 : Int16 -> Int
-
-[#Int_fromInt32]
-== `fromInt32`
-
-
-[listing]
-fromInt32 : Int32 -> Int
-
-[#Int_fromInt64]
-== `fromInt64`
+[[value.hash]]
+== hash
 
 
-[listing]
-fromInt64 : Int64 -> Int
 
-[#Int_toInt8]
-== `toInt8`
+[source,motoko]
+----
+func hash(i : Int) : Hash.Hash
+----
 
+[[value.hashAcc]]
+== hashAcc
 
-[listing]
-toInt8 : Int -> Int8
+WARNING: May go away (?)
 
-[#Int_toInt16]
-== `toInt16`
+[source,motoko]
+----
+func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash
+----
 
+[[value.equal]]
+== equal
 
-[listing]
-toInt16 : Int -> Int16
+Returns `x == y`.
 
-[#Int_toInt32]
-== `toInt32`
+[source,motoko]
+----
+func equal(x : Int, y : Int) : Bool
+----
 
+[[value.notEqual]]
+== notEqual
 
-[listing]
-toInt32 : Int -> Int32
+Returns `x != y`.
 
-[#Int_toInt64]
-== `toInt64`
+[source,motoko]
+----
+func notEqual(x : Int, y : Int) : Bool
+----
 
+[[value.less]]
+== less
 
-[listing]
-toInt64 : Int -> Int64
+Returns `x < y`.
 
-[#Int_min]
-== `min`
+[source,motoko]
+----
+func less(x : Int, y : Int) : Bool
+----
 
+[[value.lessOrEqual]]
+== lessOrEqual
 
-[listing]
-min : (Int, Int) -> Int
+Returns `x <= y`.
 
-[#Int_max]
-== `max`
+[source,motoko]
+----
+func lessOrEqual(x : Int, y : Int) : Bool
+----
 
+[[value.greater]]
+== greater
 
-[listing]
-max : (Int, Int) -> Int
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Int, y : Int) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Int, y : Int) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Int, y : Int) : {#less; #equal; #greater}
+----
+
+[[value.neq]]
+== neq
+
+Returns the negation of `x`, `-x` .
+
+[source,motoko]
+----
+func neq(x : Int) : Int
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `x + y`.
+
+[source,motoko]
+----
+func add(x : Int, y : Int) : Int
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `x - y`.
+
+[source,motoko]
+----
+func sub(x : Int, y : Int) : Int
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `x * y`.
+
+[source,motoko]
+----
+func mul(x : Int, y : Int) : Int
+----
+
+[[value.div]]
+== div
+
+Returns the division of `x` by `y`,  `x / y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func div(x : Int, y : Int) : Int
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func rem(x : Int, y : Int) : Int
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `x ** y`.
+
+[source,motoko]
+----
+func pow(x : Int, y : Int) : Int
+----
 

@@ -1,0 +1,209 @@
+[[module.Int16]]
+= Int16
+
+16-bit signed integers with checked arithmetic
+
+Most operations are available as built-in operators (e.g. `1 + 1`).
+
+[[value.toInt]]
+== toInt
+
+Conversion.
+
+[source,motoko]
+----
+let toInt : Int16 -> Int
+----
+
+[[value.fromInt]]
+== fromInt
+
+Conversion. Traps on overflow/underflow.
+
+[source,motoko]
+----
+let fromInt : Int -> Int16
+----
+
+[[value.toText]]
+== toText
+
+Returns the Text representation of `x`.
+
+[source,motoko]
+----
+func toText(x : Int16) : Text
+----
+
+[[value.abs]]
+== abs
+
+Returns the absolute value of `x`. Traps when `x = -2^15`.
+
+[source,motoko]
+----
+func abs(x : Int16) : Int16
+----
+
+[[value.min]]
+== min
+
+Returns the minimum of `x` and `y`.
+
+[source,motoko]
+----
+func min(x : Int16, y : Int16) : Int16
+----
+
+[[value.max]]
+== max
+
+Returns the maximum of `x` and `y`.
+
+[source,motoko]
+----
+func max(x : Int16, y : Int16) : Int16
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Int16, y : Int16) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Int16, y : Int16) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Int16, y : Int16) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Int16, y : Int16) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Int16, y : Int16) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Int16, y : Int16) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Int16, y : Int16) : {#less; #equal; #greater}
+----
+
+[[value.neg]]
+== neg
+
+Returns the negation of `x`, `-x`. Traps on overflow.
+
+[source,motoko]
+----
+func neg(x : Int16) : Int16
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+
+[source,motoko]
+----
+func add(x : Int16, y : Int16) : Int16
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+
+[source,motoko]
+----
+func sub(x : Int16, y : Int16) : Int16
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+
+[source,motoko]
+----
+func mul(x : Int16, y : Int16) : Int16
+----
+
+[[value.div]]
+== div
+
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func div(x : Int16, y : Int16) : Int16
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func rem(x : Int16, y : Int16) : Int16
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+
+[source,motoko]
+----
+func pow(x : Int16, y : Int16) : Int16
+----
+

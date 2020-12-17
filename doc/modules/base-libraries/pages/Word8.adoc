@@ -1,0 +1,369 @@
+[[module.Word8]]
+= Word8
+
+8-bit binary unsigned integers with modular arithmetic
+
+Most operations are available as built-in operators (e.g. `1 | 1`).
+
+[[value.toNat]]
+== toNat
+
+Conversion.
+
+[source,motoko]
+----
+let toNat : Word8 -> Nat
+----
+
+[[value.fromNat]]
+== fromNat
+
+Conversion. Wraps around.
+
+[source,motoko]
+----
+let fromNat : Nat -> Word8
+----
+
+[[value.toInt]]
+== toInt
+
+Conversion. Return a value between `-128` and `127`
+
+[source,motoko]
+----
+func toInt(x : Word8) : Int
+----
+
+[[value.fromInt]]
+== fromInt
+
+Conversion. Returns `x mod 2^8`.
+
+[source,motoko]
+----
+let fromInt : (x : Int) -> Word8
+----
+
+[[value.toText]]
+== toText
+
+Returns the Text representation of `x`.
+
+[source,motoko]
+----
+func toText(x : Word8) : Text
+----
+
+[[value.min]]
+== min
+
+Returns the minimum of `x` and `y`.
+
+[source,motoko]
+----
+func min(x : Word8, y : Word8) : Word8
+----
+
+[[value.max]]
+== max
+
+Returns the maximum of `x` and `y`.
+
+[source,motoko]
+----
+func max(x : Word8, y : Word8) : Word8
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Word8, y : Word8) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Word8, y : Word8) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Word8, y : Word8) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Word8, y : Word8) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Word8, y : Word8) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Word8, y : Word8) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Word8, y : Word8) : {#less; #equal; #greater}
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `(x + y) mod 2^8`.
+
+[source,motoko]
+----
+func add(x : Word8, y : Word8) : Word8
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `(2^8 + x - y) mod 2^8`.
+
+[source,motoko]
+----
+func sub(x : Word8, y : Word8) : Word8
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `(x * y) mod 2^8`.
+
+[source,motoko]
+----
+func mul(x : Word8, y : Word8) : Word8
+----
+
+[[value.div]]
+== div
+
+Returns the division of `x` by `y`, `x / y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func div(x : Word8, y : Word8) : Word8
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func rem(x : Word8, y : Word8) : Word8
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `(x ** y) mod 2^8`.
+
+[source,motoko]
+----
+func pow(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitnot]]
+== bitnot
+
+Returns the bitwise negation of `x`, `^x`.
+
+[source,motoko]
+----
+func bitnot(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitand]]
+== bitand
+
+Returns the bitwise and of `x` and `y`, `x & y`.
+
+[source,motoko]
+----
+func bitand(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitor]]
+== bitor
+
+Returns the bitwise or of `x` and `y`, `x \| y`.
+
+[source,motoko]
+----
+func bitor(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitxor]]
+== bitxor
+
+Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+
+[source,motoko]
+----
+func bitxor(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitshiftLeft]]
+== bitshiftLeft
+
+Returns the bitwise shift left of `x` by `y`, `x << y`.
+
+[source,motoko]
+----
+func bitshiftLeft(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitshiftRight]]
+== bitshiftRight
+
+Returns the bitwise shift right of `x` by `y`, `x >> y`.
+
+[source,motoko]
+----
+func bitshiftRight(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitshiftRightSigned]]
+== bitshiftRightSigned
+
+Returns the signed shift right of `x` by `y`, `x +>> y`.
+
+[source,motoko]
+----
+func bitshiftRightSigned(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitrotLeft]]
+== bitrotLeft
+
+Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+
+[source,motoko]
+----
+func bitrotLeft(x : Word8, y : Word8) : Word8
+----
+
+[[value.bitrotRight]]
+== bitrotRight
+
+Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+
+[source,motoko]
+----
+func bitrotRight(x : Word8, y : Word8) : Word8
+----
+
+[[value.bittest]]
+== bittest
+
+Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
+
+[source,motoko]
+----
+func bittest(x : Word8, p : Nat) : Bool
+----
+
+[[value.bitset]]
+== bitset
+
+Returns the value of setting bit `p mod 8` in `x` to `1`.
+
+[source,motoko]
+----
+func bitset(x : Word8, p : Nat) : Word8
+----
+
+[[value.bitclear]]
+== bitclear
+
+Returns the value of clearing bit `p mod 8` in `x` to `0`.
+
+[source,motoko]
+----
+func bitclear(x : Word8, p : Nat) : Word8
+----
+
+[[value.bitflip]]
+== bitflip
+
+Returns the value of flipping bit `p mod 8` in `x`.
+
+[source,motoko]
+----
+func bitflip(x : Word8, p : Nat) : Word8
+----
+
+[[value.bitcountNonZero]]
+== bitcountNonZero
+
+Returns the count of non-zero bits in `x`.
+
+[source,motoko]
+----
+let bitcountNonZero : (x : Word8) -> Word8
+----
+
+[[value.bitcountLeadingZero]]
+== bitcountLeadingZero
+
+Returns the count of leading zero bits in `x`.
+
+[source,motoko]
+----
+let bitcountLeadingZero : (x : Word8) -> Word8
+----
+
+[[value.bitcountTrailingZero]]
+== bitcountTrailingZero
+
+Returns the count of trailing zero bits in `x`.
+
+[source,motoko]
+----
+let bitcountTrailingZero : (x : Word8) -> Word8
+----
+

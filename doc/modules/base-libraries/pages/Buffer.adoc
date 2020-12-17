@@ -1,0 +1,163 @@
+[[module.Buffer]]
+= Buffer
+
+Growing buffers
+
+This module defines buffers that grow, with a general element type.
+
+## Why?
+
+Motoko applications expose interfaces that use fixed-size arrays of
+general (user-defined) elements to represent sets, sequences and maps
+of application-specific elements.
+
+The `Array` module focuses on Motoko's builtin arrays, whose size is
+each fixed.  They do not permit general growth/appending, which is the
+focus here.
+
+To create these arrays, and to consume them with ergonomic (imperative) code, and
+low API friction, developers need _buffers that grow_.
+
+## Define `Buf<X>` object type
+
+A "buffer" is a mutable sequence that grows, either one element at a
+time, or one (second) buffer at time.
+
+[[class.Buffer]]
+== Buffer
+
+Create a buffer represented internally by an mutable array.
+
+The argument `initCapacity` gives the initial capacity.  Under the
+interface, the mutable array grows by doubling when this initial
+capacity is exhausted.
+
+[source,motoko]
+----
+class Buffer<X>(initCapacity : Nat)
+----
+
+
+
+[[value.add]]
+=== add
+
+Adds a single element to the buffer.
+
+[source,motoko]
+----
+func add(elem : X)
+----
+
+[[value.removeLast]]
+=== removeLast
+
+Removes the item that was inserted last and returns it or `null` if no
+elements had been added to the Buffer.
+
+[source,motoko]
+----
+func removeLast() : ?X
+----
+
+[[value.append]]
+=== append
+
+Adds all elements in buffer `b` to this buffer.
+
+[source,motoko]
+----
+func append(b : Buffer<X>)
+----
+
+[[value.size]]
+=== size
+
+Returns the current number of elements.
+
+[source,motoko]
+----
+func size() : Nat
+----
+
+[[value.clear]]
+=== clear
+
+Resets the buffer.
+
+[source,motoko]
+----
+func clear()
+----
+
+[[value.clone]]
+=== clone
+
+Returns a copy of this buffer.
+
+[source,motoko]
+----
+func clone() : Buffer<X>
+----
+
+[[value.vals]]
+=== vals
+
+Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
+
+[source,motoko]
+----
+func vals() : { next : () -> ?X }
+----
+
+[[value.toArray]]
+=== toArray
+
+Creates a new array containing this buffer's elements.
+
+[source,motoko]
+----
+func toArray() : [X]
+----
+
+[[value.toVarArray]]
+=== toVarArray
+
+Creates a mutable array containing this buffer's elements.
+
+[source,motoko]
+----
+func toVarArray() : [var X]
+----
+
+[[value.get]]
+=== get
+
+Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
+
+[source,motoko]
+----
+func get(i : Nat) : X
+----
+
+[[value.getOpt]]
+=== getOpt
+
+Gets the 'i'-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
+
+[source,motoko]
+----
+func getOpt(i : Nat) : ?X
+----
+
+[[value.put]]
+=== put
+
+Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
+index is out of bounds. Indexing is zero-based.
+
+[source,motoko]
+----
+func put(i : Nat, elem : X)
+----
+

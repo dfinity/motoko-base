@@ -1,0 +1,90 @@
+[[module.Bool]]
+= Bool
+
+Boolean type and operations.
+
+While boolean operators `_ and _` and `_ or _` are short-circuiting,
+avoiding computation of the right argument when possible, the functions
+`logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
+of their arguments.
+
+[[value.toText]]
+== toText
+
+Conversion.
+
+[source,motoko]
+----
+func toText(x : Bool) : Text
+----
+
+[[value.logand]]
+== logand
+
+Returns `x and y`.
+
+[source,motoko]
+----
+func logand(x : Bool, y : Bool) : Bool
+----
+
+[[value.logor]]
+== logor
+
+Returns `x or y`.
+
+[source,motoko]
+----
+func logor(x : Bool, y : Bool) : Bool
+----
+
+[[value.logxor]]
+== logxor
+
+Returns exclusive or of `x` and `y`, `x != y`.
+
+[source,motoko]
+----
+func logxor(x : Bool, y : Bool) : Bool
+----
+
+[[value.lognot]]
+== lognot
+
+Returns `not x`.
+
+[source,motoko]
+----
+func lognot(x : Bool) : Bool
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Bool, y : Bool) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Bool, y : Bool) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`, where `false < true`.
+
+[source,motoko]
+----
+func compare(x : Bool, y : Bool) : {#less; #equal; #greater}
+----
+

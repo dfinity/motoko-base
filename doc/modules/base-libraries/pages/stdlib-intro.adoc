@@ -7,7 +7,7 @@ For various practical language engineering reasons, the design of {proglang} str
 Instead, whenever possible, the {proglang} base library provides the types and operations that make the language feel complete.
 __**However**, this base library is still currently under development, and is still incomplete__.
 
-This section describes a _selected subset_ of modules from the {proglang} base library, with an emphasis on the modules that support core features and the libraries that are referenced in the examples.
+This section describes a subset of modules from the {proglang} base library, with an emphasis on the modules that support core features and the libraries that are referenced in the examples.
 The libraries documented in this section are the most stable and least likely to change.
 However, all of the base library APIs are subject to change over time to varying degrees.
 You should note, in particular, that the size and number of modules and functions included in the base library may increase dramatically as {proglang} evolves.
@@ -15,8 +15,8 @@ You should note, in particular, that the size and number of modules and function
 == Importing from the base library
 
 To import from the base library, use the `import` keyword.
-Give a local module name to introduce, in this example `P` for
-"`**P**relude`", and a URL where the `import` declaration may locate
+Give a local module name to introduce, in this example `Debug` for
+"`**Debug**ging`", and a URL where the `import` declaration may locate
 the imported module:
 
 ....
@@ -32,11 +32,41 @@ For example, if you have created a {proglang} program named types.mo in the same
 import Types "./types";
 ....
 
-[[compiler-prelude]]
-== Using predefined compiler prelude function
+== Modules for data types and data structures
 
-The compiler itself contains a *prelude* in every program, effectively extending the language definition with a set of types and declarations that are always available.
+The base library provides one module for most basic types such as integers (`Int`) and characters (`Char`) to perform common operations. There are also modules for more advanced data structures such as `Trie` data structures and utility modules for performing common tasks such as iteration (`Iter` and debugging (`Debug`).
 
-In addition to these built-in compiler definitions, the prelude of the base library contributes some additional functions in a supplemental Prelude module.
+=== Primitive data types
 
-In contrast to the definitions in other modules, the compiler prelude definitions are always present, and do _not_ require any `import` declaration to bring them into the current scope.
+- link:Nat{outfilesuffix}[Nat]
+- link:Int{outfilesuffix}[Int]
+- link:Char{outfilesuffix}[Char]
+- link:Text{outfilesuffix}[Text]
+- link:None{outfilesuffix}[None]
+- link:Option{outfilesuffix}[Option]
+- link:Func{outfilesuffix}[Func]
+- link:Array{outfilesuffix}[Array]
+- link:Blob{outfilesuffix}[Blob=+1]
+- link:Principal{outfilesuffix}[Principal]
+- link:Ord{outfilesuffix}[Ord]
+
+=== Complex data structures
+
+- link:Result{outfilesuffix}[Result]
+- link:Iter{outfilesuffix}[Iter]
+- link:Buf{outfilesuffix}[Buf]
+- link:List{outfilesuffix}[List]
+- link:Deque{outfilesuffix}[Deque]
+- link:AssocList{outfilesuffix}[AssocList]
+- link:Heap{outfilesuffix}[Heap]
+- link:Hash{outfilesuffix}[Hash]
+- link:HashMap{outfilesuffix}[HashMap]
+- link:RBTree{outfilesuffix}[RBTree]
+- link:Trie{outfilesuffix}[Trie]
+- link:TrieMap{outfilesuffix}[TrieMay]
+- link:TrieSet{outfilesuffix}[TrieSet]
+
+=== Utilities
+
+- link:Prelude{outfilesuffix}[Prelude]
+- link:Debug{outfilesuffix}[Debug]

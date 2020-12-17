@@ -1,0 +1,15 @@
+[[module.IterType]]
+= IterType
+
+The Iterator type
+
+[[type.Iter]]
+== Iter
+
+
+
+[source,motoko]
+----
+type Iter<T> = { next : () -> ?T }
+----
+

@@ -1,0 +1,189 @@
+[[module.Nat16]]
+= Nat16
+
+16-bit unsigned integers with checked arithmetic
+
+Most operations are available as built-in operators (e.g. `1 + 1`).
+
+[[value.toNat]]
+== toNat
+
+Conversion.
+
+[source,motoko]
+----
+let toNat : Nat16 -> Nat
+----
+
+[[value.fromNat]]
+== fromNat
+
+Conversion. Traps on overflow/underflow.
+
+[source,motoko]
+----
+let fromNat : Nat -> Nat16
+----
+
+[[value.toText]]
+== toText
+
+Returns the Text representation of `x`.
+
+[source,motoko]
+----
+func toText(x : Nat16) : Text
+----
+
+[[value.min]]
+== min
+
+Returns the minimum of `x` and `y`.
+
+[source,motoko]
+----
+func min(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.max]]
+== max
+
+Returns the maximum of `x` and `y`.
+
+[source,motoko]
+----
+func max(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Nat16, y : Nat16) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Nat16, y : Nat16) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Nat16, y : Nat16) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Nat16, y : Nat16) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Nat16, y : Nat16) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Nat16, y : Nat16) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Nat16, y : Nat16) : {#less; #equal; #greater}
+----
+
+[[value.add]]
+== add
+
+Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+
+[source,motoko]
+----
+func add(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.sub]]
+== sub
+
+Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+
+[source,motoko]
+----
+func sub(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.mul]]
+== mul
+
+Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+
+[source,motoko]
+----
+func mul(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.div]]
+== div
+
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func div(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.rem]]
+== rem
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[source,motoko]
+----
+func rem(x : Nat16, y : Nat16) : Nat16
+----
+
+[[value.pow]]
+== pow
+
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+
+[source,motoko]
+----
+func pow(x : Nat16, y : Nat16) : Nat16
+----
+

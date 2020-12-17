@@ -1,7 +1,146 @@
-// Do not edit; This file was machine-generated
+[[module.HashMap]]
+= HashMap
+
+Mutable hash map (aka Hashtable)
+
+This module defines an imperative hash map (hash table), with a general key and value type.
+
+It has a minimal object-oriented interface: get, set, swap, delete, count and entries.
+
+The class is parameterized by the key's equality and hash functions,
+and an initial capacity.  However, as with `Buf`, no array allocation
+happens until the first `set` (or `swap`).
+
+Internally, table growth policy is very simple, for now:
+  Double an initial capacity when the expected
+  bucket list beyond a certain constant.
+
+[[class.HashMap]]
+== HashMap
+
+An imperative HashMap with a minimal object-oriented interface.
+Maps keys of type `K` to values of type `V`.
+
+[source,motoko]
+----
+class HashMap<K, V>(initCapacity : Nat, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash)
+----
 
 
-[#mod-HashMap]
-= `HashMap` -- Mutable hash map
 
+[[value.size]]
+=== size
+
+Returns the number of entries in this HashMap.
+
+[source,motoko]
+----
+func size() : Nat
+----
+
+[[value.delete]]
+=== delete
+
+Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
+exist.
+
+[source,motoko]
+----
+func delete(k : K)
+----
+
+[[value.remove]]
+=== remove
+
+Removes the entry with the key `k` and returns the associated value if it
+existed or `null` otherwise.
+
+[source,motoko]
+----
+func remove(k : K) : ?V
+----
+
+[[value.get]]
+=== get
+
+Gets the entry with the key `k` and returns its associated value if it
+existed or `null` otherwise.
+
+[source,motoko]
+----
+func get(k : K) : ?V
+----
+
+[[value.put]]
+=== put
+
+Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
+
+[source,motoko]
+----
+func put(k : K, v : V)
+----
+
+[[value.replace]]
+=== replace
+
+Insert the value `v` at key `k` and returns the previous value stored at
+`k` or null if it didn't exist.
+
+[source,motoko]
+----
+func replace(k : K, v : V) : ?V
+----
+
+[[value.entries]]
+=== entries
+
+Returns an [`Iter`](Iter.html#type.Iter) over the key value pairs in this
+HashMap. Does _not_ modify the HashMap.
+
+[source,motoko]
+----
+func entries() : Iter.Iter<(K, V)>
+----
+
+[[value.clone]]
+== clone
+
+clone cannot be an efficient object method,
+...but is still useful in tests, and beyond.
+
+[source,motoko]
+----
+func clone<K, V>(h : HashMap<K, V>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash) : HashMap<K, V>
+----
+
+[[value.fromIter]]
+== fromIter
+
+Clone from any iterator of key-value pairs
+
+[source,motoko]
+----
+func fromIter<K, V>(iter : Iter.Iter<(K, V)>, initCapacity : Nat, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash) : HashMap<K, V>
+----
+
+[[value.map]]
+== map
+
+
+
+[source,motoko]
+----
+func map<K, V1, V2>(h : HashMap<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash, mapFn : (K, V1) -> V2) : HashMap<K, V2>
+----
+
+[[value.mapFilter]]
+== mapFilter
+
+
+
+[source,motoko]
+----
+func mapFilter<K, V1, V2>(h : HashMap<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash, mapFn : (K, V1) -> ?V2) : HashMap<K, V2>
+----
 

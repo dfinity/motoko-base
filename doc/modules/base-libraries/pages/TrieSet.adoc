@@ -1,16 +1,138 @@
-// Do not edit; This file was machine-generated
+[[module.TrieSet]]
+= TrieSet
+
+Functional set
+
+Sets are partial maps from element type to unit type,
+i.e., the partial map represents the set with its domain.
+
+[[type.Hash]]
+== Hash
 
 
-[#mod-TrieSet]
-= `TrieSet` -- Functional set
+
+[source,motoko]
+----
+type Hash = Hash.Hash
+----
+
+[[type.Set]]
+== Set
 
 
-[#TrieSet_Hash]
-== `Hash` (type)
+
+[source,motoko]
+----
+type Set<T> = Trie.Trie<T, ()>
+----
+
+[[value.empty]]
+== empty
+
+Empty set.
+
+[source,motoko]
+----
+func empty<T>() : Set<T>
+----
+
+[[value.put]]
+== put
+
+Put an element into the set.
+
+[source,motoko]
+----
+func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.delete]]
+== delete
+
+Delete an element from the set.
+
+[source,motoko]
+----
+func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.equal]]
+== equal
+
+Test if two sets are equal.
+
+[source,motoko]
+----
+func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool
+----
+
+[[value.size]]
+== size
+
+The number of set elements, set's cardinality.
+
+[source,motoko]
+----
+func size<T>(s : Set<T>) : Nat
+----
+
+[[value.mem]]
+== mem
+
+Test if a set contains a given element.
+
+[source,motoko]
+----
+func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool
+----
+
+[[value.union]]
+== union
+
+[Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
+
+[source,motoko]
+----
+func union<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.diff]]
+== diff
+
+[Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
+
+[source,motoko]
+----
+func diff<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.intersect]]
+== intersect
+
+[Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
+
+[source,motoko]
+----
+func intersect<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.fromArray]]
+== fromArray
 
 
-....
-type Hash = Hash.Hash;public type Set<T> = Trie.Trie<T,()>;
 
-....
+[source,motoko]
+----
+func fromArray<T>(arr : [T], elemHash : T -> Hash, eq : (T, T) -> Bool) : Set<T>
+----
+
+[[value.toArray]]
+== toArray
+
+
+
+[source,motoko]
+----
+func toArray<T>(s : Set<T>) : [T]
+----
 

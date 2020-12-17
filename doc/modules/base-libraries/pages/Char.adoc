@@ -1,14 +1,157 @@
-// Do not edit; This file was machine-generated
+[[module.Char]]
+= Char
 
+Characters
 
-[#mod-Char]
-= `Char` -- Characters
+[[value.toWord32]]
+== toWord32
 
+Convert character `c` to a word containing its Unicode scalar value.
 
-[#Char_isDigit]
-== `isDigit`
+[source,motoko]
+----
+let toWord32 : (c : Char) -> Word32
+----
 
+[[value.fromWord32]]
+== fromWord32
 
-[listing]
-isDigit : Char -> Bool
+Convert word `w` to a character.
+Traps if `w` is not a valid Unicode scalar value.
+Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+
+[source,motoko]
+----
+let fromWord32 : (w : Word32) -> Char
+----
+
+[[value.toText]]
+== toText
+
+Convert character `c` to single character text.
+
+[source,motoko]
+----
+let toText : (c : Char) -> Text
+----
+
+[[value.isDigit]]
+== isDigit
+
+Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
+
+[source,motoko]
+----
+func isDigit(c : Char) : Bool
+----
+
+[[value.isWhitespace]]
+== isWhitespace
+
+Returns the Unicode _White_Space_ property of `c`.
+
+[source,motoko]
+----
+let isWhitespace : (c : Char) -> Bool
+----
+
+[[value.isLowercase]]
+== isLowercase
+
+Returns the Unicode _Lowercase_ property of `c`.
+
+[source,motoko]
+----
+let isLowercase : (c : Char) -> Bool
+----
+
+[[value.isUppercase]]
+== isUppercase
+
+Returns the Unicode _Uppercase_ property of `c`.
+
+[source,motoko]
+----
+let isUppercase : (c : Char) -> Bool
+----
+
+[[value.isAlphabetic]]
+== isAlphabetic
+
+Returns the Unicode _Alphabetic_ property of `c`.
+
+[source,motoko]
+----
+let isAlphabetic : (c : Char) -> Bool
+----
+
+[[value.equal]]
+== equal
+
+Returns `x == y`.
+
+[source,motoko]
+----
+func equal(x : Char, y : Char) : Bool
+----
+
+[[value.notEqual]]
+== notEqual
+
+Returns `x != y`.
+
+[source,motoko]
+----
+func notEqual(x : Char, y : Char) : Bool
+----
+
+[[value.less]]
+== less
+
+Returns `x < y`.
+
+[source,motoko]
+----
+func less(x : Char, y : Char) : Bool
+----
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+Returns `x <= y`.
+
+[source,motoko]
+----
+func lessOrEqual(x : Char, y : Char) : Bool
+----
+
+[[value.greater]]
+== greater
+
+Returns `x > y`.
+
+[source,motoko]
+----
+func greater(x : Char, y : Char) : Bool
+----
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+Returns `x >= y`.
+
+[source,motoko]
+----
+func greaterOrEqual(x : Char, y : Char) : Bool
+----
+
+[[value.compare]]
+== compare
+
+Returns the order of `x` and `y`.
+
+[source,motoko]
+----
+func compare(x : Char, y : Char) : {#less; #equal; #greater}
+----
 

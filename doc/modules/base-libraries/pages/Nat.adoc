@@ -1,146 +1,171 @@
-// Do not edit; This file was machine-generated
+[[module.Nat]]
+= Nat
 
+Natural numbers
 
-[#mod-Nat]
-= `Nat` -- Natural numbers
+Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+This module provides equivalent functions and `Text` conversion.
 
-Most operations on natural numbers (e.g. addition) are available as built-in operators (`1 + 1`).
-This module provides conversion functions.
+[[value.toText]]
+== toText
 
-The conversions `toNat*` will trap if the number is out of bounds; the conversions `toWord*` will wrap-around.
+Conversion.
 
+[source,motoko]
+----
+let toText : Nat -> Text
+----
 
+[[value.min]]
+== min
 
-[#Nat_toText]
-== `toText`
+Returns the minimum of `x` and `y`.
 
+[source,motoko]
+----
+func min(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-toText : Nat -> Text
+[[value.max]]
+== max
 
-[#Nat_fromWord8]
-== `fromWord8`
+Returns the maximum of `x` and `y`.
 
+[source,motoko]
+----
+func max(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-fromWord8 : Word8  -> Nat
+[[value.equal]]
+== equal
 
-[#Nat_fromWord16]
-== `fromWord16`
+Returns `x == y`.
 
+[source,motoko]
+----
+func equal(x : Nat, y : Nat) : Bool
+----
 
-[listing]
-fromWord16 : Word16 -> Nat
+[[value.notEqual]]
+== notEqual
 
-[#Nat_fromWord32]
-== `fromWord32`
+Returns `x != y`.
 
+[source,motoko]
+----
+func notEqual(x : Nat, y : Nat) : Bool
+----
 
-[listing]
-fromWord32 : Word32 -> Nat
+[[value.less]]
+== less
 
-[#Nat_fromWord64]
-== `fromWord64`
+Returns `x < y`.
 
+[source,motoko]
+----
+func less(x : Nat, y : Nat) : Bool
+----
 
-[listing]
-fromWord64 : Word64 -> Nat
+[[value.lessOrEqual]]
+== lessOrEqual
 
-[#Nat_toWord8]
-== `toWord8`
+Returns `x <= y`.
 
+[source,motoko]
+----
+func lessOrEqual(x : Nat, y : Nat) : Bool
+----
 
-[listing]
-toWord8 : Nat -> Word8
+[[value.greater]]
+== greater
 
-[#Nat_toWord16]
-== `toWord16`
+Returns `x > y`.
 
+[source,motoko]
+----
+func greater(x : Nat, y : Nat) : Bool
+----
 
-[listing]
-toWord16 : Nat -> Word16
+[[value.greaterOrEqual]]
+== greaterOrEqual
 
-[#Nat_toWord32]
-== `toWord32`
+Returns `x >= y`.
 
+[source,motoko]
+----
+func greaterOrEqual(x : Nat, y : Nat) : Bool
+----
 
-[listing]
-toWord32 : Nat -> Word32
+[[value.compare]]
+== compare
 
-[#Nat_toWord64]
-== `toWord64`
+Returns the order of `x` and `y`.
 
+[source,motoko]
+----
+func compare(x : Nat, y : Nat) : {#less; #equal; #greater}
+----
 
-[listing]
-toWord64 : Nat -> Word64
+[[value.add]]
+== add
 
-[#Nat_fromNat8]
-== `fromNat8`
+Returns the sum of `x` and `y`, `x + y`.
 
+[source,motoko]
+----
+func add(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-fromNat8 : Nat8  -> Nat
+[[value.sub]]
+== sub
 
-[#Nat_fromNat16]
-== `fromNat16`
+Returns the difference of `x` and `y`, `x - y`.
+Traps on underflow.
 
+[source,motoko]
+----
+func sub(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-fromNat16 : Nat16 -> Nat
+[[value.mul]]
+== mul
 
-[#Nat_fromNat32]
-== `fromNat32`
+Returns the product of `x` and `y`, `x * y`.
 
+[source,motoko]
+----
+func mul(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-fromNat32 : Nat32 -> Nat
+[[value.div]]
+== div
 
-[#Nat_fromNat64]
-== `fromNat64`
+Returns the division of `x` by `y`, `x / y`.
+Traps when `y` is zero.
 
+[source,motoko]
+----
+func div(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-fromNat64 : Nat64 -> Nat
+[[value.rem]]
+== rem
 
-[#Nat_toNat8]
-== `toNat8`
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
 
+[source,motoko]
+----
+func rem(x : Nat, y : Nat) : Nat
+----
 
-[listing]
-toNat8 : Nat -> Nat8
+[[value.pow]]
+== pow
 
-[#Nat_toNat16]
-== `toNat16`
+Returns `x` to the power of `y`, `x ** y`.
 
-
-[listing]
-toNat16 : Nat -> Nat16
-
-[#Nat_toNat32]
-== `toNat32`
-
-
-[listing]
-toNat32 : Nat -> Nat32
-
-[#Nat_toNat64]
-== `toNat64`
-
-
-[listing]
-toNat64 : Nat -> Nat64
-
-[#Nat_min]
-== `min`
-
-
-[listing]
-min : (Nat, Nat) -> Nat
-
-[#Nat_max]
-== `max`
-
-
-[listing]
-max : (Nat, Nat) -> Nat
+[source,motoko]
+----
+func pow(x : Nat, y : Nat) : Nat
+----
 
