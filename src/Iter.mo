@@ -20,21 +20,22 @@ module {
   /// ```
   public type Iter<T> = { next : () -> ?T };
 
-  /// Creates an iterator that produces all `Nat`'s from `x` to `y` including
+  /// Creates an iterator that produces all `Nat`s from `x` to `y` including
   /// both of the bounds.
-  /// ```
-  /// let iter = range(1, 3);
-  /// assertEqual(?1, iter.next());
-  /// assertEqual(?2, iter.next());
-  /// assertEqual(?3, iter.next());
-  /// assertEqual(null, iter.next());
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter = Iter.range(1, 3);
+  /// assert(?1 == iter.next());
+  /// assert(?2 == iter.next());
+  /// assert(?3 == iter.next());
+  /// assert(null == iter.next());
   /// ```
   public class range(x : Nat, y : Int) {
     var i = x;
     public func next() : ?Nat { if (i > y) { null } else {let j = i; i += 1; ?j} };
   };
 
-  /// Like [`range`](#value.range) but produces the values in the opposite
+  /// Like <<class.range>> but produces the values in the opposite
   /// order.
   public class revRange(x : Int, y : Int) {
       var i = x;
@@ -43,13 +44,14 @@ module {
 
   /// Calls a function `f` on every value produced by an iterator and discards
   /// the results. If you're looking to keep these results use
-  /// [`map`](#value.map).
-  /// ```
+  /// <<value.map>>.
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
   /// var sum = 0;
-  /// iterate(range(1, 3), func(x : Nat) {
+  /// Iter.iterate<Nat>(Iter.range(1, 3), func(x, _index) {
   ///   sum += x;
   /// });
-  /// assertEquals(6, sum)
+  /// assert(6 == sum)
   /// ```
   public func iterate<A>(
     xs : Iter<A>,
@@ -80,13 +82,14 @@ module {
 
   /// Takes a function and an iterator and returns a new iterator that lazily applies
   /// the function to every element produced by the argument iterator.
-  /// ```
-  /// let iter = range(1, 3);
-  /// let mappedIter = map(iter, func (x : Nat) : Nat { x * 2 });
-  /// assertEqual(?2, mappedIter.next());
-  /// assertEqual(?4, mappedIter.next());
-  /// assertEqual(?6, mappedIter.next());
-  /// assertEqual(null, mappedIter.next());
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter = Iter.range(1, 3);
+  /// let mappedIter = Iter.map(iter, func (x : Nat) : Nat { x * 2 });
+  /// assert(?2 == mappedIter.next());
+  /// assert(?4 == mappedIter.next());
+  /// assert(?6 == mappedIter.next());
+  /// assert(null == mappedIter.next());
   /// ```
   public func map<A, B>(xs : Iter<A>, f : A -> B) : Iter<B> = object {
     public func next() : ?B {
@@ -106,11 +109,12 @@ module {
   };
 
   /// Creates an iterator that produces an infinite sequence of `x`.
-  /// ```
-  /// let iter = make(10);
-  /// assertEquals(?10, iter.next())
-  /// assertEquals(?10, iter.next())
-  /// assertEquals(?10, iter.next())
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter = Iter.make(10);
+  /// assert(?10 == iter.next());
+  /// assert(?10 == iter.next());
+  /// assert(?10 == iter.next());
   /// // ...
   /// ```
   public func make<A>(x : A) : Iter<A> = object {
@@ -120,12 +124,13 @@ module {
   };
 
   /// Creates an iterator that produces the elements of an Array in ascending index order.
-  /// ```
-  /// let iter = fromArray([1, 2, 3]);
-  /// assertEquals(?1, iter.next())
-  /// assertEquals(?2, iter.next())
-  /// assertEquals(?3, iter.next())
-  /// assertEquals(null, iter.next())
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter = Iter.fromArray([1, 2, 3]);
+  /// assert(?1 == iter.next());
+  /// assert(?2 == iter.next());
+  /// assert(?3 == iter.next());
+  /// assert(null == iter.next());
   /// ```
   public func fromArray<A>(xs : [A]) : Iter<A> {
     var ix : Nat = 0;
@@ -143,22 +148,23 @@ module {
     }
   };
 
-  /// Like [`fromArray`](#value.fromArray) but for Arrays with mutable elements.
+  /// Like <<value.fromArray>> but for Arrays with mutable elements.
   /// Captures the elements of the Array at the time the iterator is created, so
   /// further modifications won't be reflected in the iterator.
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
     fromArray<A>(Array.freeze<A>(xs));
   };
 
-  /// Like [`fromArray`](#value.fromArray) but for Lists.
+  /// Like <<value.fromArray>> but for Lists.
   public func fromList<A>(xs : List.List<A>) : Iter<A> {
     List.toArray<A>(xs).vals();
   };
 
   /// Consumes an iterator and collects its produced elements in an Array.
-  /// ```
-  /// let iter = range(1, 3);
-  /// assertEquals([1, 2, 3], toArray(iter));
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter = Iter.range(1, 3);
+  /// assert([1, 2, 3] == Iter.toArray(iter));
   /// ```
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buffer<A>(8);
@@ -166,12 +172,12 @@ module {
     return buffer.toArray()
   };
 
-  /// Like [`toArray`](#value.toArray) but for Arrays with mutable elements.
+  /// Like <<value.toArray>> but for Arrays with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
     Array.thaw<A>(toArray<A>(xs));
   };
 
-  /// Like [`toArray`](#value.toArray) but for Lists.
+  /// Like <<value.toArray>> but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
     var result = List.nil<A>();
     iterate<A>(xs, func (x, _i) {
