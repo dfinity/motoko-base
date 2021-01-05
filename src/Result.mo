@@ -14,7 +14,7 @@ module {
 ///
 /// For example, given a function `createUser(user : User) : Result<Id, String>`
 /// where `String` is an error message we could use it like so:
-/// ```motoko
+/// ```
 /// switch(createUser(myUser)) {
 ///   case #ok(id) Debug.print("Created new user with id: " # id)
 ///   case #err(msg) Debug.print("Failed to create user with the error: " # msg)
@@ -65,7 +65,9 @@ public func compare<Ok, Err>(
 
 /// Allows sequencing of `Result` values and functions that return
 /// `Result`'s themselves.
-/// ```
+/// ```motoko
+/// import Result "mo:base/Result";
+/// type Result<T,E> = Result.Result<T, E>;
 /// func largerThan10(x : Nat) : Result<Nat, Text> =
 ///   if (x > 10) { #ok(x) } else { #err("Not larger than 10.") };
 ///
@@ -73,11 +75,11 @@ public func compare<Ok, Err>(
 ///   if (x < 20) { #ok(x) } else { #err("Not smaller than 20.") };
 ///
 /// func between10And20(x : Nat) : Result<Nat, Text> =
-///   chain(largerThan10(x), smallerThan20)
+///   Result.chain(largerThan10(x), smallerThan20);
 ///
-/// between10And20(15) = #ok(15);
-/// between10And20(9) = #err("Not larger than 10.");
-/// between10And20(21) = #err("Not smaller than 20.");
+/// assert(between10And20(15) == #ok(15));
+/// assert(between10And20(9) == #err("Not larger than 10."));
+/// assert(between10And20(21) == #err("Not smaller than 20."));
 /// ```
 public func chain<R1, R2, Error>(
   x : Result<R1, Error>,
@@ -92,9 +94,10 @@ public func chain<R1, R2, Error>(
 /// Flattens a nested Result.
 ///
 /// ```motoko
-/// assert(flatten<Nat, Text>(#ok(#ok(10))) == #ok(10))
-/// assert(flatten<Nat, Text>(#err("Wrong") == #err("Wrong"))
-/// assert(flatten<Nat, Text>(#ok(#err("Wrong")) == #err("Wrong"))
+/// import Result "mo:base/Result";
+/// assert(Result.flatten<Nat, Text>(#ok(#ok(10))) == #ok(10));
+/// assert(Result.flatten<Nat, Text>(#err("Wrong")) == #err("Wrong"));
+/// assert(Result.flatten<Nat, Text>(#ok(#err("Wrong"))) == #err("Wrong"));
 /// ```
 public func flatten<Ok, Error>(
   result : Result<Result<Ok, Error>, Error>
@@ -129,9 +132,10 @@ public func mapErr<Ok, Error1, Error2>(
 };
 
 /// Create a result from an option, including an error value to handle the `null` case.
-/// ```
-/// fromOption(?(x), e) = #ok(x)
-/// fromOption(null, e) = #err(e)
+/// ```motoko
+/// import Result "mo:base/Result";
+/// assert(Result.fromOption(?42, "err") == #ok(42));
+/// assert(Result.fromOption(null, "err") == #err("err"));
 /// ```
 public func fromOption<R, E>(x : ?R, err : E) : Result<R, E> {
   switch x {
@@ -141,9 +145,10 @@ public func fromOption<R, E>(x : ?R, err : E) : Result<R, E> {
 };
 
 /// Create an option from a result, turning all #err into `null`.
-/// ```
-/// fromOption(#ok(x)) = ?x
-/// fromOption(#err(e)) = null
+/// ```motoko
+/// import Result "mo:base/Result";
+/// assert(Result.toOption(#ok(42)) == ?42);
+/// assert(Result.toOption(#err("err")) == null);
 /// ```
 public func toOption<R, E>(r : Result<R, E>) : ?R {
   switch r {
@@ -155,11 +160,12 @@ public func toOption<R, E>(r : Result<R, E>) : ?R {
 /// Applies a function to a successful value, but discards the result. Use
 /// `iterate` if you're only interested in the side effect `f` produces.
 ///
-/// ```
+/// ```motoko
+/// import Result "mo:base/Result";
 /// var counter : Nat = 0;
-/// iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
+/// Result.iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
 /// assert(counter == 5);
-/// iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
+/// Result.iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
 /// assert(counter == 5);
 /// ```
 public func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ()) {

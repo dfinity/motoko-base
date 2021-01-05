@@ -127,6 +127,9 @@ module {
   /// the first error or an array of successful values.
   ///
   /// ```motoko
+  /// import Array "mo:base/Array";
+  /// import Result "mo:base/Result";
+  /// import Int "mo:base/Int";
   /// func makeNatural(x : Int) : Result.Result<Nat, Text> =
   ///   if (x >= 0) {
   ///     #ok(Int.abs(x))
@@ -134,8 +137,8 @@ module {
   ///     #err(Int.toText(x) # " is not a natural number.")
   ///   };
   ///
-  /// mapResult([0, 1, 2], makeNatural) = #ok([0, 1, 2]);
-  /// mapResult([-1, 0, 1], makeNatural) = #err("-1 is not a natural number.");
+  /// assert(Array.mapResult<Int, Nat, Text>([0, 1, 2], makeNatural) == #ok([0, 1, 2]));
+  /// assert(Array.mapResult([-1, 0, 1], makeNatural) == #err("-1 is not a natural number."));
   /// ```
   public func mapResult<A, R, E>(xs : [A], f : A -> Result.Result<R, E>) : Result.Result<[R], E> {
     let len : Nat = xs.size();
