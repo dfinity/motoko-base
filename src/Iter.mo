@@ -172,12 +172,12 @@ module {
     return buffer.toArray()
   };
 
-  /// Like [`fromArray`](#value.fromArray) but for Arrays with mutable elements.
+  /// Like [`toArray`](#value.toArray) but for Arrays with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
     Array.thaw<A>(toArray<A>(xs));
   };
 
-  /// Like [`fromArray`](#value.fromArray) but for Lists.
+  /// Like [`toArray`](#value.toArray) but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
     var result = List.nil<A>();
     iterate<A>(xs, func (x, _i) {
