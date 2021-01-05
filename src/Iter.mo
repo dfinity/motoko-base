@@ -35,7 +35,7 @@ module {
     public func next() : ?Nat { if (i > y) { null } else {let j = i; i += 1; ?j} };
   };
 
-  /// Like <<class.range>> but produces the values in the opposite
+  /// Like [`range`](#value.range) but produces the values in the opposite
   /// order.
   public class revRange(x : Int, y : Int) {
       var i = x;
@@ -44,7 +44,7 @@ module {
 
   /// Calls a function `f` on every value produced by an iterator and discards
   /// the results. If you're looking to keep these results use
-  /// <<value.map>>.
+  /// [`map`](#value.map).
   /// ```motoko
   /// import Iter "mo:base/Iter";
   /// var sum = 0;
@@ -148,14 +148,14 @@ module {
     }
   };
 
-  /// Like <<value.fromArray>> but for Arrays with mutable elements.
+  /// Like [`fromArray`](#value.fromArray) but for Arrays with mutable elements.
   /// Captures the elements of the Array at the time the iterator is created, so
   /// further modifications won't be reflected in the iterator.
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
     fromArray<A>(Array.freeze<A>(xs));
   };
 
-  /// Like <<value.fromArray>> but for Lists.
+  /// Like [`fromArray`](#value.fromArray) but for Lists.
   public func fromList<A>(xs : List.List<A>) : Iter<A> {
     List.toArray<A>(xs).vals();
   };
@@ -172,12 +172,12 @@ module {
     return buffer.toArray()
   };
 
-  /// Like <<value.toArray>> but for Arrays with mutable elements.
+  /// Like [`fromArray`](#value.fromArray) but for Arrays with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
     Array.thaw<A>(toArray<A>(xs));
   };
 
-  /// Like <<value.toArray>> but for Lists.
+  /// Like [`fromArray`](#value.fromArray) but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
     var result = List.nil<A>();
     iterate<A>(xs, func (x, _i) {
