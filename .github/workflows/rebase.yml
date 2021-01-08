@@ -2,7 +2,7 @@ name: Rebase master to next-moc
 on:
   push:
     branches:
-      - master
+      - rebase
 
 jobs:
   rebase:
