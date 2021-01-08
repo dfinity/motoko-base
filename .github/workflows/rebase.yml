@@ -11,5 +11,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: rebase master to next-moc
         run: |
-          git rebase master next-moc
-          git push --force-with-lease next-moc origin/next-moc
+          git rebase origin/master origin/next-moc
+          git push --force-with-lease origin/next-moc
