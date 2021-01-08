@@ -8,8 +8,8 @@ jobs:
   rebase:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: rebase master to next-moc
-        run: |
-          git rebase origin/master origin/next-moc
-          git push --force-with-lease origin/next-moc
+        uses: DeeDeeG/rebase-github-action@main
+        with:
+          head_branch: next-moc
+          base_ref: master
