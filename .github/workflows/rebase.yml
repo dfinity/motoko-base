@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: peter-evans/rebase@v1
-        with:
-          base: master
-          head: next-moc
+      - name: rebase master to next-moc
+        run: |
+          git rebase master next-moc
+          git push --force-with-lease next-moc origin/next-moc
