@@ -9,9 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Merge master -> next-moc
-        uses: devmasx/merge-branch@v1.3.0
+        uses: devmasx/merge-branch@v1.3.1
         with:
           type: now
           from_branch: master
-          target_branch: next-moc
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          target_branch: rebase
+          github_token: ${{ github.token }}
