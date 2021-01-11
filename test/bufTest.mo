@@ -64,7 +64,7 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
 };
 
 // regression test: buffers with extra space are converted to arrays of the correct length
-{
+do {
   let bigLen = 100;
   let len = 3;
   let c = B.Buffer<Nat>(bigLen);
@@ -81,7 +81,7 @@ func natIterEq(a:I.Iter<Nat>, b:I.Iter<Nat>) : Bool {
 };
 
 // regression test: initially-empty buffers grow, element-by-element
-{
+do {
   let c = B.Buffer<Nat>(0);
   assert (c.toArray().size() == 0);
   assert (c.toVarArray().size() == 0);

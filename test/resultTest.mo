@@ -43,7 +43,7 @@ let flatten = Suite.suite("flatten", [
   ),
 ]);
 
-let iterate = Suite.suite("iterate", {
+let iterate = Suite.suite("iterate", do {
   var tests : [Suite.Suite] = [];
   var counter : Nat = 0;
   Result.iterate(makeNatural(5), func (x : Nat) { counter += x });

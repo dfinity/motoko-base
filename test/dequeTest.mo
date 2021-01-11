@@ -4,7 +4,7 @@ import O "mo:base/Option";
 import D "mo:base/Debug";
 
 // test for Queue
-{
+do {
     var l = Deque.empty<Nat>();
     for (i in Iter.range(0, 100)) {
         l := Deque.pushBack(l, i);
@@ -22,8 +22,9 @@ import D "mo:base/Debug";
     };
     O.assertNull(Deque.peekFront<Nat>(l));
 };
+
 // test for Deque
-{
+do {
     var l = Deque.empty<Int>();
     for (i in Iter.range(1, 100)) {
         l := Deque.pushFront(l, -i);

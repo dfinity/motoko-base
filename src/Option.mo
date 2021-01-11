@@ -12,13 +12,13 @@
 ///   case null 0;
 ///   case (?int) int;
 /// };
-/// assertEquals(int1OrZero, 42);
+/// assert(int1orZero == 42);
 ///
 /// let int2orZero : Int = switch(optionalInt2) {
 ///   case null 0;
 ///   case (?int) int;
 /// };
-/// assertEquals(int2OrZero, 0);
+/// assert(int2orZero == 0);
 /// ```
 ///
 /// The functions in this module capture some common operations when working
@@ -45,9 +45,10 @@ public func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B =
   };
 
 /// Applies a function to the wrapped value. `null`'s are left untouched.
-/// ```
-/// map(?(x), f) = ?(f(x))
-/// map(null, f) = null
+/// ```motoko
+/// import Option "mo:base/Option";
+/// assert(Option.map<Nat, Nat>(?(42), func x = x+1) == ?(43));
+/// assert(Option.map<Nat, Nat>(null, func x = x+1) == null);
 /// ```
 public func map<A, B>(x : ?A, f : A -> B) : ?B =
   switch x {
@@ -58,11 +59,12 @@ public func map<A, B>(x : ?A, f : A -> B) : ?B =
 /// Applies a function to the wrapped value, but discards the result. Use
 /// `iterate` if you're only interested in the side effect `f` produces.
 ///
-/// ```
+/// ```motoko
+/// import Option "mo:base/Option";
 /// var counter : Nat = 0;
-/// iterate(?(5), func (x : Nat) { counter += x });
+/// Option.iterate(?(5), func (x : Nat) { counter += x });
 /// assert(counter == 5);
-/// iterate(null, func (x : Nat) { counter += x });
+/// Option.iterate(null, func (x : Nat) { counter += x });
 /// assert(counter == 5);
 /// ```
 public func iterate<A>(x : ?A, f : A -> ()) =
@@ -100,10 +102,11 @@ public func chain<A, B>(x : ?A, f : A -> ?B) : ?B {
 };
 
 /// Given an optional optional value, removes one layer of optionality.
-/// ```
-/// flatten(?(?(42)))) = ?(42)
-/// flatten(?(null))) = null
-/// flatten(null)) = null
+/// ```motoko
+/// import Option "mo:base/Option";
+/// assert(Option.flatten(?(?(42))) == ?(42));
+/// assert(Option.flatten(?(null)) == null);
+/// assert(Option.flatten(null) == null);
 /// ```
 public func flatten<A>(x : ??A) : ?A {
   chain<?A, A>(x, func (x_ : ?A) : ?A {
@@ -112,8 +115,9 @@ public func flatten<A>(x : ??A) : ?A {
 };
 
 /// Creates an optional value from a definite value.
-/// ```
-/// make(42) = ?(42)
+/// ```motoko
+/// import Option "mo:base/Option";
+/// assert(Option.make(42) == ?(42));
 /// ```
 public func make<A>(x: A) : ?A = ?x;
 

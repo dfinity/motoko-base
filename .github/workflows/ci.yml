@@ -22,9 +22,9 @@ jobs:
         nix-env --install graphviz --file '<nixpkgs>'
     - name: "install Motoko binaries"
       run: |
-       wget https://download.dfinity.systems/motoko/0.4.5/x86_64-linux/motoko-0.4.5.tar.gz
+       wget https://download.dfinity.systems/motoko/0.5.3/x86_64-linux/motoko-0.5.3.tar.gz
        mkdir -p /home/runner/bin
-       tar -xf motoko-0.4.5.tar.gz -C /home/runner/bin
+       tar -xf motoko-0.5.3.tar.gz -C /home/runner/bin
        echo "/home/runner/bin" >> $GITHUB_PATH
     - name: "install vessel"
       run: |
