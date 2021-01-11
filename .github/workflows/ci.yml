@@ -36,7 +36,7 @@ jobs:
       run: python3 doc/module_graph.py | dot -Tsvg > module_graph.svg && file module_graph.svg
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
-      run: pushd doc && ./make_docs.sh && popd
+      run: pushd doc && rm .gitignore && ./make_docs.sh && popd
     - name: Upload docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
       # if: env.HEAD_TAG != '' && github.ref == 'refs/heads/master'
