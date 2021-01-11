@@ -11,6 +11,7 @@
 ** xref:./HashMap.adoc[HashMap]
 ** xref:./Heap.adoc[Heap]
 ** xref:./Int.adoc[Int]
+** xref:./Int8.adoc[Int8]
 ** xref:./Iter.adoc[Iter]
 ** xref:./List.adoc[List]
 ** xref:./Nat.adoc[Nat]
