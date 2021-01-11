@@ -1,0 +1,55 @@
+[[module.Order]]
+= Order
+
+Order
+
+[[type.Order]]
+== Order
+
+[source.no-repl,motoko]
+----
+type Order = {#less; #equal; #greater}
+----
+
+A type to represent an order.
+
+[[value.isLess]]
+== isLess
+
+[source.no-repl,motoko]
+----
+func isLess(order : Order) : Bool
+----
+
+Check if an order is #less.
+
+[[value.isEqual]]
+== isEqual
+
+[source.no-repl,motoko]
+----
+func isEqual(order : Order) : Bool
+----
+
+Check if an order is #equal.
+
+[[value.isGreater]]
+== isGreater
+
+[source.no-repl,motoko]
+----
+func isGreater(order : Order) : Bool
+----
+
+Check if an order is #greater.
+
+[[value.equal]]
+== equal
+
+[source.no-repl,motoko]
+----
+func equal(o1 : Order, o2 : Order) : Bool
+----
+
+Returns true if only if  `o1` and `o2` are the same ordering.
+

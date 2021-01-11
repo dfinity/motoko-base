@@ -1,0 +1,369 @@
+[[module.Word16]]
+= Word16
+
+16-bit binary unsigned integers with modular arithmetic
+
+Most operations are available as built-in operators (e.g. `1 | 1`).
+
+[[value.toNat]]
+== toNat
+
+[source.no-repl,motoko]
+----
+let toNat : Word16 -> Nat
+----
+
+Conversion.
+
+[[value.fromNat]]
+== fromNat
+
+[source.no-repl,motoko]
+----
+let fromNat : Nat -> Word16
+----
+
+Conversion. Wraps around.
+
+[[value.toInt]]
+== toInt
+
+[source.no-repl,motoko]
+----
+func toInt(x : Word16) : Int
+----
+
+Conversion. Return a value between `-2^15` and `2^15-1`
+
+[[value.fromInt]]
+== fromInt
+
+[source.no-repl,motoko]
+----
+let fromInt : (x : Int) -> Word16
+----
+
+Conversion. Returns `x mod 2^16`.
+
+[[value.toText]]
+== toText
+
+[source.no-repl,motoko]
+----
+func toText(x : Word16) : Text
+----
+
+Returns the Text representation of `x`.
+
+[[value.min]]
+== min
+
+[source.no-repl,motoko]
+----
+func min(x : Word16, y : Word16) : Word16
+----
+
+Returns the minimum of `x` and `y`.
+
+[[value.max]]
+== max
+
+[source.no-repl,motoko]
+----
+func max(x : Word16, y : Word16) : Word16
+----
+
+Returns the maximum of `x` and `y`.
+
+[[value.equal]]
+== equal
+
+[source.no-repl,motoko]
+----
+func equal(x : Word16, y : Word16) : Bool
+----
+
+Returns `x == y`.
+
+[[value.notEqual]]
+== notEqual
+
+[source.no-repl,motoko]
+----
+func notEqual(x : Word16, y : Word16) : Bool
+----
+
+Returns `x != y`.
+
+[[value.less]]
+== less
+
+[source.no-repl,motoko]
+----
+func less(x : Word16, y : Word16) : Bool
+----
+
+Returns `x < y`.
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko]
+----
+func lessOrEqual(x : Word16, y : Word16) : Bool
+----
+
+Returns `x <= y`.
+
+[[value.greater]]
+== greater
+
+[source.no-repl,motoko]
+----
+func greater(x : Word16, y : Word16) : Bool
+----
+
+Returns `x > y`.
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko]
+----
+func greaterOrEqual(x : Word16, y : Word16) : Bool
+----
+
+Returns `x >= y`.
+
+[[value.compare]]
+== compare
+
+[source.no-repl,motoko]
+----
+func compare(x : Word16, y : Word16) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+
+[[value.add]]
+== add
+
+[source.no-repl,motoko]
+----
+func add(x : Word16, y : Word16) : Word16
+----
+
+Returns the sum of `x` and `y`, `(x + y) mod 2^16`.
+
+[[value.sub]]
+== sub
+
+[source.no-repl,motoko]
+----
+func sub(x : Word16, y : Word16) : Word16
+----
+
+Returns the difference of `x` and `y`, `(2^16 + x - y) mod 2^16`.
+
+[[value.mul]]
+== mul
+
+[source.no-repl,motoko]
+----
+func mul(x : Word16, y : Word16) : Word16
+----
+
+Returns the product of `x` and `y`, `(x * y) mod 2^16`.
+
+[[value.div]]
+== div
+
+[source.no-repl,motoko]
+----
+func div(x : Word16, y : Word16) : Word16
+----
+
+Returns the division of `x` by `y`, `x / y`.
+Traps when `y` is zero.
+
+[[value.rem]]
+== rem
+
+[source.no-repl,motoko]
+----
+func rem(x : Word16, y : Word16) : Word16
+----
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[[value.pow]]
+== pow
+
+[source.no-repl,motoko]
+----
+func pow(x : Word16, y : Word16) : Word16
+----
+
+Returns `x` to the power of `y`, `(x ** y) mod 2^16`.
+
+[[value.bitnot]]
+== bitnot
+
+[source.no-repl,motoko]
+----
+func bitnot(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise negation of `x`, `^x`.
+
+[[value.bitand]]
+== bitand
+
+[source.no-repl,motoko]
+----
+func bitand(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise and of `x` and `y`, `x & y`.
+
+[[value.bitor]]
+== bitor
+
+[source.no-repl,motoko]
+----
+func bitor(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise or of `x` and `y`, `x \| y`.
+
+[[value.bitxor]]
+== bitxor
+
+[source.no-repl,motoko]
+----
+func bitxor(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+
+[[value.bitshiftLeft]]
+== bitshiftLeft
+
+[source.no-repl,motoko]
+----
+func bitshiftLeft(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise shift left of `x` by `y`, `x << y`.
+
+[[value.bitshiftRight]]
+== bitshiftRight
+
+[source.no-repl,motoko]
+----
+func bitshiftRight(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise shift right of `x` by `y`, `x >> y`.
+
+[[value.bitshiftRightSigned]]
+== bitshiftRightSigned
+
+[source.no-repl,motoko]
+----
+func bitshiftRightSigned(x : Word16, y : Word16) : Word16
+----
+
+Returns the signed shift right of `x` by `y`, `x +>> y`.
+
+[[value.bitrotLeft]]
+== bitrotLeft
+
+[source.no-repl,motoko]
+----
+func bitrotLeft(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+
+[[value.bitrotRight]]
+== bitrotRight
+
+[source.no-repl,motoko]
+----
+func bitrotRight(x : Word16, y : Word16) : Word16
+----
+
+Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+
+[[value.bittest]]
+== bittest
+
+[source.no-repl,motoko]
+----
+func bittest(x : Word16, p : Nat) : Bool
+----
+
+Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
+
+[[value.bitset]]
+== bitset
+
+[source.no-repl,motoko]
+----
+func bitset(x : Word16, p : Nat) : Word16
+----
+
+Returns the value of setting bit `p mod 16` in `x` to `1`.
+
+[[value.bitclear]]
+== bitclear
+
+[source.no-repl,motoko]
+----
+func bitclear(x : Word16, p : Nat) : Word16
+----
+
+Returns the value of clearing bit `p mod 16` in `x` to `0`.
+
+[[value.bitflip]]
+== bitflip
+
+[source.no-repl,motoko]
+----
+func bitflip(x : Word16, p : Nat) : Word16
+----
+
+Returns the value of flipping bit `p mod 16` in `x`.
+
+[[value.bitcountNonZero]]
+== bitcountNonZero
+
+[source.no-repl,motoko]
+----
+let bitcountNonZero : (x : Word16) -> Word16
+----
+
+Returns the count of non-zero bits in `x`.
+
+[[value.bitcountLeadingZero]]
+== bitcountLeadingZero
+
+[source.no-repl,motoko]
+----
+let bitcountLeadingZero : (x : Word16) -> Word16
+----
+
+Returns the count of leading zero bits in `x`.
+
+[[value.bitcountTrailingZero]]
+== bitcountTrailingZero
+
+[source.no-repl,motoko]
+----
+let bitcountTrailingZero : (x : Word16) -> Word16
+----
+
+Returns the count of trailing zero bits in `x`.
+

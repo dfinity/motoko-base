@@ -1,0 +1,95 @@
+[[module.Deque]]
+= Deque
+
+Functions for persistent, double-ended queues.
+
+[[type.Deque]]
+== Deque
+
+[source.no-repl,motoko]
+----
+type Deque<T> = (List<T>, List<T>)
+----
+
+Double-ended queue
+
+[[value.empty]]
+== empty
+
+[source.no-repl,motoko]
+----
+func empty<T>() : Deque<T>
+----
+
+Empty queue
+
+[[value.isEmpty]]
+== isEmpty
+
+[source.no-repl,motoko]
+----
+func isEmpty<T>(q : Deque<T>) : Bool
+----
+
+True when the queue is empty
+
+[[value.pushFront]]
+== pushFront
+
+[source.no-repl,motoko]
+----
+func pushFront<T>(q : Deque<T>, x : T) : Deque<T>
+----
+
+Insert a new element on the front end of the queue
+
+[[value.peekFront]]
+== peekFront
+
+[source.no-repl,motoko]
+----
+func peekFront<T>(q : Deque<T>) : ?T
+----
+
+Inspect the (optional) first element on the front end of the queue
+
+[[value.popFront]]
+== popFront
+
+[source.no-repl,motoko]
+----
+func popFront<T>(q : Deque<T>) : ?(T, Deque<T>)
+----
+
+Remove the first element on the front end of the queue; Returns null when empty.
+
+[[value.pushBack]]
+== pushBack
+
+[source.no-repl,motoko]
+----
+func pushBack<T>(q : Deque<T>, x : T) : Deque<T>
+----
+
+Insert a new element on the back end of the queue
+
+[[value.peekBack]]
+== peekBack
+
+[source.no-repl,motoko]
+----
+func peekBack<T>(q : Deque<T>) : ?T
+----
+
+Inspect the (optional) first element on the back end of the queue
+
+[[value.popBack]]
+== popBack
+
+[source.no-repl,motoko]
+----
+func popBack<T>(q : Deque<T>) : ?(Deque<T>, T)
+----
+
+Remove the first element on the back end of the queue; Returns null when empty.
+

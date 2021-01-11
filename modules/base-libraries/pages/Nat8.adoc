@@ -1,0 +1,189 @@
+[[module.Nat8]]
+= Nat8
+
+8-bit unsigned integers with checked arithmetic
+
+Most operations are available as built-in operators (e.g. `1 + 1`).
+
+[[value.toNat]]
+== toNat
+
+[source.no-repl,motoko]
+----
+let toNat : Nat8 -> Nat
+----
+
+Conversion.
+
+[[value.fromNat]]
+== fromNat
+
+[source.no-repl,motoko]
+----
+let fromNat : Nat -> Nat8
+----
+
+Conversion. Traps on overflow/underflow.
+
+[[value.toText]]
+== toText
+
+[source.no-repl,motoko]
+----
+func toText(x : Nat8) : Text
+----
+
+Returns the Text representation of `x`.
+
+[[value.min]]
+== min
+
+[source.no-repl,motoko]
+----
+func min(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the minimum of `x` and `y`.
+
+[[value.max]]
+== max
+
+[source.no-repl,motoko]
+----
+func max(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the maximum of `x` and `y`.
+
+[[value.equal]]
+== equal
+
+[source.no-repl,motoko]
+----
+func equal(x : Nat8, y : Nat8) : Bool
+----
+
+Returns `x == y`.
+
+[[value.notEqual]]
+== notEqual
+
+[source.no-repl,motoko]
+----
+func notEqual(x : Nat8, y : Nat8) : Bool
+----
+
+Returns `x != y`.
+
+[[value.less]]
+== less
+
+[source.no-repl,motoko]
+----
+func less(x : Nat8, y : Nat8) : Bool
+----
+
+Returns `x < y`.
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko]
+----
+func lessOrEqual(x : Nat8, y : Nat8) : Bool
+----
+
+Returns `x <= y`.
+
+[[value.greater]]
+== greater
+
+[source.no-repl,motoko]
+----
+func greater(x : Nat8, y : Nat8) : Bool
+----
+
+Returns `x > y`.
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko]
+----
+func greaterOrEqual(x : Nat8, y : Nat8) : Bool
+----
+
+Returns `x >= y`.
+
+[[value.compare]]
+== compare
+
+[source.no-repl,motoko]
+----
+func compare(x : Nat8, y : Nat8) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+
+[[value.add]]
+== add
+
+[source.no-repl,motoko]
+----
+func add(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+
+[[value.sub]]
+== sub
+
+[source.no-repl,motoko]
+----
+func sub(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+
+[[value.mul]]
+== mul
+
+[source.no-repl,motoko]
+----
+func mul(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+
+[[value.div]]
+== div
+
+[source.no-repl,motoko]
+----
+func div(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
+
+[[value.rem]]
+== rem
+
+[source.no-repl,motoko]
+----
+func rem(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[[value.pow]]
+== pow
+
+[source.no-repl,motoko]
+----
+func pow(x : Nat8, y : Nat8) : Nat8
+----
+
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+

@@ -1,0 +1,135 @@
+[[module.TrieMap]]
+= TrieMap
+
+Functional map
+
+This module defines an imperative hash map, with a general key and value type.  It matches the interface and semantics of HashMap.  Unlike HashMap, its internal representation uses a functional hash trie (see `trie.mo`).
+
+This class permits us to compare the performance of two representations of hash-based maps, where tries (as binary trees) permit more efficient, constant-time, cloning compared with ordinary tables.  This property is nice for supporting transactional workflows where map mutations may be provisional, and where we may expect some mutations to be uncommitted, or to "roll back".
+
+For now, this class does not permit a direct `clone` operation (neither does `HashMap`), but it does permit creating iterators via `iter()`.  The effect is similar: Each iterator costs `O(1)` to create, but represents a fixed view of the mapping that does not interfere with mutations (it will _not_ view subsequent insertions or mutations, if any).
+
+[[class.TrieMap]]
+== TrieMap
+
+[source.no-repl,motoko]
+----
+class TrieMap<K, V>(isEq : (K, K) -> Bool, hashOf : K -> Hash.Hash)
+----
+
+
+
+
+
+[[value.size]]
+=== size
+
+[source.no-repl,motoko]
+----
+func size() : Nat
+----
+
+Returns the number of entries in the map.
+
+[[value.put]]
+=== put
+
+[source.no-repl,motoko]
+----
+func put(k : K, v : V)
+----
+
+Associate a key and value, overwriting any prior association for the key.
+
+[[value.replace]]
+=== replace
+
+[source.no-repl,motoko]
+----
+func replace(k : K, v : V) : ?V
+----
+
+[`Put`](#value.put) the key and value, _and_ return the (optional) prior value for the key.
+
+[[value.get]]
+=== get
+
+[source.no-repl,motoko]
+----
+func get(k : K) : ?V
+----
+
+Get the (optional) value associated with the given key.
+
+[[value.delete]]
+=== delete
+
+[source.no-repl,motoko]
+----
+func delete(k : K)
+----
+
+Delete the (optional) value associated with the given key.
+
+[[value.remove]]
+=== remove
+
+[source.no-repl,motoko]
+----
+func remove(k : K) : ?V
+----
+
+[`Delete`](#value.delete) and return the (optional) value associated with the given key.
+
+[[value.entries]]
+=== entries
+
+[source.no-repl,motoko]
+----
+func entries() : I.Iter<(K, V)>
+----
+
+Returns an [`Iter`](Iter.html#type.Iter) over the entries.
+
+Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
+
+[[value.clone]]
+== clone
+
+[source.no-repl,motoko]
+----
+func clone<K, V>(h : TrieMap<K, V>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash) : TrieMap<K, V>
+----
+
+Clone the map, given its key operations.
+
+[[value.fromEntries]]
+== fromEntries
+
+[source.no-repl,motoko]
+----
+func fromEntries<K, V>(entries : I.Iter<(K, V)>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash) : TrieMap<K, V>
+----
+
+Clone an iterator of key-value pairs.
+
+[[value.map]]
+== map
+
+[source.no-repl,motoko]
+----
+func map<K, V1, V2>(h : TrieMap<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash, mapFn : (K, V1) -> V2) : TrieMap<K, V2>
+----
+
+Transform (map) the values of a map, retaining its keys.
+
+[[value.mapFilter]]
+== mapFilter
+
+[source.no-repl,motoko]
+----
+func mapFilter<K, V1, V2>(h : TrieMap<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash, mapFn : (K, V1) -> ?V2) : TrieMap<K, V2>
+----
+
+Transform and filter the values of a map, retaining its keys.
+

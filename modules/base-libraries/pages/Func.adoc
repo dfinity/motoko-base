@@ -1,0 +1,56 @@
+[[module.Func]]
+= Func
+
+Functions on functions
+
+The functions in this module are rather useless on their own but they're
+commonly used when programming in a functional style with higher-order
+functions.
+
+[[value.compose]]
+== compose
+
+[source.no-repl,motoko]
+----
+func compose<A, B, C>(f : B -> C, g : A -> B) : A -> C
+----
+
+The composition of two functions `f` and `g` is a function that applies `g` and then `f`.
+
+```
+compose(f, g)(x) = f(g(x))
+```
+
+[[value.identity]]
+== identity
+
+[source.no-repl,motoko]
+----
+func identity<A>(x : A) : A
+----
+
+The `identity` function returns its argument.
+```motoko
+import Func "mo:base/Func";
+assert(Func.identity(10) == 10);
+assert(Func.identity(true) == true);
+```
+
+[[value.const]]
+== const
+
+[source.no-repl,motoko]
+----
+func const<A, B>(x : A) : B -> A
+----
+
+The const function is a _curried_ function that accepts an argument `x`,
+and then returns a function that discards its argument and always returns
+the `x`.
+
+```motoko
+import Func "mo:base/Func";
+assert(Func.const<Nat, Text>(10)("hello") == 10);
+assert(Func.const<Bool, Nat>(true)(20) == true);
+```
+

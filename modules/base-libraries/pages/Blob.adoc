@@ -1,0 +1,85 @@
+[[module.Blob]]
+= Blob
+
+Binary blobs
+
+[[value.hash]]
+== hash
+
+[source.no-repl,motoko]
+----
+let hash : Blob -> Word32
+----
+
+
+
+[[value.equal]]
+== equal
+
+[source.no-repl,motoko]
+----
+func equal(x : Blob, y : Blob) : Bool
+----
+
+Returns `x == y`.
+
+[[value.notEqual]]
+== notEqual
+
+[source.no-repl,motoko]
+----
+func notEqual(x : Blob, y : Blob) : Bool
+----
+
+Returns `x != y`.
+
+[[value.less]]
+== less
+
+[source.no-repl,motoko]
+----
+func less(x : Blob, y : Blob) : Bool
+----
+
+Returns `x < y`.
+
+[[value.lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko]
+----
+func lessOrEqual(x : Blob, y : Blob) : Bool
+----
+
+Returns `x <= y`.
+
+[[value.greater]]
+== greater
+
+[source.no-repl,motoko]
+----
+func greater(x : Blob, y : Blob) : Bool
+----
+
+Returns `x > y`.
+
+[[value.greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko]
+----
+func greaterOrEqual(x : Blob, y : Blob) : Bool
+----
+
+Returns `x >= y`.
+
+[[value.compare]]
+== compare
+
+[source.no-repl,motoko]
+----
+func compare(x : Blob, y : Blob) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+
