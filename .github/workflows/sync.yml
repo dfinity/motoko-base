@@ -13,5 +13,5 @@ jobs:
         with:
           type: now
           from_branch: master
-          target_branch: rebase
+          target_branch: next-moc
           github_token: ${{ github.token }}
