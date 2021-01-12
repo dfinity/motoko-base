@@ -40,6 +40,7 @@ jobs:
         pushd doc
         mo-doc --source ../src --output modules/base-libraries/pages/ --format adoc
         popd
+        python3 doc/module_nav.py > doc/modules/lib-nav.adoc
     - name: Upload docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
       # if: env.HEAD_TAG != '' && github.ref == 'refs/heads/master'
