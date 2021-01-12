@@ -135,4 +135,21 @@ module {
   /// Returns the count of trailing zero bits in `x`.
   public let bitcountTrailingZero : (x : Word8) -> Word8 = Prim.ctzWord8;
 
+  /// Returns the hexadecimal Text representation of `x`.
+  public func toHex(x : Word8) : Text {
+    func nibbleToHex(w : Word8) : Text {
+      assert(less(w, 16));
+      switch (w) {
+        case 10 "a";
+        case 11 "b";
+        case 12 "c";
+        case 13 "d";
+        case 14 "e";
+        case 15 "f";
+        case _ toText(w);
+      }
+    };
+    nibbleToHex(x / 2**4) # nibbleToHex(x % 2**4)
+  };
+
 }

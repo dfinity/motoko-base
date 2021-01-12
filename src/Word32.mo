@@ -3,6 +3,7 @@
 /// Most operations are available as built-in operators (e.g. `1 | 1`).
 
 import Nat "Nat";
+import Word16 "Word16";
 import Prim "mo:prim";
 
 module {
@@ -134,5 +135,10 @@ module {
 
   /// Returns the count of trailing zero bits in `x`.
   public let bitcountTrailingZero : (x : Word32) -> Word32 = Prim.ctzWord32;
+
+  /// Returns the hexadecimal Text representation of `x`.
+  public func toHex(x : Word32) : Text {
+    Word16.toHex(Word16.fromNat(toNat(x / 2**16))) # Word16.toHex(Word16.fromNat(toNat(x % 2**16)))
+  };
 
 }
