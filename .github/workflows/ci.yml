@@ -10,7 +10,7 @@ jobs:
     if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Check if Git tag exists
       run: echo "name=HEAD_TAG::$(git tag --points-at HEAD)" >> $GITHUB_ENV
     - uses: cachix/install-nix-action@v12
@@ -22,9 +22,9 @@ jobs:
         nix-env --install graphviz --file '<nixpkgs>'
     - name: "install Motoko binaries"
       run: |
-       wget https://download.dfinity.systems/motoko/0.5.3/x86_64-linux/motoko-0.5.3.tar.gz
+       wget https://download.dfinity.systems/motoko/0.5.4/x86_64-linux/motoko-0.5.4.tar.gz
        mkdir -p /home/runner/bin
-       tar -xf motoko-0.5.3.tar.gz -C /home/runner/bin
+       tar -xf motoko-0.5.4.tar.gz -C /home/runner/bin
        echo "/home/runner/bin" >> $GITHUB_PATH
     - name: "install vessel"
       run: |
@@ -33,14 +33,18 @@ jobs:
     - name: "test"
       run: make -C test
     - name: "graph dependencies"
-      run: python3 doc/module_graph.py | dot -Tsvg > module_graph.svg && file module_graph.svg
+      run: python3 doc/module_graph.py | dot -Tsvg > doc/module_graph.svg && file doc/module_graph.svg
     - name: "docs"
       if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
-      run: pushd doc && ./make_docs.sh && popd
+      run: |
+        pushd doc
+        mo-doc --source ../src --output modules/base-libraries/pages/ --format adoc
+        popd
+        python3 doc/module_nav.py > doc/modules/lib-nav.adoc
     - name: Upload docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
       if: env.HEAD_TAG != '' && github.ref == 'refs/heads/master'
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: doc/_out/html/
+        BRANCH: doc-pages
+        FOLDER: doc/
