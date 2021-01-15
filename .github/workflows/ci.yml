@@ -40,10 +40,10 @@ jobs:
         pushd doc
         mo-doc --source ../src --output modules/base-libraries/pages/ --format adoc
         popd
-        python3 doc/module_nav.py > doc/modules/lib-nav.adoc
+        python3 doc/module_nav.py > doc/modules/base-libraries/lib-nav.adoc
     - name: Upload docs
       uses: JamesIves/github-pages-deploy-action@releases/v3
-      if: github.ref == 'refs/heads/master'
+      #if: github.ref == 'refs/heads/master'
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: doc-pages
