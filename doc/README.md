@@ -10,3 +10,8 @@ Run `./make_docs.sh`. The output is in `_out/(html|adoc)`. For accessing the `HT
 ## Generating a DOT graph for the module structure
 
 Requires Python3 and Graphviz, then follow the instructions in `module_graph.py`.
+
+## Deploy to SDK website
+
+Library docs are auto-generated to [`doc-pages`](https://github.com/dfinity/motoko-base/tree/doc-pages) branch for every PR merged in `master`.
+The SDK playbook fetches the docs from `doc-pages` for each release.
