@@ -29,4 +29,4 @@ import Types "./types";
 
 You can find source code and documentation for {proglang} base modules in the link:https://github.com/dfinity/motoko-base[motoko-base] open source repository.
 
-You can also search for documentation by using Search in the link:sdk.dfinity.org[Developer Center].
+You can also search for documentation by using Search in any page in the Developer Center.
