@@ -28,5 +28,6 @@ import Types "./types";
 == Viewing the base library modules
 
 You can find source code and documentation for {proglang} base modules in the link:https://github.com/dfinity/motoko-base[motoko-base] open source repository.
+There are instructions in the repository for generating a local copy of the current documentation for the {proglang} base library.
 
-You can also search for documentation by using Search in the link:sdk.dfinity.org[Developer Center].
+You can also search for documentation by using Search in any page of the Developer Center.
