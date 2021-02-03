@@ -11,6 +11,15 @@ Functions on Arrays
 func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool
 ----
 
+[[value.size]]
+== zise
+
+[source.no-repl,motoko]
+----
+func size() : Nat32
+----
+
+
 Test if two arrays contain equal values
 
 [[value.append]]
