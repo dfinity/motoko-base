@@ -51,7 +51,25 @@ Returns the text value containing the sequence of characters in `cs`.
 func size(t : Text) : Nat
 ----
 
-Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
+[[value.toLower]]
+== Lowercase
+
+[source.no-repl,motoko]
+----
+func toLower(t : Text) : Text
+----
+
+Returns the lowercase of a text based on every char conversion.
+
+[[value.toUpper]]
+== Lowercase
+
+[source.no-repl,motoko]
+----
+func toUpper(t : Text) : Text
+----
+
+Returns the uppercase of a text based on every char conversion.
 
 [[value.hash]]
 == hash
