@@ -34,32 +34,32 @@ module {
   /// guaranteed only when the supplied entropy is originally obtained
   /// by the `blob()` call, and is never reused.
   public class Finite(entropy : Blob) {
-    let it : I.Iter<Word8> = entropy.bytes();
+    let it : I.Iter<Nat8> = entropy.bytes();
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     /// Consumes 1 byte of entropy.
     public func byte() : ?Nat8 {
-      Option.map(it.next(), Prim.word8ToNat8)
+      it.next()
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
     let bit : I.Iter<Bool> = object {
-      var mask = 0x80 : Word8;
-      var byte = 0x00 : Word8;
+      var mask = 0x80 : Nat8;
+      var byte = 0x00 : Nat8;
       public func next() : ?Bool {
-        if (0 : Word8 == mask) {
+        if (0 : Nat8 == mask) {
           switch (it.next()) {
             case null { null };
             case (?w) {
               byte := w;
               mask := 0x40;
-              ?(0 : Word8 != byte & (0x80 : Word8))
+              ?(0 : Nat8 != byte & (0x80 : Nat8))
             }
           }
         } else {
           let m = mask;
-          mask >>= (1 : Word8);
-          ?(0 : Word8 != byte & m)
+          mask >>= (1 : Nat8);
+          ?(0 : Nat8 != byte & m)
         }
       }
     };
@@ -77,13 +77,13 @@ module {
       var acc : Nat = 0;
       for (i in it) {
         if (8 : Nat8 <= pp)
-        { acc := acc * 256 + Prim.word8ToNat(i) }
+        { acc := acc * 256 + Prim.nat8ToNat(i) }
         else if (0 : Nat8 == pp)
         { return ?acc }
         else {
-          acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8(pp));
-          let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
-          return ?(acc + Prim.word8ToNat(i & mask))
+          acc *= Prim.nat8ToNat(1 << pp);
+          let mask : Nat8 = 0xff >> (8 - pp);
+          return ?(acc + Prim.nat8ToNat(i & mask))
         };
         pp -= 8
       };
@@ -94,16 +94,16 @@ module {
     /// Consumes ⌈p/8⌉ bytes of entropy.
     public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
-      var acc : Word8 = 0;
+      var acc : Nat8 = 0;
       for (i in it) {
         if (8 : Nat8 <= nn)
-        { acc += Prim.popcntWord8(i) }
+        { acc += Prim.popcntNat8(i) }
         else if (0 : Nat8 == nn)
-        { return ?Prim.word8ToNat8(acc) }
+        { return ?acc }
         else {
-          let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
-          let residue = Prim.popcntWord8(i & mask);
-          return ?Prim.word8ToNat8(acc + residue)
+          let mask : Nat8 = 0xff << (8 - nn);
+          let residue = Prim.popcntNat8(i & mask);
+          return ?(acc +% residue)
         };
         nn -= 8
       };
@@ -117,7 +117,7 @@ module {
   /// Seed blob must contain at least a byte.
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.bytes().next()) {
-      case (?w) { Prim.word8ToNat8(w) };
+      case (?w) { w };
       case _ { P.unreachable() };
     }
   };
@@ -126,7 +126,7 @@ module {
   /// Seed blob must contain at least a byte.
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.bytes().next()) {
-      case (?w) { w > (127 : Word8) };
+      case (?w) { w > (127 : Nat8) };
       case _ { P.unreachable() };
     }
   };
@@ -141,18 +141,18 @@ module {
   };
 
   // internal worker method, expects iterator with sufficient supply
-  func rangeIter(p : Nat8, it : I.Iter<Word8>) : Nat {
+  func rangeIter(p : Nat8, it : I.Iter<Nat8>) : Nat {
     var pp = p;
     var acc : Nat = 0;
     for (i in it) {
       if (8 : Nat8 <= pp)
-      { acc := acc * 256 + Prim.word8ToNat(i) }
+      { acc := acc * 256 + Prim.nat8ToNat(i) }
       else if (0 : Nat8 == pp)
       { return acc }
       else {
-        acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8(pp));
-        let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
-        return acc + Prim.word8ToNat(i & mask)
+        acc *= Prim.nat8ToNat(1 << pp);
+        let mask : Nat8 = 0xff >> (8 - pp);
+        return acc + Prim.nat8ToNat(i & mask)
       };
       pp -= 8
     };
@@ -166,18 +166,18 @@ module {
   };
 
   // internal worker method, expects iterator with sufficient supply
-  func binomialIter(n : Nat8, it : I.Iter<Word8>) : Nat8 {
+  func binomialIter(n : Nat8, it : I.Iter<Nat8>) : Nat8 {
     var nn = n;
-    var acc : Word8 = 0;
+    var acc : Nat8 = 0;
     for (i in it) {
       if (8 : Nat8 <= nn)
-      { acc += Prim.popcntWord8(i) }
+      { acc += Prim.popcntNat8(i) }
       else if (0 : Nat8 == nn)
-      { return Prim.word8ToNat8(acc) }
+      { return acc }
       else {
-        let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
-        let residue = Prim.popcntWord8(i & mask);
-        return Prim.word8ToNat8(acc + residue)
+        let mask : Nat8 = 0xff << (8 - nn);
+        let residue = Prim.popcntNat8(i & mask);
+        return (acc +% residue)
       };
       nn -= 8
     };
