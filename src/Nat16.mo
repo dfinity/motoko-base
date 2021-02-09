@@ -13,7 +13,7 @@ module {
   public let fromNat : Nat -> Nat16  = Prim.natToNat16;
 
   /// Conversion. Wraps on overflow/underflow.
-  public let fromNatWrap : Nat -> Nat16  = Prim.natToNat16Wrap;
+  public let fromIntWrap : Int -> Nat16  = Prim.intToNat16Wrap;
 
   /// Returns the Text representation of `x`.
   public func toText(x : Nat16) : Text {

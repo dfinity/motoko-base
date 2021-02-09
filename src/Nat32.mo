@@ -13,7 +13,7 @@ module {
   public let fromNat : Nat -> Nat32  = Prim.natToNat32;
 
   /// Conversion. Wraps on overflow/underflow.
-  public let fromNatWrap : Nat -> Nat32  = Prim.natToNat32Wrap;
+  public let fromIntWrap : Int -> Nat32  = Prim.intToNat32Wrap;
 
   /// Returns the Text representation of `x`.
   public func toText(x : Nat32) : Text {
