@@ -1,0 +1,157 @@
+[[module.Char]]
+= Char
+
+Characters
+
+[[toWord32]]
+== toWord32
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toWord32 : (c : Char) -> Word32
+----
+
+Convert character `c` to a word containing its Unicode scalar value.
+
+[[fromWord32]]
+== fromWord32
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromWord32 : (w : Word32) -> Char
+----
+
+Convert word `w` to a character.
+Traps if `w` is not a valid Unicode scalar value.
+Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+
+[[toText]]
+== toText
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toText : (c : Char) -> Text
+----
+
+Convert character `c` to single character text.
+
+[[isDigit]]
+== isDigit
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isDigit(c : Char) : Bool
+----
+
+Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
+
+[[isWhitespace]]
+== isWhitespace
+
+[source.no-repl,motoko,subs=+macros]
+----
+let isWhitespace : (c : Char) -> Bool
+----
+
+Returns the Unicode _White_Space_ property of `c`.
+
+[[isLowercase]]
+== isLowercase
+
+[source.no-repl,motoko,subs=+macros]
+----
+let isLowercase : (c : Char) -> Bool
+----
+
+Returns the Unicode _Lowercase_ property of `c`.
+
+[[isUppercase]]
+== isUppercase
+
+[source.no-repl,motoko,subs=+macros]
+----
+let isUppercase : (c : Char) -> Bool
+----
+
+Returns the Unicode _Uppercase_ property of `c`.
+
+[[isAlphabetic]]
+== isAlphabetic
+
+[source.no-repl,motoko,subs=+macros]
+----
+let isAlphabetic : (c : Char) -> Bool
+----
+
+Returns the Unicode _Alphabetic_ property of `c`.
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal(x : Char, y : Char) : Bool
+----
+
+Returns `x == y`.
+
+[[notEqual]]
+== notEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func notEqual(x : Char, y : Char) : Bool
+----
+
+Returns `x != y`.
+
+[[less]]
+== less
+
+[source.no-repl,motoko,subs=+macros]
+----
+func less(x : Char, y : Char) : Bool
+----
+
+Returns `x < y`.
+
+[[lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func lessOrEqual(x : Char, y : Char) : Bool
+----
+
+Returns `x <= y`.
+
+[[greater]]
+== greater
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greater(x : Char, y : Char) : Bool
+----
+
+Returns `x > y`.
+
+[[greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greaterOrEqual(x : Char, y : Char) : Bool
+----
+
+Returns `x >= y`.
+
+[[compare]]
+== compare
+
+[source.no-repl,motoko,subs=+macros]
+----
+func compare(x : Char, y : Char) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+

@@ -1,0 +1,99 @@
+[[module.Heap]]
+= Heap
+
+Priority Queue
+
+This module provides purely-functional priority queue based on leftist heap
+
+[[type.Tree]]
+== Tree
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Tree<T> = ?(Int, T, xref:#type.Tree[Tree]<T>, xref:#type.Tree[Tree]<T>)
+----
+
+
+
+[[type.Heap]]
+== Heap
+
+[source.no-repl,motoko,subs=+macros]
+----
+class Heap<T>(ord : (T, T) -> xref:Order.adoc#type.Order[O.Order])
+----
+
+
+
+
+
+[[Heap.share]]
+=== share
+
+[source.no-repl,motoko,subs=+macros]
+----
+func share() : xref:#type.Tree[Tree]<T>
+----
+
+Get purely-functional representation
+
+[[Heap.unsafeUnshare]]
+=== unsafeUnshare
+
+[source.no-repl,motoko,subs=+macros]
+----
+func unsafeUnshare(t : xref:#type.Tree[Tree]<T>)
+----
+
+Put purely-functional representation into class. Need to make sure the tree is constructed with the same compare function
+
+[[Heap.put]]
+=== put
+
+[source.no-repl,motoko,subs=+macros]
+----
+func put(x : T)
+----
+
+Insert an element to the heap
+
+[[Heap.peekMin]]
+=== peekMin
+
+[source.no-repl,motoko,subs=+macros]
+----
+func peekMin() : ?T
+----
+
+Return the minimal element
+
+[[Heap.deleteMin]]
+=== deleteMin
+
+[source.no-repl,motoko,subs=+macros]
+----
+func deleteMin()
+----
+
+Delete the minimal element
+
+[[Heap.removeMin]]
+=== removeMin
+
+[source.no-repl,motoko,subs=+macros]
+----
+func removeMin() : ?T
+----
+
+Remove the minimal element and return its value
+
+[[fromIter]]
+== fromIter
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromIter<T>(iter : xref:Iter.adoc#type.Iter[I.Iter]<T>, ord : (T, T) -> xref:Order.adoc#type.Order[O.Order]) : xref:#type.Heap[Heap]<T>
+----
+
+Convert iterator into a heap, takes O(N) time.
+

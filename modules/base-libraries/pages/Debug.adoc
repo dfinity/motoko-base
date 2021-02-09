@@ -1,0 +1,17 @@
+[[module.Debug]]
+= Debug
+
+Debugging aids
+
+[[print]]
+== print
+
+[source.no-repl,motoko,subs=+macros]
+----
+let print : Text -> ()
+----
+
+This prints a text (which typically does not include a final newline) to the
+debug output. Where this debug output is stored and shown depends on the
+environment the program runs in.
+

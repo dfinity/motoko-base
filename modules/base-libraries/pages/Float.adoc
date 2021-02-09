@@ -1,0 +1,412 @@
+[[module.Float]]
+= Float
+
+64-bit Floating-point numbers
+
+[[pi]]
+== pi
+
+[source.no-repl,motoko,subs=+macros]
+----
+let pi : Float
+----
+
+Ratio of the circumference of a circle to its diameter.
+
+[[e]]
+== e
+
+[source.no-repl,motoko,subs=+macros]
+----
+let e : Float
+----
+
+Base of the natural logarithm.
+
+[[abs]]
+== abs
+
+[source.no-repl,motoko,subs=+macros]
+----
+let abs : (x : Float) -> Float
+----
+
+Returns the absolute value of `x`.
+
+[[sqrt]]
+== sqrt
+
+[source.no-repl,motoko,subs=+macros]
+----
+let sqrt : (x : Float) -> Float
+----
+
+Returns the square root of `x`.
+
+[[ceil]]
+== ceil
+
+[source.no-repl,motoko,subs=+macros]
+----
+let ceil : (x : Float) -> Float
+----
+
+Returns the smallest integral float greater than or equal to `x`.
+
+[[floor]]
+== floor
+
+[source.no-repl,motoko,subs=+macros]
+----
+let floor : (x : Float) -> Float
+----
+
+Returns the largest integral float less than or equal to `x`.
+
+[[trunc]]
+== trunc
+
+[source.no-repl,motoko,subs=+macros]
+----
+let trunc : (x : Float) -> Float
+----
+
+Returns the nearest integral float not greater in magnitude than `x`.
+
+[[nearest]]
+== nearest
+
+[source.no-repl,motoko,subs=+macros]
+----
+let nearest : (x : Float) -> Float
+----
+
+Returns the nearest integral float to `x`.
+
+[[copySign]]
+== copySign
+
+[source.no-repl,motoko,subs=+macros]
+----
+let copySign : (x : Float, y : Float) -> Float
+----
+
+Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
+
+[[min]]
+== min
+
+[source.no-repl,motoko,subs=+macros]
+----
+let min : (x : Float, y : Float) -> Float
+----
+
+Returns the smaller value of `x` and `y`.
+
+[[max]]
+== max
+
+[source.no-repl,motoko,subs=+macros]
+----
+let max : (x : Float, y : Float) -> Float
+----
+
+Returns the larger value of `x` and `y`.
+
+[[sin]]
+== sin
+
+[source.no-repl,motoko,subs=+macros]
+----
+let sin : (x : Float) -> Float
+----
+
+Returns the sine of the radian angle `x`.
+
+[[cos]]
+== cos
+
+[source.no-repl,motoko,subs=+macros]
+----
+let cos : (x : Float) -> Float
+----
+
+Returns the cosine of the radian angle `x`.
+
+[[tan]]
+== tan
+
+[source.no-repl,motoko,subs=+macros]
+----
+let tan : (x : Float) -> Float
+----
+
+Returns the tangent of the radian angle `x`.
+
+[[arcsin]]
+== arcsin
+
+[source.no-repl,motoko,subs=+macros]
+----
+let arcsin : (x : Float) -> Float
+----
+
+Returns the arc sine of `x` in radians.
+
+[[arccos]]
+== arccos
+
+[source.no-repl,motoko,subs=+macros]
+----
+let arccos : (x : Float) -> Float
+----
+
+Returns the arc cosine of `x` in radians.
+
+[[arctan]]
+== arctan
+
+[source.no-repl,motoko,subs=+macros]
+----
+let arctan : (x : Float) -> Float
+----
+
+Returns the arc tangent of `x` in radians.
+
+[[arctan2]]
+== arctan2
+
+[source.no-repl,motoko,subs=+macros]
+----
+let arctan2 : (y : Float, x : Float) -> Float
+----
+
+Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
+
+[[exp]]
+== exp
+
+[source.no-repl,motoko,subs=+macros]
+----
+let exp : (x : Float) -> Float
+----
+
+Returns the value of `e` raised to the `x`-th power.
+
+[[log]]
+== log
+
+[source.no-repl,motoko,subs=+macros]
+----
+let log : (x : Float) -> Float
+----
+
+Returns the natural logarithm (base-`e`) of `x`.
+
+[[format]]
+== format
+
+[source.no-repl,motoko,subs=+macros]
+----
+func format(fmt : {#fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact}, x : Float) : Text
+----
+
+Formatting. `format(fmt, x)` formats `x` to `Text` according to the
+formatting directive `fmt`, which can take one of the following forms:
+
+* `#fix prec` as fixed-point format with `prec` digits
+* `#exp prec` as exponential format with `prec` digits
+* `#gen prec` as generic format with `prec` digits
+* `#hex prec` as hexadecimal format with `prec` digits
+* `#exact` as exact format that can be decoded without loss.
+
+[[toText]]
+== toText
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toText : Float -> Text
+----
+
+Conversion to Text. Use `format(fmt, x)` for more detailed control.
+
+[[toInt64]]
+== toInt64
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toInt64 : Float -> Int64
+----
+
+Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
+
+[[fromInt64]]
+== fromInt64
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromInt64 : Int64 -> Float
+----
+
+Conversion from Int64.
+
+[[toInt]]
+== toInt
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toInt : Float -> Int
+----
+
+Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
+
+[[fromInt]]
+== fromInt
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromInt : Int -> Float
+----
+
+Conversion from Int via Int64. May trap.
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal(x : Float, y : Float) : Bool
+----
+
+Returns `x == y`.
+
+[[notEqual]]
+== notEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func notEqual(x : Float, y : Float) : Bool
+----
+
+Returns `x != y`.
+
+[[less]]
+== less
+
+[source.no-repl,motoko,subs=+macros]
+----
+func less(x : Float, y : Float) : Bool
+----
+
+Returns `x < y`.
+
+[[lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func lessOrEqual(x : Float, y : Float) : Bool
+----
+
+Returns `x <= y`.
+
+[[greater]]
+== greater
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greater(x : Float, y : Float) : Bool
+----
+
+Returns `x > y`.
+
+[[greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greaterOrEqual(x : Float, y : Float) : Bool
+----
+
+Returns `x >= y`.
+
+[[compare]]
+== compare
+
+[source.no-repl,motoko,subs=+macros]
+----
+func compare(x : Float, y : Float) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+
+[[neq]]
+== neq
+
+[source.no-repl,motoko,subs=+macros]
+----
+func neq(x : Float) : Float
+----
+
+Returns the negation of `x`, `-x` .
+
+[[add]]
+== add
+
+[source.no-repl,motoko,subs=+macros]
+----
+func add(x : Float, y : Float) : Float
+----
+
+Returns the sum of `x` and `y`, `x + y`.
+
+[[sub]]
+== sub
+
+[source.no-repl,motoko,subs=+macros]
+----
+func sub(x : Float, y : Float) : Float
+----
+
+Returns the difference of `x` and `y`, `x - y`.
+
+[[mul]]
+== mul
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mul(x : Float, y : Float) : Float
+----
+
+Returns the product of `x` and `y`, `x * y`.
+
+[[div]]
+== div
+
+[source.no-repl,motoko,subs=+macros]
+----
+func div(x : Float, y : Float) : Float
+----
+
+Returns the division of `x` by `y`, `x / y`.
+
+[[rem]]
+== rem
+
+[source.no-repl,motoko,subs=+macros]
+----
+func rem(x : Float, y : Float) : Float
+----
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+
+[[pow]]
+== pow
+
+[source.no-repl,motoko,subs=+macros]
+----
+func pow(x : Float, y : Float) : Float
+----
+
+Returns `x` to the power of `y`, `x ** y`.
+

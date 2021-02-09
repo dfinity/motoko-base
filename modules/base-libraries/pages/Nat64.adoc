@@ -1,0 +1,189 @@
+[[module.Nat64]]
+= Nat64
+
+64-bit unsigned integers with checked arithmetic
+
+Most operations are available as built-in operators (e.g. `1 + 1`).
+
+[[toNat]]
+== toNat
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toNat : Nat64 -> Nat
+----
+
+Conversion.
+
+[[fromNat]]
+== fromNat
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromNat : Nat -> Nat64
+----
+
+Conversion. Traps on overflow/underflow.
+
+[[toText]]
+== toText
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toText(x : Nat64) : Text
+----
+
+Returns the Text representation of `x`.
+
+[[min]]
+== min
+
+[source.no-repl,motoko,subs=+macros]
+----
+func min(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the minimum of `x` and `y`.
+
+[[max]]
+== max
+
+[source.no-repl,motoko,subs=+macros]
+----
+func max(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the maximum of `x` and `y`.
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal(x : Nat64, y : Nat64) : Bool
+----
+
+Returns `x == y`.
+
+[[notEqual]]
+== notEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func notEqual(x : Nat64, y : Nat64) : Bool
+----
+
+Returns `x != y`.
+
+[[less]]
+== less
+
+[source.no-repl,motoko,subs=+macros]
+----
+func less(x : Nat64, y : Nat64) : Bool
+----
+
+Returns `x < y`.
+
+[[lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func lessOrEqual(x : Nat64, y : Nat64) : Bool
+----
+
+Returns `x <= y`.
+
+[[greater]]
+== greater
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greater(x : Nat64, y : Nat64) : Bool
+----
+
+Returns `x > y`.
+
+[[greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greaterOrEqual(x : Nat64, y : Nat64) : Bool
+----
+
+Returns `x >= y`.
+
+[[compare]]
+== compare
+
+[source.no-repl,motoko,subs=+macros]
+----
+func compare(x : Nat64, y : Nat64) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+
+[[add]]
+== add
+
+[source.no-repl,motoko,subs=+macros]
+----
+func add(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+
+[[sub]]
+== sub
+
+[source.no-repl,motoko,subs=+macros]
+----
+func sub(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+
+[[mul]]
+== mul
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mul(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+
+[[div]]
+== div
+
+[source.no-repl,motoko,subs=+macros]
+----
+func div(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the division of `x by y`, `x / y`.
+Traps when `y` is zero.
+
+[[rem]]
+== rem
+
+[source.no-repl,motoko,subs=+macros]
+----
+func rem(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[[pow]]
+== pow
+
+[source.no-repl,motoko,subs=+macros]
+----
+func pow(x : Nat64, y : Nat64) : Nat64
+----
+
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+

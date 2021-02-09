@@ -1,0 +1,171 @@
+[[module.Nat]]
+= Nat
+
+Natural numbers
+
+Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+This module provides equivalent functions and `Text` conversion.
+
+[[toText]]
+== toText
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toText : Nat -> Text
+----
+
+Conversion.
+
+[[min]]
+== min
+
+[source.no-repl,motoko,subs=+macros]
+----
+func min(x : Nat, y : Nat) : Nat
+----
+
+Returns the minimum of `x` and `y`.
+
+[[max]]
+== max
+
+[source.no-repl,motoko,subs=+macros]
+----
+func max(x : Nat, y : Nat) : Nat
+----
+
+Returns the maximum of `x` and `y`.
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal(x : Nat, y : Nat) : Bool
+----
+
+Returns `x == y`.
+
+[[notEqual]]
+== notEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func notEqual(x : Nat, y : Nat) : Bool
+----
+
+Returns `x != y`.
+
+[[less]]
+== less
+
+[source.no-repl,motoko,subs=+macros]
+----
+func less(x : Nat, y : Nat) : Bool
+----
+
+Returns `x < y`.
+
+[[lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func lessOrEqual(x : Nat, y : Nat) : Bool
+----
+
+Returns `x <= y`.
+
+[[greater]]
+== greater
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greater(x : Nat, y : Nat) : Bool
+----
+
+Returns `x > y`.
+
+[[greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greaterOrEqual(x : Nat, y : Nat) : Bool
+----
+
+Returns `x >= y`.
+
+[[compare]]
+== compare
+
+[source.no-repl,motoko,subs=+macros]
+----
+func compare(x : Nat, y : Nat) : {#less; #equal; #greater}
+----
+
+Returns the order of `x` and `y`.
+
+[[add]]
+== add
+
+[source.no-repl,motoko,subs=+macros]
+----
+func add(x : Nat, y : Nat) : Nat
+----
+
+Returns the sum of `x` and `y`, `x + y`.
+
+[[sub]]
+== sub
+
+[source.no-repl,motoko,subs=+macros]
+----
+func sub(x : Nat, y : Nat) : Nat
+----
+
+Returns the difference of `x` and `y`, `x - y`.
+Traps on underflow.
+
+[[mul]]
+== mul
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mul(x : Nat, y : Nat) : Nat
+----
+
+Returns the product of `x` and `y`, `x * y`.
+
+[[div]]
+== div
+
+[source.no-repl,motoko,subs=+macros]
+----
+func div(x : Nat, y : Nat) : Nat
+----
+
+Returns the division of `x` by `y`, `x / y`.
+Traps when `y` is zero.
+
+[[rem]]
+== rem
+
+[source.no-repl,motoko,subs=+macros]
+----
+func rem(x : Nat, y : Nat) : Nat
+----
+
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
+
+[[pow]]
+== pow
+
+[source.no-repl,motoko,subs=+macros]
+----
+func pow(x : Nat, y : Nat) : Nat
+----
+
+Returns `x` to the power of `y`, `x ** y`.
+

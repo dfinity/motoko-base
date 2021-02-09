@@ -1,0 +1,61 @@
+[[module.Stack]]
+= Stack
+
+Stack collection (LIFO discipline).
+
+Minimal LIFO (last in first out) implementation, as a class.
+See [deque](Deque.html) for mixed LIFO/FIFO behavior.
+
+
+[[type.Stack]]
+== Stack
+
+[source.no-repl,motoko,subs=+macros]
+----
+class Stack<T>()
+----
+
+
+
+
+
+[[Stack.push]]
+=== push
+
+[source.no-repl,motoko,subs=+macros]
+----
+func push(x : T)
+----
+
+Push an element on the top of the stack.
+
+[[Stack.isEmpty]]
+=== isEmpty
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isEmpty() : Bool
+----
+
+True when the stack is empty.
+
+[[Stack.peek]]
+=== peek
+
+[source.no-repl,motoko,subs=+macros]
+----
+func peek() : ?T
+----
+
+Return and retain the top element, or return null.
+
+[[Stack.pop]]
+=== pop
+
+[source.no-repl,motoko,subs=+macros]
+----
+func pop() : ?T
+----
+
+Remove and return the top element, or return null.
+

@@ -1,0 +1,90 @@
+[[module.Hash]]
+= Hash
+
+Hash values
+
+[[type.Hash]]
+== Hash
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Hash = Word32
+----
+
+Hash values represent a string of _hash bits_, packed into a `Word32`.
+
+[[length]]
+== length
+
+[source.no-repl,motoko,subs=+macros]
+----
+let length : Nat
+----
+
+The hash length, always 31.
+
+[[bit]]
+== bit
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bit(h : xref:#type.Hash[Hash], pos : Nat) : Bool
+----
+
+Project a given bit from the bit vector.
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal(ha : xref:#type.Hash[Hash], hb : xref:#type.Hash[Hash]) : Bool
+----
+
+Test if two hashes are equal
+
+[[hash]]
+== hash
+
+[source.no-repl,motoko,subs=+macros]
+----
+func hash(i : Nat) : xref:#type.Hash[Hash]
+----
+
+
+
+[[debugPrintBits]]
+== debugPrintBits
+
+[source.no-repl,motoko,subs=+macros]
+----
+func debugPrintBits(bits : xref:#type.Hash[Hash])
+----
+
+
+
+[[debugPrintBitsRev]]
+== debugPrintBitsRev
+
+[source.no-repl,motoko,subs=+macros]
+----
+func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
+----
+
+
+
+[[hashWord8]]
+== hashWord8
+
+[source.no-repl,motoko,subs=+macros]
+----
+func hashWord8(key : [xref:#type.Hash[Hash]]) : xref:#type.Hash[Hash]
+----
+
+Jenkin's one at a time:
+
+https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
+
+The input type should actually be `[Word8]`.
+Note: Be sure to explode each `Word8` of a `Word32` into its own `Word32`, and to shift into lower 8 bits.
+

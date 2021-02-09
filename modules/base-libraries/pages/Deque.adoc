@@ -1,0 +1,95 @@
+[[module.Deque]]
+= Deque
+
+Functions for persistent, double-ended queues.
+
+[[type.Deque]]
+== Deque
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Deque<T> = (xref:#type.List[List]<T>, xref:#type.List[List]<T>)
+----
+
+Double-ended queue
+
+[[empty]]
+== empty
+
+[source.no-repl,motoko,subs=+macros]
+----
+func empty<T>() : xref:#type.Deque[Deque]<T>
+----
+
+Empty queue
+
+[[isEmpty]]
+== isEmpty
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isEmpty<T>(q : xref:#type.Deque[Deque]<T>) : Bool
+----
+
+True when the queue is empty
+
+[[pushFront]]
+== pushFront
+
+[source.no-repl,motoko,subs=+macros]
+----
+func pushFront<T>(q : xref:#type.Deque[Deque]<T>, x : T) : xref:#type.Deque[Deque]<T>
+----
+
+Insert a new element on the front end of the queue
+
+[[peekFront]]
+== peekFront
+
+[source.no-repl,motoko,subs=+macros]
+----
+func peekFront<T>(q : xref:#type.Deque[Deque]<T>) : ?T
+----
+
+Inspect the (optional) first element on the front end of the queue
+
+[[popFront]]
+== popFront
+
+[source.no-repl,motoko,subs=+macros]
+----
+func popFront<T>(q : xref:#type.Deque[Deque]<T>) : ?(T, xref:#type.Deque[Deque]<T>)
+----
+
+Remove the first element on the front end of the queue; Returns null when empty.
+
+[[pushBack]]
+== pushBack
+
+[source.no-repl,motoko,subs=+macros]
+----
+func pushBack<T>(q : xref:#type.Deque[Deque]<T>, x : T) : xref:#type.Deque[Deque]<T>
+----
+
+Insert a new element on the back end of the queue
+
+[[peekBack]]
+== peekBack
+
+[source.no-repl,motoko,subs=+macros]
+----
+func peekBack<T>(q : xref:#type.Deque[Deque]<T>) : ?T
+----
+
+Inspect the (optional) first element on the back end of the queue
+
+[[popBack]]
+== popBack
+
+[source.no-repl,motoko,subs=+macros]
+----
+func popBack<T>(q : xref:#type.Deque[Deque]<T>) : ?(xref:#type.Deque[Deque]<T>, T)
+----
+
+Remove the first element on the back end of the queue; Returns null when empty.
+
