@@ -105,7 +105,7 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec(al1, al2)
   };
 
-  /// Specialied version of [`disj`](AssocList.html#value.disj), optimized for disjoint sub-spaces of keyspace (no matching keys).
+  /// Specialied version of `disj`, optimized for disjoint sub-spaces of keyspace (no matching keys).
   public func disjDisjoint<K,V,W,X>(al1:AssocList<K,V>,
                              al2:AssocList<K,W>,
                              vbin:(?V,?W)->X)

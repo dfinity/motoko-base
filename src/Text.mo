@@ -19,7 +19,7 @@ module {
   public let fromChar : (c : Char) -> Text = Prim.charToText;
 
   /// Conversion.
-  /// Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text `t`.
+  /// Creates an iterator that traverses the characters of the text `t`.
   public func toIter(t : Text) : Iter.Iter<Char> =
     t.chars();
 
@@ -192,11 +192,11 @@ module {
        case (#char(p)) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
-             case (?c) { 
-               if (p == c) { 
-                 #success 
-               } else { 
-                 #fail (empty(), c) } 
+             case (?c) {
+               if (p == c) {
+                 #success
+               } else {
+                 #fail (empty(), c) }
                };
              case null { #empty(empty()) };
            }
@@ -205,11 +205,11 @@ module {
        case (#predicate(p)) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
-             case (?c) { 
-               if (p(c)) { 
-                 #success 
-               } else { 
-                 #fail(empty(), c) } 
+             case (?c) {
+               if (p(c)) {
+                 #success
+               } else {
+                 #fail(empty(), c) }
                };
              case null { #empty (empty()) };
            }
@@ -271,7 +271,7 @@ module {
   };
 
   /// Returns the sequence of fields in `t`, derived from start to end,
-  /// separated by text matching [pattern](#type.Pattern) `p`.
+  /// separated by text matching pattern `p`.
   /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern(p);
@@ -331,7 +331,7 @@ module {
   };
 
   /// Returns the sequence of tokens in `t`, derived from start to end.
-  /// A _token_ is a non-empty maximal subsequence of `t` not containing a match for [pattern](#type.Pattern) `p`.
+  /// A _token_ is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
   /// Two tokens may be separated by one or more matches of `p`.
   public func tokens(t : Text, p : Pattern) : Iter.Iter<Text> {
     let fs = split(t, p);
@@ -345,7 +345,7 @@ module {
     }
   };
 
-  /// Returns true if `t` contains a match for [pattern](#type.Pattern) `p`.
+  /// Returns true if `t` contains a match for pattern `p`.
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern(p);
     let cs = CharBuffer(t.chars());
@@ -370,7 +370,7 @@ module {
     }
   };
 
-  /// Returns `true` if `t` starts with a prefix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
+  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
   public func startsWith(t : Text, p : Pattern) : Bool {
     var cs = t.chars();
     let match = matchOfPattern(p);
@@ -380,7 +380,7 @@ module {
     }
   };
 
-  /// Returns `true` if `t` ends with a suffix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
+  /// Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
   public func endsWith(t : Text, p : Pattern) : Bool {
     let s2 = sizeOfPattern(p);
     if (s2 == 0) return true;
@@ -399,7 +399,7 @@ module {
     }
   };
 
-  /// Returns `t` with all matches of [pattern](#type.Pattern) `p` replaced by text `r`.
+  /// Returns `t` with all matches of pattern `p` replaced by text `r`.
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern(p);
     let size = sizeOfPattern(p);
@@ -438,7 +438,7 @@ module {
 
 
 
-  /// Returns the optioned suffix of `t` obtained by eliding exactly one leading match of [pattern](#type.Pattern) `p`, otherwise `null`.
+  /// Returns the optioned suffix of `t` obtained by eliding exactly one leading match of pattern `p`, otherwise `null`.
   public func stripStart(t : Text, p : Pattern) : ?Text {
     let s = sizeOfPattern(p);
     if (s == 0) return ?t;
@@ -450,7 +450,7 @@ module {
     }
   };
 
-  /// Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of [pattern](#type.Pattern) `p`, otherwise `null`.
+  /// Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of pattern `p`, otherwise `null`.
   public func stripEnd(t : Text, p : Pattern) : ?Text {
     let s2 = sizeOfPattern(p);
     if (s2 == 0) return ?t;
@@ -469,7 +469,7 @@ module {
     }
   };
 
-  /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
+  /// Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`.
   public func trimStart(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     let size = sizeOfPattern(p);
@@ -482,11 +482,11 @@ module {
           matchSize += size;
         }; // continue
         case (#empty(cs1)) {
-          return if (matchSize == 0) { 
-            t 
+          return if (matchSize == 0) {
+            t
           } else {
             fromIter(cs1)
-          } 
+          }
         };
         case (#fail (cs1, c)) {
           return if (matchSize == 0) {
@@ -499,7 +499,7 @@ module {
     }
   };
 
-  /// Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](#type.Pattern) `p`.
+  /// Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p`.
   public func trimEnd(t : Text, p : Pattern) : Text {
     let cs = CharBuffer(t.chars());
     let size = sizeOfPattern(p);
@@ -528,7 +528,7 @@ module {
     extract(t, 0, t.size() - matchSize)
   };
 
-  /// Returns the subtext of `t` obtained by eliding all leading and trailing matches of [pattern](#type.Pattern) `p`.
+  /// Returns the subtext of `t` obtained by eliding all leading and trailing matches of pattern `p`.
   public func trim(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     let size = sizeOfPattern(p);

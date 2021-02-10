@@ -88,8 +88,6 @@ public func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B {
 
 /// Applies a function to an optional value. Returns `null` if the argument is
 /// `null`, or the function returns `null`.
-///
-/// NOTE: Together with [`make`](#value.make), this forms a “monad”.
 public func chain<A, B>(x : ?A, f : A -> ?B) : ?B {
   switch(x) {
     case (?x_) {
