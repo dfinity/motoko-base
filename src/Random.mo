@@ -34,7 +34,7 @@ module {
   /// guaranteed only when the supplied entropy is originally obtained
   /// by the `blob()` call, and is never reused.
   public class Finite(entropy : Blob) {
-    let it : I.Iter<Nat8> = entropy.bytes();
+    let it : I.Iter<Nat8> = entropy.vals();
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     /// Consumes 1 byte of entropy.
@@ -116,7 +116,7 @@ module {
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
   public func byteFrom(seed : Blob) : Nat8 {
-    switch (seed.bytes().next()) {
+    switch (seed.vals().next()) {
       case (?w) { w };
       case _ { P.unreachable() };
     }
@@ -125,7 +125,7 @@ module {
   /// Simulates a coin toss.
   /// Seed blob must contain at least a byte.
   public func coinFrom(seed : Blob) : Bool {
-    switch (seed.bytes().next()) {
+    switch (seed.vals().next()) {
       case (?w) { w > (127 : Nat8) };
       case _ { P.unreachable() };
     }
@@ -137,7 +137,7 @@ module {
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
-    rangeIter(p, seed.bytes())
+    rangeIter(p, seed.vals())
   };
 
   // internal worker method, expects iterator with sufficient supply
@@ -162,7 +162,7 @@ module {
   /// Counts the number of heads in `n` coin tosses.
   /// Seed blob must contain at least ((n+7) / 8) bytes.
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
-    binomialIter(n, seed.bytes())
+    binomialIter(n, seed.vals())
   };
 
   // internal worker method, expects iterator with sufficient supply
