@@ -100,7 +100,7 @@ Insert the value `v` at key `k` and returns the previous value stored at
 func entries() : Iter.Iter<(K, V)>
 ----
 
-Returns an [`Iter`](Iter.html#type.Iter) over the key value pairs in this
+Returns an iterator over the key value pairs in this
 HashMap. Does _not_ modify the HashMap.
 
 [[value.clone]]

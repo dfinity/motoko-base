@@ -64,7 +64,7 @@ func next() : ?Nat
 class revRange(x : Int, y : Int)
 ----
 
-Like [`range`](#value.range) but produces the values in the opposite
+Like `range` but produces the values in the opposite
 order.
 
 
@@ -88,8 +88,8 @@ func iterate<A>(xs : Iter<A>, f : (A, Nat) -> ())
 ----
 
 Calls a function `f` on every value produced by an iterator and discards
-the results. If you're looking to keep these results use
-[`map`](#value.map).
+the results. If you're looking to keep these results use `map` instead.
+
 ```motoko
 import Iter "mo:base/Iter";
 var sum = 0;
@@ -174,8 +174,8 @@ assert(null == iter.next());
 func fromArrayMut<A>(xs : [var A]) : Iter<A>
 ----
 
-Like [`fromArray`](#value.fromArray) but for Arrays with mutable elements.
-Captures the elements of the Array at the time the iterator is created, so
+Like `fromArray` but for Arrays with mutable elements. Captures
+the elements of the Array at the time the iterator is created, so
 further modifications won't be reflected in the iterator.
 
 [[value.fromList]]
@@ -186,7 +186,7 @@ further modifications won't be reflected in the iterator.
 func fromList<A>(xs : List.List<A>) : Iter<A>
 ----
 
-Like [`fromArray`](#value.fromArray) but for Lists.
+Like `fromArray` but for Lists.
 
 [[value.toArray]]
 == toArray
@@ -211,7 +211,7 @@ assert([1, 2, 3] == Iter.toArray(iter));
 func toArrayMut<A>(xs : Iter<A>) : [var A]
 ----
 
-Like [`toArray`](#value.toArray) but for Arrays with mutable elements.
+Like `toArray` but for Arrays with mutable elements.
 
 [[value.toList]]
 == toList
@@ -221,5 +221,5 @@ Like [`toArray`](#value.toArray) but for Arrays with mutable elements.
 func toList<A>(xs : Iter<A>) : List.List<A>
 ----
 
-Like [`toArray`](#value.toArray) but for Lists.
+Like `toArray` but for Lists.
 

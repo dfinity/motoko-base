@@ -219,9 +219,9 @@ func merge<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie
 
   See also:
 
-  - [`disj`](#value.disj)
-  - [`join`](#value.join)
-  - [`prod`](#value.prod)
+  - `disj`
+  - `join`
+  - `prod`
 
 [[value.mergeDisjoint]]
 == mergeDisjoint
@@ -269,9 +269,9 @@ Implements the database idea of an ["outer join"](https://stackoverflow.com/ques
 
 See also:
 
-- [`join`](#value.join)
-- [`merge`](#value.merge)
-- [`prod`](#value.prod)
+- `join`
+- `merge`
+- `prod`
 
 [[value.join]]
 == join
@@ -290,9 +290,9 @@ Implements the database idea of an ["inner join"](https://stackoverflow.com/ques
 
 See also:
 
-- [`disj`](#value.disj)
-- [`merge`](#value.merge)
-- [`prod`](#value.prod)
+- `disj`
+- `merge`
+- `prod`
 
 [[value.foldUp]]
 == foldUp
@@ -326,9 +326,9 @@ these input keys.
 
 See also:
 
-- [`disj`](#value.disj)
-- [`join`](#value.join)
-- [`merge`](#value.merge)
+- `disj`
+- `join`
+- `merge`
 
 [[value.Build]]
 == Build
@@ -398,7 +398,7 @@ func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V)
 Project the nth key-value pair from the trie.
 
 Note: This position is not meaningful; it's only here so that we
-can inject tries into arrays using functions like [Array.tabulate](Array.html#value.tabulate).
+can inject tries into arrays using functions like `Array.tabulate`.
 
 [[value.toArray]]
 == toArray

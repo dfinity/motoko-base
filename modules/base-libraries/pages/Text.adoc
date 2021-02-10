@@ -30,7 +30,7 @@ func toIter(t : Text) : Iter.Iter<Char>
 ----
 
 Conversion.
-Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text `t`.
+Creates an iterator that traverses the characters of the text `t`.
 
 [[value.fromIter]]
 == fromIter
@@ -199,7 +199,7 @@ func split(t : Text, p : Pattern) : Iter.Iter<Text>
 ----
 
 Returns the sequence of fields in `t`, derived from start to end,
-separated by text matching [pattern](#type.Pattern) `p`.
+separated by text matching pattern `p`.
 Two fields are separated by exactly one match.
 
 [[value.tokens]]
@@ -211,7 +211,7 @@ func tokens(t : Text, p : Pattern) : Iter.Iter<Text>
 ----
 
 Returns the sequence of tokens in `t`, derived from start to end.
-A _token_ is a non-empty maximal subsequence of `t` not containing a match for [pattern](#type.Pattern) `p`.
+A _token_ is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
 Two tokens may be separated by one or more matches of `p`.
 
 [[value.contains]]
@@ -222,7 +222,7 @@ Two tokens may be separated by one or more matches of `p`.
 func contains(t : Text, p : Pattern) : Bool
 ----
 
-Returns true if `t` contains a match for [pattern](#type.Pattern) `p`.
+Returns true if `t` contains a match for pattern `p`.
 
 [[value.startsWith]]
 == startsWith
@@ -232,7 +232,7 @@ Returns true if `t` contains a match for [pattern](#type.Pattern) `p`.
 func startsWith(t : Text, p : Pattern) : Bool
 ----
 
-Returns `true` if `t` starts with a prefix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
+Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
 
 [[value.endsWith]]
 == endsWith
@@ -242,7 +242,7 @@ Returns `true` if `t` starts with a prefix matching [pattern](#type.Pattern) `p`
 func endsWith(t : Text, p : Pattern) : Bool
 ----
 
-Returns `true` if `t` ends with a suffix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
+Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
 
 [[value.replace]]
 == replace
@@ -252,7 +252,7 @@ Returns `true` if `t` ends with a suffix matching [pattern](#type.Pattern) `p`, 
 func replace(t : Text, p : Pattern, r : Text) : Text
 ----
 
-Returns `t` with all matches of [pattern](#type.Pattern) `p` replaced by text `r`.
+Returns `t` with all matches of pattern `p` replaced by text `r`.
 
 [[value.stripStart]]
 == stripStart
@@ -262,7 +262,7 @@ Returns `t` with all matches of [pattern](#type.Pattern) `p` replaced by text `r
 func stripStart(t : Text, p : Pattern) : ?Text
 ----
 
-Returns the optioned suffix of `t` obtained by eliding exactly one leading match of [pattern](#type.Pattern) `p`, otherwise `null`.
+Returns the optioned suffix of `t` obtained by eliding exactly one leading match of pattern `p`, otherwise `null`.
 
 [[value.stripEnd]]
 == stripEnd
@@ -272,7 +272,7 @@ Returns the optioned suffix of `t` obtained by eliding exactly one leading match
 func stripEnd(t : Text, p : Pattern) : ?Text
 ----
 
-Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of [pattern](#type.Pattern) `p`, otherwise `null`.
+Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of pattern `p`, otherwise `null`.
 
 [[value.trimStart]]
 == trimStart
@@ -282,7 +282,7 @@ Returns the optioned prefix of `t` obtained by eliding exactly one trailing matc
 func trimStart(t : Text, p : Pattern) : Text
 ----
 
-Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
+Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`.
 
 [[value.trimEnd]]
 == trimEnd
@@ -292,7 +292,7 @@ Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#
 func trimEnd(t : Text, p : Pattern) : Text
 ----
 
-Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](#type.Pattern) `p`.
+Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p`.
 
 [[value.trim]]
 == trim
@@ -302,7 +302,7 @@ Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](
 func trim(t : Text, p : Pattern) : Text
 ----
 
-Returns the subtext of `t` obtained by eliding all leading and trailing matches of [pattern](#type.Pattern) `p`.
+Returns the subtext of `t` obtained by eliding all leading and trailing matches of pattern `p`.
 
 [[value.compareWith]]
 == compareWith

@@ -108,7 +108,7 @@ Returns a copy of this buffer.
 func vals() : { next : () -> ?X }
 ----
 
-Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
+Returns an `Iter` over the elements of this buffer.
 
 [[value.toArray]]
 === toArray
