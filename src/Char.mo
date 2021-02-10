@@ -5,7 +5,12 @@ module {
   /// Convert character `c` to a nat containing its Unicode scalar value.
   public let toNat32 : (c : Char) -> Nat32 = Prim.charToNat32;
 
-  /// Convert nat `w` to a character.
+  /// Convert `w` to a character.
+  /// Traps if `w` is not a valid Unicode scalar value.
+  /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+  public let fromNat32 : (w : Nat32) -> Char = Prim.nat32ToChar;
+
+  /// Convert word `w` to a character.
   /// Traps if `w` is not a valid Unicode scalar value.
   /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
   public let fromNat32 : (w : Nat32) -> Char = Prim.nat32ToChar;
@@ -21,7 +26,7 @@ module {
 
   /// Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
   public func isDigit(c : Char) : Bool {
-    Prim.charToNat32(c) - Prim.charToNat32('0') <= (9 : Nat32)
+    Prim.charToNat32(c) -% Prim.charToNat32('0') <= (9 : Nat32)
   };
 
   /// Returns the Unicode _White_Space_ property of `c`.
