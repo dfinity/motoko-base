@@ -12,6 +12,9 @@ module {
   /// Conversion. Traps on overflow/underflow.
   public let fromNat : Nat -> Nat32  = Prim.natToNat32;
 
+  /// Conversion. Wraps on overflow/underflow.
+  public let fromIntWrap : Int -> Nat32  = Prim.intToNat32Wrap;
+
   /// Returns the Text representation of `x`.
   public func toText(x : Nat32) : Text {
     Nat.toText(toNat(x))
@@ -71,5 +74,70 @@ module {
 
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
   public func pow(x : Nat32, y : Nat32) : Nat32 { x ** y };
+
+  /// Returns the bitwise negation of `x`, `^x`.
+  public func bitnot(x : Nat32, y : Nat32) : Nat32 { ^x };
+
+  /// Returns the bitwise and of `x` and `y`, `x & y`.
+  public func bitand(x : Nat32, y : Nat32) : Nat32 { x & y };
+
+  /// Returns the bitwise or of `x` and `y`, `x \| y`.
+  public func bitor(x : Nat32, y : Nat32) : Nat32 { x | y };
+
+  /// Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+  public func bitxor(x : Nat32, y : Nat32) : Nat32 { x ^ y };
+
+  /// Returns the bitwise shift left of `x` by `y`, `x << y`.
+  public func bitshiftLeft(x : Nat32, y : Nat32) : Nat32 { x << y };
+
+  /// Returns the bitwise shift right of `x` by `y`, `x >> y`.
+  public func bitshiftRight(x : Nat32, y : Nat32) : Nat32 { x >> y };
+
+  /// Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+  public func bitrotLeft(x : Nat32, y : Nat32) : Nat32 { x <<> y };
+
+  /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+  public func bitrotRight(x : Nat32, y : Nat32) : Nat32 { x <>> y };
+
+  /// Returns the value of bit `p mod 32` in `x`, `(x & 2^(p mod 32)) == 2^(p mod 32)`.
+  public func bittest(x : Nat32, p : Nat) : Bool {
+    Prim.btstNat32(x, Prim.natToNat32(p));
+  };
+
+  /// Returns the value of setting bit `p mod 32` in `x` to `1`.
+  public func bitset(x : Nat32, p : Nat) : Nat32 {
+    x | (1 << Prim.natToNat32(p));
+  };
+
+  /// Returns the value of clearing bit `p mod 32` in `x` to `0`.
+  public func bitclear(x : Nat32, p : Nat) : Nat32 {
+    x & ^(1 << Prim.natToNat32(p));
+  };
+
+  /// Returns the value of flipping bit `p mod 32` in `x`.
+  public func bitflip(x : Nat32, p : Nat) : Nat32 {
+    x ^ (1 << Prim.natToNat32(p));
+  };
+
+  /// Returns the count of non-zero bits in `x`.
+  public let bitcountNonZero : (x : Nat32) -> Nat32 = Prim.popcntNat32;
+
+  /// Returns the count of leading zero bits in `x`.
+  public let bitcountLeadingZero : (x : Nat32) -> Nat32 = Prim.clzNat32;
+
+  /// Returns the count of trailing zero bits in `x`.
+  public let bitcountTrailingZero : (x : Nat32) -> Nat32 = Prim.ctzNat32;
+
+  /// Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+  public func addWrap(x : Nat32, y : Nat32) : Nat32 { x +% y };
+
+  /// Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+  public func subWrap(x : Nat32, y : Nat32) : Nat32 { x -% y };
+
+  /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+  public func mulWrap(x : Nat32, y : Nat32) : Nat32 { x *% y };
+
+  /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
+  public func powWrap(x : Nat32, y : Nat32) : Nat32 { x **% y };
 
 }
