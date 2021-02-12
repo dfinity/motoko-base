@@ -60,13 +60,13 @@ module {
   };
 
   /// Returns the sum of `x` and `y`, `(x + y) mod 2^8`.
-  public func add(x : Word8, y : Word8) : Word8 { x + y };
+  public func add(x : Word8, y : Word8) : Word8 { x +% y };
 
   /// Returns the difference of `x` and `y`, `(2^8 + x - y) mod 2^8`.
-  public func sub(x : Word8, y : Word8) : Word8 { x - y };
+  public func sub(x : Word8, y : Word8) : Word8 { x -% y };
 
   /// Returns the product of `x` and `y`, `(x * y) mod 2^8`.
-  public func mul(x : Word8, y : Word8) : Word8 { x * y };
+  public func mul(x : Word8, y : Word8) : Word8 { x *% y };
 
   /// Returns the division of `x` by `y`, `x / y`.
   /// Traps when `y` is zero.
@@ -77,7 +77,7 @@ module {
   public func rem(x : Word8, y : Word8) : Word8 { x % y };
 
   /// Returns `x` to the power of `y`, `(x ** y) mod 2^8`.
-  public func pow(x : Word8, y : Word8) : Word8 { x ** y };
+  public func pow(x : Word8, y : Word8) : Word8 { x **% y };
 
   /// Returns the bitwise negation of `x`, `^x`.
   public func bitnot(x : Word8, y : Word8) : Word8 { ^x };
