@@ -142,9 +142,7 @@ module {
   };
 
   // helper for getRelated{0,1}
-  func iterAll<K>(t : Trie.Trie<K, ()>)
-    : Iter.Iter<K>
-    =
+  func iterAll<K>(t : Trie.Trie<K, ()>) : Iter.Iter<K> =
     object {
     var stack = ?(t, null) : List.List<Trie.Trie<K, ()>>;
     public func next() : ?K {
