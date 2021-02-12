@@ -97,13 +97,13 @@ module {
       var acc : Word8 = 0;
       for (i in it) {
         if (8 : Nat8 <= nn)
-        { acc += Prim.popcntWord8(i) }
+        { acc +%= Prim.popcntWord8(i) }
         else if (0 : Nat8 == nn)
         { return ?Prim.word8ToNat8(acc) }
         else {
           let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
           let residue = Prim.popcntWord8(i & mask);
-          return ?Prim.word8ToNat8(acc + residue)
+          return ?Prim.word8ToNat8(acc +% residue)
         };
         nn -= 8
       };
@@ -171,13 +171,13 @@ module {
     var acc : Word8 = 0;
     for (i in it) {
       if (8 : Nat8 <= nn)
-      { acc += Prim.popcntWord8(i) }
+      { acc +%= Prim.popcntWord8(i) }
       else if (0 : Nat8 == nn)
       { return Prim.word8ToNat8(acc) }
       else {
         let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
         let residue = Prim.popcntWord8(i & mask);
-        return Prim.word8ToNat8(acc + residue)
+        return Prim.word8ToNat8(acc +% residue)
       };
       nn -= 8
     };
