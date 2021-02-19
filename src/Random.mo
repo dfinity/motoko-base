@@ -6,6 +6,7 @@
 /// as the IC, is intricate. Some basic rules need to be followed by the
 /// user of this module to obtain (and maintain) the benefits of crypto-
 /// graphic randomness:
+///
 /// - cryptographic entropy (randomness source) is only obtainable
 ///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
 /// - all bets must be closed *before* entropy is being asked for in
