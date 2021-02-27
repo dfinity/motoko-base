@@ -9,7 +9,7 @@ You should note, in particular, that the size and number of modules and function
 
 == Importing from the base library
 
-To import from the base library, use the `import` keyword followed by a local module name and a URL where the `import` declaration can find the moduke you want to import.
+To import from the base library, use the `import` keyword followed by a local module name and a URL where the `import` declaration can find the module you want to import.
 For example:
 
 ....
