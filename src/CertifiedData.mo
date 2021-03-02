@@ -2,7 +2,7 @@
 
 Certified data
 
-The Internet Computer allows canister to store a small amount of data during
+The Internet Computer allows canisters to store a small amount of data during
 update method processing so that during query call processing, they can obtain
 a certificate about that data.
 
@@ -27,7 +27,7 @@ module {
   ///
   /// Returns `null` if no certificate is available, e.g. when processing an
   /// update call or inter-canister call. This returns a non-`null` value only
-  /// when processing an query call.
+  /// when processing a query call.
   public let getCertificate : () -> ?Blob = Prim.getCertificate;
 
 }
