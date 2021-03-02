@@ -64,5 +64,5 @@ assert(Char.isAlphabetic('京'));
 assert(not Char.isAlphabetic('㋡'));
 
 // To test the deprecations (by manually looking at the output)
-ignore(Char.toWord32)
+ignore(Char.toWord32);
 ignore(Char.fromWord32)
