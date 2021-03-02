@@ -3,6 +3,16 @@
 
 Characters
 
+[[toNat32]]
+== toNat32
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toNat32 : (c : Char) -> Nat32
+----
+
+Convert character `c` to a word containing its Unicode scalar value.
+
 [[toWord32]]
 == toWord32
 
@@ -12,6 +22,8 @@ let toWord32 : (c : Char) -> Word32
 ----
 
 Convert character `c` to a word containing its Unicode scalar value.
+
+@deprecated Please use `Char.toNat32` or `Word32.fromChar`
 
 [[fromNat32]]
 == fromNat32
@@ -36,6 +48,8 @@ let fromWord32 : (w : Word32) -> Char
 Convert word `w` to a character.
 Traps if `w` is not a valid Unicode scalar value.
 Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+
+@deprecated Please use `Char.fromNat32` or `Word32.toChar`
 
 [[toText]]
 == toText
