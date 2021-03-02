@@ -12,6 +12,15 @@ module {
   /// Conversion. Traps on overflow/underflow.
   public let fromInt : Int -> Int8  = Prim.intToInt8;
 
+  /// Conversion. Wraps on overflow/underflow.
+  public let fromIntWrap : Int -> Int8  = Prim.intToInt8Wrap;
+
+  /// Conversion. Wraps on overflow/underflow.
+  public let fromNat8 : Nat8 -> Int8 = Prim.nat8ToInt8;
+
+  /// Conversion. Wraps on overflow/underflow.
+  public let toNat8 : Int8 -> Nat8  = Prim.int8ToNat8;
+
   /// Returns the Text representation of `x`.
   public func toText(x : Int8) : Text {
     Int.toText(toInt(x))
@@ -79,5 +88,70 @@ module {
 
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
   public func pow(x : Int8, y : Int8) : Int8 { x ** y };
+
+  /// Returns the bitwise negation of `x`, `^x`.
+  public func bitnot(x : Int8, y : Int8) : Int8 { ^x };
+
+  /// Returns the bitwise and of `x` and `y`, `x & y`.
+  public func bitand(x : Int8, y : Int8) : Int8 { x & y };
+
+  /// Returns the bitwise or of `x` and `y`, `x \| y`.
+  public func bitor(x : Int8, y : Int8) : Int8 { x | y };
+
+  /// Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+  public func bitxor(x : Int8, y : Int8) : Int8 { x ^ y };
+
+  /// Returns the bitwise shift left of `x` by `y`, `x << y`.
+  public func bitshiftLeft(x : Int8, y : Int8) : Int8 { x << y };
+
+  /// Returns the bitwise shift right of `x` by `y`, `x >> y`.
+  public func bitshiftRight(x : Int8, y : Int8) : Int8 { x >> y };
+
+  /// Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+  public func bitrotLeft(x : Int8, y : Int8) : Int8 { x <<> y };
+
+  /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+  public func bitrotRight(x : Int8, y : Int8) : Int8 { x <>> y };
+
+  /// Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
+  public func bittest(x : Int8, p : Nat) : Bool {
+    Prim.btstInt8(x, Prim.intToInt8(p));
+  };
+
+  /// Returns the value of setting bit `p mod 8` in `x` to `1`.
+  public func bitset(x : Int8, p : Nat) : Int8 {
+    x | (1 << Prim.intToInt8(p));
+  };
+
+  /// Returns the value of clearing bit `p mod 8` in `x` to `0`.
+  public func bitclear(x : Int8, p : Nat) : Int8 {
+    x & ^(1 << Prim.intToInt8(p));
+  };
+
+  /// Returns the value of flipping bit `p mod 8` in `x`.
+  public func bitflip(x : Int8, p : Nat) : Int8 {
+    x ^ (1 << Prim.intToInt8(p));
+  };
+
+  /// Returns the count of non-zero bits in `x`.
+  public let bitcountNonZero : (x : Int8) -> Int8 = Prim.popcntInt8;
+
+  /// Returns the count of leading zero bits in `x`.
+  public let bitcountLeadingZero : (x : Int8) -> Int8 = Prim.clzInt8;
+
+  /// Returns the count of trailing zero bits in `x`.
+  public let bitcountTrailingZero : (x : Int8) -> Int8 = Prim.ctzInt8;
+
+  /// Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+  public func addWrap(x : Int8, y : Int8) : Int8 { x +% y };
+
+  /// Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+  public func subWrap(x : Int8, y : Int8) : Int8 { x -% y };
+
+  /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+  public func mulWrap(x : Int8, y : Int8) : Int8 { x *% y };
+
+  /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
+  public func powWrap(x : Int8, y : Int8) : Int8 { x **% y };
 
 }
