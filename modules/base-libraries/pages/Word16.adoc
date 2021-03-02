@@ -5,180 +5,180 @@
 
 Most operations are available as built-in operators (e.g. `1 | 1`).
 
-[[value.toNat]]
+[[toNat]]
 == toNat
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toNat : Word16 -> Nat
 ----
 
 Conversion.
 
-[[value.fromNat]]
+[[fromNat]]
 == fromNat
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromNat : Nat -> Word16
 ----
 
 Conversion. Wraps around.
 
-[[value.toInt]]
+[[toInt]]
 == toInt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toInt(x : Word16) : Int
 ----
 
 Conversion. Return a value between `-2^15` and `2^15-1`
 
-[[value.fromInt]]
+[[fromInt]]
 == fromInt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromInt : (x : Int) -> Word16
 ----
 
 Conversion. Returns `x mod 2^16`.
 
-[[value.toText]]
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toText(x : Word16) : Text
 ----
 
 Returns the Text representation of `x`.
 
-[[value.min]]
+[[min]]
 == min
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func min(x : Word16, y : Word16) : Word16
 ----
 
 Returns the minimum of `x` and `y`.
 
-[[value.max]]
+[[max]]
 == max
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func max(x : Word16, y : Word16) : Word16
 ----
 
 Returns the maximum of `x` and `y`.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Word16, y : Word16) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Word16, y : Word16) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(x : Word16, y : Word16) : Bool
 ----
 
 Returns `x < y`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(x : Word16, y : Word16) : Bool
 ----
 
 Returns `x <= y`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(x : Word16, y : Word16) : Bool
 ----
 
 Returns `x > y`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(x : Word16, y : Word16) : Bool
 ----
 
 Returns `x >= y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Word16, y : Word16) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
 
-[[value.add]]
+[[add]]
 == add
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func add(x : Word16, y : Word16) : Word16
 ----
 
 Returns the sum of `x` and `y`, `(x + y) mod 2^16`.
 
-[[value.sub]]
+[[sub]]
 == sub
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func sub(x : Word16, y : Word16) : Word16
 ----
 
 Returns the difference of `x` and `y`, `(2^16 + x - y) mod 2^16`.
 
-[[value.mul]]
+[[mul]]
 == mul
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mul(x : Word16, y : Word16) : Word16
 ----
 
 Returns the product of `x` and `y`, `(x * y) mod 2^16`.
 
-[[value.div]]
+[[div]]
 == div
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func div(x : Word16, y : Word16) : Word16
 ----
@@ -186,10 +186,10 @@ func div(x : Word16, y : Word16) : Word16
 Returns the division of `x` by `y`, `x / y`.
 Traps when `y` is zero.
 
-[[value.rem]]
+[[rem]]
 == rem
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func rem(x : Word16, y : Word16) : Word16
 ----
@@ -197,170 +197,170 @@ func rem(x : Word16, y : Word16) : Word16
 Returns the remainder of `x` divided by `y`, `x % y`.
 Traps when `y` is zero.
 
-[[value.pow]]
+[[pow]]
 == pow
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func pow(x : Word16, y : Word16) : Word16
 ----
 
 Returns `x` to the power of `y`, `(x ** y) mod 2^16`.
 
-[[value.bitnot]]
+[[bitnot]]
 == bitnot
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitnot(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise negation of `x`, `^x`.
 
-[[value.bitand]]
+[[bitand]]
 == bitand
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitand(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise and of `x` and `y`, `x & y`.
 
-[[value.bitor]]
+[[bitor]]
 == bitor
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitor(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise or of `x` and `y`, `x \| y`.
 
-[[value.bitxor]]
+[[bitxor]]
 == bitxor
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitxor(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 
-[[value.bitshiftLeft]]
+[[bitshiftLeft]]
 == bitshiftLeft
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitshiftLeft(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise shift left of `x` by `y`, `x << y`.
 
-[[value.bitshiftRight]]
+[[bitshiftRight]]
 == bitshiftRight
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitshiftRight(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise shift right of `x` by `y`, `x >> y`.
 
-[[value.bitshiftRightSigned]]
+[[bitshiftRightSigned]]
 == bitshiftRightSigned
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitshiftRightSigned(x : Word16, y : Word16) : Word16
 ----
 
 Returns the signed shift right of `x` by `y`, `x +>> y`.
 
-[[value.bitrotLeft]]
+[[bitrotLeft]]
 == bitrotLeft
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitrotLeft(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 
-[[value.bitrotRight]]
+[[bitrotRight]]
 == bitrotRight
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitrotRight(x : Word16, y : Word16) : Word16
 ----
 
 Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 
-[[value.bittest]]
+[[bittest]]
 == bittest
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bittest(x : Word16, p : Nat) : Bool
 ----
 
 Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
 
-[[value.bitset]]
+[[bitset]]
 == bitset
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitset(x : Word16, p : Nat) : Word16
 ----
 
 Returns the value of setting bit `p mod 16` in `x` to `1`.
 
-[[value.bitclear]]
+[[bitclear]]
 == bitclear
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitclear(x : Word16, p : Nat) : Word16
 ----
 
 Returns the value of clearing bit `p mod 16` in `x` to `0`.
 
-[[value.bitflip]]
+[[bitflip]]
 == bitflip
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func bitflip(x : Word16, p : Nat) : Word16
 ----
 
 Returns the value of flipping bit `p mod 16` in `x`.
 
-[[value.bitcountNonZero]]
+[[bitcountNonZero]]
 == bitcountNonZero
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let bitcountNonZero : (x : Word16) -> Word16
 ----
 
 Returns the count of non-zero bits in `x`.
 
-[[value.bitcountLeadingZero]]
+[[bitcountLeadingZero]]
 == bitcountLeadingZero
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let bitcountLeadingZero : (x : Word16) -> Word16
 ----
 
 Returns the count of leading zero bits in `x`.
 
-[[value.bitcountTrailingZero]]
+[[bitcountTrailingZero]]
 == bitcountTrailingZero
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let bitcountTrailingZero : (x : Word16) -> Word16
 ----

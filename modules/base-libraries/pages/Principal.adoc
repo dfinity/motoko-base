@@ -3,120 +3,120 @@
 
 IC principals (User and canister IDs)
 
-[[value.fromActor]]
+[[fromActor]]
 == fromActor
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromActor : (a : actor {  }) -> Principal
 ----
 
 Conversion.
 
-[[value.toBlob]]
+[[toBlob]]
 == toBlob
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toBlob : (p : Principal) -> Blob
 ----
 
 Conversion.
 
-[[value.toText]]
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toText(p : Principal) : Text
 ----
 
 Conversion.
 
-[[value.hash]]
+[[hash]]
 == hash
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func hash(principal : Principal) : Hash.Hash
+func hash(principal : Principal) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 
 
-[[value.fromText]]
+[[fromText]]
 == fromText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func fromText(t : Text) : Principal
 ----
 
 
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Principal, y : Principal) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Principal, y : Principal) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(x : Principal, y : Principal) : Bool
 ----
 
 Returns `x < y`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(x : Principal, y : Principal) : Bool
 ----
 
 Returns `x <= y`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(x : Principal, y : Principal) : Bool
 ----
 
 Returns `x > y`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(x : Principal, y : Principal) : Bool
 ----
 
 Returns `x >= y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Principal, y : Principal) : {#less; #equal; #greater}
 ----

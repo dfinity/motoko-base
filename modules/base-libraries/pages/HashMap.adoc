@@ -15,12 +15,12 @@ Internally, table growth policy is very simple, for now:
   Double an initial capacity when the expected
   bucket list beyond a certain constant.
 
-[[class.HashMap]]
+[[type.HashMap]]
 == HashMap
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-class HashMap<K, V>(initCapacity : Nat, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash)
+class HashMap<K, V>(initCapacity : Nat, keyEq : (K, K) -> Bool, keyHash : K -> xref:Hash.adoc#type.Hash[Hash.Hash])
 ----
 
 An imperative HashMap with a minimal object-oriented interface.
@@ -28,20 +28,20 @@ Maps keys of type `K` to values of type `V`.
 
 
 
-[[value.size]]
+[[HashMap.size]]
 === size
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func size() : Nat
 ----
 
 Returns the number of entries in this HashMap.
 
-[[value.delete]]
+[[HashMap.delete]]
 === delete
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func delete(k : K)
 ----
@@ -49,10 +49,10 @@ func delete(k : K)
 Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
 exist.
 
-[[value.remove]]
+[[HashMap.remove]]
 === remove
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func remove(k : K) : ?V
 ----
@@ -60,10 +60,10 @@ func remove(k : K) : ?V
 Removes the entry with the key `k` and returns the associated value if it
 existed or `null` otherwise.
 
-[[value.get]]
+[[HashMap.get]]
 === get
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func get(k : K) : ?V
 ----
@@ -71,20 +71,20 @@ func get(k : K) : ?V
 Gets the entry with the key `k` and returns its associated value if it
 existed or `null` otherwise.
 
-[[value.put]]
+[[HashMap.put]]
 === put
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func put(k : K, v : V)
 ----
 
 Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
 
-[[value.replace]]
+[[HashMap.replace]]
 === replace
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func replace(k : K, v : V) : ?V
 ----
@@ -92,54 +92,54 @@ func replace(k : K, v : V) : ?V
 Insert the value `v` at key `k` and returns the previous value stored at
 `k` or null if it didn't exist.
 
-[[value.entries]]
+[[HashMap.entries]]
 === entries
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func entries() : Iter.Iter<(K, V)>
+func entries() : xref:Iter.adoc#type.Iter[Iter.Iter]<(K, V)>
 ----
 
 Returns an iterator over the key value pairs in this
 HashMap. Does _not_ modify the HashMap.
 
-[[value.clone]]
+[[clone]]
 == clone
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func clone<K, V>(h : HashMap<K, V>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash) : HashMap<K, V>
+func clone<K, V>(h : xref:#type.HashMap[HashMap]<K, V>, keyEq : (K, K) -> Bool, keyHash : K -> xref:Hash.adoc#type.Hash[Hash.Hash]) : xref:#type.HashMap[HashMap]<K, V>
 ----
 
 clone cannot be an efficient object method,
 ...but is still useful in tests, and beyond.
 
-[[value.fromIter]]
+[[fromIter]]
 == fromIter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromIter<K, V>(iter : Iter.Iter<(K, V)>, initCapacity : Nat, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash) : HashMap<K, V>
+func fromIter<K, V>(iter : xref:Iter.adoc#type.Iter[Iter.Iter]<(K, V)>, initCapacity : Nat, keyEq : (K, K) -> Bool, keyHash : K -> xref:Hash.adoc#type.Hash[Hash.Hash]) : xref:#type.HashMap[HashMap]<K, V>
 ----
 
 Clone from any iterator of key-value pairs
 
-[[value.map]]
+[[map]]
 == map
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func map<K, V1, V2>(h : HashMap<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash, mapFn : (K, V1) -> V2) : HashMap<K, V2>
+func map<K, V1, V2>(h : xref:#type.HashMap[HashMap]<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> xref:Hash.adoc#type.Hash[Hash.Hash], mapFn : (K, V1) -> V2) : xref:#type.HashMap[HashMap]<K, V2>
 ----
 
 
 
-[[value.mapFilter]]
+[[mapFilter]]
 == mapFilter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mapFilter<K, V1, V2>(h : HashMap<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> Hash.Hash, mapFn : (K, V1) -> ?V2) : HashMap<K, V2>
+func mapFilter<K, V1, V2>(h : xref:#type.HashMap[HashMap]<K, V1>, keyEq : (K, K) -> Bool, keyHash : K -> xref:Hash.adoc#type.Hash[Hash.Hash], mapFn : (K, V1) -> ?V2) : xref:#type.HashMap[HashMap]<K, V2>
 ----
 
 

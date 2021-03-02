@@ -6,7 +6,7 @@ Error handling with the Result type.
 [[type.Result]]
 == Result
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type Result<Ok, Err> = {#ok : Ok; #err : Err}
 ----
@@ -26,32 +26,32 @@ switch(createUser(myUser)) {
 }
 ```
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func equal<Ok, Err>(eqOk : (Ok, Ok) -> Bool, eqErr : (Err, Err) -> Bool, r1 : Result<Ok, Err>, r2 : Result<Ok, Err>) : Bool
+func equal<Ok, Err>(eqOk : (Ok, Ok) -> Bool, eqErr : (Err, Err) -> Bool, r1 : xref:#type.Result[Result]<Ok, Err>, r2 : xref:#type.Result[Result]<Ok, Err>) : Bool
 ----
 
 
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func compare<Ok, Err>(compareOk : (Ok, Ok) -> Order.Order, compareErr : (Err, Err) -> Order.Order, r1 : Result<Ok, Err>, r2 : Result<Ok, Err>) : Order.Order
+func compare<Ok, Err>(compareOk : (Ok, Ok) -> xref:Order.adoc#type.Order[Order.Order], compareErr : (Err, Err) -> xref:Order.adoc#type.Order[Order.Order], r1 : xref:#type.Result[Result]<Ok, Err>, r2 : xref:#type.Result[Result]<Ok, Err>) : xref:Order.adoc#type.Order[Order.Order]
 ----
 
 
 
-[[value.chain]]
+[[chain]]
 == chain
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func chain<R1, R2, Error>(x : Result<R1, Error>, y : R1 -> Result<R2, Error>) : Result<R2, Error>
+func chain<R1, R2, Error>(x : xref:#type.Result[Result]<R1, Error>, y : R1 -> xref:#type.Result[Result]<R2, Error>) : xref:#type.Result[Result]<R2, Error>
 ----
 
 Allows sequencing of `Result` values and functions that return
@@ -73,12 +73,12 @@ assert(between10And20(9) == #err("Not larger than 10."));
 assert(between10And20(21) == #err("Not smaller than 20."));
 ```
 
-[[value.flatten]]
+[[flatten]]
 == flatten
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func flatten<Ok, Error>(result : Result<Result<Ok, Error>, Error>) : Result<Ok, Error>
+func flatten<Ok, Error>(result : xref:#type.Result[Result]<xref:#type.Result[Result]<Ok, Error>, Error>) : xref:#type.Result[Result]<Ok, Error>
 ----
 
 Flattens a nested Result.
@@ -90,32 +90,32 @@ assert(Result.flatten<Nat, Text>(#err("Wrong")) == #err("Wrong"));
 assert(Result.flatten<Nat, Text>(#ok(#err("Wrong"))) == #err("Wrong"));
 ```
 
-[[value.mapOk]]
+[[mapOk]]
 == mapOk
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mapOk<Ok1, Ok2, Error>(x : Result<Ok1, Error>, f : Ok1 -> Ok2) : Result<Ok2, Error>
+func mapOk<Ok1, Ok2, Error>(x : xref:#type.Result[Result]<Ok1, Error>, f : Ok1 -> Ok2) : xref:#type.Result[Result]<Ok2, Error>
 ----
 
 Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
 
-[[value.mapErr]]
+[[mapErr]]
 == mapErr
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mapErr<Ok, Error1, Error2>(x : Result<Ok, Error1>, f : Error1 -> Error2) : Result<Ok, Error2>
+func mapErr<Ok, Error1, Error2>(x : xref:#type.Result[Result]<Ok, Error1>, f : Error1 -> Error2) : xref:#type.Result[Result]<Ok, Error2>
 ----
 
 Maps the `Err` type/value, leaving any `Ok` type/value unchanged.
 
-[[value.fromOption]]
+[[fromOption]]
 == fromOption
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromOption<R, E>(x : ?R, err : E) : Result<R, E>
+func fromOption<R, E>(x : ?R, err : E) : xref:#type.Result[Result]<R, E>
 ----
 
 Create a result from an option, including an error value to handle the `null` case.
@@ -125,12 +125,12 @@ assert(Result.fromOption(?42, "err") == #ok(42));
 assert(Result.fromOption(null, "err") == #err("err"));
 ```
 
-[[value.toOption]]
+[[toOption]]
 == toOption
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toOption<R, E>(r : Result<R, E>) : ?R
+func toOption<R, E>(r : xref:#type.Result[Result]<R, E>) : ?R
 ----
 
 Create an option from a result, turning all #err into `null`.
@@ -140,12 +140,12 @@ assert(Result.toOption(#ok(42)) == ?42);
 assert(Result.toOption(#err("err")) == null);
 ```
 
-[[value.iterate]]
+[[iterate]]
 == iterate
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ())
+func iterate<Ok, Err>(res : xref:#type.Result[Result]<Ok, Err>, f : Ok -> ())
 ----
 
 Applies a function to a successful value, but discards the result. Use
@@ -160,42 +160,42 @@ Result.iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
 assert(counter == 5);
 ```
 
-[[value.isOk]]
+[[isOk]]
 == isOk
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isOk(r : Result<Any, Any>) : Bool
+func isOk(r : xref:#type.Result[Result]<Any, Any>) : Bool
 ----
 
 
 
-[[value.isErr]]
+[[isErr]]
 == isErr
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isErr(r : Result<Any, Any>) : Bool
+func isErr(r : xref:#type.Result[Result]<Any, Any>) : Bool
 ----
 
 
 
-[[value.assertOk]]
+[[assertOk]]
 == assertOk
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func assertOk(r : Result<Any, Any>)
+func assertOk(r : xref:#type.Result[Result]<Any, Any>)
 ----
 
 Asserts that its argument is an `#ok` result, traps otherwise.
 
-[[value.assertErr]]
+[[assertErr]]
 == assertErr
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func assertErr(r : Result<Any, Any>)
+func assertErr(r : xref:#type.Result[Result]<Any, Any>)
 ----
 
 Asserts that its argument is an `#err` result, traps otherwise.

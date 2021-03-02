@@ -10,10 +10,10 @@ If `t` is a value of type `Text`, then:
 
 This module defines additional operations on `Text` values.
 
-[[value.fromChar]]
+[[fromChar]]
 == fromChar
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromChar : (c : Char) -> Text
 ----
@@ -21,153 +21,153 @@ let fromChar : (c : Char) -> Text
 Conversion.
 Returns the text value of size 1 containing the single character `c`.
 
-[[value.toIter]]
+[[toIter]]
 == toIter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toIter(t : Text) : Iter.Iter<Char>
+func toIter(t : Text) : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>
 ----
 
 Conversion.
 Creates an iterator that traverses the characters of the text `t`.
 
-[[value.fromIter]]
+[[fromIter]]
 == fromIter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromIter(cs : Iter.Iter<Char>) : Text
+func fromIter(cs : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>) : Text
 ----
 
 Conversion.
 Returns the text value containing the sequence of characters in `cs`.
 
-[[value.size]]
+[[size]]
 == size
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func size(t : Text) : Nat
 ----
 
 Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
 
-[[value.hash]]
+[[hash]]
 == hash
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func hash(t : Text) : Hash.Hash
+func hash(t : Text) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 Returns a hash obtained by the `xor`-ing the (`Word32`) values of all characters in `t`.
 WARNING: this is a poor hash function and will be replaced.
 
-[[value.concat]]
+[[concat]]
 == concat
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func concat(t1 : Text, t2 : Text) : Text
 ----
 
 Returns the concatenation of `t1` and `t2`, `t1 # t2`.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(t1 : Text, t2 : Text) : Bool
 ----
 
 Returns `t1 == t2`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(t1 : Text, t2 : Text) : Bool
 ----
 
 Returns `t1 != t2`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(t1 : Text, t2 : Text) : Bool
 ----
 
 Returns `t1 < t2`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(t1 : Text, t2 : Text) : Bool
 ----
 
 Returns `t1 <= t2`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(t1 : Text, t2 : Text) : Bool
 ----
 
 Returns `t1 > t2`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(t1 : Text, t2 : Text) : Bool
 ----
 
 Returns `t1 >= t2`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(t1 : Text, t2 : Text) : {#less; #equal; #greater}
 ----
 
 Returns the order of `t1` and `t1`.
 
-[[value.join]]
+[[join]]
 == join
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func join(sep : Text, ts : Iter.Iter<Text>) : Text
+func join(sep : Text, ts : xref:Iter.adoc#type.Iter[Iter.Iter]<Text>) : Text
 ----
 
 Returns the concatenation of text values in `ts`, separated by `sep`.
 
-[[value.map]]
+[[map]]
 == map
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func map(t : Text, f : Char -> Char) : Text
 ----
 
 Returns the result of applying `f` to each character in `ts`, concatenating the intermediate single-character text values.
 
-[[value.translate]]
+[[translate]]
 == translate
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func translate(t : Text, f : Char -> Text) : Text
 ----
@@ -177,7 +177,7 @@ Returns the result of applying `f` to each character in `ts`, concatenating the 
 [[type.Pattern]]
 == Pattern
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type Pattern = {#char : Char; #text : Text; #predicate : (Char -> Bool)}
 ----
@@ -190,124 +190,124 @@ A pattern `p` describes a sequence of characters. A pattern has one of the follo
 
 A _match_ for `p` is any sequence of characters matching the pattern `p`.
 
-[[value.split]]
+[[split]]
 == split
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func split(t : Text, p : Pattern) : Iter.Iter<Text>
+func split(t : Text, p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<Text>
 ----
 
 Returns the sequence of fields in `t`, derived from start to end,
 separated by text matching pattern `p`.
 Two fields are separated by exactly one match.
 
-[[value.tokens]]
+[[tokens]]
 == tokens
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func tokens(t : Text, p : Pattern) : Iter.Iter<Text>
+func tokens(t : Text, p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<Text>
 ----
 
 Returns the sequence of tokens in `t`, derived from start to end.
 A _token_ is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
 Two tokens may be separated by one or more matches of `p`.
 
-[[value.contains]]
+[[contains]]
 == contains
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func contains(t : Text, p : Pattern) : Bool
+func contains(t : Text, p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
 Returns true if `t` contains a match for pattern `p`.
 
-[[value.startsWith]]
+[[startsWith]]
 == startsWith
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func startsWith(t : Text, p : Pattern) : Bool
+func startsWith(t : Text, p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
 Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
 
-[[value.endsWith]]
+[[endsWith]]
 == endsWith
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func endsWith(t : Text, p : Pattern) : Bool
+func endsWith(t : Text, p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
 Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
 
-[[value.replace]]
+[[replace]]
 == replace
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func replace(t : Text, p : Pattern, r : Text) : Text
+func replace(t : Text, p : xref:#type.Pattern[Pattern], r : Text) : Text
 ----
 
 Returns `t` with all matches of pattern `p` replaced by text `r`.
 
-[[value.stripStart]]
+[[stripStart]]
 == stripStart
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func stripStart(t : Text, p : Pattern) : ?Text
+func stripStart(t : Text, p : xref:#type.Pattern[Pattern]) : ?Text
 ----
 
 Returns the optioned suffix of `t` obtained by eliding exactly one leading match of pattern `p`, otherwise `null`.
 
-[[value.stripEnd]]
+[[stripEnd]]
 == stripEnd
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func stripEnd(t : Text, p : Pattern) : ?Text
+func stripEnd(t : Text, p : xref:#type.Pattern[Pattern]) : ?Text
 ----
 
 Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of pattern `p`, otherwise `null`.
 
-[[value.trimStart]]
+[[trimStart]]
 == trimStart
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func trimStart(t : Text, p : Pattern) : Text
+func trimStart(t : Text, p : xref:#type.Pattern[Pattern]) : Text
 ----
 
 Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`.
 
-[[value.trimEnd]]
+[[trimEnd]]
 == trimEnd
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func trimEnd(t : Text, p : Pattern) : Text
+func trimEnd(t : Text, p : xref:#type.Pattern[Pattern]) : Text
 ----
 
 Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p`.
 
-[[value.trim]]
+[[trim]]
 == trim
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func trim(t : Text, p : Pattern) : Text
+func trim(t : Text, p : xref:#type.Pattern[Pattern]) : Text
 ----
 
 Returns the subtext of `t` obtained by eliding all leading and trailing matches of pattern `p`.
 
-[[value.compareWith]]
+[[compareWith]]
 == compareWith
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compareWith(t1 : Text, t2 : Text, cmp : (Char, Char) -> {#less; #equal; #greater}) : {#less; #equal; #greater}
 ----

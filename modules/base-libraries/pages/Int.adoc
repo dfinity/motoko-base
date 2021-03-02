@@ -6,180 +6,180 @@ Integer numbers
 Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
 This module provides equivalent functions and `Text` conversion.
 
-[[value.abs]]
+[[abs]]
 == abs
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let abs : Int -> Nat
 ----
 
 Returns the absolute value of the number
 
-[[value.toText]]
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toText : Int -> Text
 ----
 
 
 
-[[value.min]]
+[[min]]
 == min
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func min(x : Int, y : Int) : Int
 ----
 
 Returns the minimum of `x` and `y`.
 
-[[value.max]]
+[[max]]
 == max
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func max(x : Int, y : Int) : Int
 ----
 
 Returns the maximum of `x` and `y`.
 
-[[value.hash]]
+[[hash]]
 == hash
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func hash(i : Int) : Hash.Hash
+func hash(i : Int) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 
 
-[[value.hashAcc]]
+[[hashAcc]]
 == hashAcc
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash
+func hashAcc(h1 : xref:Hash.adoc#type.Hash[Hash.Hash], i : Int) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 WARNING: May go away (?)
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Int, y : Int) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Int, y : Int) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(x : Int, y : Int) : Bool
 ----
 
 Returns `x < y`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(x : Int, y : Int) : Bool
 ----
 
 Returns `x <= y`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(x : Int, y : Int) : Bool
 ----
 
 Returns `x > y`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(x : Int, y : Int) : Bool
 ----
 
 Returns `x >= y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Int, y : Int) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
 
-[[value.neq]]
+[[neq]]
 == neq
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func neq(x : Int) : Int
 ----
 
 Returns the negation of `x`, `-x` .
 
-[[value.add]]
+[[add]]
 == add
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func add(x : Int, y : Int) : Int
 ----
 
 Returns the sum of `x` and `y`, `x + y`.
 
-[[value.sub]]
+[[sub]]
 == sub
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func sub(x : Int, y : Int) : Int
 ----
 
 Returns the difference of `x` and `y`, `x - y`.
 
-[[value.mul]]
+[[mul]]
 == mul
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mul(x : Int, y : Int) : Int
 ----
 
 Returns the product of `x` and `y`, `x * y`.
 
-[[value.div]]
+[[div]]
 == div
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func div(x : Int, y : Int) : Int
 ----
@@ -187,10 +187,10 @@ func div(x : Int, y : Int) : Int
 Returns the division of `x` by `y`,  `x / y`.
 Traps when `y` is zero.
 
-[[value.rem]]
+[[rem]]
 == rem
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func rem(x : Int, y : Int) : Int
 ----
@@ -198,10 +198,10 @@ func rem(x : Int, y : Int) : Int
 Returns the remainder of `x` divided by `y`, `x % y`.
 Traps when `y` is zero.
 
-[[value.pow]]
+[[pow]]
 == pow
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func pow(x : Int, y : Int) : Int
 ----

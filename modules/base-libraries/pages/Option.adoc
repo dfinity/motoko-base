@@ -27,10 +27,10 @@ assert(int2orZero == 0);
 The functions in this module capture some common operations when working
 with optionals that can be more succinct than using pattern matching.
 
-[[value.get]]
+[[get]]
 == get
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func get<T>(x : ?T, default : T) : T
 ----
@@ -38,10 +38,10 @@ func get<T>(x : ?T, default : T) : T
 Unwraps an optional value, with a default value, i.e. `get(?x, d) = x` and
 `get(null, d) = d`.
 
-[[value.getMapped]]
+[[getMapped]]
 == getMapped
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B
 ----
@@ -49,10 +49,10 @@ func getMapped<A, B>(x : ?A, f : A -> B, default : B) : B
 Unwraps an optional value using a function, or returns the default, i.e.
 `option(?x, f, d) = f x` and `option(null, f, d) = d`.
 
-[[value.map]]
+[[map]]
 == map
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func map<A, B>(x : ?A, f : A -> B) : ?B
 ----
@@ -64,10 +64,10 @@ assert(Option.map<Nat, Nat>(?(42), func x = x+1) == ?(43));
 assert(Option.map<Nat, Nat>(null, func x = x+1) == null);
 ```
 
-[[value.iterate]]
+[[iterate]]
 == iterate
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func iterate<A>(x : ?A, f : A -> ())
 ----
@@ -84,10 +84,10 @@ Option.iterate(null, func (x : Nat) { counter += x });
 assert(counter == 5);
 ```
 
-[[value.apply]]
+[[apply]]
 == apply
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B
 ----
@@ -95,10 +95,10 @@ func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B
 Applies an optional function to an optional value. Returns `null` if at
 least one of the arguments is `null`.
 
-[[value.chain]]
+[[chain]]
 == chain
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func chain<A, B>(x : ?A, f : A -> ?B) : ?B
 ----
@@ -106,10 +106,10 @@ func chain<A, B>(x : ?A, f : A -> ?B) : ?B
 Applies a function to an optional value. Returns `null` if the argument is
 `null`, or the function returns `null`.
 
-[[value.flatten]]
+[[flatten]]
 == flatten
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func flatten<A>(x : ??A) : ?A
 ----
@@ -122,10 +122,10 @@ assert(Option.flatten(?(null)) == null);
 assert(Option.flatten(null) == null);
 ```
 
-[[value.make]]
+[[make]]
 == make
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func make<A>(x : A) : ?A
 ----
@@ -136,30 +136,30 @@ import Option "mo:base/Option";
 assert(Option.make(42) == ?(42));
 ```
 
-[[value.isSome]]
+[[isSome]]
 == isSome
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func isSome(x : ?Any) : Bool
 ----
 
 Returns true if the argument is not `null`, otherwise returns false.
 
-[[value.isNull]]
+[[isNull]]
 == isNull
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func isNull(x : ?Any) : Bool
 ----
 
 Returns true if the argument is `null`, otherwise returns false.
 
-[[value.assertSome]]
+[[assertSome]]
 == assertSome
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func assertSome(x : ?Any)
 ----
@@ -167,10 +167,10 @@ func assertSome(x : ?Any)
 Asserts that the value is not `null`; fails otherwise.
 Deprecated.
 
-[[value.assertNull]]
+[[assertNull]]
 == assertNull
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func assertNull(x : ?Any)
 ----
@@ -178,10 +178,10 @@ func assertNull(x : ?Any)
 Asserts that the value _is_ `null`; fails otherwise.
 Deprecated.
 
-[[value.unwrap]]
+[[unwrap]]
 == unwrap
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func unwrap<T>(x : ?T) : T
 ----

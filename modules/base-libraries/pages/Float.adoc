@@ -3,210 +3,210 @@
 
 64-bit Floating-point numbers
 
-[[value.pi]]
+[[pi]]
 == pi
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let pi : Float
 ----
 
 Ratio of the circumference of a circle to its diameter.
 
-[[value.e]]
+[[e]]
 == e
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let e : Float
 ----
 
 Base of the natural logarithm.
 
-[[value.abs]]
+[[abs]]
 == abs
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let abs : (x : Float) -> Float
 ----
 
 Returns the absolute value of `x`.
 
-[[value.sqrt]]
+[[sqrt]]
 == sqrt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let sqrt : (x : Float) -> Float
 ----
 
 Returns the square root of `x`.
 
-[[value.ceil]]
+[[ceil]]
 == ceil
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let ceil : (x : Float) -> Float
 ----
 
 Returns the smallest integral float greater than or equal to `x`.
 
-[[value.floor]]
+[[floor]]
 == floor
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let floor : (x : Float) -> Float
 ----
 
 Returns the largest integral float less than or equal to `x`.
 
-[[value.trunc]]
+[[trunc]]
 == trunc
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let trunc : (x : Float) -> Float
 ----
 
 Returns the nearest integral float not greater in magnitude than `x`.
 
-[[value.nearest]]
+[[nearest]]
 == nearest
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let nearest : (x : Float) -> Float
 ----
 
 Returns the nearest integral float to `x`.
 
-[[value.copySign]]
+[[copySign]]
 == copySign
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let copySign : (x : Float, y : Float) -> Float
 ----
 
 Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
 
-[[value.min]]
+[[min]]
 == min
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let min : (x : Float, y : Float) -> Float
 ----
 
 Returns the smaller value of `x` and `y`.
 
-[[value.max]]
+[[max]]
 == max
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let max : (x : Float, y : Float) -> Float
 ----
 
 Returns the larger value of `x` and `y`.
 
-[[value.sin]]
+[[sin]]
 == sin
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let sin : (x : Float) -> Float
 ----
 
 Returns the sine of the radian angle `x`.
 
-[[value.cos]]
+[[cos]]
 == cos
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let cos : (x : Float) -> Float
 ----
 
 Returns the cosine of the radian angle `x`.
 
-[[value.tan]]
+[[tan]]
 == tan
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let tan : (x : Float) -> Float
 ----
 
 Returns the tangent of the radian angle `x`.
 
-[[value.arcsin]]
+[[arcsin]]
 == arcsin
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let arcsin : (x : Float) -> Float
 ----
 
 Returns the arc sine of `x` in radians.
 
-[[value.arccos]]
+[[arccos]]
 == arccos
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let arccos : (x : Float) -> Float
 ----
 
 Returns the arc cosine of `x` in radians.
 
-[[value.arctan]]
+[[arctan]]
 == arctan
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let arctan : (x : Float) -> Float
 ----
 
 Returns the arc tangent of `x` in radians.
 
-[[value.arctan2]]
+[[arctan2]]
 == arctan2
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let arctan2 : (y : Float, x : Float) -> Float
 ----
 
 Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
 
-[[value.exp]]
+[[exp]]
 == exp
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let exp : (x : Float) -> Float
 ----
 
 Returns the value of `e` raised to the `x`-th power.
 
-[[value.log]]
+[[log]]
 == log
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let log : (x : Float) -> Float
 ----
 
 Returns the natural logarithm (base-`e`) of `x`.
 
-[[value.format]]
+[[format]]
 == format
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func format(fmt : {#fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact}, x : Float) : Text
 ----
@@ -220,190 +220,190 @@ formatting directive `fmt`, which can take one of the following forms:
 * `#hex prec` as hexadecimal format with `prec` digits
 * `#exact` as exact format that can be decoded without loss.
 
-[[value.toText]]
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toText : Float -> Text
 ----
 
 Conversion to Text. Use `format(fmt, x)` for more detailed control.
 
-[[value.toInt64]]
+[[toInt64]]
 == toInt64
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toInt64 : Float -> Int64
 ----
 
 Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
 
-[[value.fromInt64]]
+[[fromInt64]]
 == fromInt64
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromInt64 : Int64 -> Float
 ----
 
 Conversion from Int64.
 
-[[value.toInt]]
+[[toInt]]
 == toInt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toInt : Float -> Int
 ----
 
 Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
 
-[[value.fromInt]]
+[[fromInt]]
 == fromInt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromInt : Int -> Float
 ----
 
 Conversion from Int via Int64. May trap.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Float, y : Float) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Float, y : Float) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(x : Float, y : Float) : Bool
 ----
 
 Returns `x < y`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(x : Float, y : Float) : Bool
 ----
 
 Returns `x <= y`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(x : Float, y : Float) : Bool
 ----
 
 Returns `x > y`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(x : Float, y : Float) : Bool
 ----
 
 Returns `x >= y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Float, y : Float) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
 
-[[value.neq]]
+[[neq]]
 == neq
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func neq(x : Float) : Float
 ----
 
 Returns the negation of `x`, `-x` .
 
-[[value.add]]
+[[add]]
 == add
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func add(x : Float, y : Float) : Float
 ----
 
 Returns the sum of `x` and `y`, `x + y`.
 
-[[value.sub]]
+[[sub]]
 == sub
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func sub(x : Float, y : Float) : Float
 ----
 
 Returns the difference of `x` and `y`, `x - y`.
 
-[[value.mul]]
+[[mul]]
 == mul
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mul(x : Float, y : Float) : Float
 ----
 
 Returns the product of `x` and `y`, `x * y`.
 
-[[value.div]]
+[[div]]
 == div
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func div(x : Float, y : Float) : Float
 ----
 
 Returns the division of `x` by `y`, `x / y`.
 
-[[value.rem]]
+[[rem]]
 == rem
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func rem(x : Float, y : Float) : Float
 ----
 
 Returns the remainder of `x` divided by `y`, `x % y`.
 
-[[value.pow]]
+[[pow]]
 == pow
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func pow(x : Float, y : Float) : Float
 ----

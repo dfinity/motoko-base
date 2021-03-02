@@ -3,10 +3,10 @@
 
 Debugging aids
 
-[[value.print]]
+[[print]]
 == print
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let print : Text -> ()
 ----

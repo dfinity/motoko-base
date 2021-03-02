@@ -7,10 +7,10 @@ Minimal LIFO (last in first out) implementation, as a class.
 See [deque](Deque.html) for mixed LIFO/FIFO behavior.
 
 
-[[class.Stack]]
+[[type.Stack]]
 == Stack
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 class Stack<T>()
 ----
@@ -19,40 +19,40 @@ class Stack<T>()
 
 
 
-[[value.push]]
+[[Stack.push]]
 === push
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func push(x : T)
 ----
 
 Push an element on the top of the stack.
 
-[[value.isEmpty]]
+[[Stack.isEmpty]]
 === isEmpty
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func isEmpty() : Bool
 ----
 
 True when the stack is empty.
 
-[[value.peek]]
+[[Stack.peek]]
 === peek
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func peek() : ?T
 ----
 
 Return and retain the top element, or return null.
 
-[[value.pop]]
+[[Stack.pop]]
 === pop
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func pop() : ?T
 ----

@@ -8,80 +8,80 @@ avoiding computation of the right argument when possible, the functions
 `logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
 of their arguments.
 
-[[value.toText]]
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toText(x : Bool) : Text
 ----
 
 Conversion.
 
-[[value.logand]]
+[[logand]]
 == logand
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func logand(x : Bool, y : Bool) : Bool
 ----
 
 Returns `x and y`.
 
-[[value.logor]]
+[[logor]]
 == logor
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func logor(x : Bool, y : Bool) : Bool
 ----
 
 Returns `x or y`.
 
-[[value.logxor]]
+[[logxor]]
 == logxor
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func logxor(x : Bool, y : Bool) : Bool
 ----
 
 Returns exclusive or of `x` and `y`, `x != y`.
 
-[[value.lognot]]
+[[lognot]]
 == lognot
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lognot(x : Bool) : Bool
 ----
 
 Returns `not x`.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Bool, y : Bool) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Bool, y : Bool) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Bool, y : Bool) : {#less; #equal; #greater}
 ----

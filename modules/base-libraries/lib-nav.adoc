@@ -8,6 +8,7 @@
 ** xref:./Debug.adoc[Debug]
 ** xref:./Deque.adoc[Deque]
 ** xref:./Error.adoc[Error]
+** xref:./ExperimentalCycles.adoc[ExperimentalCycles]
 ** xref:./Float.adoc[Float]
 ** xref:./Func.adoc[Func]
 ** xref:./Hash.adoc[Hash]

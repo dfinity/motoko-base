@@ -6,89 +6,89 @@ Functions for persistent, double-ended queues.
 [[type.Deque]]
 == Deque
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Deque<T> = (List<T>, List<T>)
+type Deque<T> = (xref:#type.List[List]<T>, xref:#type.List[List]<T>)
 ----
 
 Double-ended queue
 
-[[value.empty]]
+[[empty]]
 == empty
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func empty<T>() : Deque<T>
+func empty<T>() : xref:#type.Deque[Deque]<T>
 ----
 
 Empty queue
 
-[[value.isEmpty]]
+[[isEmpty]]
 == isEmpty
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isEmpty<T>(q : Deque<T>) : Bool
+func isEmpty<T>(q : xref:#type.Deque[Deque]<T>) : Bool
 ----
 
 True when the queue is empty
 
-[[value.pushFront]]
+[[pushFront]]
 == pushFront
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func pushFront<T>(q : Deque<T>, x : T) : Deque<T>
+func pushFront<T>(q : xref:#type.Deque[Deque]<T>, x : T) : xref:#type.Deque[Deque]<T>
 ----
 
 Insert a new element on the front end of the queue
 
-[[value.peekFront]]
+[[peekFront]]
 == peekFront
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func peekFront<T>(q : Deque<T>) : ?T
+func peekFront<T>(q : xref:#type.Deque[Deque]<T>) : ?T
 ----
 
 Inspect the (optional) first element on the front end of the queue
 
-[[value.popFront]]
+[[popFront]]
 == popFront
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func popFront<T>(q : Deque<T>) : ?(T, Deque<T>)
+func popFront<T>(q : xref:#type.Deque[Deque]<T>) : ?(T, xref:#type.Deque[Deque]<T>)
 ----
 
 Remove the first element on the front end of the queue; Returns null when empty.
 
-[[value.pushBack]]
+[[pushBack]]
 == pushBack
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func pushBack<T>(q : Deque<T>, x : T) : Deque<T>
+func pushBack<T>(q : xref:#type.Deque[Deque]<T>, x : T) : xref:#type.Deque[Deque]<T>
 ----
 
 Insert a new element on the back end of the queue
 
-[[value.peekBack]]
+[[peekBack]]
 == peekBack
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func peekBack<T>(q : Deque<T>) : ?T
+func peekBack<T>(q : xref:#type.Deque[Deque]<T>) : ?T
 ----
 
 Inspect the (optional) first element on the back end of the queue
 
-[[value.popBack]]
+[[popBack]]
 == popBack
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func popBack<T>(q : Deque<T>) : ?(Deque<T>, T)
+func popBack<T>(q : xref:#type.Deque[Deque]<T>) : ?(xref:#type.Deque[Deque]<T>, T)
 ----
 
 Remove the first element on the back end of the queue; Returns null when empty.

@@ -23,10 +23,10 @@ low API friction, developers need _buffers that grow_.
 A "buffer" is a mutable sequence that grows, either one element at a
 time, or one (second) buffer at time.
 
-[[class.Buffer]]
+[[type.Buffer]]
 == Buffer
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 class Buffer<X>(initCapacity : Nat)
 ----
@@ -39,20 +39,20 @@ capacity is exhausted.
 
 
 
-[[value.add]]
+[[Buffer.add]]
 === add
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func add(elem : X)
 ----
 
 Adds a single element to the buffer.
 
-[[value.removeLast]]
+[[Buffer.removeLast]]
 === removeLast
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func removeLast() : ?X
 ----
@@ -60,100 +60,100 @@ func removeLast() : ?X
 Removes the item that was inserted last and returns it or `null` if no
 elements had been added to the Buffer.
 
-[[value.append]]
+[[Buffer.append]]
 === append
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func append(b : Buffer<X>)
+func append(b : xref:#type.Buffer[Buffer]<X>)
 ----
 
 Adds all elements in buffer `b` to this buffer.
 
-[[value.size]]
+[[Buffer.size]]
 === size
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func size() : Nat
 ----
 
 Returns the current number of elements.
 
-[[value.clear]]
+[[Buffer.clear]]
 === clear
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func clear()
 ----
 
 Resets the buffer.
 
-[[value.clone]]
+[[Buffer.clone]]
 === clone
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func clone() : Buffer<X>
+func clone() : xref:#type.Buffer[Buffer]<X>
 ----
 
 Returns a copy of this buffer.
 
-[[value.vals]]
+[[Buffer.vals]]
 === vals
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func vals() : { next : () -> ?X }
 ----
 
 Returns an `Iter` over the elements of this buffer.
 
-[[value.toArray]]
+[[Buffer.toArray]]
 === toArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toArray() : [X]
 ----
 
 Creates a new array containing this buffer's elements.
 
-[[value.toVarArray]]
+[[Buffer.toVarArray]]
 === toVarArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toVarArray() : [var X]
 ----
 
 Creates a mutable array containing this buffer's elements.
 
-[[value.get]]
+[[Buffer.get]]
 === get
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func get(i : Nat) : X
 ----
 
 Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
 
-[[value.getOpt]]
+[[Buffer.getOpt]]
 === getOpt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func getOpt(i : Nat) : ?X
 ----
 
 Gets the 'i'-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
 
-[[value.put]]
+[[Buffer.put]]
 === put
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func put(i : Nat, elem : X)
 ----

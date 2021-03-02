@@ -9,9 +9,9 @@ i.e., the partial map represents the set with its domain.
 [[type.Hash]]
 == Hash
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Hash = Hash.Hash
+type Hash = xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 
@@ -19,119 +19,119 @@ type Hash = Hash.Hash
 [[type.Set]]
 == Set
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Set<T> = Trie.Trie<T, ()>
+type Set<T> = xref:Trie.adoc#type.Trie[Trie.Trie]<T, ()>
 ----
 
 
 
-[[value.empty]]
+[[empty]]
 == empty
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func empty<T>() : Set<T>
+func empty<T>() : xref:#type.Set[Set]<T>
 ----
 
 Empty set.
 
-[[value.put]]
+[[put]]
 == put
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T>
+func put<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 Put an element into the set.
 
-[[value.delete]]
+[[delete]]
 == delete
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T>
+func delete<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 Delete an element from the set.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool
+func equal<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : Bool
 ----
 
 Test if two sets are equal.
 
-[[value.size]]
+[[size]]
 == size
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func size<T>(s : Set<T>) : Nat
+func size<T>(s : xref:#type.Set[Set]<T>) : Nat
 ----
 
 The number of set elements, set's cardinality.
 
-[[value.mem]]
+[[mem]]
 == mem
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool
+func mem<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
 ----
 
 Test if a set contains a given element.
 
-[[value.union]]
+[[union]]
 == union
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func union<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+func union<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
 
-[[value.diff]]
+[[diff]]
 == diff
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func diff<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+func diff<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
 
-[[value.intersect]]
+[[intersect]]
 == intersect
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func intersect<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T>
+func intersect<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
 
-[[value.fromArray]]
+[[fromArray]]
 == fromArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromArray<T>(arr : [T], elemHash : T -> Hash, eq : (T, T) -> Bool) : Set<T>
+func fromArray<T>(arr : [T], elemHash : T -> xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 
 
-[[value.toArray]]
+[[toArray]]
 == toArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toArray<T>(s : Set<T>) : [T]
+func toArray<T>(s : xref:#type.Set[Set]<T>) : [T]
 ----
 
 

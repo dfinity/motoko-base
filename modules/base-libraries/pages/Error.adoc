@@ -9,7 +9,7 @@ The `Error` type is opaque.
 [[type.ErrorCode]]
 == ErrorCode
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type ErrorCode = Prim.ErrorCode
 ----
@@ -32,30 +32,30 @@ type ErrorCode = {
 };
 ```
 
-[[value.reject]]
+[[reject]]
 == reject
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let reject : (m : Text) -> Error
 ----
 
 Create an error from message `m` with code #canister_reject.
 
-[[value.code]]
+[[code]]
 == code
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-let code : (e : Error) -> ErrorCode
+let code : (e : Error) -> xref:#type.ErrorCode[ErrorCode]
 ----
 
 Returns the code of an error `e`.
 
-[[value.message]]
+[[message]]
 == message
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let message : (e : Error) -> Text
 ----

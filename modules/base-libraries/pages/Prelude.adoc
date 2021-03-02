@@ -7,10 +7,10 @@ This prelude file proposes standard library features that _may_
 belong in the _language_ (compiler-internal) prelude sometime, after
 some further experience and discussion.  Until then, they live here.
 
-[[value.nyi]]
+[[nyi]]
 == nyi
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func nyi() : None
 ----
@@ -22,20 +22,20 @@ Mark incomplete code with the `nyi` and `xxx` functions.
 Each have calls are well-typed in all typing contexts, which
 trap in all execution contexts.
 
-[[value.xxx]]
+[[xxx]]
 == xxx
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func xxx() : None
 ----
 
 
 
-[[value.unreachable]]
+[[unreachable]]
 == unreachable
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func unreachable() : None
 ----

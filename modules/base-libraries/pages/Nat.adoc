@@ -6,120 +6,120 @@ Natural numbers
 Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
 This module provides equivalent functions and `Text` conversion.
 
-[[value.toText]]
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toText : Nat -> Text
 ----
 
 Conversion.
 
-[[value.min]]
+[[min]]
 == min
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func min(x : Nat, y : Nat) : Nat
 ----
 
 Returns the minimum of `x` and `y`.
 
-[[value.max]]
+[[max]]
 == max
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func max(x : Nat, y : Nat) : Nat
 ----
 
 Returns the maximum of `x` and `y`.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Nat, y : Nat) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Nat, y : Nat) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(x : Nat, y : Nat) : Bool
 ----
 
 Returns `x < y`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(x : Nat, y : Nat) : Bool
 ----
 
 Returns `x <= y`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(x : Nat, y : Nat) : Bool
 ----
 
 Returns `x > y`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(x : Nat, y : Nat) : Bool
 ----
 
 Returns `x >= y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Nat, y : Nat) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
 
-[[value.add]]
+[[add]]
 == add
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func add(x : Nat, y : Nat) : Nat
 ----
 
 Returns the sum of `x` and `y`, `x + y`.
 
-[[value.sub]]
+[[sub]]
 == sub
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func sub(x : Nat, y : Nat) : Nat
 ----
@@ -127,20 +127,20 @@ func sub(x : Nat, y : Nat) : Nat
 Returns the difference of `x` and `y`, `x - y`.
 Traps on underflow.
 
-[[value.mul]]
+[[mul]]
 == mul
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mul(x : Nat, y : Nat) : Nat
 ----
 
 Returns the product of `x` and `y`, `x * y`.
 
-[[value.div]]
+[[div]]
 == div
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func div(x : Nat, y : Nat) : Nat
 ----
@@ -148,10 +148,10 @@ func div(x : Nat, y : Nat) : Nat
 Returns the division of `x` by `y`, `x / y`.
 Traps when `y` is zero.
 
-[[value.rem]]
+[[rem]]
 == rem
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func rem(x : Nat, y : Nat) : Nat
 ----
@@ -159,10 +159,10 @@ func rem(x : Nat, y : Nat) : Nat
 Returns the remainder of `x` divided by `y`, `x % y`.
 Traps when `y` is zero.
 
-[[value.pow]]
+[[pow]]
 == pow
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func pow(x : Nat, y : Nat) : Nat
 ----

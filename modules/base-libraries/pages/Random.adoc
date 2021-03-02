@@ -24,10 +24,10 @@ These are provided for performance (and convenience) reasons, and need
 special care when used. Similar caveats apply for user-defined (pseudo)
 random number generators.
 
-[[class.Finite]]
+[[type.Finite]]
 == Finite
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 class Finite(entropy : Blob)
 ----
@@ -41,10 +41,10 @@ by the `blob()` call, and is never reused.
 
 
 
-[[value.byte]]
+[[Finite.byte]]
 === byte
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func byte() : ?Nat8
 ----
@@ -52,10 +52,10 @@ func byte() : ?Nat8
 Uniformly distributes outcomes in the numeric range [0 .. 255].
 Consumes 1 byte of entropy.
 
-[[value.coin]]
+[[Finite.coin]]
 === coin
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func coin() : ?Bool
 ----
@@ -63,10 +63,10 @@ func coin() : ?Bool
 Simulates a coin toss. Both outcomes have equal probability.
 Consumes 1 bit of entropy (amortised).
 
-[[value.range]]
+[[Finite.range]]
 === range
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func range(p : Nat8) : ?Nat
 ----
@@ -74,10 +74,10 @@ func range(p : Nat8) : ?Nat
 Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
 Consumes ⌈p/8⌉ bytes of entropy.
 
-[[value.binomial]]
+[[Finite.binomial]]
 === binomial
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func binomial(n : Nat8) : ?Nat8
 ----
@@ -85,10 +85,10 @@ func binomial(n : Nat8) : ?Nat8
 Counts the number of heads in `n` fair coin tosses.
 Consumes ⌈p/8⌉ bytes of entropy.
 
-[[value.byteFrom]]
+[[byteFrom]]
 == byteFrom
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func byteFrom(seed : Blob) : Nat8
 ----
@@ -96,10 +96,10 @@ func byteFrom(seed : Blob) : Nat8
 Distributes outcomes in the numeric range [0 .. 255].
 Seed blob must contain at least a byte.
 
-[[value.coinFrom]]
+[[coinFrom]]
 == coinFrom
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func coinFrom(seed : Blob) : Bool
 ----
@@ -107,20 +107,20 @@ func coinFrom(seed : Blob) : Bool
 Simulates a coin toss.
 Seed blob must contain at least a byte.
 
-[[value.blob]]
+[[blob]]
 == blob
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let blob : shared () -> async Blob
 ----
 
 Obtains a full blob (32 bytes) worth of fresh entropy.
 
-[[value.rangeFrom]]
+[[rangeFrom]]
 == rangeFrom
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func rangeFrom(p : Nat8, seed : Blob) : Nat
 ----
@@ -128,10 +128,10 @@ func rangeFrom(p : Nat8, seed : Blob) : Nat
 Distributes outcomes in the numeric range [0 .. 2^p - 1].
 Seed blob must contain at least ((p+7) / 8) bytes.
 
-[[value.binomialFrom]]
+[[binomialFrom]]
 == binomialFrom
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func binomialFrom(n : Nat8, seed : Blob) : Nat8
 ----

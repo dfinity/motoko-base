@@ -5,180 +5,210 @@
 
 Most operations are available as built-in operators (e.g. `1 + 1`).
 
-[[value.toInt]]
+[[toInt]]
 == toInt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let toInt : Int32 -> Int
 ----
 
 Conversion.
 
-[[value.fromInt]]
+[[fromInt]]
 == fromInt
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let fromInt : Int -> Int32
 ----
 
 Conversion. Traps on overflow/underflow.
 
-[[value.toText]]
+[[fromIntWrap]]
+== fromIntWrap
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromIntWrap : Int -> Int32
+----
+
+Conversion. Wraps on overflow/underflow.
+
+[[fromNat32]]
+== fromNat32
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromNat32 : Nat32 -> Int32
+----
+
+Conversion. Wraps on overflow/underflow.
+
+[[toNat32]]
+== toNat32
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toNat32 : Int32 -> Nat32
+----
+
+Conversion. Wraps on overflow/underflow.
+
+[[toText]]
 == toText
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func toText(x : Int32) : Text
 ----
 
 Returns the Text representation of `x`.
 
-[[value.abs]]
+[[abs]]
 == abs
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func abs(x : Int32) : Int32
 ----
 
 Returns the absolute value of `x`. Traps when `x = -2^31`.
 
-[[value.min]]
+[[min]]
 == min
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func min(x : Int32, y : Int32) : Int32
 ----
 
 Returns the minimum of `x` and `y`.
 
-[[value.max]]
+[[max]]
 == max
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func max(x : Int32, y : Int32) : Int32
 ----
 
 Returns the maximum of `x` and `y`.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal(x : Int32, y : Int32) : Bool
 ----
 
 Returns `x == y`.
 
-[[value.notEqual]]
+[[notEqual]]
 == notEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func notEqual(x : Int32, y : Int32) : Bool
 ----
 
 Returns `x != y`.
 
-[[value.less]]
+[[less]]
 == less
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func less(x : Int32, y : Int32) : Bool
 ----
 
 Returns `x < y`.
 
-[[value.lessOrEqual]]
+[[lessOrEqual]]
 == lessOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func lessOrEqual(x : Int32, y : Int32) : Bool
 ----
 
 Returns `x <= y`.
 
-[[value.greater]]
+[[greater]]
 == greater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greater(x : Int32, y : Int32) : Bool
 ----
 
 Returns `x > y`.
 
-[[value.greaterOrEqual]]
+[[greaterOrEqual]]
 == greaterOrEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func greaterOrEqual(x : Int32, y : Int32) : Bool
 ----
 
 Returns `x >= y`.
 
-[[value.compare]]
+[[compare]]
 == compare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func compare(x : Int32, y : Int32) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
 
-[[value.neg]]
+[[neg]]
 == neg
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func neg(x : Int32) : Int32
 ----
 
 Returns the negation of `x`, `-x`. Traps on overflow.
 
-[[value.add]]
+[[add]]
 == add
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func add(x : Int32, y : Int32) : Int32
 ----
 
 Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
 
-[[value.sub]]
+[[sub]]
 == sub
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func sub(x : Int32, y : Int32) : Int32
 ----
 
 Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
 
-[[value.mul]]
+[[mul]]
 == mul
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mul(x : Int32, y : Int32) : Int32
 ----
 
 Returns the product of `x` and `y`, `x * y`. Traps on overflow.
 
-[[value.div]]
+[[div]]
 == div
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func div(x : Int32, y : Int32) : Int32
 ----
@@ -186,10 +216,10 @@ func div(x : Int32, y : Int32) : Int32
 Returns the division of `x by y`, `x / y`.
 Traps when `y` is zero.
 
-[[value.rem]]
+[[rem]]
 == rem
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func rem(x : Int32, y : Int32) : Int32
 ----
@@ -197,13 +227,203 @@ func rem(x : Int32, y : Int32) : Int32
 Returns the remainder of `x` divided by `y`, `x % y`.
 Traps when `y` is zero.
 
-[[value.pow]]
+[[pow]]
 == pow
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func pow(x : Int32, y : Int32) : Int32
 ----
 
 Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+
+[[bitnot]]
+== bitnot
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitnot(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise negation of `x`, `^x`.
+
+[[bitand]]
+== bitand
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitand(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise and of `x` and `y`, `x & y`.
+
+[[bitor]]
+== bitor
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitor(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise or of `x` and `y`, `x \| y`.
+
+[[bitxor]]
+== bitxor
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitxor(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+
+[[bitshiftLeft]]
+== bitshiftLeft
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitshiftLeft(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise shift left of `x` by `y`, `x << y`.
+
+[[bitshiftRight]]
+== bitshiftRight
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitshiftRight(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise shift right of `x` by `y`, `x >> y`.
+
+[[bitrotLeft]]
+== bitrotLeft
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitrotLeft(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+
+[[bitrotRight]]
+== bitrotRight
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitrotRight(x : Int32, y : Int32) : Int32
+----
+
+Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+
+[[bittest]]
+== bittest
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bittest(x : Int32, p : Nat) : Bool
+----
+
+Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
+
+[[bitset]]
+== bitset
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitset(x : Int32, p : Nat) : Int32
+----
+
+Returns the value of setting bit `p mod 16` in `x` to `1`.
+
+[[bitclear]]
+== bitclear
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitclear(x : Int32, p : Nat) : Int32
+----
+
+Returns the value of clearing bit `p mod 16` in `x` to `0`.
+
+[[bitflip]]
+== bitflip
+
+[source.no-repl,motoko,subs=+macros]
+----
+func bitflip(x : Int32, p : Nat) : Int32
+----
+
+Returns the value of flipping bit `p mod 16` in `x`.
+
+[[bitcountNonZero]]
+== bitcountNonZero
+
+[source.no-repl,motoko,subs=+macros]
+----
+let bitcountNonZero : (x : Int32) -> Int32
+----
+
+Returns the count of non-zero bits in `x`.
+
+[[bitcountLeadingZero]]
+== bitcountLeadingZero
+
+[source.no-repl,motoko,subs=+macros]
+----
+let bitcountLeadingZero : (x : Int32) -> Int32
+----
+
+Returns the count of leading zero bits in `x`.
+
+[[bitcountTrailingZero]]
+== bitcountTrailingZero
+
+[source.no-repl,motoko,subs=+macros]
+----
+let bitcountTrailingZero : (x : Int32) -> Int32
+----
+
+Returns the count of trailing zero bits in `x`.
+
+[[addWrap]]
+== addWrap
+
+[source.no-repl,motoko,subs=+macros]
+----
+func addWrap(x : Int32, y : Int32) : Int32
+----
+
+Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+
+[[subWrap]]
+== subWrap
+
+[source.no-repl,motoko,subs=+macros]
+----
+func subWrap(x : Int32, y : Int32) : Int32
+----
+
+Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+
+[[mulWrap]]
+== mulWrap
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mulWrap(x : Int32, y : Int32) : Int32
+----
+
+Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+
+[[powWrap]]
+== powWrap
+
+[source.no-repl,motoko,subs=+macros]
+----
+func powWrap(x : Int32, y : Int32) : Int32
+----
+
+Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
 

@@ -6,49 +6,49 @@ Order
 [[type.Order]]
 == Order
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type Order = {#less; #equal; #greater}
 ----
 
 A type to represent an order.
 
-[[value.isLess]]
+[[isLess]]
 == isLess
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isLess(order : Order) : Bool
+func isLess(order : xref:#type.Order[Order]) : Bool
 ----
 
 Check if an order is #less.
 
-[[value.isEqual]]
+[[isEqual]]
 == isEqual
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isEqual(order : Order) : Bool
+func isEqual(order : xref:#type.Order[Order]) : Bool
 ----
 
 Check if an order is #equal.
 
-[[value.isGreater]]
+[[isGreater]]
 == isGreater
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isGreater(order : Order) : Bool
+func isGreater(order : xref:#type.Order[Order]) : Bool
 ----
 
 Check if an order is #greater.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func equal(o1 : Order, o2 : Order) : Bool
+func equal(o1 : xref:#type.Order[Order], o2 : xref:#type.Order[Order]) : Bool
 ----
 
 Returns true if only if  `o1` and `o2` are the same ordering.

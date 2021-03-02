@@ -3,132 +3,132 @@
 
 Functions on Arrays
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool
 ----
 
 Test if two arrays contain equal values
 
-[[value.append]]
+[[append]]
 == append
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func append<A>(xs : [A], ys : [A]) : [A]
 ----
 
 Append the values of two input arrays
 
-[[value.chain]]
+[[chain]]
 == chain
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func chain<A, B>(xs : [A], f : A -> [B]) : [B]
 ----
 
 Transform each array value into zero or more output values, appended in order
 
-[[value.filter]]
+[[filter]]
 == filter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func filter<A>(xs : [A], f : A -> Bool) : [A]
 ----
 
 Output array contains each array-value if and only if the predicate is true; ordering retained.
 
-[[value.mapFilter]]
+[[mapFilter]]
 == mapFilter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B]
 ----
 
 Output array contains each transformed optional value; ordering retained.
 
-[[value.foldLeft]]
+[[foldLeft]]
 == foldLeft
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B
 ----
 
 Aggregate and transform values into a single output value, by increasing indices.
 
-[[value.foldRight]]
+[[foldRight]]
 == foldRight
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B
 ----
 
 Aggregate and transform values into a single output value, by decreasing indices.
 
-[[value.find]]
+[[find]]
 == find
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func find<A>(xs : [A], f : A -> Bool) : ?A
 ----
 
 Returns optional first value for which predicate is true
 
-[[value.freeze]]
+[[freeze]]
 == freeze
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func freeze<A>(xs : [var A]) : [A]
 ----
 
 Transform mutable array into immutable array
 
-[[value.flatten]]
+[[flatten]]
 == flatten
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func flatten<A>(xs : [[A]]) : [A]
 ----
 
 Transform an array of arrays into a single array, with retained array-value order.
 
-[[value.map]]
+[[map]]
 == map
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func map<A, B>(xs : [A], f : A -> B) : [B]
 ----
 
 Transform each value using a function, with retained array-value order.
 
-[[value.mapEntries]]
+[[mapEntries]]
 == mapEntries
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B]
 ----
 
 Transform each entry (index-value pair) using a function.
 
-[[value.mapResult]]
+[[mapResult]]
 == mapResult
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mapResult<A, R, E>(xs : [A], f : A -> Result.Result<R, E>) : Result.Result<[R], E>
+func mapResult<A, R, E>(xs : [A], f : A -> xref:Result.adoc#type.Result[Result.Result]<R, E>) : xref:Result.adoc#type.Result[Result.Result]<[R], E>
 ----
 
 Maps a Result-returning function over an Array and returns either
@@ -149,70 +149,70 @@ assert(Array.mapResult<Int, Nat, Text>([0, 1, 2], makeNatural) == #ok([0, 1, 2])
 assert(Array.mapResult([-1, 0, 1], makeNatural) == #err("-1 is not a natural number."));
 ```
 
-[[value.make]]
+[[make]]
 == make
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func make<A>(x : A) : [A]
 ----
 
 Make an array from a single value.
 
-[[value.vals]]
+[[vals]]
 == vals
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func vals<A>(xs : [A]) : I.Iter<A>
+func vals<A>(xs : [A]) : xref:IterType.adoc#type.Iter[I.Iter]<A>
 ----
 
 Returns `xs.vals()`.
 
-[[value.keys]]
+[[keys]]
 == keys
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func keys<A>(xs : [A]) : I.Iter<Nat>
+func keys<A>(xs : [A]) : xref:IterType.adoc#type.Iter[I.Iter]<Nat>
 ----
 
 Returns `xs.keys()`.
 
-[[value.thaw]]
+[[thaw]]
 == thaw
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func thaw<A>(xs : [A]) : [var A]
 ----
 
 Transform an immutable array into a mutable array.
 
-[[value.init]]
+[[init]]
 == init
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func init<A>(size : Nat, initVal : A) : [var A]
 ----
 
 Initialize a mutable array with `size` copies of the initial value.
 
-[[value.tabulate]]
+[[tabulate]]
 == tabulate
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func tabulate<A>(size : Nat, gen : Nat -> A) : [A]
 ----
 
 Initialize a mutable array of the given size, and use the `gen` function to produce the initial value for every index.
 
-[[value.tabulateVar]]
+[[tabulateVar]]
 == tabulateVar
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func tabulateVar<A>(size : Nat, gen : Nat -> A) : [var A]
 ----

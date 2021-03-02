@@ -6,79 +6,79 @@ Hash values
 [[type.Hash]]
 == Hash
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type Hash = Word32
 ----
 
 Hash values represent a string of _hash bits_, packed into a `Word32`.
 
-[[value.length]]
+[[length]]
 == length
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let length : Nat
 ----
 
 The hash length, always 31.
 
-[[value.bit]]
+[[bit]]
 == bit
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func bit(h : Hash, pos : Nat) : Bool
+func bit(h : xref:#type.Hash[Hash], pos : Nat) : Bool
 ----
 
 Project a given bit from the bit vector.
 
-[[value.equal]]
+[[equal]]
 == equal
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func equal(ha : Hash, hb : Hash) : Bool
+func equal(ha : xref:#type.Hash[Hash], hb : xref:#type.Hash[Hash]) : Bool
 ----
 
 Test if two hashes are equal
 
-[[value.hash]]
+[[hash]]
 == hash
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func hash(i : Nat) : Hash
+func hash(i : Nat) : xref:#type.Hash[Hash]
 ----
 
 
 
-[[value.debugPrintBits]]
+[[debugPrintBits]]
 == debugPrintBits
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func debugPrintBits(bits : Hash)
+func debugPrintBits(bits : xref:#type.Hash[Hash])
 ----
 
 
 
-[[value.debugPrintBitsRev]]
+[[debugPrintBitsRev]]
 == debugPrintBitsRev
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func debugPrintBitsRev(bits : Hash)
+func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
 ----
 
 
 
-[[value.hashWord8]]
+[[hashWord8]]
 == hashWord8
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func hashWord8(key : [Hash]) : Hash
+func hashWord8(key : [xref:#type.Hash[Hash]]) : xref:#type.Hash[Hash]
 ----
 
 Jenkin's one at a time:

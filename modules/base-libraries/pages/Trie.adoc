@@ -15,9 +15,9 @@ The representation we use here comes from Section 6 of ["Incremental computation
 [[type.Trie]]
 == Trie
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Trie<K, V> = {#empty; #leaf : Leaf<K, V>; #branch : Branch<K, V>}
+type Trie<K, V> = {#empty; #leaf : xref:#type.Leaf[Leaf]<K, V>; #branch : xref:#type.Branch[Branch]<K, V>}
 ----
 
 binary hash tries: either empty, a leaf node, or a branch node
@@ -25,9 +25,9 @@ binary hash tries: either empty, a leaf node, or a branch node
 [[type.Leaf]]
 == Leaf
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Leaf<K, V> = { size : Nat; keyvals : AssocList<Key<K>, V> }
+type Leaf<K, V> = { size : Nat; keyvals : xref:#type.AssocList[AssocList]<xref:#type.Key[Key]<K>, V> }
 ----
 
 leaf nodes of trie consist of key-value pairs as a list.
@@ -35,9 +35,9 @@ leaf nodes of trie consist of key-value pairs as a list.
 [[type.Branch]]
 == Branch
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Branch<K, V> = { size : Nat; left : Trie<K, V>; right : Trie<K, V> }
+type Branch<K, V> = { size : Nat; left : xref:#type.Trie[Trie]<K, V>; right : xref:#type.Trie[Trie]<K, V> }
 ----
 
 branch nodes of the trie discriminate on a bit position of the keys' hashes.
@@ -47,9 +47,9 @@ we enforce a style where this position is always known from context.
 [[type.AssocList]]
 == AssocList
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type AssocList<K, V> = AssocList.AssocList<K, V>
+type AssocList<K, V> = xref:AssocList.adoc#type.AssocList[AssocList.AssocList]<K, V>
 ----
 
 
@@ -57,29 +57,29 @@ type AssocList<K, V> = AssocList.AssocList<K, V>
 [[type.Key]]
 == Key
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Key<K> = { hash : Hash.Hash; key : K }
+type Key<K> = { hash : xref:Hash.adoc#type.Hash[Hash.Hash]; key : K }
 ----
 
 
 
-[[value.equalKey]]
+[[equalKey]]
 == equalKey
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func equalKey<K>(keq : (K, K) -> Bool) : ((Key<K>, Key<K>) -> Bool)
+func equalKey<K>(keq : (K, K) -> Bool) : ((xref:#type.Key[Key]<K>, xref:#type.Key[Key]<K>) -> Bool)
 ----
 
 Equality function for two `Key<K>`s, in terms of equality of `K`'s.
 
-[[value.isValid]]
+[[isValid]]
 == isValid
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isValid<K, V>(t : Trie<K, V>, enforceNormal : Bool) : Bool
+func isValid<K, V>(t : xref:#type.Trie[Trie]<K, V>, enforceNormal : Bool) : Bool
 ----
 
 checks the invariants of the trie structure, including the placement of keys at trie paths
@@ -87,9 +87,9 @@ checks the invariants of the trie structure, including the placement of keys at 
 [[type.Trie2D]]
 == Trie2D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Trie2D<K1, K2, V> = Trie<K1, Trie<K2, V>>
+type Trie2D<K1, K2, V> = xref:#type.Trie[Trie]<K1, xref:#type.Trie[Trie]<K2, V>>
 ----
 
 A 2D trie maps dimension-1 keys to another
@@ -98,50 +98,50 @@ layer of tries, each keyed on the dimension-2 keys.
 [[type.Trie3D]]
 == Trie3D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V>>
+type Trie3D<K1, K2, K3, V> = xref:#type.Trie[Trie]<K1, xref:#type.Trie2D[Trie2D]<K2, K3, V>>
 ----
 
 A 3D trie maps dimension-1 keys to another
 layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
 
-[[value.empty]]
+[[empty]]
 == empty
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func empty<K, V>() : Trie<K, V>
+func empty<K, V>() : xref:#type.Trie[Trie]<K, V>
 ----
 
 An empty trie.
 
-[[value.size]]
+[[size]]
 == size
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func size<K, V>(t : Trie<K, V>) : Nat
+func size<K, V>(t : xref:#type.Trie[Trie]<K, V>) : Nat
 ----
 
  Get the number of key-value pairs in the trie, in constant time.
 
-[[value.branch]]
+[[branch]]
 == branch
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func branch<K, V>(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V>
+func branch<K, V>(l : xref:#type.Trie[Trie]<K, V>, r : xref:#type.Trie[Trie]<K, V>) : xref:#type.Trie[Trie]<K, V>
 ----
 
 Construct a branch node, computing the size stored there.
 
-[[value.leaf]]
+[[leaf]]
 == leaf
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func leaf<K, V>(kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
+func leaf<K, V>(kvs : xref:#type.AssocList[AssocList]<xref:#type.Key[Key]<K>, V>, bitpos : Nat) : xref:#type.Trie[Trie]<K, V>
 ----
 
 Construct a leaf node, computing the size stored there.
@@ -150,64 +150,64 @@ This helper function automatically enforces the MAX_LEAF_SIZE
 by constructing branches as necessary; to do so, it also needs the bitpos
 of the leaf.
 
-[[value.fromList]]
+[[fromList]]
 == fromList
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromList<K, V>(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V>
+func fromList<K, V>(kvc : ?Nat, kvs : xref:#type.AssocList[AssocList]<xref:#type.Key[Key]<K>, V>, bitpos : Nat) : xref:#type.Trie[Trie]<K, V>
 ----
 
 
 
-[[value.clone]]
+[[clone]]
 == clone
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func clone<K, V>(t : Trie<K, V>) : Trie<K, V>
+func clone<K, V>(t : xref:#type.Trie[Trie]<K, V>) : xref:#type.Trie[Trie]<K, V>
 ----
 
 clone the trie efficiently, via sharing.
 
 Purely-functional representation permits _O(1)_ copy, via persistent sharing.
 
-[[value.replace]]
+[[replace]]
 == replace
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func replace<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : ?V) : (Trie<K, V>, ?V)
+func replace<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v : ?V) : (xref:#type.Trie[Trie]<K, V>, ?V)
 ----
 
 replace the given key's value option with the given one, returning the previous one
 
-[[value.put]]
+[[put]]
 == put
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie<K, V>, ?V)
+func put<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v : V) : (xref:#type.Trie[Trie]<K, V>, ?V)
 ----
 
 put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
 
-[[value.find]]
+[[find]]
 == find
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V
+func find<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool) : ?V
 ----
 
  find the given key's value in the trie, or return null if nonexistent
 
-[[value.merge]]
+[[merge]]
 == merge
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func merge<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V>
+func merge<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, V>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
   merge tries, preferring the right trie where there are collisions
@@ -223,36 +223,36 @@ func merge<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie
   - `join`
   - `prod`
 
-[[value.mergeDisjoint]]
+[[mergeDisjoint]]
 == mergeDisjoint
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mergeDisjoint<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V>
+func mergeDisjoint<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, V>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
 like `merge`, it merges tries, but unlike `merge`, it signals a
 dynamic error if there are collisions in common keys between the
 left and right inputs.
 
-[[value.diff]]
+[[diff]]
 == diff
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool) : Trie<K, V>
+func diff<K, V, W>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, W>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
 The key-value pairs of the final trie consists of those pairs of
 the left trie whose keys are not present in the right trie; the
 values of the right trie are irrelevant.
 
-[[value.disj]]
+[[disj]]
 == disj
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func disj<K, V, W, X>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool, vbin : (?V, ?W) -> X) : Trie<K, X>
+func disj<K, V, W, X>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, W>, k_eq : (K, K) -> Bool, vbin : (?V, ?W) -> X) : xref:#type.Trie[Trie]<K, X>
 ----
 
 This operation generalizes the notion of "set union" to finite maps.
@@ -273,12 +273,12 @@ See also:
 - `merge`
 - `prod`
 
-[[value.join]]
+[[join]]
 == join
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func join<K, V, W, X>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool, vbin : (V, W) -> X) : Trie<K, X>
+func join<K, V, W, X>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, W>, k_eq : (K, K) -> Bool, vbin : (V, W) -> X) : xref:#type.Trie[Trie]<K, X>
 ----
 
 This operation generalizes the notion of "set intersection" to
@@ -294,12 +294,12 @@ See also:
 - `merge`
 - `prod`
 
-[[value.foldUp]]
+[[foldUp]]
 == foldUp
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func foldUp<K, V, X>(t : Trie<K, V>, bin : (X, X) -> X, leaf : (K, V) -> X, empty : X) : X
+func foldUp<K, V, X>(t : xref:#type.Trie[Trie]<K, V>, bin : (X, X) -> X, leaf : (K, V) -> X, empty : X) : X
 ----
 
 This operation gives a recursor for the internal structure of
@@ -307,12 +307,12 @@ tries.  Many common operations are instantiations of this function,
 either as clients, or as hand-specialized versions (e.g., see , map,
 mapFilter, some and all below).
 
-[[value.prod]]
+[[prod]]
 == prod
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func prod<K1, V1, K2, V2, K3, V3>(tl : Trie<K1, V1>, tr : Trie<K2, V2>, op : (K1, V1, K2, V2) -> ?(Key<K3>, V3), k3_eq : (K3, K3) -> Bool) : Trie<K3, V3>
+func prod<K1, V1, K2, V2, K3, V3>(tl : xref:#type.Trie[Trie]<K1, V1>, tr : xref:#type.Trie[Trie]<K2, V2>, op : (K1, V1, K2, V2) -> ?(xref:#type.Key[Key]<K3>, V3), k3_eq : (K3, K3) -> Bool) : xref:#type.Trie[Trie]<K3, V3>
 ----
 
 Conditional _catesian product_, where the given
@@ -330,10 +330,10 @@ See also:
 - `join`
 - `merge`
 
-[[value.Build]]
+[[Build]]
 == Build
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let Build
 ----
@@ -356,43 +356,43 @@ these build ASTs.  They have no intrinsic balance properties of their
 own.
 
 
-[[value.fold]]
+[[fold]]
 == fold
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fold<K, V, X>(t : Trie<K, V>, f : (K, V, X) -> X, x : X) : X
+func fold<K, V, X>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V, X) -> X, x : X) : X
 ----
 
 Fold over the key-value pairs of the trie, using an accumulator.
 The key-value pairs have no reliable or meaningful ordering.
 
-[[value.some]]
+[[some]]
 == some
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func some<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool
+func some<K, V>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> Bool) : Bool
 ----
 
 Test whether a given key-value pair is present, or not.
 
-[[value.all]]
+[[all]]
 == all
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func all<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool
+func all<K, V>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> Bool) : Bool
 ----
 
 Test whether all key-value pairs have a given property.
 
-[[value.nth]]
+[[nth]]
 == nth
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V)
+func nth<K, V>(t : xref:#type.Trie[Trie]<K, V>, i : Nat) : ?(xref:#type.Key[Key]<K>, V)
 ----
 
 Project the nth key-value pair from the trie.
@@ -400,12 +400,12 @@ Project the nth key-value pair from the trie.
 Note: This position is not meaningful; it's only here so that we
 can inject tries into arrays using functions like `Array.tabulate`.
 
-[[value.toArray]]
+[[toArray]]
 == toArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toArray<K, V, W>(t : Trie<K, V>, f : (K, V) -> W) : [W]
+func toArray<K, V, W>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> W) : [W]
 ----
 
 Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
@@ -431,44 +431,44 @@ Since we want to  statically rule out null output elements, and since the AS typ
 cannot do that for an imperative approach unless we assume more about
 the type W (e.g., the existence of "default values"), we settle for using `nth`.
 
-[[value.isEmpty]]
+[[isEmpty]]
 == isEmpty
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func isEmpty<K, V>(t : Trie<K, V>) : Bool
+func isEmpty<K, V>(t : xref:#type.Trie[Trie]<K, V>) : Bool
 ----
 
 Test for "deep emptiness": subtrees that have branching structure,
 but no leaves.  These can result from naive filtering operations;
 filter uses this function to avoid creating such subtrees.
 
-[[value.filter]]
+[[filter]]
 == filter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func filter<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Trie<K, V>
+func filter<K, V>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
 filter the key-value pairs by a given predicate.
 
-[[value.mapFilter]]
+[[mapFilter]]
 == mapFilter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mapFilter<K, V, W>(t : Trie<K, V>, f : (K, V) -> ?W) : Trie<K, W>
+func mapFilter<K, V, W>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> ?W) : xref:#type.Trie[Trie]<K, W>
 ----
 
 map and filter the key-value pairs by a given predicate.
 
-[[value.equalStructure]]
+[[equalStructure]]
 == equalStructure
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func equalStructure<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, keq : (K, K) -> Bool, veq : (V, V) -> Bool) : Bool
+func equalStructure<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, V>, keq : (K, K) -> Bool, veq : (V, V) -> Bool) : Bool
 ----
 
 Test for equality, but naively, based on structure.
@@ -479,98 +479,98 @@ with
   `#empty`.
 We do not observe that equality here.
 
-[[value.replaceThen]]
+[[replaceThen]]
 == replaceThen
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func replaceThen<K, V, X>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v2 : V, success : (Trie<K, V>, V) -> X, fail : () -> X) : X
+func replaceThen<K, V, X>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v2 : V, success : (xref:#type.Trie[Trie]<K, V>, V) -> X, fail : () -> X) : X
 ----
 
 replace the given key's value in the trie,
 and only if successful, do the success continuation,
 otherwise, return the failure value
 
-[[value.putFresh]]
+[[putFresh]]
 == putFresh
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func putFresh<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : Trie<K, V>
+func putFresh<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v : V) : xref:#type.Trie[Trie]<K, V>
 ----
 
 put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
 
-[[value.put2D]]
+[[put2D]]
 == put2D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func put2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool, v : V) : Trie2D<K1, K2, V>
+func put2D<K1, K2, V>(t : xref:#type.Trie2D[Trie2D]<K1, K2, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool, v : V) : xref:#type.Trie2D[Trie2D]<K1, K2, V>
 ----
 
 put the given key's value in the 2D trie; return the new 2D trie.
 
-[[value.put3D]]
+[[put3D]]
 == put3D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func put3D<K1, K2, K3, V>(t : Trie3D<K1, K2, K3, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool, k3 : Key<K3>, k3_eq : (K3, K3) -> Bool, v : V) : Trie3D<K1, K2, K3, V>
+func put3D<K1, K2, K3, V>(t : xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool, k3 : xref:#type.Key[Key]<K3>, k3_eq : (K3, K3) -> Bool, v : V) : xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>
 ----
 
 put the given key's value in the trie; return the new trie;
 
-[[value.remove]]
+[[remove]]
 == remove
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V)
+func remove<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool) : (xref:#type.Trie[Trie]<K, V>, ?V)
 ----
 
 remove the given key's value in the trie; return the new trie
 
-[[value.removeThen]]
+[[removeThen]]
 == removeThen
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func removeThen<K, V, X>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, success : (Trie<K, V>, V) -> X, fail : () -> X) : X
+func removeThen<K, V, X>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, success : (xref:#type.Trie[Trie]<K, V>, V) -> X, fail : () -> X) : X
 ----
 
 remove the given key's value in the trie,
 and only if successful, do the success continuation,
 otherwise, return the failure value
 
-[[value.remove2D]]
+[[remove2D]]
 == remove2D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func remove2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool) : (Trie2D<K1, K2, V>, ?V)
+func remove2D<K1, K2, V>(t : xref:#type.Trie2D[Trie2D]<K1, K2, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool) : (xref:#type.Trie2D[Trie2D]<K1, K2, V>, ?V)
 ----
 
 remove the given key-key pair's value in the 2D trie; return the
 new trie, and the prior value, if any.
 
-[[value.remove3D]]
+[[remove3D]]
 == remove3D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func remove3D<K1, K2, K3, V>(t : Trie3D<K1, K2, K3, V>, k1 : Key<K1>, k1_eq : (K1, K1) -> Bool, k2 : Key<K2>, k2_eq : (K2, K2) -> Bool, k3 : Key<K3>, k3_eq : (K3, K3) -> Bool) : (Trie3D<K1, K2, K3, V>, ?V)
+func remove3D<K1, K2, K3, V>(t : xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool, k3 : xref:#type.Key[Key]<K3>, k3_eq : (K3, K3) -> Bool) : (xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>, ?V)
 ----
 
 remove the given key-key pair's value in the 3D trie; return the
 new trie, and the prior value, if any.
 
-[[value.mergeDisjoint2D]]
+[[mergeDisjoint2D]]
 == mergeDisjoint2D
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func mergeDisjoint2D<K1, K2, V>(t : Trie2D<K1, K2, V>, k1_eq : (K1, K1) -> Bool, k2_eq : (K2, K2) -> Bool) : Trie<K2, V>
+func mergeDisjoint2D<K1, K2, V>(t : xref:#type.Trie2D[Trie2D]<K1, K2, V>, k1_eq : (K1, K1) -> Bool, k2_eq : (K2, K2) -> Bool) : xref:#type.Trie[Trie]<K2, V>
 ----
 
 Like [`mergeDisjoint`](#mergedisjoint), except instead of merging a

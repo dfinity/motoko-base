@@ -6,7 +6,7 @@ The Iterator type
 [[type.Iter]]
 == Iter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type Iter<T> = { next : () -> ?T }
 ----

@@ -6,7 +6,7 @@ Iterators
 [[type.Iter]]
 == Iter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 type Iter<T> = { next : () -> ?T }
 ----
@@ -25,10 +25,10 @@ for (x in i) {
 }
 ```
 
-[[class.range]]
+[[type.range]]
 == range
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 class range(x : Nat, y : Int)
 ----
@@ -46,20 +46,20 @@ assert(null == iter.next());
 
 
 
-[[value.next]]
+[[range.next]]
 === next
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func next() : ?Nat
 ----
 
 
 
-[[class.revRange]]
+[[type.revRange]]
 == revRange
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 class revRange(x : Int, y : Int)
 ----
@@ -69,22 +69,22 @@ order.
 
 
 
-[[value.next]]
+[[revRange.next]]
 === next
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func next() : ?Int
 ----
 
 
 
-[[value.iterate]]
+[[iterate]]
 == iterate
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func iterate<A>(xs : Iter<A>, f : (A, Nat) -> ())
+func iterate<A>(xs : xref:#type.Iter[Iter]<A>, f : (A, Nat) -> ())
 ----
 
 Calls a function `f` on every value produced by an iterator and discards
@@ -99,23 +99,23 @@ Iter.iterate<Nat>(Iter.range(1, 3), func(x, _index) {
 assert(6 == sum)
 ```
 
-[[value.size]]
+[[size]]
 == size
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func size<A>(xs : Iter<A>) : Nat
+func size<A>(xs : xref:#type.Iter[Iter]<A>) : Nat
 ----
 
 Consumes an iterator and counts how many elements were produced
 (discarding them in the process).
 
-[[value.map]]
+[[map]]
 == map
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func map<A, B>(xs : Iter<A>, f : A -> B) : Iter<B>
+func map<A, B>(xs : xref:#type.Iter[Iter]<A>, f : A -> B) : xref:#type.Iter[Iter]<B>
 ----
 
 Takes a function and an iterator and returns a new iterator that lazily applies
@@ -130,12 +130,12 @@ assert(?6 == mappedIter.next());
 assert(null == mappedIter.next());
 ```
 
-[[value.make]]
+[[make]]
 == make
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func make<A>(x : A) : Iter<A>
+func make<A>(x : A) : xref:#type.Iter[Iter]<A>
 ----
 
 Creates an iterator that produces an infinite sequence of `x`.
@@ -148,12 +148,12 @@ assert(?10 == iter.next());
 // ...
 ```
 
-[[value.fromArray]]
+[[fromArray]]
 == fromArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromArray<A>(xs : [A]) : Iter<A>
+func fromArray<A>(xs : [A]) : xref:#type.Iter[Iter]<A>
 ----
 
 Creates an iterator that produces the elements of an Array in ascending index order.
@@ -166,34 +166,34 @@ assert(?3 == iter.next());
 assert(null == iter.next());
 ```
 
-[[value.fromArrayMut]]
+[[fromArrayMut]]
 == fromArrayMut
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromArrayMut<A>(xs : [var A]) : Iter<A>
+func fromArrayMut<A>(xs : [var A]) : xref:#type.Iter[Iter]<A>
 ----
 
 Like `fromArray` but for Arrays with mutable elements. Captures
 the elements of the Array at the time the iterator is created, so
 further modifications won't be reflected in the iterator.
 
-[[value.fromList]]
+[[fromList]]
 == fromList
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromList<A>(xs : List.List<A>) : Iter<A>
+func fromList<A>(xs : xref:List.adoc#type.List[List.List]<A>) : xref:#type.Iter[Iter]<A>
 ----
 
 Like `fromArray` but for Lists.
 
-[[value.toArray]]
+[[toArray]]
 == toArray
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toArray<A>(xs : Iter<A>) : [A]
+func toArray<A>(xs : xref:#type.Iter[Iter]<A>) : [A]
 ----
 
 Consumes an iterator and collects its produced elements in an Array.
@@ -203,22 +203,22 @@ let iter = Iter.range(1, 3);
 assert([1, 2, 3] == Iter.toArray(iter));
 ```
 
-[[value.toArrayMut]]
+[[toArrayMut]]
 == toArrayMut
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toArrayMut<A>(xs : Iter<A>) : [var A]
+func toArrayMut<A>(xs : xref:#type.Iter[Iter]<A>) : [var A]
 ----
 
 Like `toArray` but for Arrays with mutable elements.
 
-[[value.toList]]
+[[toList]]
 == toList
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func toList<A>(xs : Iter<A>) : List.List<A>
+func toList<A>(xs : xref:#type.Iter[Iter]<A>) : xref:List.adoc#type.List[List.List]<A>
 ----
 
 Like `toArray` but for Lists.

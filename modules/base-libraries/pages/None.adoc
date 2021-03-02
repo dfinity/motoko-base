@@ -8,10 +8,10 @@ code.
 
 For example, the type `[None]` has only empty lists.
 
-[[value.impossible]]
+[[impossible]]
 == impossible
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 let impossible : <A>None -> A
 ----

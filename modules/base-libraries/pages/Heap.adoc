@@ -8,91 +8,91 @@ This module provides purely-functional priority queue based on leftist heap
 [[type.Tree]]
 == Tree
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-type Tree<T> = ?(Int, T, Tree<T>, Tree<T>)
+type Tree<T> = ?(Int, T, xref:#type.Tree[Tree]<T>, xref:#type.Tree[Tree]<T>)
 ----
 
 
 
-[[class.Heap]]
+[[type.Heap]]
 == Heap
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-class Heap<T>(ord : (T, T) -> O.Order)
+class Heap<T>(ord : (T, T) -> xref:Order.adoc#type.Order[O.Order])
 ----
 
 
 
 
 
-[[value.share]]
+[[Heap.share]]
 === share
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func share() : Tree<T>
+func share() : xref:#type.Tree[Tree]<T>
 ----
 
 Get purely-functional representation
 
-[[value.unsafeUnshare]]
+[[Heap.unsafeUnshare]]
 === unsafeUnshare
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func unsafeUnshare(t : Tree<T>)
+func unsafeUnshare(t : xref:#type.Tree[Tree]<T>)
 ----
 
 Put purely-functional representation into class. Need to make sure the tree is constructed with the same compare function
 
-[[value.put]]
+[[Heap.put]]
 === put
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func put(x : T)
 ----
 
 Insert an element to the heap
 
-[[value.peekMin]]
+[[Heap.peekMin]]
 === peekMin
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func peekMin() : ?T
 ----
 
 Return the minimal element
 
-[[value.deleteMin]]
+[[Heap.deleteMin]]
 === deleteMin
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func deleteMin()
 ----
 
 Delete the minimal element
 
-[[value.removeMin]]
+[[Heap.removeMin]]
 === removeMin
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
 func removeMin() : ?T
 ----
 
 Remove the minimal element and return its value
 
-[[value.fromIter]]
+[[fromIter]]
 == fromIter
 
-[source.no-repl,motoko]
+[source.no-repl,motoko,subs=+macros]
 ----
-func fromIter<T>(iter : I.Iter<T>, ord : (T, T) -> O.Order) : Heap<T>
+func fromIter<T>(iter : xref:Iter.adoc#type.Iter[I.Iter]<T>, ord : (T, T) -> xref:Order.adoc#type.Order[O.Order]) : xref:#type.Heap[Heap]<T>
 ----
 
 Convert iterator into a heap, takes O(N) time.
