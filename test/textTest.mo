@@ -725,8 +725,6 @@ run(suite("compareWith",
 ]))
 };
 
-do {
-let cmp = Char.compare;
 run(suite("utf8",
 [
  test(
@@ -749,5 +747,4 @@ run(suite("utf8",
    "decode-literal-bad2",
    Text.decodeUtf8("\D8\00t d"),
    M.equals(optTextT(null))),
-]))
-};
+]));
