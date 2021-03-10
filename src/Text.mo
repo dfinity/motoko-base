@@ -597,4 +597,10 @@ module {
     }
   };
 
+  /// Returns the UTF-8 encoding of the given text
+  public let encodeUtf8 : Text -> Blob = Prim.encodeUtf8;
+
+  /// Tries to decode the given `Blob` as UTF-8.
+  /// Returns `null` if the blob is _not_ valid UTF-8.
+  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
 }
