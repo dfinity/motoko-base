@@ -3,11 +3,23 @@ import Prim "mo:prim";
 module {
 
   /// Convert character `c` to a word containing its Unicode scalar value.
+  public let toNat32 : (c : Char) -> Nat32 = Prim.charToNat32;
+
+  /// Convert character `c` to a word containing its Unicode scalar value.
+  ///
+  /// @deprecated Please use `Char.toNat32` or `Word32.fromChar`
   public let toWord32 : (c : Char) -> Word32 = Prim.charToWord32;
+
+  /// Convert `w` to a character.
+  /// Traps if `w` is not a valid Unicode scalar value.
+  /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+  public let fromNat32 : (w : Nat32) -> Char = Prim.nat32ToChar;
 
   /// Convert word `w` to a character.
   /// Traps if `w` is not a valid Unicode scalar value.
   /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+  ///
+  /// @deprecated Please use `Char.fromNat32` or `Word32.toChar`
   public let fromWord32 : (w : Word32) -> Char = Prim.word32ToChar;
 
   /// Convert character `c` to single character text.
@@ -21,7 +33,7 @@ module {
 
   /// Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
   public func isDigit(c : Char) : Bool {
-    Prim.charToWord32(c) - Prim.charToWord32('0') <= (9 : Word32)
+    Prim.charToNat32(c) -% Prim.charToNat32('0') <= (9 : Nat32)
   };
 
   /// Returns the Unicode _White_Space_ property of `c`.

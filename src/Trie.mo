@@ -395,9 +395,9 @@ func splitList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
 ///
 ///   See also:
 ///
-///   - [`disj`](#value.disj)
-///   - [`join`](#value.join)
-///   - [`prod`](#value.prod)
+///   - `disj`
+///   - `join`
+///   - `prod`
 public func merge<K,V>(tl:Trie<K,V>, tr:Trie<K,V>, k_eq:(K,K)->Bool) : Trie<K,V> = label profile_trie_merge : Trie<K,V> {
     let key_eq = equalKey<K>(k_eq);
     func br(l:Trie<K,V>, r:Trie<K,V>) : Trie<K,V> = branch<K,V>(l,r);
@@ -538,9 +538,9 @@ public func diff<K,V,W>(tl:Trie<K,V>, tr:Trie<K,W>, k_eq:(K,K)->Bool): Trie<K,V>
 ///
 /// See also:
 ///
-/// - [`join`](#value.join)
-/// - [`merge`](#value.merge)
-/// - [`prod`](#value.prod)
+/// - `join`
+/// - `merge`
+/// - `prod`
 public func disj<K,V,W,X>(
     tl   : Trie<K,V>,
     tr   : Trie<K,W>,
@@ -617,9 +617,9 @@ public func disj<K,V,W,X>(
   ///
   /// See also:
   ///
-  /// - [`disj`](#value.disj)
-  /// - [`merge`](#value.merge)
-  /// - [`prod`](#value.prod)
+  /// - `disj`
+  /// - `merge`
+  /// - `prod`
   public func join<K,V,W,X>(
     tl:Trie<K,V>,
     tr:Trie<K,W>,
@@ -696,9 +696,9 @@ public func disj<K,V,W,X>(
   ///
   /// See also:
   ///
-  /// - [`disj`](#value.disj)
-  /// - [`join`](#value.join)
-  /// - [`merge`](#value.merge)
+  /// - `disj`
+  /// - `join`
+  /// - `merge`
   public func prod<K1,V1,K2,V2,K3,V3>(
     tl    :Trie<K1,V1>,
     tr    :Trie<K2,V2>,
@@ -931,7 +931,7 @@ public func disj<K,V,W,X>(
    /// Project the nth key-value pair from the trie.
    ///
    /// Note: This position is not meaningful; it's only here so that we
-   /// can inject tries into arrays using functions like [Array.tabulate](Array.html#value.tabulate).
+   /// can inject tries into arrays using functions like `Array.tabulate`.
   public func nth<K,V>(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth : (?(Key<K>, V)) {
     func rec(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
       switch t {

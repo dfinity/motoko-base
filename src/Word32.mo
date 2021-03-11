@@ -19,6 +19,14 @@ module {
   /// Conversion. Returns `x mod 2^32`.
   public let fromInt : (x : Int) -> Word32  = Prim.intToWord32;
 
+  /// Convert character `c` to a word containing its Unicode scalar value.
+  public let fromChar : (c : Char) -> Word32 = Prim.charToWord32;
+
+  /// Convert word `w` to a character.
+  /// Traps if `w` is not a valid Unicode scalar value.
+  /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+  public let toChar : (w : Word32) -> Char = Prim.word32ToChar;
+
   /// Returns the Text representation of `x`.
   public func toText(x : Word32) : Text {
     Nat.toText(toNat(x))
@@ -60,13 +68,13 @@ module {
   };
 
   /// Returns the sum of `x` and `y`, `(x + y) mod 2^32`.
-  public func add(x : Word32, y : Word32) : Word32 { x + y };
+  public func add(x : Word32, y : Word32) : Word32 { x +% y };
 
   /// Returns the difference of `x` and `y`, `(2^32 + x - y) mod 2^32`.
-  public func sub(x : Word32, y : Word32) : Word32 { x - y };
+  public func sub(x : Word32, y : Word32) : Word32 { x -% y };
 
   /// Returns the product of `x` and `y`, `(x * y) mod 2^32`.
-  public func mul(x : Word32, y : Word32) : Word32 { x * y };
+  public func mul(x : Word32, y : Word32) : Word32 { x *% y };
 
   /// Returns the division of `x` by `y`, `x / y`.
   /// Traps when `y` is zero.
@@ -77,7 +85,7 @@ module {
   public func rem(x : Word32, y : Word32) : Word32 { x % y };
 
   /// Returns `x` to the power of `y`, `(x ** y) mod 2^32`.
-  public func pow(x : Word32, y : Word32) : Word32 { x ** y };
+  public func pow(x : Word32, y : Word32) : Word32 { x **% y };
 
   /// Returns the bitwise negation of `x`, `^x`.
   public func bitnot(x : Word32, y : Word32) : Word32 { ^x };
