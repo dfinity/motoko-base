@@ -4,6 +4,7 @@
 ** xref:./Blob.adoc[Blob]
 ** xref:./Bool.adoc[Bool]
 ** xref:./Buffer.adoc[Buffer]
+** xref:./CertifiedData.adoc[CertifiedData]
 ** xref:./Char.adoc[Char]
 ** xref:./Debug.adoc[Debug]
 ** xref:./Deque.adoc[Deque]
