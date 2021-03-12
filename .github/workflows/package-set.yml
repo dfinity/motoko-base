@@ -1,0 +1,37 @@
+name: "package-set"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  vessel_version: "v0.6.0"
+  moc_version: "0.5.10"
+
+jobs:
+  verify:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checking out motoko-base
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        path: base-checkout
+    - name: Checking out vessel-package-set
+      uses: actions/checkout@v2
+      with:
+        repository: dfinity/vessel-package-set
+        path: vessel-package-set
+    - name: "install vessel"
+      run: |
+        mkdir -p /home/runner/bin
+        echo "/home/runner/bin" >> $GITHUB_PATH
+        wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/${{ env.vessel_version }}/vessel-linux64
+        chmod +x /home/runner/bin/vessel
+    - name: "patch package-set"
+      run: |
+        cd vessel-package-set
+        echo ' # [{name = "base", repo = "file://${{github.workspace}}/base-checkout", version = "${{ github.sha }}", dependencies = [] : List Text }]' >> package-set.dhall
+        vessel verify --version ${{ env.moc_version }}
