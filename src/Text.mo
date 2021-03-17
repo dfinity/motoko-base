@@ -10,6 +10,7 @@
 import Char "Char";
 import Iter "Iter";
 import Hash "Hash";
+import Stack "Stack";
 import Prim "mo:prim";
 
 module {
@@ -175,9 +176,9 @@ module {
     /// #success on complete match
     #success;
     /// #fail(cs,c) on partial match of cs, but failing match on c
-    #fail : (cs: Iter.Iter<Char>, c : Char);
+    #fail : (cs : Iter.Iter<Char>, c : Char);
     /// #empty(cs) on partial match of cs and empty stream
-    #empty : (cs :Iter.Iter<Char> )
+    #empty : (cs : Iter.Iter<Char> )
   };
 
   private func sizeOfPattern(pat : Pattern) : Nat {
@@ -196,7 +197,7 @@ module {
                if (p == c) {
                  #success
                } else {
-                 #fail (empty(), c) }
+                 #fail(empty(), c) }
                };
              case null { #empty(empty()) };
            }
@@ -211,7 +212,7 @@ module {
                } else {
                  #fail(empty(), c) }
                };
-             case null { #empty (empty()) };
+             case null { #empty(empty()) };
            }
          }
        };
@@ -225,12 +226,12 @@ module {
                  switch (cs.next()) {
                    case (?c) {
                      if (c != d) {
-                       return #fail (take(i, p.chars()), c)
+                       return #fail(take(i, p.chars()), c)
                      };
                      i += 1;
                    };
                    case null {
-                     return #empty (take(i, p.chars()));
+                     return #empty(take(i, p.chars()));
                    }
                  }
                };
@@ -244,29 +245,29 @@ module {
 
   private class CharBuffer(cs : Iter.Iter<Char>) : Iter.Iter<Char> = {
 
-    var buff : Iter.Iter<Char> = empty();
-    var char : ?Char = null;
+    var stack : Stack.Stack<(Iter.Iter<Char>, Char)> = Stack.Stack();
 
     public func pushBack(cs0: Iter.Iter<Char>, c : Char) {
-       buff := cs0;
-       char := ?c;
+       stack.push((cs0, c));
     };
 
     public func next() : ?Char {
-      switch (buff.next()) {
-        case null {
-          switch char {
-            case (?c) {
-              char := null;
-              return ?c;
-            };
-            case null {
-              return cs.next();
-            };
-          }
-        };
-        case oc { oc };
-      }
+      switch (stack.peek()) {
+	case (?(buff, c)) {
+	  switch (buff.next()) {
+	    case null {
+	      ignore stack.pop();
+	      return ?c;
+	    };
+	    case oc {
+	      return oc;
+	    };
+	  }
+	};
+	case null {
+	  return cs.next();
+	};
+      };
     };
   };
 
@@ -303,7 +304,7 @@ module {
                   state := 2;
                   return r;
                 };
-                case (#fail (cs1, c)) {
+                case (#fail(cs1, c)) {
                   cs.pushBack(cs1,c);
                   switch (cs.next()) {
                     case (?ci) {
@@ -420,7 +421,7 @@ module {
           };
           break l;
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           cs.pushBack(cs1, c);
         }
       };
@@ -488,7 +489,7 @@ module {
             fromIter(cs1)
           }
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           return if (matchSize == 0) {
             t
           } else {
@@ -518,7 +519,7 @@ module {
             case (?_) return t;
           }
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           matchSize := 0;
           cs.pushBack(cs1, c);
           ignore cs.next();
@@ -543,7 +544,7 @@ module {
         case (#empty(cs1)) {
           return if (matchSize == 0) { t } else { fromIter(cs1) }
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           let start = matchSize;
           let cs2 = CharBuffer(cs);
           cs2.pushBack(cs1, c);
@@ -561,7 +562,7 @@ module {
                   case (?_) return t;
                 }
               };
-              case (#fail (cs3, c1)) {
+              case (#fail(cs3, c1)) {
                 matchSize := 0;
                 cs2.pushBack(cs3, c1);
                 ignore cs2.next();

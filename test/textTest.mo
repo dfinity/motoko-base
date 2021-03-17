@@ -546,6 +546,18 @@ run(suite("replace",
    "replace-pred",
    Text.replace("abcdefghijklmnopqrstuvwxyz", #predicate (func (c : Char) : Bool { c < 'm'}), ""),
    M.equals(T.text "mnopqrstuvwxyz")),
+ test(
+  "replace-partial",
+  Text.replace("123", #text "124", "ABC"),
+   M.equals(T.text "123")),
+ test(
+  "replace-partial-2",
+  Text.replace("12341235124", #text "124", "ABC"),
+   M.equals(T.text "12341235ABC")),
+ test(
+  "replace-partial-3",
+  Text.replace("111234123511124", #text "124", "ABC"),
+   M.equals(T.text "111234123511ABC")),
 ]));
 
 run(suite("stripStart",
