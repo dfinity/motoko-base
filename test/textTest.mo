@@ -5,7 +5,7 @@ import Iter "mo:base/Iter";
 import Char "mo:base/Char";
 import Order "mo:base/Order";
 import Array "mo:base/Array";
-import Word32 "mo:base/Word32";
+import Nat32 "mo:base/Nat32";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
@@ -108,7 +108,7 @@ run(suite("toIter",
    Text.toIter("abc"),
    M.equals(iterT (['a','b','c']))),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+%Word32.fromInt(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromNat(i % 26)));
    test(
      "fromIter-2",
      Text.toIter(Text.join("", Array.map(a, Char.toText).vals())),
@@ -131,7 +131,7 @@ run(suite("fromIter",
    Text.fromIter((['a', 'b', 'c'].vals())),
    M.equals(T.text "abc")),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+%Word32.fromInt(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromNat(i % 26)));
    test(
    "fromIter-3",
    Text.fromIter(a.vals()),
@@ -175,7 +175,7 @@ run(suite("join",
    Text.join("", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "abbcccdddd")),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+%Word32.fromInt(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromNat(i % 26)));
    test(
    "join-3",
    Text.join("", Array.map(a, Char.toText).vals()),
@@ -206,7 +206,7 @@ run(suite("join",
    Text.join(",", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "a,bb,ccc,dddd")),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromWord32(65+%Word32.fromInt(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromNat(i % 26)));
    test(
    "join-3",
    Text.join("", Array.map(a, Char.toText).vals()),
