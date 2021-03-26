@@ -5,22 +5,10 @@ module {
   /// Convert character `c` to a word containing its Unicode scalar value.
   public let toNat32 : (c : Char) -> Nat32 = Prim.charToNat32;
 
-  /// Convert character `c` to a word containing its Unicode scalar value.
-  ///
-  /// @deprecated Please use `Char.toNat32` or `Word32.fromChar`
-  public let toWord32 : (c : Char) -> Word32 = Prim.charToWord32;
-
   /// Convert `w` to a character.
   /// Traps if `w` is not a valid Unicode scalar value.
   /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
   public let fromNat32 : (w : Nat32) -> Char = Prim.nat32ToChar;
-
-  /// Convert word `w` to a character.
-  /// Traps if `w` is not a valid Unicode scalar value.
-  /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
-  ///
-  /// @deprecated Please use `Char.fromNat32` or `Word32.toChar`
-  public let fromWord32 : (w : Word32) -> Char = Prim.word32ToChar;
 
   /// Convert character `c` to single character text.
   public let toText : (c : Char) -> Text = Prim.charToText;
