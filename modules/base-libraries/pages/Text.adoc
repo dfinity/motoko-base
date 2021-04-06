@@ -61,8 +61,9 @@ Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
 func hash(t : Text) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
-Returns a hash obtained by the `xor`-ing the (`Word32`) values of all characters in `t`.
-WARNING: this is a poor hash function and will be replaced.
+Returns a hash obtained by using the `djb2` algorithm from http://www.cse.yorku.ca/~oz/hash.html
+
+This function is _good enough_ for use in a hash-table but it's not a cryptographic hash function!
 
 [[concat]]
 == concat
