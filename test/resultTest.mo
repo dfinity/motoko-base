@@ -16,30 +16,30 @@ func largerThan10(x : Nat) : Result.Result<Nat, Text> =
 let chain = Suite.suite("chain", [
   Suite.test("ok -> ok",
     Result.chain<Nat, Nat, Text>(makeNatural(11), largerThan10),
-    M.equals(T.result(T.natTestable, T.textTestable, #ok(11)))
+    M.equals(T.result<Nat,Text>(T.natTestable, T.textTestable, #ok(11)))
   ),
   Suite.test("ok -> err",
     Result.chain<Nat, Nat, Text>(makeNatural(5), largerThan10),
-    M.equals(T.result(T.natTestable, T.textTestable, #err("5 is not larger than 10.")))
+    M.equals(T.result<Nat,Text>(T.natTestable, T.textTestable, #err("5 is not larger than 10.")))
   ),
   Suite.test("err",
     Result.chain<Nat, Nat, Text>(makeNatural(-5), largerThan10),
-    M.equals(T.result(T.natTestable, T.textTestable, #err("-5 is not a natural number.")))
+    M.equals(T.result<Nat,Text>(T.natTestable, T.textTestable, #err("-5 is not a natural number.")))
   ),
 ]);
 
 let flatten = Suite.suite("flatten", [
   Suite.test("ok -> ok",
     Result.flatten<Nat, Text>(#ok(#ok(10))),
-    M.equals(T.result(T.natTestable, T.textTestable, #ok(10)))
+    M.equals(T.result<Nat,Text>(T.natTestable, T.textTestable, #ok(10)))
   ),
   Suite.test("err",
     Result.flatten<Nat, Text>(#err("wrong")),
-    M.equals(T.result(T.natTestable, T.textTestable, #err("wrong")))
+    M.equals(T.result<Nat,Text>(T.natTestable, T.textTestable, #err("wrong")))
   ),
   Suite.test("ok -> err",
     Result.flatten<Nat, Text>(#ok(#err("wrong"))),
-    M.equals(T.result(T.natTestable, T.textTestable, #err("wrong")))
+    M.equals(T.result<Nat,Text>(T.natTestable, T.textTestable, #err("wrong")))
   ),
 ]);
 
