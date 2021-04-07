@@ -171,7 +171,7 @@ let suite = Suite.suite("Array", [
     "thaw",
     do {
       let xs : [Int] = [ 1, 2, 3 ];
-      Array.freeze(Array.thaw(xs))
+      Array.freeze(Array.thaw<Int>(xs))
     },
     M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3]))
   ),
