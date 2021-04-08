@@ -30,4 +30,16 @@ module {
     else { #greater }
   };
 
+  /// Creates a blob from an array of bytes, by copying each element.
+  public let fromArray : [Nat8] -> Blob = Prim.arrayToBlob;
+
+  /// Creates a blob from a mutable array of bytes, by copying each element.
+  public let fromArrayMut : [var Nat8] -> Blob = Prim.arrayMutToBlob;
+
+  /// Creates an array of bytes from a blob, by copying each element.
+  public let toArray : Blob -> [Nat8] = Prim.blobToArray;
+
+  /// Creates a mutable array of bytes from a blob, by copying each element.
+  public let toArrayMut : Blob -> [var Nat8] = Prim.blobToArrayMut;
+
 }
