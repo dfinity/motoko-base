@@ -45,7 +45,7 @@ public class HashMap<K,V> (
   /// Removes the entry with the key `k` and returns the associated value if it
   /// existed or `null` otherwise.
   public func remove(k : K) : ?V {
-    let h = Prim.word32ToNat(keyHash(k));
+    let h = Prim.nat32ToNat(keyHash(k));
     let m = table.size();
     let pos = h % m;
     if (m > 0) {
@@ -64,7 +64,7 @@ public class HashMap<K,V> (
   /// Gets the entry with the key `k` and returns its associated value if it
   /// existed or `null` otherwise.
   public func get(k:K) : ?V {
-    let h = Prim.word32ToNat(keyHash(k));
+    let h = Prim.nat32ToNat(keyHash(k));
     let m = table.size();
     let v = if (m > 0) {
       AssocList.find<K,V>(table[h % m], k, keyEq)
@@ -98,7 +98,7 @@ public class HashMap<K,V> (
           switch kvs {
           case null { break moveKeyVals };
           case (?((k, v), kvsTail)) {
-                 let h = Prim.word32ToNat(keyHash(k));
+                 let h = Prim.nat32ToNat(keyHash(k));
                  let pos2 = h % table2.size();
                  table2[pos2] := ?((k,v), table2[pos2]);
                  kvs := kvsTail;
@@ -108,7 +108,7 @@ public class HashMap<K,V> (
       };
       table := table2;
     };
-    let h = Prim.word32ToNat(keyHash(k));
+    let h = Prim.nat32ToNat(keyHash(k));
     let pos = h % table.size();
     let (kvs2, ov) = AssocList.replace<K,V>(table[pos], k, keyEq, ?v);
     table[pos] := kvs2;

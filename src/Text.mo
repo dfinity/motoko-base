@@ -41,9 +41,9 @@ module {
   ///
   /// This function is _good enough_ for use in a hash-table but it's not a cryptographic hash function!
   public func hash(t : Text) : Hash.Hash {
-    var x : Word32 = 5381;
+    var x : Nat32 = 5381;
     for (char in t.chars()) {
-      let c : Word32 = Prim.charToWord32(char);
+      let c : Nat32 = Prim.charToNat32(char);
       x := ((x << 5) +% x) +% c;
     };
     return x
@@ -600,4 +600,10 @@ module {
     }
   };
 
+  /// Returns the UTF-8 encoding of the given text
+  public let encodeUtf8 : Text -> Blob = Prim.encodeUtf8;
+
+  /// Tries to decode the given `Blob` as UTF-8.
+  /// Returns `null` if the blob is _not_ valid UTF-8.
+  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
 }

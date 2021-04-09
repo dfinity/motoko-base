@@ -1,11 +1,11 @@
 import Nat "mo:base/Nat";
 import TrieSet "mo:base/TrieSet";
-import Word32 "mo:base/Word32";
+import Nat32 "mo:base/Nat32";
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
-let set1 = TrieSet.fromArray<Nat>([ 1, 2, 3, 1, 2, 3, 1 ], Word32.fromNat, Nat.equal);
+let set1 = TrieSet.fromArray<Nat>([ 1, 2, 3, 1, 2, 3, 1 ], Nat32.fromNat, Nat.equal);
 
 let suite = Suite.suite("TrieSet fromArray", [
   Suite.test(
