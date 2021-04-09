@@ -8,10 +8,10 @@ Hash values
 
 [source.no-repl,motoko,subs=+macros]
 ----
-type Hash = Word32
+type Hash = Nat32
 ----
 
-Hash values represent a string of _hash bits_, packed into a `Word32`.
+Hash values represent a string of _hash bits_, packed into a `Nat32`.
 
 [[length]]
 == length
@@ -73,18 +73,18 @@ func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
 
 
 
-[[hashWord8]]
-== hashWord8
+[[hashNat8]]
+== hashNat8
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func hashWord8(key : [xref:#type.Hash[Hash]]) : xref:#type.Hash[Hash]
+func hashNat8(key : pass:[[]xref:#type.Hash[Hash]pass:[]]) : xref:#type.Hash[Hash]
 ----
 
 Jenkin's one at a time:
 
 https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
 
-The input type should actually be `[Word8]`.
-Note: Be sure to explode each `Word8` of a `Word32` into its own `Word32`, and to shift into lower 8 bits.
+The input type should actually be `[Nat8]`.
+Note: Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and to shift into lower 8 bits.
 

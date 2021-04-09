@@ -315,3 +315,24 @@ func compareWith(t1 : Text, t2 : Text, cmp : (Char, Char) -> {#less; #equal; #gr
 
 Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
 
+[[encodeUtf8]]
+== encodeUtf8
+
+[source.no-repl,motoko,subs=+macros]
+----
+let encodeUtf8 : Text -> Blob
+----
+
+Returns the UTF-8 encoding of the given text
+
+[[decodeUtf8]]
+== decodeUtf8
+
+[source.no-repl,motoko,subs=+macros]
+----
+let decodeUtf8 : Blob -> ?Text
+----
+
+Tries to decode the given `Blob` as UTF-8.
+Returns `null` if the blob is _not_ valid UTF-8.
+

@@ -386,7 +386,7 @@ does not divide by `n` evenly.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromArray<A>(xs : [A]) : xref:#type.List[List]<A>
+func fromArray<A>(xs : pass:[[]Apass:[]]) : xref:#type.List[List]<A>
 ----
 
 Convert an array into a list.
@@ -396,7 +396,7 @@ Convert an array into a list.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromVarArray<A>(xs : [var A]) : xref:#type.List[List]<A>
+func fromVarArray<A>(xs : pass:[[]var Apass:[]]) : xref:#type.List[List]<A>
 ----
 
 Convert a mutable array into a list.
@@ -406,7 +406,7 @@ Convert a mutable array into a list.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toArray<A>(xs : xref:#type.List[List]<A>) : [A]
+func toArray<A>(xs : xref:#type.List[List]<A>) : pass:[[]Apass:[]]
 ----
 
 Create an array from a list.
@@ -416,7 +416,7 @@ Create an array from a list.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toVarArray<A>(xs : xref:#type.List[List]<A>) : [var A]
+func toVarArray<A>(xs : xref:#type.List[List]<A>) : pass:[[]var Apass:[]]
 ----
 
 Create a mutable array from a list.

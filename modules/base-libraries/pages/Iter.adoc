@@ -153,7 +153,7 @@ assert(?10 == iter.next());
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromArray<A>(xs : [A]) : xref:#type.Iter[Iter]<A>
+func fromArray<A>(xs : pass:[[]Apass:[]]) : xref:#type.Iter[Iter]<A>
 ----
 
 Creates an iterator that produces the elements of an Array in ascending index order.
@@ -171,7 +171,7 @@ assert(null == iter.next());
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromArrayMut<A>(xs : [var A]) : xref:#type.Iter[Iter]<A>
+func fromArrayMut<A>(xs : pass:[[]var Apass:[]]) : xref:#type.Iter[Iter]<A>
 ----
 
 Like `fromArray` but for Arrays with mutable elements. Captures
@@ -193,7 +193,7 @@ Like `fromArray` but for Lists.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toArray<A>(xs : xref:#type.Iter[Iter]<A>) : [A]
+func toArray<A>(xs : xref:#type.Iter[Iter]<A>) : pass:[[]Apass:[]]
 ----
 
 Consumes an iterator and collects its produced elements in an Array.
@@ -208,7 +208,7 @@ assert([1, 2, 3] == Iter.toArray(iter));
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toArrayMut<A>(xs : xref:#type.Iter[Iter]<A>) : [var A]
+func toArrayMut<A>(xs : xref:#type.Iter[Iter]<A>) : pass:[[]var Apass:[]]
 ----
 
 Like `toArray` but for Arrays with mutable elements.

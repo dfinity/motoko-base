@@ -115,7 +115,7 @@ Returns an `Iter` over the elements of this buffer.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toArray() : [X]
+func toArray() : pass:[[]Xpass:[]]
 ----
 
 Creates a new array containing this buffer's elements.
@@ -125,7 +125,7 @@ Creates a new array containing this buffer's elements.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toVarArray() : [var X]
+func toVarArray() : pass:[[]var Xpass:[]]
 ----
 
 Creates a mutable array containing this buffer's elements.

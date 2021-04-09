@@ -8,7 +8,7 @@ Binary blobs
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let hash : Blob -> Word32
+let hash : Blob -> Nat32
 ----
 
 
@@ -82,4 +82,44 @@ func compare(x : Blob, y : Blob) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
+
+[[fromArray]]
+== fromArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromArray : pass:[[]Nat8pass:[]] -> Blob
+----
+
+Creates a blob from an array of bytes, by copying each element.
+
+[[fromArrayMut]]
+== fromArrayMut
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromArrayMut : pass:[[]var Nat8pass:[]] -> Blob
+----
+
+Creates a blob from a mutable array of bytes, by copying each element.
+
+[[toArray]]
+== toArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toArray : Blob -> pass:[[]Nat8pass:[]]
+----
+
+Creates an array of bytes from a blob, by copying each element.
+
+[[toArrayMut]]
+== toArrayMut
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toArrayMut : Blob -> pass:[[]var Nat8pass:[]]
+----
+
+Creates a mutable array of bytes from a blob, by copying each element.
 

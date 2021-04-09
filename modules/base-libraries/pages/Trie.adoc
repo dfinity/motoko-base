@@ -405,7 +405,7 @@ can inject tries into arrays using functions like `Array.tabulate`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toArray<K, V, W>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> W) : [W]
+func toArray<K, V, W>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> W) : pass:[[]Wpass:[]]
 ----
 
 Gather the collection of key-value pairs into an array of a (possibly-distinct) type.

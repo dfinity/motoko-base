@@ -121,7 +121,7 @@ func intersect<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq :
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromArray<T>(arr : [T], elemHash : T -> xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
+func fromArray<T>(arr : pass:[[]Tpass:[]], elemHash : T -> xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
 
@@ -131,7 +131,7 @@ func fromArray<T>(arr : [T], elemHash : T -> xref:#type.Hash[Hash], eq : (T, T) 
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toArray<T>(s : xref:#type.Set[Set]<T>) : [T]
+func toArray<T>(s : xref:#type.Set[Set]<T>) : pass:[[]Tpass:[]]
 ----
 
 

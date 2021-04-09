@@ -8,7 +8,7 @@ Functions on Arrays
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool
+func equal<A>(a : pass:[[]Apass:[]], b : pass:[[]Apass:[]], eq : (A, A) -> Bool) : Bool
 ----
 
 Test if two arrays contain equal values
@@ -18,7 +18,7 @@ Test if two arrays contain equal values
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func append<A>(xs : [A], ys : [A]) : [A]
+func append<A>(xs : pass:[[]Apass:[]], ys : pass:[[]Apass:[]]) : pass:[[]Apass:[]]
 ----
 
 Append the values of two input arrays
@@ -28,7 +28,7 @@ Append the values of two input arrays
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func chain<A, B>(xs : [A], f : A -> [B]) : [B]
+func chain<A, B>(xs : pass:[[]Apass:[]], f : A -> pass:[[]Bpass:[]]) : pass:[[]Bpass:[]]
 ----
 
 Transform each array value into zero or more output values, appended in order
@@ -38,7 +38,7 @@ Transform each array value into zero or more output values, appended in order
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func filter<A>(xs : [A], f : A -> Bool) : [A]
+func filter<A>(xs : pass:[[]Apass:[]], f : A -> Bool) : pass:[[]Apass:[]]
 ----
 
 Output array contains each array-value if and only if the predicate is true; ordering retained.
@@ -48,7 +48,7 @@ Output array contains each array-value if and only if the predicate is true; ord
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B]
+func mapFilter<A, B>(xs : pass:[[]Apass:[]], f : A -> ?B) : pass:[[]Bpass:[]]
 ----
 
 Output array contains each transformed optional value; ordering retained.
@@ -58,7 +58,7 @@ Output array contains each transformed optional value; ordering retained.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B
+func foldLeft<A, B>(xs : pass:[[]Apass:[]], initial : B, f : (B, A) -> B) : B
 ----
 
 Aggregate and transform values into a single output value, by increasing indices.
@@ -68,7 +68,7 @@ Aggregate and transform values into a single output value, by increasing indices
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B
+func foldRight<A, B>(xs : pass:[[]Apass:[]], initial : B, f : (A, B) -> B) : B
 ----
 
 Aggregate and transform values into a single output value, by decreasing indices.
@@ -78,7 +78,7 @@ Aggregate and transform values into a single output value, by decreasing indices
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func find<A>(xs : [A], f : A -> Bool) : ?A
+func find<A>(xs : pass:[[]Apass:[]], f : A -> Bool) : ?A
 ----
 
 Returns optional first value for which predicate is true
@@ -88,7 +88,7 @@ Returns optional first value for which predicate is true
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func freeze<A>(xs : [var A]) : [A]
+func freeze<A>(xs : pass:[[]var Apass:[]]) : pass:[[]Apass:[]]
 ----
 
 Transform mutable array into immutable array
@@ -98,7 +98,7 @@ Transform mutable array into immutable array
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func flatten<A>(xs : [[A]]) : [A]
+func flatten<A>(xs : pass:[[]pass:[[]Apass:[]]pass:[]]) : pass:[[]Apass:[]]
 ----
 
 Transform an array of arrays into a single array, with retained array-value order.
@@ -108,7 +108,7 @@ Transform an array of arrays into a single array, with retained array-value orde
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func map<A, B>(xs : [A], f : A -> B) : [B]
+func map<A, B>(xs : pass:[[]Apass:[]], f : A -> B) : pass:[[]Bpass:[]]
 ----
 
 Transform each value using a function, with retained array-value order.
@@ -118,7 +118,7 @@ Transform each value using a function, with retained array-value order.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B]
+func mapEntries<A, B>(xs : pass:[[]Apass:[]], f : (A, Nat) -> B) : pass:[[]Bpass:[]]
 ----
 
 Transform each entry (index-value pair) using a function.
@@ -128,7 +128,7 @@ Transform each entry (index-value pair) using a function.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mapResult<A, R, E>(xs : [A], f : A -> xref:Result.adoc#type.Result[Result.Result]<R, E>) : xref:Result.adoc#type.Result[Result.Result]<[R], E>
+func mapResult<A, R, E>(xs : pass:[[]Apass:[]], f : A -> xref:Result.adoc#type.Result[Result.Result]<R, E>) : xref:Result.adoc#type.Result[Result.Result]<pass:[[]Rpass:[]], E>
 ----
 
 Maps a Result-returning function over an Array and returns either
@@ -154,7 +154,7 @@ assert(Array.mapResult([-1, 0, 1], makeNatural) == #err("-1 is not a natural num
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func make<A>(x : A) : [A]
+func make<A>(x : A) : pass:[[]Apass:[]]
 ----
 
 Make an array from a single value.
@@ -164,7 +164,7 @@ Make an array from a single value.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func vals<A>(xs : [A]) : xref:IterType.adoc#type.Iter[I.Iter]<A>
+func vals<A>(xs : pass:[[]Apass:[]]) : xref:IterType.adoc#type.Iter[I.Iter]<A>
 ----
 
 Returns `xs.vals()`.
@@ -174,7 +174,7 @@ Returns `xs.vals()`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func keys<A>(xs : [A]) : xref:IterType.adoc#type.Iter[I.Iter]<Nat>
+func keys<A>(xs : pass:[[]Apass:[]]) : xref:IterType.adoc#type.Iter[I.Iter]<Nat>
 ----
 
 Returns `xs.keys()`.
@@ -184,7 +184,7 @@ Returns `xs.keys()`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func thaw<A>(xs : [A]) : [var A]
+func thaw<A>(xs : pass:[[]Apass:[]]) : pass:[[]var Apass:[]]
 ----
 
 Transform an immutable array into a mutable array.
@@ -194,7 +194,7 @@ Transform an immutable array into a mutable array.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func init<A>(size : Nat, initVal : A) : [var A]
+func init<A>(size : Nat, initVal : A) : pass:[[]var Apass:[]]
 ----
 
 Initialize a mutable array with `size` copies of the initial value.
@@ -204,7 +204,7 @@ Initialize a mutable array with `size` copies of the initial value.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func tabulate<A>(size : Nat, gen : Nat -> A) : [A]
+func tabulate<A>(size : Nat, gen : Nat -> A) : pass:[[]Apass:[]]
 ----
 
 Initialize a mutable array of the given size, and use the `gen` function to produce the initial value for every index.
@@ -214,7 +214,7 @@ Initialize a mutable array of the given size, and use the `gen` function to prod
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func tabulateVar<A>(size : Nat, gen : Nat -> A) : [var A]
+func tabulateVar<A>(size : Nat, gen : Nat -> A) : pass:[[]var Apass:[]]
 ----
 
 Initialize a mutable array using a generation function
