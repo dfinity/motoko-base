@@ -8,7 +8,7 @@
 /// The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 ///
 ///
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import P "Prelude";
 import Option "Option";
 import Hash "Hash";

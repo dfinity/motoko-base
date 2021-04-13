@@ -1,4 +1,4 @@
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import H "mo:base/TrieMap";
 import Hash "mo:base/Hash";
 import Text "mo:base/Text";

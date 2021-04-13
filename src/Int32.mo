@@ -2,7 +2,7 @@
 ///
 /// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Int "Int";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 

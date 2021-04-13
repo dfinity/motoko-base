@@ -12,7 +12,7 @@
 ///   Double an initial capacity when the expected
 ///   bucket list beyond a certain constant.
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import P "Prelude";
 import A "Array";
 import Hash "Hash";

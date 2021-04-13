@@ -3,7 +3,7 @@
 /// Most operations are available as built-in operators (e.g. `1 | 1`).
 
 import Nat "Nat";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 

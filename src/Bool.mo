@@ -5,7 +5,7 @@
 /// `logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
 /// of their arguments.
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 module {
 
   /// Conversion.

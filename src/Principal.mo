@@ -1,6 +1,6 @@
 /// IC principals (User and canister IDs)
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import Blob "Blob";
 import Hash "Hash";
 module {

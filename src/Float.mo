@@ -1,6 +1,6 @@
 /// 64-bit Floating-point numbers
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import Int "Int";
 
 module {

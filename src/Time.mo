@@ -1,6 +1,6 @@
 /// System time
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 module {
 
   /// System time is represent as nanoseconds since 1970-01-01.

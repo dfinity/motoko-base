@@ -24,7 +24,7 @@
 import I "Iter";
 import Option "Option";
 import P "Prelude";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 
