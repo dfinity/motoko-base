@@ -1,6 +1,6 @@
 import Debug "mo:base/Debug";
 import Char "mo:base/Char";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 /*
 //

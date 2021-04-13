@@ -1,6 +1,6 @@
 /// Hash values
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import Iter "Iter";
 
 module {
@@ -62,13 +62,13 @@ module {
   public func hashNat8(key : [Hash]) : Hash {
     var hash : Nat32 = 0;
     for (natOfKey in key.vals()) {
-      hash := hash + natOfKey;
-      hash := hash + hash << 10;
+      hash := hash +% natOfKey;
+      hash := hash +% hash << 10;
       hash := hash ^ (hash >> 6);
     };
-    hash := hash + hash << 3;
+    hash := hash +% hash << 3;
     hash := hash ^ (hash >> 11);
-    hash := hash + hash << 15;
+    hash := hash +% hash << 15;
     return hash;
   };
 

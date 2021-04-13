@@ -19,7 +19,7 @@
 ///
 /// A "buffer" is a mutable sequence that grows, either one element at a
 /// time, or one (second) buffer at time.
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 
@@ -57,8 +57,8 @@ public class Buffer<X> (initCapacity : Nat) {
   /// Removes the item that was inserted last and returns it or `null` if no
   /// elements had been added to the Buffer.
   public func removeLast() : ?X {
-    if (count == 0) { 
-      null 
+    if (count == 0) {
+      null
     } else {
       count -= 1;
       ?elems[count]
@@ -96,7 +96,7 @@ public class Buffer<X> (initCapacity : Nat) {
     c
   };
 
-  /// Returns an [Iter](Iter.html#type.Iter) over the elements of this buffer.
+  /// Returns an `Iter` over the elements of this buffer.
   public func vals() : { next : () -> ?X } = object {
     var pos = 0;
     public func next() : ?X {

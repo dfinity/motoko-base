@@ -12,7 +12,7 @@
 ///   Double an initial capacity when the expected
 ///   bucket list beyond a certain constant.
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import P "Prelude";
 import A "Array";
 import Hash "Hash";
@@ -119,7 +119,7 @@ public class HashMap<K,V> (
     ov
   };
 
-  /// Returns an [`Iter`](Iter.html#type.Iter) over the key value pairs in this
+  /// Returns an iterator over the key value pairs in this
   /// HashMap. Does _not_ modify the HashMap.
   public func entries() : Iter.Iter<(K,V)> {
     if (table.size() == 0) {

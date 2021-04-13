@@ -11,7 +11,7 @@ module {
   /// Iterators are inherently stateful. Calling `next` "consumes" a value from
   /// the Iterator that cannot be put back, so keep that in mind when sharing
   /// iterators between consumers.
-  /// 
+  ///
   /// An iterater `i` can be iterated over using
   /// ```
   /// for (x in i) {
@@ -35,7 +35,7 @@ module {
     public func next() : ?Nat { if (i > y) { null } else {let j = i; i += 1; ?j} };
   };
 
-  /// Like [`range`](#value.range) but produces the values in the opposite
+  /// Like `range` but produces the values in the opposite
   /// order.
   public class revRange(x : Int, y : Int) {
       var i = x;
@@ -43,8 +43,8 @@ module {
   };
 
   /// Calls a function `f` on every value produced by an iterator and discards
-  /// the results. If you're looking to keep these results use
-  /// [`map`](#value.map).
+  /// the results. If you're looking to keep these results use `map` instead.
+  ///
   /// ```motoko
   /// import Iter "mo:base/Iter";
   /// var sum = 0;
@@ -148,14 +148,14 @@ module {
     }
   };
 
-  /// Like [`fromArray`](#value.fromArray) but for Arrays with mutable elements.
-  /// Captures the elements of the Array at the time the iterator is created, so
+  /// Like `fromArray` but for Arrays with mutable elements. Captures
+  /// the elements of the Array at the time the iterator is created, so
   /// further modifications won't be reflected in the iterator.
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
     fromArray<A>(Array.freeze<A>(xs));
   };
 
-  /// Like [`fromArray`](#value.fromArray) but for Lists.
+  /// Like `fromArray` but for Lists.
   public func fromList<A>(xs : List.List<A>) : Iter<A> {
     List.toArray<A>(xs).vals();
   };
@@ -172,12 +172,12 @@ module {
     return buffer.toArray()
   };
 
-  /// Like [`toArray`](#value.toArray) but for Arrays with mutable elements.
+  /// Like `toArray` but for Arrays with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
     Array.thaw<A>(toArray<A>(xs));
   };
 
-  /// Like [`toArray`](#value.toArray) but for Lists.
+  /// Like `toArray` but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
     var result = List.nil<A>();
     iterate<A>(xs, func (x, _i) {

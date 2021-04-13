@@ -1,5 +1,6 @@
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
+import Blob "mo:base/Blob";
 import Iter "mo:base/Iter";
 import Char "mo:base/Char";
 import Order "mo:base/Order";
@@ -18,6 +19,11 @@ func charT(c : Char): T.TestableItem<Char> = {
   equals = Char.equal;
 };
 
+func blobT(b : Blob): T.TestableItem<Blob> = {
+  item = b;
+  display = func(b : Blob) : Text { debug_show(b) };
+  equals = Blob.equal;
+};
 
 func ordT(o : Order.Order): T.TestableItem<Order.Order> = {
   item = o;
@@ -102,7 +108,7 @@ run(suite("toIter",
    Text.toIter("abc"),
    M.equals(iterT (['a','b','c']))),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+Nat32.fromNat(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromIntWrap(i % 26)));
    test(
      "fromIter-2",
      Text.toIter(Text.join("", Array.map(a, Char.toText).vals())),
@@ -125,7 +131,7 @@ run(suite("fromIter",
    Text.fromIter((['a', 'b', 'c'].vals())),
    M.equals(T.text "abc")),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+Nat32.fromNat(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromIntWrap(i % 26)));
    test(
    "fromIter-3",
    Text.fromIter(a.vals()),
@@ -169,7 +175,7 @@ run(suite("join",
    Text.join("", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "abbcccdddd")),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+Nat32.fromNat(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromIntWrap(i % 26)));
    test(
    "join-3",
    Text.join("", Array.map(a, Char.toText).vals()),
@@ -200,7 +206,7 @@ run(suite("join",
    Text.join(",", (["a","bb","ccc","dddd"].vals())),
    M.equals(T.text "a,bb,ccc,dddd")),
  do {
-   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+Nat32.fromNat(i % 26)));
+   let a = Array.tabulate<Char>(1000, func i = Char.fromNat32(65+%Nat32.fromIntWrap(i % 26)));
    test(
    "join-3",
    Text.join("", Array.map(a, Char.toText).vals()),
@@ -540,6 +546,18 @@ run(suite("replace",
    "replace-pred",
    Text.replace("abcdefghijklmnopqrstuvwxyz", #predicate (func (c : Char) : Bool { c < 'm'}), ""),
    M.equals(T.text "mnopqrstuvwxyz")),
+ test(
+  "replace-partial",
+  Text.replace("123", #text "124", "ABC"),
+   M.equals(T.text "123")),
+ test(
+  "replace-partial-2",
+  Text.replace("12341235124", #text "124", "ABC"),
+   M.equals(T.text "12341235ABC")),
+ test(
+  "replace-partial-3",
+  Text.replace("111234123511124", #text "124", "ABC"),
+   M.equals(T.text "111234123511ABC")),
 ]));
 
 run(suite("stripStart",
@@ -718,3 +736,27 @@ run(suite("compareWith",
    M.equals(ordT (#greater)))
 ]))
 };
+
+run(suite("utf8",
+[
+ test(
+   "encode-literal",
+   Text.encodeUtf8("FooBär☃"),
+   M.equals(blobT("FooBär☃"))),
+ test(
+   "encode-concat",
+   Text.encodeUtf8("Foo" # "Bär" # "☃"),
+   M.equals(blobT("FooBär☃"))),
+ test(
+   "decode-literal-good",
+   Text.decodeUtf8("FooBär☃"),
+   M.equals(optTextT(?"FooBär☃"))),
+ test(
+   "decode-literal-bad1",
+   Text.decodeUtf8("\FF"),
+   M.equals(optTextT(null))),
+ test(
+   "decode-literal-bad2",
+   Text.decodeUtf8("\D8\00t d"),
+   M.equals(optTextT(null))),
+]));

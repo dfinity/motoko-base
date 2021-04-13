@@ -1,16 +1,11 @@
 /// Characters
-import Prim "mo:prim";
+import Prim "mo:⛔";
 module {
 
-  /// Convert character `c` to a nat containing its Unicode scalar value.
+  /// Convert character `c` to a word containing its Unicode scalar value.
   public let toNat32 : (c : Char) -> Nat32 = Prim.charToNat32;
 
   /// Convert `w` to a character.
-  /// Traps if `w` is not a valid Unicode scalar value.
-  /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
-  public let fromNat32 : (w : Nat32) -> Char = Prim.nat32ToChar;
-
-  /// Convert word `w` to a character.
   /// Traps if `w` is not a valid Unicode scalar value.
   /// Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
   public let fromNat32 : (w : Nat32) -> Char = Prim.nat32ToChar;

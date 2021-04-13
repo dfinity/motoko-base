@@ -10,7 +10,8 @@
 import Char "Char";
 import Iter "Iter";
 import Hash "Hash";
-import Prim "mo:prim";
+import Stack "Stack";
+import Prim "mo:⛔";
 
 module {
 
@@ -19,7 +20,7 @@ module {
   public let fromChar : (c : Char) -> Text = Prim.charToText;
 
   /// Conversion.
-  /// Creates an [iterator](Iter.html#type.Iter) that traverses the characters of the text `t`.
+  /// Creates an iterator that traverses the characters of the text `t`.
   public func toIter(t : Text) : Iter.Iter<Char> =
     t.chars();
 
@@ -36,12 +37,14 @@ module {
   /// Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
   public func size(t : Text) : Nat { t.size(); };
 
-  /// Returns a hash obtained by the `xor`-ing the (`Nat32`) values of all characters in `t`.
-  /// WARNING: this is a poor hash function and will be replaced.
+  /// Returns a hash obtained by using the `djb2` algorithm from http://www.cse.yorku.ca/~oz/hash.html
+  ///
+  /// This function is _good enough_ for use in a hash-table but it's not a cryptographic hash function!
   public func hash(t : Text) : Hash.Hash {
-    var x = 0 : Nat32;
-    for (c in t.chars()) {
-      x := x ^ Prim.charToNat32(c);
+    var x : Nat32 = 5381;
+    for (char in t.chars()) {
+      let c : Nat32 = Prim.charToNat32(char);
+      x := ((x << 5) +% x) +% c;
     };
     return x
   };
@@ -175,9 +178,9 @@ module {
     /// #success on complete match
     #success;
     /// #fail(cs,c) on partial match of cs, but failing match on c
-    #fail : (cs: Iter.Iter<Char>, c : Char);
+    #fail : (cs : Iter.Iter<Char>, c : Char);
     /// #empty(cs) on partial match of cs and empty stream
-    #empty : (cs :Iter.Iter<Char> )
+    #empty : (cs : Iter.Iter<Char> )
   };
 
   private func sizeOfPattern(pat : Pattern) : Nat {
@@ -192,11 +195,11 @@ module {
        case (#char(p)) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
-             case (?c) { 
-               if (p == c) { 
-                 #success 
-               } else { 
-                 #fail (empty(), c) } 
+             case (?c) {
+               if (p == c) {
+                 #success
+               } else {
+                 #fail(empty(), c) }
                };
              case null { #empty(empty()) };
            }
@@ -205,13 +208,13 @@ module {
        case (#predicate(p)) {
          func (cs : Iter.Iter<Char>) : Match {
            switch (cs.next()) {
-             case (?c) { 
-               if (p(c)) { 
-                 #success 
-               } else { 
-                 #fail(empty(), c) } 
+             case (?c) {
+               if (p(c)) {
+                 #success
+               } else {
+                 #fail(empty(), c) }
                };
-             case null { #empty (empty()) };
+             case null { #empty(empty()) };
            }
          }
        };
@@ -225,12 +228,12 @@ module {
                  switch (cs.next()) {
                    case (?c) {
                      if (c != d) {
-                       return #fail (take(i, p.chars()), c)
+                       return #fail(take(i, p.chars()), c)
                      };
                      i += 1;
                    };
                    case null {
-                     return #empty (take(i, p.chars()));
+                     return #empty(take(i, p.chars()));
                    }
                  }
                };
@@ -244,34 +247,34 @@ module {
 
   private class CharBuffer(cs : Iter.Iter<Char>) : Iter.Iter<Char> = {
 
-    var buff : Iter.Iter<Char> = empty();
-    var char : ?Char = null;
+    var stack : Stack.Stack<(Iter.Iter<Char>, Char)> = Stack.Stack();
 
     public func pushBack(cs0: Iter.Iter<Char>, c : Char) {
-       buff := cs0;
-       char := ?c;
+       stack.push((cs0, c));
     };
 
     public func next() : ?Char {
-      switch (buff.next()) {
-        case null {
-          switch char {
-            case (?c) {
-              char := null;
-              return ?c;
-            };
-            case null {
-              return cs.next();
-            };
-          }
-        };
-        case oc { oc };
-      }
+      switch (stack.peek()) {
+	case (?(buff, c)) {
+	  switch (buff.next()) {
+	    case null {
+	      ignore stack.pop();
+	      return ?c;
+	    };
+	    case oc {
+	      return oc;
+	    };
+	  }
+	};
+	case null {
+	  return cs.next();
+	};
+      };
     };
   };
 
   /// Returns the sequence of fields in `t`, derived from start to end,
-  /// separated by text matching [pattern](#type.Pattern) `p`.
+  /// separated by text matching pattern `p`.
   /// Two fields are separated by exactly one match.
   public func split(t : Text, p : Pattern) : Iter.Iter<Text> {
     let match = matchOfPattern(p);
@@ -303,7 +306,7 @@ module {
                   state := 2;
                   return r;
                 };
-                case (#fail (cs1, c)) {
+                case (#fail(cs1, c)) {
                   cs.pushBack(cs1,c);
                   switch (cs.next()) {
                     case (?ci) {
@@ -331,7 +334,7 @@ module {
   };
 
   /// Returns the sequence of tokens in `t`, derived from start to end.
-  /// A _token_ is a non-empty maximal subsequence of `t` not containing a match for [pattern](#type.Pattern) `p`.
+  /// A _token_ is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
   /// Two tokens may be separated by one or more matches of `p`.
   public func tokens(t : Text, p : Pattern) : Iter.Iter<Text> {
     let fs = split(t, p);
@@ -345,7 +348,7 @@ module {
     }
   };
 
-  /// Returns true if `t` contains a match for [pattern](#type.Pattern) `p`.
+  /// Returns true if `t` contains a match for pattern `p`.
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern(p);
     let cs = CharBuffer(t.chars());
@@ -370,7 +373,7 @@ module {
     }
   };
 
-  /// Returns `true` if `t` starts with a prefix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
+  /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
   public func startsWith(t : Text, p : Pattern) : Bool {
     var cs = t.chars();
     let match = matchOfPattern(p);
@@ -380,7 +383,7 @@ module {
     }
   };
 
-  /// Returns `true` if `t` ends with a suffix matching [pattern](#type.Pattern) `p`, otherwise returns `false`.
+  /// Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
   public func endsWith(t : Text, p : Pattern) : Bool {
     let s2 = sizeOfPattern(p);
     if (s2 == 0) return true;
@@ -388,7 +391,7 @@ module {
     if (s2 > s1) return false;
     let match = matchOfPattern(p);
     var cs1 = t.chars();
-    var diff = s1 - s2;
+    var diff : Nat = s1 - s2;
     while (diff > 0)  {
       ignore cs1.next();
       diff -= 1;
@@ -399,7 +402,7 @@ module {
     }
   };
 
-  /// Returns `t` with all matches of [pattern](#type.Pattern) `p` replaced by text `r`.
+  /// Returns `t` with all matches of pattern `p` replaced by text `r`.
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern(p);
     let size = sizeOfPattern(p);
@@ -420,7 +423,7 @@ module {
           };
           break l;
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           cs.pushBack(cs1, c);
         }
       };
@@ -438,7 +441,7 @@ module {
 
 
 
-  /// Returns the optioned suffix of `t` obtained by eliding exactly one leading match of [pattern](#type.Pattern) `p`, otherwise `null`.
+  /// Returns the optioned suffix of `t` obtained by eliding exactly one leading match of pattern `p`, otherwise `null`.
   public func stripStart(t : Text, p : Pattern) : ?Text {
     let s = sizeOfPattern(p);
     if (s == 0) return ?t;
@@ -450,7 +453,7 @@ module {
     }
   };
 
-  /// Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of [pattern](#type.Pattern) `p`, otherwise `null`.
+  /// Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of pattern `p`, otherwise `null`.
   public func stripEnd(t : Text, p : Pattern) : ?Text {
     let s2 = sizeOfPattern(p);
     if (s2 == 0) return ?t;
@@ -458,7 +461,7 @@ module {
     if (s2 > s1) return null;
     let match = matchOfPattern(p);
     var cs1 = t.chars();
-    var diff = s1 - s2;
+    var diff : Nat = s1 - s2;
     while (diff > 0) {
       ignore cs1.next();
       diff -= 1;
@@ -469,7 +472,7 @@ module {
     }
   };
 
-  /// Returns the suffix of `t` obtained by eliding all leading matches of [pattern](#type.Pattern) `p`.
+  /// Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`.
   public func trimStart(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     let size = sizeOfPattern(p);
@@ -482,13 +485,13 @@ module {
           matchSize += size;
         }; // continue
         case (#empty(cs1)) {
-          return if (matchSize == 0) { 
-            t 
+          return if (matchSize == 0) {
+            t
           } else {
             fromIter(cs1)
-          } 
+          }
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           return if (matchSize == 0) {
             t
           } else {
@@ -499,7 +502,7 @@ module {
     }
   };
 
-  /// Returns the prefix of `t` obtained by eliding all trailing matches of [pattern](#type.Pattern) `p`.
+  /// Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p`.
   public func trimEnd(t : Text, p : Pattern) : Text {
     let cs = CharBuffer(t.chars());
     let size = sizeOfPattern(p);
@@ -518,7 +521,7 @@ module {
             case (?_) return t;
           }
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           matchSize := 0;
           cs.pushBack(cs1, c);
           ignore cs.next();
@@ -528,7 +531,7 @@ module {
     extract(t, 0, t.size() - matchSize)
   };
 
-  /// Returns the subtext of `t` obtained by eliding all leading and trailing matches of [pattern](#type.Pattern) `p`.
+  /// Returns the subtext of `t` obtained by eliding all leading and trailing matches of pattern `p`.
   public func trim(t : Text, p : Pattern) : Text {
     let cs = t.chars();
     let size = sizeOfPattern(p);
@@ -543,7 +546,7 @@ module {
         case (#empty(cs1)) {
           return if (matchSize == 0) { t } else { fromIter(cs1) }
         };
-        case (#fail (cs1, c)) {
+        case (#fail(cs1, c)) {
           let start = matchSize;
           let cs2 = CharBuffer(cs);
           cs2.pushBack(cs1, c);
@@ -561,7 +564,7 @@ module {
                   case (?_) return t;
                 }
               };
-              case (#fail (cs3, c1)) {
+              case (#fail(cs3, c1)) {
                 matchSize := 0;
                 cs2.pushBack(cs3, c1);
                 ignore cs2.next();
@@ -597,4 +600,10 @@ module {
     }
   };
 
+  /// Returns the UTF-8 encoding of the given text
+  public let encodeUtf8 : Text -> Blob = Prim.encodeUtf8;
+
+  /// Tries to decode the given `Blob` as UTF-8.
+  /// Returns `null` if the blob is _not_ valid UTF-8.
+  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
 }

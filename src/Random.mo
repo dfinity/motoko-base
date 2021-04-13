@@ -6,6 +6,7 @@
 /// as the IC, is intricate. Some basic rules need to be followed by the
 /// user of this module to obtain (and maintain) the benefits of crypto-
 /// graphic randomness:
+///
 /// - cryptographic entropy (randomness source) is only obtainable
 ///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
 /// - all bets must be closed *before* entropy is being asked for in
@@ -23,7 +24,7 @@
 import I "Iter";
 import Option "Option";
 import P "Prelude";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 
@@ -97,7 +98,7 @@ module {
       var acc : Nat8 = 0;
       for (i in it) {
         if (8 : Nat8 <= nn)
-        { acc += Prim.popcntNat8(i) }
+        { acc +%= Prim.popcntNat8(i) }
         else if (0 : Nat8 == nn)
         { return ?acc }
         else {
@@ -171,7 +172,7 @@ module {
     var acc : Nat8 = 0;
     for (i in it) {
       if (8 : Nat8 <= nn)
-      { acc += Prim.popcntNat8(i) }
+      { acc +%= Prim.popcntNat8(i) }
       else if (0 : Nat8 == nn)
       { return acc }
       else {
