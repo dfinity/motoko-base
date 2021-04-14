@@ -737,6 +737,47 @@ run(suite("compareWith",
 ]))
 };
 
+do {
+let cmp = func (c1 : Char, c2 : Char) : Order.Order {
+  switch (Char.compare (c1, c2)) {
+    case #less #greater;
+    case #equal #equal;
+    case #greater #less;
+  };
+};
+run(suite("compareWith-flip",
+[
+ test(
+   "compareWith-empties",
+   Text.compareWith("", "", cmp),
+   M.equals(ordT (#equal))),
+ test(
+   "compareWith-empty",
+   Text.compareWith("abc", "", cmp),
+   M.equals(ordT (#greater))),
+ test(
+   "compareWith-equal-nonempty",
+   Text.compareWith("abc", "abc", cmp ),
+   M.equals(ordT (#equal))),
+ test(
+   "compareWith-less-nonempty",
+   Text.compareWith("abc", "abd", cmp),
+   M.equals(ordT (#greater))),
+ test(
+   "compareWith-less-nonprefix",
+   Text.compareWith("abc", "abcd", cmp),
+   M.equals(ordT (#less))),
+ test(
+   "compareWith-empty-nonempty",
+   Text.compareWith("", "abcd", cmp),
+   M.equals(ordT (#less))),
+ test(
+   "compareWith-prefix",
+   Text.compareWith("abcd", "abc", cmp),
+   M.equals(ordT (#greater)))
+]))
+};
+
 run(suite("utf8",
 [
  test(
