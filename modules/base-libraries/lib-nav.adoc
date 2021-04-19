@@ -42,7 +42,3 @@
 ** xref:./Trie.adoc[Trie]
 ** xref:./TrieMap.adoc[TrieMap]
 ** xref:./TrieSet.adoc[TrieSet]
-** xref:./Word8.adoc[Word8]
-** xref:./Word16.adoc[Word16]
-** xref:./Word32.adoc[Word32]
-** xref:./Word64.adoc[Word64]
