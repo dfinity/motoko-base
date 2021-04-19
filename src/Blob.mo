@@ -1,6 +1,6 @@
 /// Binary blobs
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 module {
 
   public let hash : Blob -> Nat32 = Prim.hashBlob;

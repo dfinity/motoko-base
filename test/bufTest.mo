@@ -1,4 +1,4 @@
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import B "mo:base/Buffer";
 import I "mo:base/Iter";
 import O "mo:base/Option";

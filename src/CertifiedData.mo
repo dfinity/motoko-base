@@ -13,7 +13,7 @@ calls to your canister tamperproof.
 
 */
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 
