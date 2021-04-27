@@ -1,4 +1,4 @@
-/// Functional maps
+s/// Functional maps
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
 /// independent of their operation history (unlike other popular search trees).
@@ -101,7 +101,7 @@ public func hashBit(bits: Hash.Hash, bitPos: Nat) : Bool {
   } else {
     // rather than assert false (as with Hash.bit),
     // we simply give zero for all higher bits.
-    0
+    false
   }
 };
 
