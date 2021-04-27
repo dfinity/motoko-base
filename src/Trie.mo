@@ -1,4 +1,4 @@
-s/// Functional maps
+/// Functional maps
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
 /// independent of their operation history (unlike other popular search trees).
