@@ -6,6 +6,7 @@
 /// as the IC, is intricate. Some basic rules need to be followed by the
 /// user of this module to obtain (and maintain) the benefits of crypto-
 /// graphic randomness:
+///
 /// - cryptographic entropy (randomness source) is only obtainable
 ///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
 /// - all bets must be closed *before* entropy is being asked for in
@@ -23,7 +24,7 @@
 import I "Iter";
 import Option "Option";
 import P "Prelude";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 
@@ -34,32 +35,32 @@ module {
   /// guaranteed only when the supplied entropy is originally obtained
   /// by the `blob()` call, and is never reused.
   public class Finite(entropy : Blob) {
-    let it : I.Iter<Word8> = entropy.bytes();
+    let it : I.Iter<Nat8> = entropy.vals();
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     /// Consumes 1 byte of entropy.
     public func byte() : ?Nat8 {
-      Option.map(it.next(), Prim.word8ToNat8)
+      it.next()
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
     let bit : I.Iter<Bool> = object {
-      var mask = 0x80 : Word8;
-      var byte = 0x00 : Word8;
+      var mask = 0x80 : Nat8;
+      var byte = 0x00 : Nat8;
       public func next() : ?Bool {
-        if (0 : Word8 == mask) {
+        if (0 : Nat8 == mask) {
           switch (it.next()) {
             case null { null };
             case (?w) {
               byte := w;
               mask := 0x40;
-              ?(0 : Word8 != byte & (0x80 : Word8))
+              ?(0 : Nat8 != byte & (0x80 : Nat8))
             }
           }
         } else {
           let m = mask;
-          mask >>= (1 : Word8);
-          ?(0 : Word8 != byte & m)
+          mask >>= (1 : Nat8);
+          ?(0 : Nat8 != byte & m)
         }
       }
     };
@@ -77,13 +78,13 @@ module {
       var acc : Nat = 0;
       for (i in it) {
         if (8 : Nat8 <= pp)
-        { acc := acc * 256 + Prim.word8ToNat(i) }
+        { acc := acc * 256 + Prim.nat8ToNat(i) }
         else if (0 : Nat8 == pp)
         { return ?acc }
         else {
-          acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8(pp));
-          let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
-          return ?(acc + Prim.word8ToNat(i & mask))
+          acc *= Prim.nat8ToNat(1 << pp);
+          let mask : Nat8 = 0xff >> (8 - pp);
+          return ?(acc + Prim.nat8ToNat(i & mask))
         };
         pp -= 8
       };
@@ -94,16 +95,16 @@ module {
     /// Consumes ⌈p/8⌉ bytes of entropy.
     public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
-      var acc : Word8 = 0;
+      var acc : Nat8 = 0;
       for (i in it) {
         if (8 : Nat8 <= nn)
-        { acc += Prim.popcntWord8(i) }
+        { acc +%= Prim.popcntNat8(i) }
         else if (0 : Nat8 == nn)
-        { return ?Prim.word8ToNat8(acc) }
+        { return ?acc }
         else {
-          let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
-          let residue = Prim.popcntWord8(i & mask);
-          return ?Prim.word8ToNat8(acc + residue)
+          let mask : Nat8 = 0xff << (8 - nn);
+          let residue = Prim.popcntNat8(i & mask);
+          return ?(acc +% residue)
         };
         nn -= 8
       };
@@ -116,8 +117,8 @@ module {
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
   public func byteFrom(seed : Blob) : Nat8 {
-    switch (seed.bytes().next()) {
-      case (?w) { Prim.word8ToNat8(w) };
+    switch (seed.vals().next()) {
+      case (?w) { w };
       case _ { P.unreachable() };
     }
   };
@@ -125,8 +126,8 @@ module {
   /// Simulates a coin toss.
   /// Seed blob must contain at least a byte.
   public func coinFrom(seed : Blob) : Bool {
-    switch (seed.bytes().next()) {
-      case (?w) { w > (127 : Word8) };
+    switch (seed.vals().next()) {
+      case (?w) { w > (127 : Nat8) };
       case _ { P.unreachable() };
     }
   };
@@ -137,22 +138,22 @@ module {
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
-    rangeIter(p, seed.bytes())
+    rangeIter(p, seed.vals())
   };
 
   // internal worker method, expects iterator with sufficient supply
-  func rangeIter(p : Nat8, it : I.Iter<Word8>) : Nat {
+  func rangeIter(p : Nat8, it : I.Iter<Nat8>) : Nat {
     var pp = p;
     var acc : Nat = 0;
     for (i in it) {
       if (8 : Nat8 <= pp)
-      { acc := acc * 256 + Prim.word8ToNat(i) }
+      { acc := acc * 256 + Prim.nat8ToNat(i) }
       else if (0 : Nat8 == pp)
       { return acc }
       else {
-        acc *= Prim.word8ToNat(1 << Prim.nat8ToWord8(pp));
-        let mask : Word8 = -1 >> Prim.nat8ToWord8(8 - pp);
-        return acc + Prim.word8ToNat(i & mask)
+        acc *= Prim.nat8ToNat(1 << pp);
+        let mask : Nat8 = 0xff >> (8 - pp);
+        return acc + Prim.nat8ToNat(i & mask)
       };
       pp -= 8
     };
@@ -162,22 +163,22 @@ module {
   /// Counts the number of heads in `n` coin tosses.
   /// Seed blob must contain at least ((n+7) / 8) bytes.
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
-    binomialIter(n, seed.bytes())
+    binomialIter(n, seed.vals())
   };
 
   // internal worker method, expects iterator with sufficient supply
-  func binomialIter(n : Nat8, it : I.Iter<Word8>) : Nat8 {
+  func binomialIter(n : Nat8, it : I.Iter<Nat8>) : Nat8 {
     var nn = n;
-    var acc : Word8 = 0;
+    var acc : Nat8 = 0;
     for (i in it) {
       if (8 : Nat8 <= nn)
-      { acc += Prim.popcntWord8(i) }
+      { acc +%= Prim.popcntNat8(i) }
       else if (0 : Nat8 == nn)
-      { return Prim.word8ToNat8(acc) }
+      { return acc }
       else {
-        let mask : Word8 = -1 << Prim.nat8ToWord8(8 - nn);
-        let residue = Prim.popcntWord8(i & mask);
-        return Prim.word8ToNat8(acc + residue)
+        let mask : Nat8 = 0xff << (8 - nn);
+        let residue = Prim.popcntNat8(i & mask);
+        return (acc +% residue)
       };
       nn -= 8
     };

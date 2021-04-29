@@ -8,7 +8,7 @@
 /// The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 ///
 ///
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import P "Prelude";
 import Option "Option";
 import Hash "Hash";
@@ -128,11 +128,11 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
                  ((k.hash & mask) == bits)
                  or
                  (do { Prim.debugPrint("\nmalformed hash!:\n");
-                     Prim.debugPrintInt(Prim.word32ToNat(k.hash));
+                     Prim.debugPrintInt(Prim.nat32ToNat(k.hash));
                      Prim.debugPrint("\n (key hash) != (path bits): \n");
-                     Prim.debugPrintInt(Prim.word32ToNat(bits));
+                     Prim.debugPrintInt(Prim.nat32ToNat(bits));
                      Prim.debugPrint("\nmask  : ");
-                     Prim.debugPrintInt(Prim.word32ToNat(mask));
+                     Prim.debugPrintInt(Prim.nat32ToNat(mask));
                      Prim.debugPrint("\n");
                      false 
                    })
@@ -143,11 +143,11 @@ public func isValid<K,V> (t:Trie<K,V>, enforceNormal:Bool) : Bool {
          };
     case (#branch(b)) {
            let bitpos1 = switch bitpos {
-           case null  {Prim.natToWord32(0)};
-           case (?bp) {Prim.natToWord32(Prim.word32ToNat(bp) + 1)}
+           case null  {Prim.natToNat32(0)};
+           case (?bp) {Prim.natToNat32(Prim.nat32ToNat(bp) + 1)}
            };
-           let mask1 = mask | (Prim.natToWord32(1) << bitpos1);
-           let bits1 = bits | (Prim.natToWord32(1) << bitpos1);
+           let mask1 = mask | (Prim.natToNat32(1) << bitpos1);
+           let bits1 = bits | (Prim.natToNat32(1) << bitpos1);
            let sum = size<K,V>(b.left) + size<K,V>(b.right);
            (b.size == sum or (do { Prim.debugPrint("malformed size"); false }))
            and
@@ -395,9 +395,9 @@ func splitList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
 ///
 ///   See also:
 ///
-///   - [`disj`](#value.disj)
-///   - [`join`](#value.join)
-///   - [`prod`](#value.prod)
+///   - `disj`
+///   - `join`
+///   - `prod`
 public func merge<K,V>(tl:Trie<K,V>, tr:Trie<K,V>, k_eq:(K,K)->Bool) : Trie<K,V> = label profile_trie_merge : Trie<K,V> {
     let key_eq = equalKey<K>(k_eq);
     func br(l:Trie<K,V>, r:Trie<K,V>) : Trie<K,V> = branch<K,V>(l,r);
@@ -538,9 +538,9 @@ public func diff<K,V,W>(tl:Trie<K,V>, tr:Trie<K,W>, k_eq:(K,K)->Bool): Trie<K,V>
 ///
 /// See also:
 ///
-/// - [`join`](#value.join)
-/// - [`merge`](#value.merge)
-/// - [`prod`](#value.prod)
+/// - `join`
+/// - `merge`
+/// - `prod`
 public func disj<K,V,W,X>(
     tl   : Trie<K,V>,
     tr   : Trie<K,W>,
@@ -617,9 +617,9 @@ public func disj<K,V,W,X>(
   ///
   /// See also:
   ///
-  /// - [`disj`](#value.disj)
-  /// - [`merge`](#value.merge)
-  /// - [`prod`](#value.prod)
+  /// - `disj`
+  /// - `merge`
+  /// - `prod`
   public func join<K,V,W,X>(
     tl:Trie<K,V>,
     tr:Trie<K,W>,
@@ -696,9 +696,9 @@ public func disj<K,V,W,X>(
   ///
   /// See also:
   ///
-  /// - [`disj`](#value.disj)
-  /// - [`join`](#value.join)
-  /// - [`merge`](#value.merge)
+  /// - `disj`
+  /// - `join`
+  /// - `merge`
   public func prod<K1,V1,K2,V2,K3,V3>(
     tl    :Trie<K1,V1>,
     tr    :Trie<K2,V2>,
@@ -931,7 +931,7 @@ public func disj<K,V,W,X>(
    /// Project the nth key-value pair from the trie.
    ///
    /// Note: This position is not meaningful; it's only here so that we
-   /// can inject tries into arrays using functions like [Array.tabulate](Array.html#value.tabulate).
+   /// can inject tries into arrays using functions like `Array.tabulate`.
   public func nth<K,V>(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth : (?(Key<K>, V)) {
     func rec(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
       switch t {

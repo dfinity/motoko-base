@@ -1,6 +1,6 @@
 import Debug "mo:base/Debug";
 import Char "mo:base/Char";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 /*
 //
@@ -29,15 +29,15 @@ assert(Char.isWhitespace(' '));
 assert(not Char.isWhitespace('x'));
 
 // 12288 (U+3000) = ideographic space
-assert(Char.isWhitespace(Prim.word32ToChar(12288)));
+assert(Char.isWhitespace(Prim.nat32ToChar(12288)));
 
 assert(Char.isWhitespace('\t'));
 
 // Vertical tab ('\v')
-assert(Char.isWhitespace(Prim.word32ToChar(0x0B)));
+assert(Char.isWhitespace(Prim.nat32ToChar(0x0B)));
 
 // Form feed ('\f')
-assert(Char.isWhitespace(Prim.word32ToChar(0x0C)));
+assert(Char.isWhitespace(Prim.nat32ToChar(0x0C)));
 
 assert(Char.isWhitespace('\r'));
 

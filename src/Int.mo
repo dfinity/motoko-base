@@ -3,7 +3,7 @@
 /// Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
 /// This module provides equivalent functions and `Text` conversion.
 
-import Prim "mo:prim";
+import Prim "mo:⛔";
 import Prelude "Prelude";
 import Hash "Hash";
 
@@ -55,8 +55,9 @@ module {
 
   // TODO: (re)move me?
   public func hash(i : Int) : Hash.Hash {
-    let j = Prim.intToWord32(i);
-    Hash.hashWord8(
+    // CAUTION: This removes the high bits!
+    let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
+    Hash.hashNat8(
       [j & (255 << 0),
        j & (255 << 8),
        j & (255 << 16),
@@ -67,8 +68,9 @@ module {
   // TODO: (re)move me?
   /// WARNING: May go away (?)
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
-    let j = Prim.intToWord32(i);
-    Hash.hashWord8(
+    // CAUTION: This removes the high bits!
+    let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
+    Hash.hashNat8(
       [h1,
        j & (255 << 0),
        j & (255 << 8),

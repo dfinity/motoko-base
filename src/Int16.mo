@@ -2,7 +2,7 @@
 ///
 /// Most operations are available as built-in operators (e.g. `1 + 1`).
 import Int "Int";
-import Prim "mo:prim";
+import Prim "mo:⛔";
 
 module {
 
@@ -11,6 +11,15 @@ module {
 
   /// Conversion. Traps on overflow/underflow.
   public let fromInt : Int -> Int16  = Prim.intToInt16;
+
+  /// Conversion. Wraps on overflow/underflow.
+  public let fromIntWrap : Int -> Int16  = Prim.intToInt16Wrap;
+
+  /// Conversion. Wraps on overflow/underflow.
+  public let fromNat16 : Nat16 -> Int16 = Prim.nat16ToInt16;
+
+  /// Conversion. Wraps on overflow/underflow.
+  public let toNat16 : Int16 -> Nat16  = Prim.int16ToNat16;
 
   /// Returns the Text representation of `x`.
   public func toText(x : Int16) : Text {
@@ -80,4 +89,68 @@ module {
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
   public func pow(x : Int16, y : Int16) : Int16 { x ** y };
 
+  /// Returns the bitwise negation of `x`, `^x`.
+  public func bitnot(x : Int16, y : Int16) : Int16 { ^x };
+
+  /// Returns the bitwise and of `x` and `y`, `x & y`.
+  public func bitand(x : Int16, y : Int16) : Int16 { x & y };
+
+  /// Returns the bitwise or of `x` and `y`, `x \| y`.
+  public func bitor(x : Int16, y : Int16) : Int16 { x | y };
+
+  /// Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+  public func bitxor(x : Int16, y : Int16) : Int16 { x ^ y };
+
+  /// Returns the bitwise shift left of `x` by `y`, `x << y`.
+  public func bitshiftLeft(x : Int16, y : Int16) : Int16 { x << y };
+
+  /// Returns the bitwise shift right of `x` by `y`, `x >> y`.
+  public func bitshiftRight(x : Int16, y : Int16) : Int16 { x >> y };
+
+  /// Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+  public func bitrotLeft(x : Int16, y : Int16) : Int16 { x <<> y };
+
+  /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+  public func bitrotRight(x : Int16, y : Int16) : Int16 { x <>> y };
+
+  /// Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
+  public func bittest(x : Int16, p : Nat) : Bool {
+    Prim.btstInt16(x, Prim.intToInt16(p));
+  };
+
+  /// Returns the value of setting bit `p mod 16` in `x` to `1`.
+  public func bitset(x : Int16, p : Nat) : Int16 {
+    x | (1 << Prim.intToInt16(p));
+  };
+
+  /// Returns the value of clearing bit `p mod 16` in `x` to `0`.
+  public func bitclear(x : Int16, p : Nat) : Int16 {
+    x & ^(1 << Prim.intToInt16(p));
+  };
+
+  /// Returns the value of flipping bit `p mod 16` in `x`.
+  public func bitflip(x : Int16, p : Nat) : Int16 {
+    x ^ (1 << Prim.intToInt16(p));
+  };
+
+  /// Returns the count of non-zero bits in `x`.
+  public let bitcountNonZero : (x : Int16) -> Int16 = Prim.popcntInt16;
+
+  /// Returns the count of leading zero bits in `x`.
+  public let bitcountLeadingZero : (x : Int16) -> Int16 = Prim.clzInt16;
+
+  /// Returns the count of trailing zero bits in `x`.
+  public let bitcountTrailingZero : (x : Int16) -> Int16 = Prim.ctzInt16;
+
+  /// Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+  public func addWrap(x : Int16, y : Int16) : Int16 { x +% y };
+
+  /// Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+  public func subWrap(x : Int16, y : Int16) : Int16 { x -% y };
+
+  /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+  public func mulWrap(x : Int16, y : Int16) : Int16 { x *% y };
+
+  /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
+  public func powWrap(x : Int16, y : Int16) : Int16 { x **% y };
 }
