@@ -75,6 +75,28 @@ module {
     else { #greater }
   };
 
+  // Return the conversion of the string to lowercase letters
+  public func toLower (t: Text) : Text {
+    let chars = Text.toIter(t);
+    var lower = "";
+    for (c: Char in chars) {
+      lower := Text.concat(lower, Char.toText(Prim.charToLower(c)));
+    };
+
+    lower  
+  }
+
+  // Return the conversion of the string to uppercase letters
+  public func toUpper (t1: Text) : Text {
+    let chars = Text.toIter(t1);
+    var upper = "";
+    for (c: Char in chars) {
+      upper := Text.concat(upper, Char.toText(Prim.charToUpper(c)));
+    };
+
+    return upper  
+  }
+
 
   private func extract(t : Text, i : Nat, j : Nat) : Text {
     let size = t.size();
