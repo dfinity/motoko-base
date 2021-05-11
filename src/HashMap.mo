@@ -45,10 +45,10 @@ public class HashMap<K,V> (
   /// Removes the entry with the key `k` and returns the associated value if it
   /// existed or `null` otherwise.
   public func remove(k : K) : ?V {
-    let h = Prim.nat32ToNat(keyHash(k));
     let m = table.size();
-    let pos = h % m;
     if (m > 0) {
+      let h = Prim.nat32ToNat(keyHash(k));
+      let pos = h % m;
       let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, null);
       table[pos] := kvs2;
       switch(ov){

@@ -120,4 +120,10 @@ debug {
     };
   };
 
+  // Issue #228
+  let d = H.HashMap<Text, Nat>(50, Text.equal, Text.hash);
+  switch(d.remove("test")) {
+    case null { };
+    case (?_) { assert false };
+  };
 };
