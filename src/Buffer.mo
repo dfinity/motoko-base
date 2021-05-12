@@ -32,6 +32,23 @@ public class Buffer<X> (initCapacity : Nat) {
   var count : Nat = 0;
   var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
+  /// Get purely-functional representation
+  public func share() : [X] {
+      Prim.Array_tabulate<X>(count, func i = elems[i])
+  };
+
+  /// Put purely-functional representation into class.
+  public func unshare(xs : [X]) {
+      count := xs.size();
+      if (count == 0) {
+          elems := [var];
+      };
+      elems := Prim.Array_init<X>(count, xs[0]);
+      for (i in elems.keys()) {
+          elems[i] := xs[i];
+      };
+  };
+
   /// Adds a single element to the buffer.
   public func add(elem : X) {
     if (count == elems.size()) {
