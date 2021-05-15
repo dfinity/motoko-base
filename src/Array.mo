@@ -56,6 +56,7 @@ module {
   };
 
   public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
+    if (xs.size() == 0) return;
     let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
 
     func merge(a : [var A], lo : Nat, mid : Nat, hi : Nat) {
