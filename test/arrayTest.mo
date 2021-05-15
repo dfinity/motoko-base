@@ -97,22 +97,26 @@ let mapResult = Suite.suite("mapResult", [
   ),
 ]);
 
+func arrayNat(xs : [Nat]) : T.TestableItem<[A]> {
+  T.array(T.natTestable, xs)
+};
+
 let sort = Suite.suite("sort", [
   Suite.test("empty array",
     Array.sort([], Nat.compare),
-    M.equals(T.Array<Nat>(T.natTestable, []))
+    M.equals(arrayNat([]))
   ),
   Suite.test("already sorted",
     Array.sort([1, 2, 3, 4, 5], Nat.compare),
-    M.equals(T.Array<Nat>(T.natTestable, [1, 2, 3, 4, 5]))
+    M.equals(arrayNat([1, 2, 3, 4, 5]))
   ),
   Suite.test("reversed array",
     Array.sort([3, 2, 1], Nat.compare),
-    M.equals(T.Array<Nat>(T.natTestable, [1, 2, 3]))
+    M.equals(arrayNat([1, 2, 3]))
   ),
   Suite.test("repeated elements",
     Array.sort([2, 2, 2, 2, 2], Nat.compare),
-    M.equals(T.Array<Nat>(T.natTestable, [2, 2, 2, 2, 2]))
+    M.equals(arrayNat([2, 2, 2, 2, 2]))
   )
 ]);
 
