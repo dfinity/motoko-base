@@ -97,7 +97,7 @@ let mapResult = Suite.suite("mapResult", [
   ),
 ]);
 
-func arrayNat(xs : [Nat]) : T.TestableItem<[A]> {
+func arrayNat(xs : [Nat]) : T.TestableItem<[Nat]> {
   T.array(T.natTestable, xs)
 };
 
