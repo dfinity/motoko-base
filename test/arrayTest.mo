@@ -1,11 +1,12 @@
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
-import Result "mo:base/Result";
-import Text "mo:base/Text";
 import M "mo:matchers/Matchers";
+import Nat "../src/Nat";
+import Result "mo:base/Result";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
+import Text "mo:base/Text";
 
 let findTest = do {
   type Element = {
@@ -96,8 +97,28 @@ let mapResult = Suite.suite("mapResult", [
   ),
 ]);
 
+let sort = Suite.suite("sort", [
+  Suite.test("empty array",
+    Array.sort([], Nat.compare),
+    M.equals(T.Array<Nat>(T.natTestable, []))
+  ),
+  Suite.test("already sorted",
+    Array.sort([1, 2, 3, 4, 5], Nat.compare),
+    M.equals(T.Array<Nat>(T.natTestable, [1, 2, 3, 4, 5]))
+  ),
+  Suite.test("reversed array",
+    Array.sort([3, 2, 1], Nat.compare),
+    M.equals(T.Array<Nat>(T.natTestable, [1, 2, 3]))
+  ),
+  Suite.test("repeated elements",
+    Array.sort([2, 2, 2, 2, 2], Nat.compare),
+    M.equals(T.Array<Nat>(T.natTestable, [2, 2, 2, 2, 2]))
+  )
+]);
+
 let suite = Suite.suite("Array", [
   mapResult,
+  sort,
   Suite.test(
     "append",
     Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]),

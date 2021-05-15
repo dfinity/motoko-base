@@ -3,6 +3,7 @@
 import Buffer "Buffer";
 import I "IterType";
 import Option "Option";
+import Order "Order";
 import Prim "mo:⛔";
 import Result "Result";
 
@@ -38,6 +39,63 @@ module {
       };
     };
   };
+
+  /// Sorts the given array according to the `cmp` function.
+  /// This is a _stable_ sort.
+  ///
+  /// ```motoko
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  /// let xs = [4, 2, 6, 1, 5];
+  /// assert(Array.sort(xs, Nat.compare) == [1, 2, 4, 5, 6])
+  /// ```
+  public func sort<A>(xs : [A], cmp : (A, A) -> Order.Order) : [A] {
+    let tmp : [var A] = thaw(xs);
+    sortInPlace(tmp, cmp);
+    freeze(tmp)
+  };
+
+  public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
+    let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
+
+    func merge(a : [var A], lo : Nat, mid : Nat, hi : Nat) {
+      var i = lo;
+      var j = mid + 1;
+      var k = lo;
+      while(k <= hi) {
+        aux[k] := a[k];
+        k += 1;
+      };
+      k := lo;
+      while(k <= hi) {
+        if (i > mid) {
+          a[k] := aux[j];
+          j += 1;
+        } else if (j > hi) {
+          a[k] := aux[i];
+          i += 1;
+        } else if (Order.isLess(cmp(aux[j], aux[i]))) {
+          a[k] := aux[j];
+          j += 1;
+        } else {
+          a[k] := aux[i];
+          i += 1;
+        }
+      };
+    };
+
+    func go(a : [var A], lo : Nat, hi : Nat) {
+      if (hi <= lo) return;
+      let mid : Nat = lo + (hi - lo) / 2;
+      go(a, lo, mid);
+      go(a, mid + 1, hi);
+      merge(a, lo, mid, hi);
+    };
+
+    go(xs, 0, xs.size() - 1);
+
+  };
+
   /// Transform each array value into zero or more output values, appended in order
   public func chain<A, B>(xs : [A], f : A -> [B]) : [B] {
     var ys : [B] = [];
@@ -198,12 +256,12 @@ module {
   // copy from iter.mo, but iter depends on array
   class range(x : Nat, y : Int) {
     var i = x;
-    public func next() : ?Nat { 
+    public func next() : ?Nat {
       if (i > y) {
-         null 
+         null
       } else {
-        let j = i; 
-        i += 1; 
+        let j = i;
+        i += 1;
         ?j
       }
     };
