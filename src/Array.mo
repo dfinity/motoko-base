@@ -55,6 +55,16 @@ module {
     freeze(tmp)
   };
 
+  /// Sorts the given array in place according to the `cmp` function.
+  /// This is a _stable_ sort.
+  ///
+  /// ```motoko
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  /// let xs : [var Nat] = [4, 2, 6, 1, 5];
+  /// xs.sort(Nat.compare);
+  /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
+  /// ```
   public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
     if (xs.size() < 2) return;
     let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
