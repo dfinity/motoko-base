@@ -56,45 +56,44 @@ module {
   };
 
   public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
-    if (xs.size() == 0) return;
+    if (xs.size() < 2) return;
     let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
 
-    func merge(a : [var A], lo : Nat, mid : Nat, hi : Nat) {
+    func merge(lo : Nat, mid : Nat, hi : Nat) {
       var i = lo;
       var j = mid + 1;
       var k = lo;
       while(k <= hi) {
-        aux[k] := a[k];
+        aux[k] := xs[k];
         k += 1;
       };
       k := lo;
       while(k <= hi) {
         if (i > mid) {
-          a[k] := aux[j];
+          xs[k] := aux[j];
           j += 1;
         } else if (j > hi) {
-          a[k] := aux[i];
+          xs[k] := aux[i];
           i += 1;
         } else if (Order.isLess(cmp(aux[j], aux[i]))) {
-          a[k] := aux[j];
+          xs[k] := aux[j];
           j += 1;
         } else {
-          a[k] := aux[i];
+          xs[k] := aux[i];
           i += 1;
         }
       };
     };
 
-    func go(a : [var A], lo : Nat, hi : Nat) {
+    func go(lo : Nat, hi : Nat) {
       if (hi <= lo) return;
       let mid : Nat = lo + (hi - lo) / 2;
-      go(a, lo, mid);
-      go(a, mid + 1, hi);
-      merge(a, lo, mid, hi);
+      go(lo, mid);
+      go(mid + 1, hi);
+      merge(lo, mid, hi);
     };
-
-    go(xs, 0, xs.size() - 1);
-
+  
+    go(0, xs.size() - 1);
   };
 
   /// Transform each array value into zero or more output values, appended in order
