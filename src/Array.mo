@@ -81,7 +81,8 @@ module {
         } else {
           xs[k] := aux[i];
           i += 1;
-        }
+        };
+        k += 1;
       };
     };
 
