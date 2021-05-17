@@ -95,6 +95,16 @@ public type Key<K> = {
 
 type List<T> = List.List<T>;
 
+public func hashBit(bits: Hash.Hash, bitPos: Nat) : Bool {
+  if(bitPos <= Hash.length) {
+    Hash.bit(bits, bitPos)
+  } else {
+    // rather than assert false (as with Hash.bit),
+    // we simply give zero for all higher bits.
+    false
+  }
+};
+
 /// Equality function for two `Key<K>`s, in terms of equality of `K`'s.
 public func equalKey<K>(keq:(K,K) -> Bool) : ((Key<K>,Key<K>) -> Bool) {
   func (key1:Key<K>, key2:Key<K>) : Bool {
@@ -293,7 +303,7 @@ public func replace<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K)->Bool, v:?V) : (Tri
             (leaf<K,V>(kvs, bitpos), null)
           };
      case (#branch(b)) label profile_trie_replace_rec_branch : (Trie<K,V>, ?V) {
-            let bit = Hash.bit(k.hash, bitpos);
+            let bit = hashBit(k.hash, bitpos);
             // rebuild either the left or right path with the (k,v) pair
             if (not bit) {
               let (l, v_) = rec(b.left, bitpos+1);
@@ -336,7 +346,7 @@ public func find<K,V>(t : Trie<K,V>, k:Key<K>, k_eq:(K,K) -> Bool) : ?V = label 
               { AssocList.find<Key<K>,V>(l.keyvals, k, key_eq) }
             };
        case (#branch(b)) {
-            let bit = Hash.bit(k.hash, bitpos);
+            let bit = hashBit(k.hash, bitpos);
             if (not bit) {
                 label profile_trie_find_branch_left : (?V)
                 { rec(b.left, bitpos+1) }
@@ -360,7 +370,7 @@ func splitAssocList<K,V>(al:AssocList<Key<K>,V>, bitpos:Nat)
    List.partition<(Key<K>,V)>(
      al,
      func ((k : Key<K>, v : V)) : Bool {
-       not Hash.bit(k.hash, bitpos)
+       not hashBit(k.hash, bitpos)
      }
    )
  };
@@ -375,7 +385,7 @@ func splitList<K,V>(l:AssocList<Key<K>,V>, bitpos:Nat)
      case null { (0, null, 0, null) };
      case (?((k,v),t)) {
             let (cl, l, cr, r) = rec(t) ;
-            if (not Hash.bit(k.hash, bitpos)){
+            if (not hashBit(k.hash, bitpos)){
               (cl + 1, ?((k,v),l), cr, r)
             } else {
               (cl, l, cr + 1, ?((k,v),r))
