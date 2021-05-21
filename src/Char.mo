@@ -2,6 +2,9 @@
 import Prim "mo:⛔";
 module {
 
+  /// Characters represented as Unicode code points.
+  public type Char = Prim.Types.Char;
+
   /// Convert character `c` to a word containing its Unicode scalar value.
   public let toNat32 : (c : Char) -> Nat32 = Prim.charToNat32;
 

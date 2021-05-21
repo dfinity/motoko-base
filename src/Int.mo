@@ -8,9 +8,14 @@ import Prelude "Prelude";
 import Hash "Hash";
 
 module {
+
+  /// Infinite precision signed integers.
+  public type Int = Prim.Types.Int;
+
   /// Returns the absolute value of the number
   public let abs : Int -> Nat = Prim.abs;
 
+  /// Conversion.
   public let toText : Int -> Text = func(x) {
     if (x == 0) {
       return "0";

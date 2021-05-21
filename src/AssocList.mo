@@ -7,8 +7,8 @@ import List "List";
 
 module {
 
-/// polymorphic association linked lists between keys and values
-public type AssocList<K,V> = List.List<(K,V)>;
+  /// polymorphic association linked lists between keys and values
+  public type AssocList<K,V> = List.List<(K,V)>;
 
   /// Find the value associated with a given key, or null if absent.
   public func find<K,V>(al : AssocList<K,V>,
@@ -105,7 +105,7 @@ public type AssocList<K,V> = List.List<(K,V)>;
     rec(al1, al2)
   };
 
-  /// Specialied version of `disj`, optimized for disjoint sub-spaces of keyspace (no matching keys).
+  /// Specialized version of `disj`, optimized for disjoint sub-spaces of keyspace (no matching keys).
   public func disjDisjoint<K,V,W,X>(al1:AssocList<K,V>,
                              al2:AssocList<K,W>,
                              vbin:(?V,?W)->X)

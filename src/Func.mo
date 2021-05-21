@@ -1,10 +1,10 @@
 /// Functions on functions
 ///
-/// The functions in this module are rather useless on their own but they're
-/// commonly used when programming in a functional style with higher-order
-/// functions.
+/// (Most commonly used when programming in functional style using higher-order
+/// functions.)
 
 module {
+
   /// The composition of two functions `f` and `g` is a function that applies `g` and then `f`.
   ///
   /// ```

@@ -6,6 +6,9 @@ import Prim "mo:⛔";
 
 module {
 
+  /// 16-bit natural numbers.
+  public type Nat16 = Prim.Types.Nat16;
+
   /// Conversion.
   public let toNat : Nat16 -> Nat = Prim.nat16ToNat;
 
