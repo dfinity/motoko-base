@@ -29,7 +29,7 @@ module {
               rec(tl)
             }
           };
-	}
+        }
     };
     label profile_assocList_find_begin : (?V) {
       rec(al)
