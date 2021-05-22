@@ -1,6 +1,6 @@
 /// Text values
 ///
-/// This type represents human-readable text as sequences of characters of type [`Char`](Char.html) .
+/// This type represents human-readable text as sequences of characters of type `Char`.
 /// If `t` is a value of type `Text`, then:
 /// * `t.chars()` returns an _iterator_ of type `Iter<Char>` enumerating its characters from first to last.
 /// * `t.size()` returns the _size_ (or length) of `t` (and `t.chars()`) as a `Nat`.

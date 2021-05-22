@@ -1,6 +1,6 @@
 /// Lists of key-value entries ("associations").
 ///
-/// Implements the same operations as [`Trie`](Trie.html), but uses a
+/// Implements the same operations as library `Trie`, but uses a
 /// linked-list of entries and no hashing.
 
 import List "List";
