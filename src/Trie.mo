@@ -115,7 +115,7 @@ module {
           }
         };
         case (#leaf(l)) {
-          let len = List.size<(Key<K>,V)>(l.keyvals);
+          let len = List.size<(Key<K>, V)>(l.keyvals);
           ((len <= MAX_LEAF_SIZE) or (not enforceNormal))
           and
           len == l.size
@@ -128,7 +128,7 @@ module {
                 ((k.hash & mask) == bits)
               // or
               // (do {
-	      //    Prim.debugPrint("\nmalformed hash!:\n");
+              //    Prim.debugPrint("\nmalformed hash!:\n");
               //    Prim.debugPrintInt(Prim.nat32ToNat(k.hash));
               //    Prim.debugPrint("\n (key hash) != (path bits): \n");
               //    Prim.debugPrintInt(Prim.nat32ToNat(bits));
@@ -141,7 +141,7 @@ module {
                )
           // or
           // (do { Prim.debugPrint("one or more hashes are malformed"); false }
-	    )
+            )
           )
         };
         case (#branch(b)) {
@@ -152,10 +152,10 @@ module {
             };
           let mask1 = mask | (Prim.natToNat32(1) << bitpos1);
           let bits1 = bits | (Prim.natToNat32(1) << bitpos1);
-          let sum = size<K, V>(b.left) + size<K,V>(b.right);
+          let sum = size<K, V>(b.left) + size<K, V>(b.right);
           (b.size == sum
        //  or (do { Prim.debugPrint("malformed size"); false })
-	   )
+           )
           and
           rec(b.left,  ?bitpos1, bits,  mask1)
           and
@@ -194,7 +194,7 @@ module {
 
   /// Construct a branch node, computing the size stored there.
   public func branch<K, V>(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> =
-    label profile_trie_branch : Trie<K,V> {
+    label profile_trie_branch : Trie<K, V> {
       let sum = size<K, V>(l) + size<K, V>(r);
       #branch {
         size = sum;
@@ -252,7 +252,7 @@ module {
           switch (ListUtil.lenClamp<(Key<K>, V)>(kvs, MAX_LEAF_SIZE)) {
             case null {} /* fall through to branch case. */;
             case (?len) {
-              return #leaf({size=len; keyvals=kvs})
+              return #leaf({size = len; keyvals = kvs})
             };
           }
         };
@@ -260,21 +260,21 @@ module {
           if ( c == 0 ) {
             return #empty
           } else if ( c <= MAX_LEAF_SIZE ) {
-            return #leaf({size=c; keyvals=kvs})
+            return #leaf({size = c; keyvals = kvs})
           } else {
           /* fall through to branch case */
           }
         };
       };
-      let (ls, l, rs, r) = splitList<K,V>(kvs, bitpos);
+      let (ls, l, rs, r) = splitList<K, V>(kvs, bitpos);
       if ( ls == 0 and rs == 0 ) {
         #empty
       } else if (rs == 0 and ls <= MAX_LEAF_SIZE) {
-        #leaf({size=ls; keyvals=l})
+        #leaf({size = ls; keyvals = l})
       } else if (ls == 0 and rs <= MAX_LEAF_SIZE) {
-        #leaf({size=rs; keyvals=r})
+        #leaf({size = rs; keyvals = r})
       } else {
-        branch<K,V>(rec(?ls, l, bitpos + 1), rec(?rs, r, bitpos + 1))
+        branch<K, V>(rec(?ls, l, bitpos + 1), rec(?rs, r, bitpos + 1))
       }
     };
     rec(kvc, kvs, bitpos)
@@ -290,34 +290,34 @@ module {
      label profile_trie_replace : (Trie<K, V>, ?V) {
      let key_eq = equalKey<K>(k_eq);
 
-     func rec(t : Trie<K,V>, bitpos : Nat) : (Trie<K, V>, ?V) =
+     func rec(t : Trie<K, V>, bitpos : Nat) : (Trie<K, V>, ?V) =
        label profile_trie_replace_rec : (Trie<K, V>, ?V) {
         switch t {
           case (#empty) label profile_trie_replace_rec_empty : (Trie<K, V>, ?V) {
-            let (kvs, _) = AssocList.replace<Key<K>,V>(null, k, key_eq, v);
-            (leaf<K,V>(kvs, bitpos), null)
+            let (kvs, _) = AssocList.replace<Key<K>, V>(null, k, key_eq, v);
+            (leaf<K, V>(kvs, bitpos), null)
           };
           case (#branch(b)) label profile_trie_replace_rec_branch : (Trie<K, V>, ?V) {
             let bit = Hash.bit(k.hash, bitpos);
-            // rebuild either the left or right path with the (k,v) pair
+            // rebuild either the left or right path with the (k, v) pair
             if (not bit) {
-              let (l, v_) = rec(b.left, bitpos+1);
-              (branch<K,V>(l, b.right), v_)
+              let (l, v_) = rec(b.left, bitpos + 1);
+              (branch<K, V>(l, b.right), v_)
             }
             else {
-              let (r, v_) = rec(b.right, bitpos+1);
-              (branch<K,V>(b.left, r), v_)
+              let (r, v_) = rec(b.right, bitpos + 1);
+              (branch<K, V>(b.left, r), v_)
             }
           };
        case (#leaf(l)) label profile_trie_replace_rec_leaf : (Trie<K, V>, ?V) {
          let (kvs2, old_val) =
-           AssocList.replace<Key<K>,V>(l.keyvals, k, key_eq, v);
-         (leaf<K,V>(kvs2, bitpos), old_val)
+           AssocList.replace<Key<K>, V>(l.keyvals, k, key_eq, v);
+         (leaf<K, V>(kvs2, bitpos), old_val)
         };
       }
      };
      let (to, vo) = rec(t, 0);
-   //assert(isValid<K,V>(to, false));
+   //assert(isValid<K, V>(to, false));
      (to, vo)
    };
 
@@ -331,7 +331,7 @@ module {
   public func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V =
     label profile_trie_find : (?V) {
       let key_eq = equalKey<K>(k_eq);
-      func rec(t : Trie<K,V>, bitpos : Nat) : ?V = label profile_trie_find_rec : (?V) {
+      func rec(t : Trie<K, V>, bitpos : Nat) : ?V = label profile_trie_find_rec : (?V) {
         switch t {
           case (#empty) {
             label profile_trie_find_end_null : (?V)
@@ -339,17 +339,17 @@ module {
           };
           case (#leaf(l)) {
             label profile_trie_find_end_assocList_find : (?V)
-            { AssocList.find<Key<K>,V>(l.keyvals, k, key_eq) }
+            { AssocList.find<Key<K>, V>(l.keyvals, k, key_eq) }
           };
           case (#branch(b)) {
             let bit = Hash.bit(k.hash, bitpos);
             if (not bit) {
               label profile_trie_find_branch_left : (?V)
-              { rec(b.left, bitpos+1) }
+              { rec(b.left, bitpos + 1) }
             }
             else {
               label profile_trie_find_branch_right : (?V)
-              { rec(b.right, bitpos+1) }
+              { rec(b.right, bitpos + 1) }
             }
           };
         }
@@ -359,9 +359,9 @@ module {
 
 
 
-  func splitAssocList<K,V>(al : AssocList<Key<K>, V>, bitpos : Nat)
+  func splitAssocList<K, V>(al : AssocList<Key<K>, V>, bitpos : Nat)
      : (AssocList<Key<K>, V>, AssocList<Key<K>, V>) =
-   label profile_trie_splitAssocList : (AssocList<Key<K>, V>, AssocList<Key<K>,V>)
+   label profile_trie_splitAssocList : (AssocList<Key<K>, V>, AssocList<Key<K>, V>)
    {
      List.partition<(Key<K>, V)>(
        al,
@@ -379,12 +379,12 @@ module {
        label profile_trie_sized_split_rec : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>) {
          switch l {
            case null { (0, null, 0, null) };
-           case (?((k,v),t)) {
+           case (?((k, v), t)) {
              let (cl, l, cr, r) = rec(t) ;
              if (not Hash.bit(k.hash, bitpos)){
-               (cl + 1, ?((k,v),l), cr, r)
+               (cl + 1, ?((k, v), l), cr, r)
              } else {
-               (cl, l, cr + 1, ?((k,v),r))
+               (cl, l, cr + 1, ?((k, v), r))
              }
            };
          }
@@ -407,7 +407,7 @@ module {
   public func merge<K, V>(tl:Trie<K, V>, tr:Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> =
     label profile_trie_merge : Trie<K, V> {
       let key_eq = equalKey<K>(k_eq);
-      func br(l : Trie<K, V>, r : Trie<K,V>) : Trie<K, V> = branch<K, V>(l, r);
+      func br(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> = branch<K, V>(l, r);
       func rec(bitpos : Nat, tl : Trie<K, V>, tr:Trie<K, V>) : Trie<K, V> {
         func lf(kvs : AssocList<Key<K>, V>) : Trie<K, V> = leaf<K, V>(kvs, bitpos);
         switch (tl, tr) {
@@ -415,7 +415,7 @@ module {
           case (_, #empty) { return tl };
           case (#leaf(l1), #leaf(l2)) {
             lf(
-              AssocList.disj<Key<K>,V,V,V>(
+              AssocList.disj<Key<K>, V, V, V>(
                 l1.keyvals, l2.keyvals,
                 key_eq,
                 func (x:?V, y:?V):V {
@@ -452,14 +452,14 @@ module {
     label profile_trie_mergeDisjoint : Trie<K, V> {
       let key_eq = equalKey<K>(k_eq);
 
-      func br(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> = branch<K, V>(l,r);
+      func br(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> = branch<K, V>(l, r);
 
-      func rec(bitpos : Nat, tl : Trie<K,V>, tr : Trie<K,V>) : Trie<K,V> = label profile_trie_mergeDisjoint_rec : Trie<K, V> {
+      func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, V>) : Trie<K, V> = label profile_trie_mergeDisjoint_rec : Trie<K, V> {
         func lf(kvs : AssocList<Key<K>, V>) : Trie<K, V> = leaf<K, V>(kvs, bitpos);
         switch (tl, tr) {
-          case (#empty, _) label profile_trie_mergeDisjoint_rec_emptyL : Trie<K,V> { return tr };
-          case (_, #empty) label profile_trie_mergeDisjoint_rec_emptyR : Trie<K,V> { return tl };
-          case (#leaf(l1), #leaf(l2)) label profile_trie_mergeDisjoint_rec_leafPair : Trie<K,V> {
+          case (#empty, _) label profile_trie_mergeDisjoint_rec_emptyL : Trie<K, V> { return tr };
+          case (_, #empty) label profile_trie_mergeDisjoint_rec_emptyR : Trie<K, V> { return tl };
+          case (#leaf(l1), #leaf(l2)) label profile_trie_mergeDisjoint_rec_leafPair : Trie<K, V> {
             lf(
               AssocList.disjDisjoint<Key<K>, V, V, V>(
                 l1.keyvals, l2.keyvals,
@@ -482,7 +482,7 @@ module {
             rec(bitpos, tl, br(lf(ll), lf(lr)))
           };
           case (#branch(b1), #branch(b2)) label profile_trie_mergeDisjoint_rec_branchPair : Trie<K, V> {
-            branch<K,V>(
+            branch<K, V>(
               rec(bitpos + 1, b1.left, b2.left),
               rec(bitpos + 1, b1.right, b2.right)
             )
@@ -499,11 +499,11 @@ module {
     let key_eq = equalKey<K>(k_eq);
 
     func br1(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> = branch<K, V>(l, r);
-    func br2(l : Trie<K, W>, r : Trie<K,W>) : Trie<K, W> = branch<K, W>(l, r);
+    func br2(l : Trie<K, W>, r : Trie<K, W>) : Trie<K, W> = branch<K, W>(l, r);
 
     func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, W>) : Trie<K, V> {
-      func lf1(kvs : AssocList<Key<K>, V>) : Trie<K,V> = leaf<K, V>(kvs, bitpos);
-      func lf2(kvs : AssocList<Key<K>, W>) : Trie<K,W> = leaf<K, W>(kvs, bitpos);
+      func lf1(kvs : AssocList<Key<K>, V>) : Trie<K, V> = leaf<K, V>(kvs, bitpos);
+      func lf2(kvs : AssocList<Key<K>, W>) : Trie<K, W> = leaf<K, W>(kvs, bitpos);
       switch (tl, tr) {
         case (#empty, _) { return #empty };
         case (_, #empty) { return tl };
@@ -557,11 +557,11 @@ module {
   ) : Trie<K, X> {
     let key_eq = equalKey<K>(k_eq);
 
-    func br1(l : Trie<K, V>, r : Trie<K, V>) : Trie<K,V> = branch<K, V>(l,r);
-    func br2(l : Trie<K, W>, r : Trie<K, W>) : Trie<K,W> = branch<K, W>(l,r);
+    func br1(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> = branch<K, V>(l, r);
+    func br2(l : Trie<K, W>, r : Trie<K, W>) : Trie<K, W> = branch<K, W>(l, r);
 
-    func br3(l : Trie<K, X>, r : Trie<K, X>) : Trie<K,X> = branch<K, X>(l,r);
-    func lf3(kvs : AssocList<Key<K>, X>, bitpos : Nat) : Trie<K, X> = leaf<K,X>(kvs, bitpos);
+    func br3(l : Trie<K, X>, r : Trie<K, X>) : Trie<K, X> = branch<K, X>(l, r);
+    func lf3(kvs : AssocList<Key<K>, X>, bitpos : Nat) : Trie<K, X> = leaf<K, X>(kvs, bitpos);
 
     /* empty right case; build from left only: */
     func recL(t : Trie<K, V>, bitpos : Nat) : Trie<K, X> {
@@ -570,7 +570,7 @@ module {
         case (#leaf(l)) {
           lf3(AssocList.disj<Key<K>, V, W, X>(l.keyvals, null, key_eq, vbin), bitpos)
         };
-        case (#branch(b)) { br3(recL(b.left,bitpos+1),recL(b.right,bitpos+1)) };
+        case (#branch(b)) { br3(recL(b.left, bitpos + 1),recL(b.right, bitpos + 1)) };
       }
     };
 
@@ -581,7 +581,7 @@ module {
        case (#leaf(l)) {
          lf3(AssocList.disj<Key<K>, V, W, X>(null, l.keyvals, key_eq, vbin), bitpos)
        };
-       case (#branch(b)) { br3(recR(b.left,bitpos+1),recR(b.right,bitpos+1)) };
+       case (#branch(b)) { br3(recR(b.left, bitpos + 1),recR(b.right, bitpos + 1)) };
      }
    };
 
@@ -594,14 +594,14 @@ module {
        case (#empty, _   )   { recR(tr, bitpos) };
        case (_,    #empty)   { recL(tl, bitpos) };
        case (#leaf(l1), #leaf(l2)) {
-         lf3(AssocList.disj<Key<K>,V,W,X>(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
+         lf3(AssocList.disj<Key<K>, V, W, X>(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
        };
        case (#leaf(l), _) {
-         let (ll, lr) = splitAssocList<K,V>(l.keyvals, bitpos);
+         let (ll, lr) = splitAssocList<K, V>(l.keyvals, bitpos);
          rec(bitpos, br1(lf1(ll), lf1(lr)), tr)
        };
        case (_, #leaf(l)) {
-         let (ll, lr) = splitAssocList<K,W>(l.keyvals, bitpos);
+         let (ll, lr) = splitAssocList<K, W>(l.keyvals, bitpos);
          rec(bitpos, tl, br2(lf2(ll), lf2(lr)))
        };
        case (#branch(b1), #branch(b2)) {
@@ -631,31 +631,31 @@ module {
     tr : Trie<K, W>,
     k_eq : (K, K)->Bool,
     vbin: (V, W)->X
-  ) : Trie<K,X> =
-  label profile_trie_join : Trie<K,X> {
+  ) : Trie<K, X> =
+  label profile_trie_join : Trie<K, X> {
     let key_eq = equalKey<K>(k_eq);
 
     func br1(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> = branch<K, V>(l, r);
     func br2(l : Trie<K, W>, r : Trie<K, W>) : Trie<K, W> = branch<K, W>(l, r);
     func br3(l : Trie<K, X>, r : Trie<K, X>) : Trie<K, X> = branch<K, X>(l, r);
 
-    func rec(bitpos:Nat, tl:Trie<K,V>, tr:Trie<K,W>) : Trie<K,X> = label profile_trie_join_rec : Trie<K,X> {
-      func lf1(kvs:AssocList<Key<K>,V>) : Trie<K,V> = leaf<K,V>(kvs, bitpos);
-      func lf2(kvs:AssocList<Key<K>,W>) : Trie<K,W> = leaf<K,W>(kvs, bitpos);
-      func lf3(kvs:AssocList<Key<K>,X>) : Trie<K,X> = leaf<K,X>(kvs, bitpos);
+    func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, W>) : Trie<K, X> = label profile_trie_join_rec : Trie<K, X> {
+      func lf1(kvs : AssocList<Key<K>, V>) : Trie<K, V> = leaf<K, V>(kvs, bitpos);
+      func lf2(kvs : AssocList<Key<K>, W>) : Trie<K, W> = leaf<K, W>(kvs, bitpos);
+      func lf3(kvs : AssocList<Key<K>, X>) : Trie<K, X> = leaf<K, X>(kvs, bitpos);
 
       switch (tl, tr) {
         case (#empty, _) { #empty };
         case (_, #empty) { #empty };
         case (#leaf(l1), #leaf(l2)) {
-          lf3(AssocList.join<Key<K>,V,W,X>(l1.keyvals, l2.keyvals, key_eq, vbin))
+          lf3(AssocList.join<Key<K>, V, W, X>(l1.keyvals, l2.keyvals, key_eq, vbin))
         };
         case (#leaf(l), _) {
-          let (ll, lr) = splitAssocList<K,V>(l.keyvals, bitpos);
+          let (ll, lr) = splitAssocList<K, V>(l.keyvals, bitpos);
           rec(bitpos, br1(lf1(ll), lf1(lr)), tr)
         };
         case (_, #leaf(l)) {
-          let (ll, lr) = splitAssocList<K,W>(l.keyvals, bitpos);
+          let (ll, lr) = splitAssocList<K, W>(l.keyvals, bitpos);
           rec(bitpos, tl, br2(lf2(ll), lf2(lr)))
         };
         case (#branch(b1), #branch(b2)) {
@@ -679,7 +679,7 @@ module {
         case (#leaf(l)) {
           AssocList.fold<Key<K>, V, X>(
             l.keyvals, empty,
-            func (k : Key<K>, v : V, x : X) :X { bin(leaf(k.key,v),x) }
+            func (k : Key<K>, v : V, x : X) :X { bin(leaf(k.key, v), x) }
           )
         };
         case (#branch(b)) { bin(rec(b.left), rec(b.right)) };
@@ -708,16 +708,16 @@ module {
     tr : Trie<K2, V2>,
     op : (K1, V1, K2, V2) -> ?(Key<K3>, V3),
     k3_eq : (K3, K3) -> Bool
-  )  : Trie<K3,V3>  {
+  )  : Trie<K3, V3>  {
 
     /*- binary case: merge disjoint results: */
-    func merge (a:Trie<K3,V3>, b:Trie<K3,V3>) : Trie<K3,V3> =
-      mergeDisjoint<K3,V3>(a, b, k3_eq);
+    func merge (a:Trie<K3, V3>, b:Trie<K3, V3>) : Trie<K3, V3> =
+      mergeDisjoint<K3, V3>(a, b, k3_eq);
 
     /*- "`foldUp` squared" (imagine two nested loops): */
     foldUp<K1, V1, Trie<K3, V3>>(
       tl, merge,
-      func (k1:K1, v1:V1) : Trie<K3,V3> {
+      func (k1:K1, v1:V1) : Trie<K3, V3> {
         foldUp<K2, V2, Trie<K3, V3>>(
           tr, merge,
           func (k2:K2, v2:V2) : Trie<K3, V3> {
@@ -774,8 +774,8 @@ module {
 
     /// Build sequence of two sub-builds
     public func seq<K, V>(l : Build<K, V>, r : Build<K, V>) : Build<K, V> =
-      label profile_trie_seq : Build<K,V> {
-        let sum = size<K,V>(l) + size<K,V>(r);
+      label profile_trie_seq : Build<K, V> {
+        let sum = size<K, V>(l) + size<K, V>(r);
         #seq({ size = sum; left = l; right = r })
       };
 
@@ -786,17 +786,17 @@ module {
       tl : Trie<K1, V1>,
       tr : Trie<K2, V2>,
       op : (K1, V1, K2, V2) -> ?(K3, V3),
-      k3_eq :(K3,K3) -> Bool
-    ) : Build<K3,V3> {
+      k3_eq : (K3, K3) -> Bool
+    ) : Build<K3, V3> {
 
       func outer_bin (a : Build<K3, V3>, b : Build<K3, V3>)
-        : Build<K3,V3> =
-        label profile_trie_prod_outer_seqOfBranch : Build<K3,V3> {
+        : Build<K3, V3> =
+        label profile_trie_prod_outer_seqOfBranch : Build<K3, V3> {
           seq<K3, V3>(a, b)
         };
 
       func inner_bin (a : Build<K3, V3>, b : Build<K3, V3>)
-        : Build<K3,V3> =
+        : Build<K3, V3> =
         label profile_trie_prod_inner_seqOfBranch : Build<K3, V3> {
           seq<K3, V3>(a, b)
         };
@@ -825,22 +825,22 @@ module {
     /// This position is meaningful only when the build contains multiple uses of one or more keys, otherwise it is not.
     public func nth<K, V>(tb : Build<K, V>, i : Nat) : ?(K, ?Hash.Hash, V) =
       label profile_triebuild_nth : (?(K, ?Hash.Hash, V)) {
-        func rec(tb:Build<K,V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
+        func rec(tb:Build<K, V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
           switch tb {
             case (#skip) { P.unreachable() };
-            case (#put (k,h,v)) label profile_trie_nth_rec_end : (?(K, ?Hash.Hash, V)) {
+            case (#put (k, h, v)) label profile_trie_nth_rec_end : (?(K, ?Hash.Hash, V)) {
               assert(i == 0);
-              ?(k,h,v)
+              ?(k, h, v)
              };
              case (#seq(s)) label profile_trie_nth_rec_seq : (?(K, ?Hash.Hash, V)) {
-               let size_left = size<K,V>(s.left);
+               let size_left = size<K, V>(s.left);
                if (i < size_left) { rec(s.left,  i) }
                else { rec(s.right, i - size_left) }
              };
           }
         };
 
-        if (i >= size<K,V>(tb)) {
+        if (i >= size<K, V>(tb)) {
           return null
         };
         rec(tb, i)
@@ -850,10 +850,10 @@ module {
     /// work of actually merging any tries; rather, just record the work for
     /// latter (if ever).
     public func projectInner<K1, K2, V>(t : Trie<K1, Build<K2, V>>)
-      : Build<K2,V> {
+      : Build<K2, V> {
       foldUp<K1, Build<K2, V>, Build<K2, V>>(
         t,
-        func (t1 : Build<K2, V>, t2 : Build<K2, V>) : Build<K2 ,V> { seq<K2, V>(t1, t2) },
+        func (t1 : Build<K2, V>, t2 : Build<K2, V>) : Build<K2, V> { seq<K2, V>(t1, t2) },
         func (_ : K1, t : Build<K2, V>): Build<K2, V> { t },
         #skip
       )
@@ -861,13 +861,13 @@ module {
 
     /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
     public func toArray<K, V, W>(tb : Build<K, V>, f: (K, V) -> W) : [W] {
-      let c = size<K,V>(tb);
+      let c = size<K, V>(tb);
       let a = A.init<?W>(c, null);
       var i = 0;
-      func rec(tb:Build<K,V>) = label profile_triebuild_toArray2_rec {
+      func rec(tb:Build<K, V>) = label profile_triebuild_toArray2_rec {
         switch tb {
           case (#skip) {};
-          case (#put(k,_,v)) { a[i] := ?f(k,v); i := i + 1 };
+          case (#put(k, _, v)) { a[i] := ?f(k, v); i := i + 1 };
           case (#seq(s)) { rec(s.left); rec(s.right) };
         }
       };
@@ -880,7 +880,7 @@ module {
   /// Fold over the key-value pairs of the trie, using an accumulator.
   /// The key-value pairs have no reliable or meaningful ordering.
   public func fold<K, V, X>(t : Trie<K, V>, f : (K, V, X) -> X, x : X) : X {
-    func rec(t:Trie<K,V>, x:X) : X {
+    func rec(t:Trie<K, V>, x:X) : X {
       switch t {
         case (#empty) { x };
         case (#leaf(l)) {
@@ -889,7 +889,7 @@ module {
            func (k : Key<K>, v : V, x : X) : X = f(k.key, v, x)
           )
         };
-        case (#branch(b)) { rec(b.left, rec(b.right,x)) };
+        case (#branch(b)) { rec(b.left, rec(b.right, x)) };
       };
     };
     rec(t, x)
@@ -901,8 +901,8 @@ module {
       switch t {
         case (#empty) { false };
         case (#leaf(l)) {
-          List.some<(Key<K>,V)>(
-            l.keyvals, func ((k:Key<K>,v:V)):Bool=f(k.key,v)
+          List.some<(Key<K>, V)>(
+            l.keyvals, func ((k:Key<K>, v:V)):Bool=f(k.key, v)
           )
         };
         case (#branch(b)) { rec(b.left) or rec(b.right) };
@@ -912,13 +912,13 @@ module {
   };
 
   /// Test whether all key-value pairs have a given property.
-  public func all<K,V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool {
+  public func all<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool {
     func rec(t:Trie<K, V>) : Bool {
       switch t {
         case (#empty) { true };
         case (#leaf(l)) {
           List.all<(Key<K>, V)>(
-            l.keyvals, func ((k : Key<K>, v : V)) : Bool=f(k.key,v)
+            l.keyvals, func ((k : Key<K>, v : V)) : Bool=f(k.key, v)
           )
         };
         case (#branch(b)) { rec(b.left) and rec(b.right) };
@@ -931,20 +931,20 @@ module {
   ///
   /// Note: This position is not meaningful; it's only here so that we
   /// can inject tries into arrays using functions like `Array.tabulate`.
-  public func nth<K,V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) =
+  public func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) =
     label profile_trie_nth : (?(Key<K>, V)) {
-      func rec(t:Trie<K,V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
+      func rec(t:Trie<K, V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
         switch t {
           case (#empty) { P.unreachable() };
-          case (#leaf(l)) { List.get<(Key<K>,V)>(l.keyvals, i) };
+          case (#leaf(l)) { List.get<(Key<K>, V)>(l.keyvals, i) };
           case (#branch(b)) {
-            let size_left = size<K,V>(b.left);
+            let size_left = size<K, V>(b.left);
             if (i < size_left) { rec(b.left,  i) }
             else { rec(b.right, i - size_left) }
           }
         }
       };
-      if (i >= size<K,V>(t)) {
+      if (i >= size<K, V>(t)) {
         return null
       };
       rec(t, i)
@@ -976,9 +976,9 @@ module {
   public func toArray<K, V, W>(t : Trie<K, V>, f : (K, V)-> W):[W] =
     label profile_trie_toArray_begin : [W] {
       let a = A.tabulate<W> (
-        size<K,V>(t),
+        size<K, V>(t),
         func (i:Nat) : W = label profile_trie_toArray_nth : W {
-          let (k,v) = Option.unwrap<(Key<K>, V)>(nth<K, V>(t, i));
+          let (k, v) = Option.unwrap<(Key<K>, V)>(nth<K, V>(t, i));
           f(k.key, v)
         }
       );
@@ -995,26 +995,26 @@ module {
 
   /// filter the key-value pairs by a given predicate.
   public func filter<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Trie<K, V> {
-    func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K,V> {
+    func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {
         case (#empty) { #empty };
         case (#leaf(l)) {
-          leaf<K,V>(
+          leaf<K, V>(
             List.filter<(Key<K>, V)>(
               l.keyvals,
-              func ((k : Key<K>, v : V)) : Bool = f(k.key,v)
+              func ((k : Key<K>, v : V)) : Bool = f(k.key, v)
             ),
             bitpos
           )
         };
         case (#branch(b)) {
-          let fl = rec(b.left, bitpos+1);
-          let fr = rec(b.right, bitpos+1);
-          switch (isEmpty<K,V>(fl), isEmpty<K,V>(fr)) {
+          let fl = rec(b.left, bitpos + 1);
+          let fr = rec(b.right, bitpos + 1);
+          switch (isEmpty<K, V>(fl), isEmpty<K, V>(fr)) {
             case (true, true) { #empty };
             case (false, true) { fr };
             case (true, false) { fl };
-            case (false, false) { branch<K,V>(fl, fr) };
+            case (false, false) { branch<K, V>(fl, fr) };
           };
         }
       }
@@ -1024,12 +1024,12 @@ module {
 
   /// map and filter the key-value pairs by a given predicate.
   public func mapFilter<K, V, W>(t : Trie<K, V>, f : (K, V) -> ?W) : Trie<K, W> {
-    func rec(t:Trie<K,V>, bitpos:Nat) : Trie<K,W> {
+    func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, W> {
       switch t {
         case (#empty) { #empty };
         case (#leaf(l)) {
-          leaf<K,W>(
-            List.mapFilter<(Key<K>,V),(Key<K>,W)>(
+          leaf<K, W>(
+            List.mapFilter<(Key<K>, V),(Key<K>, W)>(
               l.keyvals,
               // retain key and hash, but update key's value using f:
               func ((k : Key<K>, v : V)) : ?(Key<K>, W) {
@@ -1075,9 +1075,9 @@ module {
       switch (tl, tr) {
         case (#empty, #empty) { true };
         case (#leaf(l1), #leaf(l2)) {
-          List.equal<(Key<K>,V)>(l1.keyvals, l2.keyvals,
-            func ((k1:Key<K>, v1:V), (k2:Key<K>, v2:V)) : Bool =
-              keq(k1.key, k2.key) and veq(v1,v2)
+          List.equal<(Key<K>, V)>(l1.keyvals, l2.keyvals,
+            func ((k1 : Key<K>, v1 : V), (k2 : Key<K>, v2 : V)) : Bool =
+              keq(k1.key, k2.key) and veq(v1, v2)
           )
         };
         case (#branch(b1),#branch(b2)) {
@@ -1092,12 +1092,12 @@ module {
   /// replace the given key's value in the trie,
   /// and only if successful, do the success continuation,
   /// otherwise, return the failure value
-  public func replaceThen<K,V,X>(
+  public func replaceThen<K, V, X>(
     t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v2 : V,
     success: (Trie<K, V>, V) -> X,
     fail: () -> X
   ) : X {
-    let (t2, ov) = replace<K,V>(t, k, k_eq, ?v2);
+    let (t2, ov) = replace<K, V>(t, k, k_eq, ?v2);
     switch ov {
       case (null) { /* no prior value; failure to remove */ fail() };
       case (?v1) { success(t2, v1) };
@@ -1120,10 +1120,10 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1)->Bool,
     k2 : Key<K2>,
-    k2_eq : (K2,K2)->Bool,
+    k2_eq : (K2, K2)->Bool,
     v:V
   ) : Trie2D<K1, K2, V> {
-    let inner = find<K1,Trie<K2, V>>(t, k1, k1_eq);
+    let inner = find<K1, Trie<K2, V>>(t, k1, k1_eq);
     let (updated_inner, _) = switch inner {
       case (null)   { put<K2, V>(#empty, k2, k2_eq, v) };
       case (?inner) { put<K2, V>(inner, k2, k2_eq, v) };
@@ -1142,14 +1142,14 @@ module {
     k3 : Key<K3>,
     k3_eq : (K3, K3)->Bool,
     v : V
-  ) : Trie3D<K1,K2,K3,V> {
+  ) : Trie3D<K1, K2, K3, V> {
     let inner1 = find<K1, Trie2D<K2, K3, V>>(t, k1, k1_eq);
     let (updated_inner1, _) = switch inner1 {
       case (null) {
         put<K2, Trie<K3, V>>(
           #empty, k2, k2_eq,
-           (put<K3,V>(#empty, k3, k3_eq, v)).0
-             )
+           (put<K3, V>(#empty, k3, k3_eq, v)).0
+        )
       };
       case (?inner1) {
         let inner2 = find<K2, Trie<K3, V>>(inner1, k2, k2_eq);
@@ -1157,7 +1157,7 @@ module {
           case (null) { put<K3, V>(#empty, k3, k3_eq, v) };
           case (?inner2) { put<K3, V>(inner2, k3, k3_eq, v) };
         };
-        put<K2,Trie<K3,V>>( inner1, k2, k2_eq, updated_inner2 )
+        put<K2, Trie<K3, V>>(inner1, k2, k2_eq, updated_inner2 )
       };
     };
     let (updated_outer, _) = put<K1, Trie2D<K2, K3, V>>(t, k1, k1_eq, updated_inner1);
@@ -1165,8 +1165,8 @@ module {
   };
 
   /// remove the given key's value in the trie; return the new trie
-  public func remove<K,V>(t : Trie<K,V>, k : Key<K>, k_eq: (K, K) -> Bool) : (Trie<K, V>, ?V) {
-    replace<K,V>(t, k, k_eq, null)
+  public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq: (K, K) -> Bool) : (Trie<K, V>, ?V) {
+    replace<K, V>(t, k, k_eq, null)
   };
 
   /// remove the given key's value in the trie,
@@ -1176,7 +1176,7 @@ module {
     t : Trie<K, V>,
     k : Key<K>,
     k_eq: (K, K) -> Bool,
-    success: (Trie<K,V>, V) -> X,
+    success: (Trie<K, V>, V) -> X,
     fail: () -> X
   ) : X {
     let (t2, ov) = replace<K, V>(t, k, k_eq, null);
@@ -1196,13 +1196,13 @@ module {
     k2 : Key<K2>,
     k2_eq: (K2, K2) -> Bool
   ) : (Trie2D<K1, K2, V>, ?V)  {
-    switch (find<K1,Trie<K2,V>>(t, k1, k1_eq)) {
+    switch (find<K1, Trie<K2, V>>(t, k1, k1_eq)) {
       case (null)   {
-         (t, null)
+        (t, null)
       };
       case (?inner) {
-        let (updated_inner, ov) = remove<K2,V>(inner, k2, k2_eq);
-        let (updated_outer, _) = put<K1,Trie<K2,V>>(t, k1, k1_eq, updated_inner);
+        let (updated_inner, ov) = remove<K2, V>(inner, k2, k2_eq);
+        let (updated_outer, _) = put<K1, Trie<K2, V>>(t, k1, k1_eq, updated_inner);
         (updated_outer, ov)
       };
     }
@@ -1216,8 +1216,8 @@ module {
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
     k2_eq: (K2, K2) -> Bool,
-    k3:Key<K3>, k3_eq : (K3, K3)->Bool,
-   ) : (Trie3D<K1, K2, K3, V>, ?V) {
+    k3:Key<K3>, k3_eq : (K3, K3) -> Bool,
+  ) : (Trie3D<K1, K2, K3, V>, ?V) {
     switch (find<K1, Trie2D<K2, K3, V>>(t, k1, k1_eq)) {
       case (null)   {
         (t, null)
@@ -1237,11 +1237,13 @@ module {
     t : Trie2D<K1, K2, V>,
     k1_eq : (K1, K1) -> Bool,
     k2_eq : (K2, K2) -> Bool
-  ) : Trie<K2,V> {
+  ) : Trie<K2, V> {
     foldUp<K1, Trie<K2, V>, Trie<K2, V>>(
       t,
-      func (t1 : Trie<K2, V>, t2 : Trie<K2, V>) : Trie<K2, V> { mergeDisjoint<K2, V>(t1, t2, k2_eq) },
-      func (_ : K1, t : Trie<K2, V>): Trie<K2, V> { t },
+      func (t1 : Trie<K2, V>, t2 : Trie<K2, V>) : Trie<K2, V> {
+        mergeDisjoint<K2, V>(t1, t2, k2_eq)
+      },
+      func (_ : K1, t : Trie<K2, V>) : Trie<K2, V> { t },
       #empty
     )
   };
