@@ -9,7 +9,7 @@ import O "Order";
 module {
 
   /// Node color: red or black.
-  public type Color = {#R; #B};
+  public type Color = { #R; #B };
 
   /// Ordered, (red-black) tree of entries.
   public type Tree<X, Y> = {
@@ -18,7 +18,7 @@ module {
   };
 
   /// Create an order map from an order function for its keys.
-  public class RBTree<X, Y>(compareTo:(X, X) -> O.Order) {
+  public class RBTree<X, Y>(compareTo : (X, X) -> O.Order) {
 
     var tree : Tree<X, Y> = (#leaf : Tree<X, Y>);
 
@@ -75,10 +75,10 @@ module {
   };
 
 
-  type IterRep<X, Y> = List.List<{#tr:Tree<X, Y>; #xy:(X, ?Y)}>;
+  type IterRep<X, Y> = List.List<{ #tr:Tree<X, Y>; #xy:(X, ?Y) }>;
 
   /// An iterator for the entries of the map, in ascending (`#fwd`) or descending (`#bwd`) order.
-  public func iter<X, Y>(t : Tree<X, Y>, dir : {#fwd; #bwd}) : I.Iter<(X, Y)> {
+  public func iter<X, Y>(t : Tree<X, Y>, dir : { #fwd; #bwd }) : I.Iter<(X, Y)> {
     object {
       var trees : IterRep<X, Y> = ?(#tr(t), null);
       public func next() : ?(X, Y) {

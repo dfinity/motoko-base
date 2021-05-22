@@ -26,13 +26,13 @@ module {
 
   /// Put an element into the set.
   public func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
-    let (s2, _) = Trie.put<T,()>(s, {key = x; hash = xh}, eq, ());
+    let (s2, _) = Trie.put<T,()>(s, { key = x; hash = xh }, eq, ());
     s2
   };
 
   /// Delete an element from the set.
   public func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
-    let (s2, _) = Trie.remove<T, ()>(s, {key = x; hash = xh}, eq);
+    let (s2, _) = Trie.remove<T, ()>(s, { key = x; hash = xh }, eq);
     s2
   };
 
@@ -55,7 +55,7 @@ module {
 
   /// Test if a set contains a given element.
   public func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
-    switch (Trie.find<T, ()>(s, {key = x; hash = xh}, eq)) {
+    switch (Trie.find<T, ()>(s, { key = x; hash = xh }, eq)) {
       case null { false };
       case (?_) { true };
     }

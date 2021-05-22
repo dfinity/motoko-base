@@ -251,7 +251,7 @@ module {
           switch (ListUtil.lenClamp<(Key<K>, V)>(kvs, MAX_LEAF_SIZE)) {
             case null {} /* fall through to branch case. */;
             case (?len) {
-              return #leaf({size = len; keyvals = kvs})
+              return #leaf({ size = len; keyvals = kvs })
             };
           }
         };
@@ -259,7 +259,7 @@ module {
           if ( c == 0 ) {
             return #empty
           } else if ( c <= MAX_LEAF_SIZE ) {
-            return #leaf({size = c; keyvals = kvs})
+            return #leaf({ size = c; keyvals = kvs })
           } else {
           /* fall through to branch case */
           }
@@ -269,9 +269,9 @@ module {
       if ( ls == 0 and rs == 0 ) {
         #empty
       } else if (rs == 0 and ls <= MAX_LEAF_SIZE) {
-        #leaf({size = ls; keyvals = l})
+        #leaf({ size = ls; keyvals = l })
       } else if (ls == 0 and rs <= MAX_LEAF_SIZE) {
-        #leaf({size = rs; keyvals = r})
+        #leaf({ size = rs; keyvals = r })
       } else {
         branch<K, V>(rec(?ls, l, bitpos + 1), rec(?rs, r, bitpos + 1))
       }
@@ -375,7 +375,8 @@ module {
     label profile_trie_splitList : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>)
     {
      func rec(l : AssocList<Key<K>, V>) : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>) =
-       label profile_trie_sized_split_rec : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>) {
+       label profile_trie_sized_split_rec :
+         (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>) {
          switch l {
            case null { (0, null, 0, null) };
            case (?((k, v), t)) {
@@ -417,7 +418,7 @@ module {
               AssocList.disj<Key<K>, V, V, V>(
                 l1.keyvals, l2.keyvals,
                 key_eq,
-                func (x:?V, y:?V):V {
+                func (x : ?V, y : ?V):V {
                   switch (x, y) {
                     case (null, null) { P.unreachable() };
                     case (null, ?v) { v };
@@ -716,10 +717,10 @@ module {
     /*- "`foldUp` squared" (imagine two nested loops): */
     foldUp<K1, V1, Trie<K3, V3>>(
       tl, merge,
-      func (k1:K1, v1:V1) : Trie<K3, V3> {
+      func (k1 : K1, v1 : V1) : Trie<K3, V3> {
         foldUp<K2, V2, Trie<K3, V3>>(
           tr, merge,
-          func (k2:K2, v2:V2) : Trie<K3, V3> {
+          func (k2 : K2, v2 : V2) : Trie<K3, V3> {
             switch (op(k1, v1, k2, v2)) {
               case null { #empty };
               case (?(k3, v3)) { (put<K3, V3>(#empty, k3, k3_eq, v3)).0 };
