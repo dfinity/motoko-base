@@ -22,7 +22,7 @@ module {
 
 
   // key-val list type
-  type KVs<K,V> = AssocList.AssocList<K, V>;
+  type KVs<K, V> = AssocList.AssocList<K, V>;
 
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
@@ -66,7 +66,7 @@ module {
       let h = Prim.nat32ToNat(keyHash(k));
       let m = table.size();
       let v = if (m > 0) {
-        AssocList.find<K,V>(table[h % m], k, keyEq)
+        AssocList.find<K, V>(table[h % m], k, keyEq)
       } else {
         null
       };
@@ -109,7 +109,7 @@ module {
       };
       let h = Prim.nat32ToNat(keyHash(k));
       let pos = h % table.size();
-      let (kvs2, ov) = AssocList.replace<K,V>(table[pos], k, keyEq, ?v);
+      let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, ?v);
       table[pos] := kvs2;
       switch(ov){
         case null { _count += 1 };
@@ -120,15 +120,15 @@ module {
 
     /// Returns an iterator over the key value pairs in this
     /// `HashMap`. Does _not_ modify the `HashMap`.
-    public func entries() : Iter.Iter<(K,V)> {
+    public func entries() : Iter.Iter<(K, V)> {
       if (table.size() == 0) {
-        object { public func next() : ?(K,V) { null } }
+        object { public func next() : ?(K, V) { null } }
       }
       else {
         object {
           var kvs = table[0];
           var nextTablePos = 1;
-          public func next () : ?(K,V) {
+          public func next () : ?(K, V) {
             switch kvs {
               case (?(kv, kvs2)) {
                 kvs := kvs2;
@@ -153,11 +153,12 @@ module {
 
   /// clone cannot be an efficient object method,
   /// ...but is still useful in tests, and beyond.
-  public func clone<K,V>
-    (h : HashMap<K,V>,
-     keyEq : (K,K) -> Bool,
-     keyHash : K -> Hash.Hash) : HashMap<K,V> {
-    let h2 = HashMap<K,V>(h.size(), keyEq, keyHash);
+  public func clone<K, V> (
+    h : HashMap<K, V>,
+    keyEq : (K, K) -> Bool,
+    keyHash : K -> Hash.Hash
+  ) : HashMap<K, V> {
+    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash);
     for ((k,v) in h.entries()) {
       h2.put(k,v);
     };
@@ -165,24 +166,26 @@ module {
   };
 
   /// Clone from any iterator of key-value pairs
-  public func fromIter<K, V>(iter : Iter.Iter<(K, V)>,
-                             initCapacity : Nat,
-                             keyEq : (K,K) -> Bool,
-                             keyHash : K -> Hash.Hash) : HashMap<K,V> {
-    let h = HashMap<K,V>(initCapacity, keyEq, keyHash);
+  public func fromIter<K, V>(
+    iter : Iter.Iter<(K, V)>,
+    initCapacity : Nat,
+    keyEq : (K, K) -> Bool,
+    keyHash : K -> Hash.Hash
+  ) : HashMap<K, V> {
+    let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
     for ((k,v) in iter) {
       h.put(k,v);
     };
     h
   };
 
-  public func map<K, V1, V2>
-    (h : HashMap<K,V1>,
-     keyEq : (K,K) -> Bool,
-     keyHash : K -> Hash.Hash,
-     mapFn : (K, V1) -> V2,
-    ) : HashMap<K,V2> {
-    let h2 = HashMap<K,V2>(h.size(), keyEq, keyHash);
+  public func map<K, V1, V2>(
+    h : HashMap<K, V1>,
+    keyEq : (K, K) -> Bool,
+    keyHash : K -> Hash.Hash,
+    mapFn : (K, V1) -> V2,
+  ) : HashMap<K, V2> {
+    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       let v2 = mapFn(k, v1);
       h2.put(k,v2);
@@ -190,13 +193,13 @@ module {
     h2
   };
 
-  public func mapFilter<K, V1, V2>
-    (h : HashMap<K,V1>,
-     keyEq : (K,K) -> Bool,
-     keyHash : K -> Hash.Hash,
-     mapFn : (K, V1) -> ?V2,
-    ) : HashMap<K,V2> {
-    let h2 = HashMap<K,V2>(h.size(), keyEq, keyHash);
+  public func mapFilter<K, V1, V2>(
+    h : HashMap<K, V1>,
+    keyEq : (K, K) -> Bool,
+    keyHash : K -> Hash.Hash,
+    mapFn : (K, V1) -> ?V2,
+  ) : HashMap<K, V2> {
+    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       switch (mapFn(k, v1)) {
         case null { };
