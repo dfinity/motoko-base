@@ -3,7 +3,7 @@
 /// The Internet Computer allows canisters to store a small amount of data during
 /// update method processing so that during query call processing, the canister can obtain
 /// a certificate about that data.
-
+///
 /// This module provides a _low-level_ interface to this API, aimed at advanced
 /// users and library implementors. See the Internet Computer Functional
 /// Specification and corresponding documentation for how to use this to make query
