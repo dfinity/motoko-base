@@ -123,23 +123,25 @@ module {
           ( List.all<(Key<K>, V)>(
               l.keyvals,
               func ((k:Key<K>, v:V)) : Bool {
-                //{ Prim.debugPrint "testing hash..."; true }
-                //and
+              // { Prim.debugPrint "testing hash..."; true }
+              // and
                 ((k.hash & mask) == bits)
-                or
-                (do { Prim.debugPrint("\nmalformed hash!:\n");
-                   Prim.debugPrintInt(Prim.nat32ToNat(k.hash));
-                   Prim.debugPrint("\n (key hash) != (path bits): \n");
-                   Prim.debugPrintInt(Prim.nat32ToNat(bits));
-                   Prim.debugPrint("\nmask  : ");
-                   Prim.debugPrintInt(Prim.nat32ToNat(mask));
-                   Prim.debugPrint("\n");
-                   false
-                 })
+              // or
+              // (do {
+	      //    Prim.debugPrint("\nmalformed hash!:\n");
+              //    Prim.debugPrintInt(Prim.nat32ToNat(k.hash));
+              //    Prim.debugPrint("\n (key hash) != (path bits): \n");
+              //    Prim.debugPrintInt(Prim.nat32ToNat(bits));
+              //    Prim.debugPrint("\nmask  : ");
+              //    Prim.debugPrintInt(Prim.nat32ToNat(mask));
+              //    Prim.debugPrint("\n");
+              //    false
+              //  })
                  }
                )
-            or
-            (do { Prim.debugPrint("one or more hashes are malformed"); false })
+          // or
+          // (do { Prim.debugPrint("one or more hashes are malformed"); false }
+	    )
           )
         };
         case (#branch(b)) {
@@ -151,7 +153,9 @@ module {
           let mask1 = mask | (Prim.natToNat32(1) << bitpos1);
           let bits1 = bits | (Prim.natToNat32(1) << bitpos1);
           let sum = size<K, V>(b.left) + size<K,V>(b.right);
-          (b.size == sum or (do { Prim.debugPrint("malformed size"); false }))
+          (b.size == sum
+       //  or (do { Prim.debugPrint("malformed size"); false })
+	   )
           and
           rec(b.left,  ?bitpos1, bits,  mask1)
           and
@@ -313,7 +317,7 @@ module {
       }
      };
      let (to, vo) = rec(t, 0);
-     //assert(isValid<K,V>(to, false));
+   //assert(isValid<K,V>(to, false));
      (to, vo)
    };
 
