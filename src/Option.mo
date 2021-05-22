@@ -78,10 +78,10 @@ module {
   public func apply<A, B>(x : ?A, f : ?(A -> B)) : ?B {
     switch (f, x) {
       case (?f_, ?x_) {
-	?f_(x_);
+        ?f_(x_);
       };
       case (_, _) {
-	null;
+        null;
       };
     };
   };
@@ -91,10 +91,10 @@ module {
   public func chain<A, B>(x : ?A, f : A -> ?B) : ?B {
     switch(x) {
       case (?x_) {
-	f(x_);
+        f(x_);
       };
       case (null) {
-	null;
+        null;
       };
     };
   };

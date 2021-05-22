@@ -34,10 +34,10 @@ module {
   ) : Bool {
     switch (r1, r2) {
       case (#ok(ok1), #ok(ok2)) {
-	eqOk(ok1, ok2)
+        eqOk(ok1, ok2)
       };
       case (#err(err1), #err(err2)) {
-	eqErr(err1, err2);
+        eqErr(err1, err2);
       };
       case _ { false };
     };
@@ -53,10 +53,10 @@ module {
   ) : Order.Order {
     switch (r1, r2) {
       case (#ok(ok1), #ok(ok2)) {
-	compareOk(ok1, ok2)
+        compareOk(ok1, ok2)
       };
       case (#err(err1), #err(err2)) {
-	compareErr(err1, err2)
+        compareErr(err1, err2)
       };
       case (#ok(_), _) { #greater };
       case (#err(_), _) { #less };

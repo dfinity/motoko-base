@@ -251,7 +251,7 @@ module {
               return #leaf({size=len; keyvals=kvs})
             };
           }
-      	};
+        };
         case (?c) {
           if ( c == 0 ) {
             return #empty
@@ -420,7 +420,7 @@ module {
                     case (null, ?v) { v };
                     case (?v, _) { v };
                   }
-	        }
+                }
               )
             )
           };
@@ -1033,7 +1033,7 @@ module {
                   case (null) { null };
                   case (?w) { ?({key = k.key; hash = k.hash}, w) };
                 }
-	      }
+              }
             ),
             bitpos
           )

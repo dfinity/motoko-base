@@ -261,20 +261,20 @@ module {
 
     public func next() : ?Char {
       switch (stack.peek()) {
-	case (?(buff, c)) {
-	  switch (buff.next()) {
-	    case null {
-	      ignore stack.pop();
-	      return ?c;
-	    };
-	    case oc {
-	      return oc;
-	    };
-	  }
-	};
-	case null {
-	  return cs.next();
-	};
+        case (?(buff, c)) {
+          switch (buff.next()) {
+            case null {
+              ignore stack.pop();
+              return ?c;
+            };
+            case oc {
+              return oc;
+            };
+          }
+        };
+        case null {
+          return cs.next();
+        };
       };
     };
   };

@@ -34,20 +34,20 @@ module {
     /// Adds a single element to the buffer.
     public func add(elem : X) {
       if (count == elems.size()) {
-	let size =
-	  if (count == 0) {
-	    if (initCapacity > 0) { initCapacity } else { 1 }
-	  } else {
-	    2 * elems.size()
-	  };
-	let elems2 = Prim.Array_init<X>(size, elem);
-	var i = 0;
-	label l loop {
-	  if (i >= count) break l;
-	  elems2[i] := elems[i];
-	  i += 1;
-	};
-	elems := elems2;
+        let size =
+          if (count == 0) {
+            if (initCapacity > 0) { initCapacity } else { 1 }
+          } else {
+            2 * elems.size()
+          };
+        let elems2 = Prim.Array_init<X>(size, elem);
+        var i = 0;
+        label l loop {
+          if (i >= count) break l;
+          elems2[i] := elems[i];
+          i += 1;
+        };
+        elems := elems2;
       };
       elems[count] := elem;
       count += 1;
@@ -57,10 +57,10 @@ module {
     /// elements had been added to the Buffer.
     public func removeLast() : ?X {
       if (count == 0) {
-	null
+        null
       } else {
-	count -= 1;
-	?elems[count]
+        count -= 1;
+        ?elems[count]
       };
     };
 
@@ -68,10 +68,10 @@ module {
     public func append(b : Buffer<X>) {
       let i = b.vals();
       loop {
-	switch (i.next()) {
-	case null return;
-	case (?x) { add(x) };
-	};
+        switch (i.next()) {
+        case null return;
+        case (?x) { add(x) };
+        };
       };
     };
 
@@ -88,9 +88,9 @@ module {
       let c = Buffer<X>(elems.size());
       var i = 0;
       label l loop {
-	if (i >= count) break l;
-	c.add(elems[i]);
-	i += 1;
+        if (i >= count) break l;
+        c.add(elems[i]);
+        i += 1;
       };
       c
     };
@@ -99,11 +99,11 @@ module {
     public func vals() : { next : () -> ?X } = object {
       var pos = 0;
       public func next() : ?X {
-	if (pos == count) { null } else {
-	  let elem = ?elems[pos];
-	  pos += 1;
-	  elem
-	}
+        if (pos == count) { null } else {
+          let elem = ?elems[pos];
+          pos += 1;
+          elem
+        }
       }
     };
 
@@ -111,21 +111,21 @@ module {
     public func toArray() : [X] =
       // immutable clone of array
       Prim.Array_tabulate<X>(
-	count,
-	func(x: Nat): X { elems[x] }
+        count,
+        func(x: Nat): X { elems[x] }
       );
 
     /// Creates a mutable array containing this buffer's elements.
     public func toVarArray() : [var X] {
       if (count == 0) { [var] } else {
-	let a = Prim.Array_init<X>(count, elems[0]);
-	var i = 0;
-	label l loop {
-	  if (i >= count) break l;
-	  a[i] := elems[i];
-	  i += 1;
-	};
-	a
+        let a = Prim.Array_init<X>(count, elems[0]);
+        var i = 0;
+        label l loop {
+          if (i >= count) break l;
+          a[i] := elems[i];
+          i += 1;
+        };
+        a
       }
     };
 
@@ -138,10 +138,10 @@ module {
     /// Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
     public func getOpt(i : Nat) : ?X {
       if (i < count) {
-	?elems[i]
+        ?elems[i]
       }
       else {
-	null
+        null
       }
     };
 
