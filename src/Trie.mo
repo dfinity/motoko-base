@@ -140,8 +140,7 @@ module {
                  }
                )
           // or
-          // (do { Prim.debugPrint("one or more hashes are malformed"); false }
-            )
+          // (do { Prim.debugPrint("one or more hashes are malformed"); false })
           )
         };
         case (#branch(b)) {
