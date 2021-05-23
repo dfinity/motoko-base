@@ -880,7 +880,7 @@ module {
   /// Fold over the key-value pairs of the trie, using an accumulator.
   /// The key-value pairs have no reliable or meaningful ordering.
   public func fold<K, V, X>(t : Trie<K, V>, f : (K, V, X) -> X, x : X) : X {
-    func rec(t:Trie<K, V>, x:X) : X {
+    func rec(t : Trie<K, V>, x : X) : X {
       switch t {
         case (#empty) { x };
         case (#leaf(l)) {
