@@ -45,7 +45,7 @@ module {
     ov : ?V
   )
   : (AssocList<K, V>, ?V) {
-    func rec(al:AssocList<K, V>) : (AssocList<K, V>, ?V) {
+    func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
       switch (al) {
         case (null) {
           switch ov {
