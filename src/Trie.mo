@@ -1125,7 +1125,7 @@ module {
   ) : Trie2D<K1, K2, V> {
     let inner = find<K1, Trie<K2, V>>(t, k1, k1_eq);
     let (updated_inner, _) = switch inner {
-      case (null)   { put<K2, V>(#empty, k2, k2_eq, v) };
+      case (null) { put<K2, V>(#empty, k2, k2_eq, v) };
       case (?inner) { put<K2, V>(inner, k2, k2_eq, v) };
     };
     let (updated_outer, _) = put<K1, Trie<K2, V>>(t, k1, k1_eq, updated_inner);
