@@ -76,7 +76,7 @@ module {
   /// values of the right list are irrelevant.
   public func diff<K, V, W>(
     al1 : AssocList<K, V>,
-    al2 : AssocList<K,W>,
+    al2 : AssocList<K, W>,
     keq : (K, K) -> Bool
   ) : AssocList<K, V>  {
     func rec(al1 : AssocList<K, V>) : AssocList<K, V> {
@@ -103,9 +103,9 @@ module {
       func rec(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> =
         label profile_assocList_mapAppend_rec : AssocList<K,X> {
           switch (al1, al2) {
-            case (null, null)          { null };
-            case (?((k,v),al1_), _   ) { ?((k, vbin(?v, null)), rec(al1_, al2 )) };
-            case (null, ?((k,v),al2_)) { ?((k, vbin(null, ?v)), rec(null, al2_)) };
+            case (null, null) { null };
+            case (?((k, v), al1_), _   ) { ?((k, vbin(?v, null)), rec(al1_, al2 )) };
+            case (null, ?((k, v), al2_)) { ?((k, vbin(null, ?v)), rec(null, al2_)) };
           }
         };
       rec(al1, al2)
@@ -137,7 +137,7 @@ module {
     func rec1(al1 : AssocList<K, V>) : AssocList<K, X> {
       switch al1 {
         case (null) {
-          func rec2(al2:AssocList<K,W>) : AssocList<K,X> {
+          func rec2(al2 : AssocList<K, W>) : AssocList<K, X> {
             switch al2 {
               case (null) { null };
               case (?((k, v2), tl)) {
@@ -151,7 +151,7 @@ module {
           rec2(al2)
         };
         case (?((k, v1), tl)) {
-          switch (find<K,W>(al2, k, keq)) {
+          switch (find<K, W>(al2, k, keq)) {
             case (null) { ?((k, vbin(?v1, null)), rec1(tl)) };
             case (?v2) { /* handled above */ rec1(tl) };
           }
@@ -171,11 +171,11 @@ module {
     keq : (K, K) -> Bool,
     vbin : (V, W) -> X
   ) : AssocList<K, X>  {
-    func rec(al1:AssocList<K, V>) : AssocList<K, X> {
+    func rec(al1 : AssocList<K, V>) : AssocList<K, X> {
       switch al1 {
         case (null) { null };
         case (?((k, v1), tl)) {
-          switch (find<K,W>(al2, k, keq)) {
+          switch (find<K, W>(al2, k, keq)) {
             case (null) { rec(tl) };
             case (?v2) { ?((k, vbin(v1, v2)), rec(tl)) };
           }

@@ -9,7 +9,7 @@
 /// of application-specific elements.
 ///
 /// The `Array` module focuses on Motoko's builtin arrays, whose size is
-/// fixed.  Arrays do not permit general growth/appending, which is the
+/// fixed. Arrays do not permit general growth/appending, which is the
 /// focus here.
 ///
 /// To create these arrays, and to consume them with ergonomic (imperative) code, and
@@ -27,7 +27,7 @@ module {
   /// The argument `initCapacity` determines its initial capacity.
   /// The underlying mutable array grows by doubling when its current
   /// capacity is exceeded.
-  public class Buffer<X> (initCapacity : Nat) {
+  public class Buffer<X>(initCapacity : Nat) {
     var count : Nat = 0;
     var elems : [var X] = [var]; // initially empty; allocated upon first `add`
 
@@ -69,8 +69,8 @@ module {
       let i = b.vals();
       loop {
         switch (i.next()) {
-        case null return;
-        case (?x) { add(x) };
+          case null return;
+          case (?x) { add(x) };
         };
       };
     };
@@ -112,7 +112,7 @@ module {
       // immutable clone of array
       Prim.Array_tabulate<X>(
         count,
-        func(x: Nat): X { elems[x] }
+        func(x : Nat) : X { elems[x] }
       );
 
     /// Creates a mutable array containing this buffer's elements.

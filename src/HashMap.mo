@@ -26,7 +26,7 @@ module {
 
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
-  public class HashMap<K, V> (
+  public class HashMap<K, V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash) {
@@ -51,8 +51,8 @@ module {
         let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, null);
         table[pos] := kvs2;
         switch(ov){
-        case null { };
-        case _ { _count -= 1; }
+          case null { };
+          case _ { _count -= 1; }
         };
         ov
       } else {
@@ -173,8 +173,8 @@ module {
     keyHash : K -> Hash.Hash
   ) : HashMap<K, V> {
     let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
-    for ((k,v) in iter) {
-      h.put(k,v);
+    for ((k, v) in iter) {
+      h.put(k, v);
     };
     h
   };
@@ -188,7 +188,7 @@ module {
     let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       let v2 = mapFn(k, v1);
-      h2.put(k,v2);
+      h2.put(k, v2);
     };
     h2
   };
@@ -204,7 +204,7 @@ module {
       switch (mapFn(k, v1)) {
         case null { };
         case (?v2) {
-          h2.put(k,v2);
+          h2.put(k, v2);
         };
       }
     };

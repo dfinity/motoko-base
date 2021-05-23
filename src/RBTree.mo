@@ -32,12 +32,12 @@ module {
     };
 
     /// Get the value associated with a given key.
-    public func get(x:X) : ?Y {
+    public func get(x : X) : ?Y {
       getRec(x, compareTo, tree);
     };
 
     /// Replace the value associated with a given key.
-    public func replace(x:X, y:Y) : ?Y {
+    public func replace(x : X, y : Y) : ?Y {
       let (res, t) = insertRoot(x, compareTo, y, tree);
       tree := t;
       res
@@ -56,7 +56,7 @@ module {
     };
 
     /// Remove the entry associated with a given key.
-    public func remove(x:X) : ?Y {
+    public func remove(x : X) : ?Y {
       let (res, t) = removeRec(x, compareTo, tree);
       tree := t;
       res

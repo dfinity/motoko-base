@@ -122,7 +122,7 @@ module {
           and
           ( List.all<(Key<K>, V)>(
               l.keyvals,
-              func ((k:Key<K>, v:V)) : Bool {
+              func ((k : Key<K>, v  :V)) : Bool {
               // { Prim.debugPrint "testing hash..."; true }
               // and
                 ((k.hash & mask) == bits)
@@ -215,7 +215,7 @@ module {
     /* Deprecated: List.lenIsEqLessThan */
     /// Test the list length against a maximum value and return true if
     /// the list length is less than or equal to the value specified.
-    public func lenIsEqLessThan<T>(l : List <T>, i : Nat) : Bool {
+    public func lenIsEqLessThan<T>(l : List<T>, i : Nat) : Bool {
       switch l {
         case null { true };
         case (?(_, t)) {
@@ -245,7 +245,7 @@ module {
 
   public func fromList<K, V>(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V> =
     label profile_trie_fromList_begin : (Trie<K, V>) {
-    func rec(kvc:?Nat, kvs:AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V> {
+    func rec(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V> {
       switch kvc {
         case null {
           switch (ListUtil.lenClamp<(Key<K>, V)>(kvs, MAX_LEAF_SIZE)) {
@@ -552,8 +552,8 @@ module {
   public func disj<K, V, W, X>(
     tl : Trie<K, V>,
     tr : Trie<K, W>,
-    k_eq : (K, K)->Bool,
-    vbin : (?V, ?W)->X
+    k_eq : (K, K) -> Bool,
+    vbin : (?V, ?W) -> X
   ) : Trie<K, X> {
     let key_eq = equalKey<K>(k_eq);
 
@@ -591,8 +591,8 @@ module {
      func lf2(kvs : AssocList<Key<K>, W>) : Trie<K, W> = leaf<K, W>(kvs, bitpos);
      switch (tl, tr) {
        case (#empty, #empty) { #empty };
-       case (#empty, _   )   { recR(tr, bitpos) };
-       case (_,    #empty)   { recL(tl, bitpos) };
+       case (#empty, _) { recR(tr, bitpos) };
+       case (_, #empty) { recL(tl, bitpos) };
        case (#leaf(l1), #leaf(l2)) {
          lf3(AssocList.disj<Key<K>, V, W, X>(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
        };
@@ -629,8 +629,8 @@ module {
   public func join<K, V, W, X>(
     tl : Trie<K, V>,
     tr : Trie<K, W>,
-    k_eq : (K, K)->Bool,
-    vbin: (V, W)->X
+    k_eq : (K, K) -> Bool,
+    vbin : (V, W) -> X
   ) : Trie<K, X> =
   label profile_trie_join : Trie<K, X> {
     let key_eq = equalKey<K>(k_eq);
@@ -679,7 +679,7 @@ module {
         case (#leaf(l)) {
           AssocList.fold<Key<K>, V, X>(
             l.keyvals, empty,
-            func (k : Key<K>, v : V, x : X) :X { bin(leaf(k.key, v), x) }
+            func (k : Key<K>, v : V, x : X) : X { bin(leaf(k.key, v), x) }
           )
         };
         case (#branch(b)) { bin(rec(b.left), rec(b.right)) };
@@ -825,10 +825,10 @@ module {
     /// This position is meaningful only when the build contains multiple uses of one or more keys, otherwise it is not.
     public func nth<K, V>(tb : Build<K, V>, i : Nat) : ?(K, ?Hash.Hash, V) =
       label profile_triebuild_nth : (?(K, ?Hash.Hash, V)) {
-        func rec(tb:Build<K, V>, i:Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
+        func rec(tb : Build<K, V>, i : Nat) : ?(K, ?Hash.Hash, V) = label profile_triebuild_nth_rec : (?(K, ?Hash.Hash, V)) {
           switch tb {
             case (#skip) { P.unreachable() };
-            case (#put (k, h, v)) label profile_trie_nth_rec_end : (?(K, ?Hash.Hash, V)) {
+            case (#put(k, h, v)) label profile_trie_nth_rec_end : (?(K, ?Hash.Hash, V)) {
               assert(i == 0);
               ?(k, h, v)
              };
@@ -913,7 +913,7 @@ module {
 
   /// Test whether all key-value pairs have a given property.
   public func all<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool {
-    func rec(t:Trie<K, V>) : Bool {
+    func rec(t : Trie<K, V>) : Bool {
       switch t {
         case (#empty) { true };
         case (#leaf(l)) {
@@ -933,7 +933,7 @@ module {
   /// can inject tries into arrays using functions like `Array.tabulate`.
   public func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) =
     label profile_trie_nth : (?(Key<K>, V)) {
-      func rec(t:Trie<K, V>, i:Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
+      func rec(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) = label profile_trie_nth_rec : (?(Key<K>, V)) {
         switch t {
           case (#empty) { P.unreachable() };
           case (#leaf(l)) { List.get<(Key<K>, V)>(l.keyvals, i) };
@@ -977,7 +977,7 @@ module {
     label profile_trie_toArray_begin : [W] {
       let a = A.tabulate<W> (
         size<K, V>(t),
-        func (i:Nat) : W = label profile_trie_toArray_nth : W {
+        func (i : Nat) : W = label profile_trie_toArray_nth : W {
           let (k, v) = Option.unwrap<(Key<K>, V)>(nth<K, V>(t, i));
           f(k.key, v)
         }
@@ -1080,7 +1080,7 @@ module {
               keq(k1.key, k2.key) and veq(v1, v2)
           )
         };
-        case (#branch(b1),#branch(b2)) {
+        case (#branch(b1), #branch(b2)) {
           rec(b1.left, b2.left) and rec(b2.right, b2.right)
         };
         case _ { false };
@@ -1197,7 +1197,7 @@ module {
     k2_eq: (K2, K2) -> Bool
   ) : (Trie2D<K1, K2, V>, ?V)  {
     switch (find<K1, Trie<K2, V>>(t, k1, k1_eq)) {
-      case (null)   {
+      case (null) {
         (t, null)
       };
       case (?inner) {
@@ -1219,7 +1219,7 @@ module {
     k3:Key<K3>, k3_eq : (K3, K3) -> Bool,
   ) : (Trie3D<K1, K2, K3, V>, ?V) {
     switch (find<K1, Trie2D<K2, K3, V>>(t, k1, k1_eq)) {
-      case (null)   {
+      case (null) {
         (t, null)
       };
       case (?inner) {

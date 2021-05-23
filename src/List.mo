@@ -31,8 +31,8 @@ module {
   public func last<T>(l : List<T>) : ?T {
     switch l {
       case null { null };
-      case (?(x,null)) { ?x };
-      case (?(_,t)) { last<T>(t) };
+      case (?(x, null)) { ?x };
+      case (?(_, t)) { last<T>(t) };
     }
   };
 
@@ -50,7 +50,7 @@ module {
     func rec(l : List<T>, n : Nat) : Nat {
       switch l {
         case null { n };
-        case (?(_,t)) { rec(t,n+1) };
+        case (?(_, t)) { rec(t, n + 1) };
       }
     };
     rec(l,0)
@@ -63,8 +63,8 @@ module {
   public func get<T>(l : List<T>, n : Nat) : ?T {
     switch (n, l) {
       case (_, null) { null };
-      case (0, (?(h,t))) { ?h };
-      case (_, (?(_,t))) { get<T>(t, n - 1) };
+      case (0, (?(h, t))) { ?h };
+      case (_, (?(_, t))) { get<T>(t, n - 1) };
     }
   };
 
@@ -73,7 +73,7 @@ module {
     func rec(l : List<T>, r : List<T>) : List<T> {
       switch l {
         case null { r };
-        case (?(h,t)) { rec(t,?(h,r)) };
+        case (?(h, t)) { rec(t,?(h, r)) };
       }
     };
     rec(l, null)
@@ -86,16 +86,16 @@ module {
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
       case null { () };
-      case (?(h,t)) { f(h) ; iterate<T>(t, f) };
+      case (?(h, t)) { f(h); iterate<T>(t, f) };
     }
   };
 
   /// Call the given function on each list element and collect the results
   /// in a new list.
-  public func map<T,S>(l : List<T>, f : T -> S) : List<S> {
+  public func map<T, S>(l : List<T>, f : T -> S) : List<S> {
     switch l {
       case null { null };
-      case (?(h,t)) { ?(f(h),map<T,S>(t,f)) };
+      case (?(h, t)) { ?(f(h), map<T, S>(t, f)) };
     }
   };
 
@@ -188,7 +188,7 @@ module {
   public func take<T>(l : List<T>, n:Nat) : List<T> {
     switch (l, n) {
       case (_, 0) { null };
-      case (null,_) { null };
+      case (null, _) { null };
       case (?(h, t), m) {?(h, take<T>(t, m - 1))};
     }
   };
@@ -196,8 +196,8 @@ module {
   /// Drop the first `n` elements from the given list.
   public func drop<T>(l : List<T>, n:Nat) : List<T> {
     switch (l, n) {
-      case (l_,     0) { l_ };
-      case (null,   _) { null };
+      case (l_, 0) { l_ };
+      case (null, _) { null };
       case ((?(h, t)), m) { drop<T>(t, m - 1) };
     }
   };
@@ -211,7 +211,7 @@ module {
   };
 
   /// Fold the list right-to-left using the given function (`f`).
-  public func foldRight<T,S>(l : List<T>, a : S, f : (T, S) -> S) : S {
+  public func foldRight<T, S>(l : List<T>, a : S, f : (T, S) -> S) : S {
     switch l {
       case null { a };
       case (?(h, t)) { f(h, foldRight<T,S>(t, a, f)) };
@@ -287,7 +287,7 @@ module {
     switch (l1, l2) {
       case (null, null) { true };
       case (null, _) { false };
-      case (_,    null) { false };
+      case (_, null) { false };
       case (?(h1, t1), ?(h2, t2)) { eq(h1, h2) and equal<T>(t1, t2, eq) };
     }
   };

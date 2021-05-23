@@ -34,7 +34,7 @@ module {
 
     /// Put the key and value, _and_ return the (optional) prior value for the key.
     public func replace(k : K, v : V) : ?V {
-      let keyObj = {key = k; hash = hashOf(k);};
+      let keyObj = { key = k; hash = hashOf(k) };
       let (map2, ov) =
         T.put<K,V>(map, keyObj, isEq, v);
       map := map2;
@@ -48,7 +48,7 @@ module {
     /// Get the (optional) value associated with the given key.
     public func get(k : K) : ?V {
       let keyObj = {key = k; hash = hashOf(k);};
-      T.find<K,V>(map, keyObj, isEq)
+      T.find<K, V>(map, keyObj, isEq)
     };
 
     /// Delete the (optional) value associated with the given key.
@@ -57,7 +57,7 @@ module {
 
     /// Delete and return the (optional) value associated with the given key.
     public func remove(k : K) : ?V {
-      let keyObj = {key = k; hash = hashOf(k);};
+      let keyObj = { key = k; hash = hashOf(k) };
       let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
       map := t;
       switch (ov) {
@@ -110,8 +110,8 @@ module {
     keyHash : K -> Hash.Hash
   ) : TrieMap<K, V> {
     let h2 = TrieMap<K, V>(keyEq, keyHash);
-    for ((k,v) in h.entries()) {
-      h2.put(k,v);
+    for ((k, v) in h.entries()) {
+      h2.put(k, v);
     };
     h2
   };
@@ -123,8 +123,8 @@ module {
     keyHash : K -> Hash.Hash
   ) : TrieMap<K, V> {
     let h = TrieMap<K, V>(keyEq, keyHash);
-    for ((k,v) in entries) {
-      h.put(k,v);
+    for ((k, v) in entries) {
+      h.put(k, v);
     };
     h
   };
@@ -139,7 +139,7 @@ module {
     let h2 = TrieMap<K, V2>(keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       let v2 = mapFn(k, v1);
-      h2.put(k,v2);
+      h2.put(k, v2);
     };
     h2
   };
@@ -156,7 +156,7 @@ module {
       switch (mapFn(k, v1)) {
         case null { };
         case (?v2) {
-          h2.put(k,v2);
+          h2.put(k, v2);
         };
       }
     };
