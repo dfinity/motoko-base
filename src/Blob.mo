@@ -3,7 +3,18 @@
 import Prim "mo:⛔";
 module {
 
-  public let hash : Blob -> Nat32 = Prim.hashBlob;
+/*
+  /// An immutable, possibly empty sequence of bytes.
+  /// Given `b : Blob`:
+  ///
+  /// * `b.size() : Nat` returns the number of bytes in the blob;
+  /// * `b.bytes() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob.
+  /// (Direct indexing of Blobs is not unsupported yet.)
+  public type Blob = Prim.Types.Blob;
+*/
+
+  /// Returns a (non-cryptographic) hash of 'b'
+  public let hash : (b : Blob) -> Nat32 = Prim.hashBlob;
 
   /// Returns `x == y`.
   public func equal(x : Blob, y : Blob) : Bool { x == y };

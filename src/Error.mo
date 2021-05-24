@@ -7,6 +7,11 @@ import Prim "mo:⛔";
 
 module {
 
+/*
+  /// Error values resulting from  `async` computations
+  public type Error = Prim.Types.Error;
+*/
+
   /// Error codes (user and system), where module `Prim` defines:
   /// ```motoko
   /// type ErrorCode = {

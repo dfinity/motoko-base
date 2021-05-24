@@ -15,7 +15,7 @@ module {
     };
     var i = 0;
     while (i < a.size()) {
-      if (not eq(a[i],b[i])) {
+      if (not eq(a[i], b[i])) {
         return false;
       };
       i += 1;

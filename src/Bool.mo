@@ -8,6 +8,11 @@
 import Prim "mo:⛔";
 module {
 
+/*
+  /// Booleans with constants `true` and `false`.
+  public type Bool = Prim.Types.Bool;
+*/
+
   /// Conversion.
   public func toText(x : Bool) : Text {
     if x { "true" } else { "false" }

@@ -6,6 +6,11 @@ import Prim "mo:⛔";
 
 module {
 
+/*
+  /// 64-bit natural numbers.
+  public type Nat64 = Prim.Types.Nat64;
+*/
+
   /// Conversion.
   public let toNat : Nat64 -> Nat = Prim.nat64ToNat;
 

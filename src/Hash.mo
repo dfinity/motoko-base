@@ -4,6 +4,7 @@ import Prim "mo:⛔";
 import Iter "Iter";
 
 module {
+
   /// Hash values represent a string of _hash bits_, packed into a `Nat32`.
   public type Hash = Nat32;
 

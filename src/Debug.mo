@@ -2,8 +2,10 @@
 
 import Prim "mo:⛔";
 module {
-  /// This prints a text (which typically does not include a final newline) to the
-  /// debug output. Where this debug output is stored and shown depends on the
-  /// environment the program runs in.
+
+  /// `print(t)` emits text `t` to the debug output stream.
+  /// How this stream is stored or displayed depends on the
+  /// execution environment.
   public let print : Text -> () = Prim.debugPrint;
+
 }

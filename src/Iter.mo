@@ -5,6 +5,7 @@ import Buffer "Buffer";
 import List "List";
 
 module {
+
   /// An iterator that produces values of type `T`. Calling `next` returns
   /// `null` when iteration is finished.
   ///
