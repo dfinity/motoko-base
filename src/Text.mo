@@ -19,10 +19,8 @@ import Prim "mo:⛔";
 
 module {
 
-/*
   /// Text values.
   public type Text = Prim.Types.Text;
-*/
 
   /// Conversion.
   /// Returns the text value of size 1 containing the single character `c`.
