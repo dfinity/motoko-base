@@ -9,8 +9,10 @@ import Prim "mo:⛔";
 
 module {
 
+/*
   /// The empty type. A subtype of all types.
   public type None = Prim.Types.None;
+*/
 
   /// Turns an absurd value into an arbitrary type.
   public let impossible : <A> None -> A = func<A>(x : None) : A {

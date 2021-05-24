@@ -5,8 +5,10 @@ import Int "Int";
 
 module {
 
-  /// 64-bit floating point values
+/*
+  /// 64-bit floating point numbers.
   public type Float = Prim.Types.Float;
+*/
 
   /// Ratio of the circumference of a circle to its diameter.
   public let pi : Float = 3.14159265358979323846; // taken from musl math.h

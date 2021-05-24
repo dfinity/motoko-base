@@ -6,8 +6,10 @@ import Prim "mo:⛔";
 
 module {
 
-  /// 32-bit signed integers
+/*
+  /// 32-bit signed integers.
   public type Int32 = Prim.Types.Int32;
+*/
 
   /// Conversion.
   public let toInt : Int32 -> Int = Prim.int32ToInt;

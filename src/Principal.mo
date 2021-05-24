@@ -5,9 +5,11 @@ import Blob "Blob";
 import Hash "Hash";
 module {
 
+/*
   /// Internet Computer principal identifiers.
   /// Convert to `Blob` for access to bytes.
   public type Principal = Prim.Types.Principal;
+*/
 
   /// Conversion.
   public let fromActor : (a : actor {}) -> Principal = Prim.principalOfActor;

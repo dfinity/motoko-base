@@ -6,8 +6,10 @@ import Prim "mo:⛔";
 
 module {
 
-  /// 64-bit signed integers
+/*
+  /// 64-bit signed integers.
   public type Int64 = Prim.Types.Int64;
+*/
 
   /// Conversion.
   public let toInt : Int64 -> Int = Prim.int64ToInt;

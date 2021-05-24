@@ -6,8 +6,10 @@ import Prim "mo:⛔";
 
 module {
 
-  /// 8-bit signed integers
+/*
+  /// 8-bit signed integers.
   public type Int8 = Prim.Types.Int8;
+*/
 
   /// Conversion.
   public let toInt : Int8 -> Int = Prim.int8ToInt;

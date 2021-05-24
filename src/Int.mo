@@ -9,8 +9,10 @@ import Hash "Hash";
 
 module {
 
+/*
   /// Infinite precision signed integers.
   public type Int = Prim.Types.Int;
+*/
 
   /// Returns the absolute value of the number
   public let abs : Int -> Nat = Prim.abs;

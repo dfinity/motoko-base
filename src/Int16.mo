@@ -6,8 +6,10 @@ import Prim "mo:⛔";
 
 module {
 
+/*
   /// 16-bit signed integers
   public type Int16 = Prim.Types.Int16;
+*/
 
   /// Conversion.
   public let toInt : Int16 -> Int = Prim.int16ToInt;

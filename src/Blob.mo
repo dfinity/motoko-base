@@ -3,6 +3,7 @@
 import Prim "mo:⛔";
 module {
 
+/*
   /// An immutable, possibly empty sequence of bytes.
   /// Given `b : Blob`:
   ///
@@ -10,6 +11,7 @@ module {
   /// * `b.bytes() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob.
   /// (Direct indexing of Blobs is not unsupported yet.)
   public type Blob = Prim.Types.Blob;
+*/
 
   /// Returns a (non-cryptographic) hash of 'b'
   public let hash : (b : Blob) -> Nat32 = Prim.hashBlob;
