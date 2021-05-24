@@ -474,7 +474,7 @@ func equalStructure<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie
 Test for equality, but naively, based on structure.
 Does not attempt to remove "junk" in the tree;
 For instance, a "smarter" approach would equate
-  `#bin{left=#empty;right=#empty}`
+  `#bin {left = #empty; right = #empty}`
 with
   `#empty`.
 We do not observe that equality here.

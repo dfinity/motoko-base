@@ -5,15 +5,14 @@ Mutable hash map (aka Hashtable)
 
 This module defines an imperative hash map (hash table), with a general key and value type.
 
-It has a minimal object-oriented interface: get, set, swap, delete, count and entries.
+It has a minimal object-oriented interface: `get`, `set`, `delete`, `count` and `entries`.
 
 The class is parameterized by the key's equality and hash functions,
-and an initial capacity.  However, as with `Buf`, no array allocation
-happens until the first `set` (or `swap`).
+and an initial capacity.  However, as with the `Buffer` class, no array allocation
+happens until the first `set`.
 
 Internally, table growth policy is very simple, for now:
-  Double an initial capacity when the expected
-  bucket list beyond a certain constant.
+ Double the current capacity when the expected bucket list size grows beyond a certain constant.
 
 [[type.HashMap]]
 == HashMap
@@ -90,7 +89,7 @@ func replace(k : K, v : V) : ?V
 ----
 
 Insert the value `v` at key `k` and returns the previous value stored at
-`k` or null if it didn't exist.
+`k` or `null` if it didn't exist.
 
 [[HashMap.entries]]
 === entries
@@ -101,7 +100,7 @@ func entries() : xref:Iter.adoc#type.Iter[Iter.Iter]<(K, V)>
 ----
 
 Returns an iterator over the key value pairs in this
-HashMap. Does _not_ modify the HashMap.
+`HashMap`. Does _not_ modify the `HashMap`.
 
 [[clone]]
 == clone

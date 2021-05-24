@@ -4,7 +4,7 @@
 Stack collection (LIFO discipline).
 
 Minimal LIFO (last in first out) implementation, as a class.
-See [deque](Deque.html) for mixed LIFO/FIFO behavior.
+See library `Deque` for mixed LIFO/FIFO behavior.
 
 
 [[type.Stack]]

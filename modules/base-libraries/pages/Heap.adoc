@@ -95,5 +95,5 @@ Remove the minimal element and return its value
 func fromIter<T>(iter : xref:Iter.adoc#type.Iter[I.Iter]<T>, ord : (T, T) -> xref:Order.adoc#type.Order[O.Order]) : xref:#type.Heap[Heap]<T>
 ----
 
-Convert iterator into a heap, takes O(N) time.
+Convert iterator into a heap in O(N) time.
 

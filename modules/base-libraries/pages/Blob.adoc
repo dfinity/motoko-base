@@ -8,10 +8,10 @@ Binary blobs
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let hash : Blob -> Nat32
+let hash : (b : Blob) -> Nat32
 ----
 
-
+Returns a (non-cryptographic) hash of 'b'
 
 [[equal]]
 == equal

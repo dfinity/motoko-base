@@ -298,7 +298,7 @@ func equal<T>(l1 : xref:#type.List[List]<T>, l2 : xref:#type.List[List]<T>, eq :
 
 Compare two lists for equality as specified by the given relation `eq` on the elements.
 
-The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`,
+The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1, l2) && lessThanEq(l2, l1)`,
 but the former is more efficient.
 
 [[tabulate]]

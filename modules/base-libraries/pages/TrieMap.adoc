@@ -3,7 +3,7 @@
 
 Functional map
 
-This module defines an imperative hash map, with a general key and value type.  It matches the interface and semantics of HashMap.  Unlike HashMap, its internal representation uses a functional hash trie (see `trie.mo`).
+This module defines an imperative hash map, with a general key and value type.  It matches the interface and semantics of HashMap.  Unlike HashMap, its internal representation uses a functional hash trie (see library `Trie`).
 
 This class permits us to compare the performance of two representations of hash-based maps, where tries (as binary trees) permit more efficient, constant-time, cloning compared with ordinary tables.  This property is nice for supporting transactional workflows where map mutations may be provisional, and where we may expect some mutations to be uncommitted, or to "roll back".
 

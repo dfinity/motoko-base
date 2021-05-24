@@ -12,16 +12,15 @@ general (user-defined) elements to represent sets, sequences and maps
 of application-specific elements.
 
 The `Array` module focuses on Motoko's builtin arrays, whose size is
-each fixed.  They do not permit general growth/appending, which is the
+fixed. Arrays do not permit general growth/appending, which is the
 focus here.
 
 To create these arrays, and to consume them with ergonomic (imperative) code, and
-low API friction, developers need _buffers that grow_.
+low API friction, developers can employ `Buffer` objects.
 
 ## Define `Buf<X>` object type
 
-A "buffer" is a mutable sequence that grows, either one element at a
-time, or one (second) buffer at time.
+A "Buffer" is a mutable sequence that can be extended by a single element or the contents of another buffer.
 
 [[type.Buffer]]
 == Buffer
@@ -31,11 +30,11 @@ time, or one (second) buffer at time.
 class Buffer<X>(initCapacity : Nat)
 ----
 
-Create a buffer represented internally by an mutable array.
+Create a stateful buffer class encapsulating a mutable array.
 
-The argument `initCapacity` gives the initial capacity.  Under the
-interface, the mutable array grows by doubling when this initial
-capacity is exhausted.
+The argument `initCapacity` determines its initial capacity.
+The underlying mutable array grows by doubling when its current
+capacity is exceeded.
 
 
 
@@ -148,7 +147,7 @@ Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero
 func getOpt(i : Nat) : ?X
 ----
 
-Gets the 'i'-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
+Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
 
 [[Buffer.put]]
 === put
