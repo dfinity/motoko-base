@@ -2,10 +2,11 @@
 ///
 /// This type represents human-readable text as sequences of characters of type `Char`.
 /// If `t` is a value of type `Text`, then:
+///
 /// * `t.chars()` returns an _iterator_ of type `Iter<Char>` enumerating its characters from first to last.
 /// * `t.size()` returns the _size_ (or length) of `t` (and `t.chars()`) as a `Nat`.
 /// * `t1 # t2` concatenates texts `t1` and `t2`.
-
+///
 /// Represented as ropes of UTF-8 character sequences with O(1) concatenation.
 ///
 /// This module defines additional operations on `Text` values.
