@@ -6,6 +6,11 @@ import Prim "mo:⛔";
 
 module {
 
+/*
+  /// 32-bit natural numbers.
+  public type Nat32 = Prim.Types.Nat32;
+*/
+
   /// Conversion.
   public let toNat : Nat32 -> Nat = Prim.nat32ToNat;
 

@@ -17,11 +17,11 @@ module {
 
   /// Check whether a list is empty and return true if the list is empty.
   public func isNil<T>(l : List<T>) : Bool {
-      switch l {
+    switch l {
       case null { true  };
-      case _    { false };
-      }
-    };
+      case _ { false };
+    }
+  };
 
   /// Construct a list by pre-pending a value.
   /// This function is similar to a `list.cons(item)` function.
@@ -30,9 +30,9 @@ module {
   /// Return the last element of the list, if present.
   public func last<T>(l : List<T>) : ?T {
     switch l {
-    case null        { null };
-    case (?(x,null)) { ?x };
-    case (?(_,t))    { last<T>(t) };
+      case null { null };
+      case (?(x, null)) { ?x };
+      case (?(_, t)) { last<T>(t) };
     }
   };
 
@@ -40,8 +40,8 @@ module {
   /// This function combines the `head` and (non-failing) `tail` operations into one operation.
   public func pop<T>(l : List<T>) : (?T, List<T>) {
     switch l {
-    case null      { (null, null) };
-    case (?(h, t)) { (?h, t) };
+      case null { (null, null) };
+      case (?(h, t)) { (?h, t) };
     }
   };
 
@@ -49,8 +49,8 @@ module {
   public func size<T>(l : List<T>) : Nat {
     func rec(l : List<T>, n : Nat) : Nat {
       switch l {
-        case null     { n };
-        case (?(_,t)) { rec(t,n+1) };
+        case null { n };
+        case (?(_, t)) { rec(t, n + 1) };
       }
     };
     rec(l,0)
@@ -62,9 +62,9 @@ module {
   /// to use.
   public func get<T>(l : List<T>, n : Nat) : ?T {
     switch (n, l) {
-    case (_, null)     { null };
-    case (0, (?(h,t))) { ?h };
-    case (_, (?(_,t))) { get<T>(t, n - 1) };
+      case (_, null) { null };
+      case (0, (?(h, t))) { ?h };
+      case (_, (?(_, t))) { get<T>(t, n - 1) };
     }
   };
 
@@ -72,8 +72,8 @@ module {
   public func reverse<T>(l : List<T>) : List<T> {
     func rec(l : List<T>, r : List<T>) : List<T> {
       switch l {
-            case null     { r };
-            case (?(h,t)) { rec(t,?(h,r)) };
+        case null { r };
+        case (?(h, t)) { rec(t,?(h, r)) };
       }
     };
     rec(l, null)
@@ -85,17 +85,17 @@ module {
   /// and the `iter` function in OCaml.
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
-      case null     { () };
-      case (?(h,t)) { f(h) ; iterate<T>(t, f) };
+      case null { () };
+      case (?(h, t)) { f(h); iterate<T>(t, f) };
     }
   };
 
   /// Call the given function on each list element and collect the results
   /// in a new list.
-  public func map<T,S>(l : List<T>, f : T -> S) : List<S> {
+  public func map<T, S>(l : List<T>, f : T -> S) : List<S> {
     switch l {
-      case null     { null };
-      case (?(h,t)) { ?(f(h),map<T,S>(t,f)) };
+      case null { null };
+      case (?(h, t)) { ?(f(h), map<T, S>(t, f)) };
     }
   };
 
@@ -121,13 +121,13 @@ module {
   public func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>) {
     switch l {
       case null { (null, null) };
-      case (?(h,t)) {
+      case (?(h, t)) {
         if (f(h)) { // call f in-order
-          let (l,r) = partition<T>(t, f);
-          (?(h,l), r)
+          let (l, r) = partition<T>(t, f);
+          (?(h, l), r)
         } else {
-          let (l,r) = partition<T>(t, f);
-          (l, ?(h,r))
+          let (l, r) = partition<T>(t, f);
+          (l, ?(h, r))
         }
       };
     };
@@ -168,8 +168,8 @@ module {
   public func append<T>(l : List<T>, m : List<T>) : List<T> {
     func rec(l : List<T>) : List<T> {
       switch l {
-      case null     { m };
-      case (?(h,t)) {?(h,rec(t))};
+        case null { m };
+        case (?(h, t)) {?(h,rec(t))};
       }
     };
     rec(l)
@@ -187,18 +187,18 @@ module {
   /// a copy of the full input list.
   public func take<T>(l : List<T>, n:Nat) : List<T> {
     switch (l, n) {
-    case (_, 0) { null };
-    case (null,_) { null };
-    case (?(h, t), m) {?(h, take<T>(t, m - 1))};
+      case (_, 0) { null };
+      case (null, _) { null };
+      case (?(h, t), m) {?(h, take<T>(t, m - 1))};
     }
   };
 
   /// Drop the first `n` elements from the given list.
   public func drop<T>(l : List<T>, n:Nat) : List<T> {
     switch (l, n) {
-      case (l_,     0) { l_ };
-      case (null,   _) { null };
-      case ((?(h,t)), m) { drop<T>(t, m - 1) };
+      case (l_, 0) { l_ };
+      case (null, _) { null };
+      case ((?(h, t)), m) { drop<T>(t, m - 1) };
     }
   };
 
@@ -211,10 +211,10 @@ module {
   };
 
   /// Fold the list right-to-left using the given function (`f`).
-  public func foldRight<T,S>(l : List<T>, a : S, f : (T, S) -> S) : S {
+  public func foldRight<T, S>(l : List<T>, a : S, f : (T, S) -> S) : S {
     switch l {
-      case null     { a };
-      case (?(h,t)) { f(h, foldRight<T,S>(t, a, f)) };
+      case null { a };
+      case (?(h, t)) { f(h, foldRight<T,S>(t, a, f)) };
     };
   };
 
@@ -222,8 +222,8 @@ module {
   /// if such an element exists.
   public func find<T>(l: List<T>, f:T -> Bool) : ?T {
     switch l {
-      case null     { null };
-      case (?(h,t)) { if (f(h)) { ?h } else { find<T>(t, f) } };
+      case null { null };
+      case (?(h, t)) { if (f(h)) { ?h } else { find<T>(t, f) } };
     };
   };
 
@@ -231,17 +231,17 @@ module {
   /// the given predicate `f` is true.
   public func some<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
-      case null     { false };
-      case (?(h,t)) { f(h) or some<T>(t, f)};
+      case null { false };
+      case (?(h, t)) { f(h) or some<T>(t, f)};
     };
   };
 
   /// Return true if the given predicate `f` is true for all list
   /// elements.
-  public func all<T>(l: List<T>, f:T -> Bool) : Bool {
+  public func all<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
-      case null     { true };
-      case (?(h,t)) { f(h) and all<T>(t, f) };
+      case null { true };
+      case (?(h, t)) { f(h) and all<T>(t, f) };
     }
   };
 
@@ -252,8 +252,8 @@ module {
     switch (l1, l2) {
       case (null, _) { l2 };
       case (_, null) { l1 };
-      case (?(h1,t1), ?(h2,t2)) {
-        if (lte(h1,h2)) {
+      case (?(h1, t1), ?(h2, t2)) {
+        if (lte(h1, h2)) {
           ?(h1, merge<T>(t1, l2, lte))
         } else {
           ?(h2, merge<T>(l1, t2, lte))
@@ -263,40 +263,40 @@ module {
   };
 
   /// Compare two lists using lexicographic ordering specified by the given relation `lte`.
-  public func compare<T>(l1: List<T>, l2: List<T>, compElm:(T,T) -> Order.Order) : Order.Order {
+  public func compare<T>(l1 : List<T>, l2 : List<T>, compElm: (T, T) -> Order.Order) : Order.Order {
     switch (l1, l2) {
       case (null, null) { #equal };
       case (null, _) { #less };
       case (_, null) { #greater };
-      case (?(h1,t1), ?(h2,t2)) {
-             let hOrder = compElm(h1, h2);
-             if (Order.isEqual(hOrder)) {
-               compare<T>(t1, t2, compElm) 
-             } else { 
-               hOrder 
-             }
-           };
+      case (?(h1, t1), ?(h2, t2)) {
+        let hOrder = compElm(h1, h2);
+        if (Order.isEqual(hOrder)) {
+          compare<T>(t1, t2, compElm)
+        } else {
+          hOrder
+        }
+      };
     };
   };
 
   /// Compare two lists for equality as specified by the given relation `eq` on the elements.
   ///
-  /// The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1,l2) && lessThanEq(l2,l1)`,
+  /// The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1, l2) && lessThanEq(l2, l1)`,
   /// but the former is more efficient.
-  public func equal<T>(l1: List<T>, l2: List<T>, eq:(T,T) -> Bool) : Bool {
+  public func equal<T>(l1 : List<T>, l2 : List<T>, eq :(T, T) -> Bool) : Bool {
     switch (l1, l2) {
       case (null, null) { true };
-      case (null, _)    { false };
-      case (_,    null) { false };
-      case (?(h1,t1), ?(h2,t2)) { eq(h1,h2) and equal<T>(t1, t2, eq) };
+      case (null, _) { false };
+      case (_, null) { false };
+      case (?(h1, t1), ?(h2, t2)) { eq(h1, h2) and equal<T>(t1, t2, eq) };
     }
   };
 
   /// Generate a list based on a length and a function that maps from
   /// a list index to a list element.
-  public func tabulate<T>(n:Nat, f:Nat -> T) : List<T> {
-    func rec(i:Nat, n: Nat, f : Nat -> T) : List<T> {
-      if (i == n) { null } else { ?(f(i), rec(i+1, n, f)) }
+  public func tabulate<T>(n : Nat, f : Nat -> T) : List<T> {
+    func rec(i : Nat, n : Nat, f : Nat -> T) : List<T> {
+      if (i == n) { null } else { ?(f(i), rec(i + 1, n, f)) }
     };
     rec(0, n, f)
   };

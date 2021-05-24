@@ -1,9 +1,13 @@
 /// Text values
 ///
-/// This type represents human-readable text as sequences of characters of type [`Char`](Char.html) .
+/// This type represents human-readable text as sequences of characters of type `Char`.
 /// If `t` is a value of type `Text`, then:
+///
 /// * `t.chars()` returns an _iterator_ of type `Iter<Char>` enumerating its characters from first to last.
 /// * `t.size()` returns the _size_ (or length) of `t` (and `t.chars()`) as a `Nat`.
+/// * `t1 # t2` concatenates texts `t1` and `t2`.
+///
+/// Represented as ropes of UTF-8 character sequences with O(1) concatenation.
 ///
 /// This module defines additional operations on `Text` values.
 
@@ -14,6 +18,11 @@ import Stack "Stack";
 import Prim "mo:⛔";
 
 module {
+
+/*
+  /// Text values.
+  public type Text = Prim.Types.Text;
+*/
 
   /// Conversion.
   /// Returns the text value of size 1 containing the single character `c`.
@@ -255,20 +264,20 @@ module {
 
     public func next() : ?Char {
       switch (stack.peek()) {
-	case (?(buff, c)) {
-	  switch (buff.next()) {
-	    case null {
-	      ignore stack.pop();
-	      return ?c;
-	    };
-	    case oc {
-	      return oc;
-	    };
-	  }
-	};
-	case null {
-	  return cs.next();
-	};
+        case (?(buff, c)) {
+          switch (buff.next()) {
+            case null {
+              ignore stack.pop();
+              return ?c;
+            };
+            case oc {
+              return oc;
+            };
+          }
+        };
+        case null {
+          return cs.next();
+        };
       };
     };
   };

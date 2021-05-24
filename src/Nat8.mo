@@ -6,6 +6,11 @@ import Prim "mo:⛔";
 
 module {
 
+/*
+  /// 8-bit natural numbers.
+  public type Nat8 = Prim.Types.Nat8;
+*/
+
   /// Conversion.
   public let toNat : Nat8 -> Nat = Prim.nat8ToNat;
 
