@@ -8,12 +8,22 @@ avoiding computation of the right argument when possible, the functions
 `logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
 of their arguments.
 
+[[type.Bool]]
+== Bool
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Bool = Prim.Types.Bool
+----
+
+Booleans with constants `true` and `false`.
+
 [[toText]]
 == toText
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toText(x : Bool) : Text
+func toText(x : xref:#type.Bool[Bool]) : Text
 ----
 
 Conversion.
@@ -23,7 +33,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func logand(x : Bool, y : Bool) : Bool
+func logand(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
 Returns `x and y`.
@@ -33,7 +43,7 @@ Returns `x and y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func logor(x : Bool, y : Bool) : Bool
+func logor(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
 Returns `x or y`.
@@ -43,7 +53,7 @@ Returns `x or y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func logxor(x : Bool, y : Bool) : Bool
+func logxor(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
 Returns exclusive or of `x` and `y`, `x != y`.
@@ -53,7 +63,7 @@ Returns exclusive or of `x` and `y`, `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lognot(x : Bool) : Bool
+func lognot(x : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
 Returns `not x`.
@@ -63,7 +73,7 @@ Returns `not x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Bool, y : Bool) : Bool
+func equal(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
 Returns `x == y`.
@@ -73,7 +83,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Bool, y : Bool) : Bool
+func notEqual(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
 Returns `x != y`.
@@ -83,7 +93,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Bool, y : Bool) : {#less; #equal; #greater}
+func compare(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`, where `false < true`.

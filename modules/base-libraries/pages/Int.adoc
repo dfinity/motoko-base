@@ -6,12 +6,22 @@ Integer numbers
 Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
 This module provides equivalent functions and `Text` conversion.
 
+[[type.Int]]
+== Int
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Int = Prim.Types.Int
+----
+
+Infinite precision signed integers.
+
 [[abs]]
 == abs
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let abs : Int -> Nat
+let abs : xref:#type.Int[Int] -> Nat
 ----
 
 Returns the absolute value of the number
@@ -21,7 +31,7 @@ Returns the absolute value of the number
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toText : Int -> Text
+let toText : xref:#type.Int[Int] -> Text
 ----
 
 Conversion.
@@ -31,7 +41,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func min(x : Int, y : Int) : Int
+func min(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the minimum of `x` and `y`.
@@ -41,7 +51,7 @@ Returns the minimum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func max(x : Int, y : Int) : Int
+func max(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the maximum of `x` and `y`.
@@ -51,7 +61,7 @@ Returns the maximum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func hash(i : Int) : xref:Hash.adoc#type.Hash[Hash.Hash]
+func hash(i : xref:#type.Int[Int]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 
@@ -61,7 +71,7 @@ func hash(i : Int) : xref:Hash.adoc#type.Hash[Hash.Hash]
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func hashAcc(h1 : xref:Hash.adoc#type.Hash[Hash.Hash], i : Int) : xref:Hash.adoc#type.Hash[Hash.Hash]
+func hashAcc(h1 : xref:Hash.adoc#type.Hash[Hash.Hash], i : xref:#type.Int[Int]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 WARNING: May go away (?)
@@ -71,7 +81,7 @@ WARNING: May go away (?)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Int, y : Int) : Bool
+func equal(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x == y`.
@@ -81,7 +91,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Int, y : Int) : Bool
+func notEqual(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x != y`.
@@ -91,7 +101,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Int, y : Int) : Bool
+func less(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x < y`.
@@ -101,7 +111,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Int, y : Int) : Bool
+func lessOrEqual(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x <= y`.
@@ -111,7 +121,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Int, y : Int) : Bool
+func greater(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x > y`.
@@ -121,7 +131,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Int, y : Int) : Bool
+func greaterOrEqual(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x >= y`.
@@ -131,7 +141,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Int, y : Int) : {#less; #equal; #greater}
+func compare(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
@@ -141,7 +151,7 @@ Returns the order of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func neq(x : Int) : Int
+func neq(x : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the negation of `x`, `-x` .
@@ -151,7 +161,7 @@ Returns the negation of `x`, `-x` .
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func add(x : Int, y : Int) : Int
+func add(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the sum of `x` and `y`, `x + y`.
@@ -161,7 +171,7 @@ Returns the sum of `x` and `y`, `x + y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sub(x : Int, y : Int) : Int
+func sub(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the difference of `x` and `y`, `x - y`.
@@ -171,7 +181,7 @@ Returns the difference of `x` and `y`, `x - y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mul(x : Int, y : Int) : Int
+func mul(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the product of `x` and `y`, `x * y`.
@@ -181,7 +191,7 @@ Returns the product of `x` and `y`, `x * y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func div(x : Int, y : Int) : Int
+func div(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the division of `x` by `y`,  `x / y`.
@@ -192,7 +202,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func rem(x : Int, y : Int) : Int
+func rem(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the remainder of `x` divided by `y`, `x % y`.
@@ -203,7 +213,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func pow(x : Int, y : Int) : Int
+func pow(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns `x` to the power of `y`, `x ** y`.

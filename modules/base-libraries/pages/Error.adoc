@@ -6,6 +6,16 @@ Error values and inspection.
 The `Error` type is the argument to `throw`, parameter of `catch`.
 The `Error` type is opaque.
 
+[[type.Error]]
+== Error
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Error = Prim.Types.Error
+----
+
+Error values resulting from  `async` computations
+
 [[type.ErrorCode]]
 == ErrorCode
 
@@ -37,7 +47,7 @@ type ErrorCode = {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let reject : (m : Text) -> Error
+let reject : (m : Text) -> xref:#type.Error[Error]
 ----
 
 Create an error from message `m` with code #canister_reject.
@@ -47,7 +57,7 @@ Create an error from message `m` with code #canister_reject.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let code : (e : Error) -> xref:#type.ErrorCode[ErrorCode]
+let code : (e : xref:#type.Error[Error]) -> xref:#type.ErrorCode[ErrorCode]
 ----
 
 Returns the code of an error `e`.
@@ -57,7 +67,7 @@ Returns the code of an error `e`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let message : (e : Error) -> Text
+let message : (e : xref:#type.Error[Error]) -> Text
 ----
 
 Returns the message of an error `e`.

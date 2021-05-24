@@ -14,12 +14,22 @@ Represented as ropes of UTF-8 character sequences with O(1) concatenation.
 
 This module defines additional operations on `Text` values.
 
+[[type.Text]]
+== Text
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Text = Prim.Types.Text
+----
+
+Text values.
+
 [[fromChar]]
 == fromChar
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromChar : (c : Char) -> Text
+let fromChar : (c : Char) -> xref:#type.Text[Text]
 ----
 
 Conversion.
@@ -30,7 +40,7 @@ Returns the text value of size 1 containing the single character `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toIter(t : Text) : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>
+func toIter(t : xref:#type.Text[Text]) : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>
 ----
 
 Conversion.
@@ -41,7 +51,7 @@ Creates an iterator that traverses the characters of the text `t`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromIter(cs : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>) : Text
+func fromIter(cs : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>) : xref:#type.Text[Text]
 ----
 
 Conversion.
@@ -52,7 +62,7 @@ Returns the text value containing the sequence of characters in `cs`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func size(t : Text) : Nat
+func size(t : xref:#type.Text[Text]) : Nat
 ----
 
 Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
@@ -62,7 +72,7 @@ Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func hash(t : Text) : xref:Hash.adoc#type.Hash[Hash.Hash]
+func hash(t : xref:#type.Text[Text]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 Returns a hash obtained by using the `djb2` algorithm from http://www.cse.yorku.ca/~oz/hash.html
@@ -74,7 +84,7 @@ This function is _good enough_ for use in a hash-table but it's not a cryptograp
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func concat(t1 : Text, t2 : Text) : Text
+func concat(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
 Returns the concatenation of `t1` and `t2`, `t1 # t2`.
@@ -84,7 +94,7 @@ Returns the concatenation of `t1` and `t2`, `t1 # t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(t1 : Text, t2 : Text) : Bool
+func equal(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
 Returns `t1 == t2`.
@@ -94,7 +104,7 @@ Returns `t1 == t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(t1 : Text, t2 : Text) : Bool
+func notEqual(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
 Returns `t1 != t2`.
@@ -104,7 +114,7 @@ Returns `t1 != t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(t1 : Text, t2 : Text) : Bool
+func less(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
 Returns `t1 < t2`.
@@ -114,7 +124,7 @@ Returns `t1 < t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(t1 : Text, t2 : Text) : Bool
+func lessOrEqual(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
 Returns `t1 <= t2`.
@@ -124,7 +134,7 @@ Returns `t1 <= t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(t1 : Text, t2 : Text) : Bool
+func greater(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
 Returns `t1 > t2`.
@@ -134,7 +144,7 @@ Returns `t1 > t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(t1 : Text, t2 : Text) : Bool
+func greaterOrEqual(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
 Returns `t1 >= t2`.
@@ -144,7 +154,7 @@ Returns `t1 >= t2`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(t1 : Text, t2 : Text) : {#less; #equal; #greater}
+func compare(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `t1` and `t1`.
@@ -154,7 +164,7 @@ Returns the order of `t1` and `t1`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func join(sep : Text, ts : xref:Iter.adoc#type.Iter[Iter.Iter]<Text>) : Text
+func join(sep : xref:#type.Text[Text], ts : xref:Iter.adoc#type.Iter[Iter.Iter]<xref:#type.Text[Text]>) : xref:#type.Text[Text]
 ----
 
 Returns the concatenation of text values in `ts`, separated by `sep`.
@@ -164,7 +174,7 @@ Returns the concatenation of text values in `ts`, separated by `sep`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func map(t : Text, f : Char -> Char) : Text
+func map(t : xref:#type.Text[Text], f : Char -> Char) : xref:#type.Text[Text]
 ----
 
 Returns the result of applying `f` to each character in `ts`, concatenating the intermediate single-character text values.
@@ -174,7 +184,7 @@ Returns the result of applying `f` to each character in `ts`, concatenating the 
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func translate(t : Text, f : Char -> Text) : Text
+func translate(t : xref:#type.Text[Text], f : Char -> xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
 Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
@@ -184,7 +194,7 @@ Returns the result of applying `f` to each character in `ts`, concatenating the 
 
 [source.no-repl,motoko,subs=+macros]
 ----
-type Pattern = {#char : Char; #text : Text; #predicate : (Char -> Bool)}
+type Pattern = {#char : Char; #text : xref:#type.Text[Text]; #predicate : (Char -> Bool)}
 ----
 
 A pattern `p` describes a sequence of characters. A pattern has one of the following forms:
@@ -200,7 +210,7 @@ A _match_ for `p` is any sequence of characters matching the pattern `p`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func split(t : Text, p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<Text>
+func split(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<xref:#type.Text[Text]>
 ----
 
 Returns the sequence of fields in `t`, derived from start to end,
@@ -212,7 +222,7 @@ Two fields are separated by exactly one match.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func tokens(t : Text, p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<Text>
+func tokens(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<xref:#type.Text[Text]>
 ----
 
 Returns the sequence of tokens in `t`, derived from start to end.
@@ -224,7 +234,7 @@ Two tokens may be separated by one or more matches of `p`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func contains(t : Text, p : xref:#type.Pattern[Pattern]) : Bool
+func contains(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
 Returns true if `t` contains a match for pattern `p`.
@@ -234,7 +244,7 @@ Returns true if `t` contains a match for pattern `p`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func startsWith(t : Text, p : xref:#type.Pattern[Pattern]) : Bool
+func startsWith(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
 Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
@@ -244,7 +254,7 @@ Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise retur
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func endsWith(t : Text, p : xref:#type.Pattern[Pattern]) : Bool
+func endsWith(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
 Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
@@ -254,7 +264,7 @@ Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func replace(t : Text, p : xref:#type.Pattern[Pattern], r : Text) : Text
+func replace(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern], r : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
 Returns `t` with all matches of pattern `p` replaced by text `r`.
@@ -264,7 +274,7 @@ Returns `t` with all matches of pattern `p` replaced by text `r`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func stripStart(t : Text, p : xref:#type.Pattern[Pattern]) : ?Text
+func stripStart(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : ?xref:#type.Text[Text]
 ----
 
 Returns the optioned suffix of `t` obtained by eliding exactly one leading match of pattern `p`, otherwise `null`.
@@ -274,7 +284,7 @@ Returns the optioned suffix of `t` obtained by eliding exactly one leading match
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func stripEnd(t : Text, p : xref:#type.Pattern[Pattern]) : ?Text
+func stripEnd(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : ?xref:#type.Text[Text]
 ----
 
 Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of pattern `p`, otherwise `null`.
@@ -284,7 +294,7 @@ Returns the optioned prefix of `t` obtained by eliding exactly one trailing matc
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func trimStart(t : Text, p : xref:#type.Pattern[Pattern]) : Text
+func trimStart(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:#type.Text[Text]
 ----
 
 Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`.
@@ -294,7 +304,7 @@ Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func trimEnd(t : Text, p : xref:#type.Pattern[Pattern]) : Text
+func trimEnd(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:#type.Text[Text]
 ----
 
 Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p`.
@@ -304,7 +314,7 @@ Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func trim(t : Text, p : xref:#type.Pattern[Pattern]) : Text
+func trim(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:#type.Text[Text]
 ----
 
 Returns the subtext of `t` obtained by eliding all leading and trailing matches of pattern `p`.
@@ -314,7 +324,7 @@ Returns the subtext of `t` obtained by eliding all leading and trailing matches 
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compareWith(t1 : Text, t2 : Text, cmp : (Char, Char) -> {#less; #equal; #greater}) : {#less; #equal; #greater}
+func compareWith(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text], cmp : (Char, Char) -> {#less; #equal; #greater}) : {#less; #equal; #greater}
 ----
 
 Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
@@ -324,7 +334,7 @@ Returns the lexicographic comparison of `t1` and `t2`, using the given character
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let encodeUtf8 : Text -> Blob
+let encodeUtf8 : xref:#type.Text[Text] -> Blob
 ----
 
 Returns the UTF-8 encoding of the given text
@@ -334,7 +344,7 @@ Returns the UTF-8 encoding of the given text
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let decodeUtf8 : Blob -> ?Text
+let decodeUtf8 : Blob -> ?xref:#type.Text[Text]
 ----
 
 Tries to decode the given `Blob` as UTF-8.

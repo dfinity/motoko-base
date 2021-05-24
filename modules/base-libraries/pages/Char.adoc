@@ -3,12 +3,22 @@
 
 Characters
 
+[[type.Char]]
+== Char
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Char = Prim.Types.Char
+----
+
+Characters represented as Unicode code points.
+
 [[toNat32]]
 == toNat32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat32 : (c : Char) -> Nat32
+let toNat32 : (c : xref:#type.Char[Char]) -> Nat32
 ----
 
 Convert character `c` to a word containing its Unicode scalar value.
@@ -18,7 +28,7 @@ Convert character `c` to a word containing its Unicode scalar value.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat32 : (w : Nat32) -> Char
+let fromNat32 : (w : Nat32) -> xref:#type.Char[Char]
 ----
 
 Convert `w` to a character.
@@ -30,7 +40,7 @@ Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFF
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toText : (c : Char) -> Text
+let toText : (c : xref:#type.Char[Char]) -> Text
 ----
 
 Convert character `c` to single character text.
@@ -40,7 +50,7 @@ Convert character `c` to single character text.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func isDigit(c : Char) : Bool
+func isDigit(c : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
@@ -50,7 +60,7 @@ Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isWhitespace : (c : Char) -> Bool
+let isWhitespace : (c : xref:#type.Char[Char]) -> Bool
 ----
 
 Returns the Unicode _White_Space_ property of `c`.
@@ -60,7 +70,7 @@ Returns the Unicode _White_Space_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isLowercase : (c : Char) -> Bool
+let isLowercase : (c : xref:#type.Char[Char]) -> Bool
 ----
 
 Returns the Unicode _Lowercase_ property of `c`.
@@ -70,7 +80,7 @@ Returns the Unicode _Lowercase_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isUppercase : (c : Char) -> Bool
+let isUppercase : (c : xref:#type.Char[Char]) -> Bool
 ----
 
 Returns the Unicode _Uppercase_ property of `c`.
@@ -80,7 +90,7 @@ Returns the Unicode _Uppercase_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isAlphabetic : (c : Char) -> Bool
+let isAlphabetic : (c : xref:#type.Char[Char]) -> Bool
 ----
 
 Returns the Unicode _Alphabetic_ property of `c`.
@@ -90,7 +100,7 @@ Returns the Unicode _Alphabetic_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Char, y : Char) : Bool
+func equal(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `x == y`.
@@ -100,7 +110,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Char, y : Char) : Bool
+func notEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `x != y`.
@@ -110,7 +120,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Char, y : Char) : Bool
+func less(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `x < y`.
@@ -120,7 +130,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Char, y : Char) : Bool
+func lessOrEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `x <= y`.
@@ -130,7 +140,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Char, y : Char) : Bool
+func greater(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `x > y`.
@@ -140,7 +150,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Char, y : Char) : Bool
+func greaterOrEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
 Returns `x >= y`.
@@ -150,7 +160,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Char, y : Char) : {#less; #equal; #greater}
+func compare(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.

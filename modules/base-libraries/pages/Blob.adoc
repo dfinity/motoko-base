@@ -3,12 +3,27 @@
 
 Binary blobs
 
+[[type.Blob]]
+== Blob
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Blob = Prim.Types.Blob
+----
+
+An immutable, possibly empty sequence of bytes.
+Given `b : Blob`:
+
+* `b.size() : Nat` returns the number of bytes in the blob;
+* `b.bytes() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob.
+(Direct indexing of Blobs is not yet supported.)
+
 [[hash]]
 == hash
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let hash : (b : Blob) -> Nat32
+let hash : (b : xref:#type.Blob[Blob]) -> Nat32
 ----
 
 Returns a (non-cryptographic) hash of 'b'
@@ -18,7 +33,7 @@ Returns a (non-cryptographic) hash of 'b'
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Blob, y : Blob) : Bool
+func equal(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : Bool
 ----
 
 Returns `x == y`.
@@ -28,7 +43,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Blob, y : Blob) : Bool
+func notEqual(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : Bool
 ----
 
 Returns `x != y`.
@@ -38,7 +53,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Blob, y : Blob) : Bool
+func less(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : Bool
 ----
 
 Returns `x < y`.
@@ -48,7 +63,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Blob, y : Blob) : Bool
+func lessOrEqual(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : Bool
 ----
 
 Returns `x <= y`.
@@ -58,7 +73,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Blob, y : Blob) : Bool
+func greater(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : Bool
 ----
 
 Returns `x > y`.
@@ -68,7 +83,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Blob, y : Blob) : Bool
+func greaterOrEqual(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : Bool
 ----
 
 Returns `x >= y`.
@@ -78,7 +93,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Blob, y : Blob) : {#less; #equal; #greater}
+func compare(x : xref:#type.Blob[Blob], y : xref:#type.Blob[Blob]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
@@ -88,7 +103,7 @@ Returns the order of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromArray : pass:[[]Nat8pass:[]] -> Blob
+let fromArray : pass:[[]Nat8pass:[]] -> xref:#type.Blob[Blob]
 ----
 
 Creates a blob from an array of bytes, by copying each element.
@@ -98,7 +113,7 @@ Creates a blob from an array of bytes, by copying each element.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromArrayMut : pass:[[]var Nat8pass:[]] -> Blob
+let fromArrayMut : pass:[[]var Nat8pass:[]] -> xref:#type.Blob[Blob]
 ----
 
 Creates a blob from a mutable array of bytes, by copying each element.
@@ -108,7 +123,7 @@ Creates a blob from a mutable array of bytes, by copying each element.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toArray : Blob -> pass:[[]Nat8pass:[]]
+let toArray : xref:#type.Blob[Blob] -> pass:[[]Nat8pass:[]]
 ----
 
 Creates an array of bytes from a blob, by copying each element.
@@ -118,7 +133,7 @@ Creates an array of bytes from a blob, by copying each element.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toArrayMut : Blob -> pass:[[]var Nat8pass:[]]
+let toArrayMut : xref:#type.Blob[Blob] -> pass:[[]var Nat8pass:[]]
 ----
 
 Creates a mutable array of bytes from a blob, by copying each element.

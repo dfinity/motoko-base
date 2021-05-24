@@ -8,12 +8,22 @@ The `None` type represents a type with _no_ value.
 It is often used to type code that fails to return control (e.g. an infinite loop)
 or to designate impossible values (e.g. the type `?None` only contains `null`).
 
+[[type.None]]
+== None
+
+[source.no-repl,motoko,subs=+macros]
+----
+type None = Prim.Types.None
+----
+
+The empty type. A subtype of all types.
+
 [[impossible]]
 == impossible
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let impossible : <A>None -> A
+let impossible : <A>xref:#type.None[None] -> A
 ----
 
 Turns an absurd value into an arbitrary type.

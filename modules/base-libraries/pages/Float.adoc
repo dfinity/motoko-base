@@ -3,12 +3,22 @@
 
 64-bit Floating-point numbers
 
+[[type.Float]]
+== Float
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Float = Prim.Types.Float
+----
+
+64-bit floating point numbers.
+
 [[pi]]
 == pi
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let pi : Float
+let pi : xref:#type.Float[Float]
 ----
 
 Ratio of the circumference of a circle to its diameter.
@@ -18,7 +28,7 @@ Ratio of the circumference of a circle to its diameter.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let e : Float
+let e : xref:#type.Float[Float]
 ----
 
 Base of the natural logarithm.
@@ -28,7 +38,7 @@ Base of the natural logarithm.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let abs : (x : Float) -> Float
+let abs : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the absolute value of `x`.
@@ -38,7 +48,7 @@ Returns the absolute value of `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let sqrt : (x : Float) -> Float
+let sqrt : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the square root of `x`.
@@ -48,7 +58,7 @@ Returns the square root of `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let ceil : (x : Float) -> Float
+let ceil : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the smallest integral float greater than or equal to `x`.
@@ -58,7 +68,7 @@ Returns the smallest integral float greater than or equal to `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let floor : (x : Float) -> Float
+let floor : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the largest integral float less than or equal to `x`.
@@ -68,7 +78,7 @@ Returns the largest integral float less than or equal to `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let trunc : (x : Float) -> Float
+let trunc : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the nearest integral float not greater in magnitude than `x`.
@@ -78,7 +88,7 @@ Returns the nearest integral float not greater in magnitude than `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let nearest : (x : Float) -> Float
+let nearest : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the nearest integral float to `x`.
@@ -88,7 +98,7 @@ Returns the nearest integral float to `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let copySign : (x : Float, y : Float) -> Float
+let copySign : (x : xref:#type.Float[Float], y : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
@@ -98,7 +108,7 @@ Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let min : (x : Float, y : Float) -> Float
+let min : (x : xref:#type.Float[Float], y : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the smaller value of `x` and `y`.
@@ -108,7 +118,7 @@ Returns the smaller value of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let max : (x : Float, y : Float) -> Float
+let max : (x : xref:#type.Float[Float], y : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the larger value of `x` and `y`.
@@ -118,7 +128,7 @@ Returns the larger value of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let sin : (x : Float) -> Float
+let sin : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the sine of the radian angle `x`.
@@ -128,7 +138,7 @@ Returns the sine of the radian angle `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let cos : (x : Float) -> Float
+let cos : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the cosine of the radian angle `x`.
@@ -138,7 +148,7 @@ Returns the cosine of the radian angle `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let tan : (x : Float) -> Float
+let tan : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the tangent of the radian angle `x`.
@@ -148,7 +158,7 @@ Returns the tangent of the radian angle `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arcsin : (x : Float) -> Float
+let arcsin : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the arc sine of `x` in radians.
@@ -158,7 +168,7 @@ Returns the arc sine of `x` in radians.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arccos : (x : Float) -> Float
+let arccos : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the arc cosine of `x` in radians.
@@ -168,7 +178,7 @@ Returns the arc cosine of `x` in radians.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arctan : (x : Float) -> Float
+let arctan : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the arc tangent of `x` in radians.
@@ -178,7 +188,7 @@ Returns the arc tangent of `x` in radians.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arctan2 : (y : Float, x : Float) -> Float
+let arctan2 : (y : xref:#type.Float[Float], x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
@@ -188,7 +198,7 @@ Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let exp : (x : Float) -> Float
+let exp : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the value of `e` raised to the `x`-th power.
@@ -198,7 +208,7 @@ Returns the value of `e` raised to the `x`-th power.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let log : (x : Float) -> Float
+let log : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
 ----
 
 Returns the natural logarithm (base-`e`) of `x`.
@@ -208,7 +218,7 @@ Returns the natural logarithm (base-`e`) of `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func format(fmt : {#fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact}, x : Float) : Text
+func format(fmt : {#fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact}, x : xref:#type.Float[Float]) : Text
 ----
 
 Formatting. `format(fmt, x)` formats `x` to `Text` according to the
@@ -225,7 +235,7 @@ formatting directive `fmt`, which can take one of the following forms:
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toText : Float -> Text
+let toText : xref:#type.Float[Float] -> Text
 ----
 
 Conversion to Text. Use `format(fmt, x)` for more detailed control.
@@ -235,7 +245,7 @@ Conversion to Text. Use `format(fmt, x)` for more detailed control.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt64 : Float -> Int64
+let toInt64 : xref:#type.Float[Float] -> Int64
 ----
 
 Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
@@ -245,7 +255,7 @@ Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt64 : Int64 -> Float
+let fromInt64 : Int64 -> xref:#type.Float[Float]
 ----
 
 Conversion from Int64.
@@ -255,7 +265,7 @@ Conversion from Int64.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt : Float -> Int
+let toInt : xref:#type.Float[Float] -> Int
 ----
 
 Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
@@ -265,7 +275,7 @@ Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt : Int -> Float
+let fromInt : Int -> xref:#type.Float[Float]
 ----
 
 Conversion from Int via Int64. May trap.
@@ -275,7 +285,7 @@ Conversion from Int via Int64. May trap.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Float, y : Float) : Bool
+func equal(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : Bool
 ----
 
 Returns `x == y`.
@@ -285,7 +295,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Float, y : Float) : Bool
+func notEqual(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : Bool
 ----
 
 Returns `x != y`.
@@ -295,7 +305,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Float, y : Float) : Bool
+func less(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : Bool
 ----
 
 Returns `x < y`.
@@ -305,7 +315,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Float, y : Float) : Bool
+func lessOrEqual(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : Bool
 ----
 
 Returns `x <= y`.
@@ -315,7 +325,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Float, y : Float) : Bool
+func greater(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : Bool
 ----
 
 Returns `x > y`.
@@ -325,7 +335,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Float, y : Float) : Bool
+func greaterOrEqual(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : Bool
 ----
 
 Returns `x >= y`.
@@ -335,7 +345,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Float, y : Float) : {#less; #equal; #greater}
+func compare(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
@@ -345,7 +355,7 @@ Returns the order of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func neq(x : Float) : Float
+func neq(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the negation of `x`, `-x` .
@@ -355,7 +365,7 @@ Returns the negation of `x`, `-x` .
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func add(x : Float, y : Float) : Float
+func add(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the sum of `x` and `y`, `x + y`.
@@ -365,7 +375,7 @@ Returns the sum of `x` and `y`, `x + y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sub(x : Float, y : Float) : Float
+func sub(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the difference of `x` and `y`, `x - y`.
@@ -375,7 +385,7 @@ Returns the difference of `x` and `y`, `x - y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mul(x : Float, y : Float) : Float
+func mul(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the product of `x` and `y`, `x * y`.
@@ -385,7 +395,7 @@ Returns the product of `x` and `y`, `x * y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func div(x : Float, y : Float) : Float
+func div(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the division of `x` by `y`, `x / y`.
@@ -395,7 +405,7 @@ Returns the division of `x` by `y`, `x / y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func rem(x : Float, y : Float) : Float
+func rem(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the remainder of `x` divided by `y`, `x % y`.
@@ -405,7 +415,7 @@ Returns the remainder of `x` divided by `y`, `x % y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func pow(x : Float, y : Float) : Float
+func pow(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns `x` to the power of `y`, `x ** y`.

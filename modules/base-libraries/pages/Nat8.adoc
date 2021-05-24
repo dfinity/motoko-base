@@ -5,12 +5,22 @@
 
 Most operations are available as built-in operators (e.g. `1 + 1`).
 
+[[type.Nat8]]
+== Nat8
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Nat8 = Prim.Types.Nat8
+----
+
+8-bit natural numbers.
+
 [[toNat]]
 == toNat
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat : Nat8 -> Nat
+let toNat : xref:#type.Nat8[Nat8] -> Nat
 ----
 
 Conversion.
@@ -20,7 +30,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat : Nat -> Nat8
+let fromNat : Nat -> xref:#type.Nat8[Nat8]
 ----
 
 Conversion. Traps on overflow/underflow.
@@ -30,7 +40,7 @@ Conversion. Traps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromIntWrap : Int -> Nat8
+let fromIntWrap : Int -> xref:#type.Nat8[Nat8]
 ----
 
 Conversion. Wraps on overflow/underflow.
@@ -40,7 +50,7 @@ Conversion. Wraps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toText(x : Nat8) : Text
+func toText(x : xref:#type.Nat8[Nat8]) : Text
 ----
 
 Returns the Text representation of `x`.
@@ -50,7 +60,7 @@ Returns the Text representation of `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func min(x : Nat8, y : Nat8) : Nat8
+func min(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the minimum of `x` and `y`.
@@ -60,7 +70,7 @@ Returns the minimum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func max(x : Nat8, y : Nat8) : Nat8
+func max(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the maximum of `x` and `y`.
@@ -70,7 +80,7 @@ Returns the maximum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Nat8, y : Nat8) : Bool
+func equal(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
 Returns `x == y`.
@@ -80,7 +90,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Nat8, y : Nat8) : Bool
+func notEqual(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
 Returns `x != y`.
@@ -90,7 +100,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Nat8, y : Nat8) : Bool
+func less(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
 Returns `x < y`.
@@ -100,7 +110,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Nat8, y : Nat8) : Bool
+func lessOrEqual(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
 Returns `x <= y`.
@@ -110,7 +120,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Nat8, y : Nat8) : Bool
+func greater(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
 Returns `x > y`.
@@ -120,7 +130,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Nat8, y : Nat8) : Bool
+func greaterOrEqual(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
 Returns `x >= y`.
@@ -130,7 +140,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Nat8, y : Nat8) : {#less; #equal; #greater}
+func compare(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
@@ -140,7 +150,7 @@ Returns the order of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func add(x : Nat8, y : Nat8) : Nat8
+func add(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
@@ -150,7 +160,7 @@ Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sub(x : Nat8, y : Nat8) : Nat8
+func sub(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
@@ -160,7 +170,7 @@ Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mul(x : Nat8, y : Nat8) : Nat8
+func mul(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the product of `x` and `y`, `x * y`. Traps on overflow.
@@ -170,7 +180,7 @@ Returns the product of `x` and `y`, `x * y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func div(x : Nat8, y : Nat8) : Nat8
+func div(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the division of `x by y`, `x / y`.
@@ -181,7 +191,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func rem(x : Nat8, y : Nat8) : Nat8
+func rem(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the remainder of `x` divided by `y`, `x % y`.
@@ -192,7 +202,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func pow(x : Nat8, y : Nat8) : Nat8
+func pow(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
@@ -202,7 +212,7 @@ Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitnot(x : Nat8, y : Nat8) : Nat8
+func bitnot(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise negation of `x`, `^x`.
@@ -212,7 +222,7 @@ Returns the bitwise negation of `x`, `^x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitand(x : Nat8, y : Nat8) : Nat8
+func bitand(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise and of `x` and `y`, `x & y`.
@@ -222,7 +232,7 @@ Returns the bitwise and of `x` and `y`, `x & y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitor(x : Nat8, y : Nat8) : Nat8
+func bitor(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise or of `x` and `y`, `x \| y`.
@@ -232,7 +242,7 @@ Returns the bitwise or of `x` and `y`, `x \| y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitxor(x : Nat8, y : Nat8) : Nat8
+func bitxor(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
@@ -242,7 +252,7 @@ Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitshiftLeft(x : Nat8, y : Nat8) : Nat8
+func bitshiftLeft(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise shift left of `x` by `y`, `x << y`.
@@ -252,7 +262,7 @@ Returns the bitwise shift left of `x` by `y`, `x << y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitshiftRight(x : Nat8, y : Nat8) : Nat8
+func bitshiftRight(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise shift right of `x` by `y`, `x >> y`.
@@ -262,7 +272,7 @@ Returns the bitwise shift right of `x` by `y`, `x >> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitrotLeft(x : Nat8, y : Nat8) : Nat8
+func bitrotLeft(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
@@ -272,7 +282,7 @@ Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitrotRight(x : Nat8, y : Nat8) : Nat8
+func bitrotRight(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
@@ -282,7 +292,7 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bittest(x : Nat8, p : Nat) : Bool
+func bittest(x : xref:#type.Nat8[Nat8], p : Nat) : Bool
 ----
 
 Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
@@ -292,7 +302,7 @@ Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitset(x : Nat8, p : Nat) : Nat8
+func bitset(x : xref:#type.Nat8[Nat8], p : Nat) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the value of setting bit `p mod 8` in `x` to `1`.
@@ -302,7 +312,7 @@ Returns the value of setting bit `p mod 8` in `x` to `1`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitclear(x : Nat8, p : Nat) : Nat8
+func bitclear(x : xref:#type.Nat8[Nat8], p : Nat) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the value of clearing bit `p mod 8` in `x` to `0`.
@@ -312,7 +322,7 @@ Returns the value of clearing bit `p mod 8` in `x` to `0`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitflip(x : Nat8, p : Nat) : Nat8
+func bitflip(x : xref:#type.Nat8[Nat8], p : Nat) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the value of flipping bit `p mod 8` in `x`.
@@ -322,7 +332,7 @@ Returns the value of flipping bit `p mod 8` in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountNonZero : (x : Nat8) -> Nat8
+let bitcountNonZero : (x : xref:#type.Nat8[Nat8]) -> xref:#type.Nat8[Nat8]
 ----
 
 Returns the count of non-zero bits in `x`.
@@ -332,7 +342,7 @@ Returns the count of non-zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountLeadingZero : (x : Nat8) -> Nat8
+let bitcountLeadingZero : (x : xref:#type.Nat8[Nat8]) -> xref:#type.Nat8[Nat8]
 ----
 
 Returns the count of leading zero bits in `x`.
@@ -342,7 +352,7 @@ Returns the count of leading zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountTrailingZero : (x : Nat8) -> Nat8
+let bitcountTrailingZero : (x : xref:#type.Nat8[Nat8]) -> xref:#type.Nat8[Nat8]
 ----
 
 Returns the count of trailing zero bits in `x`.
@@ -352,7 +362,7 @@ Returns the count of trailing zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func addWrap(x : Nat8, y : Nat8) : Nat8
+func addWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
@@ -362,7 +372,7 @@ Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func subWrap(x : Nat8, y : Nat8) : Nat8
+func subWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
@@ -372,7 +382,7 @@ Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mulWrap(x : Nat8, y : Nat8) : Nat8
+func mulWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -382,7 +392,7 @@ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func powWrap(x : Nat8, y : Nat8) : Nat8
+func powWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
 Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.

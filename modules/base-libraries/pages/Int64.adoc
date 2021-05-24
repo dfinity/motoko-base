@@ -5,12 +5,22 @@
 
 Most operations are available as built-in operators (e.g. `1 + 1`).
 
+[[type.Int64]]
+== Int64
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Int64 = Prim.Types.Int64
+----
+
+64-bit signed integers.
+
 [[toInt]]
 == toInt
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt : Int64 -> Int
+let toInt : xref:#type.Int64[Int64] -> Int
 ----
 
 Conversion.
@@ -20,7 +30,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt : Int -> Int64
+let fromInt : Int -> xref:#type.Int64[Int64]
 ----
 
 Conversion. Traps on overflow/underflow.
@@ -30,7 +40,7 @@ Conversion. Traps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromIntWrap : Int -> Int64
+let fromIntWrap : Int -> xref:#type.Int64[Int64]
 ----
 
 Conversion. Wraps on overflow/underflow.
@@ -40,7 +50,7 @@ Conversion. Wraps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat64 : Nat64 -> Int64
+let fromNat64 : Nat64 -> xref:#type.Int64[Int64]
 ----
 
 Conversion. Wraps on overflow/underflow.
@@ -50,7 +60,7 @@ Conversion. Wraps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat64 : Int64 -> Nat64
+let toNat64 : xref:#type.Int64[Int64] -> Nat64
 ----
 
 Conversion. Wraps on overflow/underflow.
@@ -60,7 +70,7 @@ Conversion. Wraps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toText(x : Int64) : Text
+func toText(x : xref:#type.Int64[Int64]) : Text
 ----
 
 Returns the Text representation of `x`.
@@ -70,7 +80,7 @@ Returns the Text representation of `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func abs(x : Int64) : Int64
+func abs(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the absolute value of `x`. Traps when `x = -2^63`.
@@ -80,7 +90,7 @@ Returns the absolute value of `x`. Traps when `x = -2^63`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func min(x : Int64, y : Int64) : Int64
+func min(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the minimum of `x` and `y`.
@@ -90,7 +100,7 @@ Returns the minimum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func max(x : Int64, y : Int64) : Int64
+func max(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the maximum of `x` and `y`.
@@ -100,7 +110,7 @@ Returns the maximum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Int64, y : Int64) : Bool
+func equal(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
 Returns `x == y`.
@@ -110,7 +120,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Int64, y : Int64) : Bool
+func notEqual(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
 Returns `x != y`.
@@ -120,7 +130,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Int64, y : Int64) : Bool
+func less(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
 Returns `x < y`.
@@ -130,7 +140,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Int64, y : Int64) : Bool
+func lessOrEqual(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
 Returns `x <= y`.
@@ -140,7 +150,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Int64, y : Int64) : Bool
+func greater(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
 Returns `x > y`.
@@ -150,7 +160,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Int64, y : Int64) : Bool
+func greaterOrEqual(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
 Returns `x >= y`.
@@ -160,7 +170,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Int64, y : Int64) : {#less; #equal; #greater}
+func compare(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
@@ -170,7 +180,7 @@ Returns the order of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func neg(x : Int64) : Int64
+func neg(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the negation of `x`, `-x`. Traps on overflow.
@@ -180,7 +190,7 @@ Returns the negation of `x`, `-x`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func add(x : Int64, y : Int64) : Int64
+func add(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
@@ -190,7 +200,7 @@ Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sub(x : Int64, y : Int64) : Int64
+func sub(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
@@ -200,7 +210,7 @@ Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mul(x : Int64, y : Int64) : Int64
+func mul(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the product of `x` and `y`, `x * y`. Traps on overflow.
@@ -210,7 +220,7 @@ Returns the product of `x` and `y`, `x * y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func div(x : Int64, y : Int64) : Int64
+func div(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the division of `x by y`, `x / y`.
@@ -221,7 +231,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func rem(x : Int64, y : Int64) : Int64
+func rem(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the remainder of `x` divided by `y`, `x % y`.
@@ -232,7 +242,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func pow(x : Int64, y : Int64) : Int64
+func pow(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
@@ -242,7 +252,7 @@ Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitnot(x : Int64, y : Int64) : Int64
+func bitnot(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise negation of `x`, `^x`.
@@ -252,7 +262,7 @@ Returns the bitwise negation of `x`, `^x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitand(x : Int64, y : Int64) : Int64
+func bitand(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise and of `x` and `y`, `x & y`.
@@ -262,7 +272,7 @@ Returns the bitwise and of `x` and `y`, `x & y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitor(x : Int64, y : Int64) : Int64
+func bitor(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise or of `x` and `y`, `x \| y`.
@@ -272,7 +282,7 @@ Returns the bitwise or of `x` and `y`, `x \| y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitxor(x : Int64, y : Int64) : Int64
+func bitxor(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
@@ -282,7 +292,7 @@ Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitshiftLeft(x : Int64, y : Int64) : Int64
+func bitshiftLeft(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise shift left of `x` by `y`, `x << y`.
@@ -292,7 +302,7 @@ Returns the bitwise shift left of `x` by `y`, `x << y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitshiftRight(x : Int64, y : Int64) : Int64
+func bitshiftRight(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise shift right of `x` by `y`, `x >> y`.
@@ -302,7 +312,7 @@ Returns the bitwise shift right of `x` by `y`, `x >> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitrotLeft(x : Int64, y : Int64) : Int64
+func bitrotLeft(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
@@ -312,7 +322,7 @@ Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitrotRight(x : Int64, y : Int64) : Int64
+func bitrotRight(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
@@ -322,7 +332,7 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bittest(x : Int64, p : Nat) : Bool
+func bittest(x : xref:#type.Int64[Int64], p : Nat) : Bool
 ----
 
 Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
@@ -332,7 +342,7 @@ Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitset(x : Int64, p : Nat) : Int64
+func bitset(x : xref:#type.Int64[Int64], p : Nat) : xref:#type.Int64[Int64]
 ----
 
 Returns the value of setting bit `p mod 64` in `x` to `1`.
@@ -342,7 +352,7 @@ Returns the value of setting bit `p mod 64` in `x` to `1`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitclear(x : Int64, p : Nat) : Int64
+func bitclear(x : xref:#type.Int64[Int64], p : Nat) : xref:#type.Int64[Int64]
 ----
 
 Returns the value of clearing bit `p mod 64` in `x` to `0`.
@@ -352,7 +362,7 @@ Returns the value of clearing bit `p mod 64` in `x` to `0`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitflip(x : Int64, p : Nat) : Int64
+func bitflip(x : xref:#type.Int64[Int64], p : Nat) : xref:#type.Int64[Int64]
 ----
 
 Returns the value of flipping bit `p mod 64` in `x`.
@@ -362,7 +372,7 @@ Returns the value of flipping bit `p mod 64` in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountNonZero : (x : Int64) -> Int64
+let bitcountNonZero : (x : xref:#type.Int64[Int64]) -> xref:#type.Int64[Int64]
 ----
 
 Returns the count of non-zero bits in `x`.
@@ -372,7 +382,7 @@ Returns the count of non-zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountLeadingZero : (x : Int64) -> Int64
+let bitcountLeadingZero : (x : xref:#type.Int64[Int64]) -> xref:#type.Int64[Int64]
 ----
 
 Returns the count of leading zero bits in `x`.
@@ -382,7 +392,7 @@ Returns the count of leading zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountTrailingZero : (x : Int64) -> Int64
+let bitcountTrailingZero : (x : xref:#type.Int64[Int64]) -> xref:#type.Int64[Int64]
 ----
 
 Returns the count of trailing zero bits in `x`.
@@ -392,7 +402,7 @@ Returns the count of trailing zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func addWrap(x : Int64, y : Int64) : Int64
+func addWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
@@ -402,7 +412,7 @@ Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func subWrap(x : Int64, y : Int64) : Int64
+func subWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
@@ -412,7 +422,7 @@ Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mulWrap(x : Int64, y : Int64) : Int64
+func mulWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -422,7 +432,7 @@ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func powWrap(x : Int64, y : Int64) : Int64
+func powWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.

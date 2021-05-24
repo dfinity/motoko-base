@@ -5,12 +5,22 @@
 
 Most operations are available as built-in operators (e.g. `1 + 1`).
 
+[[type.Nat16]]
+== Nat16
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Nat16 = Prim.Types.Nat16
+----
+
+16-bit natural numbers.
+
 [[toNat]]
 == toNat
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat : Nat16 -> Nat
+let toNat : xref:#type.Nat16[Nat16] -> Nat
 ----
 
 Conversion.
@@ -20,7 +30,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat : Nat -> Nat16
+let fromNat : Nat -> xref:#type.Nat16[Nat16]
 ----
 
 Conversion. Traps on overflow/underflow.
@@ -30,7 +40,7 @@ Conversion. Traps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromIntWrap : Int -> Nat16
+let fromIntWrap : Int -> xref:#type.Nat16[Nat16]
 ----
 
 Conversion. Wraps on overflow/underflow.
@@ -40,7 +50,7 @@ Conversion. Wraps on overflow/underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toText(x : Nat16) : Text
+func toText(x : xref:#type.Nat16[Nat16]) : Text
 ----
 
 Returns the Text representation of `x`.
@@ -50,7 +60,7 @@ Returns the Text representation of `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func min(x : Nat16, y : Nat16) : Nat16
+func min(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the minimum of `x` and `y`.
@@ -60,7 +70,7 @@ Returns the minimum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func max(x : Nat16, y : Nat16) : Nat16
+func max(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the maximum of `x` and `y`.
@@ -70,7 +80,7 @@ Returns the maximum of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Nat16, y : Nat16) : Bool
+func equal(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : Bool
 ----
 
 Returns `x == y`.
@@ -80,7 +90,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Nat16, y : Nat16) : Bool
+func notEqual(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : Bool
 ----
 
 Returns `x != y`.
@@ -90,7 +100,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Nat16, y : Nat16) : Bool
+func less(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : Bool
 ----
 
 Returns `x < y`.
@@ -100,7 +110,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Nat16, y : Nat16) : Bool
+func lessOrEqual(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : Bool
 ----
 
 Returns `x <= y`.
@@ -110,7 +120,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Nat16, y : Nat16) : Bool
+func greater(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : Bool
 ----
 
 Returns `x > y`.
@@ -120,7 +130,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Nat16, y : Nat16) : Bool
+func greaterOrEqual(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : Bool
 ----
 
 Returns `x >= y`.
@@ -130,7 +140,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Nat16, y : Nat16) : {#less; #equal; #greater}
+func compare(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
@@ -140,7 +150,7 @@ Returns the order of `x` and `y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func add(x : Nat16, y : Nat16) : Nat16
+func add(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
@@ -150,7 +160,7 @@ Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sub(x : Nat16, y : Nat16) : Nat16
+func sub(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
@@ -160,7 +170,7 @@ Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mul(x : Nat16, y : Nat16) : Nat16
+func mul(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the product of `x` and `y`, `x * y`. Traps on overflow.
@@ -170,7 +180,7 @@ Returns the product of `x` and `y`, `x * y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func div(x : Nat16, y : Nat16) : Nat16
+func div(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the division of `x by y`, `x / y`.
@@ -181,7 +191,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func rem(x : Nat16, y : Nat16) : Nat16
+func rem(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the remainder of `x` divided by `y`, `x % y`.
@@ -192,7 +202,7 @@ Traps when `y` is zero.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func pow(x : Nat16, y : Nat16) : Nat16
+func pow(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
@@ -202,7 +212,7 @@ Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitnot(x : Nat16, y : Nat16) : Nat16
+func bitnot(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise negation of `x`, `^x`.
@@ -212,7 +222,7 @@ Returns the bitwise negation of `x`, `^x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitand(x : Nat16, y : Nat16) : Nat16
+func bitand(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise and of `x` and `y`, `x & y`.
@@ -222,7 +232,7 @@ Returns the bitwise and of `x` and `y`, `x & y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitor(x : Nat16, y : Nat16) : Nat16
+func bitor(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise or of `x` and `y`, `x \| y`.
@@ -232,7 +242,7 @@ Returns the bitwise or of `x` and `y`, `x \| y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitxor(x : Nat16, y : Nat16) : Nat16
+func bitxor(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
@@ -242,7 +252,7 @@ Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitshiftLeft(x : Nat16, y : Nat16) : Nat16
+func bitshiftLeft(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise shift left of `x` by `y`, `x << y`.
@@ -252,7 +262,7 @@ Returns the bitwise shift left of `x` by `y`, `x << y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitshiftRight(x : Nat16, y : Nat16) : Nat16
+func bitshiftRight(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise shift right of `x` by `y`, `x >> y`.
@@ -262,7 +272,7 @@ Returns the bitwise shift right of `x` by `y`, `x >> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitrotLeft(x : Nat16, y : Nat16) : Nat16
+func bitrotLeft(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
@@ -272,7 +282,7 @@ Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitrotRight(x : Nat16, y : Nat16) : Nat16
+func bitrotRight(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
@@ -282,7 +292,7 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bittest(x : Nat16, p : Nat) : Bool
+func bittest(x : xref:#type.Nat16[Nat16], p : Nat) : Bool
 ----
 
 Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
@@ -292,7 +302,7 @@ Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitset(x : Nat16, p : Nat) : Nat16
+func bitset(x : xref:#type.Nat16[Nat16], p : Nat) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the value of setting bit `p mod 16` in `x` to `1`.
@@ -302,7 +312,7 @@ Returns the value of setting bit `p mod 16` in `x` to `1`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitclear(x : Nat16, p : Nat) : Nat16
+func bitclear(x : xref:#type.Nat16[Nat16], p : Nat) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the value of clearing bit `p mod 16` in `x` to `0`.
@@ -312,7 +322,7 @@ Returns the value of clearing bit `p mod 16` in `x` to `0`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitflip(x : Nat16, p : Nat) : Nat16
+func bitflip(x : xref:#type.Nat16[Nat16], p : Nat) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the value of flipping bit `p mod 16` in `x`.
@@ -322,7 +332,7 @@ Returns the value of flipping bit `p mod 16` in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountNonZero : (x : Nat16) -> Nat16
+let bitcountNonZero : (x : xref:#type.Nat16[Nat16]) -> xref:#type.Nat16[Nat16]
 ----
 
 Returns the count of non-zero bits in `x`.
@@ -332,7 +342,7 @@ Returns the count of non-zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountLeadingZero : (x : Nat16) -> Nat16
+let bitcountLeadingZero : (x : xref:#type.Nat16[Nat16]) -> xref:#type.Nat16[Nat16]
 ----
 
 Returns the count of leading zero bits in `x`.
@@ -342,7 +352,7 @@ Returns the count of leading zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountTrailingZero : (x : Nat16) -> Nat16
+let bitcountTrailingZero : (x : xref:#type.Nat16[Nat16]) -> xref:#type.Nat16[Nat16]
 ----
 
 Returns the count of trailing zero bits in `x`.
@@ -352,7 +362,7 @@ Returns the count of trailing zero bits in `x`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func addWrap(x : Nat16, y : Nat16) : Nat16
+func addWrap(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
@@ -362,7 +372,7 @@ Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func subWrap(x : Nat16, y : Nat16) : Nat16
+func subWrap(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
@@ -372,7 +382,7 @@ Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mulWrap(x : Nat16, y : Nat16) : Nat16
+func mulWrap(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -382,7 +392,7 @@ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func powWrap(x : Nat16, y : Nat16) : Nat16
+func powWrap(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.

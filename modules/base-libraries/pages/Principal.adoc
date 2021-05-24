@@ -3,12 +3,23 @@
 
 IC principals (User and canister IDs)
 
+[[type.Principal]]
+== Principal
+
+[source.no-repl,motoko,subs=+macros]
+----
+type Principal = Prim.Types.Principal
+----
+
+Internet Computer principal identifiers.
+Convert to `Blob` for access to bytes.
+
 [[fromActor]]
 == fromActor
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromActor : (a : actor {  }) -> Principal
+let fromActor : (a : actor {  }) -> xref:#type.Principal[Principal]
 ----
 
 Conversion.
@@ -18,7 +29,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toBlob : (p : Principal) -> Blob
+let toBlob : (p : xref:#type.Principal[Principal]) -> Blob
 ----
 
 Conversion.
@@ -28,7 +39,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func toText(p : Principal) : Text
+func toText(p : xref:#type.Principal[Principal]) : Text
 ----
 
 Conversion.
@@ -38,7 +49,7 @@ Conversion.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func hash(principal : Principal) : xref:Hash.adoc#type.Hash[Hash.Hash]
+func hash(principal : xref:#type.Principal[Principal]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
 
@@ -48,7 +59,7 @@ func hash(principal : Principal) : xref:Hash.adoc#type.Hash[Hash.Hash]
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromText(t : Text) : Principal
+func fromText(t : Text) : xref:#type.Principal[Principal]
 ----
 
 
@@ -58,7 +69,7 @@ func fromText(t : Text) : Principal
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func equal(x : Principal, y : Principal) : Bool
+func equal(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
 ----
 
 Returns `x == y`.
@@ -68,7 +79,7 @@ Returns `x == y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : Principal, y : Principal) : Bool
+func notEqual(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
 ----
 
 Returns `x != y`.
@@ -78,7 +89,7 @@ Returns `x != y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : Principal, y : Principal) : Bool
+func less(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
 ----
 
 Returns `x < y`.
@@ -88,7 +99,7 @@ Returns `x < y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func lessOrEqual(x : Principal, y : Principal) : Bool
+func lessOrEqual(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
 ----
 
 Returns `x <= y`.
@@ -98,7 +109,7 @@ Returns `x <= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greater(x : Principal, y : Principal) : Bool
+func greater(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
 ----
 
 Returns `x > y`.
@@ -108,7 +119,7 @@ Returns `x > y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func greaterOrEqual(x : Principal, y : Principal) : Bool
+func greaterOrEqual(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
 ----
 
 Returns `x >= y`.
@@ -118,7 +129,7 @@ Returns `x >= y`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : Principal, y : Principal) : {#less; #equal; #greater}
+func compare(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : {#less; #equal; #greater}
 ----
 
 Returns the order of `x` and `y`.
