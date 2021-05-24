@@ -9,10 +9,9 @@ import Prim "mo:⛔";
 
 module {
 
-/*
+
   /// Infinite precision natural numbers.
   public type Nat = Prim.Types.Nat;
-*/
 
   /// Conversion.
   public let toText : Nat -> Text = Int.toText;
