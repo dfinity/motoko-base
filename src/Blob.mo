@@ -7,7 +7,8 @@ module {
   /// Given `b : Blob`:
   ///
   /// * `b.size() : Nat` returns the number of bytes in the blob;
-  /// * `b.bytes() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob.
+  /// * `b.vals() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob.
+  ///
   /// (Direct indexing of Blobs is not yet supported.)
   public type Blob = Prim.Types.Blob;
 
