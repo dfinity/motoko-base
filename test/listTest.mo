@@ -154,3 +154,53 @@ let mapResult = Suite.suite("mapResult", [
 ]);
 
 Suite.run(Suite.suite("List", [ mapResult ]));
+
+let replicate = Suite.suite("replicate", [
+  Suite.test("empty-list",
+    List.replicate<Nat>(0, 0),
+    M.equals(
+      T.list(T.natTestable, List.nil<Nat>()))
+  ),
+  Suite.test("small-list",
+    List.replicate(3, 0),
+    M.equals(
+      T.list<Nat>(T.natTestable, ?(0, ?(0, ?(0, null)))))
+  )
+]);
+
+let tabulate = Suite.suite("tabulate", [
+  Suite.test("empty-list",
+    List.tabulate<Nat>(0, func i { i }),
+    M.equals(
+      T.list(T.natTestable, List.nil<Nat>()))
+  ),
+  Suite.test("small-list",
+    List.tabulate<Nat>(3, func i { i * 2 }),
+    M.equals(
+      T.list<Nat>(T.natTestable, ?(0, ?(2, ?(4, null)))))
+  ),
+  Suite.test("large-list",
+    List.tabulate<Nat>(10000, func i { 0 }),
+    M.equals(
+      T.list<Nat>(T.natTestable, List.replicate(10000, 0)))
+  )
+]);
+
+let append = Suite.suite("append", [
+  Suite.test("small-list",
+    List.append(
+      List.tabulate<Nat>(10, func i { i }),
+      List.tabulate<Nat>(10, func i { i + 10 })),
+    M.equals(
+      T.list(T.natTestable, List.tabulate<Nat>(20, func i { i })))
+  ),
+  Suite.test("large-list",
+    List.append(
+      List.tabulate<Nat>(10000, func i { i }),
+      List.tabulate<Nat>(10000, func i { i + 10000 })),
+    M.equals(
+      T.list(T.natTestable,List.tabulate<Nat>(20000, func i { i })))
+  ),
+]);
+
+Suite.run(Suite.suite("List", [ mapResult, replicate, tabulate, append ]));

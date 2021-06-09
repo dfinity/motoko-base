@@ -73,7 +73,7 @@ module {
     func rec(l : List<T>, r : List<T>) : List<T> {
       switch l {
         case null { r };
-        case (?(h, t)) { rec(t,?(h, r)) };
+        case (?(h, t)) { rec(t, ?(h, r)) };
       }
     };
     rec(l, null)
@@ -164,15 +164,17 @@ module {
     Result.mapOk(go(xs, null), func (xs : List<R>) : List<R> = reverse(xs))
   };
 
+  /// Append the elements from the reverse of one list to another list.
+  func revAppend<T>(l : List<T>, m : List<T>) : List<T> {
+    switch l {
+      case null { m };
+      case (?(h, t)) { revAppend(t, ?(h, m)) };
+    }
+  };
+
   /// Append the elements from one list to another list.
   public func append<T>(l : List<T>, m : List<T>) : List<T> {
-    func rec(l : List<T>) : List<T> {
-      switch l {
-        case null { m };
-        case (?(h, t)) {?(h,rec(t))};
-      }
-    };
-    rec(l)
+    revAppend(reverse(l), m);
   };
 
   /// Concatenate a list of lists.
@@ -295,18 +297,28 @@ module {
   /// Generate a list based on a length and a function that maps from
   /// a list index to a list element.
   public func tabulate<T>(n : Nat, f : Nat -> T) : List<T> {
-    func rec(i : Nat, n : Nat, f : Nat -> T) : List<T> {
-      if (i == n) { null } else { ?(f(i), rec(i + 1, n, f)) }
+    var i = 0;
+    var l : List<T> = null;
+    while (i < n) {
+      l := ?(f(i), l);
+      i += 1;
     };
-    rec(0, n, f)
+    reverse(l);
   };
 
   /// Create a list with exactly one element.
   public func make<X>(x : X) : List<X> = ?(x, null);
 
   /// Create a list of the given length with the same value in each position.
-  public func replicate<X>(n : Nat, x : X) : List<X> =
-    tabulate<X>(n, func (_) { x });
+  public func replicate<X>(n : Nat, x : X) : List<X> {
+    var i = 0;
+    var l : List<X> = null;
+    while (i < n) {
+      l := ?(x, l);
+      i += 1;
+    };
+    l;
+  };
 
   /// Create a list of pairs from a pair of lists.
   ///
