@@ -153,7 +153,7 @@ module {
   };
 
   /// Returns  Nat32 for a four byte array
-  public func fromBytes(x : [Nat8) : Nat32] {
+  public func fromBytes(x : [Nat8] : Nat32] {
     (Prim.natToNat32(Prim.nat8ToNat(x[0])) << 24) + 
     (Prim.natToNat32(Prim.nat8ToNat(x[1])) << 16) +
     (Prim.natToNat32(Prim.nat8ToNat(x[2])) << 8) +
