@@ -1,13 +1,53 @@
-/// Functional maps
+/// # Functional key-value hash maps. 
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
-/// independent of their operation history (unlike other popular search trees).
-///
-/// ## Background
+/// independent of operation history (unlike other popular search trees).
 ///
 /// The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 ///
+/// ## User's overview
 ///
+/// The basic `Trie` operations consist of:
+/// - `put` - a key-value into the trie, producing a new version.
+/// - `get` - a key's value from the trie, or `null` if none.
+/// - `iter` - visits every key-value in the trie.
+///
+/// ## Implementation overview
+///
+/// A (hash) trie is a binary tree container for key-value pairs that
+/// consists of leaf and branch nodes.
+///
+/// Each internal **branch node**
+/// represents having distinguished its key-value pairs on a single bit of
+/// the keys.
+/// By following paths in the trie, we determine an increasingly smaller
+/// and smaller subset of the keys.
+///
+/// Each **leaf node** consists of an association list of key-value pairs.
+///
+/// Each non-empty trie node stores a size; we discuss that more below.
+///
+/// ### Adaptive depth
+///
+/// We say that a leaf is valid if it contains no more than `MAX_LEAF_SIZE`
+/// key-value pairs.  When a leaf node grows too large, the
+/// binary tree produces a new internal binary node, and splits the leaf into
+/// a pair of leaves using an additional bit of their keys' hash strings.
+///
+/// For small mappings, the trie structure consists of a single
+/// leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
+///
+/// ### Cached sizes
+///
+/// At each branch and leaf, we use a stored size to support a
+/// memory-efficient `toArray` function, which itself relies on
+/// per-element projection via `nth`; in turn, `nth` directly uses the
+/// O(1)-time function `size` for achieving an acceptable level of
+/// algorithmic efficiently.  Notably, leaves are generally lists of
+/// key-value pairs, and we do not store a size for each Cons cell in the
+/// list.
+///
+
 import Prim "mo:⛔";
 import P "Prelude";
 import Option "Option";
@@ -16,48 +56,9 @@ import A "Array";
 
 import List "List";
 import AssocList "AssocList";
+import I "Iter";
 
 module {
-
-  ///
-  /// ## Representation
-  ///
-  ///
-  /// A hash trie is a binary trie, where each (internal) branch node
-  /// represents having distinguished its key-value pairs on a single bit of
-  /// the keys.
-  ///
-  /// By following paths in the trie, we determine an increasingly smaller
-  /// and smaller subset of the keys.
-  ///
-  /// Each leaf node consists of an association list of key-value pairs.
-  ///
-  /// We say that a leaf is valid if it contains no more than MAX_LEAF_SIZE
-  /// key-value pairs.
-  ///
-  /// Each non-empty trie node stores a size; we discuss that more below.
-  ///
-  /// ### Adaptive depth
-  ///
-  /// For small mappings, the trie structure consists of a single
-  /// leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
-  ///
-  /// By construction, the algorithms enforce an invariant that no
-  /// leaf ever contains more than MAX_LEAF_SIZE key-value pairs: the
-  /// function `leaf` accepts a list, but subdivides it with branches until
-  /// it can actually construct valid leaves.  Ongce distinguished, subsets
-  /// of keys tend to remain distinguished by the presence of these branches.
-  ///
-  /// ### Cached sizes
-  ///
-  /// At each branch and leaf, we use a stored size to support a
-  /// memory-efficient `toArray` function, which itself relies on
-  /// per-element projection via `nth`; in turn, `nth` directly uses the
-  /// O(1)-time function `size` for achieving an acceptable level of
-  /// algorithmic efficiently.  Notably, leaves are generally lists of
-  /// key-value pairs, and we do not store a size for each Cons cell in the
-  /// list.
-  ///
 
   let MAX_LEAF_SIZE = 8; // to do -- further profiling and tuning
 
@@ -325,6 +326,10 @@ module {
     label profile_trie_put : (Trie<K, V>, ?V) {
       replace<K, V>(t, k, k_eq, ?v)
     };
+
+  /// get the value of the given key in the trie, or return null if nonexistent
+  public func get<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V =
+     find<K, V>(t, k, k_eq);
 
   ///  find the given key's value in the trie, or return null if nonexistent
   public func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V =
@@ -712,6 +717,41 @@ module {
       #empty
     )
   };
+
+  /// Returns an `Iter` over the key-value entries of the trie.
+  ///
+  /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
+  public func iter<K, V>(t : Trie<K, V>) : I.Iter<(K, V)> {
+    object {
+      var stack = ?(t, null) : List.List<T.Trie<K, V>>;
+      public func next() : ?(K, V) {
+        switch stack {
+        case null { null };
+        case (?(trie, stack2)) {
+               switch trie {
+               case (#empty) {
+                      stack := stack2;
+                      next()
+                    };
+               case (#leaf({keyvals = null})) {
+                      stack := stack2;
+                      next()
+                    };
+               case (#leaf({size = c; keyvals = ?((k, v), kvs)})) {
+                      stack := ?(#leaf({size=c-1; keyvals=kvs}), stack2);
+                      ?(k.key, v)
+                    };
+               case (#branch(br)) {
+                      stack := ?(br.left, ?(br.right, stack2));
+                      next()
+                    };
+               }
+             }
+        }
+      }
+    }
+  };
+
 
   /// Represent the construction of tries as data.
   ///
