@@ -1,4 +1,4 @@
-/// # Functional key-value hash maps. 
+/// # Functional key-value hash maps.
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
 /// independent of operation history (unlike other popular search trees).
@@ -7,10 +7,32 @@
 ///
 /// ## User's overview
 ///
+/// This module provides an applicative (functional) hash map.
+/// Notably, each `put` produces a **new trie _and value being replaced, if any_**.
+///
+/// User's looking for more familar (imperative,
+/// object-oriented) hash map should consider `TrieMap` or `HashMap` instead.
+///
 /// The basic `Trie` operations consist of:
 /// - `put` - put a key-value into the trie, producing a new version.
 /// - `get` - get a key's value from the trie, or `null` if none.
 /// - `iter` - visit every key-value in the trie.
+///
+/// The `put` and `get` operations work over `Key` records,
+/// which group the hash of the key with its non-hash key value.
+///
+/// ```motoko
+/// import Trie "mo:ebase/Trie";
+/// import Text "mo:ebase/Text";
+///
+/// func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
+///
+/// let t0 : Trie<Text, Nat> = Trie.empty();
+/// let t1 : Trie<Text, Nat> = Trie.put(t0, key "hello", 42).0;
+/// let t2 : Trie<Text, Nat> = Trie.put(t1, key "world", 24).0;
+/// let n : Nat = Trie.put(t1, key "hello", 0).1;
+/// assert (n == 42);
+/// ```
 ///
 /// ## Implementation overview
 ///
