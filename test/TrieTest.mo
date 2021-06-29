@@ -18,9 +18,10 @@ debug {
 
   for ((k, v) in expected.entries()) {
     var found = false;
-    label here ()
-    for ((k2, v2) in actual.entries()) {
-      if (k == k2 and v == v2) { found := true; break here };
+    label here : () {
+      for ((k2, v2) in actual.entries()) {
+        if (k == k2 and v == v2) { found := true; break here };
+      }
     };
     assert found;
   };
