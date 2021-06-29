@@ -3,6 +3,7 @@ import Text "mo:base/Text";
 
 debug {
   type Trie<K, V> = Trie.Trie<K, V>;
+  type Key<K> = Trie.Key<K>;
 
   func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
   
