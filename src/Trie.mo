@@ -8,9 +8,9 @@
 /// ## User's overview
 ///
 /// The basic `Trie` operations consist of:
-/// - `put` - a key-value into the trie, producing a new version.
-/// - `get` - a key's value from the trie, or `null` if none.
-/// - `iter` - visits every key-value in the trie.
+/// - `put` - put a key-value into the trie, producing a new version.
+/// - `get` - get a key's value from the trie, or `null` if none.
+/// - `iter` - visit every key-value in the trie.
 ///
 /// ## Implementation overview
 ///
