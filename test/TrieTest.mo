@@ -23,7 +23,7 @@ debug {
           if (eq(x, y)) { found := true; break here };
         }
       };
-      if not found { return false };
+      if (not found) { return false };
     };
     return true
   };
