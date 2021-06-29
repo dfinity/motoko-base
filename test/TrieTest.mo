@@ -15,21 +15,12 @@ debug {
   assert (n == ?42);
 
   /// Compare two arrays as sets, using O(n^2) time.
-  func equalAsSets<X>(a : [X], b : [X], (X, X) -> Bool) : Bool {
-    for ((k, v) in expected.vals()) {
+  func equalAsSets<X>(a : [X], b : [X], eq : (X, X) -> Bool) : Bool {
+    for (x in a.vals()) {
       var found = false;
       label here : () {
-        for ((k2, v2) in actual.vals()) {
-          if (k == k2 and v == v2) { found := true; break here };
-        }
-      };
-      if not found { return false };
-    };
-    for ((k, v) in actual.vals()) {
-      var found = false;
-      label here : () {
-        for ((k2, v2) in expected.vals()) {
-          if (k == k2 and v == v2) { found := true; break here };
+        for (y in b.vals()) {
+          if (eq(x, y)) { found := true; break here };
         }
       };
       if not found { return false };
@@ -40,6 +31,7 @@ debug {
   // note that `put("hello", ..., 0)` happens "after" t2, but map is immutable (applicative).
   let actual : [(Text, Nat)] = Iter.toArray(Trie.iter(t2));
   let expected : [(Text, Nat)] = [("hello", 42), ("world", 24)];
-  assert (equalAsSets(actual, expected));
+  func equalKV(a : (Text, Nat), b : (Text, Nat)) : Bool { a == b };
+  assert (equalAsSets(actual, expected, equalKV));
 
 };
