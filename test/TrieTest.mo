@@ -14,8 +14,8 @@ debug {
   let n : ?Nat = Trie.put(t1, key "hello", Text.equal, 0).1;
   assert (n == ?42);
 
-  let expected : [(Text, Nat)] = [("hello", 0), ("world", 24)];
   let actual : [(Text, Nat)] = Iter.toArray(Trie.iter(t2));
+  let expected : [(Text, Nat)] = [("hello", 42), ("world", 24)];
 
   for ((k, v) in expected.vals()) {
     var found = false;
