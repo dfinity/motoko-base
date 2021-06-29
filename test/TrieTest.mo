@@ -1,5 +1,6 @@
 import Trie "mo:base/Trie";
 import Text "mo:base/Text";
+import Iter "mo:base/Iter";
 
 debug {
   type Trie<K, V> = Trie.Trie<K, V>;
@@ -16,10 +17,10 @@ debug {
   let expected : [(Text, Nat)] = [("hello", 0), ("world", 24)];
   let actual : [(Text, Nat)] = Iter.toArray(Trie.iter(t2));
 
-  for ((k, v) in expected.entries()) {
+  for ((k, v) in expected.vals()) {
     var found = false;
     label here : () {
-      for ((k2, v2) in actual.entries()) {
+      for ((k2, v2) in actual.vals()) {
         if (k == k2 and v == v2) { found := true; break here };
       }
     };
