@@ -22,8 +22,8 @@
 /// which group the hash of the key with its non-hash key value.
 ///
 /// ```motoko
-/// import Trie "mo:ebase/Trie";
-/// import Text "mo:ebase/Text";
+/// import Trie "mo:base/Trie";
+/// import Text "mo:base/Text";
 ///
 /// func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
 ///
