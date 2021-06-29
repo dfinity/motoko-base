@@ -399,11 +399,6 @@ module {
   ///   operation in various ways, and does not (in general) lose
   ///   information; this operation is a simpler, special case.
   ///
-  ///   See also:
-  ///
-  ///   - `disj`
-  ///   - `join`
-  ///   - `prod`
   public func merge<K, V>(tl:Trie<K, V>, tr:Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> =
     label profile_trie_merge : Trie<K, V> {
       let key_eq = equalKey<K>(k_eq);
@@ -544,11 +539,6 @@ module {
   ///
   /// Implements the database idea of an ["outer join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
   ///
-  /// See also:
-  ///
-  /// - `join`
-  /// - `merge`
-  /// - `prod`
   public func disj<K, V, W, X>(
     tl : Trie<K, V>,
     tr : Trie<K, W>,
@@ -621,11 +611,6 @@ module {
   ///
   /// Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
   ///
-  /// See also:
-  ///
-  /// - `disj`
-  /// - `merge`
-  /// - `prod`
   public func join<K, V, W, X>(
     tl : Trie<K, V>,
     tr : Trie<K, W>,
@@ -698,11 +683,6 @@ module {
   /// not.  Moreover, the resulting trie may use keys that are unrelated to
   /// these input keys.
   ///
-  /// See also:
-  ///
-  /// - `disj`
-  /// - `join`
-  /// - `merge`
   public func prod<K1, V1, K2, V2, K3, V3>(
     tl : Trie<K1, V1>,
     tr : Trie<K2, V2>,
@@ -952,27 +932,6 @@ module {
 
 
   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-  ///
-  /// ### Implementation notes:
-  ///
-  /// we use this function repeatedly in the Produce Exchange example
-  /// application, often on very large tries.
-  ///
-  /// Performance Profiling shows that it is important that this be
-  /// memory efficient, and reasonably time efficient, at large scales.
-  ///
-  /// To do so, we use a single array allocation (for the returned array) and we
-  /// sacrifice some efficiency in reading the input trie, and instead use function `nth` to
-  /// project each element with an independent trie traversal.
-  ///
-  /// This approach is somewhat forced on us by the type signature of
-  /// A.tabulate, and the desire to only allocate one array; that requirement rules
-  /// out iterative mutation of an optionally-null array, since an imperative
-  /// approach which would give us the wrong return type.
-  ///
-  /// Since we want to  statically rule out null output elements, and since the AS type system
-  /// cannot do that for an imperative approach unless we assume more about
-  /// the type W (e.g., the existence of "default values"), we settle for using `nth`.
   public func toArray<K, V, W>(t : Trie<K, V>, f : (K, V)-> W):[W] =
     label profile_trie_toArray_begin : [W] {
       let a = A.tabulate<W> (
