@@ -10,7 +10,7 @@
 /// This module provides an applicative (functional) hash map.
 /// Notably, each `put` produces a **new trie _and value being replaced, if any_**.
 ///
-/// User's looking for more familar (imperative,
+/// Those looking for more familar (imperative,
 /// object-oriented) hash map should consider `TrieMap` or `HashMap` instead.
 ///
 /// The basic `Trie` operations consist of:
