@@ -2,6 +2,8 @@ import Trie "mo:base/Trie";
 import Text "mo:base/Text";
 
 debug {
+  type Trie<K, V> = Trie.Trie<K, V>;
+
   func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
   
   let t0 : Trie<Text, Nat> = Trie.empty();
