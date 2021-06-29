@@ -723,7 +723,7 @@ module {
   /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
   public func iter<K, V>(t : Trie<K, V>) : I.Iter<(K, V)> {
     object {
-      var stack = ?(t, null) : List.List<T.Trie<K, V>>;
+      var stack = ?(t, null) : List.List<Trie<K, V>>;
       public func next() : ?(K, V) {
         switch stack {
         case null { null };
