@@ -8,8 +8,8 @@ on:
 
 # Remember to update me in package-set.yml as well
 env:
-  vessel_version: "v0.6.0"
-  moc_version: "0.6.2"
+  vessel_version: "v0.6.2"
+  moc_version: "0.6.5"
 
 jobs:
   tests:
@@ -28,9 +28,9 @@ jobs:
         nix-env --install graphviz --file '<nixpkgs>'
     - name: "install Motoko binaries"
       run: |
-       wget https://download.dfinity.systems/motoko/${{ env.moc_version }}/x86_64-linux/motoko-${{ env.moc_version }}.tar.gz
+       wget https://github.com/dfinity/motoko/releases/download/${{ env.moc_version }}/motoko-linux64-${{ env.moc_version }}.tar.gz
        mkdir -p /home/runner/bin
-       tar -xf motoko-${{ env.moc_version }}.tar.gz -C /home/runner/bin
+       tar -xzf motoko-linux64-${{ env.moc_version }}.tar.gz -C /home/runner/bin
        echo "/home/runner/bin" >> $GITHUB_PATH
     - name: "install vessel"
       run: |
