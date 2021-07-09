@@ -712,27 +712,27 @@ module {
       var stack = ?(t, null) : List.List<Trie<K, V>>;
       public func next() : ?(K, V) {
         switch stack {
-        case null { null };
-        case (?(trie, stack2)) {
-               switch trie {
-               case (#empty) {
-                      stack := stack2;
-                      next()
-                    };
-               case (#leaf({keyvals = null})) {
-                      stack := stack2;
-                      next()
-                    };
-               case (#leaf({size = c; keyvals = ?((k, v), kvs)})) {
-                      stack := ?(#leaf({size=c-1; keyvals=kvs}), stack2);
-                      ?(k.key, v)
-                    };
-               case (#branch(br)) {
-                      stack := ?(br.left, ?(br.right, stack2));
-                      next()
-                    };
+           case null { null };
+           case (?(trie, stack2)) {
+              switch trie {
+                 case (#empty) {
+                    stack := stack2;
+                    next()
+                 };
+                 case (#leaf({ keyvals = null })) {
+                    stack := stack2;
+                    next()
+                 };
+                 case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
+                    stack := ?(#leaf({ size = c-1; keyvals = kvs }), stack2);
+                    ?(k.key, v)
+                 };
+                 case (#branch(br)) {
+                    stack := ?(br.left, ?(br.right, stack2));
+                    next()
+                 };
                }
-             }
+            }
         }
       }
     }
