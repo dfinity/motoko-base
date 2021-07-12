@@ -37,41 +37,42 @@
 /// assert (n == ?42);
 /// ```
 ///
-/// ## Implementation overview
-///
-/// A (hash) trie is a binary tree container for key-value pairs that
-/// consists of leaf and branch nodes.
-///
-/// Each internal **branch node**
-/// represents having distinguished its key-value pairs on a single bit of
-/// the keys.
-/// By following paths in the trie, we determine an increasingly smaller
-/// and smaller subset of the keys.
-///
-/// Each **leaf node** consists of an association list of key-value pairs.
-///
-/// Each non-empty trie node stores a size; we discuss that more below.
-///
-/// ### Adaptive depth
-///
-/// We say that a leaf is valid if it contains no more than `MAX_LEAF_SIZE`
-/// key-value pairs.  When a leaf node grows too large, the
-/// binary tree produces a new internal binary node, and splits the leaf into
-/// a pair of leaves using an additional bit of their keys' hash strings.
-///
-/// For small mappings, the trie structure consists of a single
-/// leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
-///
-/// ### Cached sizes
-///
-/// At each branch and leaf, we use a stored size to support a
-/// memory-efficient `toArray` function, which itself relies on
-/// per-element projection via `nth`; in turn, `nth` directly uses the
-/// O(1)-time function `size` for achieving an acceptable level of
-/// algorithmic efficiently.  Notably, leaves are generally lists of
-/// key-value pairs, and we do not store a size for each Cons cell in the
-/// list.
-///
+
+// ## Implementation overview
+//
+// A (hash) trie is a binary tree container for key-value pairs that
+// consists of leaf and branch nodes.
+//
+// Each internal **branch node**
+// represents having distinguished its key-value pairs on a single bit of
+// the keys.
+// By following paths in the trie, we determine an increasingly smaller
+// and smaller subset of the keys.
+//
+// Each **leaf node** consists of an association list of key-value pairs.
+//
+// Each non-empty trie node stores a size; we discuss that more below.
+//
+// ### Adaptive depth
+//
+// We say that a leaf is valid if it contains no more than `MAX_LEAF_SIZE`
+// key-value pairs.  When a leaf node grows too large, the
+// binary tree produces a new internal binary node, and splits the leaf into
+// a pair of leaves using an additional bit of their keys' hash strings.
+//
+// For small mappings, the trie structure consists of a single
+// leaf, which contains up to MAX_LEAF_SIZE key-value pairs.
+//
+// ### Cached sizes
+//
+// At each branch and leaf, we use a stored size to support a
+// memory-efficient `toArray` function, which itself relies on
+// per-element projection via `nth`; in turn, `nth` directly uses the
+// O(1)-time function `size` for achieving an acceptable level of
+// algorithmic efficiently.  Notably, leaves are generally lists of
+// key-value pairs, and we do not store a size for each Cons cell in the
+// list.
+//
 
 import Prim "mo:⛔";
 import P "Prelude";
@@ -557,8 +558,9 @@ module {
         case (#leaf(l)) {
           leaf(AssocList.disj<Key<K>, V, W, X>(l.keyvals, null, key_eq, vbin), bitpos)
         };
-        case (#branch(b)) { branch(recL(b.left, bitpos + 1),
-                                   recL(b.right, bitpos + 1)) };
+        case (#branch(b)) {
+          branch(recL(b.left, bitpos + 1),
+                 recL(b.right, bitpos + 1)) };
       }
     };
 
@@ -569,8 +571,9 @@ module {
        case (#leaf(l)) {
          leaf(AssocList.disj<Key<K>, V, W, X>(null, l.keyvals, key_eq, vbin), bitpos)
        };
-       case (#branch(b)) { branch(recR(b.left, bitpos + 1),
-                                  recR(b.right, bitpos + 1)) };
+       case (#branch(b)) { 
+         branch(recR(b.left, bitpos + 1),
+                recR(b.right, bitpos + 1)) };
      }
    };
 
@@ -712,32 +715,31 @@ module {
       var stack = ?(t, null) : List.List<Trie<K, V>>;
       public func next() : ?(K, V) {
         switch stack {
-           case null { null };
-           case (?(trie, stack2)) {
-              switch trie {
-                 case (#empty) {
-                    stack := stack2;
-                    next()
-                 };
-                 case (#leaf({ keyvals = null })) {
-                    stack := stack2;
-                    next()
-                 };
-                 case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
-                    stack := ?(#leaf({ size = c-1; keyvals = kvs }), stack2);
-                    ?(k.key, v)
-                 };
-                 case (#branch(br)) {
-                    stack := ?(br.left, ?(br.right, stack2));
-                    next()
-                 };
-               }
+          case null { null };
+          case (?(trie, stack2)) {
+            switch trie {
+              case (#empty) {
+                stack := stack2;
+                next()
+              };
+              case (#leaf({ keyvals = null })) {
+                stack := stack2;
+                next()
+              };
+              case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
+                stack := ?(#leaf({ size = c-1; keyvals = kvs }), stack2);
+                ?(k.key, v)
+              };
+              case (#branch(br)) {
+                stack := ?(br.left, ?(br.right, stack2));
+                next()
+              };
             }
+          }
         }
       }
     }
   };
-
 
   /// Represent the construction of tries as data.
   ///
