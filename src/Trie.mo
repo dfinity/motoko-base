@@ -594,7 +594,7 @@ module {
        };
        case (#branch(b1), #branch(b2)) {
          branch(rec(bitpos + 1, b1.left, b2.left),
-                rec(bitpos + 1, b1.right, b2.right))
+           rec(bitpos + 1, b1.right, b2.right))
        };
       }
     };
