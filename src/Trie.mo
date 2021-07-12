@@ -88,20 +88,20 @@ module {
 
   let MAX_LEAF_SIZE = 8; // to do -- further profiling and tuning
 
-  /// binary hash tries: either empty, a leaf node, or a branch node
+  /// Binary hash tries: either empty, a leaf node, or a branch node
   public type Trie<K, V> = {
     #empty;
     #leaf : Leaf<K, V>;
     #branch : Branch<K, V>;
   };
 
-  /// leaf nodes of trie consist of key-value pairs as a list.
+  /// Leaf nodes of trie consist of key-value pairs as a list.
   public type Leaf<K, V> = {
     size : Nat ;
     keyvals : AssocList<Key<K>, V> ;
   };
 
-  /// branch nodes of the trie discriminate on a bit position of the keys' hashes.
+  /// Branch nodes of the trie discriminate on a bit position of the keys' hashes.
   /// we never store this bitpos; rather,
   /// we enforce a style where this position is always known from context.
   public type Branch<K, V> = {
@@ -129,7 +129,7 @@ module {
     }
   };
 
-  /// checks the invariants of the trie structure, including the placement of keys at trie paths
+  /// Checks the invariants of the trie structure, including the placement of keys at trie paths
   public func isValid<K, V>(t : Trie<K, V>, enforceNormal : Bool) : Bool {
     func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) : Bool {
       switch t {
@@ -204,10 +204,7 @@ module {
 
   ///  Get the number of key-value pairs in the trie, in constant time.
 
-  //  ### Implementation notes
-  //
-  //  `nth` directly uses this function `size` for achieving an
-  //  acceptable level of algorithmic efficiently.
+  /// Get size in O(1) time.
   public func size<K, V>(t : Trie<K, V>) : Nat {
     switch t {
       case (#empty) { 0 };
@@ -266,7 +263,7 @@ module {
     };
   };
 
-
+  /// Transform a list into a trie, splitting input list into small (leaf) lists, if necessary.
   public func fromList<K, V>(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V> {
     func rec(kvc : ?Nat, kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V> {
       switch kvc {
@@ -302,12 +299,12 @@ module {
     rec(kvc, kvs, bitpos)
   };
 
-  /// clone the trie efficiently, via sharing.
+  /// Clone the trie efficiently, via sharing.
   ///
   /// Purely-functional representation permits _O(1)_ copy, via persistent sharing.
   public func clone<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
 
-  /// replace the given key's value option with the given one, returning the previous one
+  /// Replace the given key's value option with the given one, returning the previous one
   public func replace<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : ?V) : (Trie<K, V>, ?V) {
      let key_eq = equalKey<K>(k_eq);
 
@@ -341,16 +338,16 @@ module {
      (to, vo)
    };
 
-  /// put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
+  /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
   public func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie<K, V>, ?V) {
       replace<K, V>(t, k, k_eq, ?v)
     };
 
-  /// get the value of the given key in the trie, or return null if nonexistent
+  /// Get the value of the given key in the trie, or return null if nonexistent
   public func get<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V =
      find<K, V>(t, k, k_eq);
 
-  ///  find the given key's value in the trie, or return null if nonexistent
+  /// Find the given key's value in the trie, or return null if nonexistent
   public func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V {
       let key_eq = equalKey<K>(k_eq);
       func rec(t : Trie<K, V>, bitpos : Nat) : ?V {
@@ -405,13 +402,12 @@ module {
      rec(l)
    };
 
-  ///   merge tries, preferring the right trie where there are collisions
-  ///   in common keys.
+  /// Merge tries, preferring the right trie where there are collisions
+  /// in common keys.
   ///
-  ///   note: the `disj` operation generalizes this `merge`
-  ///   operation in various ways, and does not (in general) lose
-  ///   information; this operation is a simpler, special case.
-  ///
+  /// note: the `disj` operation generalizes this `merge`
+  /// operation in various ways, and does not (in general) lose
+  /// information; this operation is a simpler, special case.
   public func merge<K, V>(tl:Trie<K, V>, tr:Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
       let key_eq = equalKey<K>(k_eq);
       func rec(bitpos : Nat, tl : Trie<K, V>, tr:Trie<K, V>) : Trie<K, V> {
@@ -451,7 +447,7 @@ module {
       rec(0, tl, tr)
     };
 
-  /// like `merge`, it merges tries, but unlike `merge`, it signals a
+  /// Merge tries like `merge`, except signals a
   /// dynamic error if there are collisions in common keys between the
   /// left and right inputs.
   public func mergeDisjoint<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
@@ -495,7 +491,7 @@ module {
       rec(0, tl, tr)
     };
 
-  /// The key-value pairs of the final trie consists of those pairs of
+  /// Difference of tries. The output consists are pairs of
   /// the left trie whose keys are not present in the right trie; the
   /// values of the right trie are irrelevant.
   public func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : ( K, K) -> Bool): Trie<K, V> {
@@ -531,6 +527,8 @@ module {
     rec(0, tl, tr)
   };
 
+  /// Map disjunction.
+  ///
   /// This operation generalizes the notion of "set union" to finite maps.
   ///
   /// Produces a "disjunctive image" of the two tries, where the values of
@@ -605,12 +603,13 @@ module {
     rec(0, tl, tr)
   };
 
-  /// This operation generalizes the notion of "set intersection" to
-  /// finite maps.  Produces a "conjuctive image" of the two tries, where
-  /// the values of matching keys are combined with the given binary
-  /// operator, and unmatched key-value pairs are not present in the output.
+  /// Map join.
   ///
   /// Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
+  ///
+  /// This operation generalizes the notion of "set intersection" to
+  /// finite maps.  The values of matching keys are combined with the given binary
+  /// operator, and unmatched key-value pairs are not present in the output.
   ///
   public func join<K, V, W, X>(
     tl : Trie<K, V>,
@@ -668,6 +667,8 @@ module {
   };
 
 
+  /// Map product.
+  ///
   /// Conditional _catesian product_, where the given
   /// operation `op` _conditionally_ creates output elements in the
   /// resulting trie.
@@ -972,7 +973,7 @@ module {
     size<K, V>(t) == 0
   };
 
-  /// filter the key-value pairs by a given predicate.
+  /// Filter the key-value pairs by a given predicate.
   public func filter<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Trie<K, V> {
     func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {
@@ -1001,7 +1002,7 @@ module {
     rec(t, 0)
   };
 
-  /// map and filter the key-value pairs by a given predicate.
+  /// Map and filter the key-value pairs by a given predicate.
   public func mapFilter<K, V, W>(t : Trie<K, V>, f : (K, V) -> ?W) : Trie<K, W> {
     func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, W> {
       switch t {
@@ -1068,7 +1069,7 @@ module {
     rec(tl, tr)
   };
 
-  /// replace the given key's value in the trie,
+  /// Replace the given key's value in the trie,
   /// and only if successful, do the success continuation,
   /// otherwise, return the failure value
   public func replaceThen<K, V, X>(
@@ -1083,7 +1084,7 @@ module {
     }
   };
 
-  /// put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
+  /// Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
   public func putFresh<K, V>(t : Trie<K, V>,  k : Key<K>, k_eq : (K, K) -> Bool, v : V) : Trie<K, V> {
     let (t2, none) = replace<K, V>(t, k, k_eq, ?v);
     switch none {
@@ -1093,7 +1094,7 @@ module {
     t2
   };
 
-  /// put the given key's value in the 2D trie; return the new 2D trie.
+  /// Put the given key's value in the 2D trie; return the new 2D trie.
   public func put2D<K1, K2, V>(
     t : Trie2D<K1, K2, V>,
     k1 : Key<K1>,
@@ -1111,7 +1112,7 @@ module {
     updated_outer;
   };
 
-  /// put the given key's value in the trie; return the new trie;
+  /// Put the given key's value in the trie; return the new trie;
   public func put3D<K1, K2, K3, V> (
     t : Trie3D<K1, K2, K3, V>,
     k1 : Key<K1>,
@@ -1143,12 +1144,12 @@ module {
     updated_outer;
   };
 
-  /// remove the given key's value in the trie; return the new trie
+  /// Remove the given key's value in the trie; return the new trie
   public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq: (K, K) -> Bool) : (Trie<K, V>, ?V) {
     replace<K, V>(t, k, k_eq, null)
   };
 
-  /// remove the given key's value in the trie,
+  /// Remove the given key's value in the trie,
   /// and only if successful, do the success continuation,
   /// otherwise, return the failure value
   public func removeThen<K, V, X>(
@@ -1187,7 +1188,7 @@ module {
     }
   };
 
-  /// remove the given key-key pair's value in the 3D trie; return the
+  /// Remove the given key-key pair's value in the 3D trie; return the
   /// new trie, and the prior value, if any.
   public func remove3D<K1, K2, K3, V>(
     t : Trie3D<K1, K2, K3, V>,
