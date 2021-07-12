@@ -6,7 +6,7 @@
 ///
 /// - Unlike HashMap, the internal representation uses a functional representation (via `Trie` module).
 ///
-/// - This class does not permit a direct `clone` operation (neither does `HashMap`), but it does permit creating iterators via `iter()`.  Each iterator costs `O(1)` to create, but represents a fixed view of the mapping that does not interfere with mutations (it will _not_ view subsequent insertions or mutations, if any).
+/// - This class does not permit a direct `clone` operation (neither does `HashMap`), but it does permit creating iterators via `iter()`.  Each iterator costs `O(1)` to create, but represents a fixed view of the mapping that does not interfere with mutations (it will _not_ reflect subsequent insertions or mutations, if any).
 
 import T "Trie";
 import P "Prelude";
