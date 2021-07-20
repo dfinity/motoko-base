@@ -1,15 +1,44 @@
 [[module.Trie]]
 = Trie
 
-Functional maps
+# Functional key-value hash maps.
 
 Functional maps (and sets) whose representation is "canonical", and
-independent of their operation history (unlike other popular search trees).
-
-## Background
+independent of operation history (unlike other popular search trees).
 
 The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 
+## User's overview
+
+This module provides an applicative (functional) hash map.
+Notably, each `put` produces a **new trie _and value being replaced, if any_**.
+
+Those looking for a more familiar (imperative,
+object-oriented) hash map should consider `TrieMap` or `HashMap` instead.
+
+The basic `Trie` operations consist of:
+- `put` - put a key-value into the trie, producing a new version.
+- `get` - get a key's value from the trie, or `null` if none.
+- `iter` - visit every key-value in the trie.
+
+The `put` and `get` operations work over `Key` records,
+which group the hash of the key with its non-hash key value.
+
+```motoko
+import Trie "mo:base/Trie";
+import Text "mo:base/Text";
+
+type Trie<K, V> = Trie.Trie<K, V>;
+type Key<K> = Trie.Key<K>;
+
+func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
+
+let t0 : Trie<Text, Nat> = Trie.empty();
+let t1 : Trie<Text, Nat> = Trie.put(t0, key "hello", Text.equal, 42).0;
+let t2 : Trie<Text, Nat> = Trie.put(t1, key "world", Text.equal, 24).0;
+let n : ?Nat = Trie.put(t1, key "hello", Text.equal, 0).1;
+assert (n == ?42);
+```
 
 
 [[type.Trie]]
@@ -20,7 +49,7 @@ The representation we use here comes from Section 6 of ["Incremental computation
 type Trie<K, V> = {#empty; #leaf : xref:#type.Leaf[Leaf]<K, V>; #branch : xref:#type.Branch[Branch]<K, V>}
 ----
 
-binary hash tries: either empty, a leaf node, or a branch node
+Binary hash tries: either empty, a leaf node, or a branch node
 
 [[type.Leaf]]
 == Leaf
@@ -30,7 +59,7 @@ binary hash tries: either empty, a leaf node, or a branch node
 type Leaf<K, V> = { size : Nat; keyvals : xref:#type.AssocList[AssocList]<xref:#type.Key[Key]<K>, V> }
 ----
 
-leaf nodes of trie consist of key-value pairs as a list.
+Leaf nodes of trie consist of key-value pairs as a list.
 
 [[type.Branch]]
 == Branch
@@ -40,7 +69,7 @@ leaf nodes of trie consist of key-value pairs as a list.
 type Branch<K, V> = { size : Nat; left : xref:#type.Trie[Trie]<K, V>; right : xref:#type.Trie[Trie]<K, V> }
 ----
 
-branch nodes of the trie discriminate on a bit position of the keys' hashes.
+Branch nodes of the trie discriminate on a bit position of the keys' hashes.
 we never store this bitpos; rather,
 we enforce a style where this position is always known from context.
 
@@ -82,7 +111,7 @@ Equality function for two `Key<K>`s, in terms of equality of `K`'s.
 func isValid<K, V>(t : xref:#type.Trie[Trie]<K, V>, enforceNormal : Bool) : Bool
 ----
 
-checks the invariants of the trie structure, including the placement of keys at trie paths
+Checks the invariants of the trie structure, including the placement of keys at trie paths
 
 [[type.Trie2D]]
 == Trie2D
@@ -125,6 +154,7 @@ func size<K, V>(t : xref:#type.Trie[Trie]<K, V>) : Nat
 ----
 
  Get the number of key-value pairs in the trie, in constant time.
+Get size in O(1) time.
 
 [[branch]]
 == branch
@@ -158,7 +188,7 @@ of the leaf.
 func fromList<K, V>(kvc : ?Nat, kvs : xref:#type.AssocList[AssocList]<xref:#type.Key[Key]<K>, V>, bitpos : Nat) : xref:#type.Trie[Trie]<K, V>
 ----
 
-
+Transform a list into a trie, splitting input list into small (leaf) lists, if necessary.
 
 [[clone]]
 == clone
@@ -168,7 +198,7 @@ func fromList<K, V>(kvc : ?Nat, kvs : xref:#type.AssocList[AssocList]<xref:#type
 func clone<K, V>(t : xref:#type.Trie[Trie]<K, V>) : xref:#type.Trie[Trie]<K, V>
 ----
 
-clone the trie efficiently, via sharing.
+Clone the trie efficiently, via sharing.
 
 Purely-functional representation permits _O(1)_ copy, via persistent sharing.
 
@@ -180,7 +210,7 @@ Purely-functional representation permits _O(1)_ copy, via persistent sharing.
 func replace<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v : ?V) : (xref:#type.Trie[Trie]<K, V>, ?V)
 ----
 
-replace the given key's value option with the given one, returning the previous one
+Replace the given key's value option with the given one, returning the previous one
 
 [[put]]
 == put
@@ -190,7 +220,17 @@ replace the given key's value option with the given one, returning the previous 
 func put<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v : V) : (xref:#type.Trie[Trie]<K, V>, ?V)
 ----
 
-put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
+Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
+
+[[get]]
+== get
+
+[source.no-repl,motoko,subs=+macros]
+----
+func get<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool) : ?V
+----
+
+Get the value of the given key in the trie, or return null if nonexistent
 
 [[find]]
 == find
@@ -200,7 +240,7 @@ put the given key's value in the trie; return the new trie, and the previous val
 func find<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool) : ?V
 ----
 
- find the given key's value in the trie, or return null if nonexistent
+Find the given key's value in the trie, or return null if nonexistent
 
 [[merge]]
 == merge
@@ -210,18 +250,12 @@ func find<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_e
 func merge<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, V>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
-  merge tries, preferring the right trie where there are collisions
-  in common keys.
+Merge tries, preferring the right trie where there are collisions
+in common keys.
 
-  note: the `disj` operation generalizes this `merge`
-  operation in various ways, and does not (in general) lose
-  information; this operation is a simpler, special case.
-
-  See also:
-
-  - `disj`
-  - `join`
-  - `prod`
+note: the `disj` operation generalizes this `merge`
+operation in various ways, and does not (in general) lose
+information; this operation is a simpler, special case.
 
 [[mergeDisjoint]]
 == mergeDisjoint
@@ -231,7 +265,7 @@ func merge<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K,
 func mergeDisjoint<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, V>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
-like `merge`, it merges tries, but unlike `merge`, it signals a
+Merge tries like `merge`, except signals a
 dynamic error if there are collisions in common keys between the
 left and right inputs.
 
@@ -243,7 +277,7 @@ left and right inputs.
 func diff<K, V, W>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, W>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
-The key-value pairs of the final trie consists of those pairs of
+Difference of tries. The output consists are pairs of
 the left trie whose keys are not present in the right trie; the
 values of the right trie are irrelevant.
 
@@ -254,6 +288,8 @@ values of the right trie are irrelevant.
 ----
 func disj<K, V, W, X>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, W>, k_eq : (K, K) -> Bool, vbin : (?V, ?W) -> X) : xref:#type.Trie[Trie]<K, X>
 ----
+
+Map disjunction.
 
 This operation generalizes the notion of "set union" to finite maps.
 
@@ -267,11 +303,6 @@ applied to (null, null).
 
 Implements the database idea of an ["outer join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
 
-See also:
-
-- `join`
-- `merge`
-- `prod`
 
 [[join]]
 == join
@@ -281,18 +312,14 @@ See also:
 func join<K, V, W, X>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, W>, k_eq : (K, K) -> Bool, vbin : (V, W) -> X) : xref:#type.Trie[Trie]<K, X>
 ----
 
-This operation generalizes the notion of "set intersection" to
-finite maps.  Produces a "conjuctive image" of the two tries, where
-the values of matching keys are combined with the given binary
-operator, and unmatched key-value pairs are not present in the output.
+Map join.
 
 Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
 
-See also:
+This operation generalizes the notion of "set intersection" to
+finite maps.  The values of matching keys are combined with the given binary
+operator, and unmatched key-value pairs are not present in the output.
 
-- `disj`
-- `merge`
-- `prod`
 
 [[foldUp]]
 == foldUp
@@ -315,6 +342,8 @@ mapFilter, some and all below).
 func prod<K1, V1, K2, V2, K3, V3>(tl : xref:#type.Trie[Trie]<K1, V1>, tr : xref:#type.Trie[Trie]<K2, V2>, op : (K1, V1, K2, V2) -> ?(xref:#type.Key[Key]<K3>, V3), k3_eq : (K3, K3) -> Bool) : xref:#type.Trie[Trie]<K3, V3>
 ----
 
+Map product.
+
 Conditional _catesian product_, where the given
 operation `op` _conditionally_ creates output elements in the
 resulting trie.
@@ -324,11 +353,18 @@ operation: all pairs are considered, regardless of keys matching or
 not.  Moreover, the resulting trie may use keys that are unrelated to
 these input keys.
 
-See also:
 
-- `disj`
-- `join`
-- `merge`
+[[iter]]
+== iter
+
+[source.no-repl,motoko,subs=+macros]
+----
+func iter<K, V>(t : xref:#type.Trie[Trie]<K, V>) : xref:Iter.adoc#type.Iter[I.Iter]<(K, V)>
+----
+
+Returns an `Iter` over the key-value entries of the trie.
+
+Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
 
 [[Build]]
 == Build
@@ -410,27 +446,6 @@ func toArray<K, V, W>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> W) : pass:[
 
 Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
 
-### Implementation notes:
-
-we use this function repeatedly in the Produce Exchange example
-application, often on very large tries.
-
-Performance Profiling shows that it is important that this be
-memory efficient, and reasonably time efficient, at large scales.
-
-To do so, we use a single array allocation (for the returned array) and we
-sacrifice some efficiency in reading the input trie, and instead use function `nth` to
-project each element with an independent trie traversal.
-
-This approach is somewhat forced on us by the type signature of
-A.tabulate, and the desire to only allocate one array; that requirement rules
-out iterative mutation of an optionally-null array, since an imperative
-approach which would give us the wrong return type.
-
-Since we want to  statically rule out null output elements, and since the AS type system
-cannot do that for an imperative approach unless we assume more about
-the type W (e.g., the existence of "default values"), we settle for using `nth`.
-
 [[isEmpty]]
 == isEmpty
 
@@ -451,7 +466,7 @@ filter uses this function to avoid creating such subtrees.
 func filter<K, V>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
-filter the key-value pairs by a given predicate.
+Filter the key-value pairs by a given predicate.
 
 [[mapFilter]]
 == mapFilter
@@ -461,7 +476,7 @@ filter the key-value pairs by a given predicate.
 func mapFilter<K, V, W>(t : xref:#type.Trie[Trie]<K, V>, f : (K, V) -> ?W) : xref:#type.Trie[Trie]<K, W>
 ----
 
-map and filter the key-value pairs by a given predicate.
+Map and filter the key-value pairs by a given predicate.
 
 [[equalStructure]]
 == equalStructure
@@ -487,7 +502,7 @@ We do not observe that equality here.
 func replaceThen<K, V, X>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v2 : V, success : (xref:#type.Trie[Trie]<K, V>, V) -> X, fail : () -> X) : X
 ----
 
-replace the given key's value in the trie,
+Replace the given key's value in the trie,
 and only if successful, do the success continuation,
 otherwise, return the failure value
 
@@ -499,7 +514,7 @@ otherwise, return the failure value
 func putFresh<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, v : V) : xref:#type.Trie[Trie]<K, V>
 ----
 
-put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
+Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
 
 [[put2D]]
 == put2D
@@ -509,7 +524,7 @@ put the given key's value in the trie; return the new trie; assert that no prior
 func put2D<K1, K2, V>(t : xref:#type.Trie2D[Trie2D]<K1, K2, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool, v : V) : xref:#type.Trie2D[Trie2D]<K1, K2, V>
 ----
 
-put the given key's value in the 2D trie; return the new 2D trie.
+Put the given key's value in the 2D trie; return the new 2D trie.
 
 [[put3D]]
 == put3D
@@ -519,7 +534,7 @@ put the given key's value in the 2D trie; return the new 2D trie.
 func put3D<K1, K2, K3, V>(t : xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool, k3 : xref:#type.Key[Key]<K3>, k3_eq : (K3, K3) -> Bool, v : V) : xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>
 ----
 
-put the given key's value in the trie; return the new trie;
+Put the given key's value in the trie; return the new trie;
 
 [[remove]]
 == remove
@@ -529,7 +544,7 @@ put the given key's value in the trie; return the new trie;
 func remove<K, V>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool) : (xref:#type.Trie[Trie]<K, V>, ?V)
 ----
 
-remove the given key's value in the trie; return the new trie
+Remove the given key's value in the trie; return the new trie
 
 [[removeThen]]
 == removeThen
@@ -539,7 +554,7 @@ remove the given key's value in the trie; return the new trie
 func removeThen<K, V, X>(t : xref:#type.Trie[Trie]<K, V>, k : xref:#type.Key[Key]<K>, k_eq : (K, K) -> Bool, success : (xref:#type.Trie[Trie]<K, V>, V) -> X, fail : () -> X) : X
 ----
 
-remove the given key's value in the trie,
+Remove the given key's value in the trie,
 and only if successful, do the success continuation,
 otherwise, return the failure value
 
@@ -562,7 +577,7 @@ new trie, and the prior value, if any.
 func remove3D<K1, K2, K3, V>(t : xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>, k1 : xref:#type.Key[Key]<K1>, k1_eq : (K1, K1) -> Bool, k2 : xref:#type.Key[Key]<K2>, k2_eq : (K2, K2) -> Bool, k3 : xref:#type.Key[Key]<K3>, k3_eq : (K3, K3) -> Bool) : (xref:#type.Trie3D[Trie3D]<K1, K2, K3, V>, ?V)
 ----
 
-remove the given key-key pair's value in the 3D trie; return the
+Remove the given key-key pair's value in the 3D trie; return the
 new trie, and the prior value, if any.
 
 [[mergeDisjoint2D]]
