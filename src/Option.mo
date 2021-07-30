@@ -12,13 +12,13 @@
 ///   case null 0;
 ///   case (?int) int;
 /// };
-/// assert (int1orZero == 42);
+/// assert int1orZero == 42;
 ///
 /// let int2orZero : Int = switch optionalInt2 {
 ///   case null 0;
 ///   case (?int) int;
 /// };
-/// assert (int2orZero == 0);
+/// assert int2orZero == 0;
 /// ```
 ///
 /// The functions in this module capture some common operations when working
@@ -47,8 +47,8 @@ module {
   /// Applies a function to the wrapped value. `null`'s are left untouched.
   /// ```motoko
   /// import Option "mo:base/Option";
-  /// assert (Option.map<Nat, Nat>(?(42), func x = x + 1) == ?(43));
-  /// assert (Option.map<Nat, Nat>(null, func x = x + 1) == null);
+  /// assert Option.map<Nat, Nat>(?42, func x = x + 1) == ?43;
+  /// assert Option.map<Nat, Nat>(null, func x = x + 1) == null;
   /// ```
   public func map<A, B>(x : ?A, f : A -> B) : ?B =
     switch x {
@@ -62,10 +62,10 @@ module {
   /// ```motoko
   /// import Option "mo:base/Option";
   /// var counter : Nat = 0;
-  /// Option.iterate(?(5), func (x : Nat) { counter += x });
-  /// assert (counter == 5);
+  /// Option.iterate(?5, func (x : Nat) { counter += x });
+  /// assert counter == 5;
   /// Option.iterate(null, func (x : Nat) { counter += x });
-  /// assert (counter == 5);
+  /// assert counter == 5;
   /// ```
   public func iterate<A>(x : ?A, f : A -> ()) =
     switch x {
@@ -102,9 +102,9 @@ module {
   /// Given an optional optional value, removes one layer of optionality.
   /// ```motoko
   /// import Option "mo:base/Option";
-  /// assert (Option.flatten(?(?(42))) == ?(42));
-  /// assert (Option.flatten(?(null)) == null);
-  /// assert (Option.flatten(null) == null);
+  /// assert Option.flatten(?(?(42))) == ?42;
+  /// assert Option.flatten(?(null)) == null;
+  /// assert Option.flatten(null) == null;
   /// ```
   public func flatten<A>(x : ??A) : ?A {
     chain<?A, A>(x, func (x_ : ?A) : ?A {
@@ -115,7 +115,7 @@ module {
   /// Creates an optional value from a definite value.
   /// ```motoko
   /// import Option "mo:base/Option";
-  /// assert (Option.make(42) == ?(42));
+  /// assert Option.make(42) == ?42;
   /// ```
   public func make<A>(x: A) : ?A = ?x;
 
