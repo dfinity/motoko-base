@@ -69,7 +69,7 @@
 // memory-efficient `toArray` function, which itself relies on
 // per-element projection via `nth`; in turn, `nth` directly uses the
 // O(1)-time function `size` for achieving an acceptable level of
-// algorithmic efficiently.  Notably, leaves are generally lists of
+// algorithmic efficiency.  Notably, leaves are generally lists of
 // key-value pairs, and we do not store a size for each Cons cell in the
 // list.
 //
