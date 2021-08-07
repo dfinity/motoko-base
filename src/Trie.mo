@@ -116,7 +116,7 @@ module {
   public type Key<K> = {
     /// `hash` permits fast inequality checks, and permits collisions
     hash: Hash.Hash;
-    /// `key` permits percise equality checks, but only used after equal hashes.
+    /// `key` permits precise equality checks, but only used after equal hashes.
     key: K;
   };
 
