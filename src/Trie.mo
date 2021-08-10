@@ -964,7 +964,7 @@ module {
         size<K, V>(t),
         func (i : Nat) : W {
           let (k, v) = switch (nth<K, V>(t, i)) {
-            case null { loop { assert false } };
+            case null { P.unreachable() };
             case (?x) { x };
           };
           f(k.key, v)
