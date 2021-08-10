@@ -878,7 +878,7 @@ module {
       rec(tb);
       A.tabulate<W>(c, func(i : Nat) : W {
         switch (a[i]) {
-          case null { loop { assert false } };
+          case null { P.unreachable() };
           case (?x) { x }
         }})
     };
