@@ -569,7 +569,7 @@ module {
        case (#leaf(l)) {
          leaf(AssocList.disj<Key<K>, V, W, X>(null, l.keyvals, key_eq, vbin), bitpos)
        };
-       case (#branch(b)) { 
+       case (#branch(b)) {
          branch(recR(b.left, bitpos + 1),
                 recR(b.right, bitpos + 1)) };
      }
@@ -876,7 +876,11 @@ module {
         }
       };
       rec(tb);
-      A.tabulate<W>(c, func(i : Nat) : W = Option.unwrap<W>(a[i]))
+      A.tabulate<W>(c, func(i : Nat) : W {
+        switch (a[i]) {
+          case null { P.unreachable() };
+          case (?x) { x }
+        }})
     };
 
   };
@@ -959,7 +963,10 @@ module {
       let a = A.tabulate<W> (
         size<K, V>(t),
         func (i : Nat) : W {
-          let (k, v) = Option.unwrap<(Key<K>, V)>(nth<K, V>(t, i));
+          let (k, v) = switch (nth<K, V>(t, i)) {
+            case null { P.unreachable() };
+            case (?x) { x };
+          };
           f(k.key, v)
         }
       );
