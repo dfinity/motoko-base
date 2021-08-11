@@ -406,7 +406,10 @@ module {
     Array.tabulate<A>(length, func (i) {
       let popped = pop<A>(list);
       list := popped.1;
-      Option.unwrap<A>(popped.0);
+      switch (popped.0) {
+        case null { loop { assert false } };
+        case (?x) x;
+      }
     });
   };
 
