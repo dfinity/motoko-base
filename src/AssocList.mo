@@ -73,7 +73,7 @@ module {
 
   /// The entries of the final list consist of those pairs of
   /// the left list whose keys are not present in the right list; the
-  /// values of the right list are irrelevant.
+  /// "extra" values of the right list are irrelevant.
   public func diff<K, V, W>(
     al1 : AssocList<K, V>,
     al2 : AssocList<K, W>,
@@ -84,8 +84,8 @@ module {
         case (null) { null };
         case (?((k, v1), tl)) {
           switch (find<K, W>(al2, k, keq)) {
-            case (null) { rec(tl)};
-            case (?v2) { ?((k, v1), rec(tl)) };
+            case (null) { ?((k, v1), rec(tl)) };
+            case (?v2) { rec(tl)};
           }
         };
       }
