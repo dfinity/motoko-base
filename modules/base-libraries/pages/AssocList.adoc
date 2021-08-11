@@ -47,7 +47,7 @@ func diff<K, V, W>(al1 : xref:#type.AssocList[AssocList]<K, V>, al2 : xref:#type
 
 The entries of the final list consist of those pairs of
 the left list whose keys are not present in the right list; the
-values of the right list are irrelevant.
+"extra" values of the right list are irrelevant.
 
 [[mapAppend]]
 == mapAppend
