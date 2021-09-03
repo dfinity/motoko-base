@@ -1,15 +1,19 @@
-/// Byte-level access to (virtual) Stable Memory
-
-/// This is a virtual abstraction over IC StableMemory and supports persisting
+/// Byte-level access to (virtual) _stable memory_.
+///
+/// This is a lightweight abstraction over IC _stable memory_ and supports persisting
 /// raw binary data across Motoko upgrades.
 /// Use of this module does _not_ interfere with Motoko's use of
 /// stable variables whose peristence also uses (real) IC stable memory.
-
-/// Each load operation loads from byte address `offset` in little-endian format using the natural bit-width of the type in question. The operation traps if reading beyond the current virtual memory size.
-/// Each store operation stores to byte address `offset` in little-endian formatusing the natural bit-width of the type in question. A store operation traps if attempting to store beyond the current virtual memory size.
-
+///
+/// Each `load` operation loads from byte address `offset` in little-endian
+/// format using the natural bit-width of the type in question.
+/// The operation traps if attempting to read beyond the current stable memory size.
+///
+/// Each `store` operation stores to byte address `offset` in little-endian format using the natural bit-width of the type in question.
+/// The operation traps if attempting to write beyond the current stable memory size.
+///
 /// Text values can be handled by using `Text.decodeUtf8` and `Text.encodeUtf8`, in conjunction with `loadBlob` and `storeBlob`.
-
+///
 /// NB: The IC's actual stable memory size (`ic0.stable_size`) may exceed the
 /// page size reported by Motoko function `size()`.
 /// This is to  accommodate Motoko's stable variables.
