@@ -3,7 +3,7 @@
 /// This is a lightweight abstraction over IC _stable memory_ and supports persisting
 /// raw binary data across Motoko upgrades.
 /// Use of this module does _not_ interfere with Motoko's use of
-/// stable variables whose peristence also uses (real) IC stable memory.
+/// _stable variables_, whose persistence mechanism also uses (real) IC stable memory.
 ///
 /// Each `load` operation loads from byte address `offset` in little-endian
 /// format using the natural bit-width of the type in question.
