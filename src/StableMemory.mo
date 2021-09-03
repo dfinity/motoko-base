@@ -6,7 +6,7 @@
 /// stable variables whose peristence also uses (real) IC stable memory.
 
 /// Each load operation loads from byte address `offset` in little-endian format using the natural bit-width of the type in question. The operation traps if reading beyond the current virtual memory size.
-/// Each store operation stored to byte address `offset` in little-endian format. A store operation traps if attempting to store beyond the current virtual memory size.
+/// Each store operation stores to byte address `offset` in little-endian formatusing the natural bit-width of the type in question. A store operation traps if attempting to store beyond the current virtual memory size.
 
 /// Text values can be handled by using `Text.decodeUtf8` and `Text.encodeUtf8`, in conjunction with `loadBlob` and `storeBlob`.
 
@@ -20,13 +20,14 @@ module {
 
   /// Current size of IC stable memory, in pages.
   /// Each page is 16KiB (16384 bytes).
+  /// Initially `0`.
   public let size : () -> (pages : Nat32) =
     Prim.stableMemorySize;
 
-  /// Grow current size of stable memory by `pagecount` pages.
+  /// Grow current `size` of stable memory by `pagecount` pages.
   /// Each page is 16KiB (16384 bytes).
   /// Returns previous `size` when able to grow.
-  /// Returns -1 if remaining pages insufficient.
+  /// Returns `0xFFFF` if remaining pages insufficient.
   public let grow : (new_pages : Nat32) -> (oldpages : Nat32) =
     Prim.stableMemoryGrow;
 
@@ -75,7 +76,7 @@ module {
   public let storeInt64 : (offset : Nat32, value : Int64) -> () =
     Prim.stableMemoryStoreInt64;
 
-  /// Load size bytes starting from `offset` into fresh `blob`.
+  /// Load `size` bytes starting from `offset` as `blob`.
   /// Traps on out-of-bounds access.
   public let loadBlob : (offset : Nat32, size : Nat) -> (blob : Blob) =
     Prim.stableMemoryLoadBlob;
