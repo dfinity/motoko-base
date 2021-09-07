@@ -95,13 +95,11 @@ module {
   /// Conversion from Int64.
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
 
-  /// Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
-  public let toInt : Float -> Int =
-    func (x : Float) : Int = Prim.int64ToInt(toInt64(x));
+  /// Conversion to Int.
+  public let toInt : Float -> Int = Prim.floatToInt;
 
-  /// Conversion from Int via Int64. May trap.
-  public let fromInt : Int -> Float =
-    func (x : Int) : Float = fromInt64(Prim.intToInt64(x));
+  /// Conversion from Int. May result in `Inf`.
+  public let fromInt : Int -> Float = Prim.intToFloat;
 
   /// Returns `x == y`.
   public func equal(x : Float, y : Float) : Bool { x == y };
