@@ -268,7 +268,7 @@ Conversion from Int64.
 let toInt : xref:#type.Float[Float] -> Int
 ----
 
-Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
+Conversion to Int.
 
 [[fromInt]]
 == fromInt
@@ -278,7 +278,7 @@ Conversion to Int via Int64, equivalent to `Int64.toInt(toInt64(trunc(f)))`
 let fromInt : Int -> xref:#type.Float[Float]
 ----
 
-Conversion from Int via Int64. May trap.
+Conversion from Int. May result in `Inf`.
 
 [[equal]]
 == equal
