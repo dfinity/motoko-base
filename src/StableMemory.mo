@@ -55,11 +55,6 @@ module {
   public let storeNat64 : (offset : Nat32, value : Nat64) -> () =
     Prim.stableMemoryStoreNat64;
 
-  public let loadFloat : (offset : Nat32) -> Float =
-    Prim.stableMemoryLoadFloat;
-  public let storeFloat : (offset : Nat32, value : Float) -> () =
-    Prim.stableMemoryStoreFloat;
-
   public let loadInt32 : (offset : Nat32) -> Int32 =
     Prim.stableMemoryLoadInt32;
   public let storeInt32 : (offset : Nat32, value : Int32) -> () =
@@ -79,6 +74,11 @@ module {
     Prim.stableMemoryLoadInt64;
   public let storeInt64 : (offset : Nat32, value : Int64) -> () =
     Prim.stableMemoryStoreInt64;
+
+  public let loadFloat : (offset : Nat32) -> Float =
+    Prim.stableMemoryLoadFloat;
+  public let storeFloat : (offset : Nat32, value : Float) -> () =
+    Prim.stableMemoryStoreFloat;
 
   /// Load `size` bytes starting from `offset` as `blob`.
   /// Traps on out-of-bounds access.
