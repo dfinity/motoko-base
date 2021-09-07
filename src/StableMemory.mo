@@ -22,7 +22,7 @@ import Prim "mo:⛔";
 
 module {
 
-  /// Current size of IC stable memory, in pages.
+  /// Current size of the stable memory, in pages.
   /// Each page is 16KiB (16384 bytes).
   /// Initially `0`.
   public let size : () -> (pages : Nat32) =
