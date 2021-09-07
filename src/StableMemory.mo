@@ -2,8 +2,8 @@
 ///
 /// This is a lightweight abstraction over IC _stable memory_ and supports persisting
 /// raw binary data across Motoko upgrades.
-/// Use of this module does _not_ interfere with Motoko's use of
-/// _stable variables_, whose persistence mechanism also uses (real) IC stable memory.
+/// Use of this module is fully compatible with Motoko's use of
+/// _stable variables_, whose persistence mechanism also uses (real) IC stable memory internally, but does not interfere with this API.
 ///
 /// Each `load` operation loads from byte address `offset` in little-endian
 /// format using the natural bit-width of the type in question.
@@ -22,7 +22,7 @@ import Prim "mo:⛔";
 
 module {
 
-  /// Current size of IC stable memory, in pages.
+  /// Current size of the stable memory, in pages.
   /// Each page is 16KiB (16384 bytes).
   /// Initially `0`.
   public let size : () -> (pages : Nat32) =
