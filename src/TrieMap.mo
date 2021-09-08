@@ -63,8 +63,8 @@ module {
       let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
       map := t;
       switch (ov) {
-        case null { _size -= 1 };
-        case _ {}
+        case (?_) { _size -= 1 };
+        case null {}
       };
       ov
     };
