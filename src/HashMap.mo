@@ -118,6 +118,14 @@ module {
       ov
     };
 
+    /// An `Iter` over the keys.
+    public func keys() : Iter.Iter<K>
+    { Iter.map(entries(), func (kv : (K, V)) : K { kv.0 }) };
+
+    /// An `Iter` over the values.
+    public func vals() : Iter.Iter<V>
+    { Iter.map(entries(), func (kv : (K, V)) : V { kv.1 }) };
+
     /// Returns an iterator over the key value pairs in this
     /// `HashMap`. Does _not_ modify the `HashMap`.
     public func entries() : Iter.Iter<(K, V)> {
