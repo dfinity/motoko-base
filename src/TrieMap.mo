@@ -1,6 +1,6 @@
 /// # Key-value hash maps.
 ///
-/// An imperative hash map, with a general key and value type.  
+/// An imperative hash map, with a general key and value type.
 ///
 /// - The `class` `TrieMap` exposes the same interface as `HashMap`.
 ///
@@ -68,6 +68,18 @@ module {
       };
       ov
     };
+
+    /// An `Iter` over the keys.
+    ///
+    /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
+    public func keys() : I.Iter<K>
+    { I.map(entries(), func (kv : (K, V)) : K { kv.0 }) };
+
+    /// An `Iter` over the values.
+    ///
+    /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
+    public func vals() : I.Iter<V>
+    { I.map(entries(), func (kv : (K, V)) : V { kv.1 }) };
 
     /// Returns an `Iter` over the entries.
     ///

@@ -31,6 +31,23 @@ debug {
     };
   };
 
+  // ensure clone has each key present in original
+  for (k in a.keys()) {
+    switch (b.get(k)) {
+    case null { assert false };
+    case (?_) {  };
+    };
+  };
+
+  // ensure clone has each value present in original
+  for (v in a.vals()) {
+    var foundMatch = false;
+    for (w in b.vals()) {
+      if (v == w) { foundMatch := true }
+    };
+    assert foundMatch
+  };
+
   // ensure original has each key-value pair present in clone
   for ((k,v) in b.entries()) {
     Prim.debugPrint(debug_show (k,v));
