@@ -6,6 +6,15 @@ import Text "mo:base/Text";
 debug {
   let a = H.TrieMap<Text, Nat>(Text.equal, Text.hash);
 
+  assert a.size() == 0;
+  ignore a.remove("apple");
+  assert a.size() == 0;
+
+  a.put("apple", 1);
+  assert a.size() == 1;
+  ignore a.remove("apple");
+  assert a.size() == 0;
+
   a.put("apple", 1);
   a.put("banana", 2);
   a.put("pear", 3);
@@ -126,5 +135,4 @@ debug {
     case (?w) { assert v == w };
     };
   };
-
 };
