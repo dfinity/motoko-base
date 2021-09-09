@@ -29,7 +29,7 @@ module {
     Prim.stableMemorySize;
 
   /// Grow current `size` of stable memory by `pagecount` pages.
-  /// Each page is 16KiB (16384 bytes).
+  /// Each page is 64KiB (65536 bytes).
   /// Returns previous `size` when able to grow.
   /// Returns `0xFFFF` if remaining pages insufficient.
   public let grow : (new_pages : Nat32) -> (oldpages : Nat32) =
