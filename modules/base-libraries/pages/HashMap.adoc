@@ -91,6 +91,26 @@ func replace(k : K, v : V) : ?V
 Insert the value `v` at key `k` and returns the previous value stored at
 `k` or `null` if it didn't exist.
 
+[[HashMap.keys]]
+=== keys
+
+[source.no-repl,motoko,subs=+macros]
+----
+func keys() : xref:Iter.adoc#type.Iter[Iter.Iter]<K>
+----
+
+An `Iter` over the keys.
+
+[[HashMap.vals]]
+=== vals
+
+[source.no-repl,motoko,subs=+macros]
+----
+func vals() : xref:Iter.adoc#type.Iter[Iter.Iter]<V>
+----
+
+An `Iter` over the values.
+
 [[HashMap.entries]]
 === entries
 

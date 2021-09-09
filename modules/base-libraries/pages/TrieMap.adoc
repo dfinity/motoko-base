@@ -3,7 +3,7 @@
 
 # Key-value hash maps.
 
-An imperative hash map, with a general key and value type.  
+An imperative hash map, with a general key and value type.
 
 - The `class` `TrieMap` exposes the same interface as `HashMap`.
 
@@ -82,6 +82,30 @@ func remove(k : K) : ?V
 ----
 
 Delete and return the (optional) value associated with the given key.
+
+[[TrieMap.keys]]
+=== keys
+
+[source.no-repl,motoko,subs=+macros]
+----
+func keys() : xref:Iter.adoc#type.Iter[I.Iter]<K>
+----
+
+An `Iter` over the keys.
+
+Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
+
+[[TrieMap.vals]]
+=== vals
+
+[source.no-repl,motoko,subs=+macros]
+----
+func vals() : xref:Iter.adoc#type.Iter[I.Iter]<V>
+----
+
+An `Iter` over the values.
+
+Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
 
 [[TrieMap.entries]]
 === entries
