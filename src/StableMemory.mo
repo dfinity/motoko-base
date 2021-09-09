@@ -16,14 +16,14 @@
 ///
 /// NB: The IC's actual stable memory size (`ic0.stable_size`) may exceed the
 /// page size reported by Motoko function `size()`.
-/// This is to  accommodate Motoko's stable variables.
+/// This is to accommodate Motoko's stable variables.
 
 import Prim "mo:⛔";
 
 module {
 
   /// Current size of the stable memory, in pages.
-  /// Each page is 16KiB (16384 bytes).
+  /// Each page is 64KiB (65536 bytes).
   /// Initially `0`.
   public let size : () -> (pages : Nat32) =
     Prim.stableMemorySize;
@@ -80,9 +80,9 @@ module {
   public let storeFloat : (offset : Nat32, value : Float) -> () =
     Prim.stableMemoryStoreFloat;
 
-  /// Load `size` bytes starting from `offset` as `blob`.
+  /// Load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on out-of-bounds access.
-  public let loadBlob : (offset : Nat32, size : Nat) -> (blob : Blob) =
+  public let loadBlob : (offset : Nat32, size : Nat) -> Blob =
     Prim.stableMemoryLoadBlob;
 
   /// Write bytes of `blob` beginning at `offset`.
