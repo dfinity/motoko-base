@@ -244,7 +244,7 @@ Initialize a mutable array with `size` copies of the initial value.
 func tabulate<A>(size : Nat, gen : Nat -> A) : pass:[[]Apass:[]]
 ----
 
-Initialize a mutable array of the given size, and use the `gen` function to produce the initial value for every index.
+Initialize an immutable array of the given size, and use the `gen` function to produce the initial value for every index.
 
 [[tabulateVar]]
 == tabulateVar
