@@ -15,3 +15,13 @@ let print : Text -> ()
 How this stream is stored or displayed depends on the
 execution environment.
 
+[[trap]]
+== trap
+
+[source.no-repl,motoko,subs=+macros]
+----
+let trap : Text -> None
+----
+
+`trap(t)` traps execution with a user-provided message.
+
