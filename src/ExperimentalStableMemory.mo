@@ -1,6 +1,6 @@
 /// Byte-level access to (virtual) _stable memory_.
 ///
-/// **WARNING**: The `ExperimentalStableMemory` library is **experimental**, subject to change
+/// **WARNING**: As its name suggests, this library is **experimental**, subject to change
 /// and may be replaced by safer alternatives in later versions of Motoko.
 /// Use at your own risk and discretion.
 ///
