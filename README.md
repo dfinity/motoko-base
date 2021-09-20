@@ -31,7 +31,7 @@ In `test/`, run
 
     make
 
-in `test`. This will expect `moc` to be installed and in your `$PATH`.
+This will expect `moc` to be installed and in your `$PATH`.
 
 Running the tests also requires `wasmtime` and `vessel` to be installed.
 
