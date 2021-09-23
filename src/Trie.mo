@@ -1,4 +1,4 @@
-/// # Functional key-value hash maps.
+/// Functional key-value hash maps.
 ///
 /// Functional maps (and sets) whose representation is "canonical", and
 /// independent of operation history (unlike other popular search trees).
