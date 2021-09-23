@@ -1,7 +1,7 @@
 [[module.Principal]]
 = Principal
 
-IC principals (User and canister IDs)
+IC principals (user and canister smart contract IDs)
 
 [[type.Principal]]
 == Principal
