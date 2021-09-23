@@ -1,4 +1,4 @@
-/// IC principals (User and canister IDs)
+/// IC principals (user and canister smart contract IDs)
 
 import Prim "mo:⛔";
 import Blob "Blob";
