@@ -1,23 +1,17 @@
-/// Growing buffers
+/// Generic, extensible buffers
 ///
-/// This module defines buffers that grow, with a general element type.
+/// Generic, mutable sequences that grow to accommodate arbitrary numbers of elements.
 ///
-/// ## Why?
+/// Class `Buffer<X>` provides extensible, mutable sequences of elements of type `X`.
+/// that can be efficiently produced and consumed with imperative code.
+/// A buffer object can be extended by a single element or the contents of another buffer object.
 ///
-/// Motoko applications expose interfaces that use fixed-size arrays of
-/// general (user-defined) elements to represent sets, sequences and maps
-/// of application-specific elements.
+/// When required, the current state of a buffer object can be converted to a fixed-size array of its elements.
 ///
-/// The `Array` module focuses on Motoko's builtin arrays, whose size is
-/// fixed. Arrays do not permit general growth/appending, which is the
-/// focus here.
-///
-/// To create these arrays, and to consume them with ergonomic (imperative) code, and
-/// low API friction, developers can employ `Buffer` objects.
-///
-/// ## Define `Buf<X>` object type
-///
-/// A "Buffer" is a mutable sequence that can be extended by a single element or the contents of another buffer.
+/// Buffers complement Motoko's non-extensible array types
+/// (arrays do not support efficient extension, because the size of an array is
+/// determined at construction and cannot be changed).
+
 import Prim "mo:⛔";
 
 module {
