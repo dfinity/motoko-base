@@ -1,4 +1,4 @@
-/// # Key-value hash maps.
+/// Key-value hash maps.
 ///
 /// An imperative hash map, with a general key and value type.
 ///
