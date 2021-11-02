@@ -23,6 +23,7 @@ module {
     return true;
   };
   /// Append the values of two input arrays
+  /// @deprecated Array.append has critical performance flaws; use a Buffer, and Buffer.append, instead.
   public func append<A>(xs : [A], ys : [A]) : [A] {
     switch(xs.size(), ys.size()) {
       case (0, 0) { []; };
