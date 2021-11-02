@@ -22,6 +22,7 @@ func append<A>(xs : pass:[[]Apass:[]], ys : pass:[[]Apass:[]]) : pass:[[]Apass:[
 ----
 
 Append the values of two input arrays
+@deprecated Array.append has critical performance flaws; use a Buffer, and Buffer.append, instead.
 
 [[sort]]
 == sort
