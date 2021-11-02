@@ -33,127 +33,124 @@ module {
     make([])
   };
 
-/* to do -- continue to refactor Buffer class
 
   /// Adds a single element to the buffer.
-  public func add(b : Buffer<X>, elem : X) : Buffer<X> {
+  public func add<X>(b : Buffer<X>, elem : X) {
     if (b.count == b.elems.size()) {
-      let size =
-        if (b.count == 0) {
-        if (initCapacity > 0) { initCapacity } else { 1 }
-      } else {
-        2 * elems.size()
-      };
+      let size = if (b.count == 0) { 1 } else { 2 * b.elems.size() };
       let elems2 = Prim.Array_init<X>(size, elem);
       var i = 0;
       label l loop {
-        if (i >= count) break l;
-        elems2[i] := elems[i];
+        if (i >= b.count) break l;
+        elems2[i] := b.elems[i];
         i += 1;
       };
-      elems := elems2;
+      b.elems := elems2;
     };
-    elems[count] := elem;
-    count += 1;
+    b.elems[b.count] := elem;
+    b.count += 1;
   };
 
   /// Removes the item that was inserted last and returns it or `null` if no
   /// elements had been added to the Buffer.
-  public func removeLast() : ?X {
-    if (count == 0) {
+  public func removeLast<X>(b : Buffer<X>) : ?X {
+    if (b.count == 0) {
       null
     } else {
-      count -= 1;
-      ?elems[count]
+      b.count -= 1;
+      ?b.elems[b.count]
     };
   };
 
-  /// Adds all elements in buffer `b` to this buffer.
-  public func append(b : Buffer<X>) {
-    let i = b.vals();
-    loop {
-      switch (i.next()) {
-      case null return;
-      case (?x) { add(x) };
-      };
-    };
+  /// Append two buffer's content, as a third buffer result.
+  public func concat<X>(b1 : Buffer<X>, b2 : Buffer<X>) : Buffer<X> {
+    { var count = b1.count + b2.count ;
+      var elems = Array.tabulateVar(
+        // no extra slack space -- perhaps add as another parameter?
+        b1.count + b2.count,
+        func (i : Nat) : X { if (i < b1.count) { b1.elems[i] }
+                             else { b2.elems[i - b1.count] }})
+    }
   };
-  
+
+  /// Append elements of second buffer to end of first buffer.
+  public func append<X>(b1 : Buffer<X>, b2 : Buffer<X>) {
+    for (elem in b2.elems.vals()) {
+      add(b1, elem)
+    }
+  };
+
   /// Returns the current number of elements.
-  public func size() : Nat =
-    count;
-  
+  public func size<X>(b : Buffer<X>) : Nat =
+    b.count;
+
   /// Resets the buffer.
-  public func clear() =
-    count := 0;
-  
+  public func clear<X>(b : Buffer<X>) =
+    b.count := 0;
+
   /// Returns a copy of this buffer.
-  public func clone() : Buffer<X> {
-    let c = Buffer<X>(elems.size());
-    var i = 0;
-    label l loop {
-      if (i >= count) break l;
-      c.add(elems[i]);
-      i += 1;
-    };
-    c
+  public func clone<X>(b : Buffer<X>) : Buffer<X> {
+    { var count = b.count ;
+      var elems = Array.tabulateVar(b.elems.size(), func(i : Nat) : X { b.elems[i] })
+    }
   };
-  
+
   /// Returns an `Iter` over the elements of this buffer.
-  public func vals() : { next : () -> ?X } = object {
+  public func vals<X>(b : Buffer<X>) : { next : () -> ?X } = object {
     var pos = 0;
     public func next() : ?X {
-      if (pos == count) { null } else {
-        let elem = ?elems[pos];
+      // to do -- detect if buffer has mutated; trap here if so.
+      if (pos == b.count) { null } else {
+        let elem = ?b.elems[pos];
         pos += 1;
         elem
       }
     }
   };
-  
+
   /// Creates a new array containing this buffer's elements.
-  public func toArray() : [X] =
+  public func toArray<X>(b : Buffer<X>) : [X] =
     // immutable clone of array
     Prim.Array_tabulate<X>(
-      count,
-      func(x : Nat) : X { elems[x] }
+      b.count,
+      func(x : Nat) : X { b.elems[x] }
     );
-  
+
   /// Creates a mutable array containing this buffer's elements.
-  public func toVarArray() : [var X] {
-    if (count == 0) { [var] } else {
-      let a = Prim.Array_init<X>(count, elems[0]);
+  public func toVarArray<X>(b : Buffer<X>) : [var X] {
+    if (b.count == 0) { [var] } else {
+      let a = Prim.Array_init<X>(b.count, b.elems[0]);
       var i = 0;
       label l loop {
-        if (i >= count) break l;
-        a[i] := elems[i];
+        if (i >= b.count) break l;
+        a[i] := b.elems[i];
         i += 1;
       };
       a
     }
   };
-  
+
   /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
-  public func get(i : Nat) : X {
-    assert(i < count);
-    elems[i]
+  public func get<X>(b : Buffer<X>, i : Nat) : X {
+    assert(i < b.count);
+    b.elems[i]
   };
-  
+
   /// Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
-  public func getOpt(i : Nat) : ?X {
-    if (i < count) {
-      ?elems[i]
+  public func getOpt<X>(b : Buffer<X>, i : Nat) : ?X {
+    if (i < b.count) {
+      ?b.elems[i]
     }
     else {
       null
     }
   };
-  
+
   /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
   /// index is out of bounds. Indexing is zero-based.
-  public func put(i : Nat, elem : X) {
-    elems[i] := elem;
+  public func put<X>(b : Buffer<X>, i : Nat, elem : X) {
+    assert(i < b.count);
+    b.elems[i] := elem;
   };
-*/
 
 }
