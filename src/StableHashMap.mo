@@ -17,153 +17,185 @@ module {
   // - K = key type
   // - V = value type
 
-  // func parameters that we need for some operations:
-  // - keyEq : (K, K) -> Bool,
-  // - keyHash : K -> Hash.Hash
 
   // key-val list
   public type KVs<K, V> = AssocList.AssocList<K, V>;
 
-  // representation of hash table
+  // representation of (the stable types of) the hash map state.
   public type HashMap<K, V> = {
     var table : [var KVs<K, V>];
     var count : Nat;
   };
 
+  // representation of hash map including key operations.
+  // unlike HashMap, this type is not stable, but is required for
+  // some operations (keyEq and keyHash are functions).
+  public type HashMap_<K, V> = {
+    keyEq : (K, K) -> Bool;
+    keyHash : K -> Hash.Hash;
+    // to do -- use union type operation to compress this definition
+    initCapacity : Nat;
+    var table : [var KVs<K, V>];
+    var count : Nat;
+  };
+
+  public func empty<K, V>() : HashMap<K, V> {
+    { var table = [var];
+      var count = 0;
+    }
+  };
+
+  public func empty_<K, V>(
+    initCapacity : Nat,
+    keyEq : (K, K) -> Bool,
+    keyHash : K -> Hash.Hash
+  ) : HashMap_<K, V>
+  {
+    { var table = [var];
+      var count = 0;
+      initCapacity;
+      keyEq;
+      keyHash;
+    }
+  };
+
   /// Returns the number of entries in this HashMap.
-  public func size<K, V>(h : HashMap<K, V>) : Nat = h.count;
+  public func size<K, V>(self : HashMap<K, V>) : Nat = self.count;
 
-/*
-    /// Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
-    /// exist.
-    public func delete(k : K) = ignore remove(k);
+  /// Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
+  /// exist.
+  public func delete<K, V>(self : HashMap_<K, V>, k : K) = ignore remove(self, k);
 
-    /// Removes the entry with the key `k` and returns the associated value if it
-    /// existed or `null` otherwise.
-    public func remove(k : K) : ?V {
-      let m = table.size();
-      if (m > 0) {
-        let h = Prim.nat32ToNat(keyHash(k));
-        let pos = h % m;
-        let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, null);
-        table[pos] := kvs2;
-        switch(ov){
-          case null { };
-          case _ { _count -= 1; }
-        };
-        ov
-      } else {
-        null
-      };
-    };
-
-    /// Gets the entry with the key `k` and returns its associated value if it
-    /// existed or `null` otherwise.
-    public func get(k : K) : ?V {
-      let h = Prim.nat32ToNat(keyHash(k));
-      let m = table.size();
-      let v = if (m > 0) {
-        AssocList.find<K, V>(table[h % m], k, keyEq)
-      } else {
-        null
-      };
-    };
-
-    /// Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
-    public func put(k : K, v : V) = ignore replace(k, v);
-
-    /// Insert the value `v` at key `k` and returns the previous value stored at
-    /// `k` or `null` if it didn't exist.
-    public func replace(k : K, v : V) : ?V {
-      if (_count >= table.size()) {
-        let size =
-          if (_count == 0) {
-              1
-          } else {
-            table.size() * 2;
-          };
-        let table2 = A.init<KVs<K, V>>(size, null);
-        for (i in table.keys()) {
-          var kvs = table[i];
-          label moveKeyVals : ()
-          loop {
-            switch kvs {
-              case null { break moveKeyVals };
-              case (?((k, v), kvsTail)) {
-                let h = Prim.nat32ToNat(keyHash(k));
-                let pos2 = h % table2.size();
-                table2[pos2] := ?((k,v), table2[pos2]);
-                kvs := kvsTail;
-              };
-            }
-          };
-        };
-        table := table2;
-      };
-      let h = Prim.nat32ToNat(keyHash(k));
-      let pos = h % table.size();
-      let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, ?v);
-      table[pos] := kvs2;
+  /// Removes the entry with the key `k` and returns the associated value if it
+  /// existed or `null` otherwise.
+  public func remove<K, V>(self : HashMap_<K, V>, k : K) : ?V {
+    let m = self.table.size();
+    if (m > 0) {
+      let h = Prim.nat32ToNat(self.keyHash(k));
+      let pos = h % m;
+      let (kvs2, ov) = AssocList.replace<K, V>(self.table[pos], k, self.keyEq, null);
+      self.table[pos] := kvs2;
       switch(ov){
-        case null { _count += 1 };
-        case _ {}
+      case null { };
+      case _ { self.count -= 1; }
       };
       ov
+    } else {
+      null
     };
+  };
 
-    /// An `Iter` over the keys.
-    public func keys() : Iter.Iter<K>
-    { Iter.map(entries(), func (kv : (K, V)) : K { kv.0 }) };
+  /// Gets the entry with the key `k` and returns its associated value if it
+  /// existed or `null` otherwise.
+  public func get<K, V>(self : HashMap_<K, V>, k : K) : ?V {
+    let h = Prim.nat32ToNat(self.keyHash(k));
+    let m = self.table.size();
+    let v = if (m > 0) {
+      AssocList.find<K, V>(self.table[h % m], k, self.keyEq)
+    } else {
+      null
+    };
+  };
 
-    /// An `Iter` over the values.
-    public func vals() : Iter.Iter<V>
-    { Iter.map(entries(), func (kv : (K, V)) : V { kv.1 }) };
+  /// Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
+  public func put<K, V>(self : HashMap_<K, V>, k : K, v : V) =
+    ignore replace(self, k, v);
 
-    /// Returns an iterator over the key value pairs in this
-    /// `HashMap`. Does _not_ modify the `HashMap`.
-    public func entries() : Iter.Iter<(K, V)> {
-      if (table.size() == 0) {
-        object { public func next() : ?(K, V) { null } }
-      }
-      else {
-        object {
-          var kvs = table[0];
-          var nextTablePos = 1;
-          public func next () : ?(K, V) {
-            switch kvs {
-              case (?(kv, kvs2)) {
-                kvs := kvs2;
-                ?kv
-              };
-              case null {
-                if (nextTablePos < table.size()) {
-                  kvs := table[nextTablePos];
-                  nextTablePos += 1;
-                  next()
-                } else {
-                  null
-                }
-              }
-            }
+  /// Insert the value `v` at key `k` and returns the previous value stored at
+  /// `k` or `null` if it didn't exist.
+  public func replace<K, V>(self : HashMap_<K, V>, k : K, v : V) : ?V {
+    if (self.count >= self.table.size()) {
+      let size =
+        if (self.count == 0) {
+          if (self.initCapacity > 0) {
+            self.initCapacity
+          } else {
+            1
+          }
+        } else {
+          self.table.size() * 2;
+        };
+      let table2 = A.init<KVs<K, V>>(size, null);
+      for (i in self.table.keys()) {
+        var kvs = self.table[i];
+        label moveKeyVals : ()
+        loop {
+          switch kvs {
+          case null { break moveKeyVals };
+          case (?((k, v), kvsTail)) {
+                 let h = Prim.nat32ToNat(self.keyHash(k));
+                 let pos2 = h % table2.size();
+                 table2[pos2] := ?((k,v), table2[pos2]);
+                 kvs := kvsTail;
+               };
+          }
+        };
+      };
+      self.table := table2;
+    };
+    let h = Prim.nat32ToNat(self.keyHash(k));
+    let pos = h % self.table.size();
+    let (kvs2, ov) = AssocList.replace<K, V>(self.table[pos], k, self.keyEq, ?v);
+    self.table[pos] := kvs2;
+    switch(ov){
+    case null { self.count += 1 };
+    case _ {}
+    };
+    ov
+  };
+
+  /// An `Iter` over the keys.
+  public func keys<K, V>(self : HashMap<K, V>) : Iter.Iter<K>
+  { Iter.map(entries(self), func (kv : (K, V)) : K { kv.0 }) };
+
+  /// An `Iter` over the values.
+  public func vals<K, V>(self : HashMap<K, V>) : Iter.Iter<V>
+  { Iter.map(entries(self), func (kv : (K, V)) : V { kv.1 }) };
+
+  /// Returns an iterator over the key value pairs in this
+  /// `HashMap`. Does _not_ modify the `HashMap`.
+  public func entries<K, V>(self : HashMap<K, V>) : Iter.Iter<(K, V)> {
+    if (self.table.size() == 0) {
+      object { public func next() : ?(K, V) { null } }
+    }
+    else {
+      object {
+        var kvs = self.table[0];
+        var nextTablePos = 1;
+        public func next () : ?(K, V) {
+          switch kvs {
+          case (?(kv, kvs2)) {
+                 kvs := kvs2;
+                 ?kv
+               };
+          case null {
+                 if (nextTablePos < self.table.size()) {
+                   kvs := self.table[nextTablePos];
+                   nextTablePos += 1;
+                   next()
+                 } else {
+                   null
+                 }
+               }
           }
         }
       }
-    };
-
+    }
   };
 
-  /// clone cannot be an efficient object method,
-  /// ...but is still useful in tests, and beyond.
-  public func clone<K, V> (
-    h : HashMap<K, V>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
-  ) : HashMap<K, V> {
-    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash);
-    for ((k,v) in h.entries()) {
-      h2.put(k,v);
-    };
-    h2
+  public func clone<K, V> (h : HashMap<K, V>) : HashMap<K, V> {
+    { var table = A.tabulateVar(h.table.size(), func (i : Nat) : KVs<K, V> { h.table[i] });
+      var count = h.count ;
+    }
+  };
+
+  public func clone_<K, V> (h : HashMap_<K, V>) : HashMap_<K, V> {
+    { keyEq = h.keyEq ;
+      keyHash = h.keyHash ;
+      initCapacity = h.initCapacity ;
+      var table = A.tabulateVar(h.table.size(), func (i : Nat) : KVs<K, V> { h.table[i] });
+      var count = h.count ;
+    }
   };
 
   /// Clone from any iterator of key-value pairs
@@ -172,44 +204,40 @@ module {
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash
-  ) : HashMap<K, V> {
-    let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
+  ) : HashMap_<K, V> {
+    let h = empty_<K, V>(initCapacity, keyEq, keyHash);
     for ((k, v) in iter) {
-      h.put(k, v);
+      put(h, k, v);
     };
     h
   };
 
   public func map<K, V1, V2>(
-    h : HashMap<K, V1>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
+    h : HashMap_<K, V1>,
     mapFn : (K, V1) -> V2,
   ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
-    for ((k, v1) in h.entries()) {
+    let h2 = empty_<K, V2>(h.table.size(), h.keyEq, h.keyHash);
+    for ((k, v1) in entries(h)) {
       let v2 = mapFn(k, v1);
-      h2.put(k, v2);
+      put(h2, k, v2);
     };
     h2
   };
 
   public func mapFilter<K, V1, V2>(
-    h : HashMap<K, V1>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
+    h : HashMap_<K, V1>,
     mapFn : (K, V1) -> ?V2,
   ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
-    for ((k, v1) in h.entries()) {
+    let h2 = empty_<K, V2>(h.table.size(), h.keyEq, h.keyHash);
+    for ((k, v1) in entries(h)) {
       switch (mapFn(k, v1)) {
         case null { };
         case (?v2) {
-          h2.put(k, v2);
+          put(h2, k, v2);
         };
       }
     };
     h2
   };
-*/
+
 }
