@@ -24,41 +24,36 @@ module {
   // key-val list type
   type KVs<K, V> = AssocList.AssocList<K, V>;
 
-  // The mutable bits of a HashMap, put in their own type
-  type S<K,V> = {
+  /// The mutable state of a `HashMap`
+  public type S<K,V> = {
     var table : [var KVs<K, V>];
     var _count : Nat;
   };
 
-  /// See `wrapS`
-  func newS<K,V>() : S<K,V>{
+  /// Creating the state of an empty `HashMap`
+  public func newS<K,V>() : S<K,V>{
     return {
       var table : [var KVs<K, V>] = [var];
       var _count : Nat = 0;
     };
   };
 
-  /// This is an alternative constructor for `HashMap` that allows the backing
-  /// store for the HashMap to live in stable memory. Use it as follows:
+  /// An imperative HashMap with a minimal object-oriented interface.
+  /// Maps keys of type `K` to values of type `V`.
+  ///
+  /// Unless you want to put this into a `stable var`, simply pass
+  /// `HashMap.newS()` as the last argument.
+  ///
+  /// If you _do_ want to preserve this map across upgrades, follow this idiom:
   /// ```
-  /// stable var userS : HashMap.S <UserId,UserData> = newS();
-  /// let user : HashMap.HashMap<UserId,UserData> = HashMap.wrapS(10, Nat.eq, Nat.hash, userS)
+  /// stable var usersS : HashMap.S <UserId,UserData> = HashMap.newS();
+  /// let users : HashMap.HashMap<UserId,UserData> = HashMap.HashMap(10, Nat.eq, Nat.hash, userS)
   /// ```
-  public func wrapS<K,V>(
+  public class HashMap<K,V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash,
     s : S<K,V>) : HashMap<K,V> {
-    HashMap_(initCapacity, keyEq, keyHash, s);
-  };
-
-  // not public, same type as HashMap
-  // more general constructor than HashMap
-  class HashMap_<K, V>(
-    initCapacity : Nat,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
-    s : S<K,V>) {
 
     /// Returns the number of entries in this HashMap.
     public func size() : Nat = s._count;
@@ -182,49 +177,6 @@ module {
         }
       }
     };
-
-  };
-
-  /// An imperative HashMap with a minimal object-oriented interface.
-  /// Maps keys of type `K` to values of type `V`.
-  public class HashMap<K, V>(
-    initCapacity : Nat,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash) {
-
-    let i : HashMap_<K,V> = HashMap_(initCapacity, keyEq, keyHash, newS<K,V>());
-
-    /// Returns the number of entries in this HashMap.
-    public let size = i.size;
-
-    /// Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
-    /// exist.
-    public let delete = i.delete;
-
-    /// Removes the entry with the key `k` and returns the associated value if it
-    /// existed or `null` otherwise.
-    public let remove = i.remove;
-
-    /// Gets the entry with the key `k` and returns its associated value if it
-    /// existed or `null` otherwise.
-    public let get = i.get;
-
-    /// Insert the value `v` at key `k`. Overwrites an existing entry with key `k`
-    public let put = i.put;
-
-    /// Insert the value `v` at key `k` and returns the previous value stored at
-    /// `k` or `null` if it didn't exist.
-    public let replace = i.replace;
-
-    /// An `Iter` over the keys.
-    public let keys = i.keys;
-
-    /// An `Iter` over the values.
-    public let vals = i.vals;
-
-    /// Returns an iterator over the key value pairs in this
-    /// `HashMap`. Does _not_ modify the `HashMap`.
-    public let entries = i.entries;
   };
 
   /// clone cannot be an efficient object method,
@@ -234,7 +186,7 @@ module {
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash
   ) : HashMap<K, V> {
-    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash);
+    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash, newS());
     for ((k,v) in h.entries()) {
       h2.put(k,v);
     };
@@ -248,7 +200,7 @@ module {
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash
   ) : HashMap<K, V> {
-    let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
+    let h = HashMap<K, V>(initCapacity, keyEq, keyHash, newS());
     for ((k, v) in iter) {
       h.put(k, v);
     };
@@ -261,7 +213,7 @@ module {
     keyHash : K -> Hash.Hash,
     mapFn : (K, V1) -> V2,
   ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
+    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash, newS());
     for ((k, v1) in h.entries()) {
       let v2 = mapFn(k, v1);
       h2.put(k, v2);
@@ -275,7 +227,7 @@ module {
     keyHash : K -> Hash.Hash,
     mapFn : (K, V1) -> ?V2,
   ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
+    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash, newS());
     for ((k, v1) in h.entries()) {
       switch (mapFn(k, v1)) {
         case null { };
