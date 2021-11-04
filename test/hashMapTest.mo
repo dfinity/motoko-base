@@ -4,7 +4,7 @@ import Hash "mo:base/Hash";
 import Text "mo:base/Text";
 
 debug {
-  let a = H.HashMap<Text, Nat>(3, Text.equal, Text.hash, H.newS());
+  let a = H.HashMap<Text, Nat>(3, Text.equal, Text.hash);
 
   a.put("apple", 1);
   a.put("banana", 2);
@@ -138,7 +138,7 @@ debug {
   };
 
   // Issue #228
-  let d = H.HashMap<Text, Nat>(50, Text.equal, Text.hash, H.newS());
+  let d = H.HashMap<Text, Nat>(50, Text.equal, Text.hash);
   switch(d.remove("test")) {
     case null { };
     case (?_) { assert false };

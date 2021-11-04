@@ -24,36 +24,14 @@ module {
   // key-val list type
   type KVs<K, V> = AssocList.AssocList<K, V>;
 
-  /// The mutable state of a `HashMap`
-  public type S<K,V> = {
-    var table : [var KVs<K, V>];
-    var _count : Nat;
-  };
-
-  /// Creating the state of an empty `HashMap`
-  public func newS<K,V>() : S<K,V>{
-    return {
-      var table : [var KVs<K, V>] = [var];
-      var _count : Nat = 0;
-    };
-  };
-
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
-  ///
-  /// Unless you want to put this into a `stable var`, simply pass
-  /// `HashMap.newS()` as the last argument.
-  ///
-  /// If you _do_ want to preserve this map across upgrades, follow this idiom:
-  /// ```
-  /// stable var usersS : HashMap.S <UserId,UserData> = HashMap.newS();
-  /// let users : HashMap.HashMap<UserId,UserData> = HashMap.HashMap(10, Nat.eq, Nat.hash, userS)
-  /// ```
   public class HashMap<K,V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
-    s : S<K,V>) : HashMap<K,V> {
+    keyHash : K -> Hash.Hash) : HashMap<K,V> {
+
+    var s : S<K,V> = newS();
 
     /// Returns the number of entries in this HashMap.
     public func size() : Nat = s._count;
@@ -177,6 +155,19 @@ module {
         }
       }
     };
+
+    /// Replaces the backing store for this `HashMap`.
+    ///
+    /// If you want to store the content of the `HashMap` in a a stable
+    /// variable, use the following idiom:
+    /// ```
+    /// stable var usersS : HashMap.S <UserId,UserData> = HashMap.newS();
+    /// let users : HashMap.HashMap<UserId,UserData> = HashMap.HashMap(10, Nat.eq, Nat.hash);
+    /// users.setStore(users);
+    /// ```
+    public func setStore(new_s : S<K,V>) {
+      s := new_s;
+    };
   };
 
   /// clone cannot be an efficient object method,
@@ -186,7 +177,7 @@ module {
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash
   ) : HashMap<K, V> {
-    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash, newS());
+    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash);
     for ((k,v) in h.entries()) {
       h2.put(k,v);
     };
@@ -200,7 +191,7 @@ module {
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash
   ) : HashMap<K, V> {
-    let h = HashMap<K, V>(initCapacity, keyEq, keyHash, newS());
+    let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
     for ((k, v) in iter) {
       h.put(k, v);
     };
@@ -213,7 +204,7 @@ module {
     keyHash : K -> Hash.Hash,
     mapFn : (K, V1) -> V2,
   ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash, newS());
+    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       let v2 = mapFn(k, v1);
       h2.put(k, v2);
@@ -227,7 +218,7 @@ module {
     keyHash : K -> Hash.Hash,
     mapFn : (K, V1) -> ?V2,
   ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash, newS());
+    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       switch (mapFn(k, v1)) {
         case null { };
@@ -237,6 +228,20 @@ module {
       }
     };
     h2
+  };
+
+  /// The mutable state of a `HashMap`
+  public type S<K,V> = {
+    var table : [var KVs<K, V>];
+    var _count : Nat;
+  };
+
+  /// Creating the state of an empty `HashMap`
+  public func newS<K,V>() : S<K,V>{
+    return {
+      var table : [var KVs<K, V>] = [var];
+      var _count : Nat = 0;
+    };
   };
 
 }
