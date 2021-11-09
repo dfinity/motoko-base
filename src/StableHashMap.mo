@@ -22,6 +22,7 @@ module {
   public type KVs<K, V> = AssocList.AssocList<K, V>;
 
   // representation of (the stable types of) the hash map state.
+  // can be stored in a stable variable.
   public type HashMap<K, V> = {
     var table : [var KVs<K, V>];
     var count : Nat;
@@ -30,10 +31,10 @@ module {
   // representation of hash map including key operations.
   // unlike HashMap, this type is not stable, but is required for
   // some operations (keyEq and keyHash are functions).
+  // to use, initialize `hashMap` to be your `stable var` hashmap.
   public type HashMap_<K, V> = {
     keyEq : (K, K) -> Bool;
     keyHash : K -> Hash.Hash;
-    // to do -- use union type operation to compress this definition
     initCapacity : Nat;
     var hashMap : HashMap<K, V>;
   };
