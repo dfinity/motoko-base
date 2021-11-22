@@ -63,7 +63,7 @@ module {
   /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
   /// let xs : [var Nat] = [4, 2, 6, 1, 5];
-  /// xs.sort(Nat.compare);
+  /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
   public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
@@ -104,7 +104,7 @@ module {
       go(mid + 1, hi);
       merge(lo, mid, hi);
     };
-  
+
     go(0, xs.size() - 1);
   };
 
