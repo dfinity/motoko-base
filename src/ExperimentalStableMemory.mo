@@ -37,70 +37,70 @@ module {
   /// Initially `0`.
   /// Preserved across upgrades, together with contents of allocated
   /// StableMemory.
-  public let size : () -> (pages : Nat32) =
+  public let size : () -> (pages : Nat64) =
     Prim.stableMemorySize;
 
   /// Grow current `size` of stable memory by `pagecount` pages.
   /// Each page is 64KiB (65536 bytes).
   /// Returns previous `size` when able to grow.
-  /// Returns `0xFFFF` if remaining pages insufficient.
+  /// Returns `0xFFFFFFF` if remaining pages insufficient.
   /// Every new page is zero-initialized, containing byte 0 at every offset.
-  public let grow : (new_pages : Nat32) -> (oldpages : Nat32) =
+  public let grow : (new_pages : Nat64) -> (oldpages : Nat64) =
     Prim.stableMemoryGrow;
 
-  public let loadNat32 : (offset : Nat32) -> Nat32 =
+  public let loadNat32 : (offset : Nat64) -> Nat32 =
     Prim.stableMemoryLoadNat32;
-  public let storeNat32 : (offset : Nat32, value: Nat32) -> () =
+  public let storeNat32 : (offset : Nat64, value: Nat32) -> () =
     Prim.stableMemoryStoreNat32;
 
-  public let loadNat8 : (offset : Nat32) -> Nat8 =
+  public let loadNat8 : (offset : Nat64) -> Nat8 =
     Prim.stableMemoryLoadNat8;
-  public let storeNat8 : (offset : Nat32, value : Nat8) -> () =
+  public let storeNat8 : (offset : Nat64, value : Nat8) -> () =
     Prim.stableMemoryStoreNat8;
 
-  public let loadNat16 : (offset : Nat32) -> Nat16 =
+  public let loadNat16 : (offset : Nat64) -> Nat16 =
     Prim.stableMemoryLoadNat16;
-  public let storeNat16 : (offset : Nat32, value : Nat16) -> () =
+  public let storeNat16 : (offset : Nat64, value : Nat16) -> () =
     Prim.stableMemoryStoreNat16;
 
-  public let loadNat64 : (offset : Nat32) -> Nat64 =
+  public let loadNat64 : (offset : Nat64) -> Nat64 =
     Prim.stableMemoryLoadNat64;
-  public let storeNat64 : (offset : Nat32, value : Nat64) -> () =
+  public let storeNat64 : (offset : Nat64, value : Nat64) -> () =
     Prim.stableMemoryStoreNat64;
 
-  public let loadInt32 : (offset : Nat32) -> Int32 =
+  public let loadInt32 : (offset : Nat64) -> Int32 =
     Prim.stableMemoryLoadInt32;
-  public let storeInt32 : (offset : Nat32, value : Int32) -> () =
+  public let storeInt32 : (offset : Nat64, value : Int32) -> () =
     Prim.stableMemoryStoreInt32;
 
-  public let loadInt8 : (offset : Nat32) -> Int8 =
+  public let loadInt8 : (offset : Nat64) -> Int8 =
     Prim.stableMemoryLoadInt8;
-  public let storeInt8 : (offset : Nat32, value : Int8) -> () =
+  public let storeInt8 : (offset : Nat64, value : Int8) -> () =
     Prim.stableMemoryStoreInt8;
 
-  public let loadInt16 : (offset : Nat32) -> Int16 =
+  public let loadInt16 : (offset : Nat64) -> Int16 =
     Prim.stableMemoryLoadInt16;
-  public let storeInt16 : (offset : Nat32, value : Int16) -> () =
+  public let storeInt16 : (offset : Nat64, value : Int16) -> () =
     Prim.stableMemoryStoreInt16;
 
-  public let loadInt64 : (offset : Nat32) -> Int64 =
+  public let loadInt64 : (offset : Nat64) -> Int64 =
     Prim.stableMemoryLoadInt64;
-  public let storeInt64 : (offset : Nat32, value : Int64) -> () =
+  public let storeInt64 : (offset : Nat64, value : Int64) -> () =
     Prim.stableMemoryStoreInt64;
 
-  public let loadFloat : (offset : Nat32) -> Float =
+  public let loadFloat : (offset : Nat64) -> Float =
     Prim.stableMemoryLoadFloat;
-  public let storeFloat : (offset : Nat32, value : Float) -> () =
+  public let storeFloat : (offset : Nat64, value : Float) -> () =
     Prim.stableMemoryStoreFloat;
 
   /// Load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on out-of-bounds access.
-  public let loadBlob : (offset : Nat32, size : Nat) -> Blob =
+  public let loadBlob : (offset : Nat64, size : Nat) -> Blob =
     Prim.stableMemoryLoadBlob;
 
   /// Write bytes of `blob` beginning at `offset`.
   /// Traps on out-of-bounds access.
-  public let storeBlob : (offset : Nat32, value : Blob) -> () =
+  public let storeBlob : (offset : Nat64, value : Blob) -> () =
     Prim.stableMemoryStoreBlob;
 
 }
