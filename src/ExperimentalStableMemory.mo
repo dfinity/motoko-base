@@ -43,7 +43,7 @@ module {
   /// Grow current `size` of stable memory by `pagecount` pages.
   /// Each page is 64KiB (65536 bytes).
   /// Returns previous `size` when able to grow.
-  /// Returns `0xFFFFFFF` if remaining pages insufficient.
+  /// Returns `0xFFFF_FFFF` if remaining pages insufficient.
   /// Every new page is zero-initialized, containing byte 0 at every offset.
   public let grow : (new_pages : Nat64) -> (oldpages : Nat64) =
     Prim.stableMemoryGrow;
