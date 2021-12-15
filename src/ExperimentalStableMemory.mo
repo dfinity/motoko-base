@@ -11,6 +11,8 @@
 ///
 /// Memory is allocated, using 'grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
 /// New pages are zero initialized.
+/// Growth is capped by a soft limit on page count controlled by compile-time flag
+/// `--max-stable-pages <n>` (the default is 65536, or 4GiB).
 ///
 /// Each `load` operation loads from byte address `offset` in little-endian
 /// format using the natural bit-width of the type in question.
@@ -23,10 +25,12 @@
 ///
 /// The current page allocation and page contents is preserved across upgrades.
 ///
-///
 /// NB: The IC's actual stable memory size (`ic0.stable_size`) may exceed the
 /// page size reported by Motoko function `size()`.
-/// This is to accommodate Motoko's stable variables.
+/// This (and the cap on growth) are to accommodate Motoko's stable variables.
+/// Applications that plan to use Motoko stable variables sparingly or not at all can
+/// increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB). 
+/// All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 
 import Prim "mo:⛔";
 
@@ -36,15 +40,17 @@ module {
   /// Each page is 64KiB (65536 bytes).
   /// Initially `0`.
   /// Preserved across upgrades, together with contents of allocated
-  /// StableMemory.
+  /// stable memory.
   public let size : () -> (pages : Nat64) =
     Prim.stableMemorySize;
 
   /// Grow current `size` of stable memory by `pagecount` pages.
   /// Each page is 64KiB (65536 bytes).
   /// Returns previous `size` when able to grow.
-  /// Returns `0xFFFF_FFFF` if remaining pages insufficient.
+  /// Returns `0xFFFF_FFFF_FFFF_FFFF` if remaining pages insufficient.
   /// Every new page is zero-initialized, containing byte 0 at every offset.
+  /// Function `grow` is capped by a soft limit on `size` controlled by compile-time flag
+  ///  `--max-stable-pages <n>` (the default is 65536, or 4GiB).
   public let grow : (new_pages : Nat64) -> (oldpages : Nat64) =
     Prim.stableMemoryGrow;
 
