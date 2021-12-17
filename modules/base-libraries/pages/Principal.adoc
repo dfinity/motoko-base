@@ -44,6 +44,16 @@ func toText(p : xref:#type.Principal[Principal]) : Text
 
 Conversion.
 
+[[isAnonymous]]
+== isAnonymous
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isAnonymous(p : xref:#type.Principal[Principal]) : Bool
+----
+
+
+
 [[hash]]
 == hash
 
