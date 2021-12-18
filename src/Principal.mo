@@ -18,8 +18,9 @@ module {
   /// Conversion.
   public func toText(p : Principal) : Text = debug_show(p);
 
+  let anonymousPrincipal = fromText "2vxsx-fae";
   public func isAnonymous(p : Principal) : Bool =
-    equal(p, "2vxsx-fae" : Principal);
+    p == anonymousPrincipal;
 
   public func hash(principal : Principal) : Hash.Hash =
     Blob.hash (Prim.blobOfPrincipal(principal));
