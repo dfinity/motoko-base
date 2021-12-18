@@ -1,6 +1,6 @@
 STDLIB ?= ../src
 MOC ?= moc
-WASMTIME_OPTIONS = --disable-cache --enable-cranelift-debug-verifier
+WASMTIME_OPTIONS = --disable-cache
 
 OUTDIR=_out
 
