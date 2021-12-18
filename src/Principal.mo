@@ -18,7 +18,7 @@ module {
   /// Conversion.
   public func toText(p : Principal) : Text = debug_show(p);
 
-  let anonymousPrincipal = fromText "2vxsx-fae";
+  private let anonymousPrincipal : Principal = fromText "2vxsx-fae";
   public func isAnonymous(p : Principal) : Bool =
     p == anonymousPrincipal;
 
