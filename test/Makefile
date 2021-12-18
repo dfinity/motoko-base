@@ -1,6 +1,6 @@
 STDLIB ?= ../src
 MOC ?= moc
-WASMTIME_OPTIONS = --disable-cache --cranelift
+WASMTIME_OPTIONS = --disable-cache
 
 OUTDIR=_out
 
@@ -30,7 +30,7 @@ $(OUTDIR)/%.wasm: $(OUTDIR)/%.mo | $(OUTDIR)
 	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
 
 $(OUTDIR)/%.checked: $(OUTDIR)/%.wasm
-	wasmtime $(WASMTIME_OPTIONS) $<
+	wasmtime run $(WASMTIME_OPTIONS) $<
 	touch $@
 
 clean:
