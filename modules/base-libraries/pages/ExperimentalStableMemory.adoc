@@ -14,6 +14,8 @@ _stable variables_, whose persistence mechanism also uses (real) IC stable memor
 
 Memory is allocated, using 'grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
 New pages are zero initialized.
+Growth is capped by a soft limit on page count controlled by compile-time flag
+`--max-stable-pages <n>` (the default is 65536, or 4GiB).
 
 Each `load` operation loads from byte address `offset` in little-endian
 format using the natural bit-width of the type in question.
@@ -26,45 +28,49 @@ Text values can be handled by using `Text.decodeUtf8` and `Text.encodeUtf8`, in 
 
 The current page allocation and page contents is preserved across upgrades.
 
-
 NB: The IC's actual stable memory size (`ic0.stable_size`) may exceed the
 page size reported by Motoko function `size()`.
-This is to accommodate Motoko's stable variables.
+This (and the cap on growth) are to accommodate Motoko's stable variables.
+Applications that plan to use Motoko stable variables sparingly or not at all can
+increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB). 
+All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 
 [[size]]
 == size
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let size : () -> (pages : Nat32)
+let size : () -> (pages : Nat64)
 ----
 
 Current size of the stable memory, in pages.
 Each page is 64KiB (65536 bytes).
 Initially `0`.
 Preserved across upgrades, together with contents of allocated
-StableMemory.
+stable memory.
 
 [[grow]]
 == grow
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let grow : (new_pages : Nat32) -> (oldpages : Nat32)
+let grow : (new_pages : Nat64) -> (oldpages : Nat64)
 ----
 
 Grow current `size` of stable memory by `pagecount` pages.
 Each page is 64KiB (65536 bytes).
 Returns previous `size` when able to grow.
-Returns `0xFFFF` if remaining pages insufficient.
+Returns `0xFFFF_FFFF_FFFF_FFFF` if remaining pages insufficient.
 Every new page is zero-initialized, containing byte 0 at every offset.
+Function `grow` is capped by a soft limit on `size` controlled by compile-time flag
+ `--max-stable-pages <n>` (the default is 65536, or 4GiB).
 
 [[loadNat32]]
 == loadNat32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat32 : (offset : Nat32) -> Nat32
+let loadNat32 : (offset : Nat64) -> Nat32
 ----
 
 
@@ -74,7 +80,7 @@ let loadNat32 : (offset : Nat32) -> Nat32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat32 : (offset : Nat32, value : Nat32) -> ()
+let storeNat32 : (offset : Nat64, value : Nat32) -> ()
 ----
 
 
@@ -84,7 +90,7 @@ let storeNat32 : (offset : Nat32, value : Nat32) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat8 : (offset : Nat32) -> Nat8
+let loadNat8 : (offset : Nat64) -> Nat8
 ----
 
 
@@ -94,7 +100,7 @@ let loadNat8 : (offset : Nat32) -> Nat8
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat8 : (offset : Nat32, value : Nat8) -> ()
+let storeNat8 : (offset : Nat64, value : Nat8) -> ()
 ----
 
 
@@ -104,7 +110,7 @@ let storeNat8 : (offset : Nat32, value : Nat8) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat16 : (offset : Nat32) -> Nat16
+let loadNat16 : (offset : Nat64) -> Nat16
 ----
 
 
@@ -114,7 +120,7 @@ let loadNat16 : (offset : Nat32) -> Nat16
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat16 : (offset : Nat32, value : Nat16) -> ()
+let storeNat16 : (offset : Nat64, value : Nat16) -> ()
 ----
 
 
@@ -124,7 +130,7 @@ let storeNat16 : (offset : Nat32, value : Nat16) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat64 : (offset : Nat32) -> Nat64
+let loadNat64 : (offset : Nat64) -> Nat64
 ----
 
 
@@ -134,7 +140,7 @@ let loadNat64 : (offset : Nat32) -> Nat64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat64 : (offset : Nat32, value : Nat64) -> ()
+let storeNat64 : (offset : Nat64, value : Nat64) -> ()
 ----
 
 
@@ -144,7 +150,7 @@ let storeNat64 : (offset : Nat32, value : Nat64) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt32 : (offset : Nat32) -> Int32
+let loadInt32 : (offset : Nat64) -> Int32
 ----
 
 
@@ -154,7 +160,7 @@ let loadInt32 : (offset : Nat32) -> Int32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt32 : (offset : Nat32, value : Int32) -> ()
+let storeInt32 : (offset : Nat64, value : Int32) -> ()
 ----
 
 
@@ -164,7 +170,7 @@ let storeInt32 : (offset : Nat32, value : Int32) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt8 : (offset : Nat32) -> Int8
+let loadInt8 : (offset : Nat64) -> Int8
 ----
 
 
@@ -174,7 +180,7 @@ let loadInt8 : (offset : Nat32) -> Int8
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt8 : (offset : Nat32, value : Int8) -> ()
+let storeInt8 : (offset : Nat64, value : Int8) -> ()
 ----
 
 
@@ -184,7 +190,7 @@ let storeInt8 : (offset : Nat32, value : Int8) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt16 : (offset : Nat32) -> Int16
+let loadInt16 : (offset : Nat64) -> Int16
 ----
 
 
@@ -194,7 +200,7 @@ let loadInt16 : (offset : Nat32) -> Int16
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt16 : (offset : Nat32, value : Int16) -> ()
+let storeInt16 : (offset : Nat64, value : Int16) -> ()
 ----
 
 
@@ -204,7 +210,7 @@ let storeInt16 : (offset : Nat32, value : Int16) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt64 : (offset : Nat32) -> Int64
+let loadInt64 : (offset : Nat64) -> Int64
 ----
 
 
@@ -214,7 +220,7 @@ let loadInt64 : (offset : Nat32) -> Int64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt64 : (offset : Nat32, value : Int64) -> ()
+let storeInt64 : (offset : Nat64, value : Int64) -> ()
 ----
 
 
@@ -224,7 +230,7 @@ let storeInt64 : (offset : Nat32, value : Int64) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadFloat : (offset : Nat32) -> Float
+let loadFloat : (offset : Nat64) -> Float
 ----
 
 
@@ -234,7 +240,7 @@ let loadFloat : (offset : Nat32) -> Float
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeFloat : (offset : Nat32, value : Float) -> ()
+let storeFloat : (offset : Nat64, value : Float) -> ()
 ----
 
 
@@ -244,7 +250,7 @@ let storeFloat : (offset : Nat32, value : Float) -> ()
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadBlob : (offset : Nat32, size : Nat) -> Blob
+let loadBlob : (offset : Nat64, size : Nat) -> Blob
 ----
 
 Load `size` bytes starting from `offset` as a `Blob`.
@@ -255,7 +261,7 @@ Traps on out-of-bounds access.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeBlob : (offset : Nat32, value : Blob) -> ()
+let storeBlob : (offset : Nat64, value : Blob) -> ()
 ----
 
 Write bytes of `blob` beginning at `offset`.
