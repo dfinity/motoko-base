@@ -72,6 +72,12 @@ module {
     /// iterator is persistent, like the tree itself
     public func entriesRev() : I.Iter<(X, Y)> { iter(tree, #bwd) };
 
+
+    /// An iterator for the key-value entries of the map, in ascending key order
+    /// over the keys greater than or equal to x.
+    ///
+    /// iterator is persistent, like the tree itself
+    public func entriesTail(x : X) : I.Iter<(X, Y)> { iterTail(tree, x, compareTo) };
   };
 
 
@@ -102,6 +108,47 @@ module {
           case (#bwd, ?(#tr(#node(_, l, xy, r)), ts)) {
             trees := ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts)));
             next()
+          };
+        }
+      };
+    }
+  };
+
+  /// An iterator for the entries of the map, in ascending order over the keys
+  /// greater than or equal to x.
+  public func iterTail<X, Y>(t : Tree<X, Y>, x : X, compareTo : (X, X) -> O.Order)
+    : I.Iter<(X, Y)> {
+    object {
+      var trees : IterRep<X, Y> = ?(#tr(t), null);
+      public func next() : ?(X, Y) {
+        switch trees {
+          case null { null };
+          case (?(#tr(#leaf), ts)) { 
+            trees := ts; 
+            next() 
+          };
+          case (?(#xy(xy), ts)) { 
+            trees := ts; 
+            switch (xy.1) { 
+              case null { next() };
+              case (?y) { ?(xy.0, y) } 
+            } 
+          };
+          case (?(#tr(#node(_, l, xy, r)), ts)) { 
+            switch (compareTo(x, xy.0)) {
+              case (#less) {
+                trees := ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts)));
+                next() 
+              };
+              case (#equal) {
+                trees := ?(#xy(xy), ?(#tr(r), ts));
+                next() 
+              };
+              case (#greater) {
+                trees := ?(#tr(r), ts);
+                next() 
+              };
+            }
           };
         }
       };
