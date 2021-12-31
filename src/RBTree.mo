@@ -210,10 +210,7 @@ module {
     switch t {
       case (#leaf) { 0 };
       case (#node(_, l, xy, r)) {
-        switch (xy.1) {
-          case null { size(l) + size(r) };
-          case (_) { size(l) + size(r) + 1 };
-        }
+        size(l) + size(r) + (switch (xy.1) { case null 0; case _ 1 });
       };
     }
   };
