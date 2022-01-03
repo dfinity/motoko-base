@@ -55,3 +55,7 @@ for ((num, lab) in t.entriesRev()) {
 }};
 
 assert RBT.size(t.share()) == 9;
+
+t.delete(5);
+
+assert RBT.size(t.share()) == 8;
