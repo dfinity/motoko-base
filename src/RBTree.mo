@@ -209,8 +209,8 @@ module {
   public func size<X, Y>(t : Tree<X, Y>) : Nat {
     switch t {
       case (#leaf) { 0 };
-      case (#node(_, l, _, r)) {
-        size(l) + size(r) + 1
+      case (#node(_, l, xy, r)) {
+        size(l) + size(r) + (switch (xy.1) { case null 0; case _ 1 });
       };
     }
   };
