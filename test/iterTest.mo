@@ -72,9 +72,7 @@ do {
 
   let expected = [1, 3];
 
-  for (i in actual.keys()) {
-    assert(actual[i] == expected[i]);
-  };
+  assert(actual == expected);
 };
 
 do {
