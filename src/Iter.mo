@@ -94,16 +94,40 @@ module {
   /// ```
   public func map<A, B>(xs : Iter<A>, f : A -> B) : Iter<B> = object {
     public func next() : ?B {
-      label l loop {
+      switch (xs.next()) {
+        case (?next) {
+          ?f(next);
+        };
+        case (null) {
+          null;
+        };
+      };
+    };
+  };
+
+  /// Takes a function and an iterator and returns a new iterator that produces
+  /// elements from the original iterator if and only if the predicate is true.
+  /// ```motoko
+  /// import Iter "o:base/Iter";
+  /// let iter = Iter.range(1, 3);
+  /// let mappedIter = Iter.filter(iter, func (x : Nat) : Bool { x % 2 == 1 });
+  /// assert(?1 == mappedIter.next());
+  /// assert(?3 == mappedIter.next());
+  /// assert(null == mappedIter.next());
+  /// ```
+  public func filter<A>(xs : Iter<A>, f : A -> Bool) : Iter<A> = object {
+    public func next() : ?A {
+      loop {
         switch (xs.next()) {
-          case (?next) {
-            return ?f(next);
-          };
           case (null) {
-            break l;
+            return null;
+          };
+          case (?x) {
+            if (f(x)) {
+              return ?x;
+            };
           };
         };
-        continue l;
       };
       null;
     };

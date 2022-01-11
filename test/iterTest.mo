@@ -60,6 +60,22 @@ do {
 };
 
 do {
+  Debug.print("  filter");
+
+  let isOdd = func (x : Int) : Bool {
+    x % 2 == 1;
+  };
+
+  let _actual = Iter.filter<Nat>([ 1, 2, 3 ].vals(), isOdd);
+  let actual = [var 0, 0];
+  Iter.iterate<Nat>(_actual, func (x, i) { actual[i] := x; });
+
+  let expected = [1, 3];
+
+  assert(actual == expected);
+};
+
+do {
   Debug.print("  make");
 
   let x = 1;
