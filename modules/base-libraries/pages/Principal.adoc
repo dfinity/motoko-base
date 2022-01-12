@@ -34,6 +34,16 @@ let toBlob : (p : xref:#type.Principal[Principal]) -> Blob
 
 Conversion.
 
+[[fromBlob]]
+== fromBlob
+
+[source.no-repl,motoko,subs=+macros]
+----
+let fromBlob : (b : Blob) -> xref:#type.Principal[Principal]
+----
+
+Conversion.
+
 [[toText]]
 == toText
 
