@@ -16,6 +16,9 @@ module {
   public let toBlob : (p : Principal) -> Blob = Prim.blobOfPrincipal;
 
   /// Conversion.
+  public let fromBlob : (b : Blob) -> Principal = Prim.principalOfBlob;
+  
+  /// Conversion.
   public func toText(p : Principal) : Text = debug_show(p);
 
   private let anonymousPrincipal : Blob = "\04";
