@@ -265,7 +265,7 @@ module {
     Prim.Array_tabulate<A>(size, gen);
   };
 
-  // copy from iter.mo, but iter depends on array
+  // Copy from `Iter.mo`, but `Iter` depends on `Array`.
   class range(x : Nat, y : Int) {
     var i = x;
     public func next() : ?Nat {
@@ -278,6 +278,7 @@ module {
       }
     };
   };
+
   /// Initialize a mutable array using a generation function
   public func tabulateVar<A>(size : Nat,  gen : Nat -> A) : [var A] {
     if (size == 0) { return [var] };
