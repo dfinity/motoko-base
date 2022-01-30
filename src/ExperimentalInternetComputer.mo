@@ -1,4 +1,4 @@
-/// Lower-level interface to the Internet Computer.
+/// Low-level interface to the Internet Computer.
 ///
 /// **WARNING:** This low-level API is **experimental** and likely to change or even disappear.
 
