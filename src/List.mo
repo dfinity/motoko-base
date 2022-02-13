@@ -1,6 +1,7 @@
 /// Purely-functional, singly-linked lists.
 
 import Array "Array";
+import Iter "IterType";
 import Option "Option";
 import Order "Order";
 import Result "Result";
@@ -416,5 +417,10 @@ module {
   /// Create a mutable array from a list.
   public func toVarArray<A>(xs : List<A>) : [var A] =
     Array.thaw<A>(toArray<A>(xs));
+
+  /// Create an iterator from a list.
+  public func toIter<A>(xs: List<A>) : Iter.Iter<A> {
+    toArray<A>(xs).vals();
+  };
 
 }
