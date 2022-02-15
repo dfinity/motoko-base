@@ -420,21 +420,14 @@ module {
 
   /// Create an iterator from a list.
   public func toIter<A>(xs: List<A>) : Iter.Iter<A> {
-    var ix : Nat = 0;
-    let s = size<A>(xs);
-    var list = xs;
+    var state = xs;
     object {
-      public func next() : ?A {
-        if (ix >= s) {
-          return null
-        } else {
-          let popped = pop<A>(list);
-          list := popped.1;
-          ix += 1;
-          return popped.0
+      public func next() : ?A =
+        switch state {
+          case (?(hd, tl)) { state := tl; ?hd };
+          case _ null
         }
-      }
     }
-  };
+  }
 
 }
