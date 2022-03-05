@@ -1,7 +1,7 @@
-The motoko base library
+The Motoko base library
 =======================
 
-This repository contains the Motoko base library.
+This repository contains the Motoko base library. It is intended to be used with the [`moc` compiler](https://github.com/dfinity/motoko) (and tools that wrap it, like `dfx`).
 
 Usage
 -----
@@ -15,7 +15,7 @@ If you build your project using the [vessel package manager] your package-set mo
   {
     name = "base",
     repo = "https://github.com/dfinity/motoko-base",
-    version = "dfx-0.5.10",
+    version = "dfx-0.9.2",
     dependencies = [] : List Text
   }
 ```
