@@ -47,8 +47,8 @@ module {
   /// ```motoko
   /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
-  /// let xs = [4, 2, 6, 1, 5];
-  /// assert(Array.sort(xs, Nat.compare) == [1, 2, 4, 5, 6])
+  /// let xs = [4, 2, 6];
+  /// assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
   /// ```
   public func sort<A>(xs : [A], cmp : (A, A) -> Order.Order) : [A] {
     let tmp : [var A] = thaw(xs);
@@ -62,7 +62,7 @@ module {
   /// ```motoko
   /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
-  /// let xs : [var Nat] = [4, 2, 6, 1, 5];
+  /// let xs : [var Nat] = [var 4, 2, 6, 1, 5];
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
