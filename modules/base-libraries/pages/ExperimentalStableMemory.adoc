@@ -12,7 +12,7 @@ raw binary data across Motoko upgrades.
 Use of this module is fully compatible with Motoko's use of
 _stable variables_, whose persistence mechanism also uses (real) IC stable memory internally, but does not interfere with this API.
 
-Memory is allocated, using 'grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
+Memory is allocated, using `grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
 New pages are zero initialized.
 Growth is capped by a soft limit on page count controlled by compile-time flag
 `--max-stable-pages <n>` (the default is 65536, or 4GiB).
