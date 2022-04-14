@@ -419,7 +419,7 @@ module {
     Array.thaw<A>(toArray<A>(xs));
 
   /// Create an iterator from a list.
-  public func toIter<A>(xs: List<A>) : Iter.Iter<A> {
+  public func toIter<A>(xs : List<A>) : Iter.Iter<A> {
     var state = xs;
     object {
       public func next() : ?A =
