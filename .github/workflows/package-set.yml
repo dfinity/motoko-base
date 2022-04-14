@@ -7,8 +7,8 @@ on:
   pull_request:
 
 env:
-  vessel_version: "v0.6.2"
-  moc_version: "0.6.20"
+  vessel_version: "v0.6.3"
+  moc_version: "0.6.25"
 
 jobs:
   verify:
