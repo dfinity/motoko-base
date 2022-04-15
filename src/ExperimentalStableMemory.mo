@@ -54,6 +54,16 @@ module {
   public let grow : (new_pages : Nat64) -> (oldpages : Nat64) =
     Prim.stableMemoryGrow;
 
+  /// Given the enclosing actor, returns the number of bytes of (real) IC stable memory that would be
+  /// occupied by persisting its current stable variables before an upgrade.
+  /// This function may be used to monitor or limit real stable memory usage.
+  /// The estimate is computed by running the first half of an upgrade as an internal query, after any `preupgrade` system method.
+  /// Like any other query, its state changes are discarded so no actual upgrade takes place.
+  /// The function can only be called with the enclosing actor as argument,
+  /// and will trap if called with other arguments.
+  public let varInfo : (actor {}) -> async {size : Nat64} =
+    Prim.stableVarInfo;
+
   public let loadNat32 : (offset : Nat64) -> Nat32 =
     Prim.stableMemoryLoadNat32;
   public let storeNat32 : (offset : Nat64, value: Nat32) -> () =
