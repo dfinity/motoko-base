@@ -181,9 +181,7 @@ module {
   };
 
   /// Like `fromArray` but for Lists.
-  public func fromList<A>(xs : List.List<A>) : Iter<A> {
-    List.toArray<A>(xs).vals();
-  };
+  public let fromList = List.toIter;
 
   /// Consumes an iterator and collects its produced elements in an Array.
   /// ```motoko
