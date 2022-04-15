@@ -202,7 +202,7 @@ further modifications won't be reflected in the iterator.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromList<A>(xs : xref:List.adoc#type.List[List.List]<A>) : xref:#type.Iter[Iter]<A>
+let fromList
 ----
 
 Like `fromArray` but for Lists.

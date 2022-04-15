@@ -421,3 +421,13 @@ func toVarArray<A>(xs : xref:#type.List[List]<A>) : pass:[[]var Apass:[]]
 
 Create a mutable array from a list.
 
+[[toIter]]
+== toIter
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toIter<A>(xs : xref:#type.List[List]<A>) : xref:IterType.adoc#type.Iter[Iter.Iter]<A>
+----
+
+Create an iterator from a list.
+
