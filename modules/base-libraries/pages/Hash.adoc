@@ -48,10 +48,11 @@ Test if two hashes are equal
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func hash(i : Nat) : xref:#type.Hash[Hash]
+func hash(n : Nat) : xref:#type.Hash[Hash]
 ----
 
-
+Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
+@deprecated For large `Nat` values consider using a bespoke hash function that considers all of the argument's bits.
 
 [[debugPrintBits]]
 == debugPrintBits
@@ -61,7 +62,7 @@ func hash(i : Nat) : xref:#type.Hash[Hash]
 func debugPrintBits(bits : xref:#type.Hash[Hash])
 ----
 
-
+@deprecated This function will be removed in future.
 
 [[debugPrintBitsRev]]
 == debugPrintBitsRev
@@ -71,7 +72,7 @@ func debugPrintBits(bits : xref:#type.Hash[Hash])
 func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
 ----
 
-
+@deprecated This function will be removed in future.
 
 [[hashNat8]]
 == hashNat8
@@ -87,4 +88,5 @@ https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
 
 The input type should actually be `[Nat8]`.
 Note: Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and to shift into lower 8 bits.
+@deprecated This function may be removed or changed in future.
 
