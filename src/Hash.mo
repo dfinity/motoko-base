@@ -22,8 +22,10 @@ module {
     ha == hb
   };
 
-  public func hash(i : Nat) : Hash {
-    let j = Prim.natToNat32(i);
+  /// Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
+  /// @deprecated For large `Nat` values consider using a bespoke hash function that considers all of the argument's bits.
+  public func hash(n : Nat) : Hash {
+    let j = Prim.intToNat32Wrap(n);
     hashNat8(
       [j & (255 << 0),
        j & (255 << 8),
@@ -32,6 +34,7 @@ module {
       ]);
   };
 
+  /// @deprecated This function will be removed in future.
   public func debugPrintBits(bits : Hash) {
     for (j in Iter.range(0, length - 1)) {
       if (bit(bits, j)) {
@@ -42,6 +45,7 @@ module {
     }
   };
 
+  /// @deprecated This function will be removed in future.
   public func debugPrintBitsRev(bits : Hash) {
     for (j in Iter.revRange(length - 1, 0)) {
       if (bit(bits, Prim.abs(j))) {
@@ -60,6 +64,7 @@ module {
   /// Note: Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and to shift into lower 8 bits.
 
   // should this really be public?
+  /// @deprecated This function may be removed or changed in future.
   public func hashNat8(key : [Hash]) : Hash {
     var hash : Nat32 = 0;
     for (natOfKey in key.vals()) {
