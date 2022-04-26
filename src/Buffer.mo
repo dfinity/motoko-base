@@ -146,4 +146,19 @@ module {
     };
   };
 
+  /// Construct a buffer from an array.
+  public func fromArray<T>(arr: [T]): Buffer<T> {
+    let count = arr.size();
+    let buffer = Buffer<T>(count);
+
+    var i = 0;
+    label l loop {
+      if (i >= count) break l;
+      buffer.add(arr[i]);
+      i += 1;
+    };
+    
+    buffer
+  };
+
 }
