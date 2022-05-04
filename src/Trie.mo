@@ -955,7 +955,7 @@ module {
 
 
   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-  public func toArray<K, V, W>(t : Trie<K, V>, f : (K, V) -> W):[W] {
+  public func toArray<K, V, W>(t : Trie<K, V>, f : (K, V) -> W) : [W] {
       let a = A.tabulate<W> (
         size(t),
         func (i : Nat) : W {
@@ -1101,7 +1101,7 @@ module {
   public func put2D<K1, K2, V>(
     t : Trie2D<K1, K2, V>,
     k1 : Key<K1>,
-    k1_eq : (K1, K1)->Bool,
+    k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
     k2_eq : (K2, K2) -> Bool,
     v:V
