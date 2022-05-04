@@ -215,7 +215,7 @@ let suite = Suite.suite("Array", [
   Suite.test(
     "reverse",
     Array.reverse<Nat>([0, 1, 2, 3]),
-    M.equals(T.array<Nat>(T.natTestable, [3, 2, 1, 0]));
+    M.equals(T.array<Nat>(T.natTestable, [3, 2, 1, 0]))
   )
 ]);
 
