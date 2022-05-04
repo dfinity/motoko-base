@@ -419,7 +419,7 @@ module {
               AssocList.disj(
                 l1.keyvals, l2.keyvals,
                 key_eq,
-                func (x : ?V, y : ?V):V {
+                func (x : ?V, y : ?V) : V {
                   switch (x, y) {
                     case (null, null) { P.unreachable() };
                     case (null, ?v) { v };
@@ -493,7 +493,7 @@ module {
   /// Difference of tries. The output consists are pairs of
   /// the left trie whose keys are not present in the right trie; the
   /// values of the right trie are irrelevant.
-  public func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : ( K, K) -> Bool): Trie<K, V> {
+  public func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : ( K, K) -> Bool) : Trie<K, V> {
     let key_eq = equalKey(k_eq);
 
     func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, W>) : Trie<K, V> {
@@ -854,7 +854,7 @@ module {
       foldUp(
         t,
         func (t1 : Build<K2, V>, t2 : Build<K2, V>) : Build<K2, V> { seq(t1, t2) },
-        func (_ : K1, t : Build<K2, V>): Build<K2, V> { t },
+        func (_ : K1, t : Build<K2, V>) : Build<K2, V> { t },
         #skip
       )
     };
@@ -906,7 +906,7 @@ module {
         case (#empty) { false };
         case (#leaf(l)) {
           List.some(
-            l.keyvals, func ((k:Key<K>, v:V)):Bool=f(k.key, v)
+            l.keyvals, func ((k:Key<K>, v:V)) : Bool=f(k.key, v)
           )
         };
         case (#branch(b)) { rec(b.left) or rec(b.right) };
