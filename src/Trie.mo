@@ -1017,7 +1017,7 @@ module {
               // retain key and hash, but update key's value using f:
               func ((k : Key<K>, v : V)) : ?(Key<K>, W) {
                 switch (f(k.key, v)) {
-                  case (null) { null };
+                  case null { null };
                   case (?w) { ?({key = k.key; hash = k.hash}, w) };
                 }
               }
@@ -1082,7 +1082,7 @@ module {
   ) : X {
     let (t2, ov) = replace(t, k, k_eq, ?v2);
     switch ov {
-      case (null) { /* no prior value; failure to remove */ fail() };
+      case null { /* no prior value; failure to remove */ fail() };
       case (?v1) { success(t2, v1) };
     }
   };
@@ -1091,7 +1091,7 @@ module {
   public func putFresh<K, V>(t : Trie<K, V>,  k : Key<K>, k_eq : (K, K) -> Bool, v : V) : Trie<K, V> {
     let (t2, none) = replace(t, k, k_eq, ?v);
     switch none {
-      case (null) {};
+      case null {};
       case (?_) assert false;
     };
     t2
@@ -1108,7 +1108,7 @@ module {
   ) : Trie2D<K1, K2, V> {
     let inner = find(t, k1, k1_eq);
     let (updated_inner, _) = switch inner {
-      case (null) { put(#empty, k2, k2_eq, v) };
+      case null { put(#empty, k2, k2_eq, v) };
       case (?inner) { put(inner, k2, k2_eq, v) };
     };
     let (updated_outer, _) = put(t, k1, k1_eq, updated_inner);
@@ -1128,7 +1128,7 @@ module {
   ) : Trie3D<K1, K2, K3, V> {
     let inner1 = find(t, k1, k1_eq);
     let (updated_inner1, _) = switch inner1 {
-      case (null) {
+      case null {
         put(
           #empty, k2, k2_eq,
            (put(#empty, k3, k3_eq, v)).0
@@ -1137,7 +1137,7 @@ module {
       case (?inner1) {
         let inner2 = find(inner1, k2, k2_eq);
         let (updated_inner2, _) = switch inner2 {
-          case (null) { put(#empty, k3, k3_eq, v) };
+          case null { put(#empty, k3, k3_eq, v) };
           case (?inner2) { put(inner2, k3, k3_eq, v) };
         };
         put(inner1, k2, k2_eq, updated_inner2 )
@@ -1164,7 +1164,7 @@ module {
   ) : X {
     let (t2, ov) = replace(t, k, k_eq, null);
     switch ov {
-      case (null) { /* no prior value; failure to remove */ fail() };
+      case null { /* no prior value; failure to remove */ fail() };
       case (?v) { success(t2, v) };
     }
   };
@@ -1180,7 +1180,7 @@ module {
     k2_eq: (K2, K2) -> Bool
   ) : (Trie2D<K1, K2, V>, ?V)  {
     switch (find(t, k1, k1_eq)) {
-      case (null) {
+      case null {
         (t, null)
       };
       case (?inner) {
@@ -1202,7 +1202,7 @@ module {
     k3:Key<K3>, k3_eq : (K3, K3) -> Bool,
   ) : (Trie3D<K1, K2, K3, V>, ?V) {
     switch (find(t, k1, k1_eq)) {
-      case (null) {
+      case null {
         (t, null)
       };
       case (?inner) {
