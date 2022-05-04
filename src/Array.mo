@@ -292,7 +292,7 @@ module {
 
   public func reverse<A>(xs : [A]) : [A] {
     let size = xs.size();
-    Array.tabulate(size, func (n : Nat) : A {
+    tabulate(size, func (n : Nat) : A {
       xs[size - 1 - n];
     });
   };
