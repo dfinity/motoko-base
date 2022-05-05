@@ -257,3 +257,13 @@ func tabulateVar<A>(size : Nat, gen : Nat -> A) : pass:[[]var Apass:[]]
 
 Initialize a mutable array using a generation function
 
+[[reverse]]
+== reverse
+
+[source.no-repl,motoko,subs=+macros]
+----
+func reverse<A>(xs : pass:[[]Apass:[]]) : pass:[[]Apass:[]]
+----
+
+
+
