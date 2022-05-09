@@ -1148,7 +1148,7 @@ module {
   };
 
   /// Remove the given key's value in the trie; return the new trie
-  public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq: (K, K) -> Bool) : (Trie<K, V>, ?V) {
+  public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V) {
     replace(t, k, k_eq, null)
   };
 
@@ -1158,7 +1158,7 @@ module {
   public func removeThen<K, V, X>(
     t : Trie<K, V>,
     k : Key<K>,
-    k_eq: (K, K) -> Bool,
+    k_eq : (K, K) -> Bool,
     success: (Trie<K, V>, V) -> X,
     fail: () -> X
   ) : X {
