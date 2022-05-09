@@ -426,8 +426,8 @@ module {
                     case (?v, _) { v };
                   }
                 }
-              )
-              , bitpos)
+              ),
+              bitpos)
           };
           case (#leaf(l), _) {
             let (ll, lr) = splitAssocList(l.keyvals, bitpos);
@@ -467,8 +467,8 @@ module {
                     case (_, _) { P.unreachable() };
                   }
                 }
-              )
-              , bitpos
+              ),
+              bitpos
             )
           };
           case (#leaf(l), _) {
@@ -505,8 +505,8 @@ module {
              AssocList.diff(
                l1.keyvals, l2.keyvals,
                key_eq,
-             )
-             , bitpos
+             ),
+             bitpos
            )
         };
         case (#leaf(l), _) {
