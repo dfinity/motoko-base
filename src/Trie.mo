@@ -408,9 +408,9 @@ module {
   /// note: the `disj` operation generalizes this `merge`
   /// operation in various ways, and does not (in general) lose
   /// information; this operation is a simpler, special case.
-  public func merge<K, V>(tl:Trie<K, V>, tr:Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
+  public func merge<K, V>(tl : Trie<K, V>, tr :  Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
       let key_eq = equalKey(k_eq);
-      func rec(bitpos : Nat, tl : Trie<K, V>, tr:Trie<K, V>) : Trie<K, V> {
+      func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, V>) : Trie<K, V> {
         switch (tl, tr) {
           case (#empty, _) { return tr };
           case (_, #empty) { return tl };
@@ -682,7 +682,7 @@ module {
   )  : Trie<K3, V3>  {
 
     /*- binary case: merge disjoint results: */
-    func merge (a:Trie<K3, V3>, b:Trie<K3, V3>) : Trie<K3, V3> =
+    func merge (a : Trie<K3, V3>, b : Trie<K3, V3>) : Trie<K3, V3> =
       mergeDisjoint(a, b, k3_eq);
 
     /*- "`foldUp` squared" (imagine two nested loops): */
@@ -906,7 +906,7 @@ module {
         case (#empty) { false };
         case (#leaf(l)) {
           List.some(
-            l.keyvals, func ((k:Key<K>, v:V)) : Bool=f(k.key, v)
+            l.keyvals, func ((k : Key<K>, v:V)) : Bool = f(k.key, v)
           )
         };
         case (#branch(b)) { rec(b.left) or rec(b.right) };
@@ -1121,7 +1121,7 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq: (K2, K2) -> Bool,
+    k2_eq : (K2, K2) -> Bool,
     k3 : Key<K3>,
     k3_eq : (K3, K3) -> Bool,
     v : V
@@ -1148,7 +1148,7 @@ module {
   };
 
   /// Remove the given key's value in the trie; return the new trie
-  public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq: (K, K) -> Bool) : (Trie<K, V>, ?V) {
+  public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V) {
     replace(t, k, k_eq, null)
   };
 
@@ -1158,9 +1158,9 @@ module {
   public func removeThen<K, V, X>(
     t : Trie<K, V>,
     k : Key<K>,
-    k_eq: (K, K) -> Bool,
-    success: (Trie<K, V>, V) -> X,
-    fail: () -> X
+    k_eq : (K, K) -> Bool,
+    success : (Trie<K, V>, V) -> X,
+    fail : () -> X
   ) : X {
     let (t2, ov) = replace(t, k, k_eq, null);
     switch ov {
@@ -1177,7 +1177,7 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq: (K2, K2) -> Bool
+    k2_eq : (K2, K2) -> Bool
   ) : (Trie2D<K1, K2, V>, ?V)  {
     switch (find(t, k1, k1_eq)) {
       case null {
@@ -1198,8 +1198,9 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq: (K2, K2) -> Bool,
-    k3:Key<K3>, k3_eq : (K3, K3) -> Bool,
+    k2_eq : (K2, K2) -> Bool,
+    k3 : Key<K3>,
+    k3_eq : (K3, K3) -> Bool,
   ) : (Trie3D<K1, K2, K3, V>, ?V) {
     switch (find(t, k1, k1_eq)) {
       case null {
