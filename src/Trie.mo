@@ -1159,8 +1159,8 @@ module {
     t : Trie<K, V>,
     k : Key<K>,
     k_eq : (K, K) -> Bool,
-    success: (Trie<K, V>, V) -> X,
-    fail: () -> X
+    success : (Trie<K, V>, V) -> X,
+    fail : () -> X
   ) : X {
     let (t2, ov) = replace(t, k, k_eq, null);
     switch ov {
