@@ -408,9 +408,9 @@ module {
   /// note: the `disj` operation generalizes this `merge`
   /// operation in various ways, and does not (in general) lose
   /// information; this operation is a simpler, special case.
-  public func merge<K, V>(tl:Trie<K, V>, tr:Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
+  public func merge<K, V>(tl : Trie<K, V>, tr :  Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
       let key_eq = equalKey(k_eq);
-      func rec(bitpos : Nat, tl : Trie<K, V>, tr:Trie<K, V>) : Trie<K, V> {
+      func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, V>) : Trie<K, V> {
         switch (tl, tr) {
           case (#empty, _) { return tr };
           case (_, #empty) { return tl };
@@ -906,7 +906,7 @@ module {
         case (#empty) { false };
         case (#leaf(l)) {
           List.some(
-            l.keyvals, func ((k:Key<K>, v:V)) : Bool=f(k.key, v)
+            l.keyvals, func ((k : Key<K>, v:V)) : Bool = f(k.key, v)
           )
         };
         case (#branch(b)) { rec(b.left) or rec(b.right) };
