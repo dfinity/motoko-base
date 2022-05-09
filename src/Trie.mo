@@ -682,7 +682,7 @@ module {
   )  : Trie<K3, V3>  {
 
     /*- binary case: merge disjoint results: */
-    func merge (a:Trie<K3, V3>, b:Trie<K3, V3>) : Trie<K3, V3> =
+    func merge (a : Trie<K3, V3>, b : Trie<K3, V3>) : Trie<K3, V3> =
       mergeDisjoint(a, b, k3_eq);
 
     /*- "`foldUp` squared" (imagine two nested loops): */
@@ -1121,7 +1121,7 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq: (K2, K2) -> Bool,
+    k2_eq : (K2, K2) -> Bool,
     k3 : Key<K3>,
     k3_eq : (K3, K3) -> Bool,
     v : V
@@ -1177,7 +1177,7 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq: (K2, K2) -> Bool
+    k2_eq : (K2, K2) -> Bool
   ) : (Trie2D<K1, K2, V>, ?V)  {
     switch (find(t, k1, k1_eq)) {
       case null {
@@ -1198,8 +1198,9 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq: (K2, K2) -> Bool,
-    k3:Key<K3>, k3_eq : (K3, K3) -> Bool,
+    k2_eq : (K2, K2) -> Bool,
+    k3 : Key<K3>,
+    k3_eq : (K3, K3) -> Bool,
   ) : (Trie3D<K1, K2, K3, V>, ?V) {
     switch (find(t, k1, k1_eq)) {
       case null {
