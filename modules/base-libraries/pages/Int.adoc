@@ -64,7 +64,8 @@ Returns the maximum of `x` and `y`.
 func hash(i : xref:#type.Int[Int]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
-
+Computes a hash from the least significant 32-bits of `i`, ignoring other bits.
+@deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
 
 [[hashAcc]]
 == hashAcc
@@ -74,7 +75,7 @@ func hash(i : xref:#type.Int[Int]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 func hashAcc(h1 : xref:Hash.adoc#type.Hash[Hash.Hash], i : xref:#type.Int[Int]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
-WARNING: May go away (?)
+@deprecated This function will be removed in future.
 
 [[equal]]
 == equal
