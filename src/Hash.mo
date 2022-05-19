@@ -56,6 +56,7 @@ module {
     }
   };
 
+
   /// Jenkin's one at a time:
   ///
   /// https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
@@ -64,6 +65,7 @@ module {
   /// Note: Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and to shift into lower 8 bits.
 
   // should this really be public?
+  // NB: Int.mo contains a local copy of hashNat8 (redefined to suppress the deprecation warning).
   /// @deprecated This function may be removed or changed in future.
   public func hashNat8(key : [Hash]) : Hash {
     var hash : Nat32 = 0;
