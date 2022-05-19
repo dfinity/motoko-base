@@ -58,11 +58,26 @@ module {
     if (x < y) { y } else { x };
   };
 
-  // TODO: (re)move me?
+  // this is a local copy of deprecated Hash.hashNat8 (redefined to suppress the warning)
+  private func hashNat8(key : [Nat32]) : Hash.Hash {
+    var hash : Nat32 = 0;
+    for (natOfKey in key.vals()) {
+      hash := hash +% natOfKey;
+      hash := hash +% hash << 10;
+      hash := hash ^ (hash >> 6);
+    };
+    hash := hash +% hash << 3;
+    hash := hash ^ (hash >> 11);
+    hash := hash +% hash << 15;
+    return hash;
+  };
+
+  /// Computes a hash from the least significant 32-bits of `i`, ignoring other bits.
+  /// @deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
   public func hash(i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
-    Hash.hashNat8(
+    hashNat8(
       [j & (255 << 0),
        j & (255 << 8),
        j & (255 << 16),
@@ -70,12 +85,11 @@ module {
       ]);
   };
 
-  // TODO: (re)move me?
-  /// WARNING: May go away (?)
+  /// @deprecated This function will be removed in future.
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
-    Hash.hashNat8(
+    hashNat8(
       [h1,
        j & (255 << 0),
        j & (255 << 8),
