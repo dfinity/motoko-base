@@ -29,7 +29,7 @@
 /// page size reported by Motoko function `size()`.
 /// This (and the cap on growth) are to accommodate Motoko's stable variables.
 /// Applications that plan to use Motoko stable variables sparingly or not at all can
-/// increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB). 
+/// increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB).
 /// All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 
 import Prim "mo:⛔";
@@ -54,15 +54,14 @@ module {
   public let grow : (new_pages : Nat64) -> (oldpages : Nat64) =
     Prim.stableMemoryGrow;
 
-  /// Given the enclosing actor, returns the number of bytes of (real) IC stable memory that would be
+  /// Returns a query that, when called, returns the number of bytes of (real) IC stable memory that would be
   /// occupied by persisting its current stable variables before an upgrade.
   /// This function may be used to monitor or limit real stable memory usage.
-  /// The estimate is computed by running the first half of an upgrade as an internal query, after any `preupgrade` system method.
-  /// Like any other query, its state changes are discarded so no actual upgrade takes place.
-  /// The function can only be called with the enclosing actor as argument,
-  /// and will trap if called with other arguments.
-  public let varInfo : (actor {}) -> async {size : Nat64} =
-    Prim.stableVarInfo;
+  /// The query computes the estimate by running the first half of an upgrade, including any `preupgrade` system method.
+  /// Like any other query, its state changes are discarded so no actual upgrade (or other state change) takes place.
+  /// The query can only be called by the enclosing actor and will trap for other callers.
+  public let stableVarQuery : () -> (shared query () -> async {size : Nat64}) =
+    Prim.stableVarQuery;
 
   public let loadNat32 : (offset : Nat64) -> Nat32 =
     Prim.stableMemoryLoadNat32;
