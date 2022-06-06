@@ -16,18 +16,16 @@ module {
   public let call : (canister : Principal, name : Text, data : Blob) ->
      async (reply : Blob) = Prim.call_raw;
 
-  /// Given an IC performance counter, `counter`, and computation, `comp`,
-  /// measures the cost of performing computation `comp()`.
-  /// Returns the difference between the state of `counter` before and after executing `comp()`.
-  /// NB: Currently, the only available counter is `0`,
-  /// measuring executed wasm instructions.
-  /// (see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter))
-  public func measureCounter(counter : Nat32) : (comp : () -> ()) -> Nat64 {
-    func (comp) {
-      let pre = Prim.performanceCounter(counter);
-      comp();
-      let post = Prim.performanceCounter(counter);
-      post - pre
-    }
+  /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
+  /// instructions performed during the execution of `comp()`.
+  /// More precisely, returns the difference between the state of the IC instruction counter (_performance counter_ `0`) before and after executing `comp()`
+  /// (see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
+  /// NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
+  public func countInstructions(comp : () -> ()) : Nat64 {
+    let pre = Prim.performanceCounter(0);
+    comp();
+    let post = Prim.performanceCounter(0);
+    post - pre
   }
+
 }
