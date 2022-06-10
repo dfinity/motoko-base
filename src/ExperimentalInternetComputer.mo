@@ -16,4 +16,18 @@ module {
   public let call : (canister : Principal, name : Text, data : Blob) ->
      async (reply : Blob) = Prim.call_raw;
 
+  /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
+  /// instructions performed during the execution of `comp()`.
+  ///
+  /// More precisely, returns the difference between the state of the IC instruction counter (_performance counter_ `0`) before and after executing `comp()`
+  /// (see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
+  ///
+  /// NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
+  public func countInstructions(comp : () -> ()) : Nat64 {
+    let pre = Prim.performanceCounter(0);
+    comp();
+    let post = Prim.performanceCounter(0);
+    post - pre
+  }
+
 }
