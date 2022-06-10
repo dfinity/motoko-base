@@ -21,3 +21,19 @@ Returns the response to the call, an IC _reply_ or _reject_, as a Motoko future:
 
 Note: `call` is an asynchronous function and can only be applied in an asynchronous context.
 
+[[countInstructions]]
+== countInstructions
+
+[source.no-repl,motoko,subs=+macros]
+----
+func countInstructions(comp : () -> ()) : Nat64
+----
+
+Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
+instructions performed during the execution of `comp()`.
+
+More precisely, returns the difference between the state of the IC instruction counter (_performance counter_ `0`) before and after executing `comp()`
+(see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
+
+NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
+
