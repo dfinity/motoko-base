@@ -241,7 +241,7 @@ module {
         case null { true };
         case (?(_, t)) {
           if (i == 0) { false }
-          else { lenIsEqLessThan(t, i - 1) }
+          else { lenIsEqLessThan(t, i - 1 : Nat) }
         };
       };
     };
