@@ -233,18 +233,6 @@ module {
   };
 
   module ListUtil {
-    /* Deprecated: List.lenIsEqLessThan */
-    /// Test the list length against a maximum value and return true if
-    /// the list length is less than or equal to the value specified.
-    public func lenIsEqLessThan<T>(l : List<T>, i : Nat) : Bool {
-      switch l {
-        case null { true };
-        case (?(_, t)) {
-          if (i == 0) { false }
-          else { lenIsEqLessThan(t, i - 1) }
-        };
-      };
-    };
     /* Deprecated: List.lenClamp */
     /// Return the list length unless the number of items in the list exceeds
     /// a maximum value. If the list length exceed the maximum, the function
