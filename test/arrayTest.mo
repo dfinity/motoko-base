@@ -219,8 +219,8 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test(
     "buffer",
-    Array.buffer<Nat>([0, 1, 2, 3]).toArray(),
-    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
+    Array.buffer([0, 1, 2, 3]).toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3]))
   )
 ]);
 
