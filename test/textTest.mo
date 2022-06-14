@@ -702,6 +702,34 @@ run(suite("trim",
    M.equals(T.text "")),
 ]));
 
+run(suite("compare",
+[
+ test(
+   "compare-empties",
+   Text.compare("", ""),
+   M.equals(ordT (#equal))),
+ test(
+   "compare-empty-nonempty",
+   Text.compare("", "a"),
+   M.equals(ordT (#less))),
+ test(
+   "compare-nonempty-empty",
+   Text.compare("a", ""),
+   M.equals(ordT (#greater))),
+ test(
+   "compare-a-a",
+   Text.compare("a", "a"),
+   M.equals(ordT (#equal))),
+ test(
+   "compare-a-b",
+   Text.compare("a", "b"),
+   M.equals(ordT (#less))),
+ test(
+   "compare-b-a",
+   Text.compare("b", "a"),
+   M.equals(ordT (#greater)))
+]));
+
 do {
 let cmp = Char.compare;
 run(suite("compareWith",

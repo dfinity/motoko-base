@@ -1,6 +1,7 @@
 import List "mo:base/List";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
 import Result "mo:base/Result";
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
@@ -120,6 +121,21 @@ type X = Nat;
     let actual = List.toVarArray<Nat>(list);
 
     assert (actual.size() == expected.size());
+
+    for (i in actual.keys()) {
+      assert(actual[i] == expected[i]);
+    };
+  };
+
+  do {
+    Debug.print("  toIter");
+
+    let list : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
+    let _actual = List.toIter<Nat>(list);
+    let actual = [var 0, 0, 0];
+    let expected = [1, 2, 3];
+
+    Iter.iterate<Nat>(_actual, func (x, i) { actual[i] := x; });
 
     for (i in actual.keys()) {
       assert(actual[i] == expected[i]);

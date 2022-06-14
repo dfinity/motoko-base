@@ -211,6 +211,16 @@ let suite = Suite.suite("Array", [
       0
     },
     M.equals(T.nat(0))
+  ),
+  Suite.test(
+    "reverse",
+    Array.reverse<Nat>([0, 1, 2, 3]),
+    M.equals(T.array<Nat>(T.natTestable, [3, 2, 1, 0]))
+  ),
+  Suite.test(
+    "buffer",
+    Array.buffer<Nat>([0, 1, 2, 3]).toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   )
 ]);
 
