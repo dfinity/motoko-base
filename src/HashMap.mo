@@ -26,16 +26,15 @@ module {
 
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
-  public class HashMap<K, V>(
+  public class HashMap<K,V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash) {
+    keyHash : K -> Hash.Hash) : HashMap<K,V> {
 
-    var table : [var KVs<K, V>] = [var];
-    var _count : Nat = 0;
+    var s : S<K,V> = newS();
 
     /// Returns the number of entries in this HashMap.
-    public func size() : Nat = _count;
+    public func size() : Nat = s._count;
 
     /// Deletes the entry with the key `k`. Doesn't do anything if the key doesn't
     /// exist.
@@ -44,15 +43,15 @@ module {
     /// Removes the entry with the key `k` and returns the associated value if it
     /// existed or `null` otherwise.
     public func remove(k : K) : ?V {
-      let m = table.size();
+      let m = s.table.size();
       if (m > 0) {
         let h = Prim.nat32ToNat(keyHash(k));
         let pos = h % m;
-        let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, null);
-        table[pos] := kvs2;
+        let (kvs2, ov) = AssocList.replace<K, V>(s.table[pos], k, keyEq, null);
+        s.table[pos] := kvs2;
         switch(ov){
           case null { };
-          case _ { _count -= 1; }
+          case _ { s._count -= 1; }
         };
         ov
       } else {
@@ -64,9 +63,9 @@ module {
     /// existed or `null` otherwise.
     public func get(k : K) : ?V {
       let h = Prim.nat32ToNat(keyHash(k));
-      let m = table.size();
+      let m = s.table.size();
       let v = if (m > 0) {
-        AssocList.find<K, V>(table[h % m], k, keyEq)
+        AssocList.find<K, V>(s.table[h % m], k, keyEq)
       } else {
         null
       };
@@ -78,20 +77,20 @@ module {
     /// Insert the value `v` at key `k` and returns the previous value stored at
     /// `k` or `null` if it didn't exist.
     public func replace(k : K, v : V) : ?V {
-      if (_count >= table.size()) {
+      if (s._count >= s.table.size()) {
         let size =
-          if (_count == 0) {
+          if (s._count == 0) {
             if (initCapacity > 0) {
               initCapacity
             } else {
               1
             }
           } else {
-            table.size() * 2;
+            s.table.size() * 2;
           };
         let table2 = A.init<KVs<K, V>>(size, null);
-        for (i in table.keys()) {
-          var kvs = table[i];
+        for (i in s.table.keys()) {
+          var kvs = s.table[i];
           label moveKeyVals : ()
           loop {
             switch kvs {
@@ -105,14 +104,14 @@ module {
             }
           };
         };
-        table := table2;
+        s.table := table2;
       };
       let h = Prim.nat32ToNat(keyHash(k));
-      let pos = h % table.size();
-      let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, ?v);
-      table[pos] := kvs2;
+      let pos = h % s.table.size();
+      let (kvs2, ov) = AssocList.replace<K, V>(s.table[pos], k, keyEq, ?v);
+      s.table[pos] := kvs2;
       switch(ov){
-        case null { _count += 1 };
+        case null { s._count += 1 };
         case _ {}
       };
       ov
@@ -129,12 +128,12 @@ module {
     /// Returns an iterator over the key value pairs in this
     /// `HashMap`. Does _not_ modify the `HashMap`.
     public func entries() : Iter.Iter<(K, V)> {
-      if (table.size() == 0) {
+      if (s.table.size() == 0) {
         object { public func next() : ?(K, V) { null } }
       }
       else {
         object {
-          var kvs = table[0];
+          var kvs = s.table[0];
           var nextTablePos = 1;
           public func next () : ?(K, V) {
             switch kvs {
@@ -143,8 +142,8 @@ module {
                 ?kv
               };
               case null {
-                if (nextTablePos < table.size()) {
-                  kvs := table[nextTablePos];
+                if (nextTablePos < s.table.size()) {
+                  kvs := s.table[nextTablePos];
                   nextTablePos += 1;
                   next()
                 } else {
@@ -157,6 +156,18 @@ module {
       }
     };
 
+    /// Replaces the backing store for this `HashMap`.
+    ///
+    /// If you want to store the content of the `HashMap` in a a stable
+    /// variable, use the following idiom:
+    /// ```
+    /// stable var usersS : HashMap.S <UserId,UserData> = HashMap.newS();
+    /// let users : HashMap.HashMap<UserId,UserData> = HashMap.HashMap(10, Nat.eq, Nat.hash);
+    /// users.setStore(users);
+    /// ```
+    public func setStore(new_s : S<K,V>) {
+      s := new_s;
+    };
   };
 
   /// clone cannot be an efficient object method,
@@ -217,6 +228,20 @@ module {
       }
     };
     h2
+  };
+
+  /// The mutable state of a `HashMap`
+  public type S<K,V> = {
+    var table : [var KVs<K, V>];
+    var _count : Nat;
+  };
+
+  /// Creating the state of an empty `HashMap`
+  public func newS<K,V>() : S<K,V>{
+    return {
+      var table : [var KVs<K, V>] = [var];
+      var _count : Nat = 0;
+    };
   };
 
 }
