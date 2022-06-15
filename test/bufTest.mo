@@ -92,3 +92,28 @@ do {
   assert (c.toArray().size() == 2);
   assert (c.toVarArray().size() == 2);
 };
+
+// regression test: initially-empty buffer grows to add elements in an array
+do {
+  let buf = B.Buffer<Nat>(0);
+  assert (buf.size() == 0);
+
+  buf.addArray([1,2,3,4]);
+  assert (buf.toArray().size() == 4);
+  assert (buf.toArray() == [1,2,3,4]);
+
+  buf.addArray([5,6,7,8]);
+  assert (buf.toArray().size() == 8);
+  assert (buf.toArray() == [1,2,3,4,5,6,7,8]);
+
+};
+
+
+// regression test: buffer instantiated from an array
+do {
+  let arr = [1,2,3,4];
+  let buf = B.fromArray<Nat>(arr);
+
+  assert (buf.size() == arr.size());
+  assert (buf.toArray() == arr);
+};
