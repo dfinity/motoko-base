@@ -297,11 +297,4 @@ module {
     });
   };
 
-  public func buffer<A>(xs : [A]) : Buffer.Buffer<A> {
-    let buff = Buffer.Buffer<A>(xs.size());
-    for (x in xs.vals()) {
-      buff.add(x)
-    };
-    buff
-  };
 }
