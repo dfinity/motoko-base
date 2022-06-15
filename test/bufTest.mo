@@ -3,6 +3,10 @@ import B "mo:base/Buffer";
 import I "mo:base/Iter";
 import O "mo:base/Option";
 
+import Suite "mo:matchers/Suite";
+import T "mo:matchers/Testable";
+import M "mo:matchers/Matchers";
+
 // test repeated growing
 let a = B.Buffer<Nat>(3);
 for (i in I.range(0, 123)) {
@@ -92,3 +96,9 @@ do {
   assert (c.toArray().size() == 2);
   assert (c.toVarArray().size() == 2);
 };
+
+Suite.test(
+  "fromArray",
+  B.fromArray<Nat>([0, 1, 2, 3]).toArray(),
+  M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
+);

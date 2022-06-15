@@ -146,4 +146,11 @@ module {
     };
   };
 
+  public func fromArray<A>(xs : [A]) : Buffer<A> {
+    let buff = Buffer<A>(xs.size());
+    for (x in xs.vals()) {
+      buff.add(x)
+    };
+    buff
+  };
 }
