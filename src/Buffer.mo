@@ -155,8 +155,8 @@ module {
     buff
   };
 
-  /// Creates a buffer from mutable array elements.
-  public func fromArrayMut<X>(elems : [var X]) : Buffer<X> {
+  /// Creates a buffer from the elements of a mutable array.
+  public func fromVarArray<X>(elems : [var X]) : Buffer<X> {
     let buff = Buffer<X>(elems.size());
     for (elem in elems.vals()) {
       buff.add(elem)
