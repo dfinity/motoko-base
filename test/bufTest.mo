@@ -106,8 +106,8 @@ run(suite("array",
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   ),
   test(
-    "fromArrayMut",
-    B.fromArrayMut<Nat>([var 0, 1, 2, 3]).toArray(),
+    "fromVarArray",
+    B.fromVarArray<Nat>([var 0, 1, 2, 3]).toArray(),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   )
 ]));
