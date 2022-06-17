@@ -153,3 +153,23 @@ func put(i : Nat, elem : X)
 Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
 index is out of bounds. Indexing is zero-based.
 
+[[fromArray]]
+== fromArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromArray<X>(elems : pass:[[]Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
+----
+
+Creates a buffer from immutable array elements.
+
+[[fromVarArray]]
+== fromVarArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromVarArray<X>(elems : pass:[[]var Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
+----
+
+Creates a buffer from the elements of a mutable array.
+

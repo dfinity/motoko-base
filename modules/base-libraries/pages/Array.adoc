@@ -267,13 +267,3 @@ func reverse<A>(xs : pass:[[]Apass:[]]) : pass:[[]Apass:[]]
 
 
 
-[[buffer]]
-== buffer
-
-[source.no-repl,motoko,subs=+macros]
-----
-func buffer<A>(xs : pass:[[]Apass:[]]) : xref:Buffer.adoc#type.Buffer[Buffer.Buffer]<A>
-----
-
-
-
