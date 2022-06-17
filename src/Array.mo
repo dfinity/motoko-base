@@ -22,8 +22,9 @@ module {
     };
     return true;
   };
+
   /// Append the values of two input arrays
-  /// @deprecated Array.append has critical performance flaws; use a Buffer, and Buffer.append, instead.
+  /// @deprecated `Array.append` copies its arguments and has linear complexity; when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
   public func append<A>(xs : [A], ys : [A]) : [A] {
     switch(xs.size(), ys.size()) {
       case (0, 0) { []; };
@@ -47,8 +48,8 @@ module {
   /// ```motoko
   /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
-  /// let xs = [4, 2, 6, 1, 5];
-  /// assert(Array.sort(xs, Nat.compare) == [1, 2, 4, 5, 6])
+  /// let xs = [4, 2, 6];
+  /// assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
   /// ```
   public func sort<A>(xs : [A], cmp : (A, A) -> Order.Order) : [A] {
     let tmp : [var A] = thaw(xs);
@@ -62,7 +63,7 @@ module {
   /// ```motoko
   /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
-  /// let xs : [var Nat] = [4, 2, 6, 1, 5];
+  /// let xs : [var Nat] = [var 4, 2, 6, 1, 5];
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
@@ -265,7 +266,7 @@ module {
     Prim.Array_tabulate<A>(size, gen);
   };
 
-  // copy from iter.mo, but iter depends on array
+  // Copy from `Iter.mo`, but `Iter` depends on `Array`.
   class range(x : Nat, y : Int) {
     var i = x;
     public func next() : ?Nat {
@@ -278,6 +279,7 @@ module {
       }
     };
   };
+
   /// Initialize a mutable array using a generation function
   public func tabulateVar<A>(size : Nat,  gen : Nat -> A) : [var A] {
     if (size == 0) { return [var] };
@@ -287,4 +289,12 @@ module {
     };
     return xs;
   };
+
+  public func reverse<A>(xs : [A]) : [A] {
+    let size = xs.size();
+    tabulate(size, func (n : Nat) : A {
+      xs[size - 1 - n];
+    });
+  };
+
 }

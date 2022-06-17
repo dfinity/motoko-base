@@ -9,7 +9,7 @@
 /// Use of this module is fully compatible with Motoko's use of
 /// _stable variables_, whose persistence mechanism also uses (real) IC stable memory internally, but does not interfere with this API.
 ///
-/// Memory is allocated, using 'grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
+/// Memory is allocated, using `grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
 /// New pages are zero initialized.
 /// Growth is capped by a soft limit on page count controlled by compile-time flag
 /// `--max-stable-pages <n>` (the default is 65536, or 4GiB).
@@ -29,7 +29,7 @@
 /// page size reported by Motoko function `size()`.
 /// This (and the cap on growth) are to accommodate Motoko's stable variables.
 /// Applications that plan to use Motoko stable variables sparingly or not at all can
-/// increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB). 
+/// increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB).
 /// All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 
 import Prim "mo:⛔";
@@ -53,6 +53,15 @@ module {
   ///  `--max-stable-pages <n>` (the default is 65536, or 4GiB).
   public let grow : (new_pages : Nat64) -> (oldpages : Nat64) =
     Prim.stableMemoryGrow;
+
+  /// Returns a query that, when called, returns the number of bytes of (real) IC stable memory that would be
+  /// occupied by persisting its current stable variables before an upgrade.
+  /// This function may be used to monitor or limit real stable memory usage.
+  /// The query computes the estimate by running the first half of an upgrade, including any `preupgrade` system method.
+  /// Like any other query, its state changes are discarded so no actual upgrade (or other state change) takes place.
+  /// The query can only be called by the enclosing actor and will trap for other callers.
+  public let stableVarQuery : () -> (shared query () -> async {size : Nat64}) =
+    Prim.stableVarQuery;
 
   public let loadNat32 : (offset : Nat64) -> Nat32 =
     Prim.stableMemoryLoadNat32;
