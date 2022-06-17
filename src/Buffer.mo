@@ -146,4 +146,21 @@ module {
     };
   };
 
+  /// Creates a buffer from immutable array elements.
+  public func fromArray<X>(elems : [X]) : Buffer<X> {
+    let buff = Buffer<X>(elems.size());
+    for (elem in elems.vals()) {
+      buff.add(elem)
+    };
+    buff
+  };
+
+  /// Creates a buffer from the elements of a mutable array.
+  public func fromVarArray<X>(elems : [var X]) : Buffer<X> {
+    let buff = Buffer<X>(elems.size());
+    for (elem in elems.vals()) {
+      buff.add(elem)
+    };
+    buff
+  };
 }
