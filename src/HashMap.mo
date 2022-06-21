@@ -21,11 +21,9 @@ import Nat32 "Nat32";
 
 module {
 
-  //// A `Key` for the trie has an associated hash value
-  public type Key<K> = {
-    /// `hash` permits fast inequality checks, and permits collisions
+  type Key<K> = {
+    // hash field avoids re-hashing the key when the array grows.
     hash: Hash.Hash;
-    /// `key` permits precise equality checks, but only used after equal hashes.
     key: K;
   };
 
