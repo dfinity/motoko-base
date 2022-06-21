@@ -157,7 +157,7 @@ Returns `t1 >= t2`.
 func compare(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : {#less; #equal; #greater}
 ----
 
-Returns the order of `t1` and `t1`.
+Returns the order of `t1` and `t2`.
 
 [[join]]
 == join
