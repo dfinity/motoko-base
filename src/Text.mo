@@ -78,7 +78,7 @@ module {
   /// Returns `t1 >= t2`.
   public func greaterOrEqual(t1 : Text, t2 : Text) : Bool { t1 >= t2 };
 
-  /// Returns the order of `t1` and `t1`.
+  /// Returns the order of `t1` and `t2`.
   public func compare(t1 : Text, t2 : Text) : { #less; #equal; #greater } {
     let c = Prim.textCompare(t1, t2);
     if (c < 0) #less else if (c == 0) #equal else #greater
