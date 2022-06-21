@@ -17,12 +17,20 @@ import A "Array";
 import Hash "Hash";
 import Iter "Iter";
 import AssocList "AssocList";
+import Nat32 "Nat32";
 
 module {
 
+  //// A `Key` for the trie has an associated hash value
+  public type Key<K> = {
+    /// `hash` permits fast inequality checks, and permits collisions
+    hash: Hash.Hash;
+    /// `key` permits precise equality checks, but only used after equal hashes.
+    key: K;
+  };
 
   // key-val list type
-  type KVs<K, V> = AssocList.AssocList<K, V>;
+  type KVs<K, V> = AssocList.AssocList<Key<K>, V>;
 
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
@@ -41,6 +49,10 @@ module {
     /// exist.
     public func delete(k : K) = ignore remove(k);
 
+    func keyHash_(k : K) : Key<K> = { hash = keyHash(k); key = k };
+
+    func keyHashEq(k1 : Key<K>, k2 : Key<K>) : Bool { k1.hash == k2.hash and keyEq(k1.key, k2.key) };
+
     /// Removes the entry with the key `k` and returns the associated value if it
     /// existed or `null` otherwise.
     public func remove(k : K) : ?V {
@@ -48,7 +60,7 @@ module {
       if (m > 0) {
         let h = Prim.nat32ToNat(keyHash(k));
         let pos = h % m;
-        let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, null);
+        let (kvs2, ov) = AssocList.replace<Key<K>, V>(table[pos], keyHash_(k), keyHashEq, null);
         table[pos] := kvs2;
         switch(ov){
           case null { };
@@ -66,7 +78,7 @@ module {
       let h = Prim.nat32ToNat(keyHash(k));
       let m = table.size();
       let v = if (m > 0) {
-        AssocList.find<K, V>(table[h % m], k, keyEq)
+        AssocList.find<Key<K>, V>(table[h % m], keyHash_(k), keyHashEq)
       } else {
         null
       };
@@ -97,8 +109,7 @@ module {
             switch kvs {
               case null { break moveKeyVals };
               case (?((k, v), kvsTail)) {
-                let h = Prim.nat32ToNat(keyHash(k));
-                let pos2 = h % table2.size();
+                let pos2 = Nat32.toNat(k.hash) % table2.size(); // critical: uses saved hash. no re-hash.
                 table2[pos2] := ?((k,v), table2[pos2]);
                 kvs := kvsTail;
               };
@@ -109,7 +120,7 @@ module {
       };
       let h = Prim.nat32ToNat(keyHash(k));
       let pos = h % table.size();
-      let (kvs2, ov) = AssocList.replace<K, V>(table[pos], k, keyEq, ?v);
+      let (kvs2, ov) = AssocList.replace<Key<K>, V>(table[pos], keyHash_(k), keyHashEq, ?v);
       table[pos] := kvs2;
       switch(ov){
         case null { _count += 1 };
@@ -140,7 +151,7 @@ module {
             switch kvs {
               case (?(kv, kvs2)) {
                 kvs := kvs2;
-                ?kv
+                ?(kv.0.key, kv.1)
               };
               case null {
                 if (nextTablePos < table.size()) {
