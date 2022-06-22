@@ -21,11 +21,9 @@ import Nat32 "Nat32";
 
 module {
 
-  type Key<K> = {
-    // hash field avoids re-hashing the key when the array grows.
-    hash: Hash.Hash;
-    key: K;
-  };
+
+  // hash field avoids re-hashing the key when the array grows.
+  type Key<K> = (Hash.Hash, K);
 
   // key-val list type
   type KVs<K, V> = AssocList.AssocList<Key<K>, V>;
@@ -47,9 +45,9 @@ module {
     /// exist.
     public func delete(k : K) = ignore remove(k);
 
-    func keyHash_(k : K) : Key<K> = { hash = keyHash(k); key = k };
+    func keyHash_(k : K) : Key<K> = (keyHash(k), k);
 
-    func keyHashEq(k1 : Key<K>, k2 : Key<K>) : Bool { k1.hash == k2.hash and keyEq(k1.key, k2.key) };
+    func keyHashEq(k1 : Key<K>, k2 : Key<K>) : Bool { k1.0 == k2.0 and keyEq(k1.1, k2.1) };
 
     /// Removes the entry with the key `k` and returns the associated value if it
     /// existed or `null` otherwise.
@@ -107,7 +105,7 @@ module {
             switch kvs {
               case null { break moveKeyVals };
               case (?((k, v), kvsTail)) {
-                let pos2 = Nat32.toNat(k.hash) % table2.size(); // critical: uses saved hash. no re-hash.
+                let pos2 = Nat32.toNat(k.0) % table2.size(); // critical: uses saved hash. no re-hash.
                 table2[pos2] := ?((k,v), table2[pos2]);
                 kvs := kvsTail;
               };
@@ -149,7 +147,7 @@ module {
             switch kvs {
               case (?(kv, kvs2)) {
                 kvs := kvs2;
-                ?(kv.0.key, kv.1)
+                ?(kv.0.1, kv.1)
               };
               case null {
                 if (nextTablePos < table.size()) {
