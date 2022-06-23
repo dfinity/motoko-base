@@ -21,10 +21,6 @@ module {
   public type Index<K, V> = {
     keys : [K];
     trees : [Tree<K, V>];
-    // well-formedness invariants (see Check sub-module):
-    // 1. keys.size() + 1 = subtrees.size()
-    // 2. for all k in keysOf(subrees[i]),
-    //    keys[i] <= k <= keys[i + 1]
   };
 
   public type Data<K, V> = {
