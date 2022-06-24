@@ -20,9 +20,7 @@ module {
     compare : (K, K) -> Order.Order
   };
 
-  public type Data<K, V> = {
-    data : [(K, V)];
-  };
+  public type Data<K, V> = [(K, V)];
 
   public type Index<K, V> = {
     data : Data<K, V>;
@@ -34,8 +32,8 @@ module {
     #data : Data<K, V>;
   };
 
-  func find_data<K, V>(d : Data<K, V>, find_k : K, c : Compare<K>) : ?V {
-    for ((k, v) in d.data.vals()) {
+  func find_data<K, V>(data : Data<K, V>, find_k : K, c : Compare<K>) : ?V {
+    for ((k, v) in data.vals()) {
       if (c.compare(k, find_k) == #equal) { return ?v };
     };
     return null
@@ -45,14 +43,14 @@ module {
     switch t {
       case (#data(d)) { return find_data<K, V>(d, k, c) };
       case (#index(i)) {
-        for (j in I.range(0, i.data.data.size())) {
-          switch (c.compare(k, i.data.data[j].0)) {
-            case (#equal) { return ?i.data.data[j].1 };
+        for (j in I.range(0, i.data.size())) {
+          switch (c.compare(k, i.data[j].0)) {
+            case (#equal) { return ?i.data[j].1 };
             case (#less) { return find<K, V>(i.trees[j], k, c) };
             case _ { }
           }
         };
-        find<K, V>(i.trees[i.data.data.size()], k, c)
+        find<K, V>(i.trees[i.data.size()], k, c)
       };
     };
   };
