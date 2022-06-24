@@ -36,11 +36,25 @@ module {
     public func next() : ?Nat { if (i > y) { null } else {let j = i; i += 1; ?j} };
   };
 
-  /// Like `range` but produces the values in the opposite
-  /// order.
-  public class revRange(x : Int, y : Int) {
-      var i = x;
-      public func next() : ?Int { if (i < y) { null } else {let j = i; i -= 1; ?j} };
+  /// Like `range` but produces the values in the opposite order.
+  /// ```motoko
+  /// let iter = Iter.revRange(2, 0);
+  /// assert(?2 == iter.next());
+  /// assert(?1 == iter.next());
+  /// assert(?0 == iter.next());
+  /// assert(null == iter.next());
+  /// ```
+  public class revRange(x : Nat, y : Int) {
+    var i : Int = x;
+    public func next() : ?Nat {
+      if (i + 1 == y or i < 0) {
+        null;
+      } else {
+        let j = Int.abs(i);
+        i -= 1;
+        ?j;
+      };
+    };
   };
 
   /// Calls a function `f` on every value produced by an iterator and discards
