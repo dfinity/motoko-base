@@ -75,21 +75,20 @@ module {
       }
     };
 
-    /*
     public func check<K, V>(c : Compare<K>, t : Tree<K, V>) {
       rec(null, compareOp(c), t, null)
     };
 
     func rec<K, V>(lower : ?K, c : CompareOp<K>, t : Tree<K, V>, upper : ?K) {
       switch t {
-        case (#data(d)) { data(lower, c, i, upper) };
+        case (#data(d)) { data(lower, c, d, upper) };
         case (#index(i)) { index(lower, c, i, upper) };
       }
     };
 
     func data<K, V>(lower : ?K, c : CompareOp<K>, d : Data<K, V>, upper : ?K) {
-      let var prev_k = null;
-      for ((k, _) in d.data.vals()) {
+      var prev_k : ?K = null;
+      for ((k, _) in d.vals()) {
         assert (c.compare(prev_k, ?k) != #greater);
         assert (c.compare(lower, ?k) != #greater);
         assert (c.compare(?k, upper) != #greater);
@@ -98,15 +97,14 @@ module {
     };
 
     func index<K, V>(lower : ?K, c : CompareOp<K>, i : Index<K, V>, upper : ?K) {
-      assert (i.keys.size() + 1 == i.trees.size());
+      assert (i.data.size() + 1 == i.trees.size());
       data(lower, c, i.data, upper);
-      for (j in I.range(0, i.keys.size() + 1)) {
-        let lower = if (j == 0) { lower } else { ?(i.keys[j - 1]) };
-        let upper = if (j == i.keys.size()) { upper } else { ?(i.keys[j - 1]) };
-        rec(lower, c, i.trees[j], upper)
+      for (j in I.range(0, i.trees.size())) {
+        let lower_ = if (j == 0) { lower } else { ?(i.data[j - 1].0) };
+        let upper_ = if (j == i.data.size()) { upper } else { ?(i.data[j]).0 };
+        rec<K, V>(lower_, c, i.trees[j], upper_)
       }
     };
-    */
   };
 
 }
