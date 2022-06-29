@@ -27,7 +27,8 @@ module {
     let pre = Prim.performanceCounter(0);
     comp();
     let post = Prim.performanceCounter(0);
-    post - pre
+    /// The `performance_counter` API costs 200 extra instructions, we subtract 200 to reflect the real computation cost of `comp`.
+    post - pre - 200
   }
 
 }
