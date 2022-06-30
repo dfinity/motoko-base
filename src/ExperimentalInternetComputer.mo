@@ -25,10 +25,13 @@ module {
   /// NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
   public func countInstructions(comp : () -> ()) : Nat64 {
     let pre = Prim.performanceCounter(0);
+    let post = Prim.performanceCounter(0);
+    // performance_counter costs around 200 extra instructions, we perform an empty measurement to decide the overhead
+    let overhead = post - pre;
+    let pre = Prim.performanceCounter(0);
     comp();
     let post = Prim.performanceCounter(0);
-    /// The `performance_counter` API costs 200 extra instructions, we subtract 200 to reflect the real computation cost of `comp`.
-    post - pre - 200
+    post - pre - overhead
   }
 
 }
