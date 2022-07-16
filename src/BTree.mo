@@ -34,19 +34,19 @@ module {
     #leaf : Data<K, V>;
   };
 
-  func find_data<K, V>(data : Data<K, V>, find_k : K, c : Compare<K>) : ?V {
+  func find_data<K, V>(data : Data<K, V>, find_k : K, c : (K, K) -> Order.Order) : ?V {
     for ((k, v) in data.vals()) {
-      if (c.compare(k, find_k) == #equal) { return ?v };
+      if (c(k, find_k) == #equal) { return ?v };
     };
     return null
   };
 
-  func find<K, V>(t : Tree<K, V>, k : K, c : Compare<K>) : ?V {
-    switch t {
+  public func find<K, V>(t : Tree<K, V>, k : K, c : (K, K) -> Order.Order) : ?V {
+   switch t {
       case (#leaf(d)) { return find_data<K, V>(d, k, c) };
       case (#internal(i)) {
         for (j in I.range(0, i.data.size())) {
-          switch (c.compare(k, i.data[j].0)) {
+          switch (c(k, i.data[j].0)) {
             case (#equal) { return ?i.data[j].1 };
             case (#less) { return find<K, V>(i.trees[j], k, c) };
             case _ { }
