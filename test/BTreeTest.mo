@@ -21,11 +21,13 @@ let binary_internal = #internal(
     trees=[leaf_of_three_a_c, leaf_of_three_s_w]
   });
 
+/*
 let _ = Suite.suite(
   "constructions and checks.",
   [ // These checks-as-assertions can be refactored into value-producing checks,
     // if that seems useful.  Then, they can be individual matchers tests.  Again, if useful.
     Suite.test("assertions.", try {
+*/
       Debug.print "empty1.";
       BT.assertIsValidTextKeys(empty1);
 
@@ -47,10 +49,12 @@ let _ = Suite.suite(
       Debug.print "binary internal.";
       BT.assertIsValidTextKeys(binary_internal);
 
+/*
       true
     } catch _ { false },
     M.equals(T.bool(true))
   )]);
+*/
 
 let _ = Suite.suite("find", [
   Suite.test("pine",

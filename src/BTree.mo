@@ -80,7 +80,7 @@ module {
   public func assertIsValidTextKeys<V>(t : Tree<Text, V>){
     Check.root<Text, V>({compare=Text.compare; show=func (t:Text) : Text { t }}, t)
   };
-
+ 
   /// Check that a B-Tree instance observes invariants of B-Trees.
   /// Invariants ensure performance is what we expect.
   /// For testing and debugging.
