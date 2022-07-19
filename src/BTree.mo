@@ -3,6 +3,7 @@
 import A "Array";
 import I "Iter";
 import List "List";
+import Text "Text";
 import Option "Option";
 import Order "Order";
 import P "Prelude";
@@ -45,7 +46,7 @@ module {
    switch t {
       case (#leaf(d)) { return find_data<K, V>(d, k, c) };
       case (#internal(i)) {
-        for (j in I.range(0, i.data.size())) {
+        for (j in I.range(0, i.data.size() - 1)) {
           switch (c(k, i.data[j].0)) {
             case (#equal) { return ?i.data[j].1 };
             case (#less) { return find<K, V>(i.trees[j], k, c) };
@@ -57,6 +58,29 @@ module {
     };
   };
 
+  public module Insert {
+
+
+
+  };
+
+  // Assert that the given B-Tree instance observes all relevant invariants.
+  // Used for unit tests.  Show function helps debug failing tests.
+  //
+  // Note: These checks-as-assertions can be refactored into value-producing checks,
+  // if that seems useful.  Then, they can be individual matchers tests.  Again, if useful.
+  public func assertIsValid<K, V>(
+    t : Tree<K, V>,
+    compare : (K, K) -> Order.Order,
+    show : K -> Text)
+  {
+    Check.root<K, V>({compare; show}, t)
+  };
+
+  public func assertIsValidTextKeys<V>(t : Tree<Text, V>){
+    Check.root<Text, V>({compare=Text.compare; show=func (t:Text) : Text { t }}, t)
+  };
+
   /// Check that a B-Tree instance observes invariants of B-Trees.
   /// Invariants ensure performance is what we expect.
   /// For testing and debugging.
@@ -64,7 +88,7 @@ module {
   /// Future refactoring --- Eventually, we can return Result or
   /// Option so that both valid and invalid inputs can be inspected in
   /// test cases.  Doing assertions directly here is easier, for now.
-  public module Check {
+  module Check {
 
     type Inf<K> = {#infmax; #infmin; #finite : K};
 
