@@ -1,4 +1,5 @@
 import Iter "mo:base/Iter";
+import Array "mo:base/Array";
 import List "mo:base/List";
 import Nat "mo:base/Nat";
 import Int "mo:base/Int";
@@ -72,7 +73,7 @@ do {
 
   let expected = [1, 3];
 
-  assert(actual == expected);
+  assert(Array.freeze(actual) == expected);
 };
 
 do {
@@ -162,4 +163,14 @@ do {
   let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
   let actual = Iter.toList<Nat>([1, 2, 3].vals());
   assert List.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
+};
+
+
+do {
+  Debug.print("  sort");
+
+  let input : [Nat] = [4, 3, 1, 2, 5];
+  let expected : [Nat] = [1, 2, 3, 4, 5];
+  let actual = Iter.toArray(Iter.sort<Nat>(input.vals(), Nat.compare));
+  assert Array.equal<Nat>(expected, actual, func (x1, x2) { x1 == x2 });
 };
