@@ -242,3 +242,13 @@ func toList<A>(xs : xref:#type.Iter[Iter]<A>) : xref:List.adoc#type.List[List.Li
 
 Like `toArray` but for Lists.
 
+[[sort]]
+== sort
+
+[source.no-repl,motoko,subs=+macros]
+----
+func sort<A>(xs : xref:#type.Iter[Iter]<A>, compare : (A, A) -> xref:Order.adoc#type.Order[Order.Order]) : xref:#type.Iter[Iter]<A>
+----
+
+Sorted iterator.  Will iterate over *all* elements to sort them, necessarily.
+
