@@ -3,6 +3,7 @@
 import Array "Array";
 import Buffer "Buffer";
 import List "List";
+import Order "Order";
 
 module {
 
@@ -208,4 +209,12 @@ module {
     });
     List.reverse<A>(result);
   };
-}
+
+  /// Sorted iterator.  Will iterate over *all* elements to sort them, necessarily.
+  public func sort<A>(xs : Iter<A>, compare : (A, A) -> Order.Order) : Iter<A> {
+    let a = toArrayMut<A>(xs);
+    Array.sortInPlace<A>(a, compare);
+    fromArrayMut<A>(a)
+  };
+
+};
