@@ -8,7 +8,7 @@ on:
 
 env:
   vessel_version: "v0.6.3"
-  moc_version: "0.6.29"
+  moc_version: "0.6.30"
 
 jobs:
   verify:
