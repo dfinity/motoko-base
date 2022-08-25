@@ -26,13 +26,13 @@ module {
 
   /// Put an element into the set.
   public func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
-    let (s2, _) = Trie.put<T,()>(s, { key = x; hash = xh }, eq, ());
+    let s2 = Trie.put<T,()>(s, { key = x; hash = xh }, eq, ()).0;
     s2
   };
 
   /// Delete an element from the set.
   public func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
-    let (s2, _) = Trie.remove<T, ()>(s, { key = x; hash = xh }, eq);
+    let s2 = Trie.remove<T, ()>(s,  { key = x; hash = xh}, eq).0;
     s2
   };
 
