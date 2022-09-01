@@ -60,29 +60,31 @@ module {
 
     /// Adds all elements in buffer `b` to this buffer.
     public func append(b : Buffer<X>) {
-      let i = b.vals();
-      loop {
-        switch (i.next()) {
-          case null return;
-          case (?x) { add(x) };
+      let countB = b.size();
+      var i = 0;
+      label l loop {
+        if (i >= countB) {
+          break l;
         };
+        add(b.get(i));
+        i += 1;
       };
     };
 
     /// Returns the current number of elements.
-    public func size() : Nat =
-      count;
+    public func size() : Nat = count;
 
     /// Resets the buffer.
-    public func clear() =
-      count := 0;
+    public func clear() = count := 0;
 
     /// Returns a copy of this buffer.
     public func clone() : Buffer<X> {
       let c = Buffer<X>(elems.size());
       var i = 0;
       label l loop {
-        if (i >= count) break l;
+        if (i >= count) {
+          break l;
+        };
         c.add(elems[i]);
         i += 1;
       };
@@ -93,7 +95,9 @@ module {
     public func vals() : { next : () -> ?X } = object {
       var pos = 0;
       public func next() : ?X {
-        if (pos == count) { null } else {
+        if (pos == count) {
+          null
+        } else {
           let elem = ?elems[pos];
           pos += 1;
           elem
@@ -115,7 +119,9 @@ module {
         let a = Prim.Array_init<X>(count, elems[0]);
         var i = 0;
         label l loop {
-          if (i >= count) break l;
+          if (i >= count) { 
+            break l;
+          };
           a[i] := elems[i];
           i += 1;
         };
@@ -162,5 +168,111 @@ module {
       buff.add(elem)
     };
     buff
+  };
+
+  public func map<X, Y>(buffer : Buffer<X>, f : X -> Y) : Buffer<Y> {
+    let count = buffer.size();
+    let newBuffer = Buffer<Y>(count);
+    
+    var i = 0;
+    label l loop {
+      if (i >= count) {
+        break l;
+      };
+      newBuffer.put(i, f(buffer.get(i)));
+      i += 1;
+    };
+
+    newBuffer
+  };
+
+  public func iterate<X>(buffer : Buffer<X>, f : X -> ()) {
+    let count = buffer.size();
+
+    var i = 0;
+    label l loop {
+      if (i >= count) {
+        break l;
+      };
+      f(buffer.get(i));
+      i += 1;
+    };
+  };
+
+  public func filter<X>(buffer : Buffer<X>, predicate : X -> Bool) : Buffer<X> {
+    let count = buffer.size();
+    let newBuffer = Buffer<X>(count);
+    
+    var i = 0;
+    label l loop {
+      if (i >= count) {
+        break l;
+      };
+
+      let element = buffer.get(i);
+      if (predicate element) {
+        newBuffer.add(element);
+      };
+
+      i += 1;
+    };
+
+    newBuffer
+  };
+
+  public func chain<X, Y>(buffer : Buffer<X>, k : X -> Buffer<Y>) : Buffer<Y> {
+    let count = buffer.size();
+    let newBuffer = Buffer<Y>(count);
+    
+    var i = 0;
+    label l loop {
+      if (i >= count) {
+        break l;
+      };
+      let results = k(buffer.get(i));
+      newBuffer.append(results);
+      i += 1;
+    };
+
+    newBuffer
+  };
+
+  public func mapFilter<X, Y>(buffer : Buffer<X>, f : X -> ?Y) : Buffer<Y> {
+    let count = buffer.size();
+    let newBuffer = Buffer<Y>(count);
+    
+    var i = 0;
+    label l loop {
+      if (i >= count) {
+        break l;
+      };
+
+      switch (f(buffer.get(i))) {
+        case (?element) {
+          newBuffer.add(element);
+        };
+        case _ {};
+      };
+
+      i += 1;
+    };
+
+    newBuffer
+  };
+
+  public func mapEntries<X, Y>(buffer : Buffer<X>, f : (Nat, X) -> Y) : Buffer<Y> {
+    let count = buffer.size();
+    let newBuffer = Buffer<Y>(count);
+    
+    var i = 0;
+    label l loop {
+      if (i >= count) {
+        break l;
+      };
+      newBuffer.put(i, f(i, buffer.get(i)));
+      i += 1;
+    };
+
+    newBuffer
   };
 }
