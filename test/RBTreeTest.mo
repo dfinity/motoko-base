@@ -1,6 +1,6 @@
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
-import I "mo:base/Iter";
+import Iter "mo:base/Iter";
 import List "mo:base/List";
 import RBT "mo:base/RBTree";
 
@@ -55,6 +55,20 @@ for ((num, lab) in t.entriesRev()) {
 }};
 
 assert RBT.size(t.share()) == 9;
+
+do { var i = 4;
+for ((num, lab) in t.entriesTail(4)) {
+  assert(num == i);
+  i += 1;
+}};
+
+do { var i = 1;
+for ((num, lab) in t.entriesTail(0)) {
+  assert(num == i);
+  i += 1;
+}};
+
+assert Iter.size(t.entriesTail(10)) == 0;
 
 t.delete(5);
 
