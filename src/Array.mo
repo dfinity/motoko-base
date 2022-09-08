@@ -1,6 +1,6 @@
 /// Functions on Arrays
 
-import Buffer "Buffer";
+// import Buffer "Buffer";
 import I "IterType";
 import Option "Option";
 import Order "Order";
@@ -42,7 +42,7 @@ module {
     };
   };
 
-  /// Sorts the given array according to the `cmp` function.
+  /// Sorts the given array according to the `lessThan` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -51,13 +51,13 @@ module {
   /// let xs = [4, 2, 6];
   /// assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
   /// ```
-  public func sort<A>(xs : [A], cmp : (A, A) -> Order.Order) : [A] {
+  public func sort<A>(xs : [A], lessThan : (A, A) -> Bool) : [A] {
     let tmp : [var A] = thaw(xs);
-    sortInPlace(tmp, cmp);
+    sortInPlace(tmp, lessThan);
     freeze(tmp)
   };
 
-  /// Sorts the given array in place according to the `cmp` function.
+  /// Sorts the given array in place according to the `lessThan` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -67,7 +67,7 @@ module {
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
-  public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
+  public func sortInPlace<A>(xs : [var A], lessThan : (A, A) -> Bool) {
     if (xs.size() < 2) return;
     let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
 
@@ -87,7 +87,7 @@ module {
         } else if (j > hi) {
           xs[k] := aux[i];
           i += 1;
-        } else if (Order.isLess(cmp(aux[j], aux[i]))) {
+        } else if (lessThan(aux[j], aux[i])) {
           xs[k] := aux[j];
           j += 1;
         } else {
@@ -118,26 +118,31 @@ module {
     ys;
   };
   /// Output array contains each array-value if and only if the predicate is true; ordering retained.
-  public func filter<A>(xs : [A], f : A -> Bool) : [A] {
-    let ys : Buffer.Buffer<A> = Buffer.Buffer(xs.size());
-    for (x in xs.vals()) {
-      if (f(x)) {
-        ys.add(x);
-      };
-    };
-    ys.toArray();
-  };
+
+  // FIXME rewrite using no Buffer
+  // Current implementation is using two passes anyway
+
+  // public func filter<A>(xs : [A], f : A -> Bool) : [A] {
+  //   let ys : Buffer.Buffer<A> = Buffer.Buffer(xs.size());
+  //   for (x in xs.vals()) {
+  //     if (f(x)) {
+  //       ys.add(x);
+  //     };
+  //   };
+  //   ys.toArray();
+  // };
   /// Output array contains each transformed optional value; ordering retained.
-  public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
-    let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
-    for (x in xs.vals()) {
-      switch (f(x)) {
-        case null {};
-        case (?y) { ys.add(y) };
-      }
-    };
-    ys.toArray();
-  };
+  // public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
+  //   let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
+  //   for (x in xs.vals()) {
+  //     switch (f(x)) {
+  //       case null {};
+  //       case (?y) { ys.add(y) };
+  //     }
+  //   };
+  //   ys.toArray();
+  // };
+
   /// Aggregate and transform values into a single output value, by increasing indices.
   public func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B {
     var acc = initial;

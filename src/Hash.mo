@@ -1,7 +1,7 @@
 /// Hash values
 
 import Prim "mo:⛔";
-import Iter "Iter";
+// import Iter "Iter";
 
 module {
 
@@ -36,24 +36,24 @@ module {
 
   /// @deprecated This function will be removed in future.
   public func debugPrintBits(bits : Hash) {
-    for (j in Iter.range(0, length - 1)) {
-      if (bit(bits, j)) {
-        Prim.debugPrint("1")
-      } else {
-        Prim.debugPrint("0")
-      }
-    }
+    // for (j in Iter.range(0, length - 1)) {
+    //   if (bit(bits, j)) {
+    //     Prim.debugPrint("1")
+    //   } else {
+    //     Prim.debugPrint("0")
+    //   }
+    // }
   };
 
   /// @deprecated This function will be removed in future.
   public func debugPrintBitsRev(bits : Hash) {
-    for (j in Iter.revRange(length - 1, 0)) {
-      if (bit(bits, Prim.abs(j))) {
-        Prim.debugPrint("1")
-      } else {
-        Prim.debugPrint("0")
-      }
-    }
+    // for (j in Iter.revRange(length - 1, 0)) {
+    //   if (bit(bits, Prim.abs(j))) {
+    //     Prim.debugPrint("1")
+    //   } else {
+    //     Prim.debugPrint("0")
+    //   }
+    // }
   };
 
 

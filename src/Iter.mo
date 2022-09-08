@@ -211,9 +211,9 @@ module {
   };
 
   /// Sorted iterator.  Will iterate over *all* elements to sort them, necessarily.
-  public func sort<A>(xs : Iter<A>, compare : (A, A) -> Order.Order) : Iter<A> {
+  public func sort<A>(xs : Iter<A>, lessThan : (A, A) -> Bool) : Iter<A> {
     let a = toArrayMut<A>(xs);
-    Array.sortInPlace<A>(a, compare);
+    Array.sortInPlace<A>(a, lessThan);
     fromArrayMut<A>(a)
   };
 
