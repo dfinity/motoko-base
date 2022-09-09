@@ -100,9 +100,9 @@ do {
 
 // blob conversion test
 do {
-  let b = Buffer.fromBlob(Blob.fromArray([0, 1, 2, 3]));
-  Buffer.appendBlob(b, Blob.fromArray([4, 5, 6]));
-  assert (Buffer.toBlob(b) == Blob.fromArray([0, 1, 2, 3, 4, 5, 6]));
+  let b = B.fromBlob(Blob.fromArray([0, 1, 2, 3]));
+  B.appendBlob(b, Blob.fromArray([4, 5, 6]));
+  assert (B.toBlob(b) == Blob.fromArray([0, 1, 2, 3, 4, 5, 6]));
 };
 
 let {run;test;suite} = Suite;
