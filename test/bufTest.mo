@@ -2,6 +2,7 @@ import Prim "mo:⛔";
 import B "mo:base/Buffer";
 import I "mo:base/Iter";
 import O "mo:base/Option";
+import Blob "mo:base/Blob";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -95,6 +96,13 @@ do {
   c.add(0);
   assert (c.toArray().size() == 2);
   assert (c.toVarArray().size() == 2);
+};
+
+// blob conversion test
+do {
+  let b = Buffer.fromBlob(Blob.fromArray([0, 1, 2, 3]));
+  Buffer.appendBlob(b, Blob.fromArray([4, 5, 6]));
+  assert (Buffer.toBlob(b) == Blob.fromArray([0, 1, 2, 3, 4, 5, 6]));
 };
 
 let {run;test;suite} = Suite;

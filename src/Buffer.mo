@@ -163,4 +163,23 @@ module {
     };
     buff
   };
+
+  /// Appends a blob to a byte buffer.
+  public func appendBlob(buffer : Buffer<Nat8>, blob : Blob) {
+    for (byte in blob.vals()) {
+      buffer.add(byte);
+    }
+  };
+
+  /// Constructs a byte buffer from a blob.
+  public func fromBlob(blob : Blob) : Buffer<Nat8> {
+    let buffer = Buffer<Nat8>(blob.size());
+    appendBlob(buffer, blob);
+    buffer
+  };
+
+  /// Constructs a blob from a byte buffer.
+  public func toBlob(buffer : Buffer<Nat8>) : Blob {
+    Prim.arrayToBlob(buffer.toArray())
+  };
 }
