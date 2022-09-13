@@ -16,6 +16,7 @@ import Prim "mo:⛔";
 import Result "Result";
 import Array "Array";
 import Int "Int";
+import Deque "Deque";
 
 module {
 
@@ -47,17 +48,91 @@ module {
     /// elements had been added to the Buffer.
     public func removeLast() : ?X {
       if (count == 0) {
-        null
-      } else {
-        let lastElement = ?elems[count - 1];
-        count -= 1;
+        return null;
+      };
 
-        if (count < elems.size() / 4) { // avoid thrashing
-          resize(elems.size() / 2) // will downsize to an array of size 2 at minimum
+      let lastElement = ?elems[count - 1];
+      count -= 1;
+
+      if (count < elems.size() / 4) { // avoid thrashing
+        resize(elems.size() / 2) // will downsize to an array of size 2 at minimum
+      };
+
+      lastElement
+    };
+
+    public func remove(index : Nat) : ?X {
+      if (index >= count) {
+        return null;
+      };
+
+      let element = ?elems[index];
+
+      // resize down and shift over in one pass
+      if (count - 1 < elems.size() / 4) { 
+        let elems2 = Prim.Array_init<X>(elems.size() / 2, elems[0]);
+
+        var i = 0;
+        var j = 0;
+        label l while (i < count and j < count) {
+          if (i == index) {
+            i += 1;
+            continue l;
+          };
+
+          elems2[j] := elems[i];
+          i += 1;
+          j += 1;
+        };
+        elems := elems2;
+      } else { // just shift over elements
+        var i = index;
+        while (i < count - 1) {
+          elems[i] := elems[i + 1];
+          i += 1;
+        };
+      };
+
+      count -= 1;
+      element
+    };
+
+    public func removeAllOf(element : X, equal : (X, X) -> Bool) : Nat { 
+      var removeIndices = Deque.empty<Nat>();
+      var removeCount = 0;
+
+      var i = 0;
+      while (i < count) {
+        let current = elems[i];
+        // Found element to remove
+        if (equal(element, current)) {
+          removeIndices := Deque.pushBack<Nat>(removeIndices, i);
+          removeCount += 1;
+        }
+        // Found element to shift
+        else {
+          switch (Deque.popFront(removeIndices)) {
+            case null { };
+            case (?(index, poppedQueue)) {
+              removeIndices := poppedQueue;
+              elems[index] := current;
+              removeIndices := Deque.pushBack(removeIndices, i);
+            }
+          }
         };
 
-        lastElement
+        i += 1;
       };
+
+      count -= removeCount;
+
+      // Can't shift and resize in one pass
+      // because we don't know the new count ahead of time
+      if (count < elems.size() / 4) {
+        resize(elems.size() / 2)
+      };
+
+      removeCount
     };
 
     // traps on OOB
@@ -101,6 +176,81 @@ module {
         add(buffer2.get(i));
         i += 1;
       };
+    };
+
+    public func insert(index : Nat, element : X) {
+      if (index > count) {
+        Prim.trap "Buffer index out of bounds in insert"
+      };
+
+      if (count + 1 > elems.size()) {
+        let elems2 = Prim.Array_init<X>(count + 1, element);
+        var i = 0;
+        while (i < count + 1) {
+          if (i < index) {
+            elems2[i] := elems[i];
+          } else if (i > index) {
+            elems2[i] := elems[i - 1];
+          };
+          
+          i += 1;
+        };
+        elems := elems2;
+      }
+      else {
+        var i = count - 1;
+        while (i > index) {
+          elems[i] := elems[i - 1];
+          i -= 1;
+        };
+        elems[index] := element;
+      };
+
+      count += 1;
+    };
+
+    public func insertBuffer(buffer2 : Buffer<X>, index : Nat) {
+      let count2 = buffer2.size();
+      if (index > count) {
+        Prim.trap "Buffer index out of bounds in insertAt"
+      };
+
+      // resize and insert in one go
+      if (count + count2 > elems.size()) {
+        let elems2 =
+          if (count2 == 0) {
+            return;
+          } else {
+            Prim.Array_init<X>(count + count2, buffer2.get(0))
+          };
+        var i = 0;
+        while (i < count + count2) {
+          if (i < index) {
+            elems2[i] := elems[i];
+          }
+          else if (i >= index and i < index + count2) {
+            elems2[i] := buffer2.get(i - index);
+          }
+          else {
+            elems2[i] := elems[i - count2];
+          };
+
+          i += 1;
+        };
+        elems := elems2;
+      } 
+      // just insert
+      else {
+        var i = index;
+        while (i < index + count2) {
+          elems[i + count2] := elems[i];
+          elems[i] := buffer2.get(i - index);
+
+          i += 1;
+        }
+      };
+
+      count += count2;
     };
 
     /// Returns the current number of elements.
@@ -186,7 +336,11 @@ module {
 
     public func sort(lessThan : (X, X) -> Bool) {
       Array.sortInPlace(elems, lessThan)
-    }
+    };
+  };
+
+  public func trimToSize<X>(buffer : Buffer<X>) {
+    buffer.resize(if (buffer.size() == 0) { 1 } else { buffer.size() });
   };
 
   /// Creates a buffer from immutable array elements.
@@ -411,9 +565,12 @@ module {
     false
   };
 
-  // FIXME traps on empty buffers
   public func max<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) : X {
     let count = buffer.size();
+    if (count == 0) {
+      Prim.trap "Cannot call max on an empty buffer"
+    };
+
     var i = 0;
     var maxSoFar = buffer.get(0);
     while (i < count) {
@@ -427,9 +584,12 @@ module {
     maxSoFar
   };
 
-  // FIXME traps on empty buffers
   public func min<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) : X {
     let count = buffer.size();
+    if (count == 0) {
+      Prim.trap "Cannot call min on an empty buffer"
+    };
+
     var i = 0;
     var minSoFar = buffer.get(0);
     while (i < count) {
@@ -445,7 +605,8 @@ module {
 
   public func isEmpty<X>(buffer : Buffer<X>) : Bool = buffer.size() == 0;
 
-  // FIXME can't return element X because it has to be shared from async
+  // Can't return element X because not necessarily a shared type
+  // FIXME can't use async context here
   // public func randomIndex<X>(buffer : Buffer<X>) : async Nat {
   //   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
   //   let count = buffer.size();
@@ -462,7 +623,12 @@ module {
   //   rand % count
   // };
 
+  // FIXME how to write hash and toText without type constraint on X?
   // public func hash<X>(buffer : Buffer<X>) : Nat32 {
+
+  // };
+  // Maybe just keep using debug_show() for now
+  // public func toText<X>(buffer : Buffer<X>) : Text {
 
   // };
 
@@ -540,7 +706,6 @@ module {
     newBuffer
   };
 
-  // FIXME traps on OOB
   public func split<X>(buffer : Buffer<X> , index : Nat) : (Buffer<X>, Buffer<X>) {
     let count = buffer.size();
 
@@ -602,6 +767,7 @@ module {
     newBuffer
   };
 
+  // FIXME
   // Combinations
   // Permutations (documentation should warn of any combinatorial explosions)
 
@@ -729,8 +895,32 @@ module {
     newBuffer
   };
 
-  // isInfixOf
-  // isStrictInfixOf
+  public func isInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    if (infix.size() > buffer.size()) {
+      Prim.trap "Infix size must be at most buffer size in isInfixOf";
+    };
+    switch(indexOfBuffer(buffer, infix, equal)) {
+      case null false;
+      case _ true;
+    }
+  };
+
+  public func isStrictInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    let infixSize = infix.size();
+    let bufferSize = buffer.size();
+    if (infixSize > bufferSize) {
+      Prim.trap "Infix size must be at most buffer size in isStrictInfixOf";
+    };
+
+    if (infixSize == bufferSize) {
+      return false;
+    };
+
+    switch(indexOfBuffer(buffer, infix, equal)) {
+      case null false;
+      case _ true;
+    }
+  };
 
   public func suffix<X>(buffer : Buffer<X>, start : Nat) : Buffer<X> {
     let count = buffer.size();
@@ -833,9 +1023,7 @@ module {
     newBuffer
   };
 
-  // FIXME
   // public func transpose<X>(matrix : Buffer<Buffer<X>>) : Buffer<Buffer<X>> {
-
   //   var i = 0;
   //   while (i < matrix.size()) {
   //     var j = 0;
@@ -880,5 +1068,60 @@ module {
     null
   };
 
-  // Zipper
+  // Uses the KMP substring search algorithm
+  public func indexOfBuffer<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
+    let count1 = buffer1.size();
+    let count2 = buffer2.size();
+    // FIXME implementation below assumes count1 < count2
+    if (count2 > count1) {
+      Prim.trap "Buffer2 length should be smaller than Buffer1 length in indexOfBuffer";
+    };
+
+    let lps = Array.init<Nat>(count2, 0);
+
+    // length of the previous longest prefix suffix
+    var prevLength = 0;
+    var i = 1;
+ 
+    // precompute lps
+    while (i < count2) {
+      if (equal(buffer2.get(i), buffer2.get(prevLength))) {
+        prevLength += 1;
+        lps[i] := prevLength;
+        i += 1;
+      }
+      else {
+        if (prevLength != 0) {
+          prevLength := lps[prevLength - 1];
+        } else {
+            lps[i] := prevLength;
+            i += 1;
+        }
+      }
+    };
+
+    // start search
+    i := 0;
+    var j = 0;
+    while (count1 - i >= count2 - j) {
+      if (equal(buffer1.get(i), buffer2.get(j))) {
+          i += 1;
+          j += 1;
+      };
+      if (j == count2) {
+        return ?(i - j);
+      }
+      else if (i < count1 and not equal(buffer2.get(j), buffer1.get(i))) {
+        if (j != 0) {
+            j := lps[j - 1];
+        } else {
+            i += 1;
+        }
+      }
+    };
+
+    null
+  };
+
+  // FIXME Zipper
 }
