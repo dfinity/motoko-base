@@ -14,7 +14,6 @@
 
 import Prim "mo:⛔";
 import Result "Result";
-import Array "Array";
 import Int "Int";
 import Deque "Deque";
 
@@ -97,7 +96,10 @@ module {
       element
     };
 
-    public func removeAllOf(element : X, equal : (X, X) -> Bool) : Nat { 
+    // FIXME return removeCount or unit?
+    // Don't want to clutter user with ignores
+    // And user can calculate removeCount on their own with size()
+    public func filter(predicate : (Nat, X) -> Bool) : Nat { 
       var removeIndices = Deque.empty<Nat>();
       var removeCount = 0;
 
@@ -105,7 +107,7 @@ module {
       while (i < count) {
         let current = elems[i];
         // Found element to remove
-        if (equal(element, current)) {
+        if (not predicate(i, current)) {
           removeIndices := Deque.pushBack<Nat>(removeIndices, i);
           removeCount += 1;
         }
@@ -140,7 +142,7 @@ module {
     public func resize(size : Nat) {
       if (size < count) {
         // FIXME is it okay to use Prim.trap? Maybe use assert?
-        Prim.trap "Size is too small to hold all elements in Buffer after resizing";
+        Prim.trap "Size is too small to hold all elements in Buffer after resizing"
       };
       if (elems.size() == 0) { // Do NOT let the underlying array become empty after initial Add
         Prim.trap "Must first add an element to buffer before resizing"
@@ -262,6 +264,7 @@ module {
       resize(2); // Same downsize minimum as the remove methods
     };
 
+    // FIXME move outside of class?
     /// Returns a copy of this buffer.
     public func clone() : Buffer<X> {
       let newBuffer = Buffer<X>(elems.size());
@@ -287,6 +290,7 @@ module {
       }
     };
 
+    // FIXME move outside of class?
     /// Creates a new array containing this buffer's elements.
     public func toArray() : [X] =
       // immutable clone of array
@@ -295,6 +299,7 @@ module {
         func(x : Nat) : X { elems[x] }
       );
 
+    // FIXME move outside of class?
     /// Creates a mutable array containing this buffer's elements.
     public func toVarArray() : [var X] {
       if (count == 0) { 
@@ -332,10 +337,6 @@ module {
     /// index is out of bounds. Indexing is zero-based.
     public func put(i : Nat, elem : X) {
       elems[i] := elem;
-    };
-
-    public func sort(lessThan : (X, X) -> Bool) {
-      Array.sortInPlace(elems, lessThan)
     };
   };
 
@@ -605,8 +606,18 @@ module {
 
   public func isEmpty<X>(buffer : Buffer<X>) : Bool = buffer.size() == 0;
 
-  // Can't return element X because not necessarily a shared type
-  // FIXME can't use async context here
+  public func removeDuplicates<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) : Nat {
+    sort(buffer, lessThan);
+    buffer.filter(
+      func (i, element) { 
+        let current = buffer.get(i - 1);
+        i == 0 or lessThan(element, current) or lessThan(current, element) 
+      }
+    );
+  };
+
+  // FIXME Can't return element X because not necessarily a shared type
+  // Can't use async context here
   // public func randomIndex<X>(buffer : Buffer<X>) : async Nat {
   //   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
   //   let count = buffer.size();
@@ -706,6 +717,53 @@ module {
     newBuffer
   };
 
+  public func sort<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) {
+    let count = buffer.size();
+    if (count < 2) {
+      return;
+    };
+    let aux = Prim.Array_init<X>(count, buffer.get(0));
+
+    func merge(lo : Nat, mid : Nat, hi : Nat) {
+      var i = lo;
+      var j = mid + 1;
+      var k = lo;
+      while(k <= hi) {
+        aux[k] := buffer.get(k);
+        k += 1;
+      };
+      k := lo;
+      while(k <= hi) {
+        if (i > mid) {
+          buffer.put(k, aux[j]);
+          j += 1;
+        } else if (j > hi) {
+          buffer.put(k, aux[i]);
+          i += 1;
+        } else if (lessThan(aux[j], aux[i])) {
+          buffer.put(k, aux[j]);
+          j += 1;
+        } else {
+          buffer.put(k, aux[i]);
+          i += 1;
+        };
+        k += 1;
+      };
+    };
+
+    func sortHelper(lo : Nat, hi : Nat) {
+      if (hi <= lo) {
+        return;
+      };
+      let mid : Nat = lo + (hi - lo) / 2;
+      sortHelper(lo, mid);
+      sortHelper(mid + 1, hi);
+      merge(lo, mid, hi);
+    };
+
+    sortHelper(0, count - 1);
+  };
+
   public func split<X>(buffer : Buffer<X> , index : Nat) : (Buffer<X>, Buffer<X>) {
     let count = buffer.size();
 
@@ -735,7 +793,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
     let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<(X, Y)>(minCount); // FIXME construct buffers with add leeway?
+    let newBuffer = Buffer<(X, Y)>(minCount);
 
     var i = 0;
     while (i < minCount) {
@@ -767,12 +825,130 @@ module {
     newBuffer
   };
 
-  // FIXME
-  // Combinations
-  // Permutations (documentation should warn of any combinatorial explosions)
+  // FIXME documentation should warn of combinatorial explosion
+  // Combinations are lazily produced and thus vulnerable to mutations in underlying buffer
+  public func combinations<X>(buffer : Buffer<X>, groupSize : Nat) : { next : () -> ?Buffer<X> } = object {
+    let count = buffer.size();
+    let current = Prim.Array_init<Nat>(groupSize, 0);
+    var r = 0; // index for current combination
+    var i = 0; // index for buffer
+    
+    public func next() : ?Buffer<X> {
+      if (count < groupSize or (count == 0 and groupSize == 0) or r < 0) {
+        return null;
+      };
 
-  // FIXME what is the "canonical" sequence structure? Should this return type be [Buffer<X>], List<Buffer<X>>, etc.?
-  // Maybe it should be Array because it has the least overhead by being a primitive type
+      while (r >= 0){
+        // forward step
+        if (i <= (count + (r - groupSize))){
+          current[r] := i;
+            
+          // if current array is full, add it to combinations and move to next element in buffer
+          if (r == groupSize - 1){
+            var j = 0;
+            let combination = Buffer<X>(groupSize);
+            while (j < groupSize) {
+              combination.add(buffer.get(current[j]));
+            };
+            i += 1;
+
+            return ?combination;
+          } else {
+            // if current is not full yet, select next element
+            i := current[r] + 1;
+            r += 1;
+          }				
+        } else { // backward step
+          r -= 1;
+          if (r >= 0) {
+            i := current[r] + 1;
+          }
+        }			
+      };
+
+      null
+    };
+  };
+  
+  public func permutations<X>(buffer : Buffer<X>) : { next : () -> ?Buffer<X> } = object {
+    let count = buffer.size();
+    let indices = Prim.Array_init<Nat>(count, 0);
+    var increase = 0;
+    var initialized = false;
+
+    public func next() : ?Buffer<X> {
+      if (increase == count - 1) {
+        return null;
+      };
+
+      if (not initialized) {
+        var i = 0;
+        while (i < count) {
+          indices[i] := i;
+          i += 1;
+        };
+        initialized := true;
+      } else if (increase == 0) {
+        swap(increase, increase + 1);
+
+        increase += 1;
+        while (increase < count - 1 and indices[increase] > indices[increase + 1]) {
+          increase += 1;
+        }
+      } else {
+        if (indices[increase + 1] > indices[0]) {
+          swap(increase + 1, 0);
+        } else {
+          // Binary search to find the greatest value that is less than indices[increase + 1]
+          var start = 0;
+          var end = increase;
+          var mid = (start + end) / 2;
+          let target = indices[increase + 1];
+          while (not (indices[mid] < target and indices[mid - 1] > target)) {
+            if (indices[mid] < target) {
+              end := mid - 1;
+            } else {
+              start := mid + 1;
+            };
+
+            mid := (start + end) / 2;
+          };
+
+          swap(increase + 1, mid);
+        };
+
+        // Reverse elements from 0 through increase
+        var i = 0;
+        while (i <= increase / 2) {
+          swap(i, increase - i);
+          i += 1;
+        };
+
+        increase := 0;
+      };
+
+      ?output()
+    };
+
+    private func output() : Buffer<X> {
+      let permutation = Buffer<X>(count);
+      var i = 0;
+      while (i < count) {
+        permutation.add(buffer.get(indices[i]));
+
+        i += 1;
+      };
+
+      permutation
+    };
+
+    private func swap(index1 : Nat, index2 : Nat) {
+      let temp = indices[index1];
+      indices[index1] := indices[index2];
+      indices[index2] := temp;
+    }
+  };
+
   public func chunk<X>(buffer : Buffer<X>, size : Nat) : Buffer<Buffer<X>> {
     if (size == 0) {
       Prim.trap "Chunk size must be non-zero"
@@ -1023,25 +1199,59 @@ module {
     newBuffer
   };
 
-  // public func transpose<X>(matrix : Buffer<Buffer<X>>) : Buffer<Buffer<X>> {
-  //   var i = 0;
-  //   while (i < matrix.size()) {
-  //     var j = 0;
-  //     while (j < matrix.get(i).size()) {
+  public func transpose<X>(matrix : Buffer<Buffer<X>>) : Buffer<Buffer<X>> {
+    // FIXME check bounds / staggered matrix
+    let outerCount = matrix.size();
+    let innerCount = matrix.get(0).size();
 
-  //     }
-  //   }
-  // };
+    let newMatrix = Buffer<Buffer<X>>(innerCount);
+    var i = 0;
+    while (i < innerCount) {
+      var j = 0;
+      while (j < outerCount) {
+        if (i == 0) {
+          newMatrix.add(Buffer<X>(outerCount));
+        };
+        newMatrix.get(i).put(j, matrix.get(j).get(i));
 
-  // FIXME should this be a class method? seems pretty primitive
-  // This is trivial in buffer, but less so in tree structures for example
-  // Implement this for consitency of API
-  // TRAP on empty or not?
+        j += 1;
+      };
+
+      i += 1;
+    };
+
+    newMatrix
+  };
+
+  // FIXME should error checks be with respect to the top-level library function?
+  // E.g. in first(), should there be a check to make sure the buffer isn't empty?
+  // On the one hand, not having the check is faster, but on the other hand, the index
+  // out of bounds error message that would result would be more cryptic to the user.
   public func first<X>(buffer : Buffer<X>) : X = buffer.get(0);
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
-  // binarySearch?
-  // toText (how does this interact with debug_show?)
+  // FIXME use lessThan or a function that returns Order.Order?
+  // Probably simpler for the user to write a lessThan function
+  public func binarySearch<X>(buffer : Buffer<X>, element : X, lessThan : (X, X) -> Bool) : ?Nat {
+    var low = 0;
+    var high = buffer.size();
+
+    while (low < high) {
+      let mid = (low + high) / 2;
+      let current = buffer.get(mid);
+      if (not lessThan(element, current) and not lessThan(current, element)) {
+        return ?mid;
+      }
+      else if (lessThan(element, current)) {
+        high := mid;
+      }
+      else {
+        low := mid + 1;
+      }
+    };
+
+    null
+  };
 
   public func indexOf<X>(buffer : Buffer<X>, element : X, equal : (X, X) -> Bool) : ?Nat {
     let count = buffer.size();
@@ -1077,7 +1287,7 @@ module {
       Prim.trap "Buffer2 length should be smaller than Buffer1 length in indexOfBuffer";
     };
 
-    let lps = Array.init<Nat>(count2, 0);
+    let lps = Prim.Array_init<Nat>(count2, 0);
 
     // length of the previous longest prefix suffix
     var prevLength = 0;
@@ -1122,6 +1332,4 @@ module {
 
     null
   };
-
-  // FIXME Zipper
 }
