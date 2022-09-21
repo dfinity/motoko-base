@@ -14,7 +14,7 @@ env:
 jobs:
   tests:
     if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
     - name: Check if Git tag exists

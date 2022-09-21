@@ -12,7 +12,7 @@ env:
 
 jobs:
   verify:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checking out motoko-base
       uses: actions/checkout@v2
