@@ -7,12 +7,12 @@ on:
   pull_request:
 
 env:
-  vessel_version: "v0.6.3"
+  vessel_version: "v0.6.4"
   moc_version: "0.7.0"
 
 jobs:
   verify:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checking out motoko-base
       uses: actions/checkout@v2
