@@ -19,14 +19,23 @@ import Order "Order";
 module {
   type Order = Order.Order;
 
+  private let UPSIZE_FACTOR = 2;
+  private let DOWNSIZE_THRESHOLD = 4; // Don't downsize too early to avoid thrashing
+  private let DOWNSIZE_FACTOR = 2;
+
   /// Create a stateful buffer class encapsulating a mutable array.
   ///
   /// The argument `initCapacity` determines its initial capacity.
   /// The underlying mutable array grows by doubling when its current
   /// capacity is exceeded.
+
+  // FIXME can initCapacity be an option?
   public class Buffer<X>(initCapacity : Nat) {
     var count : Nat = 0;
     var elems : [var X] = [var]; // initially empty; allocated upon first `add`
+
+    /// Returns the current number of elements.
+    public func size() : Nat = count;
 
     /// Adds a single element to the buffer.
     public func add(elem : X) {
@@ -36,7 +45,7 @@ module {
           count += 1;
           return;
         } else {
-          resize(elems.size() * 2);
+          resize(elems.size() * UPSIZE_FACTOR);
         };
       };
       elems[count] := elem;
@@ -53,8 +62,8 @@ module {
       let lastElement = ?elems[count - 1];
       count -= 1;
 
-      if (count < elems.size() / 4) { // avoid thrashing
-        resize(elems.size() / 2) // will downsize to an array of size 2 at minimum
+      if (count < elems.size() / DOWNSIZE_THRESHOLD) {
+        resize(elems.size() / DOWNSIZE_FACTOR)
       };
 
       lastElement
@@ -68,8 +77,8 @@ module {
       let element = ?elems[index];
 
       // resize down and shift over in one pass
-      if ((count - 1) : Nat < elems.size() / 4) { 
-        let elems2 = Prim.Array_init<X>(elems.size() / 2, elems[0]);
+      if ((count - 1) : Nat < elems.size() / DOWNSIZE_THRESHOLD) { 
+        let elems2 = Prim.Array_init<X>(elems.size() / DOWNSIZE_FACTOR, elems[0]);
 
         var i = 0;
         var j = 0;
@@ -114,8 +123,8 @@ module {
       let elemsSize = elems.size();
 
       var original = elems;
-      if ((count - removeCount : Nat) < elemsSize / 4) {
-        elems := Prim.Array_init<X>(elemsSize / 2, elems[0]);
+      if ((count - removeCount : Nat) < elemsSize / DOWNSIZE_THRESHOLD) {
+        elems := Prim.Array_init<X>(elemsSize / DOWNSIZE_FACTOR, elems[0]);
       };
 
       var i = 0;
@@ -133,13 +142,37 @@ module {
       count -= removeCount;
     };
 
+    /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
+    public func get(i : Nat) : X {
+      if (i >= count) {
+        Prim.trap "Buffer index out of bounds in get";
+      };
+      elems[i]
+    };
+
+    /// Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
+    public func getOpt(i : Nat) : ?X {
+      if (i < count) {
+        ?elems[i]
+      }
+      else {
+        null
+      }
+    };
+
+    /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
+    /// index is out of bounds. Indexing is zero-based.
+    public func put(i : Nat, elem : X) {
+      elems[i] := elem;
+    };
+
     // traps on OOB
     // traps if never added any element to buffer before
     public func resize(size : Nat) {
       if (size < count) {
         Prim.trap "Size is too small to hold all elements in Buffer after resizing"
       };
-      if (elems.size() == 0) { // Do NOT let the underlying array become empty after initial Add
+      if (elems.size() == 0) { // Do NOT let the underlying array become empty after initial add
         Prim.trap "Must first add an element to buffer before resizing"
       };
 
@@ -181,6 +214,7 @@ module {
       };
 
       if (count + 1 > elems.size()) {
+        // FIXME what if you do a bunch of inserts in a row?
         let elems2 = Prim.Array_init<X>(count + 1, element);
         var i = 0;
         while (i < count + 1) {
@@ -209,7 +243,7 @@ module {
     public func insertBuffer(buffer2 : Buffer<X>, index : Nat) {
       let count2 = buffer2.size();
       if (index > count) {
-        Prim.trap "Buffer index out of bounds in insertAt"
+        Prim.trap "Buffer index out of bounds in insertBuffer"
       };
 
       // resize and insert in one go
@@ -250,13 +284,10 @@ module {
       count += count2;
     };
 
-    /// Returns the current number of elements.
-    public func size() : Nat = count;
-
     /// Resets the buffer.
     public func clear() {
       count := 0;
-      resize(2); // Same downsize minimum as the remove methods
+      resize(10); 
     };
 
     // FIXME move outside of class?
@@ -291,7 +322,7 @@ module {
       // immutable clone of array
       Prim.Array_tabulate<X>(
         count,
-        func(x : Nat) : X { elems[x] }
+        func(i : Nat) : X { elems[i] }
       );
 
     // FIXME move outside of class?
@@ -308,30 +339,6 @@ module {
         };
         newArray
       }
-    };
-
-    /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
-    public func get(i : Nat) : X {
-      if (i >= count) {
-        Prim.trap "Buffer index out of bounds in get";
-      };
-      elems[i]
-    };
-
-    /// Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
-    public func getOpt(i : Nat) : ?X {
-      if (i < count) {
-        ?elems[i]
-      }
-      else {
-        null
-      }
-    };
-
-    /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
-    /// index is out of bounds. Indexing is zero-based.
-    public func put(i : Nat, elem : X) {
-      elems[i] := elem;
     };
   };
 
