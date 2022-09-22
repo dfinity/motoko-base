@@ -14,10 +14,10 @@
 
 import Prim "mo:⛔";
 import Result "Result";
-import Int "Int";
-import Deque "Deque";
+import Order "Order";
 
 module {
+  type Order = Order.Order;
 
   /// Create a stateful buffer class encapsulating a mutable array.
   ///
@@ -68,12 +68,12 @@ module {
       let element = ?elems[index];
 
       // resize down and shift over in one pass
-      if (count - 1 < elems.size() / 4) { 
+      if ((count - 1) : Nat < elems.size() / 4) { 
         let elems2 = Prim.Array_init<X>(elems.size() / 2, elems[0]);
 
         var i = 0;
         var j = 0;
-        label l while (i < count and j < count) {
+        label l while (i < count) {
           if (i == index) {
             i += 1;
             continue l;
@@ -86,7 +86,7 @@ module {
         elems := elems2;
       } else { // just shift over elements
         var i = index;
-        while (i < count - 1) {
+        while (i < (count - 1 : Nat)) {
           elems[i] := elems[i + 1];
           i += 1;
         };
@@ -96,52 +96,47 @@ module {
       element
     };
 
-    // FIXME return removeCount or unit?
-    // Don't want to clutter user with ignores
-    // And user can calculate removeCount on their own with size()
-    public func filter(predicate : (Nat, X) -> Bool) : Nat { 
-      var removeIndices = Deque.empty<Nat>();
+    public func filter(predicate : (Nat, X) -> Bool) { 
       var removeCount = 0;
-
-      var i = 0;
-      while (i < count) {
-        let current = elems[i];
-        // Found element to remove
-        if (not predicate(i, current)) {
-          removeIndices := Deque.pushBack<Nat>(removeIndices, i);
-          removeCount += 1;
-        }
-        // Found element to shift
-        else {
-          switch (Deque.popFront(removeIndices)) {
-            case null { };
-            case (?(index, poppedQueue)) {
-              removeIndices := poppedQueue;
-              elems[index] := current;
-              removeIndices := Deque.pushBack(removeIndices, i);
+      let keep = 
+        Prim.Array_tabulate<Bool>(
+          count,
+          func i {
+            if (predicate(i, elems[i])) {
+              true
+            } else {
+              removeCount += 1;
+              false
             }
           }
-        };
+        );
+      
+      let elemsSize = elems.size();
 
-        i += 1;
+      var original = elems;
+      if ((count - removeCount : Nat) < elemsSize / 4) {
+        elems := Prim.Array_init<X>(elemsSize / 2, elems[0]);
+      };
+
+      var i = 0;
+      var j = 0;
+      while (i < count) {
+        if (keep[i]) {
+          elems[j] := original[i];
+          i += 1;
+          j += 1;
+        } else {
+          i += 1;
+        }
       };
 
       count -= removeCount;
-
-      // Can't shift and resize in one pass
-      // because we don't know the new count ahead of time
-      if (count < elems.size() / 4) {
-        resize(elems.size() / 2)
-      };
-
-      removeCount
     };
 
     // traps on OOB
     // traps if never added any element to buffer before
     public func resize(size : Nat) {
       if (size < count) {
-        // FIXME is it okay to use Prim.trap? Maybe use assert?
         Prim.trap "Size is too small to hold all elements in Buffer after resizing"
       };
       if (elems.size() == 0) { // Do NOT let the underlying array become empty after initial Add
@@ -200,7 +195,7 @@ module {
         elems := elems2;
       }
       else {
-        var i = count - 1;
+        var i : Nat = count - 1;
         while (i > index) {
           elems[i] := elems[i - 1];
           i -= 1;
@@ -395,23 +390,6 @@ module {
     };
   };
 
-  public func filter<X>(buffer : Buffer<X>, predicate : X -> Bool) : Buffer<X> {
-    let count = buffer.size();
-    let newBuffer = Buffer<X>(count);
-    
-    var i = 0;
-    while (i < count) {
-      let element = buffer.get(i);
-      if (predicate element) {
-        newBuffer.add(element);
-      };
-
-      i += 1;
-    };
-
-    newBuffer
-  };
-
   public func chain<X, Y>(buffer : Buffer<X>, k : X -> Buffer<Y>) : Buffer<Y> {
     let count = buffer.size();
     let newBuffer = Buffer<Y>(count);
@@ -566,7 +544,7 @@ module {
     false
   };
 
-  public func max<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) : X {
+  public func max<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : X {
     let count = buffer.size();
     if (count == 0) {
       Prim.trap "Cannot call max on an empty buffer"
@@ -576,8 +554,11 @@ module {
     var maxSoFar = buffer.get(0);
     while (i < count) {
       let current = buffer.get(i);
-      if (lessThan(maxSoFar, current)) {
-        maxSoFar := current;
+      switch(compare(current, maxSoFar)) {
+        case (#greater) {
+          maxSoFar := current
+        };
+        case _ {};
       };
       i += 1;
     };
@@ -585,7 +566,7 @@ module {
     maxSoFar
   };
 
-  public func min<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) : X {
+  public func min<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : X {
     let count = buffer.size();
     if (count == 0) {
       Prim.trap "Cannot call min on an empty buffer"
@@ -595,8 +576,11 @@ module {
     var minSoFar = buffer.get(0);
     while (i < count) {
       let current = buffer.get(i);
-      if (lessThan(current, minSoFar)) {
-        minSoFar := current;
+      switch(compare(current, minSoFar)) {
+        case (#less) { 
+          minSoFar := current
+        };
+        case _ {};
       };
       i += 1;
     };
@@ -606,42 +590,51 @@ module {
 
   public func isEmpty<X>(buffer : Buffer<X>) : Bool = buffer.size() == 0;
 
-  public func removeDuplicates<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) : Nat {
-    sort(buffer, lessThan);
+  public func removeDuplicates<X>(buffer : Buffer<X>, compare : (X, X) -> Order) {
+    sort<X>(buffer, compare);
+
     buffer.filter(
-      func (i, element) { 
-        let current = buffer.get(i - 1);
-        i == 0 or lessThan(element, current) or lessThan(current, element) 
+      func (i, current) { 
+        if (i == 0) {
+          return true
+        };
+
+        switch(compare(buffer.get(i - 1), current)) {
+          case (#equal) false;
+          case _ true;
+        }
       }
     );
   };
 
-  // FIXME Can't return element X because not necessarily a shared type
-  // Can't use async context here
-  // public func randomIndex<X>(buffer : Buffer<X>) : async Nat {
-  //   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
-  //   let count = buffer.size();
+  // Should be a function of the logical list, not the underlying array
+  public func hash<X>(buffer : Buffer<X>, hash : X -> Nat32) : Nat32 {
+    let count = buffer.size();
+    var i = 0;
+    var accHash : Nat32 = 0;
 
-  //   var rand = 0;
+    while (i < count) {
+      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(buffer.get(i));
+      i += 1;
+    };
 
-  //   while (rand < count) { // make sure the size of randomness is large enough to span the whole set
-  //     let bytes = await raw_rand();
-  //     for (byte in bytes.vals()) {
-  //         rand := (rand << 8) + byte;
-  //     };
-  //   };
+    accHash
+  };
 
-  //   rand % count
-  // };
+  public func toText<X>(buffer : Buffer<X>, toText : X -> Text) : Text {
+    let count = buffer.size();
+    var i = 0;
+    var str = "";
+    while (i < (count - 1 : Nat)) {
+      str := str # toText(buffer.get(i)) # ", ";
+      i += 1;
+    };
+    if (count > 0) {
+      str := str # toText(buffer.get(i))
+    };
 
-  // FIXME how to write hash and toText without type constraint on X?
-  // public func hash<X>(buffer : Buffer<X>) : Nat32 {
-
-  // };
-  // Maybe just keep using debug_show() for now
-  // public func toText<X>(buffer : Buffer<X>) : Text {
-
-  // };
+    "[" # str # "]"
+  };
 
   public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
     let count = buffer.size();
@@ -682,7 +675,7 @@ module {
     (trueBuffer, falseBuffer)
   };
 
-  public func merge<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, lessThan : (X, X) -> Bool) : Buffer<X> {
+  public func merge<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order) : Buffer<X> {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
 
@@ -695,12 +688,15 @@ module {
       let current1 = buffer1.get(pointer1);
       let current2 = buffer2.get(pointer2);
 
-      if (lessThan(current1, current2)) {
-        newBuffer.add(current1);
-        pointer1 += 1;
-      } else {
-        newBuffer.add(current2);
-        pointer2 += 1;
+      switch(compare(current1, current2)) {
+        case (#less) {
+          newBuffer.add(current1);
+          pointer1 += 1;
+        };
+        case _ {
+          newBuffer.add(current2);
+          pointer2 += 1;
+        }
       };
     };
 
@@ -717,7 +713,7 @@ module {
     newBuffer
   };
 
-  public func sort<X>(buffer : Buffer<X>, lessThan : (X, X) -> Bool) {
+  public func sort<X>(buffer : Buffer<X>, compare : (X, X) -> Order) {
     let count = buffer.size();
     if (count < 2) {
       return;
@@ -740,7 +736,7 @@ module {
         } else if (j > hi) {
           buffer.put(k, aux[i]);
           i += 1;
-        } else if (lessThan(aux[j], aux[i])) {
+        } else if (Order.isLess(compare(aux[j], aux[i]))) {
           buffer.put(k, aux[j]);
           j += 1;
         } else {
@@ -825,7 +821,7 @@ module {
     newBuffer
   };
 
-  // FIXME documentation should warn of combinatorial explosion
+  // Documentation should warn of combinatorial explosion
   // Combinations are lazily produced and thus vulnerable to mutations in underlying buffer
   public func combinations<X>(buffer : Buffer<X>, groupSize : Nat) : { next : () -> ?Buffer<X> } = object {
     let count = buffer.size();
@@ -840,11 +836,11 @@ module {
 
       while (r >= 0){
         // forward step
-        if (i <= (count + (r - groupSize))){
+        if (i <= count + (r - groupSize : Nat)){
           current[r] := i;
             
           // if current array is full, add it to combinations and move to next element in buffer
-          if (r == groupSize - 1){
+          if (r == (groupSize - 1 : Nat)){
             var j = 0;
             let combination = Buffer<X>(groupSize);
             while (j < groupSize) {
@@ -877,7 +873,7 @@ module {
     var initialized = false;
 
     public func next() : ?Buffer<X> {
-      if (increase == count - 1) {
+      if (increase == (count - 1 : Nat)) {
         return null;
       };
 
@@ -892,7 +888,7 @@ module {
         swap(increase, increase + 1);
 
         increase += 1;
-        while (increase < count - 1 and indices[increase] > indices[increase + 1]) {
+        while (increase < (count - 1 : Nat) and indices[increase] > indices[increase + 1]) {
           increase += 1;
         }
       } else {
@@ -955,7 +951,7 @@ module {
     };
 
     let count = buffer.size();
-    let newBuffer = Buffer<Buffer<X>>(count); // FIXME precalculate outer buffer size
+    let newBuffer = Buffer<Buffer<X>>(Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(count) / Prim.intToFloat(size)))));
 
     var i = 0;
     while (i < count) {
@@ -982,7 +978,7 @@ module {
 
     var i = 0;
     while (i < count) {
-      let newInnerBuffer = make<X>(buffer.get(i)); // FIXME leeway
+      let newInnerBuffer = Buffer<X>(count - i);
       var j = i + 1;
       while (j < count and equal(buffer.get(j), newInnerBuffer.get(0))) {
         newInnerBuffer.add(buffer.get(j));
@@ -1127,7 +1123,7 @@ module {
     var i : Int = bufferCount - 1;
     var j : Int = suffixCount - 1;
     while (i >= 0 and j >= 0) {
-      if (not equal(buffer.get(Int.abs i), suffix.get(Int.abs j))) {
+      if (not equal(buffer.get(Prim.abs i), suffix.get(Prim.abs j))) {
         return false;
       };
       
@@ -1148,7 +1144,7 @@ module {
     var i : Int = bufferCount - 1;
     var j : Int = suffixCount - 1;
     while (i >= 0 and j >= 0) {
-      if (not equal(buffer.get(Int.abs i), suffix.get(Int.abs j))) {
+      if (not equal(buffer.get(Prim.abs i), suffix.get(Prim.abs j))) {
         return false;
       };
       
@@ -1223,30 +1219,27 @@ module {
     newMatrix
   };
 
-  // FIXME should error checks be with respect to the top-level library function?
-  // E.g. in first(), should there be a check to make sure the buffer isn't empty?
-  // On the one hand, not having the check is faster, but on the other hand, the index
-  // out of bounds error message that would result would be more cryptic to the user.
+  // FIXME error checks should be easy to understand, and top level if necessary
   public func first<X>(buffer : Buffer<X>) : X = buffer.get(0);
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
-  // FIXME use lessThan or a function that returns Order.Order?
-  // Probably simpler for the user to write a lessThan function
-  public func binarySearch<X>(buffer : Buffer<X>, element : X, lessThan : (X, X) -> Bool) : ?Nat {
+  public func binarySearch<X>(buffer : Buffer<X>, element : X, compare : (X, X) -> Order.Order) : ?Nat {
     var low = 0;
     var high = buffer.size();
 
     while (low < high) {
       let mid = (low + high) / 2;
       let current = buffer.get(mid);
-      if (not lessThan(element, current) and not lessThan(current, element)) {
-        return ?mid;
-      }
-      else if (lessThan(element, current)) {
-        high := mid;
-      }
-      else {
-        low := mid + 1;
+      switch (compare(element, current)) {
+        case (#equal) {
+          return ?mid;
+        };
+        case (#less) {
+          high := mid;
+        };
+        case (#greater) {
+          low := mid + 1;
+        };
       }
     };
 
@@ -1269,7 +1262,7 @@ module {
   public func lastIndexOf<X>(buffer : Buffer<X>, element : X, equal : (X, X) -> Bool) : ?Nat {
     var i : Int = buffer.size() - 1;
     while (i >= 0) {
-      let n = Int.abs i;
+      let n = Prim.abs i;
       if (equal(buffer.get(n), element)) {
         return ?n;
       }
@@ -1313,7 +1306,7 @@ module {
     // start search
     i := 0;
     var j = 0;
-    while (count1 - i >= count2 - j) {
+    while ((count1 - i : Nat) >= (count2 - j : Nat)) {
       if (equal(buffer1.get(i), buffer2.get(j))) {
           i += 1;
           j += 1;

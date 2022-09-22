@@ -42,7 +42,7 @@ module {
     };
   };
 
-  /// Sorts the given array according to the `lessThan` function.
+  /// Sorts the given array according to the `compare` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -51,13 +51,13 @@ module {
   /// let xs = [4, 2, 6];
   /// assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
   /// ```
-  public func sort<A>(xs : [A], lessThan : (A, A) -> Bool) : [A] {
+  public func sort<A>(xs : [A], compare : (A, A) -> Order.Order) : [A] {
     let tmp : [var A] = thaw(xs);
-    sortInPlace(tmp, lessThan);
+    sortInPlace(tmp, compare);
     freeze(tmp)
   };
 
-  /// Sorts the given array in place according to the `lessThan` function.
+  /// Sorts the given array in place according to the `compare` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -67,7 +67,7 @@ module {
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
-  public func sortInPlace<A>(xs : [var A], lessThan : (A, A) -> Bool) {
+  public func sortInPlace<A>(xs : [var A], compare : (A, A) -> Order.Order) {
     if (xs.size() < 2) return;
     let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
 
@@ -87,7 +87,7 @@ module {
         } else if (j > hi) {
           xs[k] := aux[i];
           i += 1;
-        } else if (lessThan(aux[j], aux[i])) {
+        } else if (Order.isLess(compare(aux[j], aux[i]))) {
           xs[k] := aux[j];
           j += 1;
         } else {
