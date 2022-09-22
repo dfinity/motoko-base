@@ -8,13 +8,13 @@ on:
 
 # Remember to update me in package-set.yml as well
 env:
-  vessel_version: "v0.6.3"
+  vessel_version: "v0.6.4"
   moc_version: "0.7.0"
 
 jobs:
   tests:
     if: github.ref != 'refs/heads/next-moc' && github.base_ref != 'refs/heads/next-moc'
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
     - name: Check if Git tag exists
