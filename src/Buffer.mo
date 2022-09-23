@@ -26,7 +26,7 @@ module {
   /// Create a stateful buffer class encapsulating a mutable array.
   ///
   /// The argument `initCapacity` determines its initial capacity.
-  /// The underlying mutable array grows by doubling when its current
+  /// The underlying mutable array grows by UPSIZE_FACTOR when its current
   /// capacity is exceeded.
 
   // FIXME can initCapacity be an option?
@@ -163,8 +163,14 @@ module {
     /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
     /// index is out of bounds. Indexing is zero-based.
     public func put(i : Nat, elem : X) {
+      if (i >= count) {
+        Prim.trap "Buffer index out of bounds in put";
+      };
       elems[i] := elem;
     };
+
+    /// Returns the size of the underlying array
+    public func capacity() : Nat = elems.size();
 
     // traps on OOB
     // traps if never added any element to buffer before
@@ -173,7 +179,7 @@ module {
         Prim.trap "Size is too small to hold all elements in Buffer after resizing"
       };
       if (elems.size() == 0) { // Do NOT let the underlying array become empty after initial add
-        Prim.trap "Must first add an element to buffer before resizing"
+        Prim.trap "Can only call this function when capacity() is a nonzero value. Use initial capacity instead."
       };
 
       let elems2 = Prim.Array_init<X>(size, elems[0]);
@@ -195,10 +201,10 @@ module {
           if (count2 == 0) {
             return;
           } else {
-            elems := Prim.Array_init(count + count2, buffer2.get(0));
+            elems := Prim.Array_init(count2 * UPSIZE_FACTOR, buffer2.get(0));
           }
         } else {
-          resize(count + count2);
+          resize((count + count2) * UPSIZE_FACTOR);
         }
       };
       var i = 0;
@@ -212,10 +218,18 @@ module {
       if (index > count) {
         Prim.trap "Buffer index out of bounds in insert"
       };
+      let elemsSize = elems.size();
 
-      if (count + 1 > elems.size()) {
-        // FIXME what if you do a bunch of inserts in a row?
-        let elems2 = Prim.Array_init<X>(count + 1, element);
+      if ((elemsSize != 0 and count + 1 > elemsSize) or initCapacity == 0) {
+        let elems2 = 
+          Prim.Array_init<X>(
+            if (elems.size() == 0) {
+              1
+            } else {
+              elems.size() * UPSIZE_FACTOR
+            },
+            element
+          );
         var i = 0;
         while (i < count + 1) {
           if (i < index) {
@@ -227,9 +241,11 @@ module {
           i += 1;
         };
         elems := elems2;
-      }
-      else {
-        var i : Nat = count - 1;
+      } else {
+        if (elemsSize == 0) { // create elems for the first time
+          elems := Prim.Array_init(initCapacity, element);
+        };
+        var i : Nat = count;
         while (i > index) {
           elems[i] := elems[i - 1];
           i -= 1;
@@ -240,29 +256,27 @@ module {
       count += 1;
     };
 
-    public func insertBuffer(buffer2 : Buffer<X>, index : Nat) {
-      let count2 = buffer2.size();
+    public func insertBuffer(index : Nat, buffer2 : Buffer<X>) {
       if (index > count) {
         Prim.trap "Buffer index out of bounds in insertBuffer"
       };
 
+      let count2 = buffer2.size();
+      if (count2 == 0) {
+        return;
+      };
+
+      let elemsSize = elems.size();
       // resize and insert in one go
-      if (count + count2 > elems.size()) {
-        let elems2 =
-          if (count2 == 0) {
-            return;
-          } else {
-            Prim.Array_init<X>(count + count2, buffer2.get(0))
-          };
+      if ((elemsSize != 0 and count + count2 > elemsSize) or (elemsSize == 0 and count + count2 > initCapacity)) {
+        let elems2 = Prim.Array_init<X>((count + count2) * UPSIZE_FACTOR, buffer2.get(0));
         var i = 0;
         while (i < count + count2) {
           if (i < index) {
             elems2[i] := elems[i];
-          }
-          else if (i >= index and i < index + count2) {
+          } else if (i >= index and i < index + count2) {
             elems2[i] := buffer2.get(i - index);
-          }
-          else {
+          } else {
             elems2[i] := elems[i - count2];
           };
 
@@ -272,9 +286,14 @@ module {
       } 
       // just insert
       else {
+        if (elemsSize == 0) {
+          elems := Prim.Array_init(initCapacity, buffer2.get(0));
+        };
         var i = index;
         while (i < index + count2) {
-          elems[i + count2] := elems[i];
+          if (i < count) {
+            elems[i + count2] := elems[i];
+          };
           elems[i] := buffer2.get(i - index);
 
           i += 1;
@@ -287,10 +306,10 @@ module {
     /// Resets the buffer.
     public func clear() {
       count := 0;
-      resize(10); 
+      resize(8); 
     };
 
-    // FIXME move outside of class?
+    
     /// Returns a copy of this buffer.
     public func clone() : Buffer<X> {
       let newBuffer = Buffer<X>(elems.size());
@@ -343,7 +362,13 @@ module {
   };
 
   public func trimToSize<X>(buffer : Buffer<X>) {
-    buffer.resize(if (buffer.size() == 0) { 1 } else { buffer.size() });
+    let count = buffer.size();
+    let capacity = buffer.capacity();
+    if (count == capacity) {
+      return;
+    } else {
+      buffer.resize(if (count == 0) { 1 } else { count });
+    }
   };
 
   /// Creates a buffer from immutable array elements.
@@ -419,7 +444,7 @@ module {
     while (i < count) {
       switch (f(buffer.get(i))) {
         case (?element) {
-          newBuffer.add(element);
+          newBuffer.add(element); // FIXME use put with index instead of add after unit tests are written
         };
         case _ {};
       };
@@ -645,7 +670,18 @@ module {
 
   public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
     let count = buffer.size();
-    let newBuffer = Buffer<X>(count);
+    if (count == 0) {
+      return Buffer<X>(0);
+    };
+
+    let newBuffer = 
+      Buffer<X>(
+        if (buffer.get(0).size() != 0) {
+          buffer.get(0).size() * count * UPSIZE_FACTOR
+        } else {
+          count * UPSIZE_FACTOR
+        }
+      );
     
     var i = 0;
     while (i < count) {
@@ -686,7 +722,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
 
-    let newBuffer = Buffer<X>(count1 + count2);
+    let newBuffer = Buffer<X>((count1 + count2) * UPSIZE_FACTOR);
 
     var pointer1 = 0;
     var pointer2 = 0;
@@ -796,7 +832,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
     let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<(X, Y)>(minCount);
+    let newBuffer = Buffer<(X, Y)>(minCount * UPSIZE_FACTOR);
 
     var i = 0;
     while (i < minCount) {
@@ -814,7 +850,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
     let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<Z>(minCount);
+    let newBuffer = Buffer<Z>(minCount * UPSIZE_FACTOR);
 
     var i = 0;
     while (i < minCount) {
@@ -849,7 +885,7 @@ module {
           // if current array is full, add it to combinations and move to next element in buffer
           if (r == (groupSize - 1 : Nat)){
             var j = 0;
-            let combination = Buffer<X>(groupSize);
+            let combination = Buffer<X>(groupSize * UPSIZE_FACTOR);
             while (j < groupSize) {
               combination.add(buffer.get(current[j]));
             };
@@ -934,7 +970,7 @@ module {
     };
 
     private func output() : Buffer<X> {
-      let permutation = Buffer<X>(count);
+      let permutation = Buffer<X>(count * UPSIZE_FACTOR);
       var i = 0;
       while (i < count) {
         permutation.add(buffer.get(indices[i]));
@@ -962,7 +998,7 @@ module {
 
     var i = 0;
     while (i < count) {
-      let newInnerBuffer = Buffer<X>(size);
+      let newInnerBuffer = Buffer<X>(size * UPSIZE_FACTOR);
       var j = i;
 
       while (j < i + size and j < count) {
@@ -972,7 +1008,6 @@ module {
       };
 
       newBuffer.add(newInnerBuffer);
-
       i += size;
     };
 
@@ -1006,7 +1041,7 @@ module {
       Prim.trap "Buffer index out of bounds in prefix"
     };
 
-    let newBuffer = Buffer<X>(end);
+    let newBuffer = Buffer<X>(end * UPSIZE_FACTOR);
 
     var i = 0;
     while (i < end) {
@@ -1062,7 +1097,7 @@ module {
       Prim.trap "Buffer index out of bounds in infix"
     };
 
-    let newBuffer = Buffer<X>(end - start);
+    let newBuffer = Buffer<X>((end - start) * UPSIZE_FACTOR);
 
     var i = start;
     while (i < end) {
@@ -1108,7 +1143,7 @@ module {
       Prim.trap "Buffer index out of bounds in suffix"
     };
 
-    let newBuffer = Buffer<X>(count - start);
+    let newBuffer = Buffer<X>((count - start) * UPSIZE_FACTOR);
 
     var i = start;
     while (i < count) {
@@ -1299,8 +1334,7 @@ module {
         prevLength += 1;
         lps[i] := prevLength;
         i += 1;
-      }
-      else {
+      } else {
         if (prevLength != 0) {
           prevLength := lps[prevLength - 1];
         } else {
@@ -1320,8 +1354,7 @@ module {
       };
       if (j == count2) {
         return ?(i - j);
-      }
-      else if (i < count1 and not equal(buffer2.get(j), buffer1.get(i))) {
+      } else if (i < count1 and not equal(buffer2.get(j), buffer1.get(i))) {
         if (j != 0) {
             j := lps[j - 1];
         } else {
