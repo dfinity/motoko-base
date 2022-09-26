@@ -1109,6 +1109,62 @@ run(suite("clear",
     buffer.capacity(),
     M.equals(T.nat(8))
   ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+buffer2 := buffer.clone();
+
+run(suite("clone",
+[
+  test(
+    "size",
+    buffer2.size(),
+    M.equals(T.nat(buffer.size()))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(buffer2.capacity()))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, buffer2.toArray()))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+var size = 0;
+
+for (element in buffer.vals()) {
+  M.assertThat(element, M.equals(T.nat(size)));
+  size += 1;
+};
+
+run(suite("vals",
+[
+  test(
+    "size",
+    size,
+    M.equals(T.nat(7))
+  )
 ]));
 
 /* --------------------------------------- */
@@ -1124,4 +1180,238 @@ run(suite("array round trips",
     B.fromVarArray<Nat>([var 0, 1, 2, 3]).toArray(),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   )
+]));
+
+/* --------------------------------------- */
+run(suite("empty array round trips",
+[
+  test(
+    "fromArray and toArray",
+    B.fromArray<Nat>([]).toArray(),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+  test(
+    "fromVarArray",
+    B.fromVarArray<Nat>([var]).toArray(),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+B.trimToSize(buffer);
+
+run(suite("trimToSize",
+[
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(7))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(7))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 6]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+B.trimToSize(buffer);
+
+run(suite("trimToSize on empty",
+[
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+buffer2 := B.map<Nat, Nat>(buffer, func x = x * 2);
+
+run(suite("map",
+[
+  test(
+    "size",
+    buffer2.size(),
+    M.equals(T.nat(7))
+  ),
+  test(
+    "capacity",
+    buffer2.capacity(),
+    M.equals(T.nat(12))
+  ),
+  test(
+    "elements",
+    buffer2.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 2, 4, 6, 8, 10, 12]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(0);
+
+buffer2 := B.map<Nat, Nat>(buffer, func x = x * 2);
+
+run(suite("map empty",
+[
+  test(
+    "size",
+    buffer2.size(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "capacity",
+    buffer2.capacity(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "elements",
+    buffer2.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+var sum = 0;
+
+B.iterate<Nat>(buffer, func x = sum += x);
+
+run(suite("iterate",
+[
+  test(
+    "sum",
+    sum,
+    M.equals(T.nat(21))
+  ),
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(7))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(12))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 6]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+// FIXME Why does B.make need to be wrapped?
+buffer2 := B.chain<Nat, Nat>(buffer, func x = B.make<Nat>(x));
+
+run(suite("chain",
+[
+  test(
+    "size",
+    buffer2.size(),
+    M.equals(T.nat(buffer.size()))
+  ),
+  test(
+    "elements",
+    buffer2.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, buffer.toArray()))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+buffer2 := B.mapFilter<Nat, Nat>(buffer, func x = if (x % 2 == 0) { ?x } else { null });
+
+run(suite("mapFilter",
+[
+  test(
+    "size",
+    buffer2.size(),
+    M.equals(T.nat(4))
+  ),
+  test(
+    "capacity",
+    buffer2.capacity(),
+    M.equals(T.nat(12))
+  ),
+  test(
+    "elements",
+    buffer2.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 2, 4, 6]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+buffer2 := B.mapEntries<Nat, Nat>(buffer, func (i, x) = i * x);
+
+run(suite("mapEntries",
+[
+  test(
+    "size",
+    buffer2.size(),
+    M.equals(T.nat(7))
+  ),
+  test(
+    "capacity",
+    buffer2.capacity(),
+    M.equals(T.nat(12))
+  ),
+  test(
+    "elements",
+    buffer2.toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 4, 9, 16, 25, 36]))
+  ),
 ]));

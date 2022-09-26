@@ -166,6 +166,7 @@ module {
       if (i >= count) {
         Prim.trap "Buffer index out of bounds in put";
       };
+      // FIXME if elems is not initialized yet
       elems[i] := elem;
     };
 
@@ -361,20 +362,10 @@ module {
     };
   };
 
-  public func trimToSize<X>(buffer : Buffer<X>) {
-    let count = buffer.size();
-    let capacity = buffer.capacity();
-    if (count == capacity) {
-      return;
-    } else {
-      buffer.resize(if (count == 0) { 1 } else { count });
-    }
-  };
-
   /// Creates a buffer from immutable array elements.
   public func fromArray<X>(elems : [X]) : Buffer<X> {
     let count = elems.size();
-    let newBuffer = Buffer<X>(count);
+    let newBuffer = Buffer<X>(count * UPSIZE_FACTOR);
 
     var i = 0;
     while (i < count) {
@@ -388,7 +379,7 @@ module {
   /// Creates a buffer from the elements of a mutable array.
   public func fromVarArray<X>(elems : [var X]) : Buffer<X> {
     let count = elems.size();
-    let newBuffer = Buffer<X>(count);
+    let newBuffer = Buffer<X>(count * UPSIZE_FACTOR);
 
     var i = 0;
     while (i < count) {
@@ -399,9 +390,19 @@ module {
     newBuffer
   };
 
+  public func trimToSize<X>(buffer : Buffer<X>) {
+    let count = buffer.size();
+    let capacity = buffer.capacity();
+    if (count == capacity) {
+      return;
+    } else {
+      buffer.resize(if (count == 0) { 1 } else { count });
+    }
+  };
+
   public func map<X, Y>(buffer : Buffer<X>, f : X -> Y) : Buffer<Y> {
     let count = buffer.size();
-    let newBuffer = Buffer<Y>(count);
+    let newBuffer = Buffer<Y>(buffer.capacity());
     
     var i = 0;
     while (i < count) {
@@ -424,7 +425,7 @@ module {
 
   public func chain<X, Y>(buffer : Buffer<X>, k : X -> Buffer<Y>) : Buffer<Y> {
     let count = buffer.size();
-    let newBuffer = Buffer<Y>(count);
+    let newBuffer = Buffer<Y>(count * 4);
     
     var i = 0;
     while (i < count) {
@@ -438,7 +439,7 @@ module {
 
   public func mapFilter<X, Y>(buffer : Buffer<X>, f : X -> ?Y) : Buffer<Y> {
     let count = buffer.size();
-    let newBuffer = Buffer<Y>(count);
+    let newBuffer = Buffer<Y>(buffer.capacity());
     
     var i = 0;
     while (i < count) {
@@ -457,7 +458,7 @@ module {
 
   public func mapEntries<X, Y>(buffer : Buffer<X>, f : (Nat, X) -> Y) : Buffer<Y> {
     let count = buffer.size();
-    let newBuffer = Buffer<Y>(count);
+    let newBuffer = Buffer<Y>(buffer.capacity());
     
     var i = 0;
     while (i < count) {
