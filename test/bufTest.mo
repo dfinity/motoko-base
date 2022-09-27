@@ -2,12 +2,22 @@ import Prim "mo:⛔";
 import B "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Option "mo:base/Option";
+import Nat "mo:base/Nat";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
 let {run;test;suite} = Suite;
+
+let NatBufferTestable : T.Testable<B.Buffer<Nat>> = object {
+  public func display(buffer : B.Buffer<Nat>) : Text {
+    B.toText(buffer, Nat.toText);
+  };
+  public func equals(buffer1 : B.Buffer<Nat>, buffer2 : B.Buffer<Nat>) : Bool {
+    B.equal(buffer1, buffer2, Nat.equal)
+  };
+};
 
 /* --------------------------------------- */
 run(suite("construct",
@@ -20,7 +30,7 @@ run(suite("construct",
   test(
     "initial capacity",
     B.Buffer<Nat>(10).capacity(),
-    M.equals(T.nat(0))
+    M.equals(T.nat(10))
   ),
 ]));
 
@@ -118,7 +128,7 @@ run(suite("removeLast on empty buffer",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(0))
+    M.equals(T.nat(2))
   ),
   test(
     "elements",
@@ -373,7 +383,7 @@ run(suite("filter on empty",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(0))
+    M.equals(T.nat(1))
   ),
   test(
     "elements",
@@ -599,7 +609,7 @@ run(suite("append to empty buffer",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(10))
   ),
   test(
     "elements",
@@ -1412,6 +1422,156 @@ run(suite("mapEntries",
   test(
     "elements",
     buffer2.toArray(),
-    M.equals(T.array<Nat>(T.natTestable, [0, 4, 9, 16, 25, 36]))
+    M.equals(T.array<Nat>(T.natTestable, [0, 1, 4, 9, 16, 25, 36]))
   ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+var bufferResult = B.mapResult<Nat, Nat, Text>(buffer, func x = #ok x);
+
+run(suite("mapResult success",
+[
+  test(
+    "return value",
+    #ok buffer,
+    M.equals(T.result<B.Buffer<Nat>, Text>(NatBufferTestable, T.textTestable, bufferResult))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+bufferResult := 
+  B.mapResult<Nat, Nat, Text>(
+    buffer,
+    func x = if (x == 4) { #err "error"} else { #ok x }
+  );
+
+run(suite("mapResult failure",
+[
+  test(
+    "return value",
+    #err "error",
+    M.equals(T.result<B.Buffer<Nat>, Text>(NatBufferTestable, T.textTestable, bufferResult))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+run(suite("foldLeft",
+[
+  test(
+    "return value",
+    B.foldLeft<Text, Nat>(buffer, "", func(acc, x) = acc # Nat.toText(x)),
+    M.equals(T.text("0123456"))
+  ),
+  test(
+    "return value empty",
+    B.foldLeft<Text, Nat>(B.Buffer<Nat>(4), "", func(acc, x) = acc # Nat.toText(x)),
+    M.equals(T.text(""))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+run(suite("foldRight",
+[
+  test(
+    "return value",
+    B.foldRight<Nat, Text>(buffer, "", func(x, acc) = acc # Nat.toText(x)),
+    M.equals(T.text("6543210"))
+  ),
+  test(
+    "return value empty",
+    B.foldRight<Nat, Text>(B.Buffer<Nat>(4), "", func(x, acc) = acc # Nat.toText(x)),
+    M.equals(T.text(""))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i);
+};
+
+// FIXME unnecessary reinitialization of buffer
+
+run(suite("forAll",
+[
+  test(
+    "true",
+    B.forAll<Nat>(buffer, func x = x >= 0),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "false",
+    B.forAll<Nat>(buffer, func x = x % 2 == 0),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "default",
+    B.forAll<Nat>(B.Buffer<Nat>(2), func _ = false),
+    M.equals(T.bool(true))
+  )
+]));
+
+/* --------------------------------------- */
+run(suite("forSome",
+[
+  test(
+    "true",
+    B.forSome<Nat>(buffer, func x = x % 2 == 0),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "false",
+    B.forSome<Nat>(buffer, func x = x < 0),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "default",
+    B.forSome<Nat>(B.Buffer<Nat>(2), func _ = false),
+    M.equals(T.bool(false))
+  )
+]));
+
+/* --------------------------------------- */
+run(suite("forNone",
+[
+  test(
+    "true",
+    B.forNone<Nat>(buffer, func x = x < 0),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "false",
+    B.forNone<Nat>(buffer, func x = x % 2 != 0),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "default",
+    B.forNone<Nat>(B.Buffer<Nat>(2), func _ = true),
+    M.equals(T.bool(true))
+  )
 ]));
