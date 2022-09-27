@@ -32,7 +32,7 @@ module {
   // FIXME can initCapacity be an option?
   public class Buffer<X>(initCapacity : Nat) {
     var count : Nat = 0;
-    var elems : [var X] = [var]; // initially empty; allocated upon first `add`
+    var elems : [var ?X] = Prim.Array_init(initCapacity, null);
 
     /// Returns the current number of elements.
     public func size() : Nat = count;
@@ -40,15 +40,10 @@ module {
     /// Adds a single element to the buffer.
     public func add(elem : X) {
       if (count == elems.size()) {
-        if (elems.size() == 0) {
-          elems := Prim.Array_init(if (initCapacity > 0) { initCapacity } else { 1 }, elem);
-          count += 1;
-          return;
-        } else {
-          resize(elems.size() * UPSIZE_FACTOR);
-        };
+        let elemsSize = elems.size();
+        resize(if (elemsSize == 0) { 1 } else { elemsSize * UPSIZE_FACTOR } );
       };
-      elems[count] := elem;
+      elems[count] := ?elem;
       count += 1;
     };
 
@@ -59,7 +54,7 @@ module {
         return null;
       };
 
-      let lastElement = ?elems[count - 1];
+      let lastElement = elems[count - 1];
       count -= 1;
 
       if (count < elems.size() / DOWNSIZE_THRESHOLD) {
@@ -74,11 +69,11 @@ module {
         return null;
       };
 
-      let element = ?elems[index];
+      let element = elems[index];
 
       // resize down and shift over in one pass
       if ((count - 1) : Nat < elems.size() / DOWNSIZE_THRESHOLD) { 
-        let elems2 = Prim.Array_init<X>(elems.size() / DOWNSIZE_FACTOR, elems[0]);
+        let elems2 = Prim.Array_init<?X>(elems.size() / DOWNSIZE_FACTOR, null);
 
         var i = 0;
         var j = 0;
@@ -111,11 +106,18 @@ module {
         Prim.Array_tabulate<Bool>(
           count,
           func i {
-            if (predicate(i, elems[i])) {
-              true
-            } else {
-              removeCount += 1;
-              false
+            switch (elems[i]) {
+              case (?element) {
+                if (predicate(i, element)) {
+                  true
+                } else {
+                  removeCount += 1;
+                  false
+                }
+              };
+              case null {
+                Prim.trap "Malformed buffer in filter()"
+              }
             }
           }
         );
@@ -124,7 +126,7 @@ module {
 
       var original = elems;
       if ((count - removeCount : Nat) < elemsSize / DOWNSIZE_THRESHOLD) {
-        elems := Prim.Array_init<X>(elemsSize / DOWNSIZE_FACTOR, elems[0]);
+        elems := Prim.Array_init<?X>(elemsSize / DOWNSIZE_FACTOR, null);
       };
 
       var i = 0;
@@ -144,18 +146,17 @@ module {
 
     /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
     public func get(i : Nat) : X {
-      if (i >= count) {
-        Prim.trap "Buffer index out of bounds in get";
-      };
-      elems[i]
+      switch (elems[i]) {
+        case (?element) element;
+        case null Prim.trap("Buffer index out of bounds in get");
+      }
     };
 
     /// Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
     public func getOpt(i : Nat) : ?X {
       if (i < count) {
-        ?elems[i]
-      }
-      else {
+        elems[i]
+      } else {
         null
       }
     };
@@ -166,24 +167,19 @@ module {
       if (i >= count) {
         Prim.trap "Buffer index out of bounds in put";
       };
-      // FIXME if elems is not initialized yet
-      elems[i] := elem;
+      elems[i] := ?elem;
     };
 
     /// Returns the size of the underlying array
     public func capacity() : Nat = elems.size();
 
     // traps on OOB
-    // traps if never added any element to buffer before
     public func resize(size : Nat) {
       if (size < count) {
         Prim.trap "Size is too small to hold all elements in Buffer after resizing"
       };
-      if (elems.size() == 0) { // Do NOT let the underlying array become empty after initial add
-        Prim.trap "Can only call this function when capacity() is a nonzero value. Use initial capacity instead."
-      };
 
-      let elems2 = Prim.Array_init<X>(size, elems[0]);
+      let elems2 = Prim.Array_init<?X>(size, null);
 
       var i = 0;
       while (i < count) {
@@ -198,21 +194,16 @@ module {
       let count2 = buffer2.size();
       // Make sure you only resize once
       if (count + count2 > elems.size()) {
-        if (elems.size() == 0) { // Can't call resize in this case
-          if (count2 == 0) {
-            return;
-          } else {
-            elems := Prim.Array_init(count2 * UPSIZE_FACTOR, buffer2.get(0));
-          }
-        } else {
-          resize((count + count2) * UPSIZE_FACTOR);
-        }
+        // FIXME would be nice to have a tabulate for var arrays her
+        resize((count + count2) * UPSIZE_FACTOR);
       };
       var i = 0;
       while (i < count2) {
-        add(buffer2.get(i));
+        elems[count + i] := buffer2.getOpt i;
         i += 1;
       };
+
+      count += count2;
     };
 
     public func insert(index : Nat, element : X) {
@@ -221,21 +212,20 @@ module {
       };
       let elemsSize = elems.size();
 
-      if ((elemsSize != 0 and count + 1 > elemsSize) or initCapacity == 0) {
+      if (count + 1 > elemsSize) {
+        let elemsSize = elems.size();
         let elems2 = 
-          Prim.Array_init<X>(
-            if (elems.size() == 0) {
-              1
-            } else {
-              elems.size() * UPSIZE_FACTOR
-            },
-            element
+          Prim.Array_init<?X>(
+            if (elemsSize == 0) { 1 } else { elemsSize * UPSIZE_FACTOR },
+            null
           );
         var i = 0;
         while (i < count + 1) {
           if (i < index) {
             elems2[i] := elems[i];
-          } else if (i > index) {
+          } else if (i == index) {
+            elems2[i] := ?element;
+          } else {
             elems2[i] := elems[i - 1];
           };
           
@@ -243,15 +233,12 @@ module {
         };
         elems := elems2;
       } else {
-        if (elemsSize == 0) { // create elems for the first time
-          elems := Prim.Array_init(initCapacity, element);
-        };
         var i : Nat = count;
         while (i > index) {
           elems[i] := elems[i - 1];
           i -= 1;
         };
-        elems[index] := element;
+        elems[index] := ?element;
       };
 
       count += 1;
@@ -263,20 +250,17 @@ module {
       };
 
       let count2 = buffer2.size();
-      if (count2 == 0) {
-        return;
-      };
-
       let elemsSize = elems.size();
+
       // resize and insert in one go
-      if ((elemsSize != 0 and count + count2 > elemsSize) or (elemsSize == 0 and count + count2 > initCapacity)) {
-        let elems2 = Prim.Array_init<X>((count + count2) * UPSIZE_FACTOR, buffer2.get(0));
+      if (count + count2 > elemsSize) {
+        let elems2 = Prim.Array_init<?X>((count + count2) * UPSIZE_FACTOR, null);
         var i = 0;
         while (i < count + count2) {
           if (i < index) {
             elems2[i] := elems[i];
           } else if (i >= index and i < index + count2) {
-            elems2[i] := buffer2.get(i - index);
+            elems2[i] := buffer2.getOpt(i - index);
           } else {
             elems2[i] := elems[i - count2];
           };
@@ -287,15 +271,12 @@ module {
       } 
       // just insert
       else {
-        if (elemsSize == 0) {
-          elems := Prim.Array_init(initCapacity, buffer2.get(0));
-        };
         var i = index;
         while (i < index + count2) {
           if (i < count) {
             elems[i + count2] := elems[i];
           };
-          elems[i] := buffer2.get(i - index);
+          elems[i] := buffer2.getOpt(i - index);
 
           i += 1;
         }
@@ -316,7 +297,7 @@ module {
       let newBuffer = Buffer<X>(elems.size());
       var i = 0;
       while (i < count) {
-        newBuffer.add(elems[i]);
+        newBuffer.add(get i); // FIXME Unnecesssary unwrap and rewrap
         i += 1;
       };
       newBuffer
@@ -329,9 +310,8 @@ module {
         if (pos == count) {
           null
         } else {
-          let elem = ?elems[pos];
           pos += 1;
-          elem
+          elems[pos - 1]
         }
       }
     };
@@ -342,19 +322,19 @@ module {
       // immutable clone of array
       Prim.Array_tabulate<X>(
         count,
-        func(i : Nat) : X { elems[i] }
+        func(i : Nat) : X { get i }
       );
 
     // FIXME move outside of class?
     /// Creates a mutable array containing this buffer's elements.
     public func toVarArray() : [var X] {
-      if (count == 0) { 
+      if (count == 0) {
         [var]
       } else {
-        let newArray = Prim.Array_init<X>(count, elems[0]);
+        let newArray = Prim.Array_init<X>(count, get 0);
         var i = 0;
         while (i < count) {
-          newArray[i] := elems[i];
+          newArray[i] := get i;
           i += 1;
         };
         newArray
@@ -369,7 +349,7 @@ module {
 
     var i = 0;
     while (i < count) {
-      newBuffer.add(elems.get(i));
+      newBuffer.add(elems[i]);
       i += 1;
     };
 
@@ -383,7 +363,7 @@ module {
 
     var i = 0;
     while (i < count) {
-      newBuffer.add(elems.get(i));
+      newBuffer.add(elems[i]);
       i += 1;
     };
 
@@ -392,11 +372,8 @@ module {
 
   public func trimToSize<X>(buffer : Buffer<X>) {
     let count = buffer.size();
-    let capacity = buffer.capacity();
-    if (count == capacity) {
-      return;
-    } else {
-      buffer.resize(if (count == 0) { 1 } else { count });
+    if (count < buffer.capacity()) {
+      buffer.resize(count);
     }
   };
 
@@ -445,7 +422,7 @@ module {
     while (i < count) {
       switch (f(buffer.get(i))) {
         case (?element) {
-          newBuffer.add(element); // FIXME use put with index instead of add after unit tests are written
+          newBuffer.add(element);
         };
         case _ {};
       };
@@ -462,7 +439,7 @@ module {
     
     var i = 0;
     while (i < count) {
-      newBuffer.put(i, f(i, buffer.get(i)));
+      newBuffer.add(f(i, buffer.get(i)));
       i += 1;
     };
 
@@ -490,7 +467,7 @@ module {
     #ok newBuffer
   };
 
-  public func foldLeft<X, A>(buffer : Buffer<X>, base : A, combine : (A, X) -> A) : A {
+  public func foldLeft<A, X>(buffer : Buffer<X>, base : A, combine : (A, X) -> A) : A {
     let count = buffer.size();
     var accumulation = base;
     
@@ -667,6 +644,25 @@ module {
     };
 
     "[" # str # "]"
+  };
+
+  public func equal<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    let count1 = buffer1.size();
+    let count2 = buffer2.size();
+
+    if (count1 != count2) {
+      return false;
+    };
+
+    var i = 0;
+    while (i < count1) {
+      if (not equal(buffer1.get(i), buffer2.get(i))) {
+        return false;
+      };
+      i += 1;
+    };
+
+    true
   };
 
   public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
