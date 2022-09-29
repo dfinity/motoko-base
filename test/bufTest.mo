@@ -3,6 +3,9 @@ import B "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Option "mo:base/Option";
 import Nat "mo:base/Nat";
+import Hash "mo:base/Hash";
+import Nat32 "mo:base/Nat32";
+import Order "mo:base/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -17,6 +20,24 @@ let NatBufferTestable : T.Testable<B.Buffer<Nat>> = object {
   public func equals(buffer1 : B.Buffer<Nat>, buffer2 : B.Buffer<Nat>) : Bool {
     B.equal(buffer1, buffer2, Nat.equal)
   };
+};
+
+class OrderTestable(initItem : Order.Order) : T.TestableItem<Order.Order> {
+  public let item = initItem;
+  public func display(order : Order.Order) : Text {
+    switch (order) {
+      case (#less) {
+        "#less"
+      };
+      case (#greater) {
+        "#greater"
+      };
+      case (#equal) {
+        "#equal"
+      }
+    }
+  };
+  public let equals = Order.equal;
 };
 
 /* --------------------------------------- */
@@ -1574,4 +1595,1244 @@ run(suite("forNone",
     B.forNone<Nat>(B.Buffer<Nat>(2), func _ = true),
     M.equals(T.bool(true))
   )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.make<Nat>(1);
+
+run(suite("make",
+[
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(1))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(1))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [1]))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i)
+};
+
+run(suite("contains",
+[
+  test(
+    "true",
+    B.contains<Nat>(buffer, 2, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "true",
+    B.contains<Nat>(buffer, 9, Nat.equal),
+    M.equals(T.bool(false))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+run(suite("contains empty",
+[
+  test(
+    "true",
+    B.contains<Nat>(buffer, 2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "true",
+    B.contains<Nat>(buffer, 9, Nat.equal),
+    M.equals(T.bool(false))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+buffer.add(2);
+buffer.add(1);
+buffer.add(10);
+buffer.add(1);
+buffer.add(0);
+buffer.add(3);
+
+run(suite("max",
+[
+  test(
+    "return value",
+    B.max<Nat>(buffer, Nat.compare),
+    M.equals(T.nat(10))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+buffer.add(2);
+buffer.add(1);
+buffer.add(10);
+buffer.add(1);
+buffer.add(0);
+buffer.add(3);
+buffer.add(0);
+
+run(suite("min",
+[
+  test(
+    "return value",
+    B.min<Nat>(buffer, Nat.compare),
+    M.equals(T.nat(0))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+buffer.add(2);
+
+run(suite("isEmpty",
+[
+  test(
+    "true",
+    B.isEmpty(B.Buffer<Nat>(2)),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "false",
+    B.isEmpty(buffer),
+    M.equals(T.bool(false))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+buffer.add(2);
+buffer.add(1);
+buffer.add(10);
+buffer.add(1);
+buffer.add(0);
+buffer.add(3);
+buffer.add(0);
+
+B.removeDuplicates<Nat>(buffer, Nat.compare);
+
+run(suite("removeDuplicates",
+[
+  test(
+    "elements (stable ordering)",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [2, 1, 10, 0, 3]))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+B.removeDuplicates<Nat>(buffer, Nat.compare);
+
+run(suite("removeDuplicates empty",
+[
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  )
+]));
+
+/* --------------------------------------- */
+
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(2);
+};
+
+B.removeDuplicates<Nat>(buffer, Nat.compare);
+
+run(suite("removeDuplicates repeat singleton",
+[
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [2]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+run(suite("hash",
+[
+  test(
+    "empty buffer",
+    Nat32.toNat(B.hash<Nat>(B.Buffer<Nat>(8), Hash.hash)),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "non-empty buffer",
+    Nat32.toNat(B.hash<Nat>(buffer, Hash.hash)),
+    M.equals(T.nat(3365238326))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+run(suite("toText",
+[
+  test(
+    "empty buffer",
+    B.toText<Nat>(B.Buffer<Nat>(3), Nat.toText),
+    M.equals(T.text("[]"))
+  ),
+  test(
+    "singleton buffer",
+    B.toText<Nat>(B.make<Nat>(3), Nat.toText),
+    M.equals(T.text("[3]"))
+  ),
+  test(
+    "non-empty buffer",
+    B.toText<Nat>(buffer, Nat.toText),
+    M.equals(T.text("[0, 1, 2, 3, 4, 5]"))
+  )
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+buffer2 := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 2)) {
+  buffer.add(i);
+};
+
+run(suite("equal",
+[
+  test(
+    "empty buffers",
+    B.equal<Nat>(B.Buffer<Nat>(3), B.Buffer<Nat>(2), Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "non-empty buffers",
+    B.equal<Nat>(buffer, buffer.clone(), Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "non-empty and empty buffers",
+    B.equal<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "non-empty buffers mismatching lengths",
+    B.equal<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+buffer2 := B.Buffer<Nat>(3);
+
+for (i in Iter.range(0, 2)) {
+  buffer.add(i);
+};
+
+var buffer3 = B.Buffer<Nat>(3);
+
+for (i in Iter.range(2, 5)) {
+  buffer3.add(i);
+};
+
+run(suite("compare",
+[
+  test(
+    "empty buffers",
+    B.compare<Nat>(B.Buffer<Nat>(3), B.Buffer<Nat>(2), Nat.compare),
+    M.equals(OrderTestable(#equal))
+  ),
+  test(
+    "non-empty buffers equal",
+    B.compare<Nat>(buffer, buffer.clone(), Nat.compare),
+    M.equals(OrderTestable(#equal))
+  ),
+  test(
+    "non-empty and empty buffers",
+    B.compare<Nat>(buffer, B.Buffer<Nat>(3), Nat.compare),
+    M.equals(OrderTestable(#greater))
+  ),
+  test(
+    "non-empty buffers mismatching lengths",
+    B.compare<Nat>(buffer, buffer2, Nat.compare),
+    M.equals(OrderTestable(#greater))
+  ),
+  test(
+    "non-empty buffers lexicographic difference",
+    B.compare<Nat>(buffer, buffer3, Nat.compare),
+    M.equals(OrderTestable(#less))
+  ),
+]));
+
+/* --------------------------------------- */
+
+var nestedBuffer = B.Buffer<B.Buffer<Nat>>(3);
+for (i in Iter.range(0, 4)) {
+  let innerBuffer = B.Buffer<Nat>(2);
+  for (j in if (i % 2 == 0) { Iter.range(0, 4) } else { Iter.range(0, 3) }) {
+    innerBuffer.add(j)
+  };
+  nestedBuffer.add(innerBuffer)
+};
+nestedBuffer.add(B.Buffer<Nat>(2));
+
+buffer := B.flatten<Nat>(nestedBuffer);
+
+run(suite("flatten",
+[
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(23))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(60))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4, 0, 1, 2, 3, 0, 1, 2, 3, 4, 0, 1, 2, 3, 0, 1, 2, 3, 4]))
+  ),
+]));
+
+/* --------------------------------------- */
+
+nestedBuffer := B.Buffer<B.Buffer<Nat>>(3);
+for (i in Iter.range(0, 4)) {
+  nestedBuffer.add(B.Buffer<Nat>(2));
+};
+
+buffer := B.flatten<Nat>(nestedBuffer);
+
+run(suite("flatten all empty inner buffers",
+[
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(10))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+
+nestedBuffer := B.Buffer<B.Buffer<Nat>>(3);
+buffer := B.flatten<Nat>(nestedBuffer);
+
+run(suite("flatten empty outer buffer",
+[
+  test( //FIXME size unnecessary after testing size and toArray?
+    "size",
+    buffer.size(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+
+buffer.clear(); // FIXME use clear after clear is tested?
+for (i in Iter.range(0, 5)) {
+  buffer.add(i)
+};
+
+var partition = B.partition<Nat>(buffer, func x = x % 2 == 0);
+buffer2 := partition.0;
+buffer3 := partition.1;
+
+run(suite("partition",
+[
+  test(
+    "capacity of true buffer",
+    buffer2.capacity(),
+    M.equals(T.nat(6))
+  ),
+  test(
+    "elements of true buffer",
+    buffer2.toArray(),
+    M.equals(T.array(T.natTestable, [0, 2, 4]))
+  ),
+  test(
+    "capacity of false buffer",
+    buffer3.capacity(),
+    M.equals(T.nat(6))
+  ),
+  test(
+    "elements of false buffer",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [1, 3, 5]))
+  ),
+]));
+
+/* --------------------------------------- */
+
+buffer.clear();
+for (i in Iter.range(0, 3)) {
+  buffer.add(i)
+};
+
+for (i in Iter.range(10, 13)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+for (i in Iter.range(2, 5)) {
+  buffer2.add(i)
+};
+for (i in Iter.range(13, 15)) {
+  buffer2.add(i)
+};
+
+buffer := B.merge<Nat>(buffer, buffer2, Nat.compare);
+// FIXME fix or surpress warnings in test
+
+run(suite("merge",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(30))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 2, 3, 3, 4, 5, 10, 11, 12, 13, 13, 14, 15]))
+  ),
+]));
+
+/* --------------------------------------- */
+
+buffer.clear();
+for (i in Iter.range(0, 3)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+
+buffer := B.merge<Nat>(buffer, buffer2, Nat.compare);
+
+run(suite("merge with empty",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3]))
+  ),
+]));
+
+/* --------------------------------------- */
+
+buffer.clear();
+buffer2.clear();
+
+buffer := B.merge<Nat>(buffer, buffer2, Nat.compare);
+
+run(suite("merge two empty",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+buffer.add(0);
+buffer.add(2);
+buffer.add(1);
+buffer.add(1);
+buffer.add(5);
+buffer.add(4);
+
+B.sort<Nat>(buffer, Nat.compare);
+
+run(suite("sort",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 1, 2, 4, 5]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+B.sort<Nat>(buffer, Nat.compare);
+
+run(suite("sort empty",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+partition := B.split<Nat>(buffer, 2);
+buffer2 := partition.0;
+buffer3 := partition.1;
+
+run(suite("split",
+[
+  test(
+    "capacity prefix",
+    buffer2.capacity(),
+    M.equals(T.nat(4))
+  ),
+  test(
+    "elements prefix",
+    buffer2.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1]))
+  ),
+  test(
+    "capacity suffix",
+    buffer3.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements suffix",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [2, 3, 4, 5]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+partition := B.split<Nat>(buffer, 0);
+buffer2 := partition.0;
+buffer3 := partition.1;
+
+run(suite("split at index 0",
+[
+  test(
+    "capacity prefix",
+    buffer2.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements prefix",
+    buffer2.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+  test(
+    "capacity suffix",
+    buffer3.capacity(),
+    M.equals(T.nat(12))
+  ),
+  test(
+    "elements suffix",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4, 5]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+partition := B.split<Nat>(buffer, 6);
+buffer2 := partition.0;
+buffer3 := partition.1;
+
+run(suite("split at last index",
+[
+  test(
+    "capacity prefix",
+    buffer2.capacity(),
+    M.equals(T.nat(12))
+  ),
+  test(
+    "elements prefix",
+    buffer2.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4, 5]))
+  ),
+  test(
+    "capacity suffix",
+    buffer3.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements suffix",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+buffer2.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+for (i in Iter.range(0, 3)) {
+  buffer2.add(i);
+};
+
+var bufferPairs = B.zip<Nat, Nat>(buffer, buffer2);
+
+run(suite("zip",
+[
+  test(
+    "capacity",
+    bufferPairs.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    bufferPairs.toArray(),
+    M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), 
+      [(0, 0), (1, 1), (2, 2), (3, 3)]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+buffer2.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+bufferPairs := B.zip<Nat, Nat>(buffer, buffer2);
+
+run(suite("zip empty",
+[
+  test(
+    "capacity",
+    bufferPairs.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements",
+    bufferPairs.toArray(),
+    M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), 
+      [] : [(Nat, Nat)]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+buffer2.clear();
+
+bufferPairs := B.zip<Nat, Nat>(buffer, buffer2);
+
+run(suite("zip both empty",
+[
+  test(
+    "capacity",
+    bufferPairs.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements",
+    bufferPairs.toArray(),
+    M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), 
+      [] : [(Nat, Nat)]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+buffer2.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+for (i in Iter.range(0, 3)) {
+  buffer2.add(i);
+};
+
+buffer3 := B.zipWith<Nat, Nat, Nat>(buffer, buffer2, Nat.add);
+
+run(suite("zipWith",
+[
+  test(
+    "capacity",
+    buffer3.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [0, 2, 4, 6]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+buffer2.clear();
+
+for (i in Iter.range(0, 5)) {
+  buffer.add(i);
+};
+
+buffer3 := B.zipWith<Nat, Nat, Nat>(buffer, buffer2, Nat.add);
+
+run(suite("zipWithEmpty",
+[
+  test(
+    "capacity",
+    buffer3.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 8)) {
+  buffer.add(i);
+};
+
+var chunks = B.chunk<Nat>(buffer, 2);
+
+run(suite("chunk",
+[
+  test(
+    "num chunks",
+    chunks.size(),
+    M.equals(T.nat(5))
+  ),
+  test(
+    "chunk 0 capacity",
+    chunks.get(0).capacity(),
+    M.equals(T.nat(4))
+  ),
+  test(
+    "chunk 0 elements",
+    chunks.get(0).toArray(),
+    M.equals(T.array(T.natTestable, [0, 1]))
+  ),
+  test(
+    "chunk 2 capacity",
+    chunks.get(2).capacity(),
+    M.equals(T.nat(4))
+  ),
+  test(
+    "chunk 2 elements",
+    chunks.get(2).toArray(),
+    M.equals(T.array(T.natTestable, [4, 5]))
+  ),
+  test(
+    "chunk 4 capacity",
+    chunks.get(4).capacity(),
+    M.equals(T.nat(4))
+  ),
+  test(
+    "chunk 4 elements",
+    chunks.get(4).toArray(),
+    M.equals(T.array(T.natTestable, [8]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+chunks := B.chunk<Nat>(buffer, 3);
+
+run(suite("chunk empty",
+[
+  test(
+    "num chunks",
+    chunks.size(),
+    M.equals(T.nat(0))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+buffer.add(2);
+buffer.add(2);
+buffer.add(2);
+buffer.add(1);
+buffer.add(0);
+buffer.add(0);
+buffer.add(2);
+buffer.add(1);
+buffer.add(1);
+
+chunks := B.groupBy<Nat>(buffer, Nat.equal);
+
+run(suite("groupBy",
+[
+  test(
+    "num groups",
+    chunks.size(),
+    M.equals(T.nat(5))
+  ),
+  test(
+    "group 0 capacity",
+    chunks.get(0).capacity(),
+    M.equals(T.nat(9))
+  ),
+  test(
+    "group 0 elements",
+    chunks.get(0).toArray(),
+    M.equals(T.array(T.natTestable, [2, 2, 2]))
+  ),
+  test(
+    "group 1 capacity",
+    chunks.get(1).capacity(),
+    M.equals(T.nat(6))
+  ),
+  test(
+    "group 1 elements",
+    chunks.get(1).toArray(),
+    M.equals(T.array(T.natTestable, [1]))
+  ),
+  test(
+    "group 4 capacity",
+    chunks.get(4).capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "group 4 elements",
+    chunks.get(4).toArray(),
+    M.equals(T.array(T.natTestable, [1, 1]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+chunks := B.groupBy<Nat>(buffer, Nat.equal);
+
+run(suite("groupBy clear",
+[
+  test(
+    "num groups",
+    chunks.size(),
+    M.equals(T.nat(0))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(0)
+};
+
+chunks := B.groupBy<Nat>(buffer, Nat.equal);
+
+run(suite("groupBy clear",
+[
+  test(
+    "num groups",
+    chunks.size(),
+    M.equals(T.nat(1))
+  ),
+  test(
+    "group 0 elements",
+    chunks.get(0).toArray(),
+    M.equals(T.array(T.natTestable, [0, 0, 0, 0, 0]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer := B.prefix<Nat>(buffer, 3);
+
+run(suite("prefix",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(6))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+buffer := B.prefix<Nat>(buffer, 0);
+
+run(suite("prefix of empty",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer := B.prefix<Nat>(buffer, 5);
+
+run(suite("trivial prefix",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(10))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+
+for (i in Iter.range(0, 2)) {
+  buffer2.add(i);
+};
+
+buffer3.clear();
+
+buffer3.add(2);
+buffer3.add(1);
+buffer3.add(0);
+
+run(suite("isPrefixOf",
+[
+  test(
+    "normal prefix",
+    B.isPrefixOf<Nat>(buffer2, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "identical buffers",
+    B.isPrefixOf<Nat>(buffer, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "one empty buffer",
+    B.isPrefixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "not prefix",
+    B.isPrefixOf<Nat>(buffer3, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not prefix from length",
+    B.isPrefixOf<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not prefix of empty",
+    B.isPrefixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "empty prefix of empty",
+    B.isPrefixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(true))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+
+for (i in Iter.range(0, 2)) {
+  buffer2.add(i);
+};
+
+buffer3.clear();
+
+buffer3.add(2);
+buffer3.add(1);
+buffer3.add(0);
+
+run(suite("isStrictPrefixOf",
+[
+  test(
+    "normal prefix",
+    B.isStrictPrefixOf<Nat>(buffer2, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "identical buffers",
+    B.isStrictPrefixOf<Nat>(buffer, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "one empty buffer",
+    B.isStrictPrefixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "not prefix",
+    B.isStrictPrefixOf<Nat>(buffer3, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not prefix from length",
+    B.isStrictPrefixOf<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not prefix of empty",
+    B.isStrictPrefixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "empty prefix of empty",
+    B.isStrictPrefixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer := B.infix<Nat>(buffer, 1, 3);
+
+run(suite("infix",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(6))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [1, 2, 3]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+run(suite("infix edge cases",
+[
+  test(
+    "prefix",
+    B.prefix(buffer, 3),
+    M.equals({ {item = B.infix(buffer, 0, 3)} and NatBufferTestable})
+  ),
+  test(
+    "suffix",
+    B.suffix(buffer, 3),
+    M.equals({ {item = B.infix(buffer, 2, 3)} and NatBufferTestable})
+  ),
+  test(
+    "empty",
+    B.infix(buffer, 2, 0).toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+  test(
+    "trivial",
+    B.infix(buffer, 0, buffer.size()),
+    M.equals({ {item = buffer} and NatBufferTestable})
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+
+for (i in Iter.range(0, 2)) {
+  buffer2.add(i);
+};
+
+buffer3.clear();
+
+buffer3.add(1);
+buffer3.add(2);
+buffer3.add(3);
+
+run(suite("isInfixOf",
+[
+  test(
+    "normal infix",
+    B.isInfixOf<Nat>(buffer3, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "prefix",
+    B.isInfixOf<Nat>(buffer2, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "identical buffers",
+    B.isInfixOf<Nat>(buffer, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "one empty buffer",
+    B.isInfixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "not infix",
+    B.isInfixOf<Nat>(buffer3, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not infix from length",
+    B.isInfixOf<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not infix of empty",
+    B.isInfixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "empty infix of empty",
+    B.isInfixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(true))
+  ),
 ]));

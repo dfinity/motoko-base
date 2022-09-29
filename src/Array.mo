@@ -302,4 +302,19 @@ module {
     });
   };
 
+  // FIXME optimize, and add non var version
+  public func toText<X>(array : [var X], toText : X -> Text) : Text {
+    let count : Int = array.size();
+    var i = 0;
+    var text = "";
+    while (i < count - 1) {
+      text := text # toText(array[i]) # ", ";
+      i += 1;
+    };
+    if (count > 0) {
+      text := text # toText(array[i])
+    };
+
+    "[" # text # "]"
+  }
 }

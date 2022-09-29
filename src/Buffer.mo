@@ -15,6 +15,8 @@
 import Prim "mo:⛔";
 import Result "Result";
 import Order "Order";
+import Array "Array";
+import Nat "Nat";
 
 module {
   type Order = Order.Order;
@@ -600,21 +602,49 @@ module {
 
   public func isEmpty<X>(buffer : Buffer<X>) : Bool = buffer.size() == 0;
 
+  // stable duplicate removal
   public func removeDuplicates<X>(buffer : Buffer<X>, compare : (X, X) -> Order) {
-    sort<X>(buffer, compare);
-
-    buffer.filter(
-      func (i, current) { 
-        if (i == 0) {
-          return true
-        };
-
-        switch(compare(buffer.get(i - 1), current)) {
-          case (#equal) false;
-          case _ true;
+    let count = buffer.size();
+    let indices = Prim.Array_tabulate<(Nat, X)>(count, func i = (i, buffer.get(i)));
+    // Sort based on element, while caring original index information
+    let sorted = Array.sort<(Nat, X)>(indices, func(pair1, pair2) = compare(pair1.1, pair2.1));
+    let uniques = Buffer<(Nat, X)>(count);
+    var i = 0;
+    while (i < count) {
+      var j = i;
+      // find the minimum index between duplicate elements
+      var minIndex = sorted[j];
+      label duplicates while (j < (count - 1 : Nat)) {
+        let pair1 = sorted[j];
+        let pair2 = sorted[j + 1];
+        switch(compare(pair1.1, pair2.1)) {
+          case (#equal) {
+            if (pair2.0 < pair1.0) {
+              minIndex := pair2
+            };
+            j += 1;
+          };
+          case _ { 
+            break duplicates;
+          }
         }
-      }
-    );
+      };
+
+            uniques.add(minIndex);
+      i := j + 1;
+    };
+
+    // resort based on original ordering and place back in buffer
+    sort<(Nat, X)>(uniques, func(pair1, pair2) = Nat.compare(pair1.0, pair2.0));
+
+    buffer.clear();
+    let uniqueCount = uniques.size();
+    buffer.resize(uniqueCount);
+    i := 0;
+    while (i < uniqueCount) {
+      buffer.add(uniques.get(i).1);
+      i += 1;
+    }
   };
 
   // Should be a function of the logical list, not the underlying array
@@ -632,18 +662,18 @@ module {
   };
 
   public func toText<X>(buffer : Buffer<X>, toText : X -> Text) : Text {
-    let count = buffer.size();
+    let count : Int = buffer.size();
     var i = 0;
-    var str = "";
-    while (i < (count - 1 : Nat)) {
-      str := str # toText(buffer.get(i)) # ", ";
+    var text = "";
+    while (i < count - 1) {
+      text := text # toText(buffer.get(i)) # ", ";
       i += 1;
     };
     if (count > 0) {
-      str := str # toText(buffer.get(i))
+      text := text # toText(buffer.get(i))
     };
 
-    "[" # str # "]"
+    "[" # text # "]"
   };
 
   public func equal<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : Bool {
@@ -663,6 +693,27 @@ module {
     };
 
     true
+  };
+
+  public func compare<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order.Order) : Order.Order {
+    let count1 = buffer1.size();
+    let count2 = buffer2.size();
+    let minCount = if (count1 < count2) { count1 } else { count2 };
+    var i = 0;
+    while (i < minCount) {
+      switch(compare(buffer1.get(i), buffer2.get(i))) {
+        case (#less) {
+          return #less;
+        };
+        case (#greater) {
+          return #greater;
+        };
+        case _ { }
+      };
+      i += 1;
+    };
+
+    Nat.compare(count1, count2)
   };
 
   public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
@@ -753,6 +804,7 @@ module {
     newBuffer
   };
 
+  // FIXME optimize me
   public func sort<X>(buffer : Buffer<X>, compare : (X, X) -> Order) {
     let count = buffer.size();
     if (count < 2) {
@@ -807,8 +859,8 @@ module {
       Prim.trap "Index out of bounds in split"
     };
 
-    let buffer1 = Buffer<X>(count);
-    let buffer2 = Buffer<X>(count);
+    let buffer1 = Buffer<X>(if (index == 0) { UPSIZE_FACTOR} else { index * UPSIZE_FACTOR });
+    let buffer2 = Buffer<X>(if ((count - index : Nat) == 0) { UPSIZE_FACTOR } else { (count - index) * UPSIZE_FACTOR });
 
     var i = 0;
     while (i < count) {
@@ -829,7 +881,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
     let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<(X, Y)>(minCount * UPSIZE_FACTOR);
+    let newBuffer = Buffer<(X, Y)>(if (minCount == 0) { UPSIZE_FACTOR } else { minCount* UPSIZE_FACTOR });
 
     var i = 0;
     while (i < minCount) {
@@ -847,7 +899,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
     let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<Z>(minCount * UPSIZE_FACTOR);
+    let newBuffer = Buffer<Z>(if (minCount == 0) { UPSIZE_FACTOR } else { minCount * UPSIZE_FACTOR });
 
     var i = 0;
     while (i < minCount) {
@@ -859,130 +911,6 @@ module {
     };
 
     newBuffer
-  };
-
-  // Documentation should warn of combinatorial explosion
-  // Combinations are lazily produced and thus vulnerable to mutations in underlying buffer
-  public func combinations<X>(buffer : Buffer<X>, groupSize : Nat) : { next : () -> ?Buffer<X> } = object {
-    let count = buffer.size();
-    let current = Prim.Array_init<Nat>(groupSize, 0);
-    var r = 0; // index for current combination
-    var i = 0; // index for buffer
-    
-    public func next() : ?Buffer<X> {
-      if (count < groupSize or (count == 0 and groupSize == 0) or r < 0) {
-        return null;
-      };
-
-      while (r >= 0){
-        // forward step
-        if (i <= count + (r - groupSize : Nat)){
-          current[r] := i;
-            
-          // if current array is full, add it to combinations and move to next element in buffer
-          if (r == (groupSize - 1 : Nat)){
-            var j = 0;
-            let combination = Buffer<X>(groupSize * UPSIZE_FACTOR);
-            while (j < groupSize) {
-              combination.add(buffer.get(current[j]));
-            };
-            i += 1;
-
-            return ?combination;
-          } else {
-            // if current is not full yet, select next element
-            i := current[r] + 1;
-            r += 1;
-          }				
-        } else { // backward step
-          r -= 1;
-          if (r >= 0) {
-            i := current[r] + 1;
-          }
-        }			
-      };
-
-      null
-    };
-  };
-  
-  public func permutations<X>(buffer : Buffer<X>) : { next : () -> ?Buffer<X> } = object {
-    let count = buffer.size();
-    let indices = Prim.Array_init<Nat>(count, 0);
-    var increase = 0;
-    var initialized = false;
-
-    public func next() : ?Buffer<X> {
-      if (increase == (count - 1 : Nat)) {
-        return null;
-      };
-
-      if (not initialized) {
-        var i = 0;
-        while (i < count) {
-          indices[i] := i;
-          i += 1;
-        };
-        initialized := true;
-      } else if (increase == 0) {
-        swap(increase, increase + 1);
-
-        increase += 1;
-        while (increase < (count - 1 : Nat) and indices[increase] > indices[increase + 1]) {
-          increase += 1;
-        }
-      } else {
-        if (indices[increase + 1] > indices[0]) {
-          swap(increase + 1, 0);
-        } else {
-          // Binary search to find the greatest value that is less than indices[increase + 1]
-          var start = 0;
-          var end = increase;
-          var mid = (start + end) / 2;
-          let target = indices[increase + 1];
-          while (not (indices[mid] < target and indices[mid - 1] > target)) {
-            if (indices[mid] < target) {
-              end := mid - 1;
-            } else {
-              start := mid + 1;
-            };
-
-            mid := (start + end) / 2;
-          };
-
-          swap(increase + 1, mid);
-        };
-
-        // Reverse elements from 0 through increase
-        var i = 0;
-        while (i <= increase / 2) {
-          swap(i, increase - i);
-          i += 1;
-        };
-
-        increase := 0;
-      };
-
-      ?output()
-    };
-
-    private func output() : Buffer<X> {
-      let permutation = Buffer<X>(count * UPSIZE_FACTOR);
-      var i = 0;
-      while (i < count) {
-        permutation.add(buffer.get(indices[i]));
-
-        i += 1;
-      };
-
-      permutation
-    };
-
-    private func swap(index1 : Nat, index2 : Nat) {
-      let temp = indices[index1];
-      indices[index1] := indices[index2];
-      indices[index2] := temp;
-    }
   };
 
   public func chunk<X>(buffer : Buffer<X>, size : Nat) : Buffer<Buffer<X>> {
@@ -1018,8 +946,9 @@ module {
     var i = 0;
     while (i < count) {
       let newInnerBuffer = Buffer<X>(count - i);
-      var j = i + 1;
-      while (j < count and equal(buffer.get(j), newInnerBuffer.get(0))) {
+      let baseElement = buffer.get(i);
+      var j = i;
+      while (j < count and equal(buffer.get(j), baseElement)) {
         newInnerBuffer.add(buffer.get(j));
 
         j += 1;
@@ -1033,15 +962,15 @@ module {
     newBuffer
   };
 
-  public func prefix<X>(buffer : Buffer<X>, end : Nat) : Buffer<X> {
-    if (end > buffer.size()) {
+  public func prefix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
+    if (length > buffer.size()) {
       Prim.trap "Buffer index out of bounds in prefix"
     };
 
-    let newBuffer = Buffer<X>(end * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(if (length == 0) { UPSIZE_FACTOR } else { length * UPSIZE_FACTOR }); 
 
     var i = 0;
-    while (i < end) {
+    while (i < length) {
       newBuffer.add(buffer.get(i));
 
       i += 1;
@@ -1088,13 +1017,14 @@ module {
     return true;
   };
 
-  public func infix<X>(buffer : Buffer<X>, start : Nat, end : Nat) : Buffer<X> {
+  public func infix<X>(buffer : Buffer<X>, start : Nat, length : Nat) : Buffer<X> {
     let count = buffer.size();
+    let end = start + length; // exclusive
     if (start >= count or end > count) {
       Prim.trap "Buffer index out of bounds in infix"
     };
 
-    let newBuffer = Buffer<X>((end - start) * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(if (length == 0) { UPSIZE_FACTOR } else { length * UPSIZE_FACTOR });
 
     var i = start;
     while (i < end) {
@@ -1107,9 +1037,14 @@ module {
   };
 
   public func isInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    if (infix.size() > buffer.size()) {
-      Prim.trap "Infix size must be at most buffer size in isInfixOf";
+    let infixSize = infix.size();
+    let bufferSize = buffer.size();
+    if (infixSize > bufferSize) {
+      return false;
+    } else if (infixSize == 0) {
+      return true;
     };
+
     switch(indexOfBuffer(buffer, infix, equal)) {
       case null false;
       case _ true;
@@ -1119,11 +1054,7 @@ module {
   public func isStrictInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
     let infixSize = infix.size();
     let bufferSize = buffer.size();
-    if (infixSize > bufferSize) {
-      Prim.trap "Infix size must be at most buffer size in isStrictInfixOf";
-    };
-
-    if (infixSize == bufferSize) {
+    if (infixSize >= bufferSize) {
       return false;
     };
 
@@ -1133,16 +1064,16 @@ module {
     }
   };
 
-  public func suffix<X>(buffer : Buffer<X>, start : Nat) : Buffer<X> {
+  public func suffix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
     let count = buffer.size();
 
-    if (start >= count) {
+    if (length > count) {
       Prim.trap "Buffer index out of bounds in suffix"
     };
 
-    let newBuffer = Buffer<X>((count - start) * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(length * UPSIZE_FACTOR);
 
-    var i = start;
+    var i = count - length : Nat;
     while (i < count) {
       newBuffer.add(buffer.get(i));
 
@@ -1234,30 +1165,6 @@ module {
     newBuffer
   };
 
-  public func transpose<X>(matrix : Buffer<Buffer<X>>) : Buffer<Buffer<X>> {
-    // FIXME check bounds / staggered matrix
-    let outerCount = matrix.size();
-    let innerCount = matrix.get(0).size();
-
-    let newMatrix = Buffer<Buffer<X>>(innerCount);
-    var i = 0;
-    while (i < innerCount) {
-      var j = 0;
-      while (j < outerCount) {
-        if (i == 0) {
-          newMatrix.add(Buffer<X>(outerCount));
-        };
-        newMatrix.get(i).put(j, matrix.get(j).get(i));
-
-        j += 1;
-      };
-
-      i += 1;
-    };
-
-    newMatrix
-  };
-
   // FIXME error checks should be easy to understand, and top level if necessary
   public func first<X>(buffer : Buffer<X>) : X = buffer.get(0);
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
@@ -1311,51 +1218,46 @@ module {
   };
 
   // Uses the KMP substring search algorithm
+  // Implementation from: https://www.educative.io/answers/what-is-the-knuth-morris-pratt-algorithm
   public func indexOfBuffer<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
-    // FIXME implementation below assumes count1 < count2
     if (count2 > count1) {
       Prim.trap "Buffer2 length should be smaller than Buffer1 length in indexOfBuffer";
     };
 
-    let lps = Prim.Array_init<Nat>(count2, 0);
-
-    // length of the previous longest prefix suffix
-    var prevLength = 0;
-    var i = 1;
- 
     // precompute lps
-    while (i < count2) {
-      if (equal(buffer2.get(i), buffer2.get(prevLength))) {
-        prevLength += 1;
-        lps[i] := prevLength;
+    let lps = Prim.Array_init<Nat>(count2, 0);
+    var i = 0;
+    var j = 1;
+
+    while (j < count2) {
+      if (equal(buffer2.get(i), buffer2.get(j))) {
         i += 1;
+        lps[j] := i;
+        j += 1;
+      } else if (i == 0) {
+        lps[j] := 0;
+        j += 1;
       } else {
-        if (prevLength != 0) {
-          prevLength := lps[prevLength - 1];
-        } else {
-            lps[i] := prevLength;
-            i += 1;
-        }
+        i := lps[i - 1];
       }
     };
 
     // start search
     i := 0;
-    var j = 0;
-    while ((count1 - i : Nat) >= (count2 - j : Nat)) {
-      if (equal(buffer1.get(i), buffer2.get(j))) {
-          i += 1;
-          j += 1;
-      };
-      if (j == count2) {
-        return ?(i - j);
-      } else if (i < count1 and not equal(buffer2.get(j), buffer1.get(i))) {
-        if (j != 0) {
-            j := lps[j - 1];
+    j := 0;
+    while (i < count2 and j < count1) {
+      if (equal(buffer2.get(i), buffer1.get(j)) and i == (count2 - 1 : Nat)) {
+        return ?(j - i)
+      } else if (equal(buffer2.get(i), buffer1.get(j))) {
+        i += 1;
+        j += 1;
+      } else {
+        if (i != 0) {
+          i := lps[i - 1]
         } else {
-            i += 1;
+          j += 1
         }
       }
     };
