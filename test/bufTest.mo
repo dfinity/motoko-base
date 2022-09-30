@@ -2789,9 +2789,9 @@ for (i in Iter.range(0, 2)) {
 
 buffer3.clear();
 
-buffer3.add(1);
-buffer3.add(2);
-buffer3.add(3);
+for (i in Iter.range(1, 3)) {
+  buffer3.add(i);
+};
 
 run(suite("isInfixOf",
 [
@@ -2834,5 +2834,454 @@ run(suite("isInfixOf",
     "empty infix of empty",
     B.isInfixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.bool(true))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+
+for (i in Iter.range(0, 2)) {
+  buffer2.add(i);
+};
+
+buffer3.clear();
+
+for (i in Iter.range(1, 3)) {
+  buffer3.add(i);
+};
+
+var buffer4 = B.Buffer<Nat>(4);
+
+for (i in Iter.range(3, 4)) {
+  buffer4.add(i);
+};
+
+run(suite("isStrictInfixOf",
+[
+  test(
+    "normal strict infix",
+    B.isStrictInfixOf<Nat>(buffer3, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "prefix",
+    B.isStrictInfixOf<Nat>(buffer2, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "suffix",
+    B.isStrictInfixOf<Nat>(buffer4, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "identical buffers",
+    B.isStrictInfixOf<Nat>(buffer, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "one empty buffer",
+    B.isStrictInfixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "not infix",
+    B.isStrictInfixOf<Nat>(buffer3, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not infix from length",
+    B.isStrictInfixOf<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not infix of empty",
+    B.isStrictInfixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "empty not strict infix of empty",
+    B.isStrictInfixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer := B.suffix<Nat>(buffer, 3);
+
+run(suite("suffix",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(6))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [2, 3, 4]))
+  )
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+run(suite("suffix edge cases",
+[
+  test(
+    "empty",
+    B.prefix(buffer, 0).toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+  test(
+    "trivial",
+    B.prefix(buffer, buffer.size()),
+    M.equals({ {item = buffer} and NatBufferTestable})
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+for (i in Iter.range(3, 4)) {
+  buffer2.add(i)
+};
+
+buffer3.clear();
+
+buffer3.add(2);
+buffer3.add(1);
+buffer3.add(0);
+
+run(suite("isSuffixOf",
+[
+  test(
+    "normal suffix",
+    B.isSuffixOf<Nat>(buffer2, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "identical buffers",
+    B.isSuffixOf<Nat>(buffer, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "one empty buffer",
+    B.isSuffixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "not suffix",
+    B.isSuffixOf<Nat>(buffer3, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not suffix from length",
+    B.isSuffixOf<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not suffix of empty",
+    B.isSuffixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "empty suffix of empty",
+    B.isSuffixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(true))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+buffer2.clear();
+for (i in Iter.range(3, 4)) {
+  buffer2.add(i)
+};
+
+buffer3.clear();
+
+buffer3.add(2);
+buffer3.add(1);
+buffer3.add(0);
+
+run(suite("isStrictSuffixOf",
+[
+  test(
+    "normal suffix",
+    B.isStrictSuffixOf<Nat>(buffer2, buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "identical buffers",
+    B.isStrictSuffixOf<Nat>(buffer, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "one empty buffer",
+    B.isStrictSuffixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    M.equals(T.bool(true))
+  ),
+  test(
+    "not suffix",
+    B.isStrictSuffixOf<Nat>(buffer3, buffer, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not suffix from length",
+    B.isStrictSuffixOf<Nat>(buffer, buffer2, Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "not suffix of empty",
+    B.isStrictSuffixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+  test(
+    "empty suffix of empty",
+    B.isStrictSuffixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.bool(false))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+run(suite("takeWhile",
+[
+  test(
+    "normal case",
+    B.takeWhile<Nat>(buffer, func x = x < 3).toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2]))
+  ),
+  test(
+    "empty",
+    B.takeWhile<Nat>(B.Buffer<Nat>(3), func x = x < 3).toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+run(suite("dropWhile",
+[
+  test(
+    "normal case",
+    B.dropWhile<Nat>(buffer, func x = x < 3).toArray(),
+    M.equals(T.array(T.natTestable, [3, 4]))
+  ),
+  test(
+    "empty",
+    B.dropWhile<Nat>(B.Buffer<Nat>(3), func x = x < 3).toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+  test(
+    "drop all",
+    B.dropWhile<Nat>(buffer, func _ = true).toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+  test(
+    "drop none",
+    B.dropWhile<Nat>(buffer, func _ = false).toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(1, 6)) {
+  buffer.add(i)
+};
+
+run(suite("binarySearch",
+[
+  test(
+    "find in middle",
+    B.binarySearch<Nat>(buffer, 2, Nat.compare),
+    M.equals(T.optional(T.natTestable, ?1))
+  ),
+  test(
+    "find first",
+    B.binarySearch<Nat>(buffer, 1, Nat.compare),
+    M.equals(T.optional(T.natTestable, ?0))
+  ),
+  test(
+    "find last",
+    B.binarySearch<Nat>(buffer, 6, Nat.compare),
+    M.equals(T.optional(T.natTestable, ?5))
+  ),
+  test(
+    "not found to the right",
+    B.binarySearch<Nat>(buffer, 10, Nat.compare),
+    M.equals(T.optional(T.natTestable, null : ?Nat)) // FIXME this is how you test for null
+  ),
+  test(
+    "not found to the left",
+    B.binarySearch<Nat>(buffer, 0, Nat.compare),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i)
+};
+
+run(suite("indexOf",
+[
+  test(
+    "find in middle",
+    B.indexOf<Nat>(buffer, 2, Nat.equal),
+    M.equals(T.optional(T.natTestable, ?2))
+  ),
+  test(
+    "find first",
+    B.indexOf<Nat>(buffer, 0, Nat.equal),
+    M.equals(T.optional(T.natTestable, ?0))
+  ),
+  test(
+    "find last",
+    B.indexOf<Nat>(buffer, 6, Nat.equal),
+    M.equals(T.optional(T.natTestable, ?6))
+  ),
+  test(
+    "not found",
+    B.indexOf<Nat>(buffer, 10, Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  test(
+    "empty",
+    B.indexOf<Nat>(B.Buffer<Nat>(3), 100, Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+buffer.add(2); // 0
+buffer.add(2); // 1
+buffer.add(1); // 2
+buffer.add(10);// 3
+buffer.add(1); // 4
+buffer.add(0); // 5
+buffer.add(10);// 6
+buffer.add(3); // 7
+buffer.add(0); // 8
+
+run(suite("lastIndexOf",
+[
+  test(
+    "find in middle",
+    B.lastIndexOf<Nat>(buffer, 10, Nat.equal),
+    M.equals(T.optional(T.natTestable, ?6))
+  ),
+  test(
+    "find only",
+    B.lastIndexOf<Nat>(buffer, 3, Nat.equal),
+    M.equals(T.optional(T.natTestable, ?7))
+  ),
+  test(
+    "find last",
+    B.lastIndexOf<Nat>(buffer, 0, Nat.equal),
+    M.equals(T.optional(T.natTestable, ?8))
+  ),
+  test(
+    "not found",
+    B.lastIndexOf<Nat>(buffer, 100, Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  test(
+    "empty",
+    B.lastIndexOf<Nat>(B.Buffer<Nat>(3), 100, Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+buffer.add(2); // 0
+buffer.add(2); // 1
+buffer.add(1); // 2
+buffer.add(10);// 3
+buffer.add(1); // 4
+buffer.add(10);// 5
+buffer.add(3); // 6
+buffer.add(0); // 7
+
+run(suite("indexOfBuffer",
+[
+  test(
+    "find in middle",
+    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([1, 10, 1]), Nat.equal),
+    M.equals(T.optional(T.natTestable, ?2))
+  ),
+  test(
+    "find first",
+    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([2, 2, 1, 10]), Nat.equal),
+    M.equals(T.optional(T.natTestable, ?0))
+  ),
+  test(
+    "find last",
+    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([0]), Nat.equal),
+    M.equals(T.optional(T.natTestable, ?7))
+  ),
+  test(
+    "not found",
+    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([99, 100, 1]), Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  test(
+    "search for empty buffer",
+    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([]), Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  test(
+    "search through empty buffer",
+    B.indexOfBuffer<Nat>(B.Buffer<Nat>(2), B.fromArray<Nat>([1, 2, 3]), Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  test(
+    "search for empty in empty",
+    B.indexOfBuffer<Nat>(B.Buffer<Nat>(2), B.Buffer<Nat>(3), Nat.equal),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
 ]));

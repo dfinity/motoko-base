@@ -1039,14 +1039,9 @@ module {
   public func isInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
     let infixSize = infix.size();
     let bufferSize = buffer.size();
-    if (infixSize > bufferSize) {
-      return false;
-    } else if (infixSize == 0) {
-      return true;
-    };
 
     switch(indexOfBuffer(buffer, infix, equal)) {
-      case null false;
+      case null infixSize == 0;
       case _ true;
     }
   };
@@ -1054,14 +1049,15 @@ module {
   public func isStrictInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
     let infixSize = infix.size();
     let bufferSize = buffer.size();
-    if (infixSize >= bufferSize) {
-      return false;
-    };
 
     switch(indexOfBuffer(buffer, infix, equal)) {
-      case null false;
-      case _ true;
-    }
+      case (?index) {
+        index != 0 and index != (bufferSize - infixSize : Nat) // enforce strictness
+      };
+      case null {
+        infixSize == 0 and infixSize != bufferSize
+      }
+    };
   };
 
   public func suffix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
@@ -1148,17 +1144,11 @@ module {
     let newBuffer = Buffer<X>(count);
 
     var i = 0;
-    var take = false;
+    while (i < count and predicate(buffer.get(i))) {
+      i += 1;
+    };
     while (i < count) {
-      let current = buffer.get(i);
-      if (not take and predicate current) {
-        take := true;
-      };
-
-      if (take) {
-        newBuffer.add(current);
-      };
-
+      newBuffer.add(buffer.get(i));
       i += 1;
     };
 
@@ -1199,7 +1189,8 @@ module {
     while (i < count) {
       if (equal(buffer.get(i), element)) {
         return ?i;
-      }
+      };
+      i += 1;
     };
 
     null
@@ -1211,7 +1202,8 @@ module {
       let n = Prim.abs i;
       if (equal(buffer.get(n), element)) {
         return ?n;
-      }
+      };
+      i -= 1;
     };
 
     null
@@ -1223,7 +1215,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
     if (count2 > count1) {
-      Prim.trap "Buffer2 length should be smaller than Buffer1 length in indexOfBuffer";
+      return null;
     };
 
     // precompute lps
