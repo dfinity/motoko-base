@@ -1995,6 +1995,53 @@ run(suite("flatten empty outer buffer",
 ]));
 
 /* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 7)) {
+  buffer.add(i);
+};
+
+buffer2.clear();
+
+for (i in Iter.range(0, 6)) {
+  buffer2.add(i);
+};
+
+buffer3.clear();
+
+var buffer4 = B.make<Nat>(3);
+
+B.reverse<Nat>(buffer);
+B.reverse<Nat>(buffer2);
+B.reverse<Nat>(buffer3);
+B.reverse<Nat>(buffer4);
+
+run(suite("reverse",
+[
+  test(
+    "even elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [7, 6, 5, 4, 3, 2, 1, 0]))
+  ),
+  test(
+    "odd elements",
+    buffer2.toArray(),
+    M.equals(T.array(T.natTestable, [6, 5, 4, 3, 2, 1, 0]))
+  ),
+  test(
+    "empty",
+    buffer3.toArray(),
+    M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+  test(
+    "singleton",
+    buffer4.toArray(),
+    M.equals(T.array(T.natTestable, [3]))
+  ),
+]));
+
+
+/* --------------------------------------- */
 
 buffer.clear(); // FIXME use clear after clear is tested?
 for (i in Iter.range(0, 5)) {
@@ -2461,43 +2508,43 @@ buffer.add(2);
 buffer.add(1);
 buffer.add(1);
 
-chunks := B.groupBy<Nat>(buffer, Nat.equal);
+var groups = B.groupBy<Nat>(buffer, Nat.equal);
 
 run(suite("groupBy",
 [
   test(
     "num groups",
-    chunks.size(),
+    groups.size(),
     M.equals(T.nat(5))
   ),
   test(
     "group 0 capacity",
-    chunks.get(0).capacity(),
+    groups.get(0).capacity(),
     M.equals(T.nat(9))
   ),
   test(
     "group 0 elements",
-    chunks.get(0).toArray(),
+    groups.get(0).toArray(),
     M.equals(T.array(T.natTestable, [2, 2, 2]))
   ),
   test(
     "group 1 capacity",
-    chunks.get(1).capacity(),
+    groups.get(1).capacity(),
     M.equals(T.nat(6))
   ),
   test(
     "group 1 elements",
-    chunks.get(1).toArray(),
+    groups.get(1).toArray(),
     M.equals(T.array(T.natTestable, [1]))
   ),
   test(
     "group 4 capacity",
-    chunks.get(4).capacity(),
+    groups.get(4).capacity(),
     M.equals(T.nat(2))
   ),
   test(
     "group 4 elements",
-    chunks.get(4).toArray(),
+    groups.get(4).toArray(),
     M.equals(T.array(T.natTestable, [1, 1]))
   ),
 ]));
@@ -2505,13 +2552,13 @@ run(suite("groupBy",
 /* --------------------------------------- */
 buffer.clear();
 
-chunks := B.groupBy<Nat>(buffer, Nat.equal);
+groups := B.groupBy<Nat>(buffer, Nat.equal);
 
 run(suite("groupBy clear",
 [
   test(
     "num groups",
-    chunks.size(),
+    groups.size(),
     M.equals(T.nat(0))
   ),
 ]));
@@ -2523,18 +2570,18 @@ for (i in Iter.range(0, 4)) {
   buffer.add(0)
 };
 
-chunks := B.groupBy<Nat>(buffer, Nat.equal);
+groups := B.groupBy<Nat>(buffer, Nat.equal);
 
 run(suite("groupBy clear",
 [
   test(
     "num groups",
-    chunks.size(),
+    groups.size(),
     M.equals(T.nat(1))
   ),
   test(
     "group 0 elements",
-    chunks.get(0).toArray(),
+    groups.get(0).toArray(),
     M.equals(T.array(T.natTestable, [0, 0, 0, 0, 0]))
   )
 ]));
@@ -2856,7 +2903,7 @@ for (i in Iter.range(1, 3)) {
   buffer3.add(i);
 };
 
-var buffer4 = B.Buffer<Nat>(4);
+buffer4 := B.Buffer<Nat>(4);
 
 for (i in Iter.range(3, 4)) {
   buffer4.add(i);

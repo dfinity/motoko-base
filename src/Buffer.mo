@@ -57,6 +57,7 @@ module {
       };
 
       let lastElement = elems[count - 1];
+      elems[count - 1] := null;
       count -= 1;
 
       if (count < elems.size() / DOWNSIZE_THRESHOLD) {
@@ -96,6 +97,7 @@ module {
           elems[i] := elems[i + 1];
           i += 1;
         };
+        elems[count] := null;
       };
 
       count -= 1;
@@ -184,9 +186,19 @@ module {
       let elems2 = Prim.Array_init<?X>(size, null);
 
       var i = 0;
-      while (i < count) {
-        elems2[i] := elems[i];
-        i += 1;
+      if (elems.size() <= size) {
+        label iter for (element in elems.vals()) {
+          if (i >= count) {
+            break iter;
+          };
+          elems2[i] := element;
+          i += 1;
+        }
+      } else {
+        while (i < count) {
+          elems2[i] := elems[i];
+          i += 1;
+        };
       };
       elems := elems2;
     };
@@ -258,15 +270,17 @@ module {
       if (count + count2 > elemsSize) {
         let elems2 = Prim.Array_init<?X>((count + count2) * UPSIZE_FACTOR, null);
         var i = 0;
-        while (i < count + count2) {
-          if (i < index) {
-            elems2[i] := elems[i];
-          } else if (i >= index and i < index + count2) {
-            elems2[i] := buffer2.getOpt(i - index);
-          } else {
-            elems2[i] := elems[i - count2];
+        for (element in elems.vals()) {
+          if (i == index) {
+            i += count2;
           };
+          elems2[i] := element;
+          i += 1;
+        };
 
+        i := 0;
+        while (i < count2) {
+          elems2[i + index] := buffer2.getOpt(i);
           i += 1;
         };
         elems := elems2;
@@ -297,23 +311,26 @@ module {
     /// Returns a copy of this buffer.
     public func clone() : Buffer<X> {
       let newBuffer = Buffer<X>(elems.size());
-      var i = 0;
-      while (i < count) {
-        newBuffer.add(get i); // FIXME Unnecesssary unwrap and rewrap
-        i += 1;
+      for (element in elems.vals()) {
+        switch (element) {
+          case (?element) {
+            newBuffer.add(element);
+          };
+          case null {
+            return newBuffer
+          };
+        }
       };
       newBuffer
     };
 
     /// Returns an `Iter` over the elements of this buffer.
     public func vals() : { next : () -> ?X } = object {
-      var pos = 0;
+      let arrayIterator = elems.vals();
       public func next() : ?X {
-        if (pos == count) {
-          null
-        } else {
-          pos += 1;
-          elems[pos - 1]
+        switch(arrayIterator.next()) {
+          case null null;
+          case (?element) element;
         }
       }
     };
@@ -335,8 +352,8 @@ module {
       } else {
         let newArray = Prim.Array_init<X>(count, get 0);
         var i = 0;
-        while (i < count) {
-          newArray[i] := get i;
+        for (element in vals()) {
+          newArray[i] := element;
           i += 1;
         };
         newArray
@@ -346,13 +363,10 @@ module {
 
   /// Creates a buffer from immutable array elements.
   public func fromArray<X>(elems : [X]) : Buffer<X> {
-    let count = elems.size();
-    let newBuffer = Buffer<X>(count * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(elems.size() * UPSIZE_FACTOR);
 
-    var i = 0;
-    while (i < count) {
-      newBuffer.add(elems[i]);
-      i += 1;
+    for (element in elems.vals()) {
+      newBuffer.add(element);
     };
 
     newBuffer
@@ -360,13 +374,10 @@ module {
 
   /// Creates a buffer from the elements of a mutable array.
   public func fromVarArray<X>(elems : [var X]) : Buffer<X> {
-    let count = elems.size();
-    let newBuffer = Buffer<X>(count * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(elems.size() * UPSIZE_FACTOR);
 
-    var i = 0;
-    while (i < count) {
-      newBuffer.add(elems[i]);
-      i += 1;
+    for (element in elems.vals()) {
+      newBuffer.add(element);
     };
 
     newBuffer
@@ -380,68 +391,54 @@ module {
   };
 
   public func map<X, Y>(buffer : Buffer<X>, f : X -> Y) : Buffer<Y> {
-    let count = buffer.size();
     let newBuffer = Buffer<Y>(buffer.capacity());
     
-    var i = 0;
-    while (i < count) {
-      newBuffer.add(f(buffer.get(i)));
-      i += 1;
+    // FIXME iteration is most likely faster with iterator
+    // Profile to find out
+    for (element in buffer.vals()) {
+      newBuffer.add(f element);
     };
 
     newBuffer
   };
 
   public func iterate<X>(buffer : Buffer<X>, f : X -> ()) {
-    let count = buffer.size();
-
-    var i = 0;
-    while (i < count) {
-      f(buffer.get(i));
-      i += 1;
+    for (element in buffer.vals()) {
+     f element
     };
   };
 
   public func chain<X, Y>(buffer : Buffer<X>, k : X -> Buffer<Y>) : Buffer<Y> {
-    let count = buffer.size();
-    let newBuffer = Buffer<Y>(count * 4);
+    let newBuffer = Buffer<Y>(buffer.size() * 4);
     
-    var i = 0;
-    while (i < count) {
-      let results = k(buffer.get(i));
-      newBuffer.append(results);
-      i += 1;
+    for (element in buffer.vals()) {
+      newBuffer.append(k element);
     };
 
     newBuffer
   };
 
   public func mapFilter<X, Y>(buffer : Buffer<X>, f : X -> ?Y) : Buffer<Y> {
-    let count = buffer.size();
     let newBuffer = Buffer<Y>(buffer.capacity());
     
-    var i = 0;
-    while (i < count) {
-      switch (f(buffer.get(i))) {
+    for (element in buffer.vals()) {
+      switch (f element) {
         case (?element) {
           newBuffer.add(element);
         };
         case _ {};
       };
-
-      i += 1;
     };
 
     newBuffer
   };
 
   public func mapEntries<X, Y>(buffer : Buffer<X>, f : (Nat, X) -> Y) : Buffer<Y> {
-    let count = buffer.size();
     let newBuffer = Buffer<Y>(buffer.capacity());
     
     var i = 0;
-    while (i < count) {
-      newBuffer.add(f(i, buffer.get(i)));
+    for (element in buffer.vals()) {
+      newBuffer.add(f(i, element));
       i += 1;
     };
 
@@ -449,12 +446,10 @@ module {
   };
 
   public func mapResult<X, Y, E>(buffer : Buffer<X>, f : X -> Result.Result<Y, E>) : Result.Result<Buffer<Y>, E> {
-    let count = buffer.size();
-    let newBuffer = Buffer<Y>(count);
+    let newBuffer = Buffer<Y>(buffer.size());
     
-    var i = 0;
-    while (i < count) {
-      switch(f(buffer.get(i))) {
+    for (element in buffer.vals()) {
+      switch(f element) {
         case (#ok result) {
           newBuffer.add(result);
         };
@@ -462,21 +457,16 @@ module {
           return #err e;
         }
       };
-
-      i += 1;
     };
 
     #ok newBuffer
   };
 
   public func foldLeft<A, X>(buffer : Buffer<X>, base : A, combine : (A, X) -> A) : A {
-    let count = buffer.size();
     var accumulation = base;
     
-    var i = 0;
-    while (i < count) {
-      accumulation := combine(accumulation, buffer.get(i));
-      i += 1;
+    for (element in buffer.vals()) {
+      accumulation := combine(accumulation, element);
     };
 
     accumulation
@@ -496,42 +486,30 @@ module {
   };
 
   public func forAll<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
-    let count = buffer.size();
-    
-    var i = 0;
-    while (i < count) {
-      if (not predicate(buffer.get(i))) {
+    for (element in buffer.vals()) {
+      if (not predicate element) {
         return false;
       };
-      i += 1;
     };
 
     true
   };
 
   public func forSome<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
-    let count = buffer.size();
-    
-    var i = 0;
-    while (i < count) {
-      if (predicate(buffer.get(i))) {
+    for (element in buffer.vals()) {
+      if (predicate element) {
         return true;
       };
-      i += 1;
     };
 
     false
   };
 
   public func forNone<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
-    let count = buffer.size();
-    
-    var i = 0;
-    while (i < count) {
-      if (predicate(buffer.get(i))) {
+    for (element in buffer.vals()) {
+      if (predicate element) {
         return false;
       };
-      i += 1;
     };
 
     true
@@ -544,57 +522,46 @@ module {
   };
 
   public func contains<X>(buffer : Buffer<X>, element : X, equals : (X, X) -> Bool) : Bool {
-    let count = buffer.size();
-    var i = 0;
-    while (i < count) {
-      if (equals(buffer.get(i), element)) {
+    for (current in buffer.vals()) {
+      if (equals(current, element)) {
         return true;
       };
-      i += 1;
     };
 
     false
   };
 
   public func max<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : X {
-    let count = buffer.size();
-    if (count == 0) {
+    if (buffer.size() == 0) {
       Prim.trap "Cannot call max on an empty buffer"
     };
 
-    var i = 0;
     var maxSoFar = buffer.get(0);
-    while (i < count) {
-      let current = buffer.get(i);
+    for (current in buffer.vals()) {
       switch(compare(current, maxSoFar)) {
         case (#greater) {
           maxSoFar := current
         };
         case _ {};
       };
-      i += 1;
     };
 
     maxSoFar
   };
 
   public func min<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : X {
-    let count = buffer.size();
-    if (count == 0) {
+    if (buffer.size() == 0) {
       Prim.trap "Cannot call min on an empty buffer"
     };
 
-    var i = 0;
     var minSoFar = buffer.get(0);
-    while (i < count) {
-      let current = buffer.get(i);
+    for (current in buffer.vals()) {
       switch(compare(current, minSoFar)) {
         case (#less) { 
           minSoFar := current
         };
         case _ {};
       };
-      i += 1;
     };
 
     minSoFar
@@ -630,7 +597,7 @@ module {
         }
       };
 
-            uniques.add(minIndex);
+      uniques.add(minIndex);
       i := j + 1;
     };
 
@@ -638,12 +605,9 @@ module {
     sort<(Nat, X)>(uniques, func(pair1, pair2) = Nat.compare(pair1.0, pair2.0));
 
     buffer.clear();
-    let uniqueCount = uniques.size();
-    buffer.resize(uniqueCount);
-    i := 0;
-    while (i < uniqueCount) {
-      buffer.add(uniques.get(i).1);
-      i += 1;
+    buffer.resize(uniques.size());
+    for (element in uniques.vals()) {
+      buffer.add(element.1);
     }
   };
 
@@ -653,8 +617,8 @@ module {
     var i = 0;
     var accHash : Nat32 = 0;
 
-    while (i < count) {
-      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(buffer.get(i));
+    for (element in buffer.vals()) {
+      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(element);
       i += 1;
     };
 
@@ -677,16 +641,15 @@ module {
   };
 
   public func equal<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let count1 = buffer1.size();
     let count2 = buffer2.size();
 
-    if (count1 != count2) {
+    if (buffer1.size() != count2) {
       return false;
     };
 
     var i = 0;
-    while (i < count1) {
-      if (not equal(buffer1.get(i), buffer2.get(i))) {
+    for (element1 in buffer1.vals()) {
+      if (not equal(element1, buffer2.get(i))) {
         return false;
       };
       i += 1;
@@ -698,22 +661,55 @@ module {
   public func compare<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order.Order) : Order.Order {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
-    let minCount = if (count1 < count2) { count1 } else { count2 };
     var i = 0;
-    while (i < minCount) {
-      switch(compare(buffer1.get(i), buffer2.get(i))) {
-        case (#less) {
-          return #less;
+    if (count1 < count2) {
+      for (element1 in buffer1.vals()) {
+        switch(compare(element1, buffer2.get(i))) {
+          case (#less) {
+            return #less;
+          };
+          case (#greater) {
+            return #greater;
+          };
+          case _ { }
         };
-        case (#greater) {
-          return #greater;
-        };
-        case _ { }
+        i += 1;
       };
-      i += 1;
+    } else {
+      for (element2 in buffer2.vals()) {
+        switch(compare(buffer1.get(i), element2)) {
+          case (#less) {
+            return #less;
+          };
+          case (#greater) {
+            return #greater;
+          };
+          case _ { }
+        };
+        i += 1;
+      };
     };
 
     Nat.compare(count1, count2)
+  };
+
+  public func reverse<X>(buffer : Buffer<X>) {
+    let count = buffer.size();
+    if (count == 0) {
+      return;
+    };
+
+    var i = 0;
+    var temp = buffer.get(0);
+    for (element in buffer.vals()) {
+      if (i >= count / 2) {
+        return;
+      };
+      temp := buffer.get(count - i - 1);
+      buffer.put(count - i - 1, element);
+      buffer.put(i, temp);
+      i += 1;
+    }
   };
 
   public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
@@ -731,16 +727,10 @@ module {
         }
       );
     
-    var i = 0;
-    while (i < count) {
-      let innerBuffer = buffer.get(i);
-      let innerCount = innerBuffer.size();
-      var j = 0;
-      while (j < innerCount) {
-        newBuffer.add(innerBuffer.get(j));
-        j += 1;
+    for (innerBuffer in buffer.vals()) {
+      for (innerElement in innerBuffer.vals()) {
+        newBuffer.add(innerElement);
       };
-      i += 1;
     };
 
     newBuffer
@@ -751,16 +741,12 @@ module {
     let trueBuffer = Buffer<X>(count);
     let falseBuffer = Buffer<X>(count);
     
-    var i = 0;
-    while (i < count) {
-      let element = buffer.get(i);
+    for (element in buffer.vals()) {
       if (predicate element) {
         trueBuffer.add(element);
       } else {
         falseBuffer.add(element);
       };
-
-      i += 1;
     };
 
     (trueBuffer, falseBuffer)
@@ -863,8 +849,7 @@ module {
     let buffer2 = Buffer<X>(if ((count - index : Nat) == 0) { UPSIZE_FACTOR } else { (count - index) * UPSIZE_FACTOR });
 
     var i = 0;
-    while (i < count) {
-      let element = buffer.get(i);
+    for (element in buffer.vals()) {
       if (i < index) {
         buffer1.add(element);
       } else {
@@ -878,39 +863,31 @@ module {
   };
 
   public func zip<X, Y>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>) : Buffer<(X, Y)> {
-    let count1 = buffer1.size();
-    let count2 = buffer2.size();
-    let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<(X, Y)>(if (minCount == 0) { UPSIZE_FACTOR } else { minCount* UPSIZE_FACTOR });
-
-    var i = 0;
-    while (i < minCount) {
-      let current1 = buffer1.get(i);
-      let current2 = buffer2.get(i);
-
-      newBuffer.add((current1, current2));
-      i += 1;
-    };
-
-    newBuffer
+    // compiler should pull lamda out as a static function since it is fully closed
+    zipWith<X, Y, (X, Y)>(buffer1, buffer2, func(x, y) = (x, y))
   };
 
   public func zipWith<X, Y, Z>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>, zip : (X, Y) -> Z) : Buffer<Z> {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
-    let minCount = if (count1 < count2) { count1 } else { count2 };
-    let newBuffer = Buffer<Z>(if (minCount == 0) { UPSIZE_FACTOR } else { minCount * UPSIZE_FACTOR });
-
     var i = 0;
-    while (i < minCount) {
-      let current1 = buffer1.get(i);
-      let current2 = buffer2.get(i);
-
-      newBuffer.add(zip(current1, current2));
-      i += 1;
-    };
-
-    newBuffer
+    if (count1 < count2) {
+      let newBuffer = Buffer<Z>(if (count1 == 0) { UPSIZE_FACTOR } else { count1 * UPSIZE_FACTOR });
+      for (current1 in buffer1.vals()) {
+        let current2 = buffer2.get(i);
+        newBuffer.add(zip(current1, current2));
+        i += 1;
+      };
+      newBuffer
+    } else {
+      let newBuffer = Buffer<Z>(if (count2 == 0) { UPSIZE_FACTOR } else { count2 * UPSIZE_FACTOR });
+      for (current2 in buffer2.vals()) {
+        let current1 = buffer1.get(i);
+        newBuffer.add(zip(current1, current2));
+        i += 1;
+      };
+      newBuffer
+    }
   };
 
   public func chunk<X>(buffer : Buffer<X>, size : Nat) : Buffer<Buffer<X>> {
@@ -918,22 +895,21 @@ module {
       Prim.trap "Chunk size must be non-zero"
     };
 
-    let count = buffer.size();
-    let newBuffer = Buffer<Buffer<X>>(Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(count) / Prim.intToFloat(size)))));
+    let newBuffer = Buffer<Buffer<X>>(Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(buffer.size()) / Prim.intToFloat(size)))));
 
-    var i = 0;
-    while (i < count) {
-      let newInnerBuffer = Buffer<X>(size * UPSIZE_FACTOR);
-      var j = i;
-
-      while (j < i + size and j < count) {
-        newInnerBuffer.add(buffer.get(j));
-
-        j += 1;
+    var newInnerBuffer = Buffer<X>(size * UPSIZE_FACTOR);
+    var innerSize = 0;
+    for (element in buffer.vals()) {
+      if (innerSize == size) {
+        newBuffer.add(newInnerBuffer);
+        newInnerBuffer := Buffer<X>(size * UPSIZE_FACTOR);
+        innerSize := 0;
       };
-
-      newBuffer.add(newInnerBuffer);
-      i += size;
+      newInnerBuffer.add(element);
+      innerSize += 1;
+    };
+    if (innerSize > 0) {
+      newBuffer.add(newInnerBuffer)
     };
 
     newBuffer
@@ -942,21 +918,26 @@ module {
   public func groupBy<X>(buffer : Buffer<X>, equal : (X, X) -> Bool) : Buffer<Buffer<X>> {
     let count = buffer.size();
     let newBuffer = Buffer<Buffer<X>>(count);
+    if (count == 0) {
+      return newBuffer
+    };
 
     var i = 0;
-    while (i < count) {
-      let newInnerBuffer = Buffer<X>(count - i);
-      let baseElement = buffer.get(i);
-      var j = i;
-      while (j < count and equal(buffer.get(j), baseElement)) {
-        newInnerBuffer.add(buffer.get(j));
-
-        j += 1;
+    var baseElement = buffer.get(0);
+    var newInnerBuffer = Buffer<X>(count);
+    for (element in buffer.vals()) {
+      if (equal(baseElement, element)) {
+        newInnerBuffer.add(element);
+      } else {
+        newBuffer.add(newInnerBuffer);
+        baseElement := element;
+        newInnerBuffer := Buffer<X>(count - i);
+        newInnerBuffer.add(element);
       };
-
-      newBuffer.add(newInnerBuffer);
-
-      i += newInnerBuffer.size();
+      i += 1;
+    };
+    if (newInnerBuffer.size() > 0) {
+      newBuffer.add(newInnerBuffer)
     };
 
     newBuffer
@@ -970,9 +951,11 @@ module {
     let newBuffer = Buffer<X>(if (length == 0) { UPSIZE_FACTOR } else { length * UPSIZE_FACTOR }); 
 
     var i = 0;
-    while (i < length) {
-      newBuffer.add(buffer.get(i));
-
+    for (element in buffer.vals()) {
+      if (i == length) {
+        return newBuffer;
+      };
+      newBuffer.add(element);
       i += 1;
     };
 
@@ -980,15 +963,13 @@ module {
   };
 
   public func isPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let prefixCount = prefix.size();
-    let bufferCount = buffer.size();
-    if (bufferCount < prefixCount) {
+    if (buffer.size() < prefix.size()) {
       return false;
     };
 
     var i = 0;
-    while (i < prefixCount) {
-      if (not equal(buffer.get(i), prefix.get(i))) {
+    for (prefixElement in prefix.vals()) {
+      if (not equal(buffer.get(i), prefixElement)) {
         return false;
       };
       
@@ -999,15 +980,13 @@ module {
   };
 
   public func isStrictPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let prefixCount = prefix.size();
-    let bufferCount = buffer.size();
-    if (bufferCount <= prefixCount) {
+    if (buffer.size() <= prefix.size()) {
       return false;
     };
 
     var i = 0;
-    while (i < prefixCount) {
-      if (not equal(buffer.get(i), prefix.get(i))) {
+    for (prefixElement in prefix.vals()) {
+      if (not equal(buffer.get(i), prefixElement)) {
         return false;
       };
       
@@ -1038,7 +1017,6 @@ module {
 
   public func isInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
     let infixSize = infix.size();
-    let bufferSize = buffer.size();
 
     switch(indexOfBuffer(buffer, infix, equal)) {
       case null infixSize == 0;
@@ -1048,14 +1026,13 @@ module {
 
   public func isStrictInfixOf<X>(infix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
     let infixSize = infix.size();
-    let bufferSize = buffer.size();
 
     switch(indexOfBuffer(buffer, infix, equal)) {
       case (?index) {
-        index != 0 and index != (bufferSize - infixSize : Nat) // enforce strictness
+        index != 0 and index != (buffer.size() - infixSize : Nat) // enforce strictness
       };
       case null {
-        infixSize == 0 and infixSize != bufferSize
+        infixSize == 0 and infixSize != buffer.size()
       }
     };
   };
@@ -1122,18 +1099,13 @@ module {
   };
 
   public func takeWhile<X>(buffer : Buffer<X>, predicate : X -> Bool) : Buffer<X> {
-    let count = buffer.size();
-    let newBuffer = Buffer<X>(count);
+    let newBuffer = Buffer<X>(buffer.size());
 
-    var i = 0;
-    while (i < count) {
-      let current = buffer.get(i);
-      if (not predicate current) {
+    for (element in buffer.vals()) {
+      if (not predicate element) {
         return newBuffer;
       };
-
-      newBuffer.add(current);
-      i += 1;
+      newBuffer.add(element);
     };
 
     newBuffer
@@ -1144,14 +1116,15 @@ module {
     let newBuffer = Buffer<X>(count);
 
     var i = 0;
-    while (i < count and predicate(buffer.get(i))) {
-      i += 1;
+    var take = false;
+    label iter for (element in buffer.vals()) {
+      if (not take and not predicate element) {
+        take := true;
+      };
+      if (take) {
+        newBuffer.add(element)
+      }
     };
-    while (i < count) {
-      newBuffer.add(buffer.get(i));
-      i += 1;
-    };
-
     newBuffer
   };
 
@@ -1183,11 +1156,9 @@ module {
   };
 
   public func indexOf<X>(buffer : Buffer<X>, element : X, equal : (X, X) -> Bool) : ?Nat {
-    let count = buffer.size();
-
     var i = 0;
-    while (i < count) {
-      if (equal(buffer.get(i), element)) {
+    for (current in buffer.vals()) {
+      if (equal(current, element)) {
         return ?i;
       };
       i += 1;
