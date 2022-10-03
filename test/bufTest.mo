@@ -2168,9 +2168,9 @@ buffer.add(1);
 buffer.add(5);
 buffer.add(4);
 
-B.sort<Nat>(buffer, Nat.compare);
+buffer.sort(Nat.compare);
 
-run(suite("sort",
+run(suite("sort even",
 [
   test(
     "capacity",
@@ -2187,7 +2187,32 @@ run(suite("sort",
 /* --------------------------------------- */
 buffer.clear();
 
-B.sort<Nat>(buffer, Nat.compare);
+buffer.add(0);
+buffer.add(2);
+buffer.add(1);
+buffer.add(1);
+buffer.add(5);
+
+buffer.sort(Nat.compare);
+
+run(suite("sort odd",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [0, 1, 1, 2, 5]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
+buffer.sort(Nat.compare);
 
 run(suite("sort empty",
 [
@@ -2200,6 +2225,26 @@ run(suite("sort empty",
     "elements",
     buffer.toArray(),
     M.equals(T.array(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+buffer.add(2);
+
+buffer.sort(Nat.compare);
+
+run(suite("sort singleton",
+[
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(8))
+  ),
+  test(
+    "elements",
+    buffer.toArray(),
+    M.equals(T.array(T.natTestable, [2] : [Nat]))
   ),
 ]));
 

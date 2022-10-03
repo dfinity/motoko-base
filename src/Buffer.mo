@@ -32,7 +32,7 @@ module {
   /// capacity is exceeded.
 
   // FIXME can initCapacity be an option?
-  public class Buffer<X>(initCapacity : Nat) {
+  public class Buffer<X>(initCapacity : Nat) = this {
     var count : Nat = 0;
     var elems : [var ?X] = Prim.Array_init(initCapacity, null);
 
@@ -324,6 +324,70 @@ module {
       newBuffer
     };
 
+    public func sort(compare : (X, X) -> Order.Order) {
+      // Stable merge sort in a bottom-up iterative style
+      if (count == 0) {
+        return;
+      };
+      let scratchSpace = Prim.Array_init<?X>(count, null);
+
+      var curr_size = 1;
+      while (curr_size < count) {
+        var left_start = 0;
+        while (left_start < (count - 1 : Nat)) {
+          let mid = Nat.min(left_start + curr_size - 1, count - 1);
+          let right_end = Nat.min(left_start + (2 * curr_size) - 1, count - 1);
+    
+          // Merge subarrays elems[left_start...mid] and elems[mid+1...right_end]
+          var left = left_start;
+          var right = mid + 1;
+          var nextSorted = left_start;
+          while (left < mid + 1 and right < right_end + 1) {
+            let leftOpt = elems[left];
+            let rightOpt = elems[right];
+            switch (leftOpt, rightOpt) {
+              case(?leftElement, ?rightElement) {
+                switch(compare(leftElement, rightElement)) {
+                  case (#less or #equal) {
+                    scratchSpace[nextSorted] := leftOpt;
+                    left += 1;
+                  };
+                  case (#greater) {
+                    scratchSpace[nextSorted] := rightOpt;
+                    right += 1;
+                  }
+                };
+              };
+              case (_, _) { // only sorting non-null items
+                Prim.trap("Malformed buffer in sort()")
+              };
+            };
+            nextSorted += 1;
+          };
+          while (left < mid + 1) {
+            scratchSpace[nextSorted] := elems[left];
+            nextSorted += 1;
+            left += 1;
+          };
+          while (right < right_end + 1) {
+            scratchSpace[nextSorted] := elems[right];
+            nextSorted += 1;
+            right += 1;
+          };
+
+          // Copy over merged elements
+          var i = left_start;
+          while (i < right_end + 1) {
+            elems[i] := scratchSpace[i];
+            i += 1;
+          };
+
+          left_start += 2 * curr_size;
+        };
+        curr_size *= 2;
+      }
+    };
+
     /// Returns an `Iter` over the elements of this buffer.
     public func vals() : { next : () -> ?X } = object {
       let arrayIterator = elems.vals();
@@ -602,7 +666,7 @@ module {
     };
 
     // resort based on original ordering and place back in buffer
-    sort<(Nat, X)>(uniques, func(pair1, pair2) = Nat.compare(pair1.0, pair2.0));
+    uniques.sort(func(pair1, pair2) = Nat.compare(pair1.0, pair2.0));
 
     buffer.clear();
     buffer.resize(uniques.size());
@@ -788,54 +852,6 @@ module {
     };
 
     newBuffer
-  };
-
-  // FIXME optimize me
-  public func sort<X>(buffer : Buffer<X>, compare : (X, X) -> Order) {
-    let count = buffer.size();
-    if (count < 2) {
-      return;
-    };
-    let aux = Prim.Array_init<X>(count, buffer.get(0));
-
-    func merge(lo : Nat, mid : Nat, hi : Nat) {
-      var i = lo;
-      var j = mid + 1;
-      var k = lo;
-      while(k <= hi) {
-        aux[k] := buffer.get(k);
-        k += 1;
-      };
-      k := lo;
-      while(k <= hi) {
-        if (i > mid) {
-          buffer.put(k, aux[j]);
-          j += 1;
-        } else if (j > hi) {
-          buffer.put(k, aux[i]);
-          i += 1;
-        } else if (Order.isLess(compare(aux[j], aux[i]))) {
-          buffer.put(k, aux[j]);
-          j += 1;
-        } else {
-          buffer.put(k, aux[i]);
-          i += 1;
-        };
-        k += 1;
-      };
-    };
-
-    func sortHelper(lo : Nat, hi : Nat) {
-      if (hi <= lo) {
-        return;
-      };
-      let mid : Nat = lo + (hi - lo) / 2;
-      sortHelper(lo, mid);
-      sortHelper(mid + 1, hi);
-      merge(lo, mid, hi);
-    };
-
-    sortHelper(0, count - 1);
   };
 
   public func split<X>(buffer : Buffer<X> , index : Nat) : (Buffer<X>, Buffer<X>) {
