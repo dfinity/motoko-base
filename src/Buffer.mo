@@ -31,7 +31,6 @@ module {
   /// The underlying mutable array grows by UPSIZE_FACTOR when its current
   /// capacity is exceeded.
 
-  // FIXME can initCapacity be an option?
   public class Buffer<X>(initCapacity : Nat) = this {
     var count : Nat = 0;
     var elems : [var ?X] = Prim.Array_init(initCapacity, null);
@@ -56,9 +55,9 @@ module {
         return null;
       };
 
-      let lastElement = elems[count - 1];
-      elems[count - 1] := null;
       count -= 1;
+      let lastElement = elems[count];
+      elems[count] := null;
 
       if (count < elems.size() / DOWNSIZE_THRESHOLD) {
         resize(elems.size() / DOWNSIZE_FACTOR)
@@ -441,6 +440,16 @@ module {
     let newBuffer = Buffer<X>(elems.size() * UPSIZE_FACTOR);
 
     for (element in elems.vals()) {
+      newBuffer.add(element);
+    };
+
+    newBuffer
+  };
+
+  public func fromIter<X>(iter : { next : () -> ?X }) : Buffer<X> {
+    let newBuffer = Buffer<X>(8);
+
+    for (element in iter) {
       newBuffer.add(element);
     };
 

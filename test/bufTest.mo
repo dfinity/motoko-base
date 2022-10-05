@@ -1229,6 +1229,27 @@ run(suite("empty array round trips",
 ]));
 
 /* --------------------------------------- */
+buffer.clear();
+
+for (i in Iter.range(0, 6)) {
+  buffer.add(i)
+};
+
+run(suite("iter round trips",
+[
+  test(
+    "fromIter and vals",
+    B.fromIter<Nat>(buffer.vals()).toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 6]))
+  ),
+  test(
+    "empty",
+    B.fromIter<Nat>(B.Buffer<Nat>(2).vals()).toArray(),
+    M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
 buffer := B.Buffer<Nat>(3);
 
 for (i in Iter.range(0, 6)) {
