@@ -76,7 +76,7 @@ run(suite("add",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   ),
 ]));
@@ -101,7 +101,7 @@ run(suite("add with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   ),
 ]));
@@ -126,7 +126,7 @@ run(suite("add with resize, initial capacity 0",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   ),
 ]));
@@ -153,7 +153,7 @@ run(suite("removeLast on empty buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -183,7 +183,7 @@ run(suite("removeLast",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4]))
   ),
 ]));
@@ -217,7 +217,7 @@ run(suite("removeLast until empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -244,7 +244,7 @@ run(suite("remove on empty buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -274,7 +274,7 @@ run(suite("remove",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 3, 4, 5]))
   ),
   test(
@@ -294,7 +294,7 @@ run(suite("remove",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [1, 3, 4, 5]))
   ),
 ]));
@@ -328,7 +328,7 @@ run(suite("remove until empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -358,7 +358,7 @@ run(suite("remove out of bounds",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -385,7 +385,7 @@ run(suite("filter",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 2, 4]))
   ),
 ]));
@@ -408,7 +408,7 @@ run(suite("filter on empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -434,7 +434,7 @@ run(suite("filter size down",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [1]))
   ),
 ]));
@@ -486,7 +486,7 @@ run(suite("put",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 20, 3, 4, 5]))
   ),
 ]));
@@ -514,7 +514,7 @@ run(suite("resize down",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -542,7 +542,7 @@ run(suite("resize up",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -575,7 +575,7 @@ run(suite("append",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15]))
   ),
 ]));
@@ -604,7 +604,7 @@ run(suite("append empty buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -634,7 +634,7 @@ run(suite("append to empty buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -662,7 +662,7 @@ run(suite("insert",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 30, 3, 4, 5]))
   ),
 ]));
@@ -690,7 +690,7 @@ run(suite("insert at back",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 60]))
   ),
 ]));
@@ -718,7 +718,7 @@ run(suite("insert at front",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [10, 0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -746,7 +746,7 @@ run(suite("insert with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 30, 3, 4, 5]))
   ),
 ]));
@@ -774,7 +774,7 @@ run(suite("insert at back",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 60]))
   ),
 ]));
@@ -802,7 +802,7 @@ run(suite("insert at front",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [10, 0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -826,7 +826,7 @@ run(suite("insert into empty buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0]))
   ),
 ]));
@@ -850,7 +850,7 @@ run(suite("insert into empty buffer with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0]))
   ),
 ]));
@@ -884,7 +884,7 @@ run(suite("insertBuffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 10, 11, 12, 13, 14, 15, 3, 4, 5]))
   ),
 ]));
@@ -918,7 +918,7 @@ run(suite("insertBuffer at start",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -952,7 +952,7 @@ run(suite("insertBuffer at end",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15]))
   ),
 ]));
@@ -986,7 +986,7 @@ run(suite("insertBuffer with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 10, 11, 12, 13, 14, 15, 3, 4, 5]))
   ),
 ]));
@@ -1020,7 +1020,7 @@ run(suite("insertBuffer at start with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -1054,7 +1054,7 @@ run(suite("insertBuffer at end with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15]))
   ),
 ]));
@@ -1084,7 +1084,7 @@ run(suite("insertBuffer to empty buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [10, 11, 12, 13, 14, 15]))
   ),
 ]));
@@ -1114,7 +1114,7 @@ run(suite("insertBuffer to empty buffer with resize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [10, 11, 12, 13, 14, 15]))
   ),
 ]));
@@ -1142,7 +1142,7 @@ run(suite("clear",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -1154,7 +1154,7 @@ for (i in Iter.range(0, 6)) {
   buffer.add(i);
 };
 
-buffer2 := buffer.clone();
+buffer2 := B.clone(buffer);
 
 run(suite("clone",
 [
@@ -1170,8 +1170,8 @@ run(suite("clone",
   ),
   test(
     "elements",
-    buffer.toArray(),
-    M.equals(T.array<Nat>(T.natTestable, buffer2.toArray()))
+    B.toArray(buffer),
+    M.equals(T.array<Nat>(T.natTestable, B.toArray(buffer2)))
   ),
 ]));
 
@@ -1203,12 +1203,12 @@ run(suite("array round trips",
 [
   test(
     "fromArray and toArray",
-    B.fromArray<Nat>([0, 1, 2, 3]).toArray(),
+    B.toArray<Nat>(B.fromArray<Nat>([0, 1, 2, 3])),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   ),
   test(
     "fromVarArray",
-    B.fromVarArray<Nat>([var 0, 1, 2, 3]).toArray(),
+    B.toArray<Nat>(B.fromVarArray<Nat>([var 0, 1, 2, 3])),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3]))
   )
 ]));
@@ -1218,12 +1218,12 @@ run(suite("empty array round trips",
 [
   test(
     "fromArray and toArray",
-    B.fromArray<Nat>([]).toArray(),
+    B.toArray<Nat>(B.fromArray<Nat>([])),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
   test(
     "fromVarArray",
-    B.fromVarArray<Nat>([var]).toArray(),
+    B.toArray<Nat>(B.fromVarArray<Nat>([var])),
     M.equals(T.array<Nat>(T.natTestable, []))
   )
 ]));
@@ -1239,12 +1239,12 @@ run(suite("iter round trips",
 [
   test(
     "fromIter and vals",
-    B.fromIter<Nat>(buffer.vals()).toArray(),
+    B.toArray(B.fromIter<Nat>(buffer.vals())),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 6]))
   ),
   test(
     "empty",
-    B.fromIter<Nat>(B.Buffer<Nat>(2).vals()).toArray(),
+    B.toArray(B.fromIter<Nat>(B.Buffer<Nat>(2).vals())),
     M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -1272,7 +1272,7 @@ run(suite("trimToSize",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 6]))
   ),
 ]));
@@ -1296,7 +1296,7 @@ run(suite("trimToSize on empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -1324,7 +1324,7 @@ run(suite("map",
   ),
   test(
     "elements",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array<Nat>(T.natTestable, [0, 2, 4, 6, 8, 10, 12]))
   ),
 ]));
@@ -1348,7 +1348,7 @@ run(suite("map empty",
   ),
   test(
     "elements",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array<Nat>(T.natTestable, []))
   ),
 ]));
@@ -1383,7 +1383,7 @@ run(suite("iterate",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 6]))
   ),
 ]));
@@ -1407,8 +1407,8 @@ run(suite("chain",
   ),
   test(
     "elements",
-    buffer2.toArray(),
-    M.equals(T.array<Nat>(T.natTestable, buffer.toArray()))
+    B.toArray(buffer2),
+    M.equals(T.array<Nat>(T.natTestable, B.toArray(buffer)))
   ),
 ]));
 
@@ -1435,7 +1435,7 @@ run(suite("mapFilter",
   ),
   test(
     "elements",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array<Nat>(T.natTestable, [0, 2, 4, 6]))
   ),
 ]));
@@ -1463,7 +1463,7 @@ run(suite("mapEntries",
   ),
   test(
     "elements",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 4, 9, 16, 25, 36]))
   ),
 ]));
@@ -1636,7 +1636,7 @@ run(suite("make",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [1]))
   )
 ]));
@@ -1759,7 +1759,7 @@ run(suite("removeDuplicates",
 [
   test(
     "elements (stable ordering)",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [2, 1, 10, 0, 3]))
   )
 ]));
@@ -1774,7 +1774,7 @@ run(suite("removeDuplicates empty",
 [
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   )
 ]));
@@ -1793,7 +1793,7 @@ run(suite("removeDuplicates repeat singleton",
 [
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [2]))
   )
 ]));
@@ -1867,7 +1867,7 @@ run(suite("equal",
   ),
   test(
     "non-empty buffers",
-    B.equal<Nat>(buffer, buffer.clone(), Nat.equal),
+    B.equal<Nat>(buffer, B.clone(buffer), Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
@@ -1910,7 +1910,7 @@ run(suite("compare",
   ),
   test(
     "non-empty buffers equal",
-    B.compare<Nat>(buffer, buffer.clone(), Nat.compare),
+    B.compare<Nat>(buffer, B.clone(buffer), Nat.compare),
     M.equals(OrderTestable(#equal))
   ),
   test(
@@ -1958,7 +1958,7 @@ run(suite("flatten",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4, 0, 1, 2, 3, 0, 1, 2, 3, 4, 0, 1, 2, 3, 0, 1, 2, 3, 4]))
   ),
 ]));
@@ -1986,7 +1986,7 @@ run(suite("flatten all empty inner buffers",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -2010,7 +2010,7 @@ run(suite("flatten empty outer buffer",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -2041,22 +2041,22 @@ run(suite("reverse",
 [
   test(
     "even elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [7, 6, 5, 4, 3, 2, 1, 0]))
   ),
   test(
     "odd elements",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array(T.natTestable, [6, 5, 4, 3, 2, 1, 0]))
   ),
   test(
     "empty",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
     "singleton",
-    buffer4.toArray(),
+    B.toArray(buffer4),
     M.equals(T.array(T.natTestable, [3]))
   ),
 ]));
@@ -2082,7 +2082,7 @@ run(suite("partition",
   ),
   test(
     "elements of true buffer",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array(T.natTestable, [0, 2, 4]))
   ),
   test(
@@ -2092,7 +2092,7 @@ run(suite("partition",
   ),
   test(
     "elements of false buffer",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [1, 3, 5]))
   ),
 ]));
@@ -2128,7 +2128,7 @@ run(suite("merge",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 2, 2, 3, 3, 4, 5, 10, 11, 12, 13, 13, 14, 15]))
   ),
 ]));
@@ -2153,7 +2153,7 @@ run(suite("merge with empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 2, 3]))
   ),
 ]));
@@ -2174,7 +2174,7 @@ run(suite("merge two empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -2200,7 +2200,7 @@ run(suite("sort even",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 1, 2, 4, 5]))
   ),
 ]));
@@ -2225,7 +2225,7 @@ run(suite("sort odd",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 1, 2, 5]))
   ),
 ]));
@@ -2244,7 +2244,7 @@ run(suite("sort empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -2264,7 +2264,7 @@ run(suite("sort singleton",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [2] : [Nat]))
   ),
 ]));
@@ -2289,7 +2289,7 @@ run(suite("split",
   ),
   test(
     "elements prefix",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array(T.natTestable, [0, 1]))
   ),
   test(
@@ -2299,7 +2299,7 @@ run(suite("split",
   ),
   test(
     "elements suffix",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [2, 3, 4, 5]))
   ),
 ]));
@@ -2324,7 +2324,7 @@ run(suite("split at index 0",
   ),
   test(
     "elements prefix",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
@@ -2334,7 +2334,7 @@ run(suite("split at index 0",
   ),
   test(
     "elements suffix",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
@@ -2359,7 +2359,7 @@ run(suite("split at last index",
   ),
   test(
     "elements prefix",
-    buffer2.toArray(),
+    B.toArray(buffer2),
     M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
   test(
@@ -2369,7 +2369,7 @@ run(suite("split at last index",
   ),
   test(
     "elements suffix",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -2396,7 +2396,7 @@ run(suite("zip",
   ),
   test(
     "elements",
-    bufferPairs.toArray(),
+    B.toArray(bufferPairs),
     M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), 
       [(0, 0), (1, 1), (2, 2), (3, 3)]))
   ),
@@ -2421,7 +2421,7 @@ run(suite("zip empty",
   ),
   test(
     "elements",
-    bufferPairs.toArray(),
+    B.toArray(bufferPairs),
     M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), 
       [] : [(Nat, Nat)]))
   ),
@@ -2442,7 +2442,7 @@ run(suite("zip both empty",
   ),
   test(
     "elements",
-    bufferPairs.toArray(),
+    B.toArray(bufferPairs),
     M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), 
       [] : [(Nat, Nat)]))
   ),
@@ -2470,7 +2470,7 @@ run(suite("zipWith",
   ),
   test(
     "elements",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [0, 2, 4, 6]))
   ),
 ]));
@@ -2494,7 +2494,7 @@ run(suite("zipWithEmpty",
   ),
   test(
     "elements",
-    buffer3.toArray(),
+    B.toArray(buffer3),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -2522,7 +2522,7 @@ run(suite("chunk",
   ),
   test(
     "chunk 0 elements",
-    chunks.get(0).toArray(),
+    B.toArray(chunks.get(0)),
     M.equals(T.array(T.natTestable, [0, 1]))
   ),
   test(
@@ -2532,7 +2532,7 @@ run(suite("chunk",
   ),
   test(
     "chunk 2 elements",
-    chunks.get(2).toArray(),
+    B.toArray(chunks.get(2)),
     M.equals(T.array(T.natTestable, [4, 5]))
   ),
   test(
@@ -2542,7 +2542,7 @@ run(suite("chunk",
   ),
   test(
     "chunk 4 elements",
-    chunks.get(4).toArray(),
+    B.toArray(chunks.get(4)),
     M.equals(T.array(T.natTestable, [8]))
   ),
 ]));
@@ -2590,7 +2590,7 @@ run(suite("groupBy",
   ),
   test(
     "group 0 elements",
-    groups.get(0).toArray(),
+    B.toArray(groups.get(0)),
     M.equals(T.array(T.natTestable, [2, 2, 2]))
   ),
   test(
@@ -2600,7 +2600,7 @@ run(suite("groupBy",
   ),
   test(
     "group 1 elements",
-    groups.get(1).toArray(),
+    B.toArray(groups.get(1)),
     M.equals(T.array(T.natTestable, [1]))
   ),
   test(
@@ -2610,7 +2610,7 @@ run(suite("groupBy",
   ),
   test(
     "group 4 elements",
-    groups.get(4).toArray(),
+    B.toArray(groups.get(4)),
     M.equals(T.array(T.natTestable, [1, 1]))
   ),
 ]));
@@ -2647,7 +2647,7 @@ run(suite("groupBy clear",
   ),
   test(
     "group 0 elements",
-    groups.get(0).toArray(),
+    B.toArray(groups.get(0)),
     M.equals(T.array(T.natTestable, [0, 0, 0, 0, 0]))
   )
 ]));
@@ -2670,7 +2670,7 @@ run(suite("prefix",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 2]))
   )
 ]));
@@ -2689,7 +2689,7 @@ run(suite("prefix of empty",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   )
 ]));
@@ -2712,7 +2712,7 @@ run(suite("trivial prefix",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4]))
   )
 ]));
@@ -2851,7 +2851,7 @@ run(suite("infix",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [1, 2, 3]))
   )
 ]));
@@ -2877,7 +2877,7 @@ run(suite("infix edge cases",
   ),
   test(
     "empty",
-    B.infix(buffer, 2, 0).toArray(),
+    B.toArray(B.infix(buffer, 2, 0)),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
@@ -3042,7 +3042,7 @@ run(suite("suffix",
   ),
   test(
     "elements",
-    buffer.toArray(),
+    B.toArray(buffer),
     M.equals(T.array(T.natTestable, [2, 3, 4]))
   )
 ]));
@@ -3058,7 +3058,7 @@ run(suite("suffix edge cases",
 [
   test(
     "empty",
-    B.prefix(buffer, 0).toArray(),
+    B.toArray(B.prefix(buffer, 0)),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
@@ -3193,12 +3193,12 @@ run(suite("takeWhile",
 [
   test(
     "normal case",
-    B.takeWhile<Nat>(buffer, func x = x < 3).toArray(),
+    B.toArray(B.takeWhile<Nat>(buffer, func x = x < 3)),
     M.equals(T.array(T.natTestable, [0, 1, 2]))
   ),
   test(
     "empty",
-    B.takeWhile<Nat>(B.Buffer<Nat>(3), func x = x < 3).toArray(),
+    B.toArray(B.takeWhile<Nat>(B.Buffer<Nat>(3), func x = x < 3)),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
 ]));
@@ -3214,22 +3214,22 @@ run(suite("dropWhile",
 [
   test(
     "normal case",
-    B.dropWhile<Nat>(buffer, func x = x < 3).toArray(),
+    B.toArray(B.dropWhile<Nat>(buffer, func x = x < 3)),
     M.equals(T.array(T.natTestable, [3, 4]))
   ),
   test(
     "empty",
-    B.dropWhile<Nat>(B.Buffer<Nat>(3), func x = x < 3).toArray(),
+    B.toArray(B.dropWhile<Nat>(B.Buffer<Nat>(3), func x = x < 3)),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
     "drop all",
-    B.dropWhile<Nat>(buffer, func _ = true).toArray(),
+    B.toArray(B.dropWhile<Nat>(buffer, func _ = true)),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
     "drop none",
-    B.dropWhile<Nat>(buffer, func _ = false).toArray(),
+    B.toArray(B.dropWhile<Nat>(buffer, func _ = false)),
     M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4]))
   ),
 ]));

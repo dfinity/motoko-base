@@ -304,24 +304,7 @@ module {
       count := 0;
       resize(8); 
     };
-
-    
-    /// Returns a copy of this buffer.
-    public func clone() : Buffer<X> {
-      let newBuffer = Buffer<X>(elems.size());
-      for (element in elems.vals()) {
-        switch (element) {
-          case (?element) {
-            newBuffer.add(element);
-          };
-          case null {
-            return newBuffer
-          };
-        }
-      };
-      newBuffer
-    };
-
+ 
     public func sort(compare : (X, X) -> Order.Order) {
       // Stable merge sort in a bottom-up iterative style
       if (count == 0) {
@@ -397,31 +380,39 @@ module {
         }
       }
     };
+  };
 
-    // FIXME move outside of class?
-    /// Creates a new array containing this buffer's elements.
-    public func toArray() : [X] =
-      // immutable clone of array
-      Prim.Array_tabulate<X>(
-        count,
-        func(i : Nat) : X { get i }
-      );
-
-    // FIXME move outside of class?
-    /// Creates a mutable array containing this buffer's elements.
-    public func toVarArray() : [var X] {
-      if (count == 0) {
-        [var]
-      } else {
-        let newArray = Prim.Array_init<X>(count, get 0);
-        var i = 0;
-        for (element in vals()) {
-          newArray[i] := element;
-          i += 1;
-        };
-        newArray
-      }
+  /// Returns a copy of this buffer.
+  public func clone<X>(buffer : Buffer<X>) : Buffer<X> {
+    let newBuffer = Buffer<X>(buffer.capacity());
+    for (element in buffer.vals()) {
+      newBuffer.add(element)
     };
+    newBuffer
+  };
+
+  /// Creates a new array containing this buffer's elements.
+  public func toArray<X>(buffer : Buffer<X>) : [X] =
+    // immutable clone of array
+    Prim.Array_tabulate<X>(
+      buffer.size(),
+      func(i : Nat) : X { buffer.get(i) }
+    );
+
+  /// Creates a mutable array containing this buffer's elements.
+  public func toVarArray<X>(buffer : Buffer<X>) : [var X] {
+    let count = buffer.size();
+    if (count == 0) {
+      [var]
+    } else {
+      let newArray = Prim.Array_init<X>(count, buffer.get(0));
+      var i = 0;
+      for (element in buffer.vals()) {
+        newArray[i] := element;
+        i += 1;
+      };
+      newArray
+    }
   };
 
   /// Creates a buffer from immutable array elements.
