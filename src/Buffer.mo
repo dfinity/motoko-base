@@ -16,7 +16,6 @@ import Prim "mo:⛔";
 import Result "Result";
 import Order "Order";
 import Array "Array";
-import Nat "Nat";
 
 module {
   type Order = Order.Order;
@@ -330,12 +329,13 @@ module {
       };
       let scratchSpace = Prim.Array_init<?X>(count, null);
 
+      let countDec = count - 1 : Nat;
       var curr_size = 1;
       while (curr_size < count) {
         var left_start = 0;
-        while (left_start < (count - 1 : Nat)) {
-          let mid = Nat.min(left_start + curr_size - 1, count - 1);
-          let right_end = Nat.min(left_start + (2 * curr_size) - 1, count - 1);
+        while (left_start < countDec) {
+          let mid : Nat = if (left_start + curr_size - 1 : Nat < countDec) { left_start + curr_size - 1 } else { countDec };
+          let right_end : Nat = if (left_start + (2 * curr_size) - 1 : Nat < countDec) { left_start + (2 * curr_size) - 1 } else { countDec };
     
           // Merge subarrays elems[left_start...mid] and elems[mid+1...right_end]
           var left = left_start;
@@ -675,7 +675,17 @@ module {
     };
 
     // resort based on original ordering and place back in buffer
-    uniques.sort(func(pair1, pair2) = Nat.compare(pair1.0, pair2.0));
+    uniques.sort(
+      func(pair1, pair2) {
+        if (pair1.0 < pair2.0) {
+          #less
+        } else if (pair1.0 == pair2.0) {
+          #equal
+        } else {
+          #greater
+        }
+      }
+    );
 
     buffer.clear();
     buffer.resize(uniques.size());
@@ -763,7 +773,13 @@ module {
       };
     };
 
-    Nat.compare(count1, count2)
+    if (count1 < count2) {
+      #less
+    } else if (count1 == count2) {
+      #equal
+    } else {
+      #greater
+    }
   };
 
   public func reverse<X>(buffer : Buffer<X>) {

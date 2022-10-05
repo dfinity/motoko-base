@@ -1,6 +1,5 @@
 /// Functions on Arrays
 
-// import Buffer "Buffer";
 import I "IterType";
 import Option "Option";
 import Order "Order";
@@ -118,30 +117,70 @@ module {
     ys;
   };
   /// Output array contains each array-value if and only if the predicate is true; ordering retained.
+  public func filter<A>(xs : [A], f : A -> Bool) : [A] {
+    var count = 0;
+    let keep = 
+      Prim.Array_tabulate<Bool>(
+        xs.size(),
+        func i {
+          if (f(xs[i])) {
+            count += 1;
+            true
+          } else {
+            false
+          }
+        }
+      );
+    var nextKeep = 0;
+    Prim.Array_tabulate<A>(
+      count,
+      func _ {
+        while (not keep[nextKeep]) {
+          nextKeep += 1;
+        };
+        nextKeep += 1;
+        xs[nextKeep - 1];
+      }
+    )
+  };
 
-  // FIXME rewrite using no Buffer
-  // Current implementation is using two passes anyway
-
-  // public func filter<A>(xs : [A], f : A -> Bool) : [A] {
-  //   let ys : Buffer.Buffer<A> = Buffer.Buffer(xs.size());
-  //   for (x in xs.vals()) {
-  //     if (f(x)) {
-  //       ys.add(x);
-  //     };
-  //   };
-  //   ys.toArray();
-  // };
   /// Output array contains each transformed optional value; ordering retained.
-  // public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
-  //   let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
-  //   for (x in xs.vals()) {
-  //     switch (f(x)) {
-  //       case null {};
-  //       case (?y) { ys.add(y) };
-  //     }
-  //   };
-  //   ys.toArray();
-  // };
+  public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
+    var count = 0;
+    let options = 
+      Prim.Array_tabulate<?B>(
+        xs.size(),
+        func i {
+          let result = f(xs[i]);
+          switch (result) {
+            case (?element) {
+              count += 1;
+              result
+            };
+            case null {
+              null
+            }
+          } 
+        }
+      );
+    
+    var nextSome = 0;
+    Prim.Array_tabulate<B>(
+      count,
+      func _ {
+        while (Option.isNull(options[nextSome])) {
+          nextSome += 1;
+        };
+        nextSome += 1;
+        switch(options[nextSome - 1]) {
+          case(?element) element;
+          case null {
+            Prim.trap "Malformed array in mapFilter"
+          }
+        }
+      }
+    )
+  };
 
   /// Aggregate and transform values into a single output value, by increasing indices.
   public func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B {
@@ -301,20 +340,5 @@ module {
       xs[size - 1 - n];
     });
   };
-
-  // FIXME optimize, and add non var version
-  public func toText<X>(array : [var X], toText : X -> Text) : Text {
-    let count : Int = array.size();
-    var i = 0;
-    var text = "";
-    while (i < count - 1) {
-      text := text # toText(array[i]) # ", ";
-      i += 1;
-    };
-    if (count > 0) {
-      text := text # toText(array[i])
-    };
-
-    "[" # text # "]"
-  }
 }
+

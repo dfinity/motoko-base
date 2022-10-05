@@ -144,12 +144,28 @@ let suite = Suite.suite("Array", [
     M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
   ),
   Suite.test(
+    "filter empty",
+    do {
+      let isEven = func (x : Nat) : Bool { x % 2 == 0 };
+      Array.filter([] : [Nat], isEven);
+    },
+    M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
+  ),
+  Suite.test(
     "mapFilter",
     do {
       let isEven = func (x : Nat) : ?Nat { if (x % 2 == 0) ?x else null };
       Array.mapFilter([ 1, 2, 3, 4, 5, 6 ], isEven);
     },
     M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
+  ),
+  Suite.test(
+    "mapFilter empty",
+    do {
+      let isEven = func (x : Nat) : ?Nat { if (x % 2 == 0) ?x else null };
+      Array.mapFilter([] : [Nat], isEven);
+    },
+    M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
   ),
   findTest,
   Suite.test(
