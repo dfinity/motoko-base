@@ -178,7 +178,7 @@ module {
     // traps on OOB
     public func resize(size : Nat) {
       if (size < count) {
-        Prim.trap "Size is too small to hold all elements in Buffer after resizing"
+        Prim.trap "size must be >= current buffer size in resize"
       };
 
       let elems2 = Prim.Array_init<?X>(size, null);
@@ -206,7 +206,7 @@ module {
       let count2 = buffer2.size();
       // Make sure you only resize once
       if (count + count2 > elems.size()) {
-        // FIXME would be nice to have a tabulate for var arrays her
+        // FIXME would be nice to have a tabulate for var arrays here
         resize((count + count2) * UPSIZE_FACTOR);
       };
       var i = 0;
@@ -341,7 +341,7 @@ module {
                 };
               };
               case (_, _) { // only sorting non-null items
-                Prim.trap("Malformed buffer in sort()")
+                Prim.trap("Malformed buffer in sort")
               };
             };
             nextSorted += 1;
@@ -457,8 +457,6 @@ module {
   public func map<X, Y>(buffer : Buffer<X>, f : X -> Y) : Buffer<Y> {
     let newBuffer = Buffer<Y>(buffer.capacity());
     
-    // FIXME iteration is most likely faster with iterator
-    // Profile to find out
     for (element in buffer.vals()) {
       newBuffer.add(f element);
     };
@@ -924,7 +922,7 @@ module {
 
   public func chunk<X>(buffer : Buffer<X>, size : Nat) : Buffer<Buffer<X>> {
     if (size == 0) {
-      Prim.trap "Chunk size must be non-zero"
+      Prim.trap "Chunk size must be non-zero in chunk"
     };
 
     let newBuffer = Buffer<Buffer<X>>(Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(buffer.size()) / Prim.intToFloat(size)))));
@@ -1160,7 +1158,6 @@ module {
     newBuffer
   };
 
-  // FIXME error checks should be easy to understand, and top level if necessary
   public func first<X>(buffer : Buffer<X>) : X = buffer.get(0);
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
