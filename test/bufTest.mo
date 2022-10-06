@@ -139,7 +139,7 @@ run(suite("removeLast on empty buffer",
   test(
     "return value",
     buffer.removeLast(),
-    M.not_(M.isSome()),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "size",
@@ -203,7 +203,7 @@ run(suite("removeLast until empty",
   test(
     "return value",
     buffer.removeLast(),
-    M.not_(M.isSome()),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "size",
@@ -230,7 +230,7 @@ run(suite("remove on empty buffer",
   test(
     "return value",
     buffer.remove(0),
-    M.not_(M.isSome()),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "size",
@@ -314,7 +314,7 @@ run(suite("remove until empty",
   test(
     "return value",
     buffer.remove(0),
-    M.not_(M.isSome()),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "size",
@@ -344,7 +344,7 @@ run(suite("remove out of bounds",
   test(
     "return value",
     buffer.remove(10),
-    M.not_(M.isSome()),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "size",
@@ -452,11 +452,6 @@ run(suite("get and getOpt",
     buffer.get(2),
     M.equals(T.nat(2))
   ),
-  // test(
-  //   "get out of bounds",
-  //   buffer.get(6), // FIXME how to nicely test for traps?
-  //   M.equals(T.nat(0))
-  // ),
   test(
     "getOpt success",
     buffer.getOpt(0),
@@ -465,7 +460,7 @@ run(suite("get and getOpt",
   test(
     "getOpt out of bounds",
     buffer.getOpt(10),
-    M.not_(M.isSome()),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
 ]));
 
@@ -1261,11 +1256,6 @@ B.trimToSize(buffer);
 run(suite("trimToSize",
 [
   test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(7))
-  ),
-  test(
     "capacity",
     buffer.capacity(),
     M.equals(T.nat(7))
@@ -1284,11 +1274,6 @@ B.trimToSize(buffer);
 
 run(suite("trimToSize on empty",
 [
-  test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(0))
-  ),
   test(
     "capacity",
     buffer.capacity(),
@@ -1313,11 +1298,6 @@ buffer2 := B.map<Nat, Nat>(buffer, func x = x * 2);
 run(suite("map",
 [
   test(
-    "size",
-    buffer2.size(),
-    M.equals(T.nat(7))
-  ),
-  test(
     "capacity",
     buffer2.capacity(),
     M.equals(T.nat(12))
@@ -1336,11 +1316,6 @@ buffer2 := B.map<Nat, Nat>(buffer, func x = x * 2);
 
 run(suite("map empty",
 [
-  test(
-    "size",
-    buffer2.size(),
-    M.equals(T.nat(0))
-  ),
   test(
     "capacity",
     buffer2.capacity(),
@@ -1372,11 +1347,6 @@ run(suite("iterate",
     M.equals(T.nat(21))
   ),
   test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(7))
-  ),
-  test(
     "capacity",
     buffer.capacity(),
     M.equals(T.nat(12))
@@ -1395,16 +1365,10 @@ for (i in Iter.range(0, 6)) {
   buffer.add(i);
 };
 
-// FIXME Why does B.make need to be wrapped?
-buffer2 := B.chain<Nat, Nat>(buffer, func x = B.make<Nat>(x));
+buffer2 := B.chain<Nat, Nat>(buffer, func x = B.make<Nat> x);
 
 run(suite("chain",
 [
-  test(
-    "size",
-    buffer2.size(),
-    M.equals(T.nat(buffer.size()))
-  ),
   test(
     "elements",
     B.toArray(buffer2),
@@ -1423,11 +1387,6 @@ buffer2 := B.mapFilter<Nat, Nat>(buffer, func x = if (x % 2 == 0) { ?x } else { 
 
 run(suite("mapFilter",
 [
-  test(
-    "size",
-    buffer2.size(),
-    M.equals(T.nat(4))
-  ),
   test(
     "capacity",
     buffer2.capacity(),
@@ -1451,11 +1410,6 @@ buffer2 := B.mapEntries<Nat, Nat>(buffer, func (i, x) = i * x);
 
 run(suite("mapEntries",
 [
-  test(
-    "size",
-    buffer2.size(),
-    M.equals(T.nat(7))
-  ),
   test(
     "capacity",
     buffer2.capacity(),
@@ -1557,8 +1511,6 @@ for (i in Iter.range(0, 6)) {
   buffer.add(i);
 };
 
-// FIXME unnecessary reinitialization of buffer
-
 run(suite("forAll",
 [
   test(
@@ -1624,11 +1576,6 @@ buffer := B.make<Nat>(1);
 
 run(suite("make",
 [
-  test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(1))
-  ),
   test(
     "capacity",
     buffer.capacity(),
@@ -1947,11 +1894,6 @@ buffer := B.flatten<Nat>(nestedBuffer);
 run(suite("flatten",
 [
   test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(23))
-  ),
-  test(
     "capacity",
     buffer.capacity(),
     M.equals(T.nat(60))
@@ -1975,11 +1917,6 @@ buffer := B.flatten<Nat>(nestedBuffer);
 run(suite("flatten all empty inner buffers",
 [
   test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(0))
-  ),
-  test(
     "capacity",
     buffer.capacity(),
     M.equals(T.nat(10))
@@ -1998,11 +1935,6 @@ buffer := B.flatten<Nat>(nestedBuffer);
 
 run(suite("flatten empty outer buffer",
 [
-  test( //FIXME size unnecessary after testing size and toArray?
-    "size",
-    buffer.size(),
-    M.equals(T.nat(0))
-  ),
   test(
     "capacity",
     buffer.capacity(),
@@ -2064,7 +1996,7 @@ run(suite("reverse",
 
 /* --------------------------------------- */
 
-buffer.clear(); // FIXME use clear after clear is tested?
+buffer.clear();
 for (i in Iter.range(0, 5)) {
   buffer.add(i)
 };
@@ -2117,7 +2049,6 @@ for (i in Iter.range(13, 15)) {
 };
 
 buffer := B.merge<Nat>(buffer, buffer2, Nat.compare);
-// FIXME fix or surpress warnings in test
 
 run(suite("merge",
 [
@@ -3261,7 +3192,7 @@ run(suite("binarySearch",
   test(
     "not found to the right",
     B.binarySearch<Nat>(buffer, 10, Nat.compare),
-    M.equals(T.optional(T.natTestable, null : ?Nat)) // FIXME this is how you test for null
+    M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "not found to the left",
