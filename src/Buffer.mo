@@ -13,6 +13,8 @@
 /// determined at construction and cannot be changed).
 
 import Prim "mo:⛔";
+import Nat "Nat";
+import Iter "Iter";
 
 module {
 
@@ -45,6 +47,37 @@ module {
       };
       elems[count] := elem;
       count += 1;
+    };
+
+    /// Adds all elements in the given array to this buffer.
+    public func addArray(arr : [X]) {
+      if (count + arr.size() >= elems.size()){
+        let size = if (count == 0) {
+          Nat.max(initCapacity, arr.size())
+        } else {
+          Nat.max(2 * elems.size(), count + arr.size())
+        };
+        
+        let rng = Iter.range(0, size - 1);
+        let elemIter = Iter.map<Nat, X>(rng, func(i: Nat){
+          if (i < count) {
+            elems[i]
+          } else if (i < arr.size() + count) {
+            arr[i - count]
+          }else{
+            arr[0]
+          }
+        });
+
+        elems:= Iter.toArrayMut<X>(elemIter);
+        count += arr.size();
+      }else{
+        for (item in arr.vals()){
+          elems[count] := item;
+          count+=1;
+        };
+      };
+      
     };
 
     /// Removes the item that was inserted last and returns it or `null` if no
