@@ -369,9 +369,9 @@ for (i in Iter.range(0, 5)) {
   buffer.add(i);
 };
 
-buffer.filter(func(_, x) = x % 2 == 0);
+buffer.filterEntries(func(_, x) = x % 2 == 0);
 
-run(suite("filter",
+run(suite("filterEntries",
 [
   test(
     "size",
@@ -392,9 +392,9 @@ run(suite("filter",
 
 /* --------------------------------------- */
 buffer := B.Buffer<Nat>(1);
-buffer.filter(func(_, x) = x % 2 == 0);
+buffer.filterEntries(func(_, x) = x % 2 == 0);
 
-run(suite("filter on empty",
+run(suite("filterEntries on empty",
 [
   test(
     "size",
@@ -418,9 +418,9 @@ buffer := B.Buffer<Nat>(12);
 for (i in Iter.range(0, 5)) {
   buffer.add(i);
 };
-buffer.filter(func(i, x) = i + x == 2);
+buffer.filterEntries(func(i, x) = i + x == 2);
 
-run(suite("filter size down",
+run(suite("filterEntries size down",
 [
   test(
     "size",
@@ -2495,6 +2495,29 @@ run(suite("chunk empty",
 /* --------------------------------------- */
 buffer.clear();
 
+for (i in Iter.range(0, 4)) {
+  buffer.add(i)
+};
+
+chunks := B.chunk<Nat>(buffer, 10);
+
+run(suite("chunk larger than buffer",
+[
+  test(
+    "num chunks",
+    chunks.size(),
+    M.equals(T.nat(1))
+  ),
+  test(
+    "chunk 0 elements",
+    B.toArray(chunks.get(0)),
+    M.equals(T.array(T.natTestable, [0, 1, 2, 3, 4]))
+  ),
+]));
+
+/* --------------------------------------- */
+buffer.clear();
+
 buffer.add(2);
 buffer.add(2);
 buffer.add(2);
@@ -3176,27 +3199,27 @@ run(suite("binarySearch",
 [
   test(
     "find in middle",
-    B.binarySearch<Nat>(buffer, 2, Nat.compare),
+    B.binarySearch<Nat>(2, buffer, Nat.compare),
     M.equals(T.optional(T.natTestable, ?1))
   ),
   test(
     "find first",
-    B.binarySearch<Nat>(buffer, 1, Nat.compare),
+    B.binarySearch<Nat>(1, buffer, Nat.compare),
     M.equals(T.optional(T.natTestable, ?0))
   ),
   test(
     "find last",
-    B.binarySearch<Nat>(buffer, 6, Nat.compare),
+    B.binarySearch<Nat>(6, buffer, Nat.compare),
     M.equals(T.optional(T.natTestable, ?5))
   ),
   test(
     "not found to the right",
-    B.binarySearch<Nat>(buffer, 10, Nat.compare),
+    B.binarySearch<Nat>(10, buffer, Nat.compare),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "not found to the left",
-    B.binarySearch<Nat>(buffer, 0, Nat.compare),
+    B.binarySearch<Nat>(0, buffer, Nat.compare),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
 ]));
@@ -3212,27 +3235,27 @@ run(suite("indexOf",
 [
   test(
     "find in middle",
-    B.indexOf<Nat>(buffer, 2, Nat.equal),
+    B.indexOf<Nat>(2, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?2))
   ),
   test(
     "find first",
-    B.indexOf<Nat>(buffer, 0, Nat.equal),
+    B.indexOf<Nat>(0, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?0))
   ),
   test(
     "find last",
-    B.indexOf<Nat>(buffer, 6, Nat.equal),
+    B.indexOf<Nat>(6, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?6))
   ),
   test(
     "not found",
-    B.indexOf<Nat>(buffer, 10, Nat.equal),
+    B.indexOf<Nat>(10, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "empty",
-    B.indexOf<Nat>(B.Buffer<Nat>(3), 100, Nat.equal),
+    B.indexOf<Nat>(100, B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
 ]));
@@ -3254,27 +3277,27 @@ run(suite("lastIndexOf",
 [
   test(
     "find in middle",
-    B.lastIndexOf<Nat>(buffer, 10, Nat.equal),
+    B.lastIndexOf<Nat>(10, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?6))
   ),
   test(
     "find only",
-    B.lastIndexOf<Nat>(buffer, 3, Nat.equal),
+    B.lastIndexOf<Nat>(3, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?7))
   ),
   test(
     "find last",
-    B.lastIndexOf<Nat>(buffer, 0, Nat.equal),
+    B.lastIndexOf<Nat>(0, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?8))
   ),
   test(
     "not found",
-    B.lastIndexOf<Nat>(buffer, 100, Nat.equal),
+    B.lastIndexOf<Nat>(100, buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "empty",
-    B.lastIndexOf<Nat>(B.Buffer<Nat>(3), 100, Nat.equal),
+    B.lastIndexOf<Nat>(100, B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
 ]));
@@ -3295,32 +3318,32 @@ run(suite("indexOfBuffer",
 [
   test(
     "find in middle",
-    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([1, 10, 1]), Nat.equal),
+    B.indexOfBuffer<Nat>(B.fromArray<Nat>([1, 10, 1]), buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?2))
   ),
   test(
     "find first",
-    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([2, 2, 1, 10]), Nat.equal),
+    B.indexOfBuffer<Nat>(B.fromArray<Nat>([2, 2, 1, 10]), buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?0))
   ),
   test(
     "find last",
-    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([0]), Nat.equal),
+    B.indexOfBuffer<Nat>(B.fromArray<Nat>([0]), buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, ?7))
   ),
   test(
     "not found",
-    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([99, 100, 1]), Nat.equal),
+    B.indexOfBuffer<Nat>(B.fromArray<Nat>([99, 100, 1]), buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "search for empty buffer",
-    B.indexOfBuffer<Nat>(buffer, B.fromArray<Nat>([]), Nat.equal),
+    B.indexOfBuffer<Nat>(B.fromArray<Nat>([]), buffer, Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
     "search through empty buffer",
-    B.indexOfBuffer<Nat>(B.Buffer<Nat>(2), B.fromArray<Nat>([1, 2, 3]), Nat.equal),
+    B.indexOfBuffer<Nat>(B.fromArray<Nat>([1, 2, 3]), B.Buffer<Nat>(2), Nat.equal),
     M.equals(T.optional(T.natTestable, null : ?Nat))
   ),
   test(
