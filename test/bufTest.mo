@@ -97,7 +97,7 @@ run(suite("add with resize",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(4))
+    M.equals(T.nat(5))
   ),
   test(
     "elements",
@@ -122,7 +122,7 @@ run(suite("add with resize, initial capacity 0",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(4))
+    M.equals(T.nat(5))
   ),
   test(
     "elements",
@@ -213,7 +213,7 @@ run(suite("removeLast until empty",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(3))
+    M.equals(T.nat(2))
   ),
   test(
     "elements",
@@ -566,7 +566,7 @@ run(suite("append",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(24))
+    M.equals(T.nat(18))
   ),
   test(
     "elements",
@@ -737,68 +737,12 @@ run(suite("insert with resize",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(9))
   ),
   test(
     "elements",
     B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 30, 3, 4, 5]))
-  ),
-]));
-
-/* --------------------------------------- */
-buffer := B.Buffer<Nat>(6);
-
-for (i in Iter.range(0, 5)) {
-  buffer.add(i);
-};
-
-buffer.insert(6, 60);
-
-run(suite("insert at back",
-[
-  test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(7))
-  ),
-  test(
-    "capacity",
-    buffer.capacity(),
-    M.equals(T.nat(12))
-  ),
-  test(
-    "elements",
-    B.toArray(buffer),
-    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5, 60]))
-  ),
-]));
-
-/* --------------------------------------- */
-buffer := B.Buffer<Nat>(6);
-
-for (i in Iter.range(0, 5)) {
-  buffer.add(i);
-};
-
-buffer.insert(0, 10);
-
-run(suite("insert at front",
-[
-  test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(7))
-  ),
-  test(
-    "capacity",
-    buffer.capacity(),
-    M.equals(T.nat(12))
-  ),
-  test(
-    "elements",
-    B.toArray(buffer),
-    M.equals(T.array<Nat>(T.natTestable, [10, 0, 1, 2, 3, 4, 5]))
   ),
 ]));
 
@@ -977,7 +921,7 @@ run(suite("insertBuffer with resize",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(24))
+    M.equals(T.nat(18))
   ),
   test(
     "elements",
@@ -1011,7 +955,7 @@ run(suite("insertBuffer at start with resize",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(24))
+    M.equals(T.nat(18))
   ),
   test(
     "elements",
@@ -1045,7 +989,7 @@ run(suite("insertBuffer at end with resize",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(24))
+    M.equals(T.nat(18))
   ),
   test(
     "elements",
@@ -1105,7 +1049,7 @@ run(suite("insertBuffer to empty buffer with resize",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(9))
   ),
   test(
     "elements",
@@ -1300,7 +1244,7 @@ run(suite("map",
   test(
     "capacity",
     buffer2.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(8))
   ),
   test(
     "elements",
@@ -1349,7 +1293,7 @@ run(suite("iterate",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(8))
   ),
   test(
     "elements",
@@ -1390,7 +1334,7 @@ run(suite("mapFilter",
   test(
     "capacity",
     buffer2.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(8))
   ),
   test(
     "elements",
@@ -1413,7 +1357,7 @@ run(suite("mapEntries",
   test(
     "capacity",
     buffer2.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(8))
   ),
   test(
     "elements",
@@ -1644,7 +1588,7 @@ run(suite("max",
   test(
     "return value",
     B.max<Nat>(buffer, Nat.compare),
-    M.equals(T.nat(10))
+    M.equals(T.optional(T.natTestable, ?10))
   )
 ]));
 
@@ -1665,7 +1609,7 @@ run(suite("min",
   test(
     "return value",
     B.min<Nat>(buffer, Nat.compare),
-    M.equals(T.nat(0))
+    M.equals(T.optional(T.natTestable, ?0))
   )
 ]));
 
@@ -1896,7 +1840,7 @@ run(suite("flatten",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(60))
+    M.equals(T.nat(45))
   ),
   test(
     "elements",
@@ -1919,7 +1863,7 @@ run(suite("flatten all empty inner buffers",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(10))
+    M.equals(T.nat(8))
   ),
   test(
     "elements",
@@ -2055,7 +1999,7 @@ run(suite("merge",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(30))
+    M.equals(T.nat(23))
   ),
   test(
     "elements",
@@ -2080,7 +2024,7 @@ run(suite("merge with empty",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(8))
+    M.equals(T.nat(6))
   ),
   test(
     "elements",
@@ -2101,7 +2045,7 @@ run(suite("merge two empty",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(0))
+    M.equals(T.nat(1))
   ),
   test(
     "elements",
@@ -2216,7 +2160,7 @@ run(suite("split",
   test(
     "capacity prefix",
     buffer2.capacity(),
-    M.equals(T.nat(4))
+    M.equals(T.nat(3))
   ),
   test(
     "elements prefix",
@@ -2226,7 +2170,7 @@ run(suite("split",
   test(
     "capacity suffix",
     buffer3.capacity(),
-    M.equals(T.nat(8))
+    M.equals(T.nat(6))
   ),
   test(
     "elements suffix",
@@ -2251,7 +2195,7 @@ run(suite("split at index 0",
   test(
     "capacity prefix",
     buffer2.capacity(),
-    M.equals(T.nat(2))
+    M.equals(T.nat(1))
   ),
   test(
     "elements prefix",
@@ -2261,7 +2205,7 @@ run(suite("split at index 0",
   test(
     "capacity suffix",
     buffer3.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(9))
   ),
   test(
     "elements suffix",
@@ -2286,7 +2230,7 @@ run(suite("split at last index",
   test(
     "capacity prefix",
     buffer2.capacity(),
-    M.equals(T.nat(12))
+    M.equals(T.nat(9))
   ),
   test(
     "elements prefix",
@@ -2296,7 +2240,7 @@ run(suite("split at last index",
   test(
     "capacity suffix",
     buffer3.capacity(),
-    M.equals(T.nat(2))
+    M.equals(T.nat(1))
   ),
   test(
     "elements suffix",
@@ -2323,7 +2267,7 @@ run(suite("zip",
   test(
     "capacity",
     bufferPairs.capacity(),
-    M.equals(T.nat(8))
+    M.equals(T.nat(6))
   ),
   test(
     "elements",
@@ -2348,7 +2292,7 @@ run(suite("zip empty",
   test(
     "capacity",
     bufferPairs.capacity(),
-    M.equals(T.nat(2))
+    M.equals(T.nat(1))
   ),
   test(
     "elements",
@@ -2369,7 +2313,7 @@ run(suite("zip both empty",
   test(
     "capacity",
     bufferPairs.capacity(),
-    M.equals(T.nat(2))
+    M.equals(T.nat(1))
   ),
   test(
     "elements",
@@ -2397,7 +2341,7 @@ run(suite("zipWith",
   test(
     "capacity",
     buffer3.capacity(),
-    M.equals(T.nat(8))
+    M.equals(T.nat(6))
   ),
   test(
     "elements",
@@ -2421,7 +2365,7 @@ run(suite("zipWithEmpty",
   test(
     "capacity",
     buffer3.capacity(),
-    M.equals(T.nat(2))
+    M.equals(T.nat(1))
   ),
   test(
     "elements",
@@ -2449,7 +2393,7 @@ run(suite("chunk",
   test(
     "chunk 0 capacity",
     chunks.get(0).capacity(),
-    M.equals(T.nat(4))
+    M.equals(T.nat(3))
   ),
   test(
     "chunk 0 elements",
@@ -2459,7 +2403,7 @@ run(suite("chunk",
   test(
     "chunk 2 capacity",
     chunks.get(2).capacity(),
-    M.equals(T.nat(4))
+    M.equals(T.nat(3))
   ),
   test(
     "chunk 2 elements",
@@ -2469,7 +2413,7 @@ run(suite("chunk",
   test(
     "chunk 4 capacity",
     chunks.get(4).capacity(),
-    M.equals(T.nat(4))
+    M.equals(T.nat(3))
   ),
   test(
     "chunk 4 elements",
@@ -2620,7 +2564,7 @@ run(suite("prefix",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(6))
+    M.equals(T.nat(5))
   ),
   test(
     "elements",
@@ -2639,7 +2583,7 @@ run(suite("prefix of empty",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(2))
+    M.equals(T.nat(1))
   ),
   test(
     "elements",
@@ -2662,7 +2606,7 @@ run(suite("trivial prefix",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(10))
+    M.equals(T.nat(8))
   ),
   test(
     "elements",
@@ -2801,7 +2745,7 @@ run(suite("infix",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(6))
+    M.equals(T.nat(5))
   ),
   test(
     "elements",
@@ -2992,7 +2936,7 @@ run(suite("suffix",
   test(
     "capacity",
     buffer.capacity(),
-    M.equals(T.nat(6))
+    M.equals(T.nat(5))
   ),
   test(
     "elements",

@@ -16,7 +16,7 @@
 /// exceeded. Further, when the size of the buffer shrinks to be less than 1/4th
 /// of the capacity the underyling array is shrunk by a factor of 2.
 ///
-/// Runtime: O(initCapcity)
+/// Runtime: O(initCapacity)
 ///
 /// Space: O(initCapacity)
 
@@ -28,13 +28,22 @@ import Array "Array";
 module {
   type Order = Order.Order;
 
-  private let UPSIZE_FACTOR = 2;
+  private let UPSIZE_FACTOR = 1.5; // Keep this factor low to minimize cycle limit problem with resize
   private let DOWNSIZE_THRESHOLD = 4; // Don't downsize too early to avoid thrashing
   private let DOWNSIZE_FACTOR = 2;
+  private let DEFAULT_CAPACITY = 8;
+
+  private func newUpsize(oldSize : Nat) : Nat {
+    if (oldSize == 0) {
+      1
+    } else {
+      Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(oldSize) * UPSIZE_FACTOR)))
+    }
+  };
 
   public class Buffer<X>(initCapacity : Nat) = this {
     var count : Nat = 0;
-    var elems : [var ?X] = Prim.Array_init(initCapacity, null);
+    var elements : [var ?X] = Prim.Array_init(initCapacity, null);
 
     /// Returns the current number of elements in the buffer.
     ///
@@ -50,11 +59,11 @@ module {
     ///
     /// Amortized Space: O(1), Worst Case Space: O(size)
     public func add(elem : X) {
-      if (count == elems.size()) {
-        let elemsSize = elems.size();
-        resize(if (elemsSize == 0) { 1 } else { elemsSize * UPSIZE_FACTOR } );
+      if (count == elements.size()) {
+        let elementsSize = elements.size();
+        resize(newUpsize elementsSize);
       };
-      elems[count] := ?elem;
+      elements[count] := ?elem;
       count += 1;
     };
 
@@ -70,11 +79,11 @@ module {
       };
 
       count -= 1;
-      let lastElement = elems[count];
-      elems[count] := null;
+      let lastElement = elements[count];
+      elements[count] := null;
 
-      if (count < elems.size() / DOWNSIZE_THRESHOLD) {
-        resize(elems.size() / DOWNSIZE_FACTOR)
+      if (count < elements.size() / DOWNSIZE_THRESHOLD) {
+        resize(elements.size() / DOWNSIZE_FACTOR)
       };
 
       lastElement
@@ -92,11 +101,11 @@ module {
         return null;
       };
 
-      let element = elems[index];
+      let element = elements[index];
 
       // resize down and shift over in one pass
-      if ((count - 1) : Nat < elems.size() / DOWNSIZE_THRESHOLD) { 
-        let elems2 = Prim.Array_init<?X>(elems.size() / DOWNSIZE_FACTOR, null);
+      if ((count - 1) : Nat < elements.size() / DOWNSIZE_THRESHOLD) { 
+        let elements2 = Prim.Array_init<?X>(elements.size() / DOWNSIZE_FACTOR, null);
 
         var i = 0;
         var j = 0;
@@ -106,18 +115,18 @@ module {
             continue l;
           };
 
-          elems2[j] := elems[i];
+          elements2[j] := elements[i];
           i += 1;
           j += 1;
         };
-        elems := elems2;
+        elements := elements2;
       } else { // just shift over elements
         var i = index;
         while (i < (count - 1 : Nat)) {
-          elems[i] := elems[i + 1];
+          elements[i] := elements[i + 1];
           i += 1;
         };
-        elems[count] := null;
+        elements[count] := null;
       };
 
       count -= 1;
@@ -137,7 +146,7 @@ module {
         Prim.Array_tabulate<Bool>(
           count,
           func i {
-            switch (elems[i]) {
+            switch (elements[i]) {
               case (?element) {
                 if (predicate(i, element)) {
                   true
@@ -153,18 +162,18 @@ module {
           }
         );
       
-      let elemsSize = elems.size();
+      let elementsSize = elements.size();
 
-      var original = elems;
-      if ((count - removeCount : Nat) < elemsSize / DOWNSIZE_THRESHOLD) {
-        elems := Prim.Array_init<?X>(elemsSize / DOWNSIZE_FACTOR, null);
+      var original = elements;
+      if ((count - removeCount : Nat) < elementsSize / DOWNSIZE_THRESHOLD) {
+        elements := Prim.Array_init<?X>(elementsSize / DOWNSIZE_FACTOR, null);
       };
 
       var i = 0;
       var j = 0;
       while (i < count) {
         if (keep[i]) {
-          elems[j] := original[i];
+          elements[j] := original[i];
           i += 1;
           j += 1;
         } else {
@@ -181,7 +190,7 @@ module {
     ///
     /// Space: O(1)
     public func get(i : Nat) : X {
-      switch (elems[i]) {
+      switch (elements[i]) {
         case (?element) element;
         case null Prim.trap("Buffer index out of bounds in get");
       }
@@ -194,7 +203,7 @@ module {
     /// Space: O(1)
     public func getOpt(i : Nat) : ?X {
       if (i < count) {
-        elems[i]
+        elements[i]
       } else {
         null
       }
@@ -210,7 +219,7 @@ module {
       if (i >= count) {
         Prim.trap "Buffer index out of bounds in put";
       };
-      elems[i] := ?elem;
+      elements[i] := ?elem;
     };
 
     /// Returns the size of the underlying array.
@@ -218,7 +227,7 @@ module {
     /// Runtime: O(1)
     ///
     /// Space: O(1)
-    public func capacity() : Nat = elems.size();
+    public func capacity() : Nat = elements.size();
 
     /// Resizes the underyling array to `size`. Traps if `size` is less than
     /// the current size of the buffer.
@@ -231,24 +240,14 @@ module {
         Prim.trap "size must be >= current buffer size in resize"
       };
 
-      let elems2 = Prim.Array_init<?X>(size, null);
+      let elements2 = Prim.Array_init<?X>(size, null);
 
       var i = 0;
-      if (elems.size() <= size) {
-        label iter for (element in elems.vals()) {
-          if (i >= count) {
-            break iter;
-          };
-          elems2[i] := element;
-          i += 1;
-        }
-      } else {
-        while (i < count) {
-          elems2[i] := elems[i];
-          i += 1;
-        };
+      while (i < count) {
+        elements2[i] := elements[i];
+        i += 1;
       };
-      elems := elems2;
+      elements := elements2;
     };
 
     /// Adds all elements in buffer `b` to this buffer.
@@ -259,13 +258,13 @@ module {
     public func append(buffer2 : Buffer<X>) {
       let count2 = buffer2.size();
       // Make sure you only resize once
-      if (count + count2 > elems.size()) {
+      if (count + count2 > elements.size()) {
         // FIXME would be nice to have a tabulate for var arrays here
-        resize((count + count2) * UPSIZE_FACTOR);
+        resize(newUpsize(count + count2)); 
       };
       var i = 0;
       while (i < count2) {
-        elems[count + i] := buffer2.getOpt i;
+        elements[count + i] := buffer2.getOpt i;
         i += 1;
       };
 
@@ -282,35 +281,31 @@ module {
       if (index > count) {
         Prim.trap "Buffer index out of bounds in insert"
       };
-      let elemsSize = elems.size();
+      let elementsSize = elements.size();
 
-      if (count + 1 > elemsSize) {
-        let elemsSize = elems.size();
-        let elems2 = 
-          Prim.Array_init<?X>(
-            if (elemsSize == 0) { 1 } else { elemsSize * UPSIZE_FACTOR },
-            null
-          );
+      if (count + 1 > elementsSize) {
+        let elementsSize = elements.size();
+        let elements2 = Prim.Array_init<?X>(newUpsize elementsSize, null);
         var i = 0;
         while (i < count + 1) {
           if (i < index) {
-            elems2[i] := elems[i];
+            elements2[i] := elements[i];
           } else if (i == index) {
-            elems2[i] := ?element;
+            elements2[i] := ?element;
           } else {
-            elems2[i] := elems[i - 1];
+            elements2[i] := elements[i - 1];
           };
           
           i += 1;
         };
-        elems := elems2;
+        elements := elements2;
       } else {
         var i : Nat = count;
         while (i > index) {
-          elems[i] := elems[i - 1];
+          elements[i] := elements[i - 1];
           i -= 1;
         };
-        elems[index] := ?element;
+        elements[index] := ?element;
       };
 
       count += 1;
@@ -328,35 +323,35 @@ module {
       };
 
       let count2 = buffer2.size();
-      let elemsSize = elems.size();
+      let elementsSize = elements.size();
 
       // resize and insert in one go
-      if (count + count2 > elemsSize) {
-        let elems2 = Prim.Array_init<?X>((count + count2) * UPSIZE_FACTOR, null);
+      if (count + count2 > elementsSize) {
+        let elements2 = Prim.Array_init<?X>(newUpsize(count + count2), null);
         var i = 0;
-        for (element in elems.vals()) {
+        for (element in elements.vals()) {
           if (i == index) {
             i += count2;
           };
-          elems2[i] := element;
+          elements2[i] := element;
           i += 1;
         };
 
         i := 0;
         while (i < count2) {
-          elems2[i + index] := buffer2.getOpt(i);
+          elements2[i + index] := buffer2.getOpt(i);
           i += 1;
         };
-        elems := elems2;
+        elements := elements2;
       } 
       // just insert
       else {
         var i = index;
         while (i < index + count2) {
           if (i < count) {
-            elems[i + count2] := elems[i];
+            elements[i + count2] := elements[i];
           };
-          elems[i] := buffer2.getOpt(i - index);
+          elements[i] := buffer2.getOpt(i - index);
 
           i += 1;
         }
@@ -372,7 +367,7 @@ module {
     /// Space: O(1)
     public func clear() {
       count := 0;
-      resize(8); 
+      resize(DEFAULT_CAPACITY); 
     };
  
     /// Sorts the elements in the buffer according to `compare`.
@@ -389,20 +384,21 @@ module {
       let scratchSpace = Prim.Array_init<?X>(count, null);
 
       let countDec = count - 1 : Nat;
-      var curr_size = 1;
-      while (curr_size < count) {
-        var left_start = 0;
-        while (left_start < countDec) {
-          let mid : Nat = if (left_start + curr_size - 1 : Nat < countDec) { left_start + curr_size - 1 } else { countDec };
-          let right_end : Nat = if (left_start + (2 * curr_size) - 1 : Nat < countDec) { left_start + (2 * curr_size) - 1 } else { countDec };
+      var currSize = 1; // current size of the subarrays being merged
+      // when the current size == count, the array has been merged into a single sorted array
+      while (currSize < count) {
+        var leftStart = 0; // selects the current left subarray being merged
+        while (leftStart < countDec) {
+          let mid : Nat = if (leftStart + currSize - 1 : Nat < countDec) { leftStart + currSize - 1 } else { countDec };
+          let rightEnd : Nat = if (leftStart + (2 * currSize) - 1 : Nat < countDec) { leftStart + (2 * currSize) - 1 } else { countDec };
     
-          // Merge subarrays elems[left_start...mid] and elems[mid+1...right_end]
-          var left = left_start;
+          // Merge subarrays elements[leftStart...mid] and elements[mid+1...rightEnd]
+          var left = leftStart;
           var right = mid + 1;
-          var nextSorted = left_start;
-          while (left < mid + 1 and right < right_end + 1) {
-            let leftOpt = elems[left];
-            let rightOpt = elems[right];
+          var nextSorted = leftStart;
+          while (left < mid + 1 and right < rightEnd + 1) {
+            let leftOpt = elements[left];
+            let rightOpt = elements[right];
             switch (leftOpt, rightOpt) {
               case(?leftElement, ?rightElement) {
                 switch(compare(leftElement, rightElement)) {
@@ -423,26 +419,26 @@ module {
             nextSorted += 1;
           };
           while (left < mid + 1) {
-            scratchSpace[nextSorted] := elems[left];
+            scratchSpace[nextSorted] := elements[left];
             nextSorted += 1;
             left += 1;
           };
-          while (right < right_end + 1) {
-            scratchSpace[nextSorted] := elems[right];
+          while (right < rightEnd + 1) {
+            scratchSpace[nextSorted] := elements[right];
             nextSorted += 1;
             right += 1;
           };
 
           // Copy over merged elements
-          var i = left_start;
-          while (i < right_end + 1) {
-            elems[i] := scratchSpace[i];
+          var i = leftStart;
+          while (i < rightEnd + 1) {
+            elements[i] := scratchSpace[i];
             i += 1;
           };
 
-          left_start += 2 * curr_size;
+          leftStart += 2 * currSize;
         };
-        curr_size *= 2;
+        currSize *= 2;
       }
     };
 
@@ -454,12 +450,16 @@ module {
     ///
     /// Space: O(1)
     public func vals() : { next : () -> ?X } = object {
-      let arrayIterator = elems.vals();
+      // FIXME either handle modification to underlying list
+      // or explicitly warn users in documentation
+      var nextIndex = 0;
       public func next() : ?X {
-        switch(arrayIterator.next()) {
-          case null null;
-          case (?element) element;
-        }
+        if (nextIndex >= count) {
+          return null
+        }; 
+        let nextElement = elements[nextIndex];
+        nextIndex += 1;
+        nextElement
       }
     };
 
@@ -467,7 +467,7 @@ module {
 
     /// @deprecated Use static library function instead.
     public func clone() : Buffer<X> {
-      let newBuffer = Buffer<X>(elems.size());
+      let newBuffer = Buffer<X>(elements.size());
       for (element in vals()) {
         newBuffer.add(element)
       };
@@ -535,8 +535,8 @@ module {
     } else {
       let newArray = Prim.Array_init<X>(count, buffer.get(0));
       var i = 0;
-      for (element in buffer.vals()) {
-        newArray[i] := element;
+      while (i < count) {
+        newArray[i] := buffer.get(i);
         i += 1;
       };
       newArray
@@ -549,7 +549,14 @@ module {
   ///
   /// Space: O(size)
   public func fromArray<X>(array : [X]) : Buffer<X> {
-    let newBuffer = Buffer<X>(array.size() * UPSIZE_FACTOR);
+    // When returning new buffer, if possible, set the capacity
+    // to the capacity of the old buffer. Otherwise, return them 
+    // at 2/3 capacity (like in this case). Alternative is to 
+    // calculate what the size would be if the elements were
+    // sequentially added using `add`. This current strategy (2/3)
+    // is the upper bound of that calculation (if the last element
+    // added caused a resize).
+    let newBuffer = Buffer<X>(newUpsize(array.size()));
 
     for (element in array.vals()) {
       newBuffer.add(element);
@@ -564,7 +571,7 @@ module {
   ///
   /// Space: O(size)
   public func fromVarArray<X>(array : [var X]) : Buffer<X> {
-    let newBuffer = Buffer<X>(array.size() * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(newUpsize(array.size()));
 
     for (element in array.vals()) {
       newBuffer.add(element);
@@ -579,7 +586,7 @@ module {
   ///
   /// Space: O(size)
   public func fromIter<X>(iter : { next : () -> ?X }) : Buffer<X> {
-    let newBuffer = Buffer<X>(8);
+    let newBuffer = Buffer<X>(DEFAULT_CAPACITY); // can't get size from `iter`
 
     for (element in iter) {
       newBuffer.add(element);
@@ -641,8 +648,9 @@ module {
     let newBuffer = Buffer<Y>(buffer.capacity());
     
     var i = 0;
-    for (element in buffer.vals()) {
-      newBuffer.add(f(i, element));
+    let count = buffer.size();
+    while (i < count) {
+      newBuffer.add(f(i, buffer.get(i)));
       i += 1;
     };
 
@@ -682,7 +690,7 @@ module {
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapResult<X, Y, E>(buffer : Buffer<X>, f : X -> Result.Result<Y, E>) : Result.Result<Buffer<Y>, E> {
-    let newBuffer = Buffer<Y>(buffer.size());
+    let newBuffer = Buffer<Y>(buffer.capacity());
     
     for (element in buffer.vals()) {
       switch(f element) {
@@ -747,12 +755,15 @@ module {
   /// *Runtime and space assumes that `combine` runs in O(1) time and space.
   public func foldRight<X, A>(buffer : Buffer<X>, base : A, combine : (X, A) -> A) : A {
     let count = buffer.size();
+    if (count == 0) {
+      return base;
+    };
     var accumulation = base;
     
-    var i = 0;
-    while (i < count) {
-      accumulation := combine(buffer.get(count - i - 1), accumulation);
-      i += 1;
+    var i = count;
+    while (i >= 1) {
+      i -= 1; // to avoid Nat underflow, subtract first and stop iteration at 1
+      accumulation := combine(buffer.get(i), accumulation);
     };
 
     accumulation
@@ -821,16 +832,16 @@ module {
   };
 
   /// Returns true iff `buffer` contains `element` with respect to equality
-  /// defined by `equals`.
+  /// defined by `equal`.
   ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
   ///
-  /// *Runtime and space assumes that `equals` runs in O(1) time and space.
-  public func contains<X>(buffer : Buffer<X>, element : X, equals : (X, X) -> Bool) : Bool {
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func contains<X>(buffer : Buffer<X>, element : X, equal : (X, X) -> Bool) : Bool {
     for (current in buffer.vals()) {
-      if (equals(current, element)) {
+      if (equal(current, element)) {
         return true;
       };
     };
@@ -839,16 +850,16 @@ module {
   };
 
   /// Finds the greatest element in `buffer` defined by `compare`.
-  /// Traps if `buffer` is empty.
+  /// Returns `null` if `buffer` is empty.
   ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
   ///
   /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func max<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : X {
+  public func max<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : ?X {
     if (buffer.size() == 0) {
-      Prim.trap "Cannot call max on an empty buffer"
+      return null;
     };
 
     var maxSoFar = buffer.get(0);
@@ -861,20 +872,20 @@ module {
       };
     };
 
-    maxSoFar
+    ?maxSoFar
   };
 
   /// Finds the least element in `buffer` defined by `compare`. 
-  /// Traps if `buffer` is empty.
+  /// Returns `null` if `buffer` is empty.
   ///
   /// Runtime: O(1)
   ///
   /// Space: O(1)
   ///
   /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func min<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : X {
+  public func min<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : ?X {
     if (buffer.size() == 0) {
-      Prim.trap "Cannot call min on an empty buffer"
+      return null;
     };
 
     var minSoFar = buffer.get(0);
@@ -887,7 +898,7 @@ module {
       };
     };
 
-    minSoFar
+    ?minSoFar
   };
 
   /// Returns true iff the buffer is empty.
@@ -907,12 +918,15 @@ module {
     let count = buffer.size();
     let indices = Prim.Array_tabulate<(Nat, X)>(count, func i = (i, buffer.get(i)));
     // Sort based on element, while carrying original index information
+    // This groups together the duplicate elements
     let sorted = Array.sort<(Nat, X)>(indices, func(pair1, pair2) = compare(pair1.1, pair2.1));
     let uniques = Buffer<(Nat, X)>(count);
+
+    // Iterate over elements
     var i = 0;
     while (i < count) {
       var j = i;
-      // find the minimum index between duplicate elements
+      // Iterate over duplicate elements, and find the smallest index among them (for stability)
       var minIndex = sorted[j];
       label duplicates while (j < (count - 1 : Nat)) {
         let pair1 = sorted[j];
@@ -968,8 +982,8 @@ module {
     var i = 0;
     var accHash : Nat32 = 0;
 
-    for (element in buffer.vals()) {
-      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(element);
+    while (i < count) {
+      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(buffer.get(i));
       i += 1;
     };
 
@@ -992,7 +1006,7 @@ module {
       text := text # toText(buffer.get(i)) # ", "; // Text implemented as rope
       i += 1;
     };
-    if (count > 0) {
+    if (count > 0) { // avoid the trailing comma
       text := text # toText(buffer.get(i))
     };
 
@@ -1010,15 +1024,15 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func equal<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let count2 = buffer2.size();
+    let count1 = buffer1.size();
 
-    if (buffer1.size() != count2) {
+    if (count1 != buffer2.size()) {
       return false;
     };
 
     var i = 0;
-    for (element1 in buffer1.vals()) {
-      if (not equal(element1, buffer2.get(i))) {
+    while (i < count1) {
+      if (not equal(buffer1.get(i), buffer2.get(i))) {
         return false;
       };
       i += 1;
@@ -1038,33 +1052,20 @@ module {
   public func compare<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order.Order) : Order.Order {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
+    let minCount = if (count1 < count2) { count1 } else { count2 };
+    
     var i = 0;
-    if (count1 < count2) {
-      for (element1 in buffer1.vals()) {
-        switch(compare(element1, buffer2.get(i))) {
-          case (#less) {
-            return #less;
-          };
-          case (#greater) {
-            return #greater;
-          };
-          case _ { }
+    while (i < minCount) {
+      switch(compare(buffer1.get(i), buffer2.get(i))) {
+        case (#less) {
+          return #less;
         };
-        i += 1;
-      };
-    } else {
-      for (element2 in buffer2.vals()) {
-        switch(compare(buffer1.get(i), element2)) {
-          case (#less) {
-            return #less;
-          };
-          case (#greater) {
-            return #greater;
-          };
-          case _ { }
+        case (#greater) {
+          return #greater;
         };
-        i += 1;
+        case _ { }
       };
+      i += 1;
     };
 
     if (count1 < count2) {
@@ -1088,15 +1089,14 @@ module {
     };
 
     var i = 0;
+    var j = count - 1 : Nat;
     var temp = buffer.get(0);
-    for (element in buffer.vals()) {
-      if (i >= count / 2) {
-        return;
-      };
-      temp := buffer.get(count - i - 1);
-      buffer.put(count - i - 1, element);
+    while (i < count / 2) {
+      temp := buffer.get(j);
+      buffer.put(j, buffer.get(i));
       buffer.put(i, temp);
       i += 1;
+      j -= 1;
     }
   };
 
@@ -1114,9 +1114,9 @@ module {
     let newBuffer = 
       Buffer<X>(
         if (buffer.get(0).size() != 0) {
-          buffer.get(0).size() * count * UPSIZE_FACTOR
+          newUpsize(buffer.get(0).size() * count)
         } else {
-          count * UPSIZE_FACTOR
+          newUpsize(count)
         }
       );
     
@@ -1166,7 +1166,7 @@ module {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
 
-    let newBuffer = Buffer<X>((count1 + count2) * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(newUpsize(count1 + count2));
 
     var pointer1 = 0;
     var pointer2 = 0;
@@ -1217,17 +1217,16 @@ module {
       Prim.trap "Index out of bounds in split"
     };
 
-    let buffer1 = Buffer<X>(if (index == 0) { UPSIZE_FACTOR} else { index * UPSIZE_FACTOR });
-    let buffer2 = Buffer<X>(if ((count - index : Nat) == 0) { UPSIZE_FACTOR } else { (count - index) * UPSIZE_FACTOR });
+    let buffer1 = Buffer<X>(newUpsize index);
+    let buffer2 = Buffer<X>(newUpsize(count - index));
 
     var i = 0;
-    for (element in buffer.vals()) {
-      if (i < index) {
-        buffer1.add(element);
-      } else {
-        buffer2.add(element);
-      };
-
+    while (i < index) {
+      buffer1.add(buffer.get(i));
+      i += 1;
+    };
+    while (i < count) {
+      buffer2.add(buffer.get(i));
       i += 1;
     };
 
@@ -1259,24 +1258,15 @@ module {
   public func zipWith<X, Y, Z>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>, zip : (X, Y) -> Z) : Buffer<Z> {
     let count1 = buffer1.size();
     let count2 = buffer2.size();
+    let minCount = if (count1 < count2) { count1 } else { count2 };
+
     var i = 0;
-    if (count1 < count2) {
-      let newBuffer = Buffer<Z>(if (count1 == 0) { UPSIZE_FACTOR } else { count1 * UPSIZE_FACTOR });
-      for (current1 in buffer1.vals()) {
-        let current2 = buffer2.get(i);
-        newBuffer.add(zip(current1, current2));
-        i += 1;
-      };
-      newBuffer
-    } else {
-      let newBuffer = Buffer<Z>(if (count2 == 0) { UPSIZE_FACTOR } else { count2 * UPSIZE_FACTOR });
-      for (current2 in buffer2.vals()) {
-        let current1 = buffer1.get(i);
-        newBuffer.add(zip(current1, current2));
-        i += 1;
-      };
-      newBuffer
-    }
+    let newBuffer = Buffer<Z>(newUpsize minCount);
+    while (i < minCount) {
+      newBuffer.add(zip(buffer1.get(i), buffer2.get(i)));
+      i += 1;
+    };
+    newBuffer
   };
 
   /// Breaks up `buffer` into buffers of size `size`. The last chunk may
@@ -1293,12 +1283,12 @@ module {
 
     let newBuffer = Buffer<Buffer<X>>(Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(buffer.size()) / Prim.intToFloat(size)))));
 
-    var newInnerBuffer = Buffer<X>(size * UPSIZE_FACTOR);
+    var newInnerBuffer = Buffer<X>(newUpsize size);
     var innerSize = 0;
     for (element in buffer.vals()) {
       if (innerSize == size) {
         newBuffer.add(newInnerBuffer);
-        newInnerBuffer := Buffer<X>(size * UPSIZE_FACTOR);
+        newInnerBuffer := Buffer<X>(newUpsize size);
         innerSize := 0;
       };
       newInnerBuffer.add(element);
@@ -1328,7 +1318,9 @@ module {
     var i = 0;
     var baseElement = buffer.get(0);
     var newInnerBuffer = Buffer<X>(count);
-    for (element in buffer.vals()) {
+    while (i < count) {
+      let element = buffer.get(i);
+
       if (equal(baseElement, element)) {
         newInnerBuffer.add(element);
       } else {
@@ -1353,18 +1345,16 @@ module {
   ///
   /// Space: O(length)
   public func prefix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
-    if (length > buffer.size()) {
+    let count = buffer.size();
+    if (length > count) {
       Prim.trap "Buffer index out of bounds in prefix"
     };
 
-    let newBuffer = Buffer<X>(if (length == 0) { UPSIZE_FACTOR } else { length * UPSIZE_FACTOR }); 
+    let newBuffer = Buffer<X>(newUpsize length); 
 
     var i = 0;
-    for (element in buffer.vals()) {
-      if (i == length) {
-        return newBuffer;
-      };
-      newBuffer.add(element);
+    while (i < length) {
+      newBuffer.add(buffer.get(i));
       i += 1;
     };
 
@@ -1380,13 +1370,14 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func isPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    if (buffer.size() < prefix.size()) {
+    let countPrefix = prefix.size();
+    if (buffer.size() < countPrefix) {
       return false;
     };
 
     var i = 0;
-    for (prefixElement in prefix.vals()) {
-      if (not equal(buffer.get(i), prefixElement)) {
+    while (i < countPrefix) {
+      if (not equal(buffer.get(i), prefix.get(i))) {
         return false;
       };
       
@@ -1405,13 +1396,14 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func isStrictPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    if (buffer.size() <= prefix.size()) {
+    let countPrefix = prefix.size();
+    if (buffer.size() <= countPrefix) {
       return false;
     };
 
     var i = 0;
-    for (prefixElement in prefix.vals()) {
-      if (not equal(buffer.get(i), prefixElement)) {
+    while (i < countPrefix) {
+      if (not equal(buffer.get(i), prefix.get(i))) {
         return false;
       };
       
@@ -1435,7 +1427,7 @@ module {
       Prim.trap "Buffer index out of bounds in infix"
     };
 
-    let newBuffer = Buffer<X>(if (length == 0) { UPSIZE_FACTOR } else { length * UPSIZE_FACTOR });
+    let newBuffer = Buffer<X>(newUpsize length);
 
     var i = start;
     while (i < end) {
@@ -1499,7 +1491,7 @@ module {
       Prim.trap "Buffer index out of bounds in suffix"
     };
 
-    let newBuffer = Buffer<X>(length * UPSIZE_FACTOR);
+    let newBuffer = Buffer<X>(newUpsize length);
 
     var i = count - length : Nat;
     while (i < count) {
@@ -1526,15 +1518,14 @@ module {
       return false;
     };
 
-    var i : Int = bufferCount - 1;
-    var j : Int = suffixCount - 1;
-    while (i >= 0 and j >= 0) {
-      if (not equal(buffer.get(Prim.abs i), suffix.get(Prim.abs j))) {
-        return false;
-      };
-      
+    var i = bufferCount;
+    var j = suffixCount;
+    while (i >= 1 and j >= 1) {
       i -= 1;
       j -= 1;
+      if (not equal(buffer.get(i), suffix.get(j))) {
+        return false;
+      };  
     };
 
     return true;
@@ -1555,15 +1546,15 @@ module {
       return false;
     };
 
-    var i : Int = bufferCount - 1;
-    var j : Int = suffixCount - 1;
-    while (i >= 0 and j >= 0) {
-      if (not equal(buffer.get(Prim.abs i), suffix.get(Prim.abs j))) {
-        return false;
-      };
-      
+    var i = bufferCount;
+    var j = suffixCount;
+    while (i >= 1 and j >= 1) {
       i -= 1;
       j -= 1;
+
+      if (not equal(buffer.get(i), suffix.get(j))) {
+        return false;
+      };
     };
 
     return true;
@@ -1605,7 +1596,7 @@ module {
     var i = 0;
     var take = false;
     label iter for (element in buffer.vals()) {
-      if (not take and not predicate element) {
+      if (not (take or predicate element)) {
         take := true;
       };
       if (take) {
@@ -1630,7 +1621,7 @@ module {
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
   /// Finds the first index of `element` in `buffer` using equality of elements defined
-  /// by `equal`. Returns null if `element` is not found.
+  /// by `equal`. Returns `null` if `element` is not found.
   ///
   /// Runtime: O(size)
   ///
@@ -1638,9 +1629,10 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func indexOf<X>(element : X, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
+    let count = buffer.size();
     var i = 0;
-    for (current in buffer.vals()) {
-      if (equal(current, element)) {
+    while (i < count) {
+      if (equal(buffer.get(i), element)) {
         return ?i;
       };
       i += 1;
@@ -1650,7 +1642,7 @@ module {
   };
 
   /// Finds the last index of `element` in `buffer` using equality of elements defined
-  /// by `equal`. Returns null if `element` is not found.
+  /// by `equal`. Returns `null` if `element` is not found.
   ///
   /// Runtime: O(size)
   ///
@@ -1658,13 +1650,16 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func lastIndexOf<X>(element : X, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
-    var i : Int = buffer.size() - 1;
-    while (i >= 0) {
-      let n = Prim.abs i;
-      if (equal(buffer.get(n), element)) {
-        return ?n;
-      };
+    let count = buffer.size();
+    if (count == 0) {
+      return null;
+    };
+    var i = count;
+    while (i >= 1) {
       i -= 1;
+      if (equal(buffer.get(i), element)) {
+        return ?i;
+      };
     };
 
     null
@@ -1677,9 +1672,9 @@ module {
   /// Space: O(size of subBuffer)
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  // Uses the KMP substring search algorithm
-  // Implementation from: https://www.educative.io/answers/what-is-the-knuth-morris-pratt-algorithm
   public func indexOfBuffer<X>(subBuffer: Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
+    // Uses the KMP substring search algorithm
+    // Implementation from: https://www.educative.io/answers/what-is-the-knuth-morris-pratt-algorithm
     let count = buffer.size();
     let subCount = subBuffer.size();
     if (subCount > count) {
