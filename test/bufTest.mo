@@ -87,7 +87,7 @@ for (i in Iter.range(0, 3)) {
   buffer.add(i);
 };
 
-run(suite("add with resize",
+run(suite("add with capacity change",
 [
   test(
     "size",
@@ -112,7 +112,7 @@ for (i in Iter.range(0, 3)) {
   buffer.add(i);
 };
 
-run(suite("add with resize, initial capacity 0",
+run(suite("add with capacity change, initial capacity 0",
 [
   test(
     "size",
@@ -493,9 +493,9 @@ for (i in Iter.range(0, 5)) {
 };
 
 
-buffer.resize(6);
+buffer.reserve(6);
 
-run(suite("resize down",
+run(suite("decrease capacity",
 [
   test(
     "size",
@@ -521,9 +521,9 @@ for (i in Iter.range(0, 5)) {
 };
 
 
-buffer.resize(20);
+buffer.reserve(20);
 
-run(suite("resize up",
+run(suite("increase capacity",
 [
   test(
     "size",
@@ -727,7 +727,7 @@ for (i in Iter.range(0, 5)) {
 
 buffer.insert(3, 30);
 
-run(suite("insert with resize",
+run(suite("insert with capacity change",
 [
   test(
     "size",
@@ -775,7 +775,7 @@ buffer := B.Buffer<Nat>(0);
 
 buffer.insert(0, 0);
 
-run(suite("insert into empty buffer with resize",
+run(suite("insert into empty buffer with capacity change",
 [
   test(
     "size",
@@ -911,7 +911,7 @@ for (i in Iter.range(10, 15)) {
 
 buffer.insertBuffer(3, buffer2);
 
-run(suite("insertBuffer with resize",
+run(suite("insertBuffer with capacity change",
 [
   test(
     "size",
@@ -945,7 +945,7 @@ for (i in Iter.range(10, 15)) {
 
 buffer.insertBuffer(0, buffer2);
 
-run(suite("insertBuffer at start with resize",
+run(suite("insertBuffer at start with capacity change",
 [
   test(
     "size",
@@ -979,7 +979,7 @@ for (i in Iter.range(10, 15)) {
 
 buffer.insertBuffer(6, buffer2);
 
-run(suite("insertBuffer at end with resize",
+run(suite("insertBuffer at end with capacity change",
 [
   test(
     "size",
@@ -1039,7 +1039,7 @@ for (i in Iter.range(10, 15)) {
 
 buffer.insertBuffer(0, buffer2);
 
-run(suite("insertBuffer to empty buffer with resize",
+run(suite("insertBuffer to empty buffer with capacity change",
 [
   test(
     "size",
@@ -2738,9 +2738,9 @@ for (i in Iter.range(0, 4)) {
   buffer.add(i)
 };
 
-buffer := B.infix<Nat>(buffer, 1, 3);
+buffer := B.subBuffer<Nat>(buffer, 1, 3);
 
-run(suite("infix",
+run(suite("subBuffer",
 [
   test(
     "capacity",
@@ -2761,26 +2761,26 @@ for (i in Iter.range(0, 4)) {
   buffer.add(i)
 };
 
-run(suite("infix edge cases",
+run(suite("subBuffer edge cases",
 [
   test(
     "prefix",
     B.prefix(buffer, 3),
-    M.equals({ {item = B.infix(buffer, 0, 3)} and NatBufferTestable})
+    M.equals({ {item = B.subBuffer(buffer, 0, 3)} and NatBufferTestable})
   ),
   test(
     "suffix",
     B.suffix(buffer, 3),
-    M.equals({ {item = B.infix(buffer, 2, 3)} and NatBufferTestable})
+    M.equals({ {item = B.subBuffer(buffer, 2, 3)} and NatBufferTestable})
   ),
   test(
     "empty",
-    B.toArray(B.infix(buffer, 2, 0)),
+    B.toArray(B.subBuffer(buffer, 2, 0)),
     M.equals(T.array(T.natTestable, [] : [Nat]))
   ),
   test(
     "trivial",
-    B.infix(buffer, 0, buffer.size()),
+    B.subBuffer(buffer, 0, buffer.size()),
     M.equals({ {item = buffer} and NatBufferTestable})
   ),
 ]));
@@ -2804,46 +2804,46 @@ for (i in Iter.range(1, 3)) {
   buffer3.add(i);
 };
 
-run(suite("isInfixOf",
+run(suite("isSubBufferOf",
 [
   test(
-    "normal infix",
-    B.isInfixOf<Nat>(buffer3, buffer, Nat.equal),
+    "normal subBuffer",
+    B.isSubBufferOf<Nat>(buffer3, buffer, Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
     "prefix",
-    B.isInfixOf<Nat>(buffer2, buffer, Nat.equal),
+    B.isSubBufferOf<Nat>(buffer2, buffer, Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
     "identical buffers",
-    B.isInfixOf<Nat>(buffer, buffer, Nat.equal),
+    B.isSubBufferOf<Nat>(buffer, buffer, Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
     "one empty buffer",
-    B.isInfixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    B.isSubBufferOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
-    "not infix",
-    B.isInfixOf<Nat>(buffer3, buffer2, Nat.equal),
+    "not subBuffer",
+    B.isSubBufferOf<Nat>(buffer3, buffer2, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
-    "not infix from length",
-    B.isInfixOf<Nat>(buffer, buffer2, Nat.equal),
+    "not subBuffer from length",
+    B.isSubBufferOf<Nat>(buffer, buffer2, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
-    "not infix of empty",
-    B.isInfixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    "not subBuffer of empty",
+    B.isSubBufferOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
-    "empty infix of empty",
-    B.isInfixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    "empty subBuffer of empty",
+    B.isSubBufferOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.bool(true))
   ),
 ]));
@@ -2873,51 +2873,51 @@ for (i in Iter.range(3, 4)) {
   buffer4.add(i);
 };
 
-run(suite("isStrictInfixOf",
+run(suite("isStrictSubBufferOf",
 [
   test(
-    "normal strict infix",
-    B.isStrictInfixOf<Nat>(buffer3, buffer, Nat.equal),
+    "normal strict subBuffer",
+    B.isStrictSubBufferOf<Nat>(buffer3, buffer, Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
     "prefix",
-    B.isStrictInfixOf<Nat>(buffer2, buffer, Nat.equal),
+    B.isStrictSubBufferOf<Nat>(buffer2, buffer, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
     "suffix",
-    B.isStrictInfixOf<Nat>(buffer4, buffer, Nat.equal),
+    B.isStrictSubBufferOf<Nat>(buffer4, buffer, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
     "identical buffers",
-    B.isStrictInfixOf<Nat>(buffer, buffer, Nat.equal),
+    B.isStrictSubBufferOf<Nat>(buffer, buffer, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
     "one empty buffer",
-    B.isStrictInfixOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
+    B.isStrictSubBufferOf<Nat>(B.Buffer<Nat>(3), buffer, Nat.equal),
     M.equals(T.bool(true))
   ),
   test(
-    "not infix",
-    B.isStrictInfixOf<Nat>(buffer3, buffer2, Nat.equal),
+    "not subBuffer",
+    B.isStrictSubBufferOf<Nat>(buffer3, buffer2, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
-    "not infix from length",
-    B.isStrictInfixOf<Nat>(buffer, buffer2, Nat.equal),
+    "not subBuffer from length",
+    B.isStrictSubBufferOf<Nat>(buffer, buffer2, Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
-    "not infix of empty",
-    B.isStrictInfixOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
+    "not subBuffer of empty",
+    B.isStrictSubBufferOf<Nat>(buffer, B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.bool(false))
   ),
   test(
-    "empty not strict infix of empty",
-    B.isStrictInfixOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
+    "empty not strict subBuffer of empty",
+    B.isStrictSubBufferOf<Nat>(B.Buffer<Nat>(4), B.Buffer<Nat>(3), Nat.equal),
     M.equals(T.bool(false))
   ),
 ]));
