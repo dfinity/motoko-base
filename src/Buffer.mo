@@ -9,6 +9,8 @@
 /// and `capacity`. `size` is the length of the list that the buffer represents.
 /// `capacity` is the length of the underyling array that backs this list.
 /// `capacity` >= `size` is an invariant for this class.
+/// 
+/// Like arrays, elements in the buffer are ordered by indices from 0 to size-1.
 ///
 /// WARNING: Certain operations are amortized O(1) time, such as `add`, but run
 /// in worst case O(n) time. These worst case runtimes may exceed the cycles limit
@@ -75,6 +77,45 @@ module {
       _size += 1;
     };
 
+    /// Returns the element at index `index`. Traps if  `index >= size`. Indexing is zero-based.
+    ///
+    /// Runtime: O(1)
+    ///
+    /// Space: O(1)
+    public func get(index : Nat) : X {
+      switch (elements[index]) {
+        case (?element) element;
+        case null Prim.trap("Buffer index out of bounds in get");
+      };
+    };
+
+    /// Returns the element at index `index` as an option.
+    /// Returns `null` when `index >= size`. Indexing is zero-based.
+    ///
+    /// Runtime: O(1)
+    ///
+    /// Space: O(1)
+    public func getOpt(index : Nat) : ?X {
+      if (index < _size) {
+        elements[index];
+      } else {
+        null;
+      };
+    };
+
+    /// Overwrites the current element at `index` with `element`. Traps if
+    /// `index` >= size. Indexing is zero-based.
+    ///
+    /// Runtime: O(1)
+    ///
+    /// Space: O(1)
+    public func put(index : Nat, element : X) {
+      if (index >= _size) {
+        Prim.trap "Buffer index out of bounds in put";
+      };
+      elements[index] := ?element;
+    };
+
     /// Removes and returns the last item in the buffer or `null` if
     /// the buffer is empty.
     ///
@@ -101,6 +142,8 @@ module {
     /// All elements with index > `index` are shifted one position to the left.
     /// This may cause a downsizing of the array.
     ///
+    /// Traps if index >= size.
+    ///
     /// WARNING: Repeated removal of elements using this method is ineffecient
     /// and might be a sign that you should consider a different data-structure
     /// for your use case.
@@ -108,14 +151,14 @@ module {
     /// Runtime: O(size)
     ///
     /// Amortized Space: O(1), Worst Case Space: O(size)
-    public func remove(index : Nat) : ?X {
+    public func remove(index : Nat) : X {
       if (index >= _size) {
-        return null;
+        Prim.trap "Buffer index out of bounds in remove";
       };
 
       let element = elements[index];
 
-      // resize down and shift over in one pass
+      // copy elements to new array and shift over in one pass
       if ((_size - 1) : Nat < elements.size() / DECREASE_THRESHOLD) {
         let elements2 = Prim.Array_init<?X>(elements.size() / DECREASE_FACTOR, null);
 
@@ -143,7 +186,25 @@ module {
       };
 
       _size -= 1;
-      element;
+
+      switch (element) {
+        case (?element) {
+          element
+        };
+        case null {
+          Prim.trap "Malformed buffer in remove"
+        }
+      }
+    };
+
+    /// Resets the buffer. Capacity is set to 8.
+    ///
+    /// Runtime: O(1)
+    ///
+    /// Space: O(1)
+    public func clear() {
+      _size := 0;
+      reserve(DEFAULT_CAPACITY);
     };
 
     /// Removes all elements from the buffer for which the predicate returns false.
@@ -196,45 +257,6 @@ module {
       _size -= numRemoved;
     };
 
-    /// Returns the element at index `index`. Traps if  `index >= size`. Indexing is zero-based.
-    ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
-    public func get(index : Nat) : X {
-      switch (elements[index]) {
-        case (?element) element;
-        case null Prim.trap("Buffer index out of bounds in get");
-      };
-    };
-
-    /// Returns the element at index `index` as an option.
-    /// Returns `null` when `index >= size`. Indexing is zero-based.
-    ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
-    public func getOpt(index : Nat) : ?X {
-      if (index < _size) {
-        elements[index];
-      } else {
-        null;
-      };
-    };
-
-    /// Overwrites the current element at `index` with `element`. Traps if
-    /// `index` >= size. Indexing is zero-based.
-    ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
-    public func put(index : Nat, element : X) {
-      if (index >= _size) {
-        Prim.trap "Buffer index out of bounds in put";
-      };
-      elements[index] := ?element;
-    };
-
     /// Returns the capacity of the buffer (the length of the underlying array).
     ///
     /// Runtime: O(1)
@@ -249,7 +271,7 @@ module {
     /// Space: O(capacity)
     public func reserve(capacity : Nat) {
       if (capacity < _size) {
-        Prim.trap "capacity must be >= size in resize";
+        Prim.trap "capacity must be >= size in reserve";
       };
 
       let elements2 = Prim.Array_init<?X>(capacity, null);
@@ -269,7 +291,7 @@ module {
     /// Amortized Space: O(1), Worst Case Space: O(size1 + size2)
     public func append(buffer2 : Buffer<X>) {
       let size2 = buffer2.size();
-      // Make sure you only resize once
+      // Make sure you only allocate a new array at most once
       if (_size + size2 > elements.size()) {
         // FIXME would be nice to have a tabulate for var arrays here
         reserve(newCapacity(_size + size2));
@@ -337,7 +359,7 @@ module {
       let size2 = buffer2.size();
       let capacity = elements.size();
 
-      // resize and insert in one go
+      // copy elements to new array and shift over in one pass
       if (_size + size2 > capacity) {
         let elements2 = Prim.Array_init<?X>(newCapacity(_size + size2), null);
         var i = 0;
@@ -369,16 +391,6 @@ module {
       };
 
       _size += size2;
-    };
-
-    /// Resets the buffer. Capacity is set to 8.
-    ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
-    public func clear() {
-      _size := 0;
-      reserve(DEFAULT_CAPACITY);
     };
 
     /// Sorts the elements in the buffer according to `compare`.
@@ -429,7 +441,7 @@ module {
               };
               case (_, _) {
                 // only sorting non-null items
-                Prim.trap("Malformed buffer in sort");
+                Prim.trap "Malformed buffer in sort";
               };
             };
             nextSorted += 1;
@@ -512,6 +524,31 @@ module {
     };
   };
 
+  /// Returns true iff the buffer is empty.
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
+  public func isEmpty<X>(buffer : Buffer<X>) : Bool = buffer.size() == 0;
+
+  /// Returns true iff `buffer` contains `element` with respect to equality
+  /// defined by `equal`.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func contains<X>(buffer : Buffer<X>, element : X, equal : (X, X) -> Bool) : Bool {
+    for (current in buffer.vals()) {
+      if (equal(current, element)) {
+        return true;
+      };
+    };
+
+    false;
+  };
+
   /// Returns a copy of `buffer`, with the same capacity.
   ///
   /// Runtime: O(size)
@@ -523,6 +560,546 @@ module {
       newBuffer.add(element);
     };
     newBuffer;
+  };
+
+  /// Finds the greatest element in `buffer` defined by `compare`.
+  /// Returns `null` if `buffer` is empty.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func max<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : ?X {
+    if (buffer.size() == 0) {
+      return null;
+    };
+
+    var maxSoFar = buffer.get(0);
+    for (current in buffer.vals()) {
+      switch (compare(current, maxSoFar)) {
+        case (#greater) {
+          maxSoFar := current;
+        };
+        case _ {};
+      };
+    };
+
+    ?maxSoFar;
+  };
+
+  /// Finds the least element in `buffer` defined by `compare`.
+  /// Returns `null` if `buffer` is empty.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func min<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : ?X {
+    if (buffer.size() == 0) {
+      return null;
+    };
+
+    var minSoFar = buffer.get(0);
+    for (current in buffer.vals()) {
+      switch (compare(current, minSoFar)) {
+        case (#less) {
+          minSoFar := current;
+        };
+        case _ {};
+      };
+    };
+
+    ?minSoFar;
+  };
+
+  /// Defines equality for two buffers, using `equal` to recursively compare elements in the
+  /// buffers. Returns true iff the two buffers are of the same size, and `equal`
+  /// evaluates to true for every pair of elements in the two buffers of the same
+  /// index.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func equal<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    let size1 = buffer1.size();
+
+    if (size1 != buffer2.size()) {
+      return false;
+    };
+
+    var i = 0;
+    while (i < size1) {
+      if (not equal(buffer1.get(i), buffer2.get(i))) {
+        return false;
+      };
+      i += 1;
+    };
+
+    true;
+  };
+
+  /// Defines comparison for two buffers, using `compare` to recursively compare elements in the
+  /// buffers. Comparison is defined lexicographically.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func compare<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order.Order) : Order.Order {
+    let size1 = buffer1.size();
+    let size2 = buffer2.size();
+    let minSize = if (size1 < size2) { size1 } else { size2 };
+
+    var i = 0;
+    while (i < minSize) {
+      switch (compare(buffer1.get(i), buffer2.get(i))) {
+        case (#less) {
+          return #less;
+        };
+        case (#greater) {
+          return #greater;
+        };
+        case _ {};
+      };
+      i += 1;
+    };
+
+    if (size1 < size2) {
+      #less;
+    } else if (size1 == size2) {
+      #equal;
+    } else {
+      #greater;
+    };
+  };
+
+  /// Creates a textual representation of `buffer`, using `toText` to recursively
+  /// convert the elements into Text.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `toText` runs in O(1) time and space.
+  public func toText<X>(buffer : Buffer<X>, toText : X -> Text) : Text {
+    let size : Int = buffer.size();
+    var i = 0;
+    var text = "";
+    while (i < size - 1) {
+      text := text # toText(buffer.get(i)) # ", "; // Text implemented as rope
+      i += 1;
+    };
+    if (size > 0) {
+      // avoid the trailing comma
+      text := text # toText(buffer.get(i));
+    };
+
+    "[" # text # "]";
+  };
+
+  /// Hashes `buffer` using `hash` to hash the underlying elements.
+  /// The deterministic hash function is a function of the elements in the Buffer, as well
+  /// as their ordering.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `hash` runs in O(1) time and space.
+  public func hash<X>(buffer : Buffer<X>, hash : X -> Nat32) : Nat32 {
+    let size = buffer.size();
+    var i = 0;
+    var accHash : Nat32 = 0;
+
+    while (i < size) {
+      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(buffer.get(i));
+      i += 1;
+    };
+
+    accHash;
+  };
+
+  /// Finds the first index of `element` in `buffer` using equality of elements defined
+  /// by `equal`. Returns `null` if `element` is not found.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func indexOf<X>(element : X, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
+    let size = buffer.size();
+    var i = 0;
+    while (i < size) {
+      if (equal(buffer.get(i), element)) {
+        return ?i;
+      };
+      i += 1;
+    };
+
+    null;
+  };
+
+  /// Finds the last index of `element` in `buffer` using equality of elements defined
+  /// by `equal`. Returns `null` if `element` is not found.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func lastIndexOf<X>(element : X, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
+    let size = buffer.size();
+    if (size == 0) {
+      return null;
+    };
+    var i = size;
+    while (i >= 1) {
+      i -= 1;
+      if (equal(buffer.get(i), element)) {
+        return ?i;
+      };
+    };
+
+    null;
+  };
+
+  /// Searches for `subBuffer` in `buffer`, and returns the starting index if it is found.
+  ///
+  /// Runtime: O(size of buffer + size of subBuffer)
+  ///
+  /// Space: O(size of subBuffer)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func indexOfBuffer<X>(subBuffer : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
+    // Uses the KMP substring search algorithm
+    // Implementation from: https://www.educative.io/answers/what-is-the-knuth-morris-pratt-algorithm
+    let size = buffer.size();
+    let subSize = subBuffer.size();
+    if (subSize > size) {
+      return null;
+    };
+
+    // precompute lps
+    let lps = Prim.Array_init<Nat>(subSize, 0);
+    var i = 0;
+    var j = 1;
+
+    while (j < subSize) {
+      if (equal(subBuffer.get(i), subBuffer.get(j))) {
+        i += 1;
+        lps[j] := i;
+        j += 1;
+      } else if (i == 0) {
+        lps[j] := 0;
+        j += 1;
+      } else {
+        i := lps[i - 1];
+      };
+    };
+
+    // start search
+    i := 0;
+    j := 0;
+    while (i < subSize and j < size) {
+      if (equal(subBuffer.get(i), buffer.get(j)) and i == (subSize - 1 : Nat)) {
+        return ?(j - i);
+      } else if (equal(subBuffer.get(i), buffer.get(j))) {
+        i += 1;
+        j += 1;
+      } else {
+        if (i != 0) {
+          i := lps[i - 1];
+        } else {
+          j += 1;
+        };
+      };
+    };
+
+    null;
+  };
+
+  /// Similar to indexOf, but runs in logarithmic time. Assumes that `buffer` is sorted.
+  /// Behavior is undefined if `buffer` is not sorted. Uses `compare` to
+  /// perform the search. Returns an index of `element` if it is found.
+  ///
+  /// Runtime: O(log(size))
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func binarySearch<X>(element : X, buffer : Buffer<X>, compare : (X, X) -> Order.Order) : ?Nat {
+    var low = 0;
+    var high = buffer.size();
+
+    while (low < high) {
+      let mid = (low + high) / 2;
+      let current = buffer.get(mid);
+      switch (compare(element, current)) {
+        case (#equal) {
+          return ?mid;
+        };
+        case (#less) {
+          high := mid;
+        };
+        case (#greater) {
+          low := mid + 1;
+        };
+      };
+    };
+
+    null;
+  };
+
+  /// Returns the sub-buffer of `buffer` starting at index `start`
+  /// of length `length`. Traps if `start` is out of bounds, or `start + length`
+  /// is greater than the size of `buffer`.
+  ///
+  /// Runtime: O(length)
+  ///
+  /// Space: O(length)
+  public func subBuffer<X>(buffer : Buffer<X>, start : Nat, length : Nat) : Buffer<X> {
+    let size = buffer.size();
+    let end = start + length; // exclusive
+    if (start >= size or end > size) {
+      Prim.trap "Buffer index out of bounds in subBuffer";
+    };
+
+    let newBuffer = Buffer<X>(newCapacity length);
+
+    var i = start;
+    while (i < end) {
+      newBuffer.add(buffer.get(i));
+
+      i += 1;
+    };
+
+    newBuffer;
+  };
+
+  /// Checks if `subBuffer` is a sub-Buffer of `buffer`. Uses `equal` to
+  /// compare elements.
+  ///
+  /// Runtime: O(size of subBuffer + size of buffer)
+  ///
+  /// Space: O(size of subBuffer)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func isSubBufferOf<X>(subBuffer : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    switch (indexOfBuffer(subBuffer, buffer, equal)) {
+      case null subBuffer.size() == 0;
+      case _ true;
+    };
+  };
+
+  /// Checks if `subBuffer` is a strict subBuffer of `buffer`, i.e. `subBuffer` must be
+  /// strictly contained inside both the first and last indices of `buffer`.
+  /// Uses `equal` to compare elements.
+  ///
+  /// Runtime: O(size of subBuffer + size of buffer)
+  ///
+  /// Space: O(size of subBuffer)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func isStrictSubBufferOf<X>(subBuffer : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    let subBufferSize = subBuffer.size();
+
+    switch (indexOfBuffer(subBuffer, buffer, equal)) {
+      case (?index) {
+        index != 0 and index != (buffer.size() - subBufferSize : Nat) // enforce strictness
+      };
+      case null {
+        subBufferSize == 0 and subBufferSize != buffer.size();
+      };
+    };
+  };
+
+  /// Returns the prefix of `buffer` of length `length`. Traps if `length`
+  /// is greater than the size of `buffer`.
+  ///
+  /// Runtime: O(length)
+  ///
+  /// Space: O(length)
+  public func prefix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
+    let size = buffer.size();
+    if (length > size) {
+      Prim.trap "Buffer index out of bounds in prefix";
+    };
+
+    let newBuffer = Buffer<X>(newCapacity length);
+
+    var i = 0;
+    while (i < length) {
+      newBuffer.add(buffer.get(i));
+      i += 1;
+    };
+
+    newBuffer;
+  };
+
+  /// Checks if `prefix` is a prefix of `buffer`. Uses `equal` to
+  /// compare elements.
+  ///
+  /// Runtime: O(size of prefix)
+  ///
+  /// Space: O(size of prefix)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func isPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    let sizePrefix = prefix.size();
+    if (buffer.size() < sizePrefix) {
+      return false;
+    };
+
+    var i = 0;
+    while (i < sizePrefix) {
+      if (not equal(buffer.get(i), prefix.get(i))) {
+        return false;
+      };
+
+      i += 1;
+    };
+
+    return true;
+  };
+
+  /// Checks if `prefix` is a strict prefix of `buffer`. Uses `equal` to
+  /// compare elements.
+  ///
+  /// Runtime: O(size of prefix)
+  ///
+  /// Space: O(size of prefix)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func isStrictPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    if (buffer.size() <= prefix.size()) {
+      return false;
+    };
+    isPrefixOf(prefix, buffer, equal)
+  };
+
+  /// Returns the suffix of `buffer` of length `length`.
+  /// Traps if `length`is greater than the size of `buffer`.
+  ///
+  /// Runtime: O(length)
+  ///
+  /// Space: O(length)
+  public func suffix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
+    let size = buffer.size();
+
+    if (length > size) {
+      Prim.trap "Buffer index out of bounds in suffix";
+    };
+
+    let newBuffer = Buffer<X>(newCapacity length);
+
+    var i = size - length : Nat;
+    while (i < size) {
+      newBuffer.add(buffer.get(i));
+
+      i += 1;
+    };
+
+    newBuffer;
+  };
+
+  /// Checks if `suffix` is a suffix of `buffer`. Uses `equal` to compare
+  /// elements.
+  ///
+  /// Runtime: O(length of suffix)
+  ///
+  /// Space: O(length of suffix)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func isSuffixOf<X>(suffix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    let suffixSize = suffix.size();
+    let bufferSize = buffer.size();
+    if (bufferSize < suffixSize) {
+      return false;
+    };
+
+    var i = bufferSize;
+    var j = suffixSize;
+    while (i >= 1 and j >= 1) {
+      i -= 1;
+      j -= 1;
+      if (not equal(buffer.get(i), suffix.get(j))) {
+        return false;
+      };
+    };
+
+    return true;
+  };
+
+  /// Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
+  /// elements.
+  ///
+  /// Runtime: O(length of suffix)
+  ///
+  /// Space: O(length of suffix)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func isStrictSuffixOf<X>(suffix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
+    if (buffer.size() <= suffix.size()) {
+      return false;
+    };
+    isSuffixOf(suffix, buffer, equal)
+  };
+
+  /// Returns true iff every element in `buffer` satisfies `predicate`.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
+  public func forAll<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
+    for (element in buffer.vals()) {
+      if (not predicate element) {
+        return false;
+      };
+    };
+
+    true;
+  };
+
+  /// Returns true iff some element in `buffer` satisfies `predicate`.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
+  public func forSome<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
+    for (element in buffer.vals()) {
+      if (predicate element) {
+        return true;
+      };
+    };
+
+    false;
+  };
+
+  /// Returns true iff no element in `buffer` satisfies `predicate`.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
+  public func forNone<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
+    for (element in buffer.vals()) {
+      if (predicate element) {
+        return false;
+      };
+    };
+
+    true;
   };
 
   /// Creates an array containing elements from `buffer`.
@@ -567,7 +1144,7 @@ module {
     // calculate what the size would be if the elements were
     // sequentially added using `add`. This current strategy (2/3)
     // is the upper bound of that calculation (if the last element
-    // added caused a resize).
+    // added caused a capacity increase).
     let newBuffer = Buffer<X>(newCapacity(array.size()));
 
     for (element in array.vals()) {
@@ -607,7 +1184,7 @@ module {
     newBuffer;
   };
 
-  /// Resizes the array underlying `buffer` such that capacity == size.
+  /// Reallocates the array underlying `buffer` such that capacity == size.
   ///
   /// Runtime: O(size)
   ///
@@ -781,56 +1358,19 @@ module {
     accumulation;
   };
 
-  /// Returns true iff every element in `buffer` satisfies `predicate`.
+  /// Returns the first element of `buffer`. Traps if `buffer` is empty.
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
-  public func forAll<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
-    for (element in buffer.vals()) {
-      if (not predicate element) {
-        return false;
-      };
-    };
-
-    true;
-  };
-
-  /// Returns true iff some element in `buffer` satisfies `predicate`.
-  ///
-  /// Runtime: O(size)
+  /// Runtime: O(1)
   ///
   /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
-  public func forSome<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
-    for (element in buffer.vals()) {
-      if (predicate element) {
-        return true;
-      };
-    };
+  public func first<X>(buffer : Buffer<X>) : X = buffer.get(0);
 
-    false;
-  };
-
-  /// Returns true iff no element in `buffer` satisfies `predicate`.
+  /// Returns the last element of `buffer`. Traps if `buffer` is empty.
   ///
-  /// Runtime: O(size)
+  /// Runtime: O(1)
   ///
   /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
-  public func forNone<X>(buffer : Buffer<X>, predicate : X -> Bool) : Bool {
-    for (element in buffer.vals()) {
-      if (predicate element) {
-        return false;
-      };
-    };
-
-    true;
-  };
+  public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
   /// Returns a new buffer with capacity and size 1, containing `element`.
   ///
@@ -843,82 +1383,75 @@ module {
     newBuffer;
   };
 
-  /// Returns true iff `buffer` contains `element` with respect to equality
-  /// defined by `equal`.
+  /// Reverses the order of elements in `buffer`.
   ///
   /// Runtime: O(size)
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func contains<X>(buffer : Buffer<X>, element : X, equal : (X, X) -> Bool) : Bool {
-    for (current in buffer.vals()) {
-      if (equal(current, element)) {
-        return true;
-      };
+  // Space: O(1)
+  public func reverse<X>(buffer : Buffer<X>) {
+    let size = buffer.size();
+    if (size == 0) {
+      return;
     };
 
-    false;
+    var i = 0;
+    var j = size - 1 : Nat;
+    var temp = buffer.get(0);
+    while (i < size / 2) {
+      temp := buffer.get(j);
+      buffer.put(j, buffer.get(i));
+      buffer.put(i, temp);
+      i += 1;
+      j -= 1;
+    };
   };
 
-  /// Finds the greatest element in `buffer` defined by `compare`.
-  /// Returns `null` if `buffer` is empty.
+  /// Merges two sorted buffers into a single sorted buffer, using `compare` to define
+  /// the ordering. The final ordering is stable. Behavior is undefined if either
+  /// `buffer1` or `buffer2` is not sorted.
   ///
-  /// Runtime: O(size)
+  /// Runtime: O(size1 + size2)
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func max<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : ?X {
-    if (buffer.size() == 0) {
-      return null;
-    };
-
-    var maxSoFar = buffer.get(0);
-    for (current in buffer.vals()) {
-      switch (compare(current, maxSoFar)) {
-        case (#greater) {
-          maxSoFar := current;
-        };
-        case _ {};
-      };
-    };
-
-    ?maxSoFar;
-  };
-
-  /// Finds the least element in `buffer` defined by `compare`.
-  /// Returns `null` if `buffer` is empty.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
+  /// Space: O(size1 + size2)
   ///
   /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func min<X>(buffer : Buffer<X>, compare : (X, X) -> Order) : ?X {
-    if (buffer.size() == 0) {
-      return null;
-    };
+  public func merge<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order) : Buffer<X> {
+    let size1 = buffer1.size();
+    let size2 = buffer2.size();
 
-    var minSoFar = buffer.get(0);
-    for (current in buffer.vals()) {
-      switch (compare(current, minSoFar)) {
+    let newBuffer = Buffer<X>(newCapacity(size1 + size2));
+
+    var pointer1 = 0;
+    var pointer2 = 0;
+
+    while (pointer1 < size1 and pointer2 < size2) {
+      let current1 = buffer1.get(pointer1);
+      let current2 = buffer2.get(pointer2);
+
+      switch (compare(current1, current2)) {
         case (#less) {
-          minSoFar := current;
+          newBuffer.add(current1);
+          pointer1 += 1;
         };
-        case _ {};
+        case _ {
+          newBuffer.add(current2);
+          pointer2 += 1;
+        };
       };
     };
 
-    ?minSoFar;
-  };
+    while (pointer1 < size1) {
+      newBuffer.add(buffer1.get(pointer1));
+      pointer1 += 1;
+    };
 
-  /// Returns true iff the buffer is empty.
-  ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
-  public func isEmpty<X>(buffer : Buffer<X>) : Bool = buffer.size() == 0;
+    while (pointer2 < size2) {
+      newBuffer.add(buffer2.get(pointer2));
+      pointer2 += 1;
+    };
+
+    newBuffer;
+  };
 
   /// Eliminates all duplicate elements in `buffer` as defined by `compare`.
   /// Elimination is stable with respect to the original ordering of the elements.
@@ -980,167 +1513,6 @@ module {
     };
   };
 
-  /// Hashes `buffer` using `hash` to hash the underlying elements.
-  /// The deterministic hash function is a function of the elements in the Buffer, as well
-  /// as their ordering.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `hash` runs in O(1) time and space.
-  public func hash<X>(buffer : Buffer<X>, hash : X -> Nat32) : Nat32 {
-    let size = buffer.size();
-    var i = 0;
-    var accHash : Nat32 = 0;
-
-    while (i < size) {
-      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(buffer.get(i));
-      i += 1;
-    };
-
-    accHash;
-  };
-
-  /// Creates a textual representation of `buffer`, using `toText` to recursively
-  /// convert the elements into Text.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `toText` runs in O(1) time and space.
-  public func toText<X>(buffer : Buffer<X>, toText : X -> Text) : Text {
-    let size : Int = buffer.size();
-    var i = 0;
-    var text = "";
-    while (i < size - 1) {
-      text := text # toText(buffer.get(i)) # ", "; // Text implemented as rope
-      i += 1;
-    };
-    if (size > 0) {
-      // avoid the trailing comma
-      text := text # toText(buffer.get(i));
-    };
-
-    "[" # text # "]";
-  };
-
-  /// Defines equality for two buffers, using `equal` to recursively compare elements in the
-  /// buffers. Returns true iff the two buffers are of the same size, and `equal`
-  /// evaluates to true for every pair of elements in the two buffers of the same
-  /// index.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func equal<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let size1 = buffer1.size();
-
-    if (size1 != buffer2.size()) {
-      return false;
-    };
-
-    var i = 0;
-    while (i < size1) {
-      if (not equal(buffer1.get(i), buffer2.get(i))) {
-        return false;
-      };
-      i += 1;
-    };
-
-    true;
-  };
-
-  /// Defines comparison for two buffers, using `compare` to recursively compare elements in the
-  /// buffers. Comparison is defined lexicographically.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func compare<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order.Order) : Order.Order {
-    let size1 = buffer1.size();
-    let size2 = buffer2.size();
-    let minSize = if (size1 < size2) { size1 } else { size2 };
-
-    var i = 0;
-    while (i < minSize) {
-      switch (compare(buffer1.get(i), buffer2.get(i))) {
-        case (#less) {
-          return #less;
-        };
-        case (#greater) {
-          return #greater;
-        };
-        case _ {};
-      };
-      i += 1;
-    };
-
-    if (size1 < size2) {
-      #less;
-    } else if (size1 == size2) {
-      #equal;
-    } else {
-      #greater;
-    };
-  };
-
-  /// Reverses the order of elements in `buffer`.
-  ///
-  /// Runtime: O(size)
-  ///
-  // Space: O(1)
-  public func reverse<X>(buffer : Buffer<X>) {
-    let size = buffer.size();
-    if (size == 0) {
-      return;
-    };
-
-    var i = 0;
-    var j = size - 1 : Nat;
-    var temp = buffer.get(0);
-    while (i < size / 2) {
-      temp := buffer.get(j);
-      buffer.put(j, buffer.get(i));
-      buffer.put(i, temp);
-      i += 1;
-      j -= 1;
-    };
-  };
-
-  /// Flattens the buffer of buffers into a single buffer.
-  ///
-  /// Runtime: O(number of elements in buffer)
-  ///
-  /// Space: O(number of elements in buffer)
-  public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
-    let size = buffer.size();
-    if (size == 0) {
-      return Buffer<X>(0);
-    };
-
-    let newBuffer = Buffer<X>(
-      if (buffer.get(0).size() != 0) {
-        newCapacity(buffer.get(0).size() * size);
-      } else {
-        newCapacity(size);
-      },
-    );
-
-    for (innerBuffer in buffer.vals()) {
-      for (innerElement in innerBuffer.vals()) {
-        newBuffer.add(innerElement);
-      };
-    };
-
-    newBuffer;
-  };
-
   /// Splits `buffer` into a pair of buffers where all elements in the left
   /// buffer satisfy `predicate` and all elements in the right buffer do not.
   ///
@@ -1163,53 +1535,6 @@ module {
     };
 
     (trueBuffer, falseBuffer);
-  };
-
-  /// Merges two sorted buffers into a single sorted buffer, using `compare` to define
-  /// the ordering. The final ordering is stable. Behavior is undefined if either
-  /// `buffer1` or `buffer2` is not sorted.
-  ///
-  /// Runtime: O(size1 + size2)
-  ///
-  /// Space: O(size1 + size2)
-  ///
-  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func merge<X>(buffer1 : Buffer<X>, buffer2 : Buffer<X>, compare : (X, X) -> Order) : Buffer<X> {
-    let size1 = buffer1.size();
-    let size2 = buffer2.size();
-
-    let newBuffer = Buffer<X>(newCapacity(size1 + size2));
-
-    var pointer1 = 0;
-    var pointer2 = 0;
-
-    while (pointer1 < size1 and pointer2 < size2) {
-      let current1 = buffer1.get(pointer1);
-      let current2 = buffer2.get(pointer2);
-
-      switch (compare(current1, current2)) {
-        case (#less) {
-          newBuffer.add(current1);
-          pointer1 += 1;
-        };
-        case _ {
-          newBuffer.add(current2);
-          pointer2 += 1;
-        };
-      };
-    };
-
-    while (pointer1 < size1) {
-      newBuffer.add(buffer1.get(pointer1));
-      pointer1 += 1;
-    };
-
-    while (pointer2 < size2) {
-      newBuffer.add(buffer2.get(pointer2));
-      pointer2 += 1;
-    };
-
-    newBuffer;
   };
 
   /// Splits the buffer into two buffers at `index`, where the left buffer contains
@@ -1243,42 +1568,6 @@ module {
     };
 
     (buffer1, buffer2);
-  };
-
-  /// Combines the two buffers into a single buffer of pairs, pairing together
-  /// elements with the same index. If one buffer is longer than the other, the
-  /// remaining elements from the longer buffer is not included.
-  ///
-  /// Runtime: O(min(size1, size2))
-  ///
-  /// Space: O(min(size1, size2))
-  public func zip<X, Y>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>) : Buffer<(X, Y)> {
-    // compiler should pull lamda out as a static function since it is fully closed
-    zipWith<X, Y, (X, Y)>(buffer1, buffer2, func(x, y) = (x, y));
-  };
-
-  /// Combines the two buffers into a single buffer, pairing together
-  /// elements with the same index and combining them using `zip`. If
-  /// one buffer is longer than the other, the remaining elements from
-  /// the longer buffer is not included.
-  ///
-  /// Runtime: O(min(size1, size2))
-  ///
-  /// Space: O(min(size1, size2))
-  ///
-  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
-  public func zipWith<X, Y, Z>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>, zip : (X, Y) -> Z) : Buffer<Z> {
-    let size1 = buffer1.size();
-    let size2 = buffer2.size();
-    let minSize = if (size1 < size2) { size1 } else { size2 };
-
-    var i = 0;
-    let newBuffer = Buffer<Z>(newCapacity minSize);
-    while (i < minSize) {
-      newBuffer.add(zip(buffer1.get(i), buffer2.get(i)));
-      i += 1;
-    };
-    newBuffer;
   };
 
   /// Breaks up `buffer` into buffers of size `size`. The last chunk may
@@ -1350,224 +1639,68 @@ module {
     newBuffer;
   };
 
-  /// Returns the sub-buffer of `buffer` starting at index `start`
-  /// of length `length`. Traps if `start` is out of bounds, or `start + length`
-  /// is greater than the size of `buffer`.
+  /// Flattens the buffer of buffers into a single buffer.
   ///
-  /// Runtime: O(length)
+  /// Runtime: O(number of elements in buffer)
   ///
-  /// Space: O(length)
-  public func subBuffer<X>(buffer : Buffer<X>, start : Nat, length : Nat) : Buffer<X> {
+  /// Space: O(number of elements in buffer)
+  public func flatten<X>(buffer : Buffer<Buffer<X>>) : Buffer<X> {
     let size = buffer.size();
-    let end = start + length; // exclusive
-    if (start >= size or end > size) {
-      Prim.trap "Buffer index out of bounds in subBuffer";
+    if (size == 0) {
+      return Buffer<X>(0);
     };
 
-    let newBuffer = Buffer<X>(newCapacity length);
+    let newBuffer = Buffer<X>(
+      if (buffer.get(0).size() != 0) {
+        newCapacity(buffer.get(0).size() * size);
+      } else {
+        newCapacity(size);
+      },
+    );
 
-    var i = start;
-    while (i < end) {
-      newBuffer.add(buffer.get(i));
-
-      i += 1;
+    for (innerBuffer in buffer.vals()) {
+      for (innerElement in innerBuffer.vals()) {
+        newBuffer.add(innerElement);
+      };
     };
 
     newBuffer;
   };
 
-  /// Checks if `subBuffer` is a sub-Buffer of `buffer`. Uses `equal` to
-  /// compare elements.
+  /// Combines the two buffers into a single buffer of pairs, pairing together
+  /// elements with the same index. If one buffer is longer than the other, the
+  /// remaining elements from the longer buffer are not included.
   ///
-  /// Runtime: O(size of subBuffer + size of buffer)
+  /// Runtime: O(min(size1, size2))
   ///
-  /// Space: O(size of subBuffer)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func isSubBufferOf<X>(subBuffer : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    switch (indexOfBuffer(subBuffer, buffer, equal)) {
-      case null subBuffer.size() == 0;
-      case _ true;
-    };
+  /// Space: O(min(size1, size2))
+  public func zip<X, Y>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>) : Buffer<(X, Y)> {
+    // compiler should pull lamda out as a static function since it is fully closed
+    zipWith<X, Y, (X, Y)>(buffer1, buffer2, func(x, y) = (x, y));
   };
 
-  /// Checks if `subBuffer` is a strict subBuffer of `buffer`, i.e. `subBuffer` must be
-  /// strictly contained inside both the first and last indices of `buffer`.
-  /// Uses `equal` to compare elements.
+  /// Combines the two buffers into a single buffer, pairing together
+  /// elements with the same index and combining them using `zip`. If
+  /// one buffer is longer than the other, the remaining elements from
+  /// the longer buffer are not included.
   ///
-  /// Runtime: O(size of subBuffer + size of buffer)
+  /// Runtime: O(min(size1, size2))
   ///
-  /// Space: O(size of subBuffer)
+  /// Space: O(min(size1, size2))
   ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func isStrictSubBufferOf<X>(subBuffer : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let subBufferSize = subBuffer.size();
-
-    switch (indexOfBuffer(subBuffer, buffer, equal)) {
-      case (?index) {
-        index != 0 and index != (buffer.size() - subBufferSize : Nat) // enforce strictness
-      };
-      case null {
-        subBufferSize == 0 and subBufferSize != buffer.size();
-      };
-    };
-  };
-
-  /// Returns the prefix of `buffer` of length `length`. Traps if `length`
-  /// is greater than the size of `buffer`.
-  ///
-  /// Runtime: O(length)
-  ///
-  /// Space: O(length)
-  public func prefix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
-    let size = buffer.size();
-    if (length > size) {
-      Prim.trap "Buffer index out of bounds in prefix";
-    };
-
-    let newBuffer = Buffer<X>(newCapacity length);
+  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
+  public func zipWith<X, Y, Z>(buffer1 : Buffer<X>, buffer2 : Buffer<Y>, zip : (X, Y) -> Z) : Buffer<Z> {
+    let size1 = buffer1.size();
+    let size2 = buffer2.size();
+    let minSize = if (size1 < size2) { size1 } else { size2 };
 
     var i = 0;
-    while (i < length) {
-      newBuffer.add(buffer.get(i));
+    let newBuffer = Buffer<Z>(newCapacity minSize);
+    while (i < minSize) {
+      newBuffer.add(zip(buffer1.get(i), buffer2.get(i)));
       i += 1;
     };
-
     newBuffer;
-  };
-
-  /// Checks if `prefix` is a prefix of `buffer`. Uses `equal` to
-  /// compare elements.
-  ///
-  /// Runtime: O(size of prefix)
-  ///
-  /// Space: O(size of prefix)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func isPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let sizePrefix = prefix.size();
-    if (buffer.size() < sizePrefix) {
-      return false;
-    };
-
-    var i = 0;
-    while (i < sizePrefix) {
-      if (not equal(buffer.get(i), prefix.get(i))) {
-        return false;
-      };
-
-      i += 1;
-    };
-
-    return true;
-  };
-
-  /// Checks if `prefix` is a strict prefix of `buffer`. Uses `equal` to
-  /// compare elements.
-  ///
-  /// Runtime: O(size of prefix)
-  ///
-  /// Space: O(size of prefix)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func isStrictPrefixOf<X>(prefix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let sizePrefix = prefix.size();
-    if (buffer.size() <= sizePrefix) {
-      return false;
-    };
-
-    var i = 0;
-    while (i < sizePrefix) {
-      if (not equal(buffer.get(i), prefix.get(i))) {
-        return false;
-      };
-
-      i += 1;
-    };
-
-    return true;
-  };
-
-  /// Returns the suffix of `buffer` of length `length`.
-  /// Traps if `length`is greater than the size of `buffer`.
-  ///
-  /// Runtime: O(length)
-  ///
-  /// Space: O(length)
-  public func suffix<X>(buffer : Buffer<X>, length : Nat) : Buffer<X> {
-    let size = buffer.size();
-
-    if (length > size) {
-      Prim.trap "Buffer index out of bounds in suffix";
-    };
-
-    let newBuffer = Buffer<X>(newCapacity length);
-
-    var i = size - length : Nat;
-    while (i < size) {
-      newBuffer.add(buffer.get(i));
-
-      i += 1;
-    };
-
-    newBuffer;
-  };
-
-  /// Checks if `suffix` is a suffix of `buffer`. Uses `equal` to compare
-  /// elements.
-  ///
-  /// Runtime: O(length of suffix)
-  ///
-  /// Space: O(length of suffix)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func isSuffixOf<X>(suffix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let suffixSize = suffix.size();
-    let bufferSize = buffer.size();
-    if (bufferSize < suffixSize) {
-      return false;
-    };
-
-    var i = bufferSize;
-    var j = suffixSize;
-    while (i >= 1 and j >= 1) {
-      i -= 1;
-      j -= 1;
-      if (not equal(buffer.get(i), suffix.get(j))) {
-        return false;
-      };
-    };
-
-    return true;
-  };
-
-  /// Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
-  /// elements.
-  ///
-  /// Runtime: O(length of suffix)
-  ///
-  /// Space: O(length of suffix)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func isStrictSuffixOf<X>(suffix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
-    let suffixSize = suffix.size();
-    let bufferSize = buffer.size();
-    if (bufferSize <= suffixSize) {
-      return false;
-    };
-
-    var i = bufferSize;
-    var j = suffixSize;
-    while (i >= 1 and j >= 1) {
-      i -= 1;
-      j -= 1;
-
-      if (not equal(buffer.get(i), suffix.get(j))) {
-        return false;
-      };
-    };
-
-    return true;
   };
 
   /// Creates a new buffer taking elements in order from `buffer` until predicate
@@ -1614,151 +1747,5 @@ module {
       };
     };
     newBuffer;
-  };
-
-  /// Returns the first element of `buffer`. Traps if `buffer` is empty.
-  ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
-  public func first<X>(buffer : Buffer<X>) : X = buffer.get(0);
-
-  /// Returns the last element of `buffer`. Traps if `buffer` is empty.
-  ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
-  public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
-
-  /// Finds the first index of `element` in `buffer` using equality of elements defined
-  /// by `equal`. Returns `null` if `element` is not found.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func indexOf<X>(element : X, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
-    let size = buffer.size();
-    var i = 0;
-    while (i < size) {
-      if (equal(buffer.get(i), element)) {
-        return ?i;
-      };
-      i += 1;
-    };
-
-    null;
-  };
-
-  /// Finds the last index of `element` in `buffer` using equality of elements defined
-  /// by `equal`. Returns `null` if `element` is not found.
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func lastIndexOf<X>(element : X, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
-    let size = buffer.size();
-    if (size == 0) {
-      return null;
-    };
-    var i = size;
-    while (i >= 1) {
-      i -= 1;
-      if (equal(buffer.get(i), element)) {
-        return ?i;
-      };
-    };
-
-    null;
-  };
-
-  /// Searches for `subBuffer` in `buffer`, and returns the starting index if it is found.
-  ///
-  /// Runtime: O(size of buffer + size of subBuffer)
-  ///
-  /// Space: O(size of subBuffer)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func indexOfBuffer<X>(subBuffer : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : ?Nat {
-    // Uses the KMP substring search algorithm
-    // Implementation from: https://www.educative.io/answers/what-is-the-knuth-morris-pratt-algorithm
-    let size = buffer.size();
-    let subSize = subBuffer.size();
-    if (subSize > size) {
-      return null;
-    };
-
-    // precompute lps
-    let lps = Prim.Array_init<Nat>(subSize, 0);
-    var i = 0;
-    var j = 1;
-
-    while (j < subSize) {
-      if (equal(subBuffer.get(i), subBuffer.get(j))) {
-        i += 1;
-        lps[j] := i;
-        j += 1;
-      } else if (i == 0) {
-        lps[j] := 0;
-        j += 1;
-      } else {
-        i := lps[i - 1];
-      };
-    };
-
-    // start search
-    i := 0;
-    j := 0;
-    while (i < subSize and j < size) {
-      if (equal(subBuffer.get(i), buffer.get(j)) and i == (subSize - 1 : Nat)) {
-        return ?(j - i);
-      } else if (equal(subBuffer.get(i), buffer.get(j))) {
-        i += 1;
-        j += 1;
-      } else {
-        if (i != 0) {
-          i := lps[i - 1];
-        } else {
-          j += 1;
-        };
-      };
-    };
-
-    null;
-  };
-
-  /// Similar to indexOf, but runs in logarithmic time. Assumes that `buffer` is sorted.
-  /// Behavior is undefined if `buffer` is not sorted. Uses `compare` to
-  /// perform the search. Returns an index of `element` if it is found.
-  ///
-  /// Runtime: O(log(size))
-  ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func binarySearch<X>(element : X, buffer : Buffer<X>, compare : (X, X) -> Order.Order) : ?Nat {
-    var low = 0;
-    var high = buffer.size();
-
-    while (low < high) {
-      let mid = (low + high) / 2;
-      let current = buffer.get(mid);
-      switch (compare(element, current)) {
-        case (#equal) {
-          return ?mid;
-        };
-        case (#less) {
-          high := mid;
-        };
-        case (#greater) {
-          low := mid + 1;
-        };
-      };
-    };
-
-    null;
   };
 };

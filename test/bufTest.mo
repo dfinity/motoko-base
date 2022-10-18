@@ -224,33 +224,6 @@ run(suite("removeLast until empty",
 
 /* --------------------------------------- */
 buffer := B.Buffer<Nat>(0);
-
-run(suite("remove on empty buffer",
-[
-  test(
-    "return value",
-    buffer.remove(0),
-    M.equals(T.optional(T.natTestable, null : ?Nat))
-  ),
-  test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(0))
-  ),
-  test(
-    "capacity",
-    buffer.capacity(),
-    M.equals(T.nat(0))
-  ),
-  test(
-    "elements",
-    B.toArray(buffer),
-    M.equals(T.array<Nat>(T.natTestable, []))
-  ),
-]));
-
-/* --------------------------------------- */
-buffer := B.Buffer<Nat>(0);
 for (i in Iter.range(0, 5)) {
   buffer.add(i);
 };
@@ -260,7 +233,7 @@ run(suite("remove",
   test(
     "return value",
     buffer.remove(2),
-    M.equals(T.optional<Nat>(T.natTestable, ?2))
+    M.equals(T.nat(2))
   ),
   test(
     "size",
@@ -280,7 +253,7 @@ run(suite("remove",
   test(
     "return value",
     buffer.remove(0),
-    M.equals(T.optional<Nat>(T.natTestable, ?0))
+    M.equals(T.nat(0))
   ),
   test(
     "size",
@@ -312,11 +285,6 @@ for (i in Iter.range(0, 5)) {
 run(suite("remove until empty",
 [
   test(
-    "return value",
-    buffer.remove(0),
-    M.equals(T.optional(T.natTestable, null : ?Nat))
-  ),
-  test(
     "size",
     buffer.size(),
     M.equals(T.nat(0))
@@ -330,36 +298,6 @@ run(suite("remove until empty",
     "elements",
     B.toArray(buffer),
     M.equals(T.array<Nat>(T.natTestable, []))
-  ),
-]));
-
-/* --------------------------------------- */
-buffer := B.Buffer<Nat>(0);
-for (i in Iter.range(0, 5)) {
-  buffer.add(i);
-};
-
-run(suite("remove out of bounds",
-[
-  test(
-    "return value",
-    buffer.remove(10),
-    M.equals(T.optional(T.natTestable, null : ?Nat))
-  ),
-  test(
-    "size",
-    buffer.size(),
-    M.equals(T.nat(6))
-  ),
-  test(
-    "capacity",
-    buffer.capacity(),
-    M.equals(T.nat(8))
-  ),
-  test(
-    "elements",
-    B.toArray(buffer),
-    M.equals(T.array<Nat>(T.natTestable, [0, 1, 2, 3, 4, 5]))
   ),
 ]));
 
