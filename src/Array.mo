@@ -41,7 +41,7 @@ module {
     };
   };
 
-  /// Sorts the given array according to the `compare` function.
+  /// Sorts the given array, in ascending order, according to the `compare` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -56,7 +56,7 @@ module {
     freeze(tmp)
   };
 
-  /// Sorts the given array in place according to the `compare` function.
+  /// Sorts the given array, in ascending order, in place, according to the `compare` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko

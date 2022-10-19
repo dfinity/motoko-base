@@ -10,7 +10,7 @@
 /// `capacity` is the length of the underyling array that backs this list.
 /// `capacity` >= `size` is an invariant for this class.
 /// 
-/// Like arrays, elements in the buffer are ordered by indices from 0 to size-1.
+/// Like arrays, elements in the buffer are ordered by indices from 0 to `size`-1.
 ///
 /// WARNING: Certain operations are amortized O(1) time, such as `add`, but run
 /// in worst case O(n) time. These worst case runtimes may exceed the cycles limit
@@ -39,7 +39,11 @@ module {
   // The length of `elements` is increased by `INCREASE_FACTOR` when capacity is reached.
   // The length of `elements` is decreased by `DECREASE_FACTOR` when capacity is strictly less than
   // `DECREASE_THRESHOLD`.
-  private let INCREASE_FACTOR = 1.5; // Keep this factor low to minimize cycle limit problem
+
+  // INCREASE_FACTOR = INCREASE_FACTOR_NUME / INCREASE_FACTOR_DENOM (with floating point division)
+  // Keep INCREASE_FACTOR low to minimize cycle limit problem
+  private let INCREASE_FACTOR_NUME = 3;
+  private let INCREASE_FACTOR_DENOM = 2;
   private let DECREASE_THRESHOLD = 4; // Don't decrease capacity too early to avoid thrashing
   private let DECREASE_FACTOR = 2;
   private let DEFAULT_CAPACITY = 8;
@@ -48,7 +52,9 @@ module {
     if (oldCapacity == 0) {
       1;
     } else {
-      Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(oldCapacity) * INCREASE_FACTOR)));
+      // calculates ceil(oldCapacity * INCREASE_FACTOR) without floats
+      let product = oldCapacity * INCREASE_FACTOR_NUME;
+      (product / INCREASE_FACTOR_DENOM) + (if (product % INCREASE_FACTOR_DENOM != 0) { 1 } else { 0 })
     };
   };
 
@@ -781,7 +787,7 @@ module {
     // Implementation from: https://www.educative.io/answers/what-is-the-knuth-morris-pratt-algorithm
     let size = buffer.size();
     let subSize = subBuffer.size();
-    if (subSize > size) {
+    if (subSize > size or subSize == 0) {
       return null;
     };
 
@@ -806,8 +812,9 @@ module {
     // start search
     i := 0;
     j := 0;
+    let subSizeDec = subSize - 1 : Nat; // hoisting loop invariant
     while (i < subSize and j < size) {
-      if (equal(subBuffer.get(i), buffer.get(j)) and i == (subSize - 1 : Nat)) {
+      if (equal(subBuffer.get(i), buffer.get(j)) and i == subSizeDec) {
         return ?(j - i);
       } else if (equal(subBuffer.get(i), buffer.get(j))) {
         i += 1;
@@ -1123,7 +1130,7 @@ module {
     let size = buffer.size();
     if (size == 0) { [var] } else {
       let newArray = Prim.Array_init<X>(size, buffer.get(0));
-      var i = 0;
+      var i = 1;
       while (i < size) {
         newArray[i] := buffer.get(i);
         i += 1;
@@ -1270,8 +1277,8 @@ module {
   };
 
   /// Creates a new buffer by applying `f` to each element in `buffer`.
-  /// If any invocation of `f` produces an #err, returns an #err. Otherwise
-  /// Returns an #ok containing the new buffer.
+  /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
+  /// Returns an `#ok` containing the new buffer.
   ///
   /// Runtime: O(size)
   ///
@@ -1582,7 +1589,12 @@ module {
       Prim.trap "Chunk size must be non-zero in chunk";
     };
 
-    let newBuffer = Buffer<Buffer<X>>(Prim.abs(Prim.floatToInt(Prim.floatCeil(Prim.intToFloat(buffer.size()) / Prim.intToFloat(size)))));
+    // ceil(buffer.size() / size)
+    let newBuffer = 
+      Buffer<Buffer<X>>(
+        buffer.size() / size + 
+        (if (buffer.size() % size != 0) { 1 } else { 0 })
+      );
 
     var newInnerBuffer = Buffer<X>(newCapacity size);
     var innerSize = 0;
