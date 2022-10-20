@@ -53,8 +53,7 @@ module {
       1;
     } else {
       // calculates ceil(oldCapacity * INCREASE_FACTOR) without floats
-      let product = oldCapacity * INCREASE_FACTOR_NUME;
-      (product / INCREASE_FACTOR_DENOM) + (if (product % INCREASE_FACTOR_DENOM != 0) { 1 } else { 0 })
+      ((oldCapacity * INCREASE_FACTOR_NUME) + INCREASE_FACTOR_DENOM - 1) / INCREASE_FACTOR_DENOM
     };
   };
 
@@ -1590,11 +1589,7 @@ module {
     };
 
     // ceil(buffer.size() / size)
-    let newBuffer = 
-      Buffer<Buffer<X>>(
-        buffer.size() / size + 
-        (if (buffer.size() % size != 0) { 1 } else { 0 })
-      );
+    let newBuffer = Buffer<Buffer<X>>((buffer.size() + size - 1) / size);
 
     var newInnerBuffer = Buffer<X>(newCapacity size);
     var innerSize = 0;
