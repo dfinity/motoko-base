@@ -29,10 +29,10 @@ Append the values of two input arrays
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sort<A>(xs : pass:[[]Apass:[]], cmp : (A, A) -> xref:Order.adoc#type.Order[Order.Order]) : pass:[[]Apass:[]]
+func sort<A>(xs : pass:[[]Apass:[]], compare : (A, A) -> xref:Order.adoc#type.Order[Order.Order]) : pass:[[]Apass:[]]
 ----
 
-Sorts the given array according to the `cmp` function.
+Sorts the given array, in ascending order, according to the `compare` function.
 This is a _stable_ sort.
 
 ```motoko
@@ -47,10 +47,10 @@ assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func sortInPlace<A>(xs : pass:[[]var Apass:[]], cmp : (A, A) -> xref:Order.adoc#type.Order[Order.Order])
+func sortInPlace<A>(xs : pass:[[]var Apass:[]], compare : (A, A) -> xref:Order.adoc#type.Order[Order.Order])
 ----
 
-Sorts the given array in place according to the `cmp` function.
+Sorts the given array, in ascending order, in place, according to the `compare` function.
 This is a _stable_ sort.
 
 ```motoko
