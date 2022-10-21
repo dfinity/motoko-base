@@ -1,6 +1,5 @@
 /// Functions on Arrays
 
-import Buffer "Buffer";
 import I "IterType";
 import Option "Option";
 import Order "Order";
@@ -42,7 +41,7 @@ module {
     };
   };
 
-  /// Sorts the given array according to the `cmp` function.
+  /// Sorts the given array, in ascending order, according to the `compare` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -51,13 +50,13 @@ module {
   /// let xs = [4, 2, 6];
   /// assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
   /// ```
-  public func sort<A>(xs : [A], cmp : (A, A) -> Order.Order) : [A] {
+  public func sort<A>(xs : [A], compare : (A, A) -> Order.Order) : [A] {
     let tmp : [var A] = thaw(xs);
-    sortInPlace(tmp, cmp);
+    sortInPlace(tmp, compare);
     freeze(tmp)
   };
 
-  /// Sorts the given array in place according to the `cmp` function.
+  /// Sorts the given array, in ascending order, in place, according to the `compare` function.
   /// This is a _stable_ sort.
   ///
   /// ```motoko
@@ -67,7 +66,7 @@ module {
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
-  public func sortInPlace<A>(xs : [var A], cmp : (A, A) -> Order.Order) {
+  public func sortInPlace<A>(xs : [var A], compare : (A, A) -> Order.Order) {
     if (xs.size() < 2) return;
     let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
 
@@ -87,7 +86,7 @@ module {
         } else if (j > hi) {
           xs[k] := aux[i];
           i += 1;
-        } else if (Order.isLess(cmp(aux[j], aux[i]))) {
+        } else if (Order.isLess(compare(aux[j], aux[i]))) {
           xs[k] := aux[j];
           j += 1;
         } else {
@@ -119,25 +118,70 @@ module {
   };
   /// Output array contains each array-value if and only if the predicate is true; ordering retained.
   public func filter<A>(xs : [A], f : A -> Bool) : [A] {
-    let ys : Buffer.Buffer<A> = Buffer.Buffer(xs.size());
-    for (x in xs.vals()) {
-      if (f(x)) {
-        ys.add(x);
-      };
-    };
-    ys.toArray();
+    var count = 0;
+    let keep = 
+      Prim.Array_tabulate<Bool>(
+        xs.size(),
+        func i {
+          if (f(xs[i])) {
+            count += 1;
+            true
+          } else {
+            false
+          }
+        }
+      );
+    var nextKeep = 0;
+    Prim.Array_tabulate<A>(
+      count,
+      func _ {
+        while (not keep[nextKeep]) {
+          nextKeep += 1;
+        };
+        nextKeep += 1;
+        xs[nextKeep - 1];
+      }
+    )
   };
+
   /// Output array contains each transformed optional value; ordering retained.
   public func mapFilter<A, B>(xs : [A], f : A -> ?B) : [B] {
-    let ys : Buffer.Buffer<B> = Buffer.Buffer(xs.size());
-    for (x in xs.vals()) {
-      switch (f(x)) {
-        case null {};
-        case (?y) { ys.add(y) };
+    var count = 0;
+    let options = 
+      Prim.Array_tabulate<?B>(
+        xs.size(),
+        func i {
+          let result = f(xs[i]);
+          switch (result) {
+            case (?element) {
+              count += 1;
+              result
+            };
+            case null {
+              null
+            }
+          } 
+        }
+      );
+    
+    var nextSome = 0;
+    Prim.Array_tabulate<B>(
+      count,
+      func _ {
+        while (Option.isNull(options[nextSome])) {
+          nextSome += 1;
+        };
+        nextSome += 1;
+        switch(options[nextSome - 1]) {
+          case(?element) element;
+          case null {
+            Prim.trap "Malformed array in mapFilter"
+          }
+        }
       }
-    };
-    ys.toArray();
+    )
   };
+
   /// Aggregate and transform values into a single output value, by increasing indices.
   public func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B {
     var acc = initial;
@@ -296,5 +340,5 @@ module {
       xs[size - 1 - n];
     });
   };
-
 }
+

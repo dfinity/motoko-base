@@ -1,2 +1,9 @@
+# Builds
 _build
 _out
+
+# Macs
+.DS_Store
+
+# IDEs
+.vscode/
