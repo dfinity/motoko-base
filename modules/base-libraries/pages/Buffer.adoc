@@ -1,19 +1,34 @@
 [[module.Buffer]]
 = Buffer
 
-Generic, extensible buffers
-
-Generic, mutable sequences that grow to accommodate arbitrary numbers of elements.
-
-Class `Buffer<X>` provides extensible, mutable sequences of elements of type `X`.
-that can be efficiently produced and consumed with imperative code.
-A buffer object can be extended by a single element or the contents of another buffer object.
+Class `Buffer<X>` provides a mutable list of elements of type `X`.
+The class wraps and resizes an underyling array that holds the elements,
+and thus is comparable to ArrayLists or Vectors in other languages.
 
 When required, the current state of a buffer object can be converted to a fixed-size array of its elements.
+This is recommended for example when storing a buffer to a stable variable.
 
-Buffers complement Motoko's non-extensible array types
-(arrays do not support efficient extension, because the size of an array is
-determined at construction and cannot be changed).
+Throughout this documentation, two terms come up that can be confused: `size`
+and `capacity`. `size` is the length of the list that the buffer represents.
+`capacity` is the length of the underyling array that backs this list.
+`capacity` >= `size` is an invariant for this class.
+
+Like arrays, elements in the buffer are ordered by indices from 0 to `size`-1.
+
+WARNING: Certain operations are amortized O(1) time, such as `add`, but run
+in worst case O(n) time. These worst case runtimes may exceed the cycles limit
+per message if the size of the buffer is large enough. Grow these structures
+with discretion. All amortized operations below also list the worst case runtime.
+
+Constructor:
+The argument `initCapacity` determines the initial capacity of the array.
+The underlying array grows by a factor of 1.5 when its current capacity is
+exceeded. Further, when the size of the buffer shrinks to be less than 1/4th
+of the capacity, the underyling array is shrunk by a factor of 2.
+
+Runtime: O(initCapacity)
+
+Space: O(initCapacity)
 
 [[type.Buffer]]
 == Buffer
@@ -23,44 +38,9 @@ determined at construction and cannot be changed).
 class Buffer<X>(initCapacity : Nat)
 ----
 
-Create a stateful buffer class encapsulating a mutable array.
-
-The argument `initCapacity` determines its initial capacity.
-The underlying mutable array grows by doubling when its current
-capacity is exceeded.
 
 
 
-[[Buffer.add]]
-=== add
-
-[source.no-repl,motoko,subs=+macros]
-----
-func add(elem : X)
-----
-
-Adds a single element to the buffer.
-
-[[Buffer.removeLast]]
-=== removeLast
-
-[source.no-repl,motoko,subs=+macros]
-----
-func removeLast() : ?X
-----
-
-Removes the item that was inserted last and returns it or `null` if no
-elements had been added to the Buffer.
-
-[[Buffer.append]]
-=== append
-
-[source.no-repl,motoko,subs=+macros]
-----
-func append(b : xref:#type.Buffer[Buffer]<X>)
-----
-
-Adds all elements in buffer `b` to this buffer.
 
 [[Buffer.size]]
 === size
@@ -70,7 +50,107 @@ Adds all elements in buffer `b` to this buffer.
 func size() : Nat
 ----
 
-Returns the current number of elements.
+Returns the current number of elements in the buffer.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.add]]
+=== add
+
+[source.no-repl,motoko,subs=+macros]
+----
+func add(element : X)
+----
+
+Adds a single element to the end of the buffer, doubling
+the size of the array if capacity is exceeded.
+
+Amortized Runtime: O(1), Worst Case Runtime: O(size)
+
+Amortized Space: O(1), Worst Case Space: O(size)
+
+[[Buffer.get]]
+=== get
+
+[source.no-repl,motoko,subs=+macros]
+----
+func get(index : Nat) : X
+----
+
+Returns the element at index `index`. Traps if  `index >= size`. Indexing is zero-based.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.getOpt]]
+=== getOpt
+
+[source.no-repl,motoko,subs=+macros]
+----
+func getOpt(index : Nat) : ?X
+----
+
+Returns the element at index `index` as an option.
+Returns `null` when `index >= size`. Indexing is zero-based.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.put]]
+=== put
+
+[source.no-repl,motoko,subs=+macros]
+----
+func put(index : Nat, element : X)
+----
+
+Overwrites the current element at `index` with `element`. Traps if
+`index` >= size. Indexing is zero-based.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.removeLast]]
+=== removeLast
+
+[source.no-repl,motoko,subs=+macros]
+----
+func removeLast() : ?X
+----
+
+Removes and returns the last item in the buffer or `null` if
+the buffer is empty.
+
+Amortized Runtime: O(1), Worst Case Runtime: O(size)
+
+Amortized Space: O(1), Worst Case Space: O(size)
+
+[[Buffer.remove]]
+=== remove
+
+[source.no-repl,motoko,subs=+macros]
+----
+func remove(index : Nat) : X
+----
+
+Removes and returns the element at `index` from the buffer.
+All elements with index > `index` are shifted one position to the left.
+This may cause a downsizing of the array.
+
+Traps if index >= size.
+
+WARNING: Repeated removal of elements using this method is ineffecient
+and might be a sign that you should consider a different data-structure
+for your use case.
+
+Runtime: O(size)
+
+Amortized Space: O(1), Worst Case Space: O(size)
 
 [[Buffer.clear]]
 === clear
@@ -80,17 +160,114 @@ Returns the current number of elements.
 func clear()
 ----
 
-Resets the buffer.
+Resets the buffer. Capacity is set to 8.
 
-[[Buffer.clone]]
-=== clone
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.filterEntries]]
+=== filterEntries
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func clone() : xref:#type.Buffer[Buffer]<X>
+func filterEntries(predicate : (Nat, X) -> Bool)
 ----
 
-Returns a copy of this buffer.
+Removes all elements from the buffer for which the predicate returns false.
+The predicate is given both the index of the element and the element itself.
+This may cause a downsizing of the array.
+
+Runtime: O(size)
+
+Amortized Space: O(1), Worst Case Space: O(size)
+
+[[Buffer.capacity]]
+=== capacity
+
+[source.no-repl,motoko,subs=+macros]
+----
+func capacity() : Nat
+----
+
+Returns the capacity of the buffer (the length of the underlying array).
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.reserve]]
+=== reserve
+
+[source.no-repl,motoko,subs=+macros]
+----
+func reserve(capacity : Nat)
+----
+
+Changes the capacity to `capacity`. Traps if `capacity` < `size`.
+
+Runtime: O(capacity)
+
+Space: O(capacity)
+
+[[Buffer.append]]
+=== append
+
+[source.no-repl,motoko,subs=+macros]
+----
+func append(buffer2 : xref:#type.Buffer[Buffer]<X>)
+----
+
+Adds all elements in buffer `b` to this buffer.
+
+Amortized Runtime: O(size2), Worst Case Runtime: O(size1 + size2)
+
+Amortized Space: O(1), Worst Case Space: O(size1 + size2)
+
+[[Buffer.insert]]
+=== insert
+
+[source.no-repl,motoko,subs=+macros]
+----
+func insert(index : Nat, element : X)
+----
+
+Inserts `element` at `index`, shifts all elements to the right of
+`index` over by one index. Traps if `index` is greater than size.
+
+Runtime: O(size)
+
+Amortized Space: O(1), Worst Case Space: O(size)
+
+[[Buffer.insertBuffer]]
+=== insertBuffer
+
+[source.no-repl,motoko,subs=+macros]
+----
+func insertBuffer(index : Nat, buffer2 : xref:#type.Buffer[Buffer]<X>)
+----
+
+Inserts `buffer2` at `index`, and shifts all elements to the right of
+`index` over by size2. Traps if `index` is greater than size.
+
+Runtime: O(size)
+
+Amortized Space: O(1), Worst Case Space: O(size1 + size2)
+
+[[Buffer.sort]]
+=== sort
+
+[source.no-repl,motoko,subs=+macros]
+----
+func sort(compare : (X, X) -> xref:Order.adoc#type.Order[Order.Order])
+----
+
+Sorts the elements in the buffer according to `compare`.
+Sort is deterministic, stable, and in-place.
+
+Runtime: O(size * log(size))
+
+Space: O(size)
 
 [[Buffer.vals]]
 === vals
@@ -100,7 +277,23 @@ Returns a copy of this buffer.
 func vals() : { next : () -> ?X }
 ----
 
-Returns an `Iter` over the elements of this buffer.
+Returns an Iterator (`Iter`) over the elements of this buffer.
+Iterator provides a single method `next()`, which returns
+elements in order, or `null` when out of elements to iterate over.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[Buffer.clone]]
+=== clone
+
+[source.no-repl,motoko,subs=+macros]
+----
+func clone() : xref:#type.Buffer[Buffer]<X>
+----
+
+@deprecated Use static library function instead.
 
 [[Buffer.toArray]]
 === toArray
@@ -110,7 +303,7 @@ Returns an `Iter` over the elements of this buffer.
 func toArray() : pass:[[]Xpass:[]]
 ----
 
-Creates a new array containing this buffer's elements.
+@deprecated Use static library function instead.
 
 [[Buffer.toVarArray]]
 === toVarArray
@@ -120,56 +313,880 @@ Creates a new array containing this buffer's elements.
 func toVarArray() : pass:[[]var Xpass:[]]
 ----
 
-Creates a mutable array containing this buffer's elements.
+@deprecated Use static library function instead.
 
-[[Buffer.get]]
-=== get
-
-[source.no-repl,motoko,subs=+macros]
-----
-func get(i : Nat) : X
-----
-
-Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
-
-[[Buffer.getOpt]]
-=== getOpt
+[[isEmpty]]
+== isEmpty
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func getOpt(i : Nat) : ?X
+func isEmpty<X>(buffer : xref:#type.Buffer[Buffer]<X>) : Bool
 ----
 
-Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
+Returns true iff the buffer is empty.
 
-[[Buffer.put]]
-=== put
+Runtime: O(1)
+
+Space: O(1)
+
+[[contains]]
+== contains
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func put(i : Nat, elem : X)
+func contains<X>(buffer : xref:#type.Buffer[Buffer]<X>, element : X, equal : (X, X) -> Bool) : Bool
 ----
 
-Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
-index is out of bounds. Indexing is zero-based.
+Returns true iff `buffer` contains `element` with respect to equality
+defined by `equal`.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[clone]]
+== clone
+
+[source.no-repl,motoko,subs=+macros]
+----
+func clone<X>(buffer : xref:#type.Buffer[Buffer]<X>) : xref:#type.Buffer[Buffer]<X>
+----
+
+Returns a copy of `buffer`, with the same capacity.
+
+Runtime: O(size)
+
+Space: O(size)
+
+[[max]]
+== max
+
+[source.no-repl,motoko,subs=+macros]
+----
+func max<X>(buffer : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:#type.Order[Order]) : ?X
+----
+
+Finds the greatest element in `buffer` defined by `compare`.
+Returns `null` if `buffer` is empty.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `compare` runs in O(1) time and space.
+
+[[min]]
+== min
+
+[source.no-repl,motoko,subs=+macros]
+----
+func min<X>(buffer : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:#type.Order[Order]) : ?X
+----
+
+Finds the least element in `buffer` defined by `compare`.
+Returns `null` if `buffer` is empty.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `compare` runs in O(1) time and space.
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal<X>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Defines equality for two buffers, using `equal` to recursively compare elements in the
+buffers. Returns true iff the two buffers are of the same size, and `equal`
+evaluates to true for every pair of elements in the two buffers of the same
+index.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[compare]]
+== compare
+
+[source.no-repl,motoko,subs=+macros]
+----
+func compare<X>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:Order.adoc#type.Order[Order.Order]) : xref:Order.adoc#type.Order[Order.Order]
+----
+
+Defines comparison for two buffers, using `compare` to recursively compare elements in the
+buffers. Comparison is defined lexicographically.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `compare` runs in O(1) time and space.
+
+[[toText]]
+== toText
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toText<X>(buffer : xref:#type.Buffer[Buffer]<X>, toText : X -> Text) : Text
+----
+
+Creates a textual representation of `buffer`, using `toText` to recursively
+convert the elements into Text.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `toText` runs in O(1) time and space.
+
+[[hash]]
+== hash
+
+[source.no-repl,motoko,subs=+macros]
+----
+func hash<X>(buffer : xref:#type.Buffer[Buffer]<X>, hash : X -> Nat32) : Nat32
+----
+
+Hashes `buffer` using `hash` to hash the underlying elements.
+The deterministic hash function is a function of the elements in the Buffer, as well
+as their ordering.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `hash` runs in O(1) time and space.
+
+[[indexOf]]
+== indexOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func indexOf<X>(element : X, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : ?Nat
+----
+
+Finds the first index of `element` in `buffer` using equality of elements defined
+by `equal`. Returns `null` if `element` is not found.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[lastIndexOf]]
+== lastIndexOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func lastIndexOf<X>(element : X, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : ?Nat
+----
+
+Finds the last index of `element` in `buffer` using equality of elements defined
+by `equal`. Returns `null` if `element` is not found.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[indexOfBuffer]]
+== indexOfBuffer
+
+[source.no-repl,motoko,subs=+macros]
+----
+func indexOfBuffer<X>(subBuffer : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : ?Nat
+----
+
+Searches for `subBuffer` in `buffer`, and returns the starting index if it is found.
+
+Runtime: O(size of buffer + size of subBuffer)
+
+Space: O(size of subBuffer)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[binarySearch]]
+== binarySearch
+
+[source.no-repl,motoko,subs=+macros]
+----
+func binarySearch<X>(element : X, buffer : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:Order.adoc#type.Order[Order.Order]) : ?Nat
+----
+
+Similar to indexOf, but runs in logarithmic time. Assumes that `buffer` is sorted.
+Behavior is undefined if `buffer` is not sorted. Uses `compare` to
+perform the search. Returns an index of `element` if it is found.
+
+Runtime: O(log(size))
+
+Space: O(1)
+
+*Runtime and space assumes that `compare` runs in O(1) time and space.
+
+[[subBuffer]]
+== subBuffer
+
+[source.no-repl,motoko,subs=+macros]
+----
+func subBuffer<X>(buffer : xref:#type.Buffer[Buffer]<X>, start : Nat, length : Nat) : xref:#type.Buffer[Buffer]<X>
+----
+
+Returns the sub-buffer of `buffer` starting at index `start`
+of length `length`. Traps if `start` is out of bounds, or `start + length`
+is greater than the size of `buffer`.
+
+Runtime: O(length)
+
+Space: O(length)
+
+[[isSubBufferOf]]
+== isSubBufferOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isSubBufferOf<X>(subBuffer : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Checks if `subBuffer` is a sub-Buffer of `buffer`. Uses `equal` to
+compare elements.
+
+Runtime: O(size of subBuffer + size of buffer)
+
+Space: O(size of subBuffer)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[isStrictSubBufferOf]]
+== isStrictSubBufferOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isStrictSubBufferOf<X>(subBuffer : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Checks if `subBuffer` is a strict subBuffer of `buffer`, i.e. `subBuffer` must be
+strictly contained inside both the first and last indices of `buffer`.
+Uses `equal` to compare elements.
+
+Runtime: O(size of subBuffer + size of buffer)
+
+Space: O(size of subBuffer)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[prefix]]
+== prefix
+
+[source.no-repl,motoko,subs=+macros]
+----
+func prefix<X>(buffer : xref:#type.Buffer[Buffer]<X>, length : Nat) : xref:#type.Buffer[Buffer]<X>
+----
+
+Returns the prefix of `buffer` of length `length`. Traps if `length`
+is greater than the size of `buffer`.
+
+Runtime: O(length)
+
+Space: O(length)
+
+[[isPrefixOf]]
+== isPrefixOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isPrefixOf<X>(prefix : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Checks if `prefix` is a prefix of `buffer`. Uses `equal` to
+compare elements.
+
+Runtime: O(size of prefix)
+
+Space: O(size of prefix)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[isStrictPrefixOf]]
+== isStrictPrefixOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isStrictPrefixOf<X>(prefix : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Checks if `prefix` is a strict prefix of `buffer`. Uses `equal` to
+compare elements.
+
+Runtime: O(size of prefix)
+
+Space: O(size of prefix)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[suffix]]
+== suffix
+
+[source.no-repl,motoko,subs=+macros]
+----
+func suffix<X>(buffer : xref:#type.Buffer[Buffer]<X>, length : Nat) : xref:#type.Buffer[Buffer]<X>
+----
+
+Returns the suffix of `buffer` of length `length`.
+Traps if `length`is greater than the size of `buffer`.
+
+Runtime: O(length)
+
+Space: O(length)
+
+[[isSuffixOf]]
+== isSuffixOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isSuffixOf<X>(suffix : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Checks if `suffix` is a suffix of `buffer`. Uses `equal` to compare
+elements.
+
+Runtime: O(length of suffix)
+
+Space: O(length of suffix)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[isStrictSuffixOf]]
+== isStrictSuffixOf
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isStrictSuffixOf<X>(suffix : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
+----
+
+Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
+elements.
+
+Runtime: O(length of suffix)
+
+Space: O(length of suffix)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[forAll]]
+== forAll
+
+[source.no-repl,motoko,subs=+macros]
+----
+func forAll<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : Bool
+----
+
+Returns true iff every element in `buffer` satisfies `predicate`.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `predicate` runs in O(1) time and space.
+
+[[forSome]]
+== forSome
+
+[source.no-repl,motoko,subs=+macros]
+----
+func forSome<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : Bool
+----
+
+Returns true iff some element in `buffer` satisfies `predicate`.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `predicate` runs in O(1) time and space.
+
+[[forNone]]
+== forNone
+
+[source.no-repl,motoko,subs=+macros]
+----
+func forNone<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : Bool
+----
+
+Returns true iff no element in `buffer` satisfies `predicate`.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `predicate` runs in O(1) time and space.
+
+[[toArray]]
+== toArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toArray<X>(buffer : xref:#type.Buffer[Buffer]<X>) : pass:[[]Xpass:[]]
+----
+
+Creates an array containing elements from `buffer`.
+
+Runtime: O(size)
+
+Space: O(size)
+
+[[toVarArray]]
+== toVarArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toVarArray<X>(buffer : xref:#type.Buffer[Buffer]<X>) : pass:[[]var Xpass:[]]
+----
+
+Creates a mutable array containing elements from `buffer`.
+
+Runtime: O(size)
+
+Space: O(size)
 
 [[fromArray]]
 == fromArray
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromArray<X>(elems : pass:[[]Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
+func fromArray<X>(array : pass:[[]Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Creates a buffer from immutable array elements.
+Creates a buffer containing elements from `array`.
+
+Runtime: O(size)
+
+Space: O(size)
 
 [[fromVarArray]]
 == fromVarArray
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func fromVarArray<X>(elems : pass:[[]var Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
+func fromVarArray<X>(array : pass:[[]var Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Creates a buffer from the elements of a mutable array.
+Creates a buffer containing elements from `array`.
+
+Runtime: O(size)
+
+Space: O(size)
+
+[[fromIter]]
+== fromIter
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromIter<X>(iter : { next : () -> ?X }) : xref:#type.Buffer[Buffer]<X>
+----
+
+Creates a buffer containing elements from `iter`.
+
+Runtime: O(size)
+
+Space: O(size)
+
+[[trimToSize]]
+== trimToSize
+
+[source.no-repl,motoko,subs=+macros]
+----
+func trimToSize<X>(buffer : xref:#type.Buffer[Buffer]<X>)
+----
+
+Reallocates the array underlying `buffer` such that capacity == size.
+
+Runtime: O(size)
+
+Space: O(size)
+
+[[map]]
+== map
+
+[source.no-repl,motoko,subs=+macros]
+----
+func map<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, f : X -> Y) : xref:#type.Buffer[Buffer]<Y>
+----
+
+Creates a new buffer by applying `f` to each element in `buffer`.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `f` runs in O(1) time and space.
+
+[[iterate]]
+== iterate
+
+[source.no-repl,motoko,subs=+macros]
+----
+func iterate<X>(buffer : xref:#type.Buffer[Buffer]<X>, f : X -> ())
+----
+
+Applies `f` to each element in `buffer`.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `f` runs in O(1) time and space.
+
+[[mapEntries]]
+== mapEntries
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mapEntries<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, f : (Nat, X) -> Y) : xref:#type.Buffer[Buffer]<Y>
+----
+
+Applies `f` to each element in `buffer` and its index.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `f` runs in O(1) time and space.
+
+[[mapFilter]]
+== mapFilter
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mapFilter<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, f : X -> ?Y) : xref:#type.Buffer[Buffer]<Y>
+----
+
+Creates a new buffer by applying `f` to each element in `buffer`,
+and keeping all non-null elements.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `f` runs in O(1) time and space.
+
+[[mapResult]]
+== mapResult
+
+[source.no-repl,motoko,subs=+macros]
+----
+func mapResult<X, Y, E>(buffer : xref:#type.Buffer[Buffer]<X>, f : X -> xref:Result.adoc#type.Result[Result.Result]<Y, E>) : xref:Result.adoc#type.Result[Result.Result]<xref:#type.Buffer[Buffer]<Y>, E>
+----
+
+Creates a new buffer by applying `f` to each element in `buffer`.
+If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
+Returns an `#ok` containing the new buffer.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `f` runs in O(1) time and space.
+
+[[chain]]
+== chain
+
+[source.no-repl,motoko,subs=+macros]
+----
+func chain<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, k : X -> xref:#type.Buffer[Buffer]<Y>) : xref:#type.Buffer[Buffer]<Y>
+----
+
+Creates a new buffer by applying `k` to each element in `buffer`,
+and concatenating the resulting buffers in order. This operation
+is similar to what in other functional languages is known as monadic bind.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `f` runs in O(1) time and space.
+
+[[foldLeft]]
+== foldLeft
+
+[source.no-repl,motoko,subs=+macros]
+----
+func foldLeft<A, X>(buffer : xref:#type.Buffer[Buffer]<X>, base : A, combine : (A, X) -> A) : A
+----
+
+Collapses the elements in `buffer` into a single value by starting with `base`
+and progessively combining elements into `base` with `combine`. Iteration runs
+left to right.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `combine` runs in O(1) time and space.
+
+[[foldRight]]
+== foldRight
+
+[source.no-repl,motoko,subs=+macros]
+----
+func foldRight<X, A>(buffer : xref:#type.Buffer[Buffer]<X>, base : A, combine : (X, A) -> A) : A
+----
+
+Collapses the elements in `buffer` into a single value by starting with `base`
+and progessively combining elements into `base` with `combine`. Iteration runs
+right to left.
+
+Runtime: O(size)
+
+Space: O(1)
+
+*Runtime and space assumes that `combine` runs in O(1) time and space.
+
+[[first]]
+== first
+
+[source.no-repl,motoko,subs=+macros]
+----
+func first<X>(buffer : xref:#type.Buffer[Buffer]<X>) : X
+----
+
+Returns the first element of `buffer`. Traps if `buffer` is empty.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[last]]
+== last
+
+[source.no-repl,motoko,subs=+macros]
+----
+func last<X>(buffer : xref:#type.Buffer[Buffer]<X>) : X
+----
+
+Returns the last element of `buffer`. Traps if `buffer` is empty.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[make]]
+== make
+
+[source.no-repl,motoko,subs=+macros]
+----
+func make<X>(element : X) : xref:#type.Buffer[Buffer]<X>
+----
+
+Returns a new buffer with capacity and size 1, containing `element`.
+
+Runtime: O(1)
+
+Space: O(1)
+
+[[reverse]]
+== reverse
+
+[source.no-repl,motoko,subs=+macros]
+----
+func reverse<X>(buffer : xref:#type.Buffer[Buffer]<X>)
+----
+
+Reverses the order of elements in `buffer`.
+
+Runtime: O(size)
+
+
+[[merge]]
+== merge
+
+[source.no-repl,motoko,subs=+macros]
+----
+func merge<X>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:#type.Order[Order]) : xref:#type.Buffer[Buffer]<X>
+----
+
+Merges two sorted buffers into a single sorted buffer, using `compare` to define
+the ordering. The final ordering is stable. Behavior is undefined if either
+`buffer1` or `buffer2` is not sorted.
+
+Runtime: O(size1 + size2)
+
+Space: O(size1 + size2)
+
+*Runtime and space assumes that `compare` runs in O(1) time and space.
+
+[[removeDuplicates]]
+== removeDuplicates
+
+[source.no-repl,motoko,subs=+macros]
+----
+func removeDuplicates<X>(buffer : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:#type.Order[Order])
+----
+
+Eliminates all duplicate elements in `buffer` as defined by `compare`.
+Elimination is stable with respect to the original ordering of the elements.
+
+Runtime: O(size * log(size))
+
+Space: O(size)
+
+[[partition]]
+== partition
+
+[source.no-repl,motoko,subs=+macros]
+----
+func partition<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : (xref:#type.Buffer[Buffer]<X>, xref:#type.Buffer[Buffer]<X>)
+----
+
+Splits `buffer` into a pair of buffers where all elements in the left
+buffer satisfy `predicate` and all elements in the right buffer do not.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `predicate` runs in O(1) time and space.
+
+[[split]]
+== split
+
+[source.no-repl,motoko,subs=+macros]
+----
+func split<X>(buffer : xref:#type.Buffer[Buffer]<X>, index : Nat) : (xref:#type.Buffer[Buffer]<X>, xref:#type.Buffer[Buffer]<X>)
+----
+
+Splits the buffer into two buffers at `index`, where the left buffer contains
+all elements with indices less than `index`, and the right buffer contains all
+elements with indices greater than or equal to `index`. Traps if `index` is out
+of bounds.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `compare` runs in O(1) time and space.
+
+[[chunk]]
+== chunk
+
+[source.no-repl,motoko,subs=+macros]
+----
+func chunk<X>(buffer : xref:#type.Buffer[Buffer]<X>, size : Nat) : xref:#type.Buffer[Buffer]<xref:#type.Buffer[Buffer]<X>>
+----
+
+Breaks up `buffer` into buffers of size `size`. The last chunk may
+have less than `size` elements if the number of elements is not divisible
+by the chunk size.
+
+Runtime: O(number of elements in buffer)
+
+Space: O(number of elements in buffer)
+
+[[groupBy]]
+== groupBy
+
+[source.no-repl,motoko,subs=+macros]
+----
+func groupBy<X>(buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : xref:#type.Buffer[Buffer]<xref:#type.Buffer[Buffer]<X>>
+----
+
+Groups equal and adjacent elements in the list into sub lists.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `equal` runs in O(1) time and space.
+
+[[flatten]]
+== flatten
+
+[source.no-repl,motoko,subs=+macros]
+----
+func flatten<X>(buffer : xref:#type.Buffer[Buffer]<xref:#type.Buffer[Buffer]<X>>) : xref:#type.Buffer[Buffer]<X>
+----
+
+Flattens the buffer of buffers into a single buffer.
+
+Runtime: O(number of elements in buffer)
+
+Space: O(number of elements in buffer)
+
+[[zip]]
+== zip
+
+[source.no-repl,motoko,subs=+macros]
+----
+func zip<X, Y>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffer[Buffer]<Y>) : xref:#type.Buffer[Buffer]<(X, Y)>
+----
+
+Combines the two buffers into a single buffer of pairs, pairing together
+elements with the same index. If one buffer is longer than the other, the
+remaining elements from the longer buffer are not included.
+
+Runtime: O(min(size1, size2))
+
+Space: O(min(size1, size2))
+
+[[zipWith]]
+== zipWith
+
+[source.no-repl,motoko,subs=+macros]
+----
+func zipWith<X, Y, Z>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffer[Buffer]<Y>, zip : (X, Y) -> Z) : xref:#type.Buffer[Buffer]<Z>
+----
+
+Combines the two buffers into a single buffer, pairing together
+elements with the same index and combining them using `zip`. If
+one buffer is longer than the other, the remaining elements from
+the longer buffer are not included.
+
+Runtime: O(min(size1, size2))
+
+Space: O(min(size1, size2))
+
+*Runtime and space assumes that `zip` runs in O(1) time and space.
+
+[[takeWhile]]
+== takeWhile
+
+[source.no-repl,motoko,subs=+macros]
+----
+func takeWhile<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : xref:#type.Buffer[Buffer]<X>
+----
+
+Creates a new buffer taking elements in order from `buffer` until predicate
+returns false.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `predicate` runs in O(1) time and space.
+
+[[dropWhile]]
+== dropWhile
+
+[source.no-repl,motoko,subs=+macros]
+----
+func dropWhile<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : xref:#type.Buffer[Buffer]<X>
+----
+
+Creates a new buffer excluding elements in order from `buffer` until predicate
+returns false.
+
+Runtime: O(size)
+
+Space: O(size)
+
+*Runtime and space assumes that `predicate` runs in O(1) time and space.
 
