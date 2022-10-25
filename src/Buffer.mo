@@ -258,6 +258,10 @@ module {
           i += 1;
         };
       };
+      while (j < _size) {
+        elements[j] := null;
+        j += 1;
+      };
 
       _size -= numRemoved;
     };
