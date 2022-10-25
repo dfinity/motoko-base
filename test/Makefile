@@ -4,7 +4,7 @@ WASMTIME_OPTIONS = --disable-cache
 
 OUTDIR=_out
 
-TESTS = bufTest.mo
+TESTS = $(wildcard *.mo)
 
 TEST_TARGETS = $(patsubst %.mo,_out/%.checked,$(TESTS))
 
