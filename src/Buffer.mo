@@ -194,6 +194,8 @@ module {
       elements[_size] := null;
 
       if (_size < elements.size() / DECREASE_THRESHOLD) {
+        // FIXME should this new capacity be a function of _size
+        // instead of the current capacity? E.g. _size * INCREASE_FACTOR
         reserve(elements.size() / DECREASE_FACTOR);
       };
 
@@ -327,25 +329,39 @@ module {
 
       let capacity = elements.size();
 
-      var original = elements;
       if ((_size - numRemoved : Nat) < capacity / DECREASE_THRESHOLD) {
-        elements := Prim.Array_init<?X>(capacity / DECREASE_FACTOR, null);
-      };
+        let elements2 = Prim.Array_init<?X>(capacity / DECREASE_FACTOR, null);
 
-      var i = 0;
-      var j = 0;
-      while (i < _size) {
-        if (keep[i]) {
-          elements[j] := original[i];
-          i += 1;
-          j += 1;
-        } else {
-          i += 1;
+        var i = 0;
+        var j = 0;
+        while (i < _size) {
+          if (keep[i]) {
+            elements2[j] := elements[i];
+            i += 1;
+            j += 1;
+          } else {
+            i += 1;
+          };
         };
-      };
-      while (j < _size) {
-        elements[j] := null;
-        j += 1;
+
+        elements := elements2;
+      } else {
+        var i = 0;
+        var j = 0;
+        while (i < _size) {
+          if (keep[i]) {
+            elements[j] := elements[i];
+            i += 1;
+            j += 1;
+          } else {
+            i += 1;
+          };
+        };
+
+        while (j < _size) {
+          elements[j] := null;
+          j += 1;
+        }
       };
 
       _size -= numRemoved;
