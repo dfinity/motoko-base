@@ -408,6 +408,32 @@ run(suite("filterEntries size down",
 ]));
 
 /* --------------------------------------- */
+buffer := B.Buffer<Nat>(5);
+for (i in Iter.range(0, 4)) {
+  buffer.add(i);
+};
+buffer.filterEntries(func(_, _) = false);
+
+run(suite("filterEntries size down to empty",
+[
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(0))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "elements",
+    B.toArray(buffer),
+    M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
+  ),
+]));
+
+/* --------------------------------------- */
 buffer := B.Buffer<Nat>(10);
 for (i in Iter.range(0, 5)) {
   buffer.add(i);
