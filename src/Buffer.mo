@@ -137,6 +137,8 @@ module {
       elements[_size] := null;
 
       if (_size < elements.size() / DECREASE_THRESHOLD) {
+        // FIXME should this new capacity be a function of _size
+        // instead of the current capacity? E.g. _size * INCREASE_FACTOR
         reserve(elements.size() / DECREASE_FACTOR);
       };
 
