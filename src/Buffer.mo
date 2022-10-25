@@ -254,7 +254,7 @@ module {
           elements[i] := elements[i + 1];
           i += 1;
         };
-        elements[_size] := null;
+        elements[_size - 1] := null;
       };
 
       _size -= 1;
@@ -342,6 +342,10 @@ module {
         } else {
           i += 1;
         };
+      };
+      while (j < _size) {
+        elements[j] := null;
+        j += 1;
       };
 
       _size -= numRemoved;

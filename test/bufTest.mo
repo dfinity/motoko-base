@@ -273,6 +273,36 @@ run(suite("remove",
 ]));
 
 /* --------------------------------------- */
+buffer := B.Buffer<Nat>(3);
+for (i in Iter.range(0, 2)) {
+  buffer.add(i);
+};
+
+run(suite("remove last element at capacity",
+[
+  test(
+    "return value",
+    buffer.remove(2),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "size",
+    buffer.size(),
+    M.equals(T.nat(2))
+  ),
+  test(
+    "capacity",
+    buffer.capacity(),
+    M.equals(T.nat(3))
+  ),
+  test(
+    "elements",
+    B.toArray(buffer),
+    M.equals(T.array<Nat>(T.natTestable, [0, 1]))
+  ),
+]));
+
+/* --------------------------------------- */
 buffer := B.Buffer<Nat>(0);
 for (i in Iter.range(0, 5)) {
   buffer.add(i);
