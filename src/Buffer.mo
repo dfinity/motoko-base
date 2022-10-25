@@ -9,7 +9,7 @@
 /// and `capacity`. `size` is the length of the list that the buffer represents.
 /// `capacity` is the length of the underyling array that backs this list.
 /// `capacity` >= `size` is an invariant for this class.
-/// 
+///
 /// Like arrays, elements in the buffer are ordered by indices from 0 to `size`-1.
 ///
 /// WARNING: Certain operations are amortized O(1) time, such as `add`, but run
@@ -26,7 +26,7 @@
 /// Example:
 /// ```motoko
 /// import Buffer "mo:base/Buffer";
-/// 
+///
 /// let buffer = Buffer.Buffer<Nat>(3); // Creates a new Buffer
 /// ```
 ///
@@ -60,7 +60,7 @@ module {
       1;
     } else {
       // calculates ceil(oldCapacity * INCREASE_FACTOR) without floats
-      ((oldCapacity * INCREASE_FACTOR_NUME) + INCREASE_FACTOR_DENOM - 1) / INCREASE_FACTOR_DENOM
+      ((oldCapacity * INCREASE_FACTOR_NUME) + INCREASE_FACTOR_DENOM - 1) / INCREASE_FACTOR_DENOM;
     };
   };
 
@@ -69,7 +69,7 @@ module {
     var elements : [var ?X] = Prim.Array_init(initCapacity, null);
 
     /// Returns the current number of elements in the buffer.
-    /// 
+    ///
     /// Example:
     /// ```motoko
     /// let size = buffer.size(); // evaluates to 0
@@ -82,7 +82,7 @@ module {
 
     /// Adds a single element to the end of the buffer, doubling
     /// the size of the array if capacity is exceeded.
-    /// 
+    ///
     /// Example:
     /// ```motoko
     /// let buffer = Buffer.Buffer<Nat>(3);
@@ -175,7 +175,7 @@ module {
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.removeLast(); // evaluates to ?11
-    /// // view of buffer = [10] 
+    /// // view of buffer = [10]
     /// let y = buffer.removeLast(); // evaluates to ?10
     /// // view of buffer = []
     /// let z = buffer.removeLast() // evaluates to null
@@ -263,12 +263,12 @@ module {
 
       switch (element) {
         case (?element) {
-          element
+          element;
         };
         case null {
-          Prim.trap "Malformed buffer in remove"
-        }
-      }
+          Prim.trap "Malformed buffer in remove";
+        };
+      };
     };
 
     /// Resets the buffer. Capacity is set to 8.
@@ -361,7 +361,7 @@ module {
         while (j < _size) {
           elements[j] := null;
           j += 1;
-        }
+        };
       };
 
       _size -= numRemoved;
@@ -385,7 +385,7 @@ module {
     public func capacity() : Nat = elements.size();
 
     /// Changes the capacity to `capacity`. Traps if `capacity` < `size`.
-    /// 
+    ///
     /// ```motoko
     /// buffer.reserve(4);
     /// let c = buffer.capacity(); // evaluates to 4
@@ -552,7 +552,7 @@ module {
     ///
     /// ```motoko
     /// import Nat "mo:base/Nat";
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(13);
     /// buffer.add(12);
@@ -1159,7 +1159,7 @@ module {
     if (buffer.size() <= prefix.size()) {
       return false;
     };
-    isPrefixOf(prefix, buffer, equal)
+    isPrefixOf(prefix, buffer, equal);
   };
 
   /// Returns the suffix of `buffer` of length `length`.
@@ -1227,7 +1227,7 @@ module {
     if (buffer.size() <= suffix.size()) {
       return false;
     };
-    isSuffixOf(suffix, buffer, equal)
+    isSuffixOf(suffix, buffer, equal);
   };
 
   /// Returns true iff every element in `buffer` satisfies `predicate`.
