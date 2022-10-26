@@ -72,7 +72,11 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// let size = buffer.size(); // evaluates to 0
+    /// import Buffer "mo:base/Buffer";
+    ///
+    /// let buffer = Buffer.Buffer<Nat>(4);
+    /// buffer.size()
+    ///
     /// ```
     ///
     /// Runtime: O(1)
