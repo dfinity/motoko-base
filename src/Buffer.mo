@@ -416,7 +416,8 @@ module {
     /// Adds all elements in buffer `b` to this buffer.
     ///
     /// ```motoko include=initialize
-    /// 
+    /// let buffer1 = Buffer.Buffer<Nat>(2);
+    /// let buffer2 = Buffer.Buffer<Nat>(2);
     /// buffer1.add(10);
     /// buffer1.add(11);
     /// buffer2.add(12);
@@ -448,7 +449,8 @@ module {
     /// `index` over by one index. Traps if `index` is greater than size.
     ///
     /// ```motoko include=initialize
-    /// 
+    /// let buffer1 = Buffer.Buffer<Nat>(2);
+    /// let buffer2 = Buffer.Buffer<Nat>(2);
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.insert(1, 9);
@@ -557,10 +559,9 @@ module {
     /// 
     /// import Nat "mo:base/Nat";
     ///
-    /// buffer.add(10);
-    /// buffer.add(13);
-    /// buffer.add(12);
     /// buffer.add(11);
+    /// buffer.add(12);
+    /// buffer.add(10);
     /// buffer.sort(Nat.compare);
     /// Buffer.toArray(buffer)
     /// ```
