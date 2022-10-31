@@ -24,7 +24,7 @@
 /// of the capacity, the underyling array is shrunk by a factor of 2.
 ///
 /// Example:
-/// ```motoko
+/// ```motoko name=initialize
 /// import Buffer "mo:base/Buffer";
 ///
 /// let buffer = Buffer.Buffer<Nat>(3); // Creates a new Buffer
@@ -71,12 +71,8 @@ module {
     /// Returns the current number of elements in the buffer.
     ///
     /// Example:
-    /// ```motoko
-    /// import Buffer "mo:base/Buffer";
-    ///
-    /// let buffer = Buffer.Buffer<Nat>(4);
+    /// ```motoko include=initialize
     /// buffer.size()
-    ///
     /// ```
     ///
     /// Runtime: O(1)
@@ -88,13 +84,13 @@ module {
     /// the size of the array if capacity is exceeded.
     ///
     /// Example:
-    /// ```motoko
-    /// let buffer = Buffer.Buffer<Nat>(3);
+    /// ```motoko include=initialize
     ///
     /// buffer.add(0); // add 0 to buffer
     /// buffer.add(1);
     /// buffer.add(2);
     /// buffer.add(3); // causes underlying array to increase in capacity
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Amortized Runtime: O(1), Worst Case Runtime: O(size)
@@ -111,11 +107,11 @@ module {
     /// Returns the element at index `index`. Traps if  `index >= size`. Indexing is zero-based.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.get(0); // evaluates to 10
-    /// let y = buffer.get(2); // traps
     /// ```
     ///
     /// Runtime: O(1)
@@ -132,7 +128,8 @@ module {
     /// Returns `null` when `index >= size`. Indexing is zero-based.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.getOpt(0); // evaluates to ?10
@@ -154,11 +151,11 @@ module {
     /// `index` >= size. Indexing is zero-based.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.put(0, 20); // overwrites 10 at index 0 with 20
-    /// // view of buffer = [20]
-    /// let x = buffer.put(1, 11); // traps
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Runtime: O(1)
@@ -175,14 +172,11 @@ module {
     /// the buffer is empty.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.removeLast(); // evaluates to ?11
-    /// // view of buffer = [10]
-    /// let y = buffer.removeLast(); // evaluates to ?10
-    /// // view of buffer = []
-    /// let z = buffer.removeLast() // evaluates to null
     /// ```
     ///
     /// Amortized Runtime: O(1), Worst Case Runtime: O(size)
@@ -217,13 +211,13 @@ module {
     /// for your use case.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
     /// let x = buffer.remove(1); // evaluates to 11. 11 no longer in list.
-    /// // view of buffer = [10, 12]
-    /// let z = buffer.remove(2); // traps
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Runtime: O(size)
@@ -278,12 +272,13 @@ module {
     /// Resets the buffer. Capacity is set to 8.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
     /// buffer.clear(); // buffer is now empty
-    /// // view of buffer = []
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Runtime: O(1)
@@ -299,12 +294,13 @@ module {
     /// This may cause a downsizing of the array.
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
     /// buffer.filterEntries(func(_, x) = x % 2 == 0); // only keep even elements
-    /// // view of buffer = [10, 12]
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Runtime: O(size)
@@ -374,7 +370,8 @@ module {
     /// Returns the capacity of the buffer (the length of the underlying array).
     ///
     /// Example:
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// let buffer = Buffer.Buffer<Nat>(2); // underlying array has capacity 2
     /// buffer.add(10);
     /// let c1 = buffer.capacity(); // evaluates to 2
@@ -390,12 +387,12 @@ module {
 
     /// Changes the capacity to `capacity`. Traps if `capacity` < `size`.
     ///
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.reserve(4);
-    /// let c = buffer.capacity(); // evaluates to 4
     /// buffer.add(10);
     /// buffer.add(11);
-    /// buffer.reserve(1); // traps
+    /// let c = buffer.capacity(); // evaluates to 4
     /// ```
     ///
     /// Runtime: O(capacity)
@@ -418,14 +415,14 @@ module {
 
     /// Adds all elements in buffer `b` to this buffer.
     ///
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer1.add(10);
     /// buffer1.add(11);
     /// buffer2.add(12);
     /// buffer2.add(13);
     /// buffer1.append(buffer2); // adds elements from buffer2 to buffer1
-    /// // view of buffer1 = [10, 11, 12, 13]
-    /// // view of buffer2 = [12, 13]
+    /// Buffer.toArray(buffer1)
     /// ```
     ///
     /// Amortized Runtime: O(size2), Worst Case Runtime: O(size1 + size2)
@@ -450,11 +447,12 @@ module {
     /// Inserts `element` at `index`, shifts all elements to the right of
     /// `index` over by one index. Traps if `index` is greater than size.
     ///
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.insert(1, 9);
-    /// // view of buffer = [10, 9, 11]
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Runtime: O(size)
@@ -497,13 +495,14 @@ module {
     /// Inserts `buffer2` at `index`, and shifts all elements to the right of
     /// `index` over by size2. Traps if `index` is greater than size.
     ///
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// buffer1.add(10);
     /// buffer1.add(11);
     /// buffer2.add(12);
     /// buffer2.add(13);
     /// buffer1.insertBuffer(1, buffer2);
-    /// // view of buffer1 = [10, 12, 13, 11]
+    /// Buffer.toArray(buffer1)
     /// ```
     ///
     /// Runtime: O(size)
@@ -554,7 +553,8 @@ module {
     /// Sorts the elements in the buffer according to `compare`.
     /// Sort is deterministic, stable, and in-place.
     ///
-    /// ```motoko
+    /// ```motoko include=initialize
+    /// 
     /// import Nat "mo:base/Nat";
     ///
     /// buffer.add(10);
@@ -562,7 +562,7 @@ module {
     /// buffer.add(12);
     /// buffer.add(11);
     /// buffer.sort(Nat.compare);
-    /// // view of buffer = [10, 11, 12, 13]
+    /// Buffer.toArray(buffer)
     /// ```
     ///
     /// Runtime: O(size * log(size))
@@ -643,7 +643,7 @@ module {
     /// Iterator provides a single method `next()`, which returns
     /// elements in order, or `null` when out of elements to iterate over.
     ///
-    /// ```motoko
+    /// ```motoko include=initialize
     ///
     /// buffer.add(10);
     /// buffer.add(11);
@@ -653,7 +653,7 @@ module {
     /// for (element in buffer.vals()) {
     ///   sum += element;
     /// };
-    /// // sum evaluates to 33
+    /// sum
     /// ```
     ///
     /// Runtime: O(1)
