@@ -66,46 +66,76 @@ module {
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
-  public func sortInPlace<A>(xs : [var A], compare : (A, A) -> Order.Order) {
-    if (xs.size() < 2) return;
-    let aux : [var A] = tabulateVar<A>(xs.size(), func i { xs[i] });
+  public func sortInPlace<X>(xs : [var X], compare : (X, X) -> Order.Order) {
+    // Stable merge sort in a bottom-up iterative style
+    let size = xs.size();
+    if (size == 0) {
+      return;
+    };
+    let scratchSpace = Prim.Array_init<X>(size, null);
 
-    func merge(lo : Nat, mid : Nat, hi : Nat) {
-      var i = lo;
-      var j = mid + 1;
-      var k = lo;
-      while(k <= hi) {
-        aux[k] := xs[k];
-        k += 1;
-      };
-      k := lo;
-      while(k <= hi) {
-        if (i > mid) {
-          xs[k] := aux[j];
-          j += 1;
-        } else if (j > hi) {
-          xs[k] := aux[i];
-          i += 1;
-        } else if (Order.isLess(compare(aux[j], aux[i]))) {
-          xs[k] := aux[j];
-          j += 1;
-        } else {
-          xs[k] := aux[i];
+    let sizeDec = size - 1 : Nat;
+    var currSize = 1; // current size of the subarrays being merged
+    // when the current size == size, the array has been merged into a single sorted array
+    while (currSize < _size) {
+      var leftStart = 0; // selects the current left subarray being merged
+      while (leftStart < sizeDec) {
+        let mid : Nat = if (leftStart + currSize - 1 : Nat < sizeDec) {
+          leftStart + currSize - 1;
+        } else { sizeDec };
+        let rightEnd : Nat = if (leftStart + (2 * currSize) - 1 : Nat < sizeDec) {
+          leftStart + (2 * currSize) - 1;
+        } else { sizeDec };
+
+        // Merge subarrays elements[leftStart...mid] and elements[mid+1...rightEnd]
+        var left = leftStart;
+        var right = mid + 1;
+        var nextSorted = leftStart;
+        while (left < mid + 1 and right < rightEnd + 1) {
+          let leftOpt = elements[left];
+          let rightOpt = elements[right];
+          switch (leftOpt, rightOpt) {
+            case (?leftElement, ?rightElement) {
+              switch (compare(leftElement, rightElement)) {
+                case (#less or #equal) {
+                  scratchSpace[nextSorted] := leftOpt;
+                  left += 1;
+                };
+                case (#greater) {
+                  scratchSpace[nextSorted] := rightOpt;
+                  right += 1;
+                };
+              };
+            };
+            case (_, _) {
+              // only sorting non-null items
+              Prim.trap "Malformed buffer in sort";
+            };
+          };
+          nextSorted += 1;
+        };
+        while (left < mid + 1) {
+          scratchSpace[nextSorted] := elements[left];
+          nextSorted += 1;
+          left += 1;
+        };
+        while (right < rightEnd + 1) {
+          scratchSpace[nextSorted] := elements[right];
+          nextSorted += 1;
+          right += 1;
+        };
+
+        // Copy over merged elements
+        var i = leftStart;
+        while (i < rightEnd + 1) {
+          elements[i] := scratchSpace[i];
           i += 1;
         };
-        k += 1;
+
+        leftStart += 2 * currSize;
       };
+      currSize *= 2;
     };
-
-    func go(lo : Nat, hi : Nat) {
-      if (hi <= lo) return;
-      let mid : Nat = lo + (hi - lo) / 2;
-      go(lo, mid);
-      go(mid + 1, hi);
-      merge(lo, mid, hi);
-    };
-
-    go(0, xs.size() - 1);
   };
 
   /// Transform each array value into zero or more output values, appended in order
