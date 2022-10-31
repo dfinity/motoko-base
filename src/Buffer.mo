@@ -498,7 +498,8 @@ module {
     /// `index` over by size2. Traps if `index` is greater than size.
     ///
     /// ```motoko include=initialize
-    /// 
+    /// let buffer1 = Buffer.Buffer<Nat>(2);
+    /// let buffer2 = Buffer.Buffer<Nat>(2);
     /// buffer1.add(10);
     /// buffer1.add(11);
     /// buffer2.add(12);
