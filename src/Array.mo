@@ -7,14 +7,38 @@ import Prim "mo:⛔";
 import Result "Result";
 
 module {
+  /// Initialize a mutable array with `size` copies of the initial value.
+  public func init<X>(size : Nat,  initVal : X) : [var X] = 
+    Prim.Array_init<X>(size, initVal);
+
+  /// Initialize an immutable array of the given size, and use the `gen` function to produce the initial value for every index.
+  public func tabulate<X>(size : Nat,  generator : Nat -> X) : [X] =
+    Prim.Array_tabulate<X>(size, generator);
+
+  /// Initialize a mutable array using a generation function
+  public func tabulateVar<X>(size : Nat,  generator : Nat -> X) : [var X] {
+    // FIXME add this as a primitive in the RTS
+    if (size == 0) { return [var] };
+    let array = Prim.Array_init<X>(size, generator 0);
+    var i = 0;
+    while (i < size) {
+      array[i] := generator i;
+      i += 1;
+    };
+    array
+  };
+
+
   /// Test if two arrays contain equal values
-  public func equal<A>(a : [A], b : [A], eq : (A, A) -> Bool) : Bool {
-    if (a.size() != b.size()) {
+  public func equal<X>(array1 : [X], array2 : [X], equal : (X, X) -> Bool) : Bool {
+    let size1 = array1.size();
+    let size2 = array2.size();
+    if (size1 != size2) {
       return false;
     };
     var i = 0;
-    while (i < a.size()) {
-      if (not eq(a[i], b[i])) {
+    while (i < size1) {
+      if (not equal(array1[i], array2[i])) {
         return false;
       };
       i += 1;
@@ -24,21 +48,16 @@ module {
 
   /// Append the values of two input arrays
   /// @deprecated `Array.append` copies its arguments and has linear complexity; when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
-  public func append<A>(xs : [A], ys : [A]) : [A] {
-    switch(xs.size(), ys.size()) {
-      case (0, 0) { []; };
-      case (0, _) { ys; };
-      case (_, 0) { xs; };
-      case (xsSize, ysSize) {
-        Prim.Array_tabulate<A>(xsSize + ysSize, func (i : Nat) : A {
-          if (i < xsSize) {
-            xs[i];
-          } else {
-            ys[i - xsSize];
-          };
-        });
+  public func append<X>(array1 : [X], array2 : [X]) : [X] {
+    let size1 = array1.size();
+    let size2 = array2.size();
+    Prim.Array_tabulate<X>(size1 + size2, func i {
+      if (i < size1) {
+        array1[i];
+      } else {
+        array2[i - size1];
       };
-    };
+    });
   };
 
   /// Sorts the given array, in ascending order, according to the `compare` function.
@@ -50,10 +69,10 @@ module {
   /// let xs = [4, 2, 6];
   /// assert(Array.sort(xs, Nat.compare) == [2, 4, 6])
   /// ```
-  public func sort<A>(xs : [A], compare : (A, A) -> Order.Order) : [A] {
-    let tmp : [var A] = thaw(xs);
-    sortInPlace(tmp, compare);
-    freeze(tmp)
+  public func sort<X>(array : [X], compare : (X, X) -> Order.Order) : [X] {
+    let temp : [var X] = thaw(array);
+    sortInPlace(temp, compare);
+    freeze(temp)
   };
 
   /// Sorts the given array, in ascending order, in place, according to the `compare` function.
@@ -66,18 +85,18 @@ module {
   /// Array.sortInPlace(xs, Nat.compare);
   /// assert(Array.freeze(xs) == [1, 2, 4, 5, 6])
   /// ```
-  public func sortInPlace<X>(xs : [var X], compare : (X, X) -> Order.Order) {
+  public func sortInPlace<X>(array : [var X], compare : (X, X) -> Order.Order) {
     // Stable merge sort in a bottom-up iterative style
-    let size = xs.size();
+    let size = array.size();
     if (size == 0) {
       return;
     };
-    let scratchSpace = Prim.Array_init<X>(size, null);
+    let scratchSpace = Prim.Array_init<X>(size, array[0]);
 
     let sizeDec = size - 1 : Nat;
     var currSize = 1; // current size of the subarrays being merged
     // when the current size == size, the array has been merged into a single sorted array
-    while (currSize < _size) {
+    while (currSize < size) {
       var leftStart = 0; // selects the current left subarray being merged
       while (leftStart < sizeDec) {
         let mid : Nat = if (leftStart + currSize - 1 : Nat < sizeDec) {
@@ -92,35 +111,27 @@ module {
         var right = mid + 1;
         var nextSorted = leftStart;
         while (left < mid + 1 and right < rightEnd + 1) {
-          let leftOpt = elements[left];
-          let rightOpt = elements[right];
-          switch (leftOpt, rightOpt) {
-            case (?leftElement, ?rightElement) {
-              switch (compare(leftElement, rightElement)) {
-                case (#less or #equal) {
-                  scratchSpace[nextSorted] := leftOpt;
-                  left += 1;
-                };
-                case (#greater) {
-                  scratchSpace[nextSorted] := rightOpt;
-                  right += 1;
-                };
-              };
+          let leftElement = array[left];
+          let rightElement = array[right];
+          switch (compare(leftElement, rightElement)) {
+            case (#less or #equal) {
+              scratchSpace[nextSorted] := leftElement;
+              left += 1;
             };
-            case (_, _) {
-              // only sorting non-null items
-              Prim.trap "Malformed buffer in sort";
+            case (#greater) {
+              scratchSpace[nextSorted] := rightElement;
+              right += 1;
             };
           };
           nextSorted += 1;
         };
         while (left < mid + 1) {
-          scratchSpace[nextSorted] := elements[left];
+          scratchSpace[nextSorted] := array[left];
           nextSorted += 1;
           left += 1;
         };
         while (right < rightEnd + 1) {
-          scratchSpace[nextSorted] := elements[right];
+          scratchSpace[nextSorted] := array[right];
           nextSorted += 1;
           right += 1;
         };
@@ -128,7 +139,7 @@ module {
         // Copy over merged elements
         var i = leftStart;
         while (i < rightEnd + 1) {
-          elements[i] := scratchSpace[i];
+          array[i] := scratchSpace[i];
           i += 1;
         };
 
@@ -139,13 +150,29 @@ module {
   };
 
   /// Transform each array value into zero or more output values, appended in order
-  public func chain<A, B>(xs : [A], f : A -> [B]) : [B] {
-    var ys : [B] = [];
-    for (i in xs.keys()) {
-      ys := append<B>(ys, f(xs[i]));
-    };
-    ys;
+  public func chain<X, Y>(array : [X], k : X -> [Y]) : [Y] {
+    var flatSize = 0;
+    let subArrays = Prim.Array_tabulate<[Y]>(array.size(), func i {
+      let subArray = k(array[i]);
+      flatSize += subArray.size();
+      subArray
+    });
+    // could replace with a call to flatten,
+    // but it would require an extra pass (to compute `flatSize`)
+    var outer = 0;
+    var inner = 0;
+    Prim.Array_tabulate<Y>(flatSize, func _ {
+      let subArray = subArrays[outer];
+      let element = subArray[inner];
+      inner += 1;
+      if (inner == subArray.size()) {
+        inner := 0;
+        outer += 1;
+      };
+      element
+    })
   };
+
   /// Output array contains each array-value if and only if the predicate is true; ordering retained.
   public func filter<A>(xs : [A], f : A -> Bool) : [A] {
     var count = 0;
@@ -213,60 +240,91 @@ module {
   };
 
   /// Aggregate and transform values into a single output value, by increasing indices.
-  public func foldLeft<A, B>(xs : [A], initial : B, f : (B, A) -> B) : B {
-    var acc = initial;
-    let size = xs.size();
-    var i = 0;
-    while (i < size) {
-      acc := f(acc, xs[i]);
-      i += 1;
+  public func foldLeft<X, A>(array : [X], base : A, combine : (A, X) -> A) : A {
+    var accumulation = base;
+
+    for (element in array.vals()) {
+      accumulation := combine(accumulation, element);
     };
-    acc;
+
+    accumulation
   };
+
   /// Aggregate and transform values into a single output value, by decreasing indices.
-  public func foldRight<A, B>(xs : [A], initial : B, f : (A, B) -> B) : B {
-    var acc = initial;
-    let size = xs.size();
+  public func foldRight<X, Y>(array : [X], base : Y, combine : (X, Y) -> Y) : Y {
+    var accumulation = base;
+    let size = array.size();
+
     var i = size;
     while (i > 0) {
       i -= 1;
-      acc := f(xs[i], acc);
+      accumulation := combine(array[i], accumulation);
     };
-    acc;
+
+    accumulation;
   };
+
   /// Returns optional first value for which predicate is true
-  public func find<A>(xs : [A], f : A -> Bool) : ?A {
-    for (x in xs.vals()) {
-      if (f(x)) {
-        return ?x;
+  public func find<X>(array : [X], predicate : X -> Bool) : ?X {
+    for (element in array.vals()) {
+      if (predicate element) {
+        return ?element;
       }
     };
     return null;
   };
+
   /// Transform mutable array into immutable array
-  public func freeze<A>(xs : [var A]) : [A] {
-    Prim.Array_tabulate<A>(xs.size(), func (i : Nat) : A {
-      xs[i];
-    });
+  public func freeze<X>(varArray : [var X]) : [X] = 
+    Prim.Array_tabulate<X>(varArray.size(), func i = varArray[i]);
+
+  /// Transform an immutable array into a mutable array.
+  public func thaw<A>(array : [A]) : [var A] {
+    let size = array.size();
+    if (size == 0) {
+      return [var];
+    };
+    let newArray = Prim.Array_init<A>(size, array[0]);
+    var i = 0;
+    while (i < size) {
+      newArray[i] := array[i];
+      i += 1;
+    };
+    newArray
   };
+
+  // FIXME add var versions of these or not?
+
   /// Transform an array of arrays into a single array, with retained array-value order.
-  public func flatten<A>(xs : [[A]]) : [A] {
-    chain<[A], A>(xs, func (x : [A]) : [A] {
-      x;
-    });
+  public func flatten<X>(arrays : [[X]]) : [X] {
+    var flatSize = 0;
+    for (subArray in arrays.vals()) {
+      flatSize += subArray.size()
+    };
+
+    var outer = 0;
+    var inner = 0;
+    Prim.Array_tabulate<X>(flatSize, func _ {
+      let subArray = arrays[outer];
+      let element = subArray[inner];
+      inner += 1;
+      if (inner == subArray.size()) {
+        inner := 0;
+        outer += 1;
+      };
+      element
+    })
   };
+
   /// Transform each value using a function, with retained array-value order.
-  public func map<A, B>(xs : [A], f : A -> B) : [B] {
-    Prim.Array_tabulate<B>(xs.size(), func (i : Nat) : B {
-      f(xs[i]);
-    });
-  };
+  public func map<X, Y>(array : [X], f : X -> Y) : [Y] = 
+    Prim.Array_tabulate<Y>(array.size(), func i = f(array[i]));
+
   /// Transform each entry (index-value pair) using a function.
-  public func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B] {
-    Prim.Array_tabulate<B>(xs.size(), func (i : Nat) : B {
-      f(xs[i], i);
-    });
-  };
+  public func mapEntries<X, Y>(array : [X], f : (X, Nat) -> Y) : [Y] = 
+    Prim.Array_tabulate<Y>(array.size(), func i = f(array[i], i));  
+  // FIXME the arguments ordering are flipped between this and the buffer class
+  // probably can't avoid breaking changes at some point
 
   /// Maps a Result-returning function over an Array and returns either
   /// the first error or an array of successful values.
@@ -285,90 +343,61 @@ module {
   /// assert(Array.mapResult<Int, Nat, Text>([0, 1, 2], makeNatural) == #ok([0, 1, 2]));
   /// assert(Array.mapResult([-1, 0, 1], makeNatural) == #err("-1 is not a natural number."));
   /// ```
-  public func mapResult<A, R, E>(xs : [A], f : A -> Result.Result<R, E>) : Result.Result<[R], E> {
-    let len : Nat = xs.size();
-    var target : [var R] = [var];
-    var i : Nat = 0;
+  public func mapResult<X, Y, E>(array : [X], f : X -> Result.Result<Y, E>) : Result.Result<[Y], E> {
+    let size = array.size();
+    var target : [var Y] = [var];
     var isInit = false;
-    while (i < len) {
-      switch (f(xs[i])) {
-        case (#err(err)) return #err(err);
-        case (#ok(ok)) {
-          if (not isInit) {
-            isInit := true;
-            target := init(len, ok);
-          } else {
-            target[i] := ok
-          }
+
+    var error : ?Result.Result<[Y], E> = null;
+    let results = Prim.Array_tabulate<?Y>(size, func i {
+      switch (f(array[i])) {
+        case (#ok element) {
+          ?element
         };
+        case (#err e) {
+          switch (error) {
+            case null { // only take the first error
+              error := ?(#err e);
+            };
+            case _ { };
+          };
+          null
+        }
+      }
+    });
+
+    switch error {
+      case null {
+        // unpack the option
+        #ok(map<?Y, Y>(results, func element {
+          switch element {
+            case (?element) {
+              element
+            };
+            case null {
+              Prim.trap "Malformed array in mapResults"
+            };
+          }
+        }));
       };
-      i += 1;
-    };
-    #ok(freeze(target))
+      case (?error) {
+        error
+      };
+    }
   };
 
   /// Make an array from a single value.
-  public func make<A>(x: A) : [A] {
-    [x];
-  };
+  public func make<X>(element : X) : [X] = [element];
+
   /// Returns `xs.vals()`.
-  public func vals<A>(xs : [A]) : I.Iter<A> {
-    xs.vals()
-  };
+  public func vals<X>(array : [X]) : I.Iter<X> = array.vals();
+
   /// Returns `xs.keys()`.
-  public func keys<A>(xs : [A]) : I.Iter<Nat> {
-    xs.keys()
-  };
-  /// Transform an immutable array into a mutable array.
-  public func thaw<A>(xs : [A]) : [var A] {
-    let xsSize = xs.size();
-    if (xsSize == 0) {
-      return [var];
-    };
-    let ys = Prim.Array_init<A>(xsSize, xs[0]);
-    for (i in ys.keys()) {
-      ys[i] := xs[i];
-    };
-    ys;
-  };
-  /// Initialize a mutable array with `size` copies of the initial value.
-  public func init<A>(size : Nat,  initVal : A) : [var A] {
-    Prim.Array_init<A>(size, initVal);
-  };
-  /// Initialize an immutable array of the given size, and use the `gen` function to produce the initial value for every index.
-  public func tabulate<A>(size : Nat,  gen : Nat -> A) : [A] {
-    Prim.Array_tabulate<A>(size, gen);
-  };
+  public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys();
 
-  // Copy from `Iter.mo`, but `Iter` depends on `Array`.
-  class range(x : Nat, y : Int) {
-    var i = x;
-    public func next() : ?Nat {
-      if (i > y) {
-         null
-      } else {
-        let j = i;
-        i += 1;
-        ?j
-      }
-    };
-  };
-
-  /// Initialize a mutable array using a generation function
-  public func tabulateVar<A>(size : Nat,  gen : Nat -> A) : [var A] {
-    if (size == 0) { return [var] };
-    let xs = Prim.Array_init<A>(size, gen(0));
-    for (i in range(1, size - 1)) {
-      xs[i] := gen(i);
-    };
-    return xs;
-  };
-
-  public func reverse<A>(xs : [A]) : [A] {
-    let size = xs.size();
-    tabulate(size, func (n : Nat) : A {
-      xs[size - 1 - n];
-    });
+  public func reverse<X>(array : [X]) : [X] {
+    let size = array.size();
+    Prim.Array_tabulate<X>(size, func i = array[size - i - 1]);
   };
 }
 
