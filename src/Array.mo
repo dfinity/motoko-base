@@ -419,11 +419,34 @@ module {
     return null;
   };
 
-  /// Transform mutable array into immutable array
+  /// Transforms a mutable array into an immutable array.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let varArray = [var 0, 1, 2];
+  /// varArray[2] := 3;
+  /// let array = Array.freeze<Nat>(varArray);
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
   public func freeze<X>(varArray : [var X]) : [X] = 
     Prim.Array_tabulate<X>(varArray.size(), func i = varArray[i]);
 
-  /// Transform an immutable array into a mutable array.
+  /// Transforms an immutable array into a mutable array.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [0, 1, 2];
+  /// let varArray = Array.thaw<Nat>(array);
+  /// varArray[2] := 3;
+  /// varArray
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
   public func thaw<A>(array : [A]) : [var A] {
     let size = array.size();
     if (size == 0) {
@@ -438,9 +461,18 @@ module {
     newArray
   };
 
-  // FIXME add var versions of these or not?
-
-  /// Transform an array of arrays into a single array, with retained array-value order.
+  /// Flattens the array of arrays into a single array. Retains the original 
+  /// ordering of the elements.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let arrays = [[0, 1, 2], [2, 3], [], [4]];
+  /// Array.flatten<Nat>(arrays)
+  /// ```
+  ///
+  /// Runtime: O(number of elements in array)
+  ///
+  /// Space: O(number of elements in array)
   public func flatten<X>(arrays : [[X]]) : [X] {
     var flatSize = 0;
     for (subArray in arrays.vals()) {
@@ -461,33 +493,65 @@ module {
     })
   };
 
-  /// Transform each value using a function, with retained array-value order.
+  /// Creates a new array by applying `f` to each element in `array`. `f` "maps"
+  /// each element it is applied to of type `X` to an element of type `Y`.
+  /// Retains original ordering of elements.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [0, 1, 2, 3];
+  /// Array.map<Nat, Nat>(array, func x = x * 3)
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func map<X, Y>(array : [X], f : X -> Y) : [Y] = 
     Prim.Array_tabulate<Y>(array.size(), func i = f(array[i]));
 
-  /// Transform each entry (index-value pair) using a function.
+  /// Creates a new array by applying `f` to each element in `array` and its index.
+  /// Retains original ordering of elements.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [10, 10, 10, 10];
+  /// Array.mapEntries<Nat, Nat>(array, func (i, x) = i * x)
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapEntries<X, Y>(array : [X], f : (X, Nat) -> Y) : [Y] = 
     Prim.Array_tabulate<Y>(array.size(), func i = f(array[i], i));  
+
   // FIXME the arguments ordering are flipped between this and the buffer class
   // probably can't avoid breaking changes at some point
 
-  /// Maps a Result-returning function over an Array and returns either
-  /// the first error or an array of successful values.
+  /// Creates a new array by applying `f` to each element in `array`.
+  /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
+  /// Returns an `#ok` containing the new array.
   ///
-  /// ```motoko
-  /// import Array "mo:base/Array";
-  /// import Result "mo:base/Result";
-  /// import Int "mo:base/Int";
-  /// func makeNatural(x : Int) : Result.Result<Nat, Text> =
-  ///   if (x >= 0) {
-  ///     #ok(Int.abs(x))
+  /// ```motoko include=import
+  /// let array = [4, 3, 2, 1, 0];
+  /// // divide 100 by every element in the array
+  /// Array.mapResult<Nat, Nat, Text>(array, func x {
+  ///   if (x > 0) {
+  ///     #ok(100 / x)
   ///   } else {
-  ///     #err(Int.toText(x) # " is not a natural number.")
-  ///   };
-  ///
-  /// assert(Array.mapResult<Int, Nat, Text>([0, 1, 2], makeNatural) == #ok([0, 1, 2]));
-  /// assert(Array.mapResult([-1, 0, 1], makeNatural) == #err("-1 is not a natural number."));
+  ///     #err "Cannot divide by zero"
+  ///   }
+  /// })
   /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapResult<X, Y, E>(array : [X], f : X -> Result.Result<Y, E>) : Result.Result<[Y], E> {
     let size = array.size();
     var target : [var Y] = [var];
@@ -531,15 +595,75 @@ module {
     }
   };
 
-  /// Make an array from a single value.
+  /// Create an array containing a single value.
+  ///
+  /// ```motoko include=import
+  /// Array.make(2)
+  /// ```
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
   public func make<X>(element : X) : [X] = [element];
 
-  /// Returns `array.vals()`.
+  /// Returns an Iterator (`Iter`) over the elements of `array`.
+  /// Iterator provides a single method `next()`, which returns
+  /// elements in order, or `null` when out of elements to iterate over.
+  ///
+  /// NOTE: You can also use `array.vals()` instead of this function. See example
+  /// below.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [10, 11, 12];
+  ///
+  /// var sum = 0;
+  /// for (element in array.vals()) {
+  ///   sum += element;
+  /// };
+  /// sum
+  /// ```
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
   public func vals<X>(array : [X]) : I.Iter<X> = array.vals();
 
-  /// Returns `array.keys()`.
+  /// Returns an Iterator (`Iter`) over the indices of `array`.
+  /// Iterator provides a single method `next()`, which returns
+  /// indices in order, or `null` when out of index to iterate over.
+  ///
+  /// NOTE: You can also use `array.keys()` instead of this function. See example
+  /// below.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [10, 11, 12];
+  ///
+  /// var sum = 0;
+  /// for (element in array.keys()) {
+  ///   sum += element;
+  /// };
+  /// sum
+  /// ```
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
   public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys();
 
+  /// Creates a new array by reversing the order of elements in `array`.
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [10, 11, 12];
+  ///
+  /// Array.reverse(array)
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
   public func reverse<X>(array : [X]) : [X] {
     let size = array.size();
     Prim.Array_tabulate<X>(size, func i = array[size - i - 1]);
