@@ -1572,7 +1572,7 @@ module {
   ///
   /// Runtime: O(size)
   ///
-  // Space: O(1)
+  /// Space: O(1)
   public func reverse<X>(buffer : Buffer<X>) {
     let size = buffer.size();
     if (size == 0) {
