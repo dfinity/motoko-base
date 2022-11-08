@@ -25,8 +25,8 @@ module {
   ///
   /// Runtime: O(size)
   /// Space: O(size)
-  public func init<X>(size : Nat,  initVal : X) : [var X] = 
-    Prim.Array_init<X>(size, initVal);
+  public func init<X>(size : Nat,  initValue : X) : [var X] = 
+    Prim.Array_init<X>(size, initValue);
 
   /// Create an immutable array of the size `size`. Each element at index i
   /// is created by applying `generator` to i.
@@ -142,7 +142,6 @@ module {
     return true;
   };
 
-  // FIXME this is called indexOf in Buffer
   /// Returns first value in `array` for which `predicate` returns true.
   /// If no element satisfies the predicate, returns null.
   ///
@@ -359,6 +358,8 @@ module {
     )
   };
 
+  // FIXME the arguments ordering to the higher order function are flipped
+  /// between this and the buffer class
   /// Creates a new array by applying `f` to each element in `array` and its index.
   /// Retains original ordering of elements.
   ///
@@ -430,7 +431,6 @@ module {
     )
   };
 
-  // FIXME the arguments ordering are flipped between this and the buffer class
   // probably can't avoid breaking changes at some point
   /// Creates a new array by applying `f` to each element in `array`.
   /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
