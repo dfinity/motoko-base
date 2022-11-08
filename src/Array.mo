@@ -122,6 +122,7 @@ module {
   /// ```
   ///
   /// Runtime: O(size1 + size2)
+  ///
   /// Space: O(1)
   /// 
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
@@ -149,6 +150,11 @@ module {
   /// let array = [1, 9, 4, 8];
   /// Array.find<Nat>(array, func x = x > 8)
   /// ```
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  /// 
+  /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
   public func find<X>(array : [X], predicate : X -> Bool) : ?X {
     for (element in array.vals()) {
       if (predicate element) {
@@ -158,8 +164,17 @@ module {
     return null;
   };
 
-  /// Create a new array by appending the values of the two arrays
+  /// Create a new array by appending the values of `array1` and `array2`.
   /// @deprecated `Array.append` copies its arguments and has linear complexity; when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
+  ///
+  /// ```motoko include=import
+  /// let array1 = [1, 2, 3];
+  /// let array2 = [4, 5, 6];
+  /// Array.append<Nat>(array1, array2)
+  /// ```
+  /// Runtime: O(size1 + size2)
+  ///
+  /// Space: O(size1 + size2)
   public func append<X>(array1 : [X], array2 : [X]) : [X] {
     let size1 = array1.size();
     let size2 = array2.size();
