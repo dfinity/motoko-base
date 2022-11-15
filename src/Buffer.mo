@@ -1488,7 +1488,7 @@ module {
   ///
   /// Space: O(size)
   ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+  /// *Runtime and space assumes that `k` runs in O(1) time and space.
   public func chain<X, Y>(buffer : Buffer<X>, k : X -> Buffer<Y>) : Buffer<Y> {
     let newBuffer = Buffer<Y>(buffer.size() * 4);
 
@@ -1572,7 +1572,7 @@ module {
   ///
   /// Runtime: O(size)
   ///
-  // Space: O(1)
+  /// Space: O(1)
   public func reverse<X>(buffer : Buffer<X>) {
     let size = buffer.size();
     if (size == 0) {
