@@ -28,7 +28,7 @@ module {
   public func init<X>(size : Nat,  initValue : X) : [var X] = 
     Prim.Array_init<X>(size, initValue);
 
-  /// Create an immutable array of the size `size`. Each element at index i
+  /// Create an immutable array of size `size`. Each element at index i
   /// is created by applying `generator` to i.
   ///
   /// ```motoko include=import
@@ -42,7 +42,7 @@ module {
   public func tabulate<X>(size : Nat,  generator : Nat -> X) : [X] =
     Prim.Array_tabulate<X>(size, generator);
 
-  /// Create a mutable array of the size `size`. Each element at index i
+  /// Create a mutable array of size `size`. Each element at index i
   /// is created by applying `generator` to i.
   ///
   /// ```motoko include=import
@@ -142,7 +142,7 @@ module {
     return true;
   };
 
-  /// Returns first value in `array` for which `predicate` returns true.
+  /// Returns the first value in `array` for which `predicate` returns true.
   /// If no element satisfies the predicate, returns null.
   ///
   /// ```motoko include=import
@@ -164,7 +164,8 @@ module {
   };
 
   /// Create a new array by appending the values of `array1` and `array2`.
-  /// @deprecated `Array.append` copies its arguments and has linear complexity; when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
+  /// @deprecated `Array.append` copies its arguments and has linear complexity;
+  /// when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
   ///
   /// ```motoko include=import
   /// let array1 = [1, 2, 3];
@@ -222,7 +223,7 @@ module {
   /// Space: O(size)
   /// *Runtime and space assumes that `compare` runs in O(1) time and space.
   public func sortInPlace<X>(array : [var X], compare : (X, X) -> Order.Order) {
-    // Stable merge sort in a bottom-up iterative style
+    // Stable merge sort in a bottom-up iterative style. Same algorithm as the sort in Buffer.
     let size = array.size();
     if (size == 0) {
       return;
@@ -320,7 +321,7 @@ module {
   public func map<X, Y>(array : [X], f : X -> Y) : [Y] = 
     Prim.Array_tabulate<Y>(array.size(), func i = f(array[i]));
 
-  /// Creates a new array by applied `predicate` to every element
+  /// Creates a new array by applying `predicate` to every element
   /// in `array`, and keeping elements for which `predicate` returns true. 
   ///
   /// ```motoko include=import
@@ -331,7 +332,7 @@ module {
   ///
   /// Space: O(size)
   /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
-  public func filter<A>(array : [A], predicate : A -> Bool) : [A] {
+  public func filter<X>(array : [X], predicate : X -> Bool) : [X] {
     var count = 0;
     let keep = 
       Prim.Array_tabulate<Bool>(
@@ -346,7 +347,7 @@ module {
         }
       );
     var nextKeep = 0;
-    Prim.Array_tabulate<A>(
+    Prim.Array_tabulate<X>(
       count,
       func _ {
         while (not keep[nextKeep]) {
@@ -359,7 +360,8 @@ module {
   };
 
   // FIXME the arguments ordering to the higher order function are flipped
-  /// between this and the buffer class
+  // between this and the buffer class
+  // probably can't avoid breaking changes at some point
   /// Creates a new array by applying `f` to each element in `array` and its index.
   /// Retains original ordering of elements.
   ///
@@ -394,10 +396,10 @@ module {
   ///
   /// Space: O(size)
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func mapFilter<A, B>(array : [A], f : A -> ?B) : [B] {
+  public func mapFilter<X, Y>(array : [X], f : X -> ?Y) : [Y] {
     var count = 0;
     let options = 
-      Prim.Array_tabulate<?B>(
+      Prim.Array_tabulate<?Y>(
         array.size(),
         func i {
           let result = f(array[i]);
@@ -414,7 +416,7 @@ module {
       );
     
     var nextSome = 0;
-    Prim.Array_tabulate<B>(
+    Prim.Array_tabulate<Y>(
       count,
       func _ {
         while (Option.isNull(options[nextSome])) {
@@ -431,7 +433,6 @@ module {
     )
   };
 
-  // probably can't avoid breaking changes at some point
   /// Creates a new array by applying `f` to each element in `array`.
   /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
   /// Returns an `#ok` containing the new array.
@@ -565,6 +566,7 @@ module {
     accumulation
   };
 
+  // FIXME the type arguments are reverse order from Buffer
   /// Collapses the elements in `array` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// right to left.
@@ -581,7 +583,7 @@ module {
   /// Space: O(1)
   ///
   /// *Runtime and space assumes that `combine` runs in O(1) time and space.
-  public func foldRight<X, Y>(array : [X], base : Y, combine : (X, Y) -> Y) : Y {
+  public func foldRight<X, A>(array : [X], base : A, combine : (X, A) -> A) : A {
     var accumulation = base;
     let size = array.size();
 
