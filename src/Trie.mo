@@ -984,7 +984,7 @@ module {
           if (isEmpty(fl) and isEmpty(fr)) { #empty }
           else {
             branch(fl, fr) };
-          };
+          }
         }
       }
     };
@@ -1017,7 +1017,7 @@ module {
           if (isEmpty(fl) and isEmpty(fr)) { #empty }
           else {
             branch(fl, fr) };
-          };
+          }
         }
       }
     };
