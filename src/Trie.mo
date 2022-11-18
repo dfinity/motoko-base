@@ -981,11 +981,9 @@ module {
         case (#branch(b)) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
-          switch (isEmpty(fl), isEmpty(fr)) {
-            case (true, true) { #empty };
-            case (false, true) { fl };
-            case (true, false) { fr };
-            case (false, false) { branch(fl, fr) };
+          if isEmpty(fl) and isEmpty(fr)) { #empty }
+          else {
+            branch(fl, fr) };
           };
         }
       }
@@ -1016,11 +1014,9 @@ module {
         case (#branch(b)) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
-          switch (isEmpty(fl), isEmpty(fr)) {
-            case (true, true) { #empty };
-            case (false, true) { fl };
-            case (true, false) { fr };
-            case (false, false) { branch(fl, fr) };
+          if isEmpty(fl) and isEmpty(fr)) { #empty }
+          else {
+            branch(fl, fr) };
           };
         }
       }
