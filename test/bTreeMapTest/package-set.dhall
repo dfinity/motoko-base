@@ -1,1 +1,1 @@
-../../package-set.dhall
+../package-set.dhall
