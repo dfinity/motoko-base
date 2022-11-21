@@ -46,7 +46,7 @@ debug {
     for (i in Iter.range(0, max - 1)) {
       t1 := Trie.filter (t1, func (t : Text, n : Nat) : Bool { n != i } );
       Trie.assertIsValid(t1);
-      //assert Trie.size(t1) == (max - i : Nat);
+      assert Trie.size(t1) == (max - (i + 1) : Nat);
     }
   };
 
@@ -60,7 +60,7 @@ debug {
          if (n != i) ?n else null }
       );
       Trie.assertIsValid(t1);
-      //assert Trie.size(t1) == (max - i : Nat);
+      assert Trie.size(t1) == (max - (i + 1) : Nat);
     }
   }
 };
