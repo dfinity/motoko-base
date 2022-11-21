@@ -74,6 +74,8 @@
 // list.
 //
 
+import Debug "mo:base/Debug";
+
 import Prim "mo:⛔";
 import P "Prelude";
 import Option "Option";
@@ -129,44 +131,23 @@ module {
     }
   };
 
-  /// Checks the invariants of the trie structure, including the placement of keys at trie paths
-  public func isValid<K, V>(t : Trie<K, V>, enforceNormal : Bool) : Bool {
-    func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) : Bool {
+  public func assertIsValid<K, V>(t : Trie<K, V>) {
+    func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) {
       switch t {
-        case (#empty) {
-          switch bitpos {
-            case null { true };
-            case (?_) { not enforceNormal };
-          }
-        };
+        case (#empty) { };
         case (#leaf(l)) {
           let len = List.size(l.keyvals);
-          ((len <= MAX_LEAF_SIZE) or (not enforceNormal))
-          and
-          len == l.size
-          and
-          ( List.all(
+          assert
+            len <= MAX_LEAF_SIZE + 1;
+          assert
+            len == l.size;
+          assert
+            List.all(
               l.keyvals,
               func ((k : Key<K>, v : V)) : Bool {
-              // { Prim.debugPrint "testing hash..."; true }
-              // and
                 ((k.hash & mask) == bits)
-              // or
-              // (do {
-              //    Prim.debugPrint("\nmalformed hash!:\n");
-              //    Prim.debugPrintInt(Prim.nat32ToNat(k.hash));
-              //    Prim.debugPrint("\n (key hash) != (path bits): \n");
-              //    Prim.debugPrintInt(Prim.nat32ToNat(bits));
-              //    Prim.debugPrint("\nmask  : ");
-              //    Prim.debugPrintInt(Prim.nat32ToNat(mask));
-              //    Prim.debugPrint("\n");
-              //    false
-              //  })
-                 }
-               )
-          // or
-          // (do { Prim.debugPrint("one or more hashes are malformed"); false })
-          )
+              }
+            )
         };
         case (#branch(b)) {
           let bitpos1 =
@@ -177,12 +158,9 @@ module {
           let mask1 = mask | (Prim.natToNat32(1) << bitpos1);
           let bits1 = bits | (Prim.natToNat32(1) << bitpos1);
           let sum = size(b.left) + size(b.right);
-          (b.size == sum
-       //  or (do { Prim.debugPrint("malformed size"); false })
-           )
-          and
-          rec(b.left,  ?bitpos1, bits,  mask1)
-          and
+          assert
+            (b.size == sum);
+          rec(b.left,  ?bitpos1, bits,  mask1);
           rec(b.right, ?bitpos1, bits1, mask1)
         };
       }
