@@ -19,8 +19,17 @@ debug {
   var t : Trie<Text, Nat> = Trie.empty();
   for (i in Iter.range(0, max)) {
     let (t1_, x) = Trie.put<Text, Nat>(t, key i, Text.equal, i);
+
+
+
     assert (Option.isNull(x));
+
+
+
     assert Trie.isValid(t1_, true);
+
+
+
     t := t1_;
   };
   assert Trie.size(t) == max;
