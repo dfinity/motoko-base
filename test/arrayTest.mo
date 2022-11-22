@@ -8,68 +8,11 @@ import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import Text "mo:base/Text";
 
-let mapEntriesTest = do {
-
-  let isEven = func (x : Int) : Bool {
-    x % 2 == 0;
-  };
-
-  let xs = [ 1, 2, 3, 4, 5, 6 ];
-
-  let actual = Array.mapEntries<Int, (Bool, Bool)>(
-    xs, func (value : Int, index : Nat) : (Bool, Bool) {
-      (isEven value, isEven index)
-    });
-
-  let expected = [
-    (false, true),
-    (true, false),
-    (false, true),
-    (true, false),
-    (false, true),
-    (true, false),
-  ];
-
-  Suite.test(
-    "mapEntries",
-    actual,
-    M.equals<[(Bool, Bool)]>(T.array(T.tuple2Testable(T.boolTestable, T.boolTestable), expected))
-  )
-};
-
-func makeNatural(x : Int) : Result.Result<Nat, Text> =
-  if (x >= 0) { #ok(Int.abs(x)) } else { #err(Int.toText(x) # " is not a natural number.") };
-
-func arrayRes(itm : Result.Result<[Nat], Text>) : T.TestableItem<Result.Result<[Nat], Text>> {
-  let resT = T.resultTestable(T.arrayTestable<Nat>(T.intTestable), T.textTestable);
-  { display = resT.display; equals = resT.equals; item = itm }
-};
-
-let mapResult = Suite.suite("mapResult", [
-  Suite.test("empty array",
-    Array.mapResult<Int, Nat, Text>([], makeNatural),
-    M.equals(arrayRes(#ok([])))
-  ),
-  Suite.test("success",
-    Array.mapResult<Int, Nat, Text>([ 1, 2, 3 ], makeNatural),
-    M.equals(arrayRes(#ok([1, 2, 3])))
-  ),
-  Suite.test("fail fast",
-    Array.mapResult<Int, Nat, Text>([ -1, 2, 3 ], makeNatural),
-    M.equals(arrayRes(#err("-1 is not a natural number.")))
-  ),
-  Suite.test("fail last",
-    Array.mapResult<Int, Nat, Text>([ 1, 2, -3 ], makeNatural),
-    M.equals(arrayRes(#err("-3 is not a natural number.")))
-  ),
-]);
-
 func arrayNat(xs : [Nat]) : T.TestableItem<[Nat]> {
   T.array(T.natTestable, xs)
 };
 
 let suite = Suite.suite("Array", [
-  mapResult,
   Suite.test(
     "init",
     Array.freeze(Array.init<Int>(3, 4)),
@@ -190,45 +133,140 @@ let suite = Suite.suite("Array", [
     Array.sort([2, 2, 2, 2, 2], Nat.compare),
     M.equals(arrayNat([2, 2, 2, 2, 2]))
   ),
-  Suite.test(
-    "chain",
+  Suite.test("sortInPlace",
     do {
-      let purePlusOne = func (x : Int) : [Int] { [ x + 1 ] };
-      Array.chain<Int, Int>([ 0, 1, 2 ], purePlusOne);
+      let array = [var 2, 3, 1];
+      Array.sortInPlace(array, Nat.compare);
+      Array.freeze(array)
     },
-    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
+    M.equals(arrayNat([1, 2, 3]))
+  ),
+  Suite.test("sortInPlace empty",
+    do {
+      let array = [var];
+      Array.sortInPlace(array, Nat.compare);
+      Array.freeze(array)
+    },
+    M.equals(arrayNat([]))
+  ),
+  Suite.test("sortInPlace already sorted",
+    do {
+      let array = [var 1, 2, 3, 4, 5];
+      Array.sortInPlace(array, Nat.compare);
+      Array.freeze(array)
+    },
+    M.equals(arrayNat([1, 2, 3, 4, 5]))
+  ),
+  Suite.test("sortInPlace repeated elements",
+    do {
+      let array = [var 2, 2, 2, 2, 2];
+      Array.sortInPlace(array, Nat.compare);
+      Array.freeze(array)
+    },
+    M.equals(arrayNat([2, 2, 2, 2, 2]))
+  ),
+  Suite.test(
+    "reverse",
+    Array.reverse<Nat>([0, 1, 2, 2, 3]),
+    M.equals(T.array<Nat>(T.natTestable, [3, 2, 2, 1, 0]))
+  ),
+  Suite.test(
+    "reverse empty",
+    Array.reverse<Nat>([]),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+  Suite.test(
+    "reverse singleton",
+    Array.reverse<Nat>([0]),
+    M.equals(T.array<Nat>(T.natTestable, [0]))
+  ),
+  Suite.test(
+    "map",
+    Array.map<Nat, Bool>([1, 2, 3], func x = x % 2 == 0),
+    M.equals(T.array<Bool>(T.boolTestable, [false, true, false]))
+  ),
+  Suite.test(
+    "map empty",
+    Array.map<Nat, Bool>([], func x = x % 2 == 0),
+    M.equals(T.array<Bool>(T.boolTestable, []))
   ),
   Suite.test(
     "filter",
-    do {
-      let isEven = func (x : Nat) : Bool { x % 2 == 0 };
-      Array.filter([ 1, 2, 3, 4, 5, 6 ], isEven);
-    },
-    M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
+    Array.filter<Nat>([1, 2, 3, 4, 5, 6], func x = x % 2 == 0),
+    M.equals(T.array<Nat>(T.natTestable, [2, 4, 6]))
   ),
   Suite.test(
     "filter empty",
-    do {
-      let isEven = func (x : Nat) : Bool { x % 2 == 0 };
-      Array.filter([] : [Nat], isEven);
-    },
-    M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
+    Array.filter<Nat>([], func x = x % 2 == 0),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+  Suite.test(
+    "mapEntries",
+    Array.mapEntries<Nat, Nat>([1, 2, 3], func (x, i) = x + i),
+    M.equals(T.array<Nat>(T.natTestable, [1, 3, 5]))
+  ),
+  Suite.test(
+    "mapEntries empty",
+    Array.mapEntries<Nat, Nat>([], func (x, i) = x + i),
+    M.equals(T.array<Nat>(T.natTestable, []))
   ),
   Suite.test(
     "mapFilter",
-    do {
-      let isEven = func (x : Nat) : ?Nat { if (x % 2 == 0) ?x else null };
-      Array.mapFilter([ 1, 2, 3, 4, 5, 6 ], isEven);
-    },
-    M.equals(T.array<Nat>(T.natTestable, [ 2, 4, 6 ]))
+    Array.mapFilter<Nat, Nat>([1, 2, 3, 4, 5, 6], func x { if (x % 2 == 0) ?x else null }),
+    M.equals(T.array<Nat>(T.natTestable, [2, 4, 6]))
+  ),
+  Suite.test(
+    "mapFilter keep all",
+    Array.mapFilter<Nat, Nat>([1, 2, 3], func x = ?x),
+    M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
+  ),
+  Suite.test(
+    "mapFilter keep none",
+    Array.mapFilter<Nat, Nat>([1, 2, 3], func _ = null),
+    M.equals(T.array<Nat>(T.natTestable, []))
   ),
   Suite.test(
     "mapFilter empty",
-    do {
-      let isEven = func (x : Nat) : ?Nat { if (x % 2 == 0) ?x else null };
-      Array.mapFilter([] : [Nat], isEven);
-    },
-    M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
+    Array.mapFilter<Nat, Nat>([], func x { if (x % 2 == 0) ?x else null }),
+    M.equals(T.array<Nat>(T.natTestable, []))
+  ),
+  Suite.test(
+    "mapResult",
+    Array.mapResult<Int, Nat, Text>(
+      [1, 2, 3],
+      func x { if (x >= 0) { #ok(Int.abs x) } else { #err "error message"} }),
+    M.equals(T.result<[Nat], Text>(T.arrayTestable(T.natTestable), T.textTestable, #ok([1, 2, 3])))
+  ),
+  Suite.test(
+    "mapResult fail first",
+    Array.mapResult<Int, Nat, Text>(
+      [-1, 2, 3],
+      func x { if (x >= 0) { #ok(Int.abs x) } else { #err "error message"} }),
+    M.equals(T.result<[Nat], Text>(T.arrayTestable(T.natTestable), T.textTestable, #err "error message"))
+  ),
+  Suite.test(
+    "mapResult fail last",
+    Array.mapResult<Int, Nat, Text>(
+      [1, 2, -3],
+      func x { if (x >= 0) { #ok(Int.abs x) } else { #err "error message"} }),
+    M.equals(T.result<[Nat], Text>(T.arrayTestable(T.natTestable), T.textTestable, #err "error message"))
+  ),
+  Suite.test(
+    "mapResult empty",
+    Array.mapResult<Nat, Nat, Text>(
+      [],
+      func x = #ok x),
+    M.equals(T.result<[Nat], Text>(T.arrayTestable(T.natTestable), T.textTestable, #ok([])))
+  ),
+  Suite.test(
+    "chain",
+    Array.chain<Int, Int>([0, 1, 2], func x = [x, -x]),
+    M.equals(T.array<Int>(T.intTestable, [0, 0, 1, -1, 2, -2]))
+  ),
+  Suite.test(
+    "chain empty",
+    Array.chain<Int, Int>([], func x = [x, -x]),
+    M.equals(T.array<Int>(T.intTestable, []))
   ),
   Suite.test(
     "foldLeft",
@@ -246,18 +284,6 @@ let suite = Suite.suite("Array", [
     M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
   ),
   Suite.test(
-    "map",
-    do {
-      let isEven = func (x : Int) : Bool {
-        x % 2 == 0;
-      };
-
-      Array.map<Int, Bool>([ 1, 2, 3, 4, 5, 6 ], isEven);
-    },
-    M.equals(T.array<Bool>(T.boolTestable, [ false, true, false, true, false, true ]))
-  ),
-  mapEntriesTest,
-  Suite.test(
     "make",
     Array.make<Int>(0),
     M.equals(T.array<Int>(T.intTestable, [0]))
@@ -273,11 +299,6 @@ let suite = Suite.suite("Array", [
       0
     },
     M.equals(T.nat(0))
-  ),
-  Suite.test(
-    "reverse",
-    Array.reverse<Nat>([0, 1, 2, 3]),
-    M.equals(T.array<Nat>(T.natTestable, [3, 2, 1, 0]))
   )
 ]);
 
