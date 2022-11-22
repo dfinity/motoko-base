@@ -8,39 +8,6 @@ import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import Text "mo:base/Text";
 
-let findTest = do {
-  type Element = {
-    key : Text;
-    value : Int;
-  };
-
-  let xs = [
-    { key = "a"; value = 0; },
-    { key = "b"; value = 1; },
-    { key = "c"; value = 2; },
-  ];
-
-  let actual : ?Element = Array.find<Element>(xs, func (x : Element) : Bool {
-    x.key == "b";
-  });
-
-  let elementTestable : T.Testable<Element> = {
-    display = func (e : Element) : Text {
-      "{ key = " # T.textTestable.display(e.key) # ";" #
-      " value = " # T.intTestable.display(e.value) #
-      " }"
-    };
-    equals = func (e1 : Element, e2 : Element) : Bool =
-      e1.key == e2.key and e1.value == e2.value;
-  };
-
-  Suite.test(
-    "find",
-    actual,
-    M.equals<?Element>(T.optional(elementTestable, ?({ key = "b"; value = 1 })))
-  )
-};
-
 let mapEntriesTest = do {
 
   let isEven = func (x : Int) : Bool {
@@ -101,32 +68,128 @@ func arrayNat(xs : [Nat]) : T.TestableItem<[Nat]> {
   T.array(T.natTestable, xs)
 };
 
-let sort = Suite.suite("sort", [
-  Suite.test("empty array",
+let suite = Suite.suite("Array", [
+  mapResult,
+  Suite.test(
+    "init",
+    Array.freeze(Array.init<Int>(3, 4)),
+    M.equals(T.array<Int>(T.intTestable, [4, 4, 4]))),
+  Suite.test(
+    "init empty",
+    Array.freeze(Array.init<Int>(0, 4)),
+    M.equals(T.array<Int>(T.intTestable, []))),
+  Suite.test(
+    "tabulate",
+    Array.tabulate<Int>(3, func (i : Nat)= i * 2),
+    M.equals(T.array<Int>(T.intTestable, [0, 2, 4]))),
+  Suite.test(
+    "tabulate empty",
+    Array.tabulate<Int>(0, func (i : Nat) = i),
+    M.equals(T.array<Int>(T.intTestable, []))),
+  Suite.test(
+    "tabulateVar",
+    Array.freeze(Array.tabulateVar<Int>(3, func (i : Nat)= i * 2)),
+    M.equals(T.array<Int>(T.intTestable, [0, 2, 4]))),
+  Suite.test(
+    "tabulateVar empty",
+    Array.freeze(Array.tabulateVar<Int>(0, func (i : Nat) = i)),
+    M.equals(T.array<Int>(T.intTestable, []))),
+  Suite.test(
+    "freeze",
+    Array.freeze<Int>([ var 1, 2, 3 ]),
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
+  ),
+  Suite.test(
+    "freeze empty",
+    Array.freeze<Int>([var]),
+    M.equals(T.array<Int>(T.intTestable, []))
+  ),
+  Suite.test(
+    "thaw round trip",
+    Array.freeze(Array.thaw<Int>([1, 2, 3])),
+    M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+  ),
+  Suite.test(
+    "thaw round trip empty",
+    Array.freeze(Array.thaw<Int>([])),
+    M.equals(T.array<Int>(T.intTestable, []))
+  ),
+  Suite.test(
+    "equal",
+    Array.equal<Int>([1, 2, 3], [1, 2, 3], Int.equal),
+    M.equals(T.bool(true))
+  ),
+  Suite.test(
+    "equal empty",
+    Array.equal<Int>([], [], Int.equal),
+    M.equals(T.bool(true))
+  ),
+  Suite.test(
+    "not equal one empty",
+    Array.equal<Int>([], [2, 3], Int.equal),
+    M.equals(T.bool(false))
+  ),
+  Suite.test(
+    "not equal different lengths",
+    Array.equal<Int>([1, 2, 3], [2, 4], Int.equal),
+    M.equals(T.bool(false))
+  ),
+  Suite.test(
+    "not equal same lengths",
+    Array.equal<Int>([1, 2, 3], [1, 2, 4], Int.equal),
+    M.equals(T.bool(false))
+  ),
+  Suite.test(
+    "find",
+    Array.find<Nat>([1, 9, 4, 8], func x = x == 9),
+    M.equals(T.optional(T.natTestable, ?9))
+  ),
+  Suite.test(
+    "find fail",
+    Array.find<Nat>([1, 9, 4, 8], func _ = false),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  Suite.test(
+    "find empty",
+    Array.find<Nat>([], func _ = true),
+    M.equals(T.optional(T.natTestable, null : ?Nat))
+  ),
+  Suite.test(
+    "append",
+    Array.append<Int>([1, 2, 3], [4, 5, 6]),
+    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3, 4, 5, 6 ]))
+  ),
+  Suite.test(
+    "append first empty",
+    Array.append<Int>([], [4, 5, 6]),
+    M.equals(T.array<Int>(T.intTestable, [4, 5, 6]))
+  ),
+  Suite.test(
+    "append second empty",
+    Array.append<Int>([1, 2, 3], []),
+    M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+  ),
+  Suite.test(
+    "append both empty",
+    Array.append<Int>([], []),
+    M.equals(T.array<Int>(T.intTestable, []))
+  ),
+  Suite.test("sort",
+    Array.sort([2, 3, 1], Nat.compare),
+    M.equals(arrayNat([1, 2, 3]))
+  ),
+  Suite.test("sort empty array",
     Array.sort([], Nat.compare),
     M.equals(arrayNat([]))
   ),
-  Suite.test("already sorted",
+  Suite.test("sort already sorted",
     Array.sort([1, 2, 3, 4, 5], Nat.compare),
     M.equals(arrayNat([1, 2, 3, 4, 5]))
   ),
-  Suite.test("reversed array",
-    Array.sort([3, 2, 1], Nat.compare),
-    M.equals(arrayNat([1, 2, 3]))
-  ),
-  Suite.test("repeated elements",
+  Suite.test("sort repeated elements",
     Array.sort([2, 2, 2, 2, 2], Nat.compare),
     M.equals(arrayNat([2, 2, 2, 2, 2]))
-  )
-]);
-
-let suite = Suite.suite("Array", [
-  mapResult,
-  sort,
-  Suite.test(
-    "append",
-    Array.append<Int>([ 1, 2, 3 ], [ 4, 5, 6 ]),
-    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3, 4, 5, 6 ]))),
+  ),
   Suite.test(
     "chain",
     do {
@@ -167,7 +230,6 @@ let suite = Suite.suite("Array", [
     },
     M.equals(T.array<Nat>(T.natTestable, [] : [Nat]))
   ),
-  findTest,
   Suite.test(
     "foldLeft",
     Array.foldLeft<Text, Text>([ "a", "b", "c" ], "", Text.concat),
@@ -177,14 +239,6 @@ let suite = Suite.suite("Array", [
     "foldRight",
     Array.foldRight<Text, Text>([ "a", "b", "c" ], "", Text.concat),
     M.equals(T.text("abc"))
-  ),
-  Suite.test(
-    "freeze",
-    do {
-      var xs : [var Int] = [ var 1, 2, 3 ];
-      Array.freeze<Int>(xs);
-    },
-    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
   ),
   Suite.test(
     "flatten",
@@ -207,14 +261,6 @@ let suite = Suite.suite("Array", [
     "make",
     Array.make<Int>(0),
     M.equals(T.array<Int>(T.intTestable, [0]))
-  ),
-  Suite.test(
-    "thaw",
-    do {
-      let xs : [Int] = [ 1, 2, 3 ];
-      Array.freeze(Array.thaw<Int>(xs))
-    },
-    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3]))
   ),
   Suite.test(
     "tabulateVar",
