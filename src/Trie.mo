@@ -132,16 +132,19 @@ module {
   };
 
   public func assertIsValid<K, V>(t : Trie<K, V>) {
-    func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) {
+    assert isValid(t)
+  };
+
+  public func isValid<K, V>(t : Trie<K, V>) : Bool {
+    func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) : Bool {
       switch t {
-        case (#empty) { };
+        case (#empty) { true };
         case (#leaf(l)) {
           let len = List.size(l.keyvals);
-          assert
-            len <= MAX_LEAF_SIZE + 1;
-          assert
-            len == l.size;
-          assert
+            len <= MAX_LEAF_SIZE + 1
+          and
+            len == l.size
+          and
             List.all(
               l.keyvals,
               func ((k : Key<K>, v : V)) : Bool {
@@ -158,9 +161,8 @@ module {
           let mask1 = mask | (Prim.natToNat32(1) << bitpos1);
           let bits1 = bits | (Prim.natToNat32(1) << bitpos1);
           let sum = size(b.left) + size(b.right);
-          assert
-            (b.size == sum);
-          rec(b.left,  ?bitpos1, bits,  mask1);
+          (b.size == sum) and
+          rec(b.left,  ?bitpos1, bits,  mask1) and
           rec(b.right, ?bitpos1, bits1, mask1)
         };
       }
@@ -960,7 +962,7 @@ module {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
           if (isEmpty(fl) and isEmpty(fr)) {
-            #empty 
+            #empty
           } else {
             branch(fl, fr)
           }
@@ -994,7 +996,7 @@ module {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
           if (isEmpty(fl) and isEmpty(fr)) {
-            #empty 
+            #empty
           } else {
             branch(fl, fr)
           }
