@@ -1,16 +1,11 @@
 import Array "mo:base/Array";
-import Debug "mo:base/Debug";
 import Int "mo:base/Int";
-import M "mo:matchers/Matchers";
 import Nat "../src/Nat";
+import Text "mo:base/Text";
 import Result "mo:base/Result";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
-import Text "mo:base/Text";
-
-func arrayNat(xs : [Nat]) : T.TestableItem<[Nat]> {
-  T.array(T.natTestable, xs)
-};
+import M "mo:matchers/Matchers";
 
 let suite = Suite.suite("Array", [
   Suite.test(
@@ -119,19 +114,19 @@ let suite = Suite.suite("Array", [
   ),
   Suite.test("sort",
     Array.sort([2, 3, 1], Nat.compare),
-    M.equals(arrayNat([1, 2, 3]))
+    M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
   ),
   Suite.test("sort empty array",
     Array.sort([], Nat.compare),
-    M.equals(arrayNat([]))
+    M.equals(T.array<Nat>(T.natTestable, []))
   ),
   Suite.test("sort already sorted",
     Array.sort([1, 2, 3, 4, 5], Nat.compare),
-    M.equals(arrayNat([1, 2, 3, 4, 5]))
+    M.equals(T.array<Nat>(T.natTestable, [1, 2, 3, 4, 5]))
   ),
   Suite.test("sort repeated elements",
     Array.sort([2, 2, 2, 2, 2], Nat.compare),
-    M.equals(arrayNat([2, 2, 2, 2, 2]))
+    M.equals(T.array<Nat>(T.natTestable, [2, 2, 2, 2, 2]))
   ),
   Suite.test("sortInPlace",
     do {
@@ -139,7 +134,7 @@ let suite = Suite.suite("Array", [
       Array.sortInPlace(array, Nat.compare);
       Array.freeze(array)
     },
-    M.equals(arrayNat([1, 2, 3]))
+    M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
   ),
   Suite.test("sortInPlace empty",
     do {
@@ -147,7 +142,7 @@ let suite = Suite.suite("Array", [
       Array.sortInPlace(array, Nat.compare);
       Array.freeze(array)
     },
-    M.equals(arrayNat([]))
+    M.equals(T.array<Nat>(T.natTestable, []))
   ),
   Suite.test("sortInPlace already sorted",
     do {
@@ -155,7 +150,7 @@ let suite = Suite.suite("Array", [
       Array.sortInPlace(array, Nat.compare);
       Array.freeze(array)
     },
-    M.equals(arrayNat([1, 2, 3, 4, 5]))
+    M.equals(T.array<Nat>(T.natTestable, [1, 2, 3, 4, 5]))
   ),
   Suite.test("sortInPlace repeated elements",
     do {
@@ -163,7 +158,7 @@ let suite = Suite.suite("Array", [
       Array.sortInPlace(array, Nat.compare);
       Array.freeze(array)
     },
-    M.equals(arrayNat([2, 2, 2, 2, 2]))
+    M.equals(T.array<Nat>(T.natTestable, [2, 2, 2, 2, 2]))
   ),
   Suite.test(
     "reverse",
