@@ -25,7 +25,7 @@ module {
   ///
   /// Runtime: O(size)
   /// Space: O(size)
-  public func init<X>(size : Nat,  initValue : X) : [var X] = 
+  public func init<X>(size : Nat,  initValue : X) : [var X] =
     Prim.Array_init<X>(size, initValue);
 
   /// Create an immutable array of size `size`. Each element at index i
@@ -37,7 +37,7 @@ module {
   ///
   /// Runtime: O(size)
   /// Space: O(size)
-  /// 
+  ///
   /// *Runtime and space assumes that `generator` runs in O(1) time and space.
   public func tabulate<X>(size : Nat,  generator : Nat -> X) : [X] =
     Prim.Array_tabulate<X>(size, generator);
@@ -53,7 +53,7 @@ module {
   ///
   /// Runtime: O(size)
   /// Space: O(size)
-  /// 
+  ///
   /// *Runtime and space assumes that `generator` runs in O(1) time and space.
   public func tabulateVar<X>(size : Nat,  generator : Nat -> X) : [var X] {
     // FIXME add this as a primitive in the RTS
@@ -79,7 +79,7 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(1)
-  public func freeze<X>(varArray : [var X]) : [X] = 
+  public func freeze<X>(varArray : [var X]) : [X] =
     Prim.Array_tabulate<X>(varArray.size(), func i = varArray[i]);
 
   /// Transforms an immutable array into a mutable array.
@@ -114,7 +114,7 @@ module {
   ///
   /// ```motoko include=import
   /// // Use the equal function from the Nat module to compare Nats
-  /// import {equal} "mo:base/Nat"; 
+  /// import {equal} "mo:base/Nat";
   ///
   /// let array1 = [0, 1, 2, 3];
   /// let array2 = [0, 1, 2, 3];
@@ -124,7 +124,7 @@ module {
   /// Runtime: O(size1 + size2)
   ///
   /// Space: O(1)
-  /// 
+  ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func equal<X>(array1 : [X], array2 : [X], equal : (X, X) -> Bool) : Bool {
     let size1 = array1.size();
@@ -152,7 +152,7 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(1)
-  /// 
+  ///
   /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
   public func find<X>(array : [X], predicate : X -> Bool) : ?X {
     for (element in array.vals()) {
@@ -211,7 +211,7 @@ module {
   /// Sort is deterministic, stable, and in-place.
   ///
   /// ```motoko include=import
-  /// 
+  ///
   /// import {compare} "mo:base/Nat";
   ///
   /// let array = [var 4, 2, 6];
@@ -318,11 +318,11 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func map<X, Y>(array : [X], f : X -> Y) : [Y] = 
+  public func map<X, Y>(array : [X], f : X -> Y) : [Y] =
     Prim.Array_tabulate<Y>(array.size(), func i = f(array[i]));
 
   /// Creates a new array by applying `predicate` to every element
-  /// in `array`, and keeping elements for which `predicate` returns true. 
+  /// in `array`, retaining the elements for which `predicate` returns true.
   ///
   /// ```motoko include=import
   /// let array = [4, 2, 6, 1, 5];
@@ -334,7 +334,7 @@ module {
   /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
   public func filter<X>(array : [X], predicate : X -> Bool) : [X] {
     var count = 0;
-    let keep = 
+    let keep =
       Prim.Array_tabulate<Bool>(
         array.size(),
         func i {
@@ -376,8 +376,8 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func mapEntries<X, Y>(array : [X], f : (X, Nat) -> Y) : [Y] = 
-    Prim.Array_tabulate<Y>(array.size(), func i = f(array[i], i));  
+  public func mapEntries<X, Y>(array : [X], f : (X, Nat) -> Y) : [Y] =
+    Prim.Array_tabulate<Y>(array.size(), func i = f(array[i], i));
 
   /// Creates a new array by applying `f` to each element in `array`,
   /// and keeping all non-null elements. The ordering is retained.
@@ -386,7 +386,7 @@ module {
   /// import {toText} "mo:base/Nat";
   ///
   /// let array = [4, 2, 0, 1];
-  /// let newArray = 
+  /// let newArray =
   ///   Array.mapFilter<Nat, Text>( // mapping from Nat to Text values
   ///     array,
   ///     func x = if (x == 0) { null } else { ?toText(100 / x) } // can't divide by 0, so return null
@@ -398,7 +398,7 @@ module {
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapFilter<X, Y>(array : [X], f : X -> ?Y) : [Y] {
     var count = 0;
-    let options = 
+    let options =
       Prim.Array_tabulate<?Y>(
         array.size(),
         func i {
@@ -411,10 +411,10 @@ module {
             case null {
               null
             }
-          } 
+          }
         }
       );
-    
+
     var nextSome = 0;
     Prim.Array_tabulate<Y>(
       count,
@@ -435,7 +435,7 @@ module {
 
   /// Creates a new array by applying `f` to each element in `array`.
   /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
-  /// Returns an `#ok` containing the new array.
+  /// returns an `#ok` containing the new array.
   ///
   /// ```motoko include=import
   /// let array = [4, 3, 2, 1, 0];
@@ -543,7 +543,7 @@ module {
   /// import {add} "mo:base/Nat";
   ///
   /// let array = [4, 2, 0, 1];
-  /// let sum = 
+  /// let sum =
   ///   Array.foldLeft<Nat, Nat>(
   ///     array,
   ///     0, // start the sum at 0
@@ -596,7 +596,7 @@ module {
     accumulation;
   };
 
-  /// Flattens the array of arrays into a single array. Retains the original 
+  /// Flattens the array of arrays into a single array. Retains the original
   /// ordering of the elements.
   ///
   /// ```motoko include=import
