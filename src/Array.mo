@@ -617,13 +617,12 @@ module {
     var outer = 0;
     var inner = 0;
     Prim.Array_tabulate<X>(flatSize, func _ {
-      let subArray = arrays[outer];
-      let element = subArray[inner];
-      inner += 1;
-      if (inner == subArray.size()) {
+      while (inner == arrays[outer].size()) {
         inner := 0;
         outer += 1;
       };
+      let element = arrays[outer][inner];
+      inner += 1;
       element
     })
   };
