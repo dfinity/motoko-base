@@ -683,4 +683,185 @@ module {
   ///
   /// Space: O(1)
   public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys();
-}
+
+  public func clone<X>(array : [var X]) : [var X] = tabulateVar<X>(array.size(), func i = array[i]);
+
+  /// Finds the greatest element in `array` defined by `compare`.
+  /// Returns `null` if `array` is empty.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func max<X>(array : [X], compare : (X, X) -> Order.Order) : ?X {
+    if (array.size() == 0) {
+      return null;
+    };
+
+    var maxSoFar = array[0];
+    for (current in array.vals()) {
+      switch (compare(current, maxSoFar)) {
+        case (#greater) {
+          maxSoFar := current;
+        };
+        case _ {};
+      };
+    };
+
+    ?maxSoFar;
+  };
+
+  /// Finds the least element in `array` defined by `compare`.
+  /// Returns `null` if `array` is empty.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func min<X>(array : [X], compare : (X, X) -> Order.Order) : ?X {
+    if (array.size() == 0) {
+      return null;
+    };
+
+    var minSoFar = array[0];
+    for (current in array.vals()) {
+      switch (compare(current, minSoFar)) {
+        case (#less) {
+          minSoFar := current;
+        };
+        case _ {};
+      };
+    };
+
+    ?minSoFar;
+  };
+
+  /// Defines comparison for two arrays, using `compare` to recursively compare elements in the
+  /// arrays. Comparison is defined lexicographically.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compare` runs in O(1) time and space.
+  public func compare<X>(array1 : [X], array2 : [X], compare : (X, X) -> Order.Order) : Order.Order {
+    let size1 = array1.size();
+    let size2 = array2.size();
+    let minSize = if (size1 < size2) { size1 } else { size2 };
+
+    var i = 0;
+    while (i < minSize) {
+      switch (compare(array1[i], array2[i])) {
+        case (#less) {
+          return #less;
+        };
+        case (#greater) {
+          return #greater;
+        };
+        case _ {};
+      };
+      i += 1;
+    };
+
+    if (size1 < size2) {
+      #less;
+    } else if (size1 == size2) {
+      #equal;
+    } else {
+      #greater;
+    };
+  };
+
+  /// Creates a textual representation of `array`, using `toText` to recursively
+  /// convert the elements into Text.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `toText` runs in O(1) time and space.
+  public func toText<X>(array : [X], toText : X -> Text) : Text {
+    let size : Int = array.size();
+    var i = 0;
+    var text = "";
+    while (i < size - 1) {
+      text := text # toText(array[i]) # ", "; // Text implemented as rope
+      i += 1;
+    };
+    if (size > 0) {
+      // avoid the trailing comma
+      text := text # toText(array[i]);
+    };
+
+    "[" # text # "]";
+  };
+
+  /// Hashes `array` using `hash` to hash the underlying elements.
+  /// The deterministic hash function is a function of the elements in the array, as well
+  /// as their ordering.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `hash` runs in O(1) time and space.
+  public func hash<X>(array : [X], hash : X -> Nat32) : Nat32 {
+    let size = array.size();
+    var i = 0;
+    var accHash : Nat32 = 0;
+
+    while (i < size) {
+      accHash := Prim.intToNat32Wrap(i) ^ accHash ^ hash(array[i]);
+      i += 1;
+    };
+
+    accHash;
+  };
+
+  /// Finds the first index of `element` in `array` using equality of elements defined
+  /// by `equal`. Returns `null` if `element` is not found.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func indexOf<X>(element : X, array : [X], equal : (X, X) -> Bool) : ?Nat {
+    let size = array.size();
+    var i = 0;
+    while (i < size) {
+      if (equal(array[i], element)) {
+        return ?i;
+      };
+      i += 1;
+    };
+
+    null;
+  };
+
+  /// Finds the last index of `element` in `array` using equality of elements defined
+  /// by `equal`. Returns `null` if `element` is not found.
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
+  public func lastIndexOf<X>(element : X, array : [X], equal : (X, X) -> Bool) : ?Nat {
+    let size = array.size();
+    if (size == 0) {
+      return null;
+    };
+    var i = size;
+    while (i >= 1) {
+      i -= 1;
+      if (equal(array[i], element)) {
+        return ?i;
+      };
+    };
+
+    null;
+  };
+};
