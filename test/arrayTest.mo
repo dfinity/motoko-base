@@ -274,14 +274,49 @@ let suite = Suite.suite("Array", [
     M.equals(T.text("abc"))
   ),
   Suite.test(
+    "foldLeft empty",
+    Array.foldLeft<Text, Text>([], "base", Text.concat),
+    M.equals(T.text("base"))
+  ),
+  Suite.test(
     "foldRight",
-    Array.foldRight<Text, Text>([ "a", "b", "c" ], "", Text.concat),
-    M.equals(T.text("abc"))
+    Array.foldRight<Text, Text>([ "a", "b", "c" ], "", func (x, acc) = acc # x),
+    M.equals(T.text("cba"))
+  ),
+  Suite.test(
+    "foldRight empty",
+    Array.foldRight<Text, Text>([], "base", Text.concat),
+    M.equals(T.text("base"))
   ),
   Suite.test(
     "flatten",
-    Array.flatten<Int>([ [ 1, 2, 3 ] ]),
-    M.equals(T.array<Int>(T.intTestable, [ 1, 2, 3 ]))
+    Array.flatten<Int>([[1, 2, 3], [], [1]]),
+    M.equals(T.array<Int>(T.intTestable, [1, 2, 3, 1]))
+  ),
+  Suite.test(
+    "flatten empty start",
+    Array.flatten<Int>([[], [1, 2, 3], [], [1]]),
+    M.equals(T.array<Int>(T.intTestable, [1, 2, 3, 1]))
+  ),
+  Suite.test(
+    "flatten empty end",
+    Array.flatten<Int>([[1, 2, 3], [], [1], []]),
+    M.equals(T.array<Int>(T.intTestable, [1, 2, 3, 1]))
+  ),
+  Suite.test(
+    "flatten singleton",
+    Array.flatten<Int>([[1, 2, 3]]),
+    M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+  ),
+  Suite.test(
+    "flatten empty",
+    Array.flatten<Int>([[]]),
+    M.equals(T.array<Int>(T.intTestable, []))
+  ),
+  Suite.test(
+    "flatten empty",
+    Array.flatten<Int>([]),
+    M.equals(T.array<Int>(T.intTestable, []))
   ),
   Suite.test(
     "make",
@@ -289,17 +324,49 @@ let suite = Suite.suite("Array", [
     M.equals(T.array<Int>(T.intTestable, [0]))
   ),
   Suite.test(
-    "tabulateVar",
+    "vals",
     do {
-      // regression test for (fixed) issues in base cases, where func was called too often:
-      let test0 = Array.tabulateVar<Nat>(0, func (i:Nat) { assert(false); 0 });
-      let test1 = Array.tabulateVar<Nat>(1, func (i:Nat) { assert(i < 1); 0 });
-      let test2 = Array.tabulateVar<Nat>(2, func (i:Nat) { assert(i < 2); 0 });
-      let test3 = Array.tabulateVar<Nat>(3, func (i:Nat) { assert(i < 3); 0 });
-      0
+      var sum = 0;
+      for (x in Array.vals([1, 2, 3])) {
+        sum += x;
+      };
+      sum
+    },
+    M.equals(T.nat(6))
+  ),
+  Suite.test(
+    "vals empty",
+    do {
+      var sum = 0;
+      for (x in Array.vals([])) {
+        sum += x;
+      };
+      sum
     },
     M.equals(T.nat(0))
-  )
+  ),
+  Suite.test(
+    "keys",
+    do {
+      var sum = 0;
+      for (x in Array.keys([1, 2, 3])) {
+        sum += x;
+      };
+      sum
+    },
+    M.equals(T.nat(3))
+  ),
+  Suite.test(
+    "keys empty",
+    do {
+      var sum = 0;
+      for (x in Array.keys([])) {
+        sum += x;
+      };
+      sum
+    },
+    M.equals(T.nat(0))
+  ),
 ]);
 
 Suite.run(suite);
