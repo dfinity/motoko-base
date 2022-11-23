@@ -38,7 +38,7 @@ Space: O(size)
 func tabulate<X>(size : Nat, generator : Nat -> X) : pass:[[]Xpass:[]]
 ----
 
-Create an immutable array of the size `size`. Each element at index i
+Create an immutable array of size `size`. Each element at index i
 is created by applying `generator` to i.
 
 ```motoko include=import
@@ -58,7 +58,7 @@ Space: O(size)
 func tabulateVar<X>(size : Nat, generator : Nat -> X) : pass:[[]var Xpass:[]]
 ----
 
-Create a mutable array of the size `size`. Each element at index i
+Create a mutable array of size `size`. Each element at index i
 is created by applying `generator` to i.
 
 ```motoko include=import
@@ -128,7 +128,7 @@ list of elements). Uses `equal` to compare elements in the arrays.
 
 ```motoko include=import
 // Use the equal function from the Nat module to compare Nats
-import {equal} "mo:base/Nat"; 
+import {equal} "mo:base/Nat";
 
 let array1 = [0, 1, 2, 3];
 let array2 = [0, 1, 2, 3];
@@ -149,7 +149,7 @@ Space: O(1)
 func find<X>(array : pass:[[]Xpass:[]], predicate : X -> Bool) : ?X
 ----
 
-Returns first value in `array` for which `predicate` returns true.
+Returns the first value in `array` for which `predicate` returns true.
 If no element satisfies the predicate, returns null.
 
 ```motoko include=import
@@ -171,7 +171,8 @@ func append<X>(array1 : pass:[[]Xpass:[]], array2 : pass:[[]Xpass:[]]) : pass:[[
 ----
 
 Create a new array by appending the values of `array1` and `array2`.
-@deprecated `Array.append` copies its arguments and has linear complexity; when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
+@deprecated `Array.append` copies its arguments and has linear complexity;
+when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
 
 ```motoko include=import
 let array1 = [1, 2, 3];
@@ -278,11 +279,11 @@ Space: O(size)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func filter<A>(array : pass:[[]Apass:[]], predicate : A -> Bool) : pass:[[]Apass:[]]
+func filter<X>(array : pass:[[]Xpass:[]], predicate : X -> Bool) : pass:[[]Xpass:[]]
 ----
 
-Creates a new array by applied `predicate` to every element
-in `array`, and keeping elements for which `predicate` returns true. 
+Creates a new array by applying `predicate` to every element
+in `array`, retaining the elements for which `predicate` returns true.
 
 ```motoko include=import
 let array = [4, 2, 6, 1, 5];
@@ -301,7 +302,6 @@ Space: O(size)
 func mapEntries<X, Y>(array : pass:[[]Xpass:[]], f : (X, Nat) -> Y) : pass:[[]Ypass:[]]
 ----
 
-between this and the buffer class
 Creates a new array by applying `f` to each element in `array` and its index.
 Retains original ordering of elements.
 
@@ -322,7 +322,7 @@ Space: O(size)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func mapFilter<A, B>(array : pass:[[]Apass:[]], f : A -> ?B) : pass:[[]Bpass:[]]
+func mapFilter<X, Y>(array : pass:[[]Xpass:[]], f : X -> ?Y) : pass:[[]Ypass:[]]
 ----
 
 Creates a new array by applying `f` to each element in `array`,
@@ -332,7 +332,7 @@ and keeping all non-null elements. The ordering is retained.
 import {toText} "mo:base/Nat";
 
 let array = [4, 2, 0, 1];
-let newArray = 
+let newArray =
   Array.mapFilter<Nat, Text>( // mapping from Nat to Text values
     array,
     func x = if (x == 0) { null } else { ?toText(100 / x) } // can't divide by 0, so return null
@@ -353,7 +353,7 @@ func mapResult<X, Y, E>(array : pass:[[]Xpass:[]], f : X -> xref:Result.adoc#typ
 
 Creates a new array by applying `f` to each element in `array`.
 If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
-Returns an `#ok` containing the new array.
+returns an `#ok` containing the new array.
 
 ```motoko include=import
 let array = [4, 3, 2, 1, 0];
@@ -413,7 +413,7 @@ left to right.
 import {add} "mo:base/Nat";
 
 let array = [4, 2, 0, 1];
-let sum = 
+let sum =
   Array.foldLeft<Nat, Nat>(
     array,
     0, // start the sum at 0
@@ -432,7 +432,7 @@ Space: O(1)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func foldRight<X, Y>(array : pass:[[]Xpass:[]], base : Y, combine : (X, Y) -> Y) : Y
+func foldRight<X, A>(array : pass:[[]Xpass:[]], base : A, combine : (X, A) -> A) : A
 ----
 
 Collapses the elements in `array` into a single value by starting with `base`
@@ -460,7 +460,7 @@ Space: O(1)
 func flatten<X>(arrays : pass:[[]pass:[[]Xpass:[]]pass:[]]) : pass:[[]Xpass:[]]
 ----
 
-Flattens the array of arrays into a single array. Retains the original 
+Flattens the array of arrays into a single array. Retains the original
 ordering of the elements.
 
 ```motoko include=import
