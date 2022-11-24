@@ -34,5 +34,5 @@ debug {
   func equalKV(a : (Text, Nat), b : (Text, Nat)) : Bool { a == b };
   assert (isSubSet(actual, expected, equalKV));
   assert (isSubSet(expected, actual, equalKV));
-  Trie.assertIsValid(t2);
+  assert Trie.isValid(t2, false);
 };

@@ -9,7 +9,7 @@ debug {
   type Trie<K, V> = Trie.Trie<K, V>;
   type Key<K> = Trie.Key<K>;
 
-  func key(i: Nat) : Key<Text> { 
+  func key(i: Nat) : Key<Text> {
     let t = Nat.toText i;
     { key = t ; hash = Text.hash t }
   };
@@ -22,7 +22,7 @@ debug {
   for (i in Iter.range(0, max - 1)) {
     let (t1_, x) = Trie.put<Text, Nat>(t, key i, Text.equal, i);
     assert (Option.isNull(x));
-    Trie.assertIsValid(t1_);
+    assert Trie.isValid(t1_, false);
     t := t1_;
   };
   assert Trie.size(t) == max;
@@ -33,33 +33,33 @@ debug {
     var t1 = t;
     for (i in Iter.range(0, max - 1)) {
       let (t1_, x) = Trie.remove<Text, Nat>(t1, key i, Text.equal);
-      Trie.assertIsValid(t1_);
+      assert Trie.isValid(t1_, false);
       assert (Option.isSome(x));
       t1 := t1_;
     }
   };
 
   // filter all elements away, one by one (but hashes are expected random).
-  do { 
+  do {
     Debug.print "Trie.filter";
     var t1 = t;
     for (i in Iter.range(0, max - 1)) {
       t1 := Trie.filter (t1, func (t : Text, n : Nat) : Bool { n != i } );
-      Trie.assertIsValid(t1);
+      assert Trie.isValid(t1, false);
       assert Trie.size(t1) == (max - (i + 1) : Nat);
     }
   };
 
   // filter-map all elements away, one by one (but hashes are expected random).
-  do { 
+  do {
     Debug.print "Trie.mapFilter";
     var t1 = t;
     for (i in Iter.range(0, max - 1)) {
-      t1 := Trie.mapFilter (t1, 
-       func (t : Text, n : Nat) : ?Nat { 
+      t1 := Trie.mapFilter (t1,
+       func (t : Text, n : Nat) : ?Nat {
          if (n != i) ?n else null }
       );
-      Trie.assertIsValid(t1);
+      assert Trie.isValid(t1, false);
       assert Trie.size(t1) == (max - (i + 1) : Nat);
     }
   }

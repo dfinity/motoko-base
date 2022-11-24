@@ -131,14 +131,13 @@ module {
     }
   };
 
-  public func assertIsValid<K, V>(t : Trie<K, V>) {
-    assert isValid(t)
-  };
-
-  public func isValid<K, V>(t : Trie<K, V>) : Bool {
+  /// @deprecated `isValid` is an internal predicate and will be removed in future.
+  public func isValid<K, V>(t : Trie<K, V>, _enforceNormal : Bool) : Bool {
     func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) : Bool {
       switch t {
-        case (#empty) { true };
+        case (#empty) {
+          true;
+        };
         case (#leaf(l)) {
           let len = List.size(l.keyvals);
             len <= MAX_LEAF_SIZE + 1
