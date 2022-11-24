@@ -219,7 +219,10 @@ module {
     public func lenClamp<T>(l : List<T>, max : Nat) : ?Nat {
       func rec(l : List<T>, max : Nat, i : Nat) : ?Nat {
         switch l {
-          case null { ?i };
+          case null {
+            if (i >= max) { null }
+            else { ?i }
+          };
           case (?(_, t)) {
             if ( i >= max ) { null }
             else { rec(t, max, i + 1) }
