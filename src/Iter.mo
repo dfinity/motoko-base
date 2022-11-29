@@ -193,7 +193,7 @@ module {
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buffer<A>(8);
     iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
-    return buffer.toArray()
+    return Buffer.toArray(buffer)
   };
 
   /// Like `toArray` but for Arrays with mutable elements.
