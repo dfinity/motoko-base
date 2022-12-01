@@ -1,5 +1,7 @@
 import Trie "mo:base/Trie";
+import List "mo:base/List";
 import Nat "mo:base/Nat";
+import Hash "mo:base/Hash";
 import Option "mo:base/Option";
 import Iter "mo:base/Iter";
 import Text "mo:base/Text";
@@ -11,16 +13,45 @@ import M "mo:matchers/Matchers";
 
 let test = Suite;
 
+// Utilities to massage types between Trie and Matchers
+func prettyArray(trie : Trie.Trie<Nat, Nat>) : [(Nat, Nat)] {
+  Trie.toArray<Nat, Nat, (Nat, Nat)>(trie, func(k, v) = (k, v))
+};
+func arrayTest(array : [(Nat, Nat)]) : M.Matcher<[(Nat, Nat)]> {
+  M.equals<[(Nat, Nat)]>(T.array<(Nat, Nat)>(T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable), array))
+};
+func natKey(nat : Nat) : Trie.Key<Nat> {
+  { hash = Hash.hash(nat); key = nat }
+};
+
+// Matchers tests
 let suite = Suite.suite("Array", [
   Suite.test(
     "empty trie size 0",
-    Trie.size(Trie.empty<Nat, Nat>()),
+    Trie.size(Trie.empty()),
     M.equals(T.nat(0))),
+  Suite.test(
+    "empty trie array roundtrip",
+    prettyArray(Trie.empty()),
+    arrayTest([])),
+  Suite.test(
+    "put 1",
+    prettyArray(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0),
+    arrayTest([(0, 10)])),
+  Suite.test(
+    "put get 1",
+    prettyArray(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0),
+    arrayTest([(0, 10)])),
+  Suite.test(
+    "put get 1",
+    Trie.get(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0, natKey(0), Nat.equal),
+    M.equals(T.optional(T.natTestable, ?10))),
   ]
 );
 
 Suite.run(suite);
 
+// Assertion tests
 debug {
   type Trie<K, V> = Trie.Trie<K, V>;
   type Key<K> = Trie.Key<K>;
