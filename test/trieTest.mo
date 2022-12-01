@@ -24,6 +24,16 @@ func natKey(nat : Nat) : Trie.Key<Nat> {
   { hash = Hash.hash(nat); key = nat }
 };
 
+// Sample tries for testing
+var trie1 = Trie.empty<Nat, Nat>();
+trie1 := Trie.put<Nat, Nat>(trie1, natKey(0), Nat.equal, 10).0;
+trie1 := Trie.put<Nat, Nat>(trie1, natKey(2), Nat.equal, 12).0;
+trie1 := Trie.put<Nat, Nat>(trie1, natKey(4), Nat.equal, 14).0;
+
+var trie2 = Trie.empty<Nat, Nat>();
+trie2 := Trie.put<Nat, Nat>(trie2, natKey(1), Nat.equal, 11).0;
+trie2 := Trie.put<Nat, Nat>(trie2, natKey(3), Nat.equal, 13).0;
+
 // Matchers tests
 let suite = Suite.suite("Array", [
   Suite.test(
@@ -40,12 +50,16 @@ let suite = Suite.suite("Array", [
     arrayTest([(0, 10)])),
   Suite.test(
     "put get 1",
-    prettyArray(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0),
-    arrayTest([(0, 10)])),
-  Suite.test(
-    "put get 1",
     Trie.get(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0, natKey(0), Nat.equal),
     M.equals(T.optional(T.natTestable, ?10))),
+  Suite.test(
+    "put find 1",
+    Trie.find(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0, natKey(0), Nat.equal),
+    M.equals(T.optional(T.natTestable, ?10))),
+  Suite.test(
+    "merge small tries",
+    prettyArray(Trie.merge(trie1, trie2, Nat.equal)),
+    arrayTest([(0, 10), (2, 12), (4, 14), (1, 11), (3, 13)])),
   ]
 );
 
