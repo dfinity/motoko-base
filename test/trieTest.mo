@@ -39,7 +39,7 @@ trie3 := Trie.put<Nat, Nat>(trie3, natKey(1), Nat.equal, 21).0;
 trie3 := Trie.put<Nat, Nat>(trie3, natKey(2), Nat.equal, 22).0;
 
 // Matchers tests
-let suite = Suite.suite("Array", [
+let suite = Suite.suite("Trie", [
   Suite.test(
     "empty trie size 0",
     Trie.size(Trie.empty()),
@@ -111,10 +111,7 @@ let suite = Suite.suite("Array", [
             case(null, ?v2) v2;
             case(null, null) Debug.trap "unreachable in disj";
           }
-        },
-        Nat.toText,
-        Nat.toText,
-        Nat.toText
+        }
       )
     ),
     arrayTest([(0, 10), (4, 14), (1, 21), (2, 34)])),

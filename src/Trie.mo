@@ -389,8 +389,8 @@ module {
                 func (x : ?V, y : ?V) : V {
                   switch (x, y) {
                     case (null, null) { P.unreachable() };
-                    case (null, ?v) { v };
-                    case (?v, _) { v };
+                    case (?v, null) { v };
+                    case (_, ?v) { v };
                   }
                 }
               ),
