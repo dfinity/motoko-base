@@ -5,6 +5,22 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Debug "mo:base/Debug";
 
+import Suite "mo:matchers/Suite";
+import T "mo:matchers/Testable";
+import M "mo:matchers/Matchers";
+
+let test = Suite;
+
+let suite = Suite.suite("Array", [
+  Suite.test(
+    "empty trie size 0",
+    Trie.size(Trie.empty<Nat, Nat>()),
+    M.equals(T.nat(0))),
+  ]
+);
+
+Suite.run(suite);
+
 debug {
   type Trie<K, V> = Trie.Trie<K, V>;
   type Key<K> = Trie.Key<K>;
