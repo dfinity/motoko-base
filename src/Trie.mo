@@ -369,7 +369,7 @@ module {
      rec(l)
    };
 
-  /// Merge tries, preferring the right trie where there are collisions
+  /// Merge tries, preferring the left trie where there are collisions
   /// in common keys.
   ///
   /// note: the `disj` operation generalizes this `merge`
@@ -389,8 +389,8 @@ module {
                 func (x : ?V, y : ?V) : V {
                   switch (x, y) {
                     case (null, null) { P.unreachable() };
-                    case (?v, null) { v };
-                    case (_, ?v) { v };
+                    case (null, ?v) { v };
+                    case (?v, _) { v };
                   }
                 }
               ),

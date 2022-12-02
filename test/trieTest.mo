@@ -63,7 +63,7 @@ let suite = Suite.suite("Trie", [
   Suite.test(
     "merge",
     prettyArray(Trie.merge(trie1, trie3, Nat.equal)),
-    arrayTest([(0, 10), (4, 14), (1, 21), (2, 22)])),
+    arrayTest([(0, 10), (4, 14), (1, 21), (2, 12)])),
   Suite.test(
     "merge with empty",
     prettyArray(Trie.merge(trie1, Trie.empty(), Nat.equal)),
