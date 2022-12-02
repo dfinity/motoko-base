@@ -115,10 +115,171 @@ let suite = Suite.suite("Trie", [
       )
     ),
     arrayTest([(0, 10), (4, 14), (1, 21), (2, 34)])),
+  Suite.test(
+    "disj with empty first",
+    prettyArray(
+      Trie.disj<Nat, Nat, Nat, Nat>(Trie.empty(), trie1, Nat.equal,
+        func(v1, v2) {
+          switch(v1, v2) {
+            case(?v1, ?v2) v1 + v2; // add values to combine
+            case(?v1, null) v1;
+            case(null, ?v2) v2;
+            case(null, null) Debug.trap "unreachable in disj";
+          }
+        }
+      )
+    ),
+    arrayTest([(0, 10), (2, 12), (4, 14)])),
+  Suite.test(
+    "disj with empty second",
+    prettyArray(
+      Trie.disj<Nat, Nat, Nat, Nat>(trie1, Trie.empty(), Nat.equal,
+        func(v1, v2) {
+          switch(v1, v2) {
+            case(?v1, ?v2) v1 + v2; // add values to combine
+            case(?v1, null) v1;
+            case(null, ?v2) v2;
+            case(null, null) Debug.trap "unreachable in disj";
+          }
+        }
+      )
+    ),
+    arrayTest([(0, 10), (2, 12), (4, 14)])),
+  Suite.test(
+    "disj two empties",
+    prettyArray(
+      Trie.disj<Nat, Nat, Nat, Nat>(Trie.empty(), Trie.empty(), Nat.equal,
+        func(v1, v2) {
+          switch(v1, v2) {
+            case(?v1, ?v2) v1 + v2; // add values to combine
+            case(?v1, null) v1;
+            case(null, ?v2) v2;
+            case(null, null) Debug.trap "unreachable in disj";
+          }
+        }
+      )
+    ),
+    arrayTest([])),
+  Suite.test(
+    "join",
+    prettyArray(
+      Trie.join<Nat, Nat, Nat, Nat>(trie1, trie3, Nat.equal, Nat.add)
+    ),
+    arrayTest([(2, 34)])),
+  Suite.test(
+    "join with empty first",
+    prettyArray(
+      Trie.join<Nat, Nat, Nat, Nat>(Trie.empty(), trie1, Nat.equal, Nat.add)
+    ),
+    arrayTest([])),
+  Suite.test(
+    "join with empty second",
+    prettyArray(
+      Trie.join<Nat, Nat, Nat, Nat>(trie1, Trie.empty(), Nat.equal, Nat.add)
+    ),
+    arrayTest([])),
+  Suite.test(
+    "join with two empties",
+    prettyArray(
+      Trie.join<Nat, Nat, Nat, Nat>(Trie.empty(), Trie.empty(), Nat.equal, Nat.add)
+    ),
+    arrayTest([])),
+  Suite.test(
+    "foldUp",
+    Trie.foldUp<Nat, Nat, Nat>(trie1, Nat.mul, Nat.add, 1),
+    M.equals(T.nat(2520))), // 1 * (0 + 10) * (2 + 12) * (4 + 14)
+  Suite.test(
+    "foldUp empty",
+    Trie.foldUp<Nat, Nat, Nat>(Trie.empty(), Nat.mul, Nat.add, 1),
+    M.equals(T.nat(1))),
+  Suite.test(
+    "prod",
+    prettyArray(Trie.prod<Nat, Nat, Nat, Nat, Nat, Nat>(trie1, trie3, func(k1, v1, k2, v2) = ?(natKey(k1 + k2), v1 + v2), Nat.equal)),
+    arrayTest([(1, 31), (2, 32), (3, 33), (4, 34), (5, 35), (6, 36)])),
+  Suite.test(
+    "prod first empty",
+    prettyArray(Trie.prod<Nat, Nat, Nat, Nat, Nat, Nat>(Trie.empty(), trie3, func(k1, v1, k2, v2) = ?(natKey(k1 + k2), v1 + v2), Nat.equal)),
+    arrayTest([])),
+  Suite.test(
+    "prod second empty",
+    prettyArray(Trie.prod<Nat, Nat, Nat, Nat, Nat, Nat>(trie1, Trie.empty(), func(k1, v1, k2, v2) = ?(natKey(k1 + k2), v1 + v2), Nat.equal)),
+    arrayTest([])),
+  Suite.test(
+    "prod both empty",
+    prettyArray(Trie.prod<Nat, Nat, Nat, Nat, Nat, Nat>(Trie.empty(), Trie.empty(), func(k1, v1, k2, v2) = ?(natKey(k1 + k2), v1 + v2), Nat.equal)),
+    arrayTest([])),
+  Suite.test(
+    "iter",
+    Iter.toArray(Trie.iter(trie1)),
+    arrayTest([(0, 10), (2, 12), (4, 14)])),
+  Suite.test(
+    "iter empty",
+    Iter.toArray(Trie.iter(Trie.empty())),
+    arrayTest([])),
+  Suite.test(
+    "fold",
+    Trie.fold<Nat, Nat, Nat>(trie1, func(k, v, acc) = k + v + acc, 0),
+    M.equals(T.nat(42))), // 0 + 10 + 2 + 12 + 4 + 14
+  Suite.test(
+    "fold empty",
+    Trie.fold<Nat, Nat, Nat>(Trie.empty(), func(k, v, acc) = k + v + acc, 0),
+    M.equals(T.nat(0))),
+  Suite.test(
+    "some true",
+    Trie.some<Nat, Nat>(trie1, func(k, v) = k * v == 0),
+    M.equals(T.bool(true))),
+  Suite.test(
+    "some false",
+    Trie.some<Nat, Nat>(trie1, func(k, _) = k % 2 != 0),
+    M.equals(T.bool(false))),
+  Suite.test(
+    "some empty",
+    Trie.some<Nat, Nat>(Trie.empty(), func _ = true),
+    M.equals(T.bool(false))),
+  Suite.test(
+    "all true",
+    Trie.all<Nat, Nat>(trie1, func(k, _) = k % 2 == 0),
+    M.equals(T.bool(true))),
+  Suite.test(
+    "all false",
+    Trie.all<Nat, Nat>(trie1, func(k, v) = k * v == 0),
+    M.equals(T.bool(false))),
+  Suite.test(
+    "all empty",
+    Trie.all<Nat, Nat>(Trie.empty(), func _ = false),
+    M.equals(T.bool(true))),
+  // FIXME test nth
+  Suite.test(
+    "isEmpty false",
+    Trie.isEmpty<Nat, Nat>(trie1),
+    M.equals(T.bool(false))),
+  Suite.test(
+    "isEmpty true",
+    Trie.isEmpty<Nat, Nat>(Trie.empty()),
+    M.equals(T.bool(true))),
+  Suite.test(
+    "isEmpty put remove",
+    Trie.isEmpty<Nat, Nat>(
+      Trie.remove<Nat, Nat>(Trie.put<Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 10).0, natKey(0), Nat.equal).0
+    ),
+    M.equals(T.bool(true))),
+  Suite.test(
+    "filter",
+    prettyArray(Trie.filter<Nat, Nat>(trie1, func(k, v) = k * v == 0)),
+    arrayTest([(0, 10)])),
+  Suite.test(
+    "filter all",
+    prettyArray(Trie.filter<Nat, Nat>(trie1, func _ = false)),
+    arrayTest([])),
+  Suite.test(
+    "filter none",
+    prettyArray(Trie.filter<Nat, Nat>(trie1, func _ = true)),
+    arrayTest([(0, 10), (2, 12), (4, 14)])),
   ]
 );
 
 // FIXME add tests for bitpos functions
+// FIXME test structure of resulting trie, instead of flattening to array
 
 Suite.run(suite);
 
