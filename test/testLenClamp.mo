@@ -4,6 +4,7 @@ import Debug "mo:base/Debug";
 
 type List<T> = List.List<T>;
 
+/* copied because private to Trie.mo */
 func lenClamp<T>(l : List<T>, max : Nat) : ?Nat {
   func rec(l : List<T>, max : Nat, i : Nat) : ?Nat {
     switch l {
