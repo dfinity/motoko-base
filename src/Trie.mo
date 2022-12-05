@@ -140,7 +140,7 @@ module {
         };
         case (#leaf(l)) {
           let len = List.size(l.keyvals);
-            len <= MAX_LEAF_SIZE + 1
+            len <= MAX_LEAF_SIZE
           and
             len == l.size
           and
@@ -221,7 +221,7 @@ module {
         switch l {
           case null { ?i };
           case (?(_, t)) {
-            if ( i > max ) { null }
+            if ( i >= max ) { null }
             else { rec(t, max, i + 1) }
           };
         }
