@@ -134,8 +134,8 @@ module {
     keq : (K, K) -> Bool,
     vbin :(?V, ?W) -> X
   ) : AssocList<K, X> {
-    func rec1(al1 : AssocList<K, V>) : AssocList<K, X> {
-      switch al1 {
+    func rec1(al1Rec : AssocList<K, V>) : AssocList<K, X> {
+      switch al1Rec {
         case (null) {
           func rec2(al2 : AssocList<K, W>) : AssocList<K, X> {
             switch al2 {
