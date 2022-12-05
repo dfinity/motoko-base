@@ -250,7 +250,7 @@ Find the given key's value in the trie, or return null if nonexistent
 func merge<K, V>(tl : xref:#type.Trie[Trie]<K, V>, tr : xref:#type.Trie[Trie]<K, V>, k_eq : (K, K) -> Bool) : xref:#type.Trie[Trie]<K, V>
 ----
 
-Merge tries, preferring the right trie where there are collisions
+Merge tries, preferring the left trie where there are collisions
 in common keys.
 
 note: the `disj` operation generalizes this `merge`
