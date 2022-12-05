@@ -369,7 +369,7 @@ module {
      rec(l)
    };
 
-  /// Merge tries, preferring the right trie where there are collisions
+  /// Merge tries, preferring the left trie where there are collisions
   /// in common keys.
   ///
   /// note: the `disj` operation generalizes this `merge`
