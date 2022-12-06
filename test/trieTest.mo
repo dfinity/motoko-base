@@ -19,10 +19,10 @@ func prettyArray(trie : Trie.Trie<Nat, Nat>) : [(Nat, Nat)] {
   Trie.toArray<Nat, Nat, (Nat, Nat)>(trie, func kv = kv);
 };
 
-func prettyArray2D(trie2D : Trie.Trie2D<Nat, Nat, Nat>) : [((Nat, Nat), Nat)] {
+func prettyArray2D(trie2D1 : Trie.Trie2D<Nat, Nat, Nat>) : [((Nat, Nat), Nat)] {
   Array.flatten(
     Trie.toArray<Nat, Trie.Trie<Nat, Nat>, [((Nat, Nat), Nat)]>(
-      trie2D,
+      trie2D1,
       func(k1, trie) {
         let innerArray = prettyArray trie;
         Array.map<(Nat, Nat), ((Nat, Nat), Nat)>(innerArray, func(k2, v) = ((k1, k2), v));
@@ -35,8 +35,8 @@ func prettyArray3D(trie3D : Trie.Trie3D<Nat, Nat, Nat, Nat>) : [((Nat, Nat, Nat)
   Array.flatten(
     Trie.toArray<Nat, Trie.Trie<Nat, Trie.Trie<Nat, Nat>>, [((Nat, Nat, Nat), Nat)]>(
       trie3D,
-      func(k1, trie2D) {
-        let innerArray = prettyArray2D trie2D;
+      func(k1, trie2D1) {
+        let innerArray = prettyArray2D trie2D1;
         Array.map<((Nat, Nat), Nat), ((Nat, Nat, Nat), Nat)>(innerArray, func((k2, k3), v) = ((k1, k2, k3), v));
       },
     ),
@@ -77,8 +77,13 @@ func arrayTest3D(array : [((Nat, Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat, Nat)
 };
 
 func natKey(nat : Nat) : Trie.Key<Nat> { { hash = Hash.hash(nat); key = nat } };
+let natKeyTestable : T.Testable<Trie.Key<Nat>> = {
+  display = func k { debug_show k.key };
+  equals = func(k1, k2) { k1.key == k2.key and k1.hash == k2.hash };
+};
 
 // Sample tries for testing
+// FIXME tweak the keys to force collisions here
 var trie1 = Trie.empty<Nat, Nat>();
 trie1 := Trie.put<Nat, Nat>(trie1, natKey(0), Nat.equal, 10).0;
 trie1 := Trie.put<Nat, Nat>(trie1, natKey(2), Nat.equal, 12).0;
@@ -93,10 +98,18 @@ trie3 := Trie.put<Nat, Nat>(trie3, natKey(1), Nat.equal, 21).0;
 trie3 := Trie.put<Nat, Nat>(trie3, natKey(2), Nat.equal, 22).0;
 
 // Sample 2D trie for testing
-var trie2D = Trie.empty<Nat, Trie.Trie<Nat, Nat>>();
-trie2D := Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(0), Nat.equal, natKey(10), Nat.equal, 100);
-trie2D := Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(2), Nat.equal, natKey(12), Nat.equal, 102);
-trie2D := Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(4), Nat.equal, natKey(14), Nat.equal, 104);
+var trie2D1 = Trie.empty<Nat, Trie.Trie<Nat, Nat>>();
+trie2D1 := Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(0), Nat.equal, natKey(10), Nat.equal, 100);
+trie2D1 := Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(2), Nat.equal, natKey(12), Nat.equal, 102);
+trie2D1 := Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(4), Nat.equal, natKey(14), Nat.equal, 104);
+
+var trie2D2 = Trie.empty<Nat, Trie.Trie<Nat, Nat>>();
+trie2D2 := Trie.put2D<Nat, Nat, Nat>(trie2D2, natKey(1), Nat.equal, natKey(11), Nat.equal, 101);
+trie2D2 := Trie.put2D<Nat, Nat, Nat>(trie2D2, natKey(1), Nat.equal, natKey(21), Nat.equal, 201);
+trie2D2 := Trie.put2D<Nat, Nat, Nat>(trie2D2, natKey(2), Nat.equal, natKey(12), Nat.equal, 102);
+trie2D2 := Trie.put2D<Nat, Nat, Nat>(trie2D2, natKey(3), Nat.equal, natKey(13), Nat.equal, 103);
+trie2D2 := Trie.put2D<Nat, Nat, Nat>(trie2D2, natKey(3), Nat.equal, natKey(23), Nat.equal, 203);
+trie2D2 := Trie.put2D<Nat, Nat, Nat>(trie2D2, natKey(3), Nat.equal, natKey(33), Nat.equal, 303);
 
 // Sample 3D trie for testing
 var trie3D = Trie.empty<Nat, Trie.Trie<Nat, Trie.Trie<Nat, Nat>>>();
@@ -367,7 +380,45 @@ let suite = Suite.suite(
       Trie.all<Nat, Nat>(Trie.empty(), func _ = false),
       M.equals(T.bool(true)),
     ),
-    // FIXME test nth
+    Suite.test(
+      "nth",
+      Trie.nth<Nat, Nat>(trie1, 1),
+      M.equals(
+        T.optional(
+          T.tuple2Testable(
+            natKeyTestable,
+            T.natTestable,
+          ),
+          ?(natKey(2), 12),
+        ),
+      ),
+    ),
+    Suite.test(
+      "nth OOB",
+      Trie.nth<Nat, Nat>(trie1, 3),
+      M.equals(
+        T.optional(
+          T.tuple2Testable(
+            natKeyTestable,
+            T.natTestable,
+          ),
+          null : ?(Trie.Key<Nat>, Nat),
+        ),
+      ),
+    ),
+    Suite.test(
+      "nth empty",
+      Trie.nth<Nat, Nat>(Trie.empty(), 0),
+      M.equals(
+        T.optional(
+          T.tuple2Testable(
+            natKeyTestable,
+            T.natTestable,
+          ),
+          null : ?(Trie.Key<Nat>, Nat),
+        ),
+      ),
+    ),
     Suite.test(
       "isEmpty false",
       Trie.isEmpty<Nat, Nat>(trie1),
@@ -443,7 +494,14 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "replaceThen success old value",
-      Trie.replaceThen<Nat, Nat, Nat>(trie1, natKey(0), Nat.equal, 100, func(newTrie, oldV) = oldV, func _ = Debug.trap "unreachable"),
+      Trie.replaceThen<Nat, Nat, Nat>(
+        trie1,
+        natKey(0),
+        Nat.equal,
+        100,
+        func(newTrie, oldV) = oldV,
+        func _ = Debug.trap "unreachable",
+      ),
       M.equals(T.nat(10)),
     ),
     Suite.test(
@@ -462,12 +520,26 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "replaceThen failure",
-      Trie.replaceThen<Nat, Nat, Nat>(trie1, natKey(3), Nat.equal, 13, func _ = Debug.trap "unreachable", func() = 99),
+      Trie.replaceThen<Nat, Nat, Nat>(
+        trie1,
+        natKey(3),
+        Nat.equal,
+        13,
+        func _ = Debug.trap "unreachable",
+        func() = 99,
+      ),
       M.equals(T.nat(99)),
     ),
     Suite.test(
       "replaceThen empty",
-      Trie.replaceThen<Nat, Nat, Nat>(Trie.empty(), natKey(0), Nat.equal, 100, func _ = Debug.trap "unreachable", func() = 99),
+      Trie.replaceThen<Nat, Nat, Nat>(
+        Trie.empty(),
+        natKey(0),
+        Nat.equal,
+        100,
+        func _ = Debug.trap "unreachable",
+        func() = 99,
+      ),
       M.equals(T.nat(99)),
     ),
     Suite.test(
@@ -482,22 +554,22 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "put2D",
-      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(1), Nat.equal, natKey(11), Nat.equal, 101)),
+      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(1), Nat.equal, natKey(11), Nat.equal, 101)),
       arrayTest2D([((0, 10), 100), ((2, 12), 102), ((4, 14), 104), ((1, 11), 101)]),
     ),
     Suite.test(
       "put2D overlapping k1",
-      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(0), Nat.equal, natKey(11), Nat.equal, 101)),
+      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(0), Nat.equal, natKey(11), Nat.equal, 101)),
       arrayTest2D([((0, 10), 100), ((0, 11), 101), ((2, 12), 102), ((4, 14), 104)]),
     ),
     Suite.test(
       "put2D overlapping k2",
-      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(1), Nat.equal, natKey(10), Nat.equal, 101)),
+      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(1), Nat.equal, natKey(10), Nat.equal, 101)),
       arrayTest2D([((0, 10), 100), ((2, 12), 102), ((4, 14), 104), ((1, 10), 101)]),
     ),
     Suite.test(
       "put2D overlapping both",
-      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D, natKey(0), Nat.equal, natKey(10), Nat.equal, 1001)),
+      prettyArray2D(Trie.put2D<Nat, Nat, Nat>(trie2D1, natKey(0), Nat.equal, natKey(10), Nat.equal, 1001)),
       arrayTest2D([((0, 10), 1001), ((2, 12), 102), ((4, 14), 104)]),
     ),
     Suite.test(
@@ -549,6 +621,152 @@ let suite = Suite.suite(
       "put3D empty",
       prettyArray3D(Trie.put3D<Nat, Nat, Nat, Nat>(Trie.empty(), natKey(1), Nat.equal, natKey(11), Nat.equal, natKey(101), Nat.equal, 1001)),
       arrayTest3D([((1, 11, 101), 1001)]),
+    ),
+    Suite.test(
+      "remove success, new trie",
+      prettyArray(Trie.remove<Nat, Nat>(trie1, natKey(2), Nat.equal).0),
+      arrayTest([(0, 10), (4, 14)]),
+    ),
+    Suite.test(
+      "remove success, old value",
+      Trie.remove<Nat, Nat>(trie1, natKey(2), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, ?12)),
+    ),
+    Suite.test(
+      "remove failure, new trie",
+      prettyArray(Trie.remove<Nat, Nat>(trie1, natKey(1), Nat.equal).0),
+      arrayTest([(0, 10), (2, 12), (4, 14)]),
+    ),
+    Suite.test(
+      "remove failure, old value",
+      Trie.remove<Nat, Nat>(trie1, natKey(1), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "remove empty, new trie",
+      prettyArray(Trie.remove<Nat, Nat>(Trie.empty(), natKey(1), Nat.equal).0),
+      arrayTest([]),
+    ),
+    Suite.test(
+      "remove empty, old value",
+      Trie.remove<Nat, Nat>(Trie.empty(), natKey(1), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "removeThen success old value",
+      Trie.removeThen<Nat, Nat, Nat>(
+        trie1,
+        natKey(0),
+        Nat.equal,
+        func(newTrie, oldV) = oldV,
+        func _ = Debug.trap "unreachable",
+      ),
+      M.equals(T.nat(10)),
+    ),
+    Suite.test(
+      "removeThen success new trie",
+      prettyArray(
+        Trie.removeThen<Nat, Nat, Trie.Trie<Nat, Nat>>(
+          trie1,
+          natKey(0),
+          Nat.equal,
+          func(newTrie, oldV) = newTrie,
+          func _ = Debug.trap "unreachable",
+        ),
+      ),
+      arrayTest([(2, 12), (4, 14)]),
+    ),
+    Suite.test(
+      "removeThen failure",
+      Trie.removeThen<Nat, Nat, Nat>(
+        trie1,
+        natKey(1),
+        Nat.equal,
+        func _ = Debug.trap "unreachable",
+        func() = 99,
+      ),
+      M.equals(T.nat(99)),
+    ),
+    Suite.test(
+      "removeThen empty",
+      Trie.removeThen<Nat, Nat, Nat>(
+        Trie.empty() : Trie.Trie<Nat, Nat>,
+        natKey(1),
+        Nat.equal,
+        func _ = Debug.trap "unreachable",
+        func() = 99,
+      ),
+      M.equals(T.nat(99)),
+    ),
+    Suite.test(
+      "remove2D success, new trie",
+      prettyArray2D(Trie.remove2D<Nat, Nat, Nat>(trie2D1, natKey(2), Nat.equal, natKey(12), Nat.equal).0),
+      arrayTest2D([((0, 10), 100), ((4, 14), 104)]),
+    ),
+    Suite.test(
+      "remove2D success, old value",
+      Trie.remove2D<Nat, Nat, Nat>(trie2D1, natKey(2), Nat.equal, natKey(12), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, ?102)),
+    ),
+    Suite.test(
+      "remove2D failure, new trie",
+      prettyArray2D(Trie.remove2D<Nat, Nat, Nat>(trie2D1, natKey(1), Nat.equal, natKey(11), Nat.equal).0),
+      arrayTest2D([((0, 10), 100), ((2, 12), 102), ((4, 14), 104)]),
+    ),
+    Suite.test(
+      "remove2D failure, old value",
+      Trie.remove2D<Nat, Nat, Nat>(trie2D1, natKey(1), Nat.equal, natKey(11), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "remove2D failure empty, new trie",
+      prettyArray2D(Trie.remove2D<Nat, Nat, Nat>(Trie.empty(), natKey(1), Nat.equal, natKey(11), Nat.equal).0),
+      arrayTest2D([]),
+    ),
+    Suite.test(
+      "remove2D failure empty, old value",
+      Trie.remove2D<Nat, Nat, Nat>(Trie.empty(), natKey(1), Nat.equal, natKey(11), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "remove3D success, new trie",
+      prettyArray3D(Trie.remove3D<Nat, Nat, Nat, Nat>(trie3D, natKey(2), Nat.equal, natKey(12), Nat.equal, natKey(102), Nat.equal).0),
+      arrayTest3D([((0, 10, 100), 1000), ((4, 14, 104), 1004)]),
+    ),
+    Suite.test(
+      "remove3D success, old value",
+      Trie.remove3D<Nat, Nat, Nat, Nat>(trie3D, natKey(2), Nat.equal, natKey(12), Nat.equal, natKey(102), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, ?1002 : ?Nat)),
+    ),
+    Suite.test(
+      "remove3D failure, new trie",
+      prettyArray3D(Trie.remove3D<Nat, Nat, Nat, Nat>(trie3D, natKey(1), Nat.equal, natKey(11), Nat.equal, natKey(101), Nat.equal).0),
+      arrayTest3D([((0, 10, 100), 1000), ((2, 12, 102), 1002), ((4, 14, 104), 1004)]),
+    ),
+    Suite.test(
+      "remove3D failure, old value",
+      Trie.remove3D<Nat, Nat, Nat, Nat>(trie3D, natKey(1), Nat.equal, natKey(11), Nat.equal, natKey(101), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "remove3D failure empty, new trie",
+      prettyArray3D(Trie.remove3D<Nat, Nat, Nat, Nat>(Trie.empty(), natKey(1), Nat.equal, natKey(11), Nat.equal, natKey(101), Nat.equal).0),
+      arrayTest3D([]),
+    ),
+    Suite.test(
+      "remove3D failure empty, old value",
+      Trie.remove3D<Nat, Nat, Nat, Nat>(Trie.empty(), natKey(1), Nat.equal, natKey(11), Nat.equal, natKey(101), Nat.equal).1,
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "mergeDisjoint2D",
+      prettyArray(Trie.mergeDisjoint2D<Nat, Nat, Nat>(trie2D2, Nat.equal, Nat.equal)),
+      arrayTest([(11, 101), (21, 201), (12, 102), (13, 103), (23, 203), (33, 303)]),
+    ),
+    Suite.test(
+      "mergeDisjoint2D empty",
+      prettyArray(Trie.mergeDisjoint2D<Nat, Nat, Nat>(Trie.empty(), Nat.equal, Nat.equal)),
+      arrayTest([]),
     ),
   ],
 );
