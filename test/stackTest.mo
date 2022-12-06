@@ -9,7 +9,7 @@ do {
     };
     for (i in Iter.revRange(100, 0)) {
         let x = s.pop();
-        assert(O.unwrap(x) == i);
+        assert (O.unwrap(x) == i);
     };
     assert (s.isEmpty());
 };

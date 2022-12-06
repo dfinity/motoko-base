@@ -13,35 +13,35 @@ module {
   public let toInt : Int64 -> Int = Prim.int64ToInt;
 
   /// Conversion. Traps on overflow/underflow.
-  public let fromInt : Int -> Int64  = Prim.intToInt64;
+  public let fromInt : Int -> Int64 = Prim.intToInt64;
 
   /// Conversion. Wraps on overflow/underflow.
-  public let fromIntWrap : Int -> Int64  = Prim.intToInt64Wrap;
+  public let fromIntWrap : Int -> Int64 = Prim.intToInt64Wrap;
 
   /// Conversion. Wraps on overflow/underflow.
   public let fromNat64 : Nat64 -> Int64 = Prim.nat64ToInt64;
 
   /// Conversion. Wraps on overflow/underflow.
-  public let toNat64 : Int64 -> Nat64  = Prim.int64ToNat64;
+  public let toNat64 : Int64 -> Nat64 = Prim.int64ToNat64;
 
   /// Returns the Text representation of `x`.
   public func toText(x : Int64) : Text {
-    Int.toText(toInt(x))
+    Int.toText(toInt(x));
   };
 
   /// Returns the absolute value of `x`. Traps when `x = -2^63`.
   public func abs(x : Int64) : Int64 {
-    fromInt(Int.abs(toInt(x)))
+    fromInt(Int.abs(toInt(x)));
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Int64, y : Int64) : Int64 {
-    if (x < y) { x } else { y }
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
-  public func max( x : Int64, y : Int64) : Int64 {
-    if (x < y) { y } else { x }
+  public func max(x : Int64, y : Int64) : Int64 {
+    if (x < y) { y } else { x };
   };
 
   /// Returns `x == y`.
@@ -64,13 +64,11 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Int64, y : Int64) : { #less; #equal; #greater } {
-    if (x < y) { #less }
-    else if (x == y) { #equal }
-    else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the negation of `x`, `-x`. Traps on overflow.
-  public func neg(x : Int64) : Int64 { -x; };
+  public func neg(x : Int64) : Int64 { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
   public func add(x : Int64, y : Int64) : Int64 { x + y };
@@ -145,7 +143,6 @@ module {
   /// Returns the count of trailing zero bits in `x`.
   public let bitcountTrailingZero : (x : Int64) -> Int64 = Prim.ctzInt64;
 
-
   /// Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
   public func addWrap(x : Int64, y : Int64) : Int64 { x +% y };
 
@@ -158,4 +155,4 @@ module {
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
   public func powWrap(x : Int64, y : Int64) : Int64 { x **% y };
 
-}
+};

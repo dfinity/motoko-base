@@ -12,7 +12,7 @@ module {
   public let pi : Float = 3.14159265358979323846; // taken from musl math.h
 
   /// Base of the natural logarithm.
-  public let e : Float  = 2.7182818284590452354;  // taken from musl math.h
+  public let e : Float = 2.7182818284590452354; // taken from musl math.h
 
   /// Returns the absolute value of `x`.
   public let abs : (x : Float) -> Float = Prim.floatAbs;
@@ -36,7 +36,7 @@ module {
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
 
   /// Returns the smaller value of `x` and `y`.
-  public let min : (x : Float, y :  Float) -> Float = Prim.floatMin;
+  public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
 
   /// Returns the larger value of `x` and `y`.
   public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
@@ -51,7 +51,7 @@ module {
   public let tan : (x : Float) -> Float = Prim.tan;
 
   /// Returns the arc sine of `x` in radians.
-  public let arcsin: (x : Float) -> Float = Prim.arcsin;
+  public let arcsin : (x : Float) -> Float = Prim.arcsin;
 
   /// Returns the arc cosine of `x` in radians.
   public let arccos : (x : Float) -> Float = Prim.arccos;
@@ -76,15 +76,13 @@ module {
   /// * `#gen prec` as generic format with `prec` digits
   /// * `#hex prec` as hexadecimal format with `prec` digits
   /// * `#exact` as exact format that can be decoded without loss.
-  public func format
-    (fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text =
-    switch fmt {
-      case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
-      case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
-      case (#gen(prec)) { Prim.floatToFormattedText(x, prec, 2) };
-      case (#hex(prec)) { Prim.floatToFormattedText(x, prec, 3) };
-      case (#exact) { Prim.floatToFormattedText(x, 17, 2) };
-    };
+  public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text = switch fmt {
+    case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
+    case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
+    case (#gen(prec)) { Prim.floatToFormattedText(x, prec, 2) };
+    case (#hex(prec)) { Prim.floatToFormattedText(x, prec, 3) };
+    case (#exact) { Prim.floatToFormattedText(x, 17, 2) };
+  };
 
   /// Conversion to Text. Use `format(fmt, x)` for more detailed control.
   public let toText : Float -> Text = Prim.floatToText;
@@ -120,14 +118,12 @@ module {
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Float, y : Float) : { #less; #equal; #greater} {
-    if (x < y) { #less }
-    else if (x == y) { #equal }
-    else { #greater }
+  public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the negation of `x`, `-x` .
-  public func neq(x : Float) : Float { -x; };
+  public func neq(x : Float) : Float { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
   public func add(x : Float, y : Float) : Float { x + y };

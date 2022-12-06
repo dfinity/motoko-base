@@ -108,7 +108,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.get(0); // evaluates to 10
@@ -129,7 +129,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.getOpt(0); // evaluates to ?10
@@ -152,7 +152,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.put(0, 20); // overwrites 10 at index 0 with 20
     /// Buffer.toArray(buffer)
@@ -173,7 +173,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.removeLast(); // evaluates to ?11
@@ -212,7 +212,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -273,7 +273,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -295,7 +295,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -371,7 +371,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// 
+    ///
     /// let buffer = Buffer.Buffer<Nat>(2); // underlying array has capacity 2
     /// buffer.add(10);
     /// let c1 = buffer.capacity(); // evaluates to 2
@@ -388,7 +388,7 @@ module {
     /// Changes the capacity to `capacity`. Traps if `capacity` < `size`.
     ///
     /// ```motoko include=initialize
-    /// 
+    ///
     /// buffer.reserve(4);
     /// buffer.add(10);
     /// buffer.add(11);
@@ -557,7 +557,7 @@ module {
     /// Sort is deterministic, stable, and in-place.
     ///
     /// ```motoko include=initialize
-    /// 
+    ///
     /// import Nat "mo:base/Nat";
     ///
     /// buffer.add(11);
