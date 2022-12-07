@@ -26,4 +26,4 @@ module {
   /// when processing a query call.
   public let getCertificate : () -> ?Blob = Prim.getCertificate;
 
-}
+};

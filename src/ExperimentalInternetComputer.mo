@@ -13,8 +13,7 @@ module {
   /// * The error code and textual message data of an IC reject determines the future's `Error` value.
   ///
   /// Note: `call` is an asynchronous function and can only be applied in an asynchronous context.
-  public let call : (canister : Principal, name : Text, data : Blob) ->
-     async (reply : Blob) = Prim.call_raw;
+  public let call : (canister : Principal, name : Text, data : Blob) -> async (reply : Blob) = Prim.call_raw;
 
   /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
   /// instructions performed during the execution of `comp()`.
@@ -30,7 +29,7 @@ module {
     let post = Prim.performanceCounter(0);
     // performance_counter costs around 200 extra instructions, we perform an empty measurement to decide the overhead
     let overhead = pre - init;
-    post - pre - overhead
+    post - pre - overhead;
   }
 
-}
+};

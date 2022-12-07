@@ -34,14 +34,18 @@ module {
   /// ```
   public class range(x : Nat, y : Int) {
     var i = x;
-    public func next() : ?Nat { if (i > y) { null } else {let j = i; i += 1; ?j} };
+    public func next() : ?Nat {
+      if (i > y) { null } else { let j = i; i += 1; ?j };
+    };
   };
 
   /// Like `range` but produces the values in the opposite
   /// order.
   public class revRange(x : Int, y : Int) {
-      var i = x;
-      public func next() : ?Int { if (i < y) { null } else {let j = i; i -= 1; ?j} };
+    var i = x;
+    public func next() : ?Int {
+      if (i < y) { null } else { let j = i; i -= 1; ?j };
+    };
   };
 
   /// Calls a function `f` on every value produced by an iterator and discards
@@ -57,7 +61,7 @@ module {
   /// ```
   public func iterate<A>(
     xs : Iter<A>,
-    f : (A, Nat) -> ()
+    f : (A, Nat) -> (),
   ) {
     var i = 0;
     label l loop {
@@ -78,7 +82,7 @@ module {
   /// (discarding them in the process).
   public func size<A>(xs : Iter<A>) : Nat {
     var len = 0;
-    iterate<A>(xs, func (x, i) { len += 1; });
+    iterate<A>(xs, func(x, i) { len += 1 });
     len;
   };
 
@@ -164,14 +168,14 @@ module {
     object {
       public func next() : ?A {
         if (ix >= size) {
-          return null
+          return null;
         } else {
           let res = ?(xs[ix]);
           ix += 1;
-          return res
-        }
-      }
-    }
+          return res;
+        };
+      };
+    };
   };
 
   /// Like `fromArray` but for Arrays with mutable elements. Captures
@@ -193,7 +197,7 @@ module {
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buffer<A>(8);
     iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
-    return Buffer.toArray(buffer)
+    return Buffer.toArray(buffer);
   };
 
   /// Like `toArray` but for Arrays with mutable elements.
@@ -204,9 +208,12 @@ module {
   /// Like `toArray` but for Lists.
   public func toList<A>(xs : Iter<A>) : List.List<A> {
     var result = List.nil<A>();
-    iterate<A>(xs, func (x, _i) {
-      result := List.push<A>(x, result);
-    });
+    iterate<A>(
+      xs,
+      func(x, _i) {
+        result := List.push<A>(x, result);
+      },
+    );
     List.reverse<A>(result);
   };
 
@@ -214,7 +221,7 @@ module {
   public func sort<A>(xs : Iter<A>, compare : (A, A) -> Order.Order) : Iter<A> {
     let a = toArrayMut<A>(xs);
     Array.sortInPlace<A>(a, compare);
-    fromArrayMut<A>(a)
+    fromArrayMut<A>(a);
   };
 
 };

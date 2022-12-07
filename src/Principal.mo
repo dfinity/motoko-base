@@ -17,19 +17,17 @@ module {
 
   /// Conversion.
   public let fromBlob : (b : Blob) -> Principal = Prim.principalOfBlob;
-  
+
   /// Conversion.
-  public func toText(p : Principal) : Text = debug_show(p);
+  public func toText(p : Principal) : Text = debug_show (p);
 
   private let anonymousPrincipal : Blob = "\04";
 
-  public func isAnonymous(p : Principal) : Bool =
-    Prim.blobOfPrincipal p == anonymousPrincipal;
+  public func isAnonymous(p : Principal) : Bool = Prim.blobOfPrincipal p == anonymousPrincipal;
 
-  public func hash(principal : Principal) : Hash.Hash =
-    Blob.hash (Prim.blobOfPrincipal(principal));
+  public func hash(principal : Principal) : Hash.Hash = Blob.hash(Prim.blobOfPrincipal(principal));
 
-  public func fromText(t : Text) : Principal = fromActor(actor(t));
+  public func fromText(t : Text) : Principal = fromActor(actor (t));
 
   /// Returns `x == y`.
   public func equal(x : Principal, y : Principal) : Bool { x == y };
@@ -50,9 +48,11 @@ module {
   public func greaterOrEqual(x : Principal, y : Principal) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
-  public func compare(x : Principal, y : Principal) : { #less; #equal; #greater } {
-    if (x < y) { #less }
-    else if (x == y) { #equal }
-    else { #greater }
+  public func compare(x : Principal, y : Principal) : {
+    #less;
+    #equal;
+    #greater;
+  } {
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
-}
+};
