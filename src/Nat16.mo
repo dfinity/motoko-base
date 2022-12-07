@@ -13,24 +13,24 @@ module {
   public let toNat : Nat16 -> Nat = Prim.nat16ToNat;
 
   /// Conversion. Traps on overflow/underflow.
-  public let fromNat : Nat -> Nat16  = Prim.natToNat16;
+  public let fromNat : Nat -> Nat16 = Prim.natToNat16;
 
   /// Conversion. Wraps on overflow/underflow.
-  public let fromIntWrap : Int -> Nat16  = Prim.intToNat16Wrap;
+  public let fromIntWrap : Int -> Nat16 = Prim.intToNat16Wrap;
 
   /// Returns the Text representation of `x`.
   public func toText(x : Nat16) : Text {
-    Nat.toText(toNat(x))
+    Nat.toText(toNat(x));
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Nat16, y : Nat16) : Nat16 {
-    if (x < y) { x } else { y }
+    if (x < y) { x } else { y };
   };
 
   /// Returns the maximum of `x` and `y`.
-  public func max( x : Nat16, y : Nat16) : Nat16 {
-    if (x < y) { y } else { x }
+  public func max(x : Nat16, y : Nat16) : Nat16 {
+    if (x < y) { y } else { x };
   };
 
   /// Returns `x == y`.
@@ -53,9 +53,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Nat16, y : Nat16) : { #less; #equal; #greater } {
-    if (x < y) { #less }
-    else if (x == y) { #equal }
-    else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
@@ -143,4 +141,4 @@ module {
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
   public func powWrap(x : Nat16, y : Nat16) : Nat16 { x **% y };
 
-}
+};

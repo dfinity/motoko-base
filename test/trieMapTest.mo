@@ -32,19 +32,19 @@ debug {
   let b = H.clone<Text, Nat>(a, Text.equal, Text.hash);
 
   // ensure clone has each key-value pair present in original
-  for ((k,v) in a.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in a.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // ensure clone has each key present in original
   for (k in a.keys()) {
     switch (b.get(k)) {
-    case null { assert false };
-    case (?_) {  };
+      case null { assert false };
+      case (?_) {};
     };
   };
 
@@ -52,17 +52,17 @@ debug {
   for (v in a.vals()) {
     var foundMatch = false;
     for (w in b.vals()) {
-      if (v == w) { foundMatch := true }
+      if (v == w) { foundMatch := true };
     };
-    assert foundMatch
+    assert foundMatch;
   };
 
   // ensure original has each key-value pair present in clone
-  for ((k,v) in b.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in b.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (a.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
@@ -74,20 +74,20 @@ debug {
 
   // check them:
   switch (a.get("apple")) {
-  case (?1111) { };
-  case _ { assert false };
+    case (?1111) {};
+    case _ { assert false };
   };
   switch (a.get("banana")) {
-  case (?2222) { };
-  case _ { assert false };
+    case (?2222) {};
+    case _ { assert false };
   };
   switch (a.get("pear")) {
-  case null {  };
-  case (?_) { assert false };
+    case null {};
+    case (?_) { assert false };
   };
   switch (a.get("avocado")) {
-  case null {  };
-  case (?_) { assert false };
+    case null {};
+    case (?_) { assert false };
   };
 
   // undo operations above:
@@ -97,42 +97,41 @@ debug {
   a.put("avocado", 4);
 
   // ensure clone has each key-value pair present in original
-  for ((k,v) in a.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in a.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // ensure original has each key-value pair present in clone
-  for ((k,v) in b.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in b.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (a.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
-
 
   // test fromEntries method
   let c = H.fromEntries<Text, Nat>(b.entries(), Text.equal, Text.hash);
 
   // c agrees with each entry of b
-  for ((k,v) in b.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in b.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (c.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // b agrees with each entry of c
-  for ((k,v) in c.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in c.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 };

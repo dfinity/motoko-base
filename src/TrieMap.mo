@@ -22,7 +22,7 @@ import List "List";
 
 module {
 
-  public class TrieMap<K, V> (isEq : (K, K) -> Bool, hashOf :  K -> Hash.Hash) {
+  public class TrieMap<K, V>(isEq : (K, K) -> Bool, hashOf : K -> Hash.Hash) {
 
     var map = T.empty<K, V>();
     var _size : Nat = 0;
@@ -31,31 +31,28 @@ module {
     public func size() : Nat { _size };
 
     /// Associate a key and value, overwriting any prior association for the key.
-    public func put(k : K, v : V) =
-      ignore replace(k, v);
+    public func put(k : K, v : V) = ignore replace(k, v);
 
     /// Put the key and value, _and_ return the (optional) prior value for the key.
     public func replace(k : K, v : V) : ?V {
       let keyObj = { key = k; hash = hashOf(k) };
-      let (map2, ov) =
-        T.put<K,V>(map, keyObj, isEq, v);
+      let (map2, ov) = T.put<K, V>(map, keyObj, isEq, v);
       map := map2;
       switch (ov) {
         case null { _size += 1 };
-        case _ {}
+        case _ {};
       };
-      ov
+      ov;
     };
 
     /// Get the (optional) value associated with the given key.
     public func get(k : K) : ?V {
-      let keyObj = {key = k; hash = hashOf(k);};
-      T.find<K, V>(map, keyObj, isEq)
+      let keyObj = { key = k; hash = hashOf(k) };
+      T.find<K, V>(map, keyObj, isEq);
     };
 
     /// Delete the (optional) value associated with the given key.
-    public func delete(k : K) =
-      ignore remove(k);
+    public func delete(k : K) = ignore remove(k);
 
     /// Delete and return the (optional) value associated with the given key.
     public func remove(k : K) : ?V {
@@ -64,22 +61,24 @@ module {
       map := t;
       switch (ov) {
         case null {};
-        case (?_) { _size -= 1 }
+        case (?_) { _size -= 1 };
       };
-      ov
+      ov;
     };
 
     /// An `Iter` over the keys.
     ///
     /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
-    public func keys() : I.Iter<K>
-    { I.map(entries(), func (kv : (K, V)) : K { kv.0 }) };
+    public func keys() : I.Iter<K> {
+      I.map(entries(), func(kv : (K, V)) : K { kv.0 });
+    };
 
     /// An `Iter` over the values.
     ///
     /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
-    public func vals() : I.Iter<V>
-    { I.map(entries(), func (kv : (K, V)) : V { kv.1 }) };
+    public func vals() : I.Iter<V> {
+      I.map(entries(), func(kv : (K, V)) : V { kv.1 });
+    };
 
     /// Returns an `Iter` over the entries.
     ///
@@ -94,57 +93,56 @@ module {
               switch trie {
                 case (#empty) {
                   stack := stack2;
-                  next()
+                  next();
                 };
-                case (#leaf({keyvals = null})) {
+                case (#leaf({ keyvals = null })) {
                   stack := stack2;
-                  next()
+                  next();
                 };
-                case (#leaf({size = c; keyvals = ?((k, v), kvs)})) {
-                  stack := ?(#leaf({size=c-1; keyvals=kvs}), stack2);
-                  ?(k.key, v)
+                case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
+                  stack := ?(#leaf({ size = c -1; keyvals = kvs }), stack2);
+                  ?(k.key, v);
                 };
                 case (#branch(br)) {
                   stack := ?(br.left, ?(br.right, stack2));
-                  next()
+                  next();
                 };
-              }
-            }
-          }
-        }
-      }
-    }
+              };
+            };
+          };
+        };
+      };
+    };
   };
-
 
   /// Clone the map, given its key operations.
   public func clone<K, V>(
     h : TrieMap<K, V>,
-    keyEq : (K,K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyEq : (K, K) -> Bool,
+    keyHash : K -> Hash.Hash,
   ) : TrieMap<K, V> {
     let h2 = TrieMap<K, V>(keyEq, keyHash);
     for ((k, v) in h.entries()) {
       h2.put(k, v);
     };
-    h2
+    h2;
   };
 
   /// Clone an iterator of key-value pairs.
   public func fromEntries<K, V>(
     entries : I.Iter<(K, V)>,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyHash : K -> Hash.Hash,
   ) : TrieMap<K, V> {
     let h = TrieMap<K, V>(keyEq, keyHash);
     for ((k, v) in entries) {
       h.put(k, v);
     };
-    h
+    h;
   };
 
   /// Transform (map) the values of a map, retaining its keys.
-  public func map<K, V1, V2> (
+  public func map<K, V1, V2>(
     h : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash,
@@ -155,7 +153,7 @@ module {
       let v2 = mapFn(k, v1);
       h2.put(k, v2);
     };
-    h2
+    h2;
   };
 
   /// Transform and filter the values of a map, retaining its keys.
@@ -168,13 +166,13 @@ module {
     let h2 = TrieMap<K, V2>(keyEq, keyHash);
     for ((k, v1) in h.entries()) {
       switch (mapFn(k, v1)) {
-        case null { };
+        case null {};
         case (?v2) {
           h2.put(k, v2);
         };
-      }
+      };
     };
-    h2
+    h2;
   };
 
-}
+};

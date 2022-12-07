@@ -25,8 +25,7 @@ module {
   ///
   /// Runtime: O(size)
   /// Space: O(size)
-  public func init<X>(size : Nat,  initValue : X) : [var X] =
-    Prim.Array_init<X>(size, initValue);
+  public func init<X>(size : Nat, initValue : X) : [var X] = Prim.Array_init<X>(size, initValue);
 
   /// Create an immutable array of size `size`. Each element at index i
   /// is created by applying `generator` to i.
@@ -39,8 +38,7 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `generator` runs in O(1) time and space.
-  public func tabulate<X>(size : Nat,  generator : Nat -> X) : [X] =
-    Prim.Array_tabulate<X>(size, generator);
+  public func tabulate<X>(size : Nat, generator : Nat -> X) : [X] = Prim.Array_tabulate<X>(size, generator);
 
   /// Create a mutable array of size `size`. Each element at index i
   /// is created by applying `generator` to i.
@@ -55,7 +53,7 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `generator` runs in O(1) time and space.
-  public func tabulateVar<X>(size : Nat,  generator : Nat -> X) : [var X] {
+  public func tabulateVar<X>(size : Nat, generator : Nat -> X) : [var X] {
     // FIXME add this as a primitive in the RTS
     if (size == 0) { return [var] };
     let array = Prim.Array_init<X>(size, generator 0);
@@ -64,7 +62,7 @@ module {
       array[i] := generator i;
       i += 1;
     };
-    array
+    array;
   };
 
   /// Transforms a mutable array into an immutable array.
@@ -79,8 +77,7 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(1)
-  public func freeze<X>(varArray : [var X]) : [X] =
-    Prim.Array_tabulate<X>(varArray.size(), func i = varArray[i]);
+  public func freeze<X>(varArray : [var X]) : [X] = Prim.Array_tabulate<X>(varArray.size(), func i = varArray[i]);
 
   /// Transforms an immutable array into a mutable array.
   ///
@@ -106,7 +103,7 @@ module {
       newArray[i] := array[i];
       i += 1;
     };
-    newArray
+    newArray;
   };
 
   /// Tests if two arrays contain equal values (i.e. they represent the same
@@ -158,7 +155,7 @@ module {
     for (element in array.vals()) {
       if (predicate element) {
         return ?element;
-      }
+      };
     };
     return null;
   };
@@ -178,13 +175,16 @@ module {
   public func append<X>(array1 : [X], array2 : [X]) : [X] {
     let size1 = array1.size();
     let size2 = array2.size();
-    Prim.Array_tabulate<X>(size1 + size2, func i {
-      if (i < size1) {
-        array1[i];
-      } else {
-        array2[i - size1];
-      };
-    });
+    Prim.Array_tabulate<X>(
+      size1 + size2,
+      func i {
+        if (i < size1) {
+          array1[i];
+        } else {
+          array2[i - size1];
+        };
+      },
+    );
   };
 
   // FIXME this example stack overflows. Should test with new implementation of sortInPlace
@@ -204,7 +204,7 @@ module {
   public func sort<X>(array : [X], compare : (X, X) -> Order.Order) : [X] {
     let temp : [var X] = thaw(array);
     sortInPlace(temp, compare);
-    freeze(temp)
+    freeze(temp);
   };
 
   /// Sorts the elements in the array, __in place__, according to `compare`.
@@ -318,8 +318,7 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func map<X, Y>(array : [X], f : X -> Y) : [Y] =
-    Prim.Array_tabulate<Y>(array.size(), func i = f(array[i]));
+  public func map<X, Y>(array : [X], f : X -> Y) : [Y] = Prim.Array_tabulate<Y>(array.size(), func i = f(array[i]));
 
   /// Creates a new array by applying `predicate` to every element
   /// in `array`, retaining the elements for which `predicate` returns true.
@@ -334,18 +333,17 @@ module {
   /// *Runtime and space assumes that `predicate` runs in O(1) time and space.
   public func filter<X>(array : [X], predicate : X -> Bool) : [X] {
     var count = 0;
-    let keep =
-      Prim.Array_tabulate<Bool>(
-        array.size(),
-        func i {
-          if (predicate(array[i])) {
-            count += 1;
-            true
-          } else {
-            false
-          }
-        }
-      );
+    let keep = Prim.Array_tabulate<Bool>(
+      array.size(),
+      func i {
+        if (predicate(array[i])) {
+          count += 1;
+          true;
+        } else {
+          false;
+        };
+      },
+    );
     var nextKeep = 0;
     Prim.Array_tabulate<X>(
       count,
@@ -355,8 +353,8 @@ module {
         };
         nextKeep += 1;
         array[nextKeep - 1];
-      }
-    )
+      },
+    );
   };
 
   // FIXME the arguments ordering to the higher order function are flipped
@@ -376,8 +374,7 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func mapEntries<X, Y>(array : [X], f : (X, Nat) -> Y) : [Y] =
-    Prim.Array_tabulate<Y>(array.size(), func i = f(array[i], i));
+  public func mapEntries<X, Y>(array : [X], f : (X, Nat) -> Y) : [Y] = Prim.Array_tabulate<Y>(array.size(), func i = f(array[i], i));
 
   /// Creates a new array by applying `f` to each element in `array`,
   /// and keeping all non-null elements. The ordering is retained.
@@ -398,22 +395,21 @@ module {
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapFilter<X, Y>(array : [X], f : X -> ?Y) : [Y] {
     var count = 0;
-    let options =
-      Prim.Array_tabulate<?Y>(
-        array.size(),
-        func i {
-          let result = f(array[i]);
-          switch (result) {
-            case (?element) {
-              count += 1;
-              result
-            };
-            case null {
-              null
-            }
-          }
-        }
-      );
+    let options = Prim.Array_tabulate<?Y>(
+      array.size(),
+      func i {
+        let result = f(array[i]);
+        switch (result) {
+          case (?element) {
+            count += 1;
+            result;
+          };
+          case null {
+            null;
+          };
+        };
+      },
+    );
 
     var nextSome = 0;
     Prim.Array_tabulate<Y>(
@@ -423,14 +419,14 @@ module {
           nextSome += 1;
         };
         nextSome += 1;
-        switch(options[nextSome - 1]) {
-          case(?element) element;
+        switch (options[nextSome - 1]) {
+          case (?element) element;
           case null {
-            Prim.trap "Malformed array in mapFilter"
-          }
-        }
-      }
-    )
+            Prim.trap "Malformed array in mapFilter";
+          };
+        };
+      },
+    );
   };
 
   /// Creates a new array by applying `f` to each element in `array`.
@@ -460,41 +456,50 @@ module {
     var isInit = false;
 
     var error : ?Result.Result<[Y], E> = null;
-    let results = Prim.Array_tabulate<?Y>(size, func i {
-      switch (f(array[i])) {
-        case (#ok element) {
-          ?element
-        };
-        case (#err e) {
-          switch (error) {
-            case null { // only take the first error
-              error := ?(#err e);
-            };
-            case _ { };
+    let results = Prim.Array_tabulate<?Y>(
+      size,
+      func i {
+        switch (f(array[i])) {
+          case (#ok element) {
+            ?element;
           };
-          null
-        }
-      }
-    });
+          case (#err e) {
+            switch (error) {
+              case null {
+                // only take the first error
+                error := ?(#err e);
+              };
+              case _ {};
+            };
+            null;
+          };
+        };
+      },
+    );
 
     switch error {
       case null {
         // unpack the option
-        #ok(map<?Y, Y>(results, func element {
-          switch element {
-            case (?element) {
-              element
-            };
-            case null {
-              Prim.trap "Malformed array in mapResults"
-            };
-          }
-        }));
+        #ok(
+          map<?Y, Y>(
+            results,
+            func element {
+              switch element {
+                case (?element) {
+                  element;
+                };
+                case null {
+                  Prim.trap "Malformed array in mapResults";
+                };
+              };
+            },
+          ),
+        );
       };
       case (?error) {
-        error
+        error;
       };
-    }
+    };
   };
 
   /// Creates a new array by applying `k` to each element in `array`,
@@ -514,25 +519,31 @@ module {
   /// *Runtime and space assumes that `k` runs in O(1) time and space.
   public func chain<X, Y>(array : [X], k : X -> [Y]) : [Y] {
     var flatSize = 0;
-    let subArrays = Prim.Array_tabulate<[Y]>(array.size(), func i {
-      let subArray = k(array[i]);
-      flatSize += subArray.size();
-      subArray
-    });
+    let subArrays = Prim.Array_tabulate<[Y]>(
+      array.size(),
+      func i {
+        let subArray = k(array[i]);
+        flatSize += subArray.size();
+        subArray;
+      },
+    );
     // could replace with a call to flatten,
     // but it would require an extra pass (to compute `flatSize`)
     var outer = 0;
     var inner = 0;
-    Prim.Array_tabulate<Y>(flatSize, func _ {
-      let subArray = subArrays[outer];
-      let element = subArray[inner];
-      inner += 1;
-      if (inner == subArray.size()) {
-        inner := 0;
-        outer += 1;
-      };
-      element
-    })
+    Prim.Array_tabulate<Y>(
+      flatSize,
+      func _ {
+        let subArray = subArrays[outer];
+        let element = subArray[inner];
+        inner += 1;
+        if (inner == subArray.size()) {
+          inner := 0;
+          outer += 1;
+        };
+        element;
+      },
+    );
   };
 
   /// Collapses the elements in `array` into a single value by starting with `base`
@@ -563,7 +574,7 @@ module {
       accumulation := combine(accumulation, element);
     };
 
-    accumulation
+    accumulation;
   };
 
   // FIXME the type arguments are reverse order from Buffer
@@ -611,20 +622,23 @@ module {
   public func flatten<X>(arrays : [[X]]) : [X] {
     var flatSize = 0;
     for (subArray in arrays.vals()) {
-      flatSize += subArray.size()
+      flatSize += subArray.size();
     };
 
     var outer = 0;
     var inner = 0;
-    Prim.Array_tabulate<X>(flatSize, func _ {
-      while (inner == arrays[outer].size()) {
-        inner := 0;
-        outer += 1;
-      };
-      let element = arrays[outer][inner];
-      inner += 1;
-      element
-    })
+    Prim.Array_tabulate<X>(
+      flatSize,
+      func _ {
+        while (inner == arrays[outer].size()) {
+          inner := 0;
+          outer += 1;
+        };
+        let element = arrays[outer][inner];
+        inner += 1;
+        element;
+      },
+    );
   };
 
   /// Create an array containing a single value.
@@ -683,4 +697,4 @@ module {
   ///
   /// Space: O(1)
   public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys();
-}
+};
