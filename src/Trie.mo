@@ -237,7 +237,8 @@ module {
           } else if (c <= MAX_LEAF_SIZE) {
             return #leaf({ size = c; keyvals = kvs });
           } else {
-            /* fall through to branch case */
+
+            //fall through to branch case
           };
         };
       };
