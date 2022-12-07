@@ -16,7 +16,7 @@ module {
 
     /// Get purely-functional representation
     public func share() : Tree<T> {
-      heap
+      heap;
     };
 
     /// Put purely-functional representation into class. Need to make sure the tree is constructed with the same compare function
@@ -34,7 +34,7 @@ module {
       switch heap {
         case (null) { null };
         case (?(_, x, _, _)) { ?x };
-      }
+      };
     };
 
     /// Delete the minimal element
@@ -42,7 +42,7 @@ module {
       switch heap {
         case null {};
         case (?(_, _, a, b)) { heap := merge(a, b, ord) };
-      }
+      };
     };
 
     /// Remove the minimal element and return its value
@@ -51,9 +51,9 @@ module {
         case null { null };
         case (?(_, x, a, b)) {
           heap := merge(a, b, ord);
-          ?x
+          ?x;
         };
-      }
+      };
     };
   };
 
@@ -61,14 +61,14 @@ module {
     switch heap {
       case null { 0 };
       case (?(r, _, _, _)) { r };
-    }
+    };
   };
 
   func makeT<T>(x : T, a : Tree<T>, b : Tree<T>) : Tree<T> {
     if (rank(a) >= rank(b)) {
-        ?(rank(b) + 1, x, a, b)
+      ?(rank(b) + 1, x, a, b);
     } else {
-        ?(rank(a) + 1, x, b, a)
+      ?(rank(a) + 1, x, b, a);
     };
   };
 
@@ -77,7 +77,7 @@ module {
       case (null, h) { h };
       case (h, null) { h };
       case (?(_, x, a, b), ?(_, y, c, d)) {
-        switch (ord(x,y)) {
+        switch (ord(x, y)) {
           case (#less) { makeT(x, a, merge(b, h2, ord)) };
           case _ { makeT(y, c, merge(d, h1, ord)) };
         };
@@ -90,24 +90,24 @@ module {
     let heap = Heap<T>(ord);
     func build(xs : L.List<Tree<T>>) : Tree<T> {
       func join(xs : L.List<Tree<T>>) : L.List<Tree<T>> {
-        switch(xs) {
+        switch (xs) {
           case (null) { null };
           case (?(hd, null)) { ?(hd, null) };
           case (?(h1, ?(h2, tl))) { ?(merge(h1, h2, ord), join(tl)) };
-        }
+        };
       };
-      switch(xs) {
+      switch (xs) {
         case null { P.unreachable() };
         case (?(hd, null)) { hd };
         case _ { build(join(xs)) };
       };
     };
-    let list = I.toList(I.map(iter, func (x : T) : Tree<T> { ?(1, x, null, null) } ));
+    let list = I.toList(I.map(iter, func(x : T) : Tree<T> { ?(1, x, null, null) }));
     if (not L.isNil(list)) {
       let t = build(list);
       heap.unsafeUnshare(t);
     };
-    heap
+    heap;
   };
 
 };

@@ -48,4 +48,4 @@ module {
   /// whether or not `refunded` is used to observe them.
   public let refunded : () -> (amount : Nat) = Prim.cyclesRefunded;
 
-}
+};

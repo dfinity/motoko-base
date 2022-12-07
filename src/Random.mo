@@ -40,7 +40,7 @@ module {
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     /// Consumes 1 byte of entropy.
     public func byte() : ?Nat8 {
-      it.next()
+      it.next();
     };
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
@@ -54,21 +54,21 @@ module {
             case (?w) {
               byte := w;
               mask := 0x40;
-              ?(0 : Nat8 != byte & (0x80 : Nat8))
-            }
-          }
+              ?(0 : Nat8 != byte & (0x80 : Nat8));
+            };
+          };
         } else {
           let m = mask;
           mask >>= (1 : Nat8);
-          ?(0 : Nat8 != byte & m)
-        }
-      }
+          ?(0 : Nat8 != byte & m);
+        };
+      };
     };
 
     /// Simulates a coin toss. Both outcomes have equal probability.
     /// Consumes 1 bit of entropy (amortised).
     public func coin() : ?Bool {
-      bit.next()
+      bit.next();
     };
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
@@ -77,18 +77,16 @@ module {
       var pp = p;
       var acc : Nat = 0;
       for (i in it) {
-        if (8 : Nat8 <= pp)
-        { acc := acc * 256 + Prim.nat8ToNat(i) }
-        else if (0 : Nat8 == pp)
-        { return ?acc }
-        else {
+        if (8 : Nat8 <= pp) { acc := acc * 256 + Prim.nat8ToNat(i) } else if (0 : Nat8 == pp) {
+          return ?acc;
+        } else {
           acc *= Prim.nat8ToNat(1 << pp);
           let mask : Nat8 = 0xff >> (8 - pp);
-          return ?(acc + Prim.nat8ToNat(i & mask))
+          return ?(acc + Prim.nat8ToNat(i & mask));
         };
-        pp -= 8
+        pp -= 8;
       };
-      null
+      null;
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
@@ -97,19 +95,17 @@ module {
       var nn = n;
       var acc : Nat8 = 0;
       for (i in it) {
-        if (8 : Nat8 <= nn)
-        { acc +%= Prim.popcntNat8(i) }
-        else if (0 : Nat8 == nn)
-        { return ?acc }
-        else {
+        if (8 : Nat8 <= nn) { acc +%= Prim.popcntNat8(i) } else if (0 : Nat8 == nn) {
+          return ?acc;
+        } else {
           let mask : Nat8 = 0xff << (8 - nn);
           let residue = Prim.popcntNat8(i & mask);
-          return ?(acc +% residue)
+          return ?(acc +% residue);
         };
-        nn -= 8
+        nn -= 8;
       };
-      null
-    }
+      null;
+    };
   };
 
   let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
@@ -120,7 +116,7 @@ module {
     switch (seed.vals().next()) {
       case (?w) { w };
       case _ { P.unreachable() };
-    }
+    };
   };
 
   /// Simulates a coin toss.
@@ -129,7 +125,7 @@ module {
     switch (seed.vals().next()) {
       case (?w) { w > (127 : Nat8) };
       case _ { P.unreachable() };
-    }
+    };
   };
 
   /// Obtains a full blob (32 bytes) worth of fresh entropy.
@@ -138,7 +134,7 @@ module {
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
-    rangeIter(p, seed.vals())
+    rangeIter(p, seed.vals());
   };
 
   // internal worker method, expects iterator with sufficient supply
@@ -146,24 +142,22 @@ module {
     var pp = p;
     var acc : Nat = 0;
     for (i in it) {
-      if (8 : Nat8 <= pp)
-      { acc := acc * 256 + Prim.nat8ToNat(i) }
-      else if (0 : Nat8 == pp)
-      { return acc }
-      else {
+      if (8 : Nat8 <= pp) { acc := acc * 256 + Prim.nat8ToNat(i) } else if (0 : Nat8 == pp) {
+        return acc;
+      } else {
         acc *= Prim.nat8ToNat(1 << pp);
         let mask : Nat8 = 0xff >> (8 - pp);
-        return acc + Prim.nat8ToNat(i & mask)
+        return acc + Prim.nat8ToNat(i & mask);
       };
-      pp -= 8
+      pp -= 8;
     };
-    P.unreachable()
+    P.unreachable();
   };
 
   /// Counts the number of heads in `n` coin tosses.
   /// Seed blob must contain at least ((n+7) / 8) bytes.
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
-    binomialIter(n, seed.vals())
+    binomialIter(n, seed.vals());
   };
 
   // internal worker method, expects iterator with sufficient supply
@@ -171,18 +165,16 @@ module {
     var nn = n;
     var acc : Nat8 = 0;
     for (i in it) {
-      if (8 : Nat8 <= nn)
-      { acc +%= Prim.popcntNat8(i) }
-      else if (0 : Nat8 == nn)
-      { return acc }
-      else {
+      if (8 : Nat8 <= nn) { acc +%= Prim.popcntNat8(i) } else if (0 : Nat8 == nn) {
+        return acc;
+      } else {
         let mask : Nat8 = 0xff << (8 - nn);
         let residue = Prim.popcntNat8(i & mask);
-        return (acc +% residue)
+        return (acc +% residue);
       };
-      nn -= 8
+      nn -= 8;
     };
-    P.unreachable()
+    P.unreachable();
   }
 
-}
+};

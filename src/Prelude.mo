@@ -27,7 +27,7 @@ module {
   /// Calls are well-typed in all typing contexts, and they
   /// trap in all execution contexts.
   public func unreachable() : None {
-    Debug.trap("Prelude.unreachable()")
+    Debug.trap("Prelude.unreachable()");
   };
 
-}
+};
