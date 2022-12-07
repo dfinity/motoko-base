@@ -16,4 +16,4 @@ module {
   public let impossible : <A> None -> A = func<A>(x : None) : A {
     switch (x) {};
   };
-}
+};

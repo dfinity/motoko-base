@@ -23,28 +23,28 @@ debug {
   let b = H.clone<Text, Nat>(a, Text.equal, Text.hash);
 
   // ensure clone has each key-value pair present in original
-  for ((k,v) in a.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in a.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // ensure original has each key-value pair present in clone
-  for ((k,v) in b.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in b.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (a.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // ensure clone has each key present in original
   for (k in a.keys()) {
     switch (b.get(k)) {
-    case null { assert false };
-    case (?_) {  };
+      case null { assert false };
+      case (?_) {};
     };
   };
 
@@ -52,15 +52,15 @@ debug {
   for (v in a.vals()) {
     var foundMatch = false;
     for (w in b.vals()) {
-      if (v == w) { foundMatch := true }
+      if (v == w) { foundMatch := true };
     };
-    assert foundMatch
+    assert foundMatch;
   };
 
   // do some more operations:
   a.put("apple", 1111);
   a.put("banana", 2222);
-  switch( a.remove("pear")) {
+  switch (a.remove("pear")) {
     case null { assert false };
     case (?three) { assert three == 3 };
   };
@@ -68,20 +68,20 @@ debug {
 
   // check them:
   switch (a.get("apple")) {
-  case (?1111) { };
-  case _ { assert false };
+    case (?1111) {};
+    case _ { assert false };
   };
   switch (a.get("banana")) {
-  case (?2222) { };
-  case _ { assert false };
+    case (?2222) {};
+    case _ { assert false };
   };
   switch (a.get("pear")) {
-  case null {  };
-  case (?_) { assert false };
+    case null {};
+    case (?_) { assert false };
   };
   switch (a.get("avocado")) {
-  case null {  };
-  case (?_) { assert false };
+    case null {};
+    case (?_) { assert false };
   };
 
   // undo operations above:
@@ -89,58 +89,58 @@ debug {
   // .. and test that replace works
   switch (a.replace("apple", 666)) {
     case null { assert false };
-    case (?one) { assert one == 1; // ...and revert
-                  a.put("apple", 1)
-         };
+    case (?one) {
+      assert one == 1; // ...and revert
+      a.put("apple", 1);
+    };
   };
   a.put("banana", 2);
   a.put("pear", 3);
   a.put("avocado", 4);
 
   // ensure clone has each key-value pair present in original
-  for ((k,v) in a.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in a.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // ensure original has each key-value pair present in clone
-  for ((k,v) in b.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in b.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (a.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
-
 
   // test fromIter method
   let c = H.fromIter<Text, Nat>(b.entries(), 0, Text.equal, Text.hash);
 
   // c agrees with each entry of b
-  for ((k,v) in b.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in b.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (c.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // b agrees with each entry of c
-  for ((k,v) in c.entries()) {
-    Prim.debugPrint(debug_show (k,v));
+  for ((k, v) in c.entries()) {
+    Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
-    case null { assert false };
-    case (?w) { assert v == w };
+      case null { assert false };
+      case (?w) { assert v == w };
     };
   };
 
   // Issue #228
   let d = H.HashMap<Text, Nat>(50, Text.equal, Text.hash);
-  switch(d.remove("test")) {
-    case null { };
+  switch (d.remove("test")) {
+    case null {};
     case (?_) { assert false };
   };
 };
