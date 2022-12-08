@@ -6,7 +6,7 @@ debug {
   type Trie<K, V> = Trie.Trie<K, V>;
   type Key<K> = Trie.Key<K>;
 
-  func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
+  func key(t : Text) : Key<Text> { { key = t; hash = Text.hash t } };
 
   let t0 : Trie<Text, Nat> = Trie.empty();
   let t1 : Trie<Text, Nat> = Trie.put(t0, key "hello", Text.equal, 42).0;
@@ -21,11 +21,11 @@ debug {
       label here : () {
         for (y in b.vals()) {
           if (eq(x, y)) { found := true; break here };
-        }
+        };
       };
       if (not found) { return false };
     };
-    return true
+    return true;
   };
 
   // note that `put("hello", ..., 0)` happens "after" t2, but map is immutable (applicative).

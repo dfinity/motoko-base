@@ -35,9 +35,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Blob, y : Blob) : { #less; #equal; #greater } {
-    if (x < y) { #less }
-    else if (x == y) { #equal }
-    else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Creates a blob from an array of bytes, by copying each element.
@@ -52,4 +50,4 @@ module {
   /// Creates a mutable array of bytes from a blob, by copying each element.
   public let toArrayMut : Blob -> [var Nat8] = Prim.blobToArrayMut;
 
-}
+};

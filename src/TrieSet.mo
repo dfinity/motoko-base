@@ -19,28 +19,28 @@ import List "List";
 module {
 
   public type Hash = Hash.Hash;
-  public type Set<T> = Trie.Trie<T,()>;
+  public type Set<T> = Trie.Trie<T, ()>;
 
   /// Empty set.
-  public func empty<T>() : Set<T> { Trie.empty<T,()>(); };
+  public func empty<T>() : Set<T> { Trie.empty<T, ()>() };
 
   /// Put an element into the set.
   public func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
-    let (s2, _) = Trie.put<T,()>(s, { key = x; hash = xh }, eq, ());
-    s2
+    let (s2, _) = Trie.put<T, ()>(s, { key = x; hash = xh }, eq, ());
+    s2;
   };
 
   /// Delete an element from the set.
   public func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
     let (s2, _) = Trie.remove<T, ()>(s, { key = x; hash = xh }, eq);
-    s2
+    s2;
   };
 
   /// Test if two sets are equal.
   public func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     // XXX: Todo: use a smarter check
-    func unitEqual (_ : (),_ : ()) : Bool { true };
-    Trie.equalStructure<T, ()>(s1, s2, eq, unitEqual)
+    func unitEqual(_ : (), _ : ()) : Bool { true };
+    Trie.equalStructure<T, ()>(s1, s2, eq, unitEqual);
   };
 
   /// The number of set elements, set's cardinality.
@@ -49,8 +49,8 @@ module {
       s,
       func(n : Nat, m : Nat) : Nat { n + m },
       func(_ : T, _ : ()) : Nat { 1 },
-      0
-    )
+      0,
+    );
   };
 
   /// Test if a set contains a given element.
@@ -58,26 +58,26 @@ module {
     switch (Trie.find<T, ()>(s, { key = x; hash = xh }, eq)) {
       case null { false };
       case (?_) { true };
-    }
+    };
   };
 
   /// [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
   public func union<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let s3 = Trie.merge<T, ()>(s1, s2, eq);
-    s3
+    s3;
   };
 
   /// [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
   public func diff<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let s3 = Trie.diff<T, (), ()>(s1, s2, eq);
-    s3
+    s3;
   };
 
   /// [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
   public func intersect<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
-    let noop : ((), ()) -> (()) = func (_ : (), _ : ()) : (()) = ();
+    let noop : ((), ()) -> (()) = func(_ : (), _ : ()) : (()) = ();
     let s3 = Trie.join<T, (), (), ()>(s1, s2, eq, noop);
-    s3
+    s3;
   };
 
   //// Construct a set from an array.
@@ -86,12 +86,12 @@ module {
     for (elem in arr.vals()) {
       s := put<T>(s, elem, elemHash(elem), eq);
     };
-    s
+    s;
   };
 
   //// Returns the set as an array.
-  public func toArray<T>(s : Set<T>): [T] {
-    Trie.toArray(s, func (t : T, _ : ()) : T { t })
+  public func toArray<T>(s : Set<T>) : [T] {
+    Trie.toArray(s, func(t : T, _ : ()) : T { t });
   }
 
-}
+};
