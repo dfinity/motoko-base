@@ -1,14 +1,32 @@
-/// Debugging aids
+/// Utility functions for debugging.
+///
+/// Import from the base library to use this module.
+/// ```motoko name=import
+/// import Debug "mo:base/Debug";
+/// ```
 
 import Prim "mo:⛔";
 module {
+  /// Prints `text` to output stream.
+  ///
+  /// NOTE: What this output stream is depends on your execution environment.
+  ///
+  /// ```motoko include=import
+  /// Debug.print "Hello New World!"
+  /// ```
+  public func print(text : Text) {
+    Prim.debugPrint text;
+  };
 
-  /// `print(t)` emits text `t` to the debug output stream.
-  /// How this stream is stored or displayed depends on the
-  /// execution environment.
-  public let print : Text -> () = Prim.debugPrint;
-
-  /// `trap(t)` traps execution with a user-provided message.
-  public let trap : Text -> None = Prim.trap;
-
+  /// Causes program to trap (error) and ends execution. Prints `errorMessage`
+  /// to output stream.
+  ///
+  /// NOTE: What this output stream is depends on your execution environment.
+  ///
+  /// ```motoko include=import
+  /// Debug.trap "Hello New World!"
+  /// ```
+  public func trap(errorMessage : Text) {
+    Prim.trap errorMessage;
+  };
 };
