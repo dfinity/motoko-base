@@ -24,9 +24,9 @@ module {
   /// NOTE: What this output stream is depends on your execution environment.
   ///
   /// ```motoko include=import
-  /// Debug.trap "Hello New World!"
+  /// Debug.trap "Test error message"
   /// ```
-  public func trap(errorMessage : Text) {
+  public func trap(errorMessage : Text) : None {
     Prim.trap errorMessage;
   };
 };
