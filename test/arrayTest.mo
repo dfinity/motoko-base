@@ -385,4 +385,26 @@ let suite = Suite.suite(
   ]
 );
 
-Suite.run(suite)
+let subArraySuite = Suite.suite("subArray", [
+  Suite.test("if including entire array",
+    Array.subArray<Nat>([2,4,6,8,10], 0, 4),
+    M.equals(T.array(T.natTestable, [2,4,6,8,10]))
+  ),
+  Suite.test("if including middle of array",
+    Array.subArray<Nat>([2,4,6,8,10], 1, 3),
+    M.equals(T.array(T.natTestable, [4,6,8]))
+  ),
+  Suite.test("if including start, but not end of array",
+    Array.subArray<Nat>([2,4,6,8,10], 0, 2),
+    M.equals(T.array(T.natTestable, [2,4,6]))
+  ),
+  Suite.test("if including end, but not start of array",
+    Array.subArray<Nat>([2,4,6,8,10], 2, 4),
+    M.equals(T.array(T.natTestable, [6,8,10]))
+  ),
+]);
+
+Suite.run(Suite.suite("array", [
+  suite,
+  subArraySuite
+]));
