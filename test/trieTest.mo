@@ -62,7 +62,7 @@ func arrayTest2D(array : [((Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat), Nat)]> {
 func arrayTest3D(array : [((Nat, Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat, Nat), Nat)]> {
   let tuple3Testable : T.Testable<(Nat, Nat, Nat)> = {
     display = func t { debug_show t };
-    equals = func(t1, t2) { t1.0 == t2.0 and t1.1 == t2.1 and t1.2 == t2.2 };
+    equals = func(t1, t2) { t1 == t2 };
   };
 
   M.equals<[((Nat, Nat, Nat), Nat)]>(
@@ -79,7 +79,7 @@ func arrayTest3D(array : [((Nat, Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat, Nat)
 func natKey(nat : Nat) : Trie.Key<Nat> { { hash = Hash.hash(nat); key = nat } };
 let natKeyTestable : T.Testable<Trie.Key<Nat>> = {
   display = func k { debug_show k.key };
-  equals = func(k1, k2) { k1.key == k2.key and k1.hash == k2.hash };
+  equals = func(k1, k2) { k1 == k2 };
 };
 
 // Sample tries for testing
