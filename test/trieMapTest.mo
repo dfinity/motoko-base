@@ -1,10 +1,38 @@
 import Prim "mo:⛔";
-import H "mo:base/TrieMap";
+import TrieMap "mo:base/TrieMap";
 import Hash "mo:base/Hash";
 import Text "mo:base/Text";
+import Nat "mo:base/Nat";
+
+import Suite "mo:matchers/Suite";
+import T "mo:matchers/Testable";
+import M "mo:matchers/Matchers";
+
+let map1 = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
+// resulting map is {(0, 10), (2, 12), (4, 14)}
+map1.put(0, 10);
+map1.put(2, 12);
+map1.put(3, 13);
+map1.put(4, 24);
+map1.delete(3);
+map1.delete(4);
+map1.put(4, 14);
+
+let suite = Suite.suite(
+  "TrieMap",
+  [
+    Suite.test(
+      "size",
+      map1.size(),
+      M.equals(T.nat(3)),
+    ),
+  ],
+);
+
+Suite.run(suite);
 
 debug {
-  let a = H.TrieMap<Text, Nat>(Text.equal, Text.hash);
+  let a = TrieMap.TrieMap<Text, Nat>(Text.equal, Text.hash);
 
   assert a.size() == 0;
   ignore a.remove("apple");
@@ -29,7 +57,7 @@ debug {
   a.put("AvocadO", 444);
 
   // need to resupply the constructor args; they are private to the object; but, should they be?
-  let b = H.clone<Text, Nat>(a, Text.equal, Text.hash);
+  let b = TrieMap.clone<Text, Nat>(a, Text.equal, Text.hash);
 
   // ensure clone has each key-value pair present in original
   for ((k, v) in a.entries()) {
@@ -115,7 +143,7 @@ debug {
   };
 
   // test fromEntries method
-  let c = H.fromEntries<Text, Nat>(b.entries(), Text.equal, Text.hash);
+  let c = TrieMap.fromEntries<Text, Nat>(b.entries(), Text.equal, Text.hash);
 
   // c agrees with each entry of b
   for ((k, v) in b.entries()) {
