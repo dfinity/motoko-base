@@ -1,5 +1,6 @@
 import Prim "mo:⛔";
 import TrieMap "mo:base/TrieMap";
+import Iter "mo:base/Iter";
 import Hash "mo:base/Hash";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
@@ -8,6 +9,12 @@ import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
+// Utility functions to work with Matchers
+func arrayTest(array : [(Nat, Nat)]) : M.Matcher<[(Nat, Nat)]> {
+  M.equals<[(Nat, Nat)]>(T.array<(Nat, Nat)>(T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable), array));
+};
+
+// Sample maps to use for testing
 let map1 = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
 // resulting map is {(0, 10), (2, 12), (4, 14)}
 map1.put(0, 10);
@@ -25,6 +32,80 @@ let suite = Suite.suite(
       "size",
       map1.size(),
       M.equals(T.nat(3)),
+    ),
+    Suite.test(
+      "size empty",
+      TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).size(),
+      M.equals(T.nat(0)),
+    ),
+    Suite.test(
+      "size empty",
+      TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).size(),
+      M.equals(T.nat(0)),
+    ),
+    Suite.test(
+      "put",
+      do {
+        let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
+        map.put(5, 15);
+        Iter.toArray(map.entries());
+      },
+      arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)]),
+    ),
+    Suite.test(
+      "put overwrite",
+      do {
+        let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
+        map.put(0, 20);
+        map.put(4, 24);
+        Iter.toArray(map.entries());
+      },
+      arrayTest([(0, 20), (2, 12), (4, 24)]),
+    ),
+    Suite.test(
+      "put empty",
+      do {
+        let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
+        map.put(0, 10);
+        map.put(2, 12);
+        Iter.toArray(map.entries());
+      },
+      arrayTest([(0, 10), (2, 12)]),
+    ),
+    Suite.test(
+      "replace old value",
+      do {
+        let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
+        map.replace(5, 15);
+      },
+      M.equals(T.optional(T.natTestable, null : ?Nat)),
+    ),
+    Suite.test(
+      "replace new map",
+      do {
+        let map = TrieMap.clone<Nat, Nat>(map1, Nat.equal, Hash.hash);
+        ignore map.replace(5, 15);
+        Iter.toArray(map.entries());
+      },
+      arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)]),
+    ),
+    Suite.test(
+      "replace overwrite old value",
+      do {
+        let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
+        map.replace(0, 20);
+      },
+      M.equals(T.optional(T.natTestable, ?10)),
+    ),
+    Suite.test(
+      "replace overwrite new map",
+      do {
+        let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
+        ignore map.replace(0, 20);
+        ignore map.replace(4, 24);
+        Iter.toArray(map.entries());
+      },
+      arrayTest([(0, 20), (2, 12), (4, 24)]),
     ),
   ],
 );
