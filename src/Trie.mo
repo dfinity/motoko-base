@@ -5,7 +5,7 @@
 ///
 /// The representation we use here comes from Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 ///
-/// ## User's overview
+/// ## <a name="overview"></a>User's overview
 ///
 /// This module provides an applicative (functional) hash map.
 /// Notably, each `put` produces a **new trie _and value being replaced, if any_**.
@@ -16,27 +16,79 @@
 /// The basic `Trie` operations consist of:
 /// - `put` - put a key-value into the trie, producing a new version.
 /// - `get` - get a key's value from the trie, or `null` if none.
+/// - `remove` - remove a key's value from the trie
 /// - `iter` - visit every key-value in the trie.
 ///
-/// The `put` and `get` operations work over `Key` records,
+/// The `put`, `get` and `remove` operations work over `Key` records,
 /// which group the hash of the key with its non-hash key value.
 ///
+/// Example:
 /// ```motoko
 /// import Trie "mo:base/Trie";
 /// import Text "mo:base/Text";
 ///
+/// // we do this to have shorter type names and thus
+/// // better readibility
 /// type Trie<K, V> = Trie.Trie<K, V>;
 /// type Key<K> = Trie.Key<K>;
 ///
-/// func key(t: Text) : Key<Text> { { key = t; hash = Text.hash t } };
+/// // we have to provide `put`, `get` and `remove` with 
+/// // a record of type Key<K> = { hash : Hash.Hash; key : K },
+/// // thus we define the following function that takes a value of type K 
+/// // (in this case `Text`) and returns a Key<K> record.
+/// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
 ///
+/// // we start off by creating an empty Trie
 /// let t0 : Trie<Text, Nat> = Trie.empty();
+///
+/// // `put` requires 4 arguments:
+/// // - the trie we want to insert the value into
+/// // - the key of the value we want to insert (note that we use the `key` function defined above)
+/// // - a function that checks for equality of keys
+/// // - the value we want to insert
+/// // 
+/// // when inserting a value, `put` returns a tuple of type (Trie<K, V>, ?V).
+/// // to get the new trie that contains the value,  we use the `0` projection 
+/// // and assign it to `t1` and `t2` respectively.
 /// let t1 : Trie<Text, Nat> = Trie.put(t0, key "hello", Text.equal, 42).0;
 /// let t2 : Trie<Text, Nat> = Trie.put(t1, key "world", Text.equal, 24).0;
-/// let n : ?Nat = Trie.put(t1, key "hello", Text.equal, 0).1;
-/// assert (n == ?42);
-/// ```
 ///
+/// // if for a given key there already was a value in the Trie, `put` returns
+/// // that previous value as the second element of the tuple.
+/// // in our case we have already inserted the value 42 for the key "hello", so
+/// // `put` returns 42 as the second element of the tuple.
+/// let (t3, n) : (Trie<Text, Nat>, ?Nat) = Trie.put(
+///   t2,
+///   key "hello",
+///   Text.equal,
+///   0,
+/// );
+/// assert (n == ?42);
+///
+/// // `remove` requires 3 arguments:
+/// // - the trie we want to remove the value from
+/// // - the key of the value we want to remove (note that we use the `key` function defined above)
+/// // - a function that checks for equality of keys
+/// //
+/// // in the case of keys of type Text, we can use `Text.equal`
+/// // to check for equality of keys. `remove` returns a tuple of type (Trie<K, V>, ?V).
+/// // where the second element of the tuple is the value that was removed, or `null` if
+/// // there was no value for the given key.
+/// let removedValue : ?Nat = Trie.remove(
+///   t3,
+///   key "hello",
+///   Text.equal,
+/// ).1;
+/// assert (removedValue == ?0);
+///
+/// // to iterate over the Trie, we use the `iter` function that takes a Trie
+/// // of Type Trie<K,V> and returns an Iterator of type Iter<(K,V)> 
+/// var sum : Nat = 0;
+/// for (kv in Trie.iter(t3)) {
+///   sum += kv.1;
+/// };
+/// assert(sum == 24);
+/// ```
 
 // ## Implementation overview
 //
@@ -114,11 +166,11 @@ module {
 
   public type AssocList<K, V> = AssocList.AssocList<K, V>;
 
-  //// A `Key` for the trie has an associated hash value
+  /// A `Key` for the trie has an associated hash value
+  /// - `hash` permits fast inequality checks, and permits collisions
+  /// - `key` permits precise equality checks, but only used after equal hashes.
   public type Key<K> = {
-    /// `hash` permits fast inequality checks, and permits collisions
     hash : Hash.Hash;
-    /// `key` permits precise equality checks, but only used after equal hashes.
     key : K;
   };
 
@@ -168,12 +220,41 @@ module {
   /// layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
   public type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V>>;
 
-  /// An empty trie.
+  /// An empty trie. This is usually the starting point for building a trie.
+  ///
+  /// Example:
+  /// ```motoko name=initialize
+  /// import Trie "mo:base/Trie";
+  /// import Text "mo:base/Text";
+  ///
+  /// // we do this to have shorter type names and thus
+  /// // better readibility
+  /// type Trie<K, V> = Trie.Trie<K, V>;
+  /// type Key<K> = Trie.Key<K>;
+  ///
+  /// // we have to provide `put`, `get` and `remove` with 
+  /// // a function of return type Key<K> = { hash : Hash.Hash; key : K }
+  /// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
+  /// // we start off by creating an empty Trie
+  /// var trie : Trie<Text, Nat> = Trie.empty();
+  /// ```
   public func empty<K, V>() : Trie<K, V> { #empty };
 
-  ///  Get the number of key-value pairs in the trie, in constant time.
 
-  /// Get size in O(1) time.
+  /// Get the size in O(1) time. 
+  ///
+  /// For a quick overview of adding and removing elements 
+  /// from a Trie, see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// var size = Trie.size(trie); // Returns 0, as Trie is empty
+  /// assert(size == 0);
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
+  /// size := Trie.size(trie); // Returns 1, as we just added a new entry
+  /// assert(size == 1);
+  /// ```
+
   public func size<K, V>(t : Trie<K, V>) : Nat {
     switch t {
       case (#empty) { 0 };
