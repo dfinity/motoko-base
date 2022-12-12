@@ -9,8 +9,8 @@ import Prim "mo:⛔";
 module {
   /// Prints `text` to output stream.
   ///
-  /// NOTE: The output is placed in the replica log. When running on mainnet, it
-  /// is not visible to the developer.
+  /// NOTE: The output is placed in the replica log. When running on mainnet,
+  /// this function has no effect.
   ///
   /// ```motoko include=import
   /// Debug.print "Hello New World!";
