@@ -243,8 +243,8 @@ module {
 
   /// Get the size in O(1) time. 
   ///
-  /// For a quick overview of adding and removing elements 
-  /// from a Trie, see the [User's Overview](#overview).
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
   /// 
   /// Example:
   /// ```motoko include=initialize
@@ -374,12 +374,34 @@ module {
     (to, vo);
   };
 
-  /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
+  /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
+  /// let previousValue = Trie.put(trie, key "hello", Text.equal, 33).1; // Returns ?42
+  /// assert(previousValue == ?42);
+  /// ```
   public func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie<K, V>, ?V) {
     replace(t, k, k_eq, ?v);
   };
 
-  /// Get the value of the given key in the trie, or return null if nonexistent
+  /// Get the value of the given key in the trie, or return null if nonexistent.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// var value = Trie.get(trie, key "hello", Text.equal); // Returns ?42
+  /// assert(value == ?42);
+  /// value := Trie.get(trie, key "world", Text.equal); // Returns null
+  /// assert(value == null);
+  /// ```
   public func get<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V = find(t, k, k_eq);
 
   /// Find the given key's value in the trie, or return null if nonexistent
