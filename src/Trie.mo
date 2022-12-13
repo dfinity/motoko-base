@@ -1073,6 +1073,22 @@ module {
   };
 
   /// Test whether a given key-value pair is present, or not.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
+  /// // `some` takes a function that returns a boolean if
+  /// // the key-value pair is present or not
+  /// var isPresent = Trie.some(trie, func(k: Text, v: Nat) : Bool = k == "bye" and v == 32);
+  /// assert(isPresent == true);
+  /// isPresent := Trie.some(trie, func(k: Text, v: Nat) : Bool = k == "hello" and v == 32);
+  /// assert(isPresent == false);
+  /// ```
   public func some<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool {
     func rec(t : Trie<K, V>) : Bool {
       switch t {
