@@ -24,7 +24,7 @@ module {
 
   /// Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
   public func isDigit(c : Char) : Bool {
-    Prim.charToNat32(c) -% Prim.charToNat32('0') <= (9 : Nat32);
+    Prim.charToNat32(c) -% Prim.charToNat32('0') <= (9 : Nat32)
   };
 
   /// Returns the Unicode _White_Space_ property of `c`.
@@ -59,7 +59,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Char, y : Char) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
-};
+}

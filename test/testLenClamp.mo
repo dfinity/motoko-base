@@ -10,11 +10,11 @@ func lenClamp<T>(l : List<T>, max : Nat) : ?Nat {
     switch l {
       case null { ?i };
       case (?(_, t)) {
-        if (i >= max) { null } else { rec(t, max, i + 1) };
-      };
-    };
+        if (i >= max) { null } else { rec(t, max, i + 1) }
+      }
+    }
   };
-  rec(l, max, 0);
+  rec(l, max, 0)
 };
 
 var s = 0;
@@ -27,8 +27,8 @@ while (s < 10) {
     Debug.print(debug_show ({ l = List.toArray(l); m; o }));
     assert (s == List.size(l));
     assert (if (s <= m) { o == ?s } else { o == null });
-    m += 1;
+    m += 1
   };
   l := List.push(s +1, l);
-  s += 1;
-};
+  s += 1
+}
