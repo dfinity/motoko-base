@@ -732,6 +732,18 @@ module {
   /// Returns true iff `buffer` contains `element` with respect to equality
   /// defined by `equal`.
   ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(2);
+  /// buffer.add(0);
+  /// buffer.add(3);
+  /// Buffer.contains(buffer, 2, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
