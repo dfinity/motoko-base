@@ -35,8 +35,8 @@ module {
   public class range(x : Nat, y : Int) {
     var i = x;
     public func next() : ?Nat {
-      if (i > y) { null } else { let j = i; i += 1; ?j };
-    };
+      if (i > y) { null } else { let j = i; i += 1; ?j }
+    }
   };
 
   /// Like `range` but produces the values in the opposite
@@ -44,8 +44,8 @@ module {
   public class revRange(x : Int, y : Int) {
     var i = x;
     public func next() : ?Int {
-      if (i < y) { null } else { let j = i; i -= 1; ?j };
-    };
+      if (i < y) { null } else { let j = i; i -= 1; ?j }
+    }
   };
 
   /// Calls a function `f` on every value produced by an iterator and discards
@@ -61,21 +61,21 @@ module {
   /// ```
   public func iterate<A>(
     xs : Iter<A>,
-    f : (A, Nat) -> (),
+    f : (A, Nat) -> ()
   ) {
     var i = 0;
     label l loop {
       switch (xs.next()) {
         case (?next) {
-          f(next, i);
+          f(next, i)
         };
         case (null) {
-          break l;
-        };
+          break l
+        }
       };
       i += 1;
-      continue l;
-    };
+      continue l
+    }
   };
 
   /// Consumes an iterator and counts how many elements were produced
@@ -83,7 +83,7 @@ module {
   public func size<A>(xs : Iter<A>) : Nat {
     var len = 0;
     iterate<A>(xs, func(x, i) { len += 1 });
-    len;
+    len
   };
 
   /// Takes a function and an iterator and returns a new iterator that lazily applies
@@ -101,13 +101,13 @@ module {
     public func next() : ?B {
       switch (xs.next()) {
         case (?next) {
-          ?f(next);
+          ?f(next)
         };
         case (null) {
-          null;
-        };
-      };
-    };
+          null
+        }
+      }
+    }
   };
 
   /// Takes a function and an iterator and returns a new iterator that produces
@@ -125,17 +125,17 @@ module {
       loop {
         switch (xs.next()) {
           case (null) {
-            return null;
+            return null
           };
           case (?x) {
             if (f(x)) {
-              return ?x;
-            };
-          };
-        };
+              return ?x
+            }
+          }
+        }
       };
-      null;
-    };
+      null
+    }
   };
 
   /// Creates an iterator that produces an infinite sequence of `x`.
@@ -149,8 +149,8 @@ module {
   /// ```
   public func make<A>(x : A) : Iter<A> = object {
     public func next() : ?A {
-      ?x;
-    };
+      ?x
+    }
   };
 
   /// Creates an iterator that produces the elements of an Array in ascending index order.
@@ -168,21 +168,21 @@ module {
     object {
       public func next() : ?A {
         if (ix >= size) {
-          return null;
+          return null
         } else {
           let res = ?(xs[ix]);
           ix += 1;
-          return res;
-        };
-      };
-    };
+          return res
+        }
+      }
+    }
   };
 
   /// Like `fromArray` but for Arrays with mutable elements. Captures
   /// the elements of the Array at the time the iterator is created, so
   /// further modifications won't be reflected in the iterator.
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
-    fromArray<A>(Array.freeze<A>(xs));
+    fromArray<A>(Array.freeze<A>(xs))
   };
 
   /// Like `fromArray` but for Lists.
@@ -197,12 +197,12 @@ module {
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buffer<A>(8);
     iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
-    return Buffer.toArray(buffer);
+    return Buffer.toArray(buffer)
   };
 
   /// Like `toArray` but for Arrays with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
-    Array.thaw<A>(toArray<A>(xs));
+    Array.thaw<A>(toArray<A>(xs))
   };
 
   /// Like `toArray` but for Lists.
@@ -211,17 +211,17 @@ module {
     iterate<A>(
       xs,
       func(x, _i) {
-        result := List.push<A>(x, result);
-      },
+        result := List.push<A>(x, result)
+      }
     );
-    List.reverse<A>(result);
+    List.reverse<A>(result)
   };
 
   /// Sorted iterator.  Will iterate over *all* elements to sort them, necessarily.
   public func sort<A>(xs : Iter<A>, compare : (A, A) -> Order.Order) : Iter<A> {
     let a = toArrayMut<A>(xs);
     Array.sortInPlace<A>(a, compare);
-    fromArrayMut<A>(a);
+    fromArrayMut<A>(a)
   };
 
-};
+}

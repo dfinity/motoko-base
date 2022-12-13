@@ -15,11 +15,11 @@ module {
   /// Each have calls are well-typed in all typing contexts, which
   /// trap in all execution contexts.
   public func nyi() : None {
-    Debug.trap("Prelude.nyi()");
+    Debug.trap("Prelude.nyi()")
   };
 
   public func xxx() : None {
-    Debug.trap("Prelude.xxx()");
+    Debug.trap("Prelude.xxx()")
   };
 
   /// Mark unreachable code with the `unreachable` function.
@@ -27,7 +27,7 @@ module {
   /// Calls are well-typed in all typing contexts, and they
   /// trap in all execution contexts.
   public func unreachable() : None {
-    Debug.trap("Prelude.unreachable()");
+    Debug.trap("Prelude.unreachable()")
   };
 
-};
+}

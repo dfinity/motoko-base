@@ -36,25 +36,25 @@ debug {
     Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
       case null { assert false };
-      case (?w) { assert v == w };
-    };
+      case (?w) { assert v == w }
+    }
   };
 
   // ensure clone has each key present in original
   for (k in a.keys()) {
     switch (b.get(k)) {
       case null { assert false };
-      case (?_) {};
-    };
+      case (?_) {}
+    }
   };
 
   // ensure clone has each value present in original
   for (v in a.vals()) {
     var foundMatch = false;
     for (w in b.vals()) {
-      if (v == w) { foundMatch := true };
+      if (v == w) { foundMatch := true }
     };
-    assert foundMatch;
+    assert foundMatch
   };
 
   // ensure original has each key-value pair present in clone
@@ -62,8 +62,8 @@ debug {
     Prim.debugPrint(debug_show (k, v));
     switch (a.get(k)) {
       case null { assert false };
-      case (?w) { assert v == w };
-    };
+      case (?w) { assert v == w }
+    }
   };
 
   // do some more operations:
@@ -75,19 +75,19 @@ debug {
   // check them:
   switch (a.get("apple")) {
     case (?1111) {};
-    case _ { assert false };
+    case _ { assert false }
   };
   switch (a.get("banana")) {
     case (?2222) {};
-    case _ { assert false };
+    case _ { assert false }
   };
   switch (a.get("pear")) {
     case null {};
-    case (?_) { assert false };
+    case (?_) { assert false }
   };
   switch (a.get("avocado")) {
     case null {};
-    case (?_) { assert false };
+    case (?_) { assert false }
   };
 
   // undo operations above:
@@ -101,8 +101,8 @@ debug {
     Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
       case null { assert false };
-      case (?w) { assert v == w };
-    };
+      case (?w) { assert v == w }
+    }
   };
 
   // ensure original has each key-value pair present in clone
@@ -110,8 +110,8 @@ debug {
     Prim.debugPrint(debug_show (k, v));
     switch (a.get(k)) {
       case null { assert false };
-      case (?w) { assert v == w };
-    };
+      case (?w) { assert v == w }
+    }
   };
 
   // test fromEntries method
@@ -122,8 +122,8 @@ debug {
     Prim.debugPrint(debug_show (k, v));
     switch (c.get(k)) {
       case null { assert false };
-      case (?w) { assert v == w };
-    };
+      case (?w) { assert v == w }
+    }
   };
 
   // b agrees with each entry of c
@@ -131,7 +131,7 @@ debug {
     Prim.debugPrint(debug_show (k, v));
     switch (b.get(k)) {
       case null { assert false };
-      case (?w) { assert v == w };
-    };
-  };
-};
+      case (?w) { assert v == w }
+    }
+  }
+}

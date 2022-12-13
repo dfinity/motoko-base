@@ -35,9 +35,9 @@ module {
   public func fromIter(cs : Iter.Iter<Char>) : Text {
     var r = "";
     for (c in cs) {
-      r #= Prim.charToText(c);
+      r #= Prim.charToText(c)
     };
-    return r;
+    return r
   };
 
   /// Returns `t.size()`, the number of characters in `t` (and `t.chars()`).
@@ -50,9 +50,9 @@ module {
     var x : Nat32 = 5381;
     for (char in t.chars()) {
       let c : Nat32 = Prim.charToNat32(char);
-      x := ((x << 5) +% x) +% c;
+      x := ((x << 5) +% x) +% c
     };
-    return x;
+    return x
   };
 
   /// Returns the concatenation of `t1` and `t2`, `t1 # t2`.
@@ -79,7 +79,7 @@ module {
   /// Returns the order of `t1` and `t2`.
   public func compare(t1 : Text, t2 : Text) : { #less; #equal; #greater } {
     let c = Prim.textCompare(t1, t2);
-    if (c < 0) #less else if (c == 0) #equal else #greater;
+    if (c < 0) #less else if (c == 0) #equal else #greater
   };
 
   private func extract(t : Text, i : Nat, j : Nat) : Text {
@@ -91,17 +91,17 @@ module {
     var n = i;
     while (n > 0) {
       ignore cs.next();
-      n -= 1;
+      n -= 1
     };
     n := j;
     while (n > 0) {
       switch (cs.next()) {
         case null { assert false };
-        case (?c) { r #= Prim.charToText(c) };
+        case (?c) { r #= Prim.charToText(c) }
       };
-      n -= 1;
+      n -= 1
     };
-    return r;
+    return r
   };
 
   /// Returns the concatenation of text values in `ts`, separated by `sep`.
@@ -109,44 +109,44 @@ module {
     var r = "";
     if (sep.size() == 0) {
       for (t in ts) {
-        r #= t;
+        r #= t
       };
-      return r;
+      return r
     };
     let next = ts.next;
     switch (next()) {
       case null { return r };
       case (?t) {
-        r #= t;
-      };
+        r #= t
+      }
     };
     loop {
       switch (next()) {
         case null { return r };
         case (?t) {
           r #= sep;
-          r #= t;
-        };
-      };
-    };
+          r #= t
+        }
+      }
+    }
   };
 
   /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate single-character text values.
   public func map(t : Text, f : Char -> Char) : Text {
     var r = "";
     for (c in t.chars()) {
-      r #= Prim.charToText(f(c));
+      r #= Prim.charToText(f(c))
     };
-    return r;
+    return r
   };
 
   /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
   public func translate(t : Text, f : Char -> Text) : Text {
     var r = "";
     for (c in t.chars()) {
-      r #= f(c);
+      r #= f(c)
     };
-    return r;
+    return r
   };
 
   /// A pattern `p` describes a sequence of characters. A pattern has one of the following forms:
@@ -159,7 +159,7 @@ module {
   public type Pattern = {
     #char : Char;
     #text : Text;
-    #predicate : (Char -> Bool);
+    #predicate : (Char -> Bool)
   };
 
   private func take(n : Nat, cs : Iter.Iter<Char>) : Iter.Iter<Char> {
@@ -168,15 +168,15 @@ module {
       public func next() : ?Char {
         if (i == 0) return null;
         i -= 1;
-        return cs.next();
-      };
-    };
+        return cs.next()
+      }
+    }
   };
 
   private func empty() : Iter.Iter<Char> {
     object {
-      public func next() : ?Char = null;
-    };
+      public func next() : ?Char = null
+    }
   };
 
   private type Match = {
@@ -185,14 +185,14 @@ module {
     /// #fail(cs,c) on partial match of cs, but failing match on c
     #fail : (cs : Iter.Iter<Char>, c : Char);
     /// #empty(cs) on partial match of cs and empty stream
-    #empty : (cs : Iter.Iter<Char>);
+    #empty : (cs : Iter.Iter<Char>)
   };
 
   private func sizeOfPattern(pat : Pattern) : Nat {
     switch pat {
       case (#text(t)) { t.size() };
-      case (#predicate(_) or #char(_)) { 1 };
-    };
+      case (#predicate(_) or #char(_)) { 1 }
+    }
   };
 
   private func matchOfPattern(pat : Pattern) : (cs : Iter.Iter<Char>) -> Match {
@@ -202,28 +202,28 @@ module {
           switch (cs.next()) {
             case (?c) {
               if (p == c) {
-                #success;
+                #success
               } else {
-                #fail(empty(), c);
-              };
+                #fail(empty(), c)
+              }
             };
-            case null { #empty(empty()) };
-          };
-        };
+            case null { #empty(empty()) }
+          }
+        }
       };
       case (#predicate(p)) {
         func(cs : Iter.Iter<Char>) : Match {
           switch (cs.next()) {
             case (?c) {
               if (p(c)) {
-                #success;
+                #success
               } else {
-                #fail(empty(), c);
-              };
+                #fail(empty(), c)
+              }
             };
-            case null { #empty(empty()) };
-          };
-        };
+            case null { #empty(empty()) }
+          }
+        }
       };
       case (#text(p)) {
         func(cs : Iter.Iter<Char>) : Match {
@@ -235,21 +235,21 @@ module {
                 switch (cs.next()) {
                   case (?c) {
                     if (c != d) {
-                      return #fail(take(i, p.chars()), c);
+                      return #fail(take(i, p.chars()), c)
                     };
-                    i += 1;
+                    i += 1
                   };
                   case null {
-                    return #empty(take(i, p.chars()));
-                  };
-                };
+                    return #empty(take(i, p.chars()))
+                  }
+                }
               };
-              case null { return #success };
-            };
-          };
-        };
-      };
-    };
+              case null { return #success }
+            }
+          }
+        }
+      }
+    }
   };
 
   private class CharBuffer(cs : Iter.Iter<Char>) : Iter.Iter<Char> = {
@@ -257,7 +257,7 @@ module {
     var stack : Stack.Stack<(Iter.Iter<Char>, Char)> = Stack.Stack();
 
     public func pushBack(cs0 : Iter.Iter<Char>, c : Char) {
-      stack.push((cs0, c));
+      stack.push((cs0, c))
     };
 
     public func next() : ?Char {
@@ -266,18 +266,18 @@ module {
           switch (buff.next()) {
             case null {
               ignore stack.pop();
-              return ?c;
+              return ?c
             };
             case oc {
-              return oc;
-            };
-          };
+              return oc
+            }
+          }
         };
         case null {
-          return cs.next();
-        };
-      };
-    };
+          return cs.next()
+        }
+      }
+    }
   };
 
   /// Returns the sequence of fields in `t`, derived from start to end,
@@ -298,44 +298,44 @@ module {
                   let r = field;
                   field := "";
                   state := 1;
-                  return ?r;
+                  return ?r
                 };
                 case (#empty(cs1)) {
                   for (c in cs1) {
-                    field #= fromChar(c);
+                    field #= fromChar(c)
                   };
                   let r = if (state == 0 and field == "") {
-                    null;
+                    null
                   } else {
-                    ?field;
+                    ?field
                   };
                   state := 2;
-                  return r;
+                  return r
                 };
                 case (#fail(cs1, c)) {
                   cs.pushBack(cs1, c);
                   switch (cs.next()) {
                     case (?ci) {
-                      field #= fromChar(ci);
+                      field #= fromChar(ci)
                     };
                     case null {
                       let r = if (state == 0 and field == "") {
-                        null;
+                        null
                       } else {
-                        ?field;
+                        ?field
                       };
                       state := 2;
-                      return r;
-                    };
-                  };
-                };
-              };
-            };
+                      return r
+                    }
+                  }
+                }
+              }
+            }
           };
-          case _ { return null };
-        };
-      };
-    };
+          case _ { return null }
+        }
+      }
+    }
   };
 
   /// Returns the sequence of tokens in `t`, derived from start to end.
@@ -347,10 +347,10 @@ module {
       public func next() : ?Text {
         switch (fs.next()) {
           case (?"") { next() };
-          case ot { ot };
-        };
-      };
-    };
+          case ot { ot }
+        }
+      }
+    }
   };
 
   /// Returns true if `t` contains a match for pattern `p`.
@@ -360,22 +360,22 @@ module {
     loop {
       switch (match(cs)) {
         case (#success) {
-          return true;
+          return true
         };
         case (#empty(cs1)) {
-          return false;
+          return false
         };
         case (#fail(cs1, c)) {
           cs.pushBack(cs1, c);
           switch (cs.next()) {
             case null {
-              return false;
+              return false
             };
             case _ {}; // continue
-          };
-        };
-      };
-    };
+          }
+        }
+      }
+    }
   };
 
   /// Returns `true` if `t` starts with a prefix matching pattern `p`, otherwise returns `false`.
@@ -384,8 +384,8 @@ module {
     let match = matchOfPattern(p);
     switch (match(cs)) {
       case (#success) { true };
-      case _ { false };
-    };
+      case _ { false }
+    }
   };
 
   /// Returns `true` if `t` ends with a suffix matching pattern `p`, otherwise returns `false`.
@@ -399,12 +399,12 @@ module {
     var diff : Nat = s1 - s2;
     while (diff > 0) {
       ignore cs1.next();
-      diff -= 1;
+      diff -= 1
     };
     switch (match(cs1)) {
       case (#success) { true };
-      case _ { false };
-    };
+      case _ { false }
+    }
   };
 
   /// Returns `t` with all matches of pattern `p` replaced by text `r`.
@@ -418,29 +418,29 @@ module {
         case (#success) {
           res #= r;
           if (size > 0) {
-            continue l;
-          };
+            continue l
+          }
         };
         case (#empty(cs1)) {
           for (c1 in cs1) {
-            res #= fromChar(c1);
+            res #= fromChar(c1)
           };
-          break l;
+          break l
         };
         case (#fail(cs1, c)) {
-          cs.pushBack(cs1, c);
-        };
+          cs.pushBack(cs1, c)
+        }
       };
       switch (cs.next()) {
         case null {
-          break l;
+          break l
         };
         case (?c1) {
-          res #= fromChar(c1);
+          res #= fromChar(c1)
         }; // continue
-      };
+      }
     };
-    return res;
+    return res
   };
 
   /// Returns the optioned suffix of `t` obtained by eliding exactly one leading match of pattern `p`, otherwise `null`.
@@ -451,8 +451,8 @@ module {
     let match = matchOfPattern(p);
     switch (match(cs)) {
       case (#success) return ?fromIter(cs);
-      case _ return null;
-    };
+      case _ return null
+    }
   };
 
   /// Returns the optioned prefix of `t` obtained by eliding exactly one trailing match of pattern `p`, otherwise `null`.
@@ -466,12 +466,12 @@ module {
     var diff : Nat = s1 - s2;
     while (diff > 0) {
       ignore cs1.next();
-      diff -= 1;
+      diff -= 1
     };
     switch (match(cs1)) {
       case (#success) return ?extract(t, 0, s1 - s2);
-      case _ return null;
-    };
+      case _ return null
+    }
   };
 
   /// Returns the suffix of `t` obtained by eliding all leading matches of pattern `p`.
@@ -484,24 +484,24 @@ module {
     loop {
       switch (match(cs)) {
         case (#success) {
-          matchSize += size;
+          matchSize += size
         }; // continue
         case (#empty(cs1)) {
           return if (matchSize == 0) {
-            t;
+            t
           } else {
-            fromIter(cs1);
-          };
+            fromIter(cs1)
+          }
         };
         case (#fail(cs1, c)) {
           return if (matchSize == 0) {
-            t;
+            t
           } else {
-            fromIter(cs1) # fromChar(c) # fromIter(cs);
-          };
-        };
-      };
-    };
+            fromIter(cs1) # fromChar(c) # fromIter(cs)
+          }
+        }
+      }
+    }
   };
 
   /// Returns the prefix of `t` obtained by eliding all trailing matches of pattern `p`.
@@ -514,22 +514,22 @@ module {
     label l loop {
       switch (match(cs)) {
         case (#success) {
-          matchSize += size;
+          matchSize += size
         }; // continue
         case (#empty(cs1)) {
           switch (cs1.next()) {
             case null break l;
-            case (?_) return t;
-          };
+            case (?_) return t
+          }
         };
         case (#fail(cs1, c)) {
           matchSize := 0;
           cs.pushBack(cs1, c);
-          ignore cs.next();
-        };
-      };
+          ignore cs.next()
+        }
+      }
     };
-    extract(t, 0, t.size() - matchSize);
+    extract(t, 0, t.size() - matchSize)
   };
 
   /// Returns the subtext of `t` obtained by eliding all leading and trailing matches of pattern `p`.
@@ -542,10 +542,10 @@ module {
     loop {
       switch (match(cs)) {
         case (#success) {
-          matchSize += size;
+          matchSize += size
         }; // continue
         case (#empty(cs1)) {
-          return if (matchSize == 0) { t } else { fromIter(cs1) };
+          return if (matchSize == 0) { t } else { fromIter(cs1) }
         };
         case (#fail(cs1, c)) {
           let start = matchSize;
@@ -556,32 +556,32 @@ module {
           label l loop {
             switch (match(cs2)) {
               case (#success) {
-                matchSize += size;
+                matchSize += size
               }; // continue
               case (#empty(cs3)) {
                 switch (cs1.next()) {
                   case null break l;
-                  case (?_) return t;
-                };
+                  case (?_) return t
+                }
               };
               case (#fail(cs3, c1)) {
                 matchSize := 0;
                 cs2.pushBack(cs3, c1);
-                ignore cs2.next();
-              };
-            };
+                ignore cs2.next()
+              }
+            }
           };
-          return extract(t, start, t.size() - matchSize - start);
-        };
-      };
-    };
+          return extract(t, start, t.size() - matchSize - start)
+        }
+      }
+    }
   };
 
   /// Returns the lexicographic comparison of `t1` and `t2`, using the given character ordering `cmp`.
   public func compareWith(
     t1 : Text,
     t2 : Text,
-    cmp : (Char, Char) -> { #less; #equal; #greater },
+    cmp : (Char, Char) -> { #less; #equal; #greater }
   ) : { #less; #equal; #greater } {
     let cs1 = t1.chars();
     let cs2 = t2.chars();
@@ -593,11 +593,11 @@ module {
         case (?c1, ?c2) {
           switch (cmp(c1, c2)) {
             case (#equal) {}; // continue
-            case other { return other };
-          };
-        };
-      };
-    };
+            case other { return other }
+          }
+        }
+      }
+    }
   };
 
   /// Returns the UTF-8 encoding of the given text
@@ -605,5 +605,5 @@ module {
 
   /// Tries to decode the given `Blob` as UTF-8.
   /// Returns `null` if the blob is _not_ valid UTF-8.
-  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
-};
+  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8
+}
