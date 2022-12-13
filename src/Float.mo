@@ -1,44 +1,177 @@
-/// 64-bit Floating-point numbers
+/// Double precision (64-bit) floating-point numbers in IEEE 754 representation.
+///
+/// Common floating-point constants and functions.
+/// 
+/// Notation for special values in the documentation below:
+/// `+inf`: Positive infinity
+/// `-inf`: Negative infinity
+/// `nan`: "not a number" (can have different sign bit values, but `nan != nan` regardless of the sign).
+/// 
+/// Note: 
+/// Floating point numbers have limited precision and operations may inherently result in numerical errors.
+/// 
+/// Examples of numerical errors:
+///   ```motoko name=initialize
+///   assert(0.1 + 0.1 + 0.1 == 0.3); // Fails!
+///   ```
+///
+///   ```motoko name=initialize
+////  assert(1e16 + 1.0 != 1e16); // Fails!
+///   ```
+/// 
+////  (and many more cases)
+/// 
+/// Advice:
+/// * Floating point number comparisons by `==` or `!=` are discouraged. Instead, it is better to compare 
+///   floating-point numbers with a numerical epsilon.
+///
+///   Example:
+///   ```motoko name=initialize
+///   let epsilon = 1e-6; // This depends on the application case (needs a numerical error analysis).
+///   let equals = Float.abs(x - y) < epsilon;
+///   ```
+///
+/// * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base 
+//    and a Nat for the exponent (decimal point).
+///
 
 import Prim "mo:⛔";
 import Int "Int";
 
 module {
 
-  /// 64-bit floating point numbers.
+  /// 64-bit floating point number type.
   public type Float = Prim.Types.Float;
 
   /// Ratio of the circumference of a circle to its diameter.
+  /// Note: Limited precision.
   public let pi : Float = 3.14159265358979323846; // taken from musl math.h
 
   /// Base of the natural logarithm.
+  /// Note: Limited precision.
   public let e : Float = 2.7182818284590452354; // taken from musl math.h
 
   /// Returns the absolute value of `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `abs(x)` |
+  /// | ------------ | --------------- |
+  /// | `+inf`       | `+inf`          |
+  /// | `-inf`       | `+inf`          |
+  /// | `nan`        | `nan`           | 
+  /// | `-0.0`       | `0.0`           |
+  /// 
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.abs(-1.2); // result is 1.2
+  ///   ```
   public let abs : (x : Float) -> Float = Prim.floatAbs;
 
   /// Returns the square root of `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `sqrt(x)` |
+  /// | ------------ | ---------------- |
+  /// | `+inf`       | `+inf`           |
+  /// | `-0.0`       | `-0.0`           |
+  /// | `< 0.0`      | `nan`            |
+  /// | `nan`        | `nan`            | 
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.sqrt(6.25); // result is 2.5
+  ///   ```
   public let sqrt : (x : Float) -> Float = Prim.floatSqrt;
 
   /// Returns the smallest integral float greater than or equal to `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `ceil(x)` |
+  /// | ------------ | ---------------- |
+  /// | `+inf`       | `+inf`           |
+  /// | `-inf`       | `-inf`           |
+  /// | `nan`        | `nan`            | 
+  /// | `0.0`        | `0.0`            |
+  /// | `-0.0`       | `-0.0`           |
+  /// 
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.ceil(1.2); // result is 2.0
+  ///   ```
   public let ceil : (x : Float) -> Float = Prim.floatCeil;
 
   /// Returns the largest integral float less than or equal to `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `floor(x)` |
+  /// | ------------ | ----------------- |
+  /// | `+inf`       | `+inf`            |
+  /// | `-inf`       | `-inf`            |
+  /// | `nan`        | `nan`             | 
+  /// | `0.0`        | `0.0`             |
+  /// | `-0.0`       | `-0.0`            |
+  /// 
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.floor(1.2); // returns 1.0
+  ///   ```
   public let floor : (x : Float) -> Float = Prim.floatFloor;
 
   /// Returns the nearest integral float not greater in magnitude than `x`.
+  /// This is equilvent to returning `x` with truncating its decimal places.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `trunc(x)` |
+  /// | ------------ | ----------------- |
+  /// | `+inf`       | `+inf`            |
+  /// | `-inf`       | `-inf`            |
+  /// | `nan`        | `nan`             | 
+  /// | `0.0`        | `0.0`             |
+  /// | `-0.0`       | `-0.0`            |
+  /// 
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.trunc(2.75); // returns 2.0
+  ///   ```
   public let trunc : (x : Float) -> Float = Prim.floatTrunc;
 
   /// Returns the nearest integral float to `x`.
+  /// A decimal place of exactly .5 is rounded up for `x > 0` 
+  /// and rounded down for `x < 0`
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `nearest(x)` |
+  /// | ------------ | ------------------- |
+  /// | `+inf`       | `+inf`              |
+  /// | `-inf`       | `-inf`              |
+  /// | `nan`        | `nan`               | 
+  /// | `0.0`        | `0.0`               |
+  /// | `-0.0`       | `-0.0`              |
+  /// 
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.nearest(2.75); // returns 3.0
+  ///   ```
   public let nearest : (x : Float) -> Float = Prim.floatNearest;
 
   /// Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
+  ///
+  /// The sign bit of zero, infinity, and `nan` is considered. 
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.copySign(1.5, 2.5); // returns 1.5
+  ///   ```
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
 
   /// Returns the smaller value of `x` and `y`.
+  /// 
+  /// If `x` or `y` is `nan`, the result is also `nan`.
   public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
 
   /// Returns the larger value of `x` and `y`.
+  /// 
+  /// If `x` or `y` is `nan`, the result is also `nan`.
   public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
 
   /// Returns the sine of the radian angle `x`.
