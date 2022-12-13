@@ -26,22 +26,22 @@ module {
 
   /// Returns the Text representation of `x`.
   public func toText(x : Int64) : Text {
-    Int.toText(toInt(x));
+    Int.toText(toInt(x))
   };
 
   /// Returns the absolute value of `x`. Traps when `x = -2^63`.
   public func abs(x : Int64) : Int64 {
-    fromInt(Int.abs(toInt(x)));
+    fromInt(Int.abs(toInt(x)))
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Int64, y : Int64) : Int64 {
-    if (x < y) { x } else { y };
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max(x : Int64, y : Int64) : Int64 {
-    if (x < y) { y } else { x };
+    if (x < y) { y } else { x }
   };
 
   /// Returns `x == y`.
@@ -64,7 +64,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Int64, y : Int64) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the negation of `x`, `-x`. Traps on overflow.
@@ -116,22 +116,22 @@ module {
 
   /// Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
   public func bittest(x : Int64, p : Nat) : Bool {
-    Prim.btstInt64(x, Prim.intToInt64(p));
+    Prim.btstInt64(x, Prim.intToInt64(p))
   };
 
   /// Returns the value of setting bit `p mod 64` in `x` to `1`.
   public func bitset(x : Int64, p : Nat) : Int64 {
-    x | (1 << Prim.intToInt64(p));
+    x | (1 << Prim.intToInt64(p))
   };
 
   /// Returns the value of clearing bit `p mod 64` in `x` to `0`.
   public func bitclear(x : Int64, p : Nat) : Int64 {
-    x & ^(1 << Prim.intToInt64(p));
+    x & ^(1 << Prim.intToInt64(p))
   };
 
   /// Returns the value of flipping bit `p mod 64` in `x`.
   public func bitflip(x : Int64, p : Nat) : Int64 {
-    x ^ (1 << Prim.intToInt64(p));
+    x ^ (1 << Prim.intToInt64(p))
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -155,4 +155,4 @@ module {
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
   public func powWrap(x : Int64, y : Int64) : Int64 { x **% y };
 
-};
+}
