@@ -1,5 +1,6 @@
-/// Key-value hash maps.
+/// Map implementation backed by Trie.
 ///
+/// FIXME rework description
 /// An imperative hash map, with a general key and value type.
 ///
 /// - The `class` `TrieMap` exposes the same interface as `HashMap`.
@@ -7,6 +8,14 @@
 /// - Unlike HashMap, the internal representation uses a functional representation (via `Trie` module).
 ///
 /// - This class does not permit a direct `clone` operation (neither does `HashMap`), but it does permit creating iterators via `iter()`.  Each iterator costs `O(1)` to create, but represents a fixed view of the mapping that does not interfere with mutations (it will _not_ reflect subsequent insertions or mutations, if any).
+///
+/// ```motoko name=initialize
+/// import TrieMap "mo:base/TrieMap";
+/// import Nat "mo:base/Nat";
+/// import Hash "mo:base/Hash";
+///
+/// let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash)
+/// ```
 
 import T "Trie";
 import P "Prelude";
@@ -14,20 +23,17 @@ import I "Iter";
 import Hash "Hash";
 import List "List";
 
-/// An imperative hash-based map with a minimal object-oriented interface.
-/// Maps keys of type `K` to values of type `V`.
-///
-/// See also the `HashMap` module, with a matching interface.
-/// Unlike HashMap, the iterators are persistent (pure), clones are cheap and the maps have an efficient persistent representation.
-
 module {
-
   public class TrieMap<K, V>(isEq : (K, K) -> Bool, hashOf : K -> Hash.Hash) {
-
     var map = T.empty<K, V>();
     var _size : Nat = 0;
 
     /// Returns the number of entries in the map.
+    ///
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.size()
+    /// ```
     public func size() : Nat { _size };
 
     /// Associate a key and value, overwriting any prior association for the key.
