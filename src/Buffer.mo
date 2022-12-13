@@ -713,12 +713,15 @@ module {
   /// Example:
   /// ```motoko include=initialize
   /// let buffer = Buffer.Buffer<Nat>(2);
-  /// buffer.isEmpty(); // true
-  ///
   /// buffer.add(2);
   /// buffer.add(0);
   /// buffer.add(3);
-  /// buffer.isEmpty(); // false
+  /// Buffer.isEmpty(buffer); // false
+  /// ```
+  ///
+  /// ```motoko include=initialize
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// Buffer.isEmpty(buffer); // true
   /// ```
   ///
   /// Runtime: O(1)
