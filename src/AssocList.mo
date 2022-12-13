@@ -1,26 +1,57 @@
-/// Lists of key-value entries ("associations").
+/// Map implemented as a linked-list of key-value pairs ("Associations").
 ///
-/// Implements the same operations as library `Trie`, but uses a
-/// linked-list of entries and no hashing.
+/// NOTE: This map implementation is mainly used as underlying buckets for other map
+/// structures. Thus, other map implementations are easier to use in most cases.
 
 import List "List";
 
 module {
-
-  /// polymorphic association linked lists between keys and values
+  /// Import from the base library to use this module.
+  ///
+  /// ```motoko name=import
+  /// import AssocList "mo:base/AssocList";
+  /// import List "mo:base/List";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// type AssocList<K, V> = AssocList.AssocList<K, V>;
+  /// ```
+  ///
+  /// Initialize an empty map using an empty list.
+  /// ```motoko name=initialize include=import
+  /// var map : AssocList<Nat, Nat> = List.nil(); // Empty list as an empty map
+  /// map := null; // Alternative: null as empty list.
+  /// map
+  /// ```
   public type AssocList<K, V> = List.List<(K, V)>;
 
-  /// Find the value associated with a given key, or null if absent.
+  /// Find the first value associated with key `key`, or null if no such key exists.
+  /// Compares keys using the provided function `equal`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Add three entries to the map
+  /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
+  /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
+  /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
+  ///
+  /// // Find value associated with key 1
+  /// AssocList.find(map, 1, Nat.equal)
+  /// ```
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func find<K, V>(
-    al : AssocList<K, V>,
-    k : K,
-    k_eq : (K, K) -> Bool,
+    map : AssocList<K, V>,
+    key : K,
+    equal : (K, K) -> Bool,
   ) : ?V {
     func rec(al : AssocList<K, V>) : ?V {
       label profile_assocList_find_rec : (?V) switch (al) {
         case (null) { label profile_assocList_find_end_fail : (?V) { null } };
         case (?((hd_k, hd_v), tl)) {
-          if (k_eq(k, hd_k)) {
+          if (equal(key, hd_k)) {
             label profile_assocList_find_end_success : (?V) {
               ?hd_v;
             };
@@ -31,33 +62,49 @@ module {
       };
     };
     label profile_assocList_find_begin : (?V) {
-      rec(al);
+      rec(map);
     };
   };
 
-  /// replace the value associated with a given key, or add it, if missing.
-  /// returns old value, or null, if no prior value existed.
+  /// Maps `key` to `value` in `map`, and overwrites the old entry if the key
+  /// was already present. Returns the old value if it existed, and null
+  /// otherwise. Compares keys using the provided function `equal`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Add three entries to the map
+  /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
+  /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
+  /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
+  ///
+  /// List.toArray(map)
+  /// ```
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func replace<K, V>(
-    al : AssocList<K, V>,
-    k : K,
-    k_eq : (K, K) -> Bool,
-    ov : ?V,
+    map : AssocList<K, V>,
+    key : K,
+    equal : (K, K) -> Bool,
+    value : ?V,
   ) : (AssocList<K, V>, ?V) {
     func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
       switch (al) {
         case (null) {
-          switch ov {
+          switch value {
             case (null) { (null, null) };
-            case (?v) { (?((k, v), null), null) };
+            case (?value) { (?((key, value), null), null) };
           };
         };
         case (?((hd_k, hd_v), tl)) {
-          if (k_eq(k, hd_k)) {
+          if (equal(key, hd_k)) {
             // if value is null, remove the key; otherwise, replace key's old value
             // return old value
-            switch ov {
+            switch value {
               case (null) { (tl, ?hd_v) };
-              case (?v) { (?((hd_k, v), tl), ?hd_v) };
+              case (?value) { (?((hd_k, value), tl), ?hd_v) };
             };
           } else {
             let (tl2, old_v) = rec(tl);
@@ -66,29 +113,52 @@ module {
         };
       };
     };
-    rec(al);
+    rec(map);
   };
 
-  /// The entries of the final list consist of those pairs of
-  /// the left list whose keys are not present in the right list; the
-  /// "extra" values of the right list are irrelevant.
+  /// Produces a new map containing all entires from `map1` whose keys are not
+  /// contained in `map2`. The "extra" entries in `map2` are ignored. Compares
+  /// keys using the provided function `equal`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Create map1
+  /// var map1 : AssocList<Nat, Nat> = null;
+  /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
+  /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
+  /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
+  ///
+  /// // Create map2
+  /// var map2 : AssocList<Nat, Nat> = null;
+  /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
+  /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
+  ///
+  /// // Take the difference
+  /// let newMap = AssocList.diff(map1, map2, Nat.equal);
+  /// List.toArray(newMap)
+  /// ```
+  /// Runtime: O(size1 * size2)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func diff<K, V, W>(
-    al1 : AssocList<K, V>,
-    al2 : AssocList<K, W>,
-    keq : (K, K) -> Bool,
+    map1 : AssocList<K, V>,
+    map2 : AssocList<K, W>,
+    equal : (K, K) -> Bool,
   ) : AssocList<K, V> {
     func rec(al1 : AssocList<K, V>) : AssocList<K, V> {
       switch al1 {
         case (null) { null };
         case (?((k, v1), tl)) {
-          switch (find<K, W>(al2, k, keq)) {
+          switch (find<K, W>(map2, k, equal)) {
             case (null) { ?((k, v1), rec(tl)) };
             case (?v2) { rec(tl) };
           };
         };
       };
     };
-    rec(al1);
+    rec(map1);
   };
 
   /// Transform and combine the entries of two association lists.
