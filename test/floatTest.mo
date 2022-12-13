@@ -1181,6 +1181,215 @@ run(
   ),
 );
 
+/* --------------------------------------- */
+
+run(
+  suite(
+    "format",
+    [
+      test(
+        "exact positive",
+        Float.format(#exact, 20.12345678901),
+        M.equals(T.text("20.12345678901")),
+      ),
+      test(
+        "exact negative",
+        Float.format(#exact, -20.12345678901),
+        M.equals(T.text("-20.12345678901")),
+      ),
+      test(
+        "exact positive zero",
+        Float.format(#exact, positiveZero),
+        M.equals(T.text("0")),
+      ),
+      test(
+        "exact negative zero",
+        Float.format(#exact, negativeZero),
+        M.equals(T.text("-0")),
+      ),
+      test(
+        "exact positive infinity",
+        Float.format(#exact, positiveInfinity),
+        M.equals(T.text("inf")),
+      ),
+      test(
+        "exact negative infinity",
+        Float.format(#exact, negativeInfinity),
+        M.equals(T.text("-inf")),
+      ),
+      test(
+        "exact positive NaN",
+        Float.format(#exact, positiveNaN),
+        M.equals(T.text("nan")),
+      ),
+      test(
+        "exact negative NaN",
+        Float.format(#exact, negativeNaN),
+        M.equals(T.text("-nan")),
+      ),
+      test(
+        "fix positive",
+        Float.format(#fix 6, 20.12345678901),
+        M.equals(T.text("20.123457")),
+      ),
+      test(
+        "fix negative",
+        Float.format(#fix 6, -20.12345678901),
+        M.equals(T.text("-20.123457")),
+      ),
+      test(
+        "fix positive zero",
+        Float.format(#fix 6, positiveZero),
+        M.equals(T.text("0.000000")),
+      ),
+      test(
+        "fix negative zero",
+        Float.format(#fix 6, negativeZero),
+        M.equals(T.text("-0.000000")),
+      ),
+      test(
+        "fix positive infinity",
+        Float.format(#fix 6, positiveInfinity),
+        M.equals(T.text("inf")),
+      ),
+      test(
+        "fix negative infinity",
+        Float.format(#fix 6, negativeInfinity),
+        M.equals(T.text("-inf")),
+      ),
+      test(
+        "fix positive NaN",
+        Float.format(#fix 6, positiveNaN),
+        M.equals(T.text("nan")),
+      ),
+      test(
+        "fix negative NaN",
+        Float.format(#fix 6, negativeNaN),
+        M.equals(T.text("-nan")),
+      ),
+      test(
+        "exp positive",
+        Float.format(#exp 9, 20.12345678901),
+        M.equals(T.text("2.012345679e+01")),
+      ),
+      test(
+        "exp negative",
+        Float.format(#exp 9, -20.12345678901),
+        M.equals(T.text("-2.012345679e+01")),
+      ),
+      test(
+        "exp positive zero",
+        Float.format(#exp 9, positiveZero),
+        M.equals(T.text("0.000000000e+00")),
+      ),
+      test(
+        "exp negative zero",
+        Float.format(#exp 9, negativeZero),
+        M.equals(T.text("-0.000000000e+00")),
+      ),
+      test(
+        "exp positive infinity",
+        Float.format(#exp 9, positiveInfinity),
+        M.equals(T.text("inf")),
+      ),
+      test(
+        "exp negative infinity",
+        Float.format(#exp 9, negativeInfinity),
+        M.equals(T.text("-inf")),
+      ),
+      test(
+        "exp positive NaN",
+        Float.format(#exp 9, positiveNaN),
+        M.equals(T.text("nan")),
+      ),
+      test(
+        "exp negative NaN",
+        Float.format(#exp 9, negativeNaN),
+        M.equals(T.text("-nan")),
+      ),
+      test(
+        "gen positive",
+        Float.format(#gen 12, 20.12345678901),
+        M.equals(T.text("20.123456789")),
+      ),
+      test(
+        "gen negative",
+        Float.format(#gen 12, -20.12345678901),
+        M.equals(T.text("-20.123456789")),
+      ),
+      test(
+        "gen positive zero",
+        Float.format(#gen 12, positiveZero),
+        M.equals(T.text("0")),
+      ),
+      test(
+        "gen negative zero",
+        Float.format(#gen 12, negativeZero),
+        M.equals(T.text("-0")),
+      ),
+      test(
+        "gen positive infinity",
+        Float.format(#gen 12, positiveInfinity),
+        M.equals(T.text("inf")),
+      ),
+      test(
+        "gen negative infinity",
+        Float.format(#gen 12, negativeInfinity),
+        M.equals(T.text("-inf")),
+      ),
+      test(
+        "gen positive NaN",
+        Float.format(#gen 12, positiveNaN),
+        M.equals(T.text("nan")),
+      ),
+      test(
+        "gen negative NaN",
+        Float.format(#gen 12, negativeNaN),
+        M.equals(T.text("-nan")),
+      ),
+      test(
+        "hex positive",
+        Float.format(#hex 10, 20.12345678901),
+        M.equals(T.text("0x1.41f9add374p+4")),
+      ),
+      test(
+        "hex negative",
+        Float.format(#hex 10, -20.12345678901),
+        M.equals(T.text("-0x1.41f9add374p+4")),
+      ),
+      test(
+        "hex positive zero",
+        Float.format(#hex 10, positiveZero),
+        M.equals(T.text("0x0.0000000000p+0")),
+      ),
+      test(
+        "hex negative zero",
+        Float.format(#hex 10, negativeZero),
+        M.equals(T.text("-0x0.0000000000p+0")),
+      ),
+      test(
+        "hex positive infinity",
+        Float.format(#hex 10, positiveInfinity),
+        M.equals(T.text("inf")),
+      ),
+      test(
+        "hex negative infinity",
+        Float.format(#hex 10, negativeInfinity),
+        M.equals(T.text("-inf")),
+      ),
+      test(
+        "hex positive NaN",
+        Float.format(#hex 10, positiveNaN),
+        M.equals(T.text("nan")),
+      ),
+      test(
+        "hex negative NaN",
+        Float.format(#hex 10, negativeNaN),
+        M.equals(T.text("-nan")),
+      ),
+    ],
+  ),
+);
 
 do {
   Debug.print("  toFloat64");
@@ -1196,26 +1405,5 @@ do {
   assert (Float.fromInt64(-10000000000) == -1e10);
 };
 
-do {
-  Debug.print("  format");
 
-  assert (Float.format(#exact, 20.12345678901) == "20.12345678901");
-  assert (Float.format(#fix 6, 20.12345678901) == "20.123457");
-  assert (Float.format(#exp 9, 20.12345678901) == "2.012345679e+01");
-  assert (Float.format(#gen 12, 20.12345678901) == "20.123456789");
-  assert (Float.format(#hex 10, 20.12345678901) == "0x1.41f9add374p+4");
-};
 
-do {
-  Debug.print("  Pi: " # Float.toText(Float.pi));
-  Debug.print("  arccos(-1.0): " # Float.toText(Float.arccos(-1.)));
-
-  assert (Float.pi == Float.arccos(-1.));
-};
-
-do {
-  Debug.print("  e: " # debug_show (Float.toText(Float.e)));
-  Debug.print("  exp(1): " # debug_show (Float.toText(Float.exp(1))));
-
-  assert (Float.e == Float.exp(1));
-};

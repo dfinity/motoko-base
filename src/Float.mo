@@ -281,6 +281,12 @@ module {
   /// * `#gen prec` as generic format with `prec` digits
   /// * `#hex prec` as hexadecimal format with `prec` digits
   /// * `#exact` as exact format that can be decoded without loss.
+  ///
+  /// `-0.0` is formatted with negative sign bit.
+  /// Positive infinity is formatted as `inf`.
+  /// Negative infinity is formatted as `-inf`.
+  /// Positive NaN is formatted as `nan`.
+  /// Negative NaN is formatted as `-nan`.
   public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text = switch fmt {
     case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
     case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
