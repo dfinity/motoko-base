@@ -1624,19 +1624,712 @@ run(
   ),
 );
 
-do {
-  Debug.print("  toFloat64");
+/* --------------------------------------- */
 
-  assert (Float.toInt64(1e10) == (10000000000 : Int64));
-  assert (Float.toInt64(-1e10) == (-10000000000 : Int64));
-};
+run(
+  suite(
+    "equal",
+    [
+      test(
+        "positive equal",
+        Float.equal(1.23, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative equal",
+        Float.equal(-1.23, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "zero",
+        Float.equal(0.0, 0.0),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed zero signs",
+        Float.equal(positiveZero, negativeZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive not equal",
+        Float.equal(1.23, 1.24),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative not equal",
+        Float.equal(-1.23, -1.24),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed signs",
+        Float.equal(1.23, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive infinity",
+        Float.equal(positiveInfinity, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative infinity",
+        Float.equal(negativeInfinity, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed infinity signs",
+        Float.equal(positiveInfinity, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two positive NaNs",
+        Float.equal(positiveNaN, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two negative NaNs",
+        Float.equal(negativeNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaNs with mixed signs",
+        Float.equal(positiveNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaN and number",
+        Float.equal(1.23, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "Number and NaN",
+        Float.equal(positiveNaN, -1.23),
+        M.equals(T.bool(false)),
+      ),
+    ],
+  ),
+);
 
-do {
-  Debug.print("  ofFloat64");
+/* --------------------------------------- */
 
-  assert (Float.fromInt64(10000000000) == 1e10);
-  assert (Float.fromInt64(-10000000000) == -1e10);
-};
+run(
+  suite(
+    "notEqual",
+    [
+      test(
+        "positive equal",
+        Float.notEqual(1.23, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative equal",
+        Float.notEqual(-1.23, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "zero",
+        Float.notEqual(0.0, 0.0),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed zero signs",
+        Float.notEqual(positiveZero, negativeZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive not equal",
+        Float.notEqual(1.23, 1.24),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative not equal",
+        Float.notEqual(-1.23, -1.24),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed signs",
+        Float.notEqual(1.23, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive infinity",
+        Float.notEqual(positiveInfinity, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative infinity",
+        Float.notEqual(negativeInfinity, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed infinity signs",
+        Float.notEqual(positiveInfinity, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "two positive NaNs",
+        Float.notEqual(positiveNaN, positiveNaN),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "two negative NaNs",
+        Float.notEqual(negativeNaN, negativeNaN),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "NaNs with mixed signs",
+        Float.notEqual(positiveNaN, negativeNaN),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "NaN and number",
+        Float.notEqual(1.23, positiveNaN),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "Number and NaN",
+        Float.notEqual(positiveNaN, -1.23),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
 
+/* --------------------------------------- */
 
+run(
+  suite(
+    "less",
+    [
+      test(
+        "positive equal",
+        Float.less(1.23, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive less",
+        Float.less(1.23, 2.45),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive greater",
+        Float.less(2.45, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative equal",
+        Float.less(-1.23, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative less",
+        Float.less(-2.45, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative greater",
+        Float.less(-1.23, -2.45),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive zeros",
+        Float.less(positiveZero, positiveZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative zeros",
+        Float.less(negativeZero, negativeZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive and negative zero",
+        Float.less(positiveZero, negativeZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative and positive zero",
+        Float.less(negativeZero, positiveZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed signs less",
+        Float.less(-1.23, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed signs greater",
+        Float.less(1.23, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "number and positive infinity",
+        Float.less(1.23, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive infinity and number",
+        Float.less(positiveInfinity, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "number and negative infinity",
+        Float.less(1.23, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative infinity and number",
+        Float.less(negativeInfinity, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "double positive infinity",
+        Float.less(positiveInfinity, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive and negative infinity",
+        Float.less(positiveInfinity, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "double negative infinity",
+        Float.less(negativeInfinity, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative and positive infinity",
+        Float.less(negativeInfinity, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "two positive NaNs",
+        Float.less(positiveNaN, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two negative NaNs",
+        Float.less(negativeNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaNs with mixed signs",
+        Float.less(positiveNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaN and number",
+        Float.less(1.23, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "Number and NaN",
+        Float.less(positiveNaN, -1.23),
+        M.equals(T.bool(false)),
+      ),
+    ],
+  ),
+);
 
+/* --------------------------------------- */
+
+run(
+  suite(
+    "lessOrEqual",
+    [
+      test(
+        "positive equal",
+        Float.lessOrEqual(1.23, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive less",
+        Float.lessOrEqual(1.23, 2.45),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive greater",
+        Float.lessOrEqual(2.45, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative equal",
+        Float.lessOrEqual(-1.23, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative less",
+        Float.lessOrEqual(-2.45, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative greater",
+        Float.lessOrEqual(-1.23, -2.45),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive zeros",
+        Float.lessOrEqual(positiveZero, positiveZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative zeros",
+        Float.lessOrEqual(negativeZero, negativeZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive and negative zero",
+        Float.lessOrEqual(positiveZero, negativeZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative and positive zero",
+        Float.lessOrEqual(negativeZero, positiveZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed signs less",
+        Float.lessOrEqual(-1.23, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed signs greater",
+        Float.lessOrEqual(1.23, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "number and positive infinity",
+        Float.lessOrEqual(1.23, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive infinity and number",
+        Float.lessOrEqual(positiveInfinity, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "number and negative infinity",
+        Float.lessOrEqual(1.23, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative infinity and number",
+        Float.lessOrEqual(negativeInfinity, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "double positive infinity",
+        Float.lessOrEqual(positiveInfinity, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive and negative infinity",
+        Float.lessOrEqual(positiveInfinity, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "double negative infinity",
+        Float.lessOrEqual(negativeInfinity, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative and positive infinity",
+        Float.lessOrEqual(negativeInfinity, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "two positive NaNs",
+        Float.lessOrEqual(positiveNaN, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two negative NaNs",
+        Float.lessOrEqual(negativeNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaNs with mixed signs",
+        Float.lessOrEqual(positiveNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaN and number",
+        Float.lessOrEqual(1.23, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "Number and NaN",
+        Float.lessOrEqual(positiveNaN, -1.23),
+        M.equals(T.bool(false)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "greater",
+    [
+      test(
+        "positive equal",
+        Float.greater(1.23, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive less",
+        Float.greater(1.23, 2.45),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive greater",
+        Float.greater(2.45, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative equal",
+        Float.greater(-1.23, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative less",
+        Float.greater(-2.45, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative greater",
+        Float.greater(-1.23, -2.45),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive zeros",
+        Float.greater(positiveZero, positiveZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative zeros",
+        Float.greater(negativeZero, negativeZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive and negative zero",
+        Float.greater(positiveZero, negativeZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative and positive zero",
+        Float.greater(negativeZero, positiveZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed signs less",
+        Float.greater(-1.23, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed signs greater",
+        Float.greater(1.23, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "less than positive infinity",
+        Float.greater(1.23, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive infinity and number",
+        Float.greater(positiveInfinity, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "number and negative infinity",
+        Float.greater(1.23, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative infinity and number",
+        Float.greater(negativeInfinity, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "double positive infinity",
+        Float.greater(positiveInfinity, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive and negative infinity",
+        Float.greater(positiveInfinity, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "double negative infinity",
+        Float.greater(negativeInfinity, negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative and positive infinity",
+        Float.greater(negativeInfinity, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two positive NaNs",
+        Float.greater(positiveNaN, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two negative NaNs",
+        Float.greater(negativeNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaNs with mixed signs",
+        Float.greater(positiveNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaN and number",
+        Float.greater(1.23, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "Number and NaN",
+        Float.greater(positiveNaN, -1.23),
+        M.equals(T.bool(false)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "greaterOrEqual",
+    [
+      test(
+        "positive equal",
+        Float.greaterOrEqual(1.23, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive less",
+        Float.greaterOrEqual(1.23, 2.45),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive greater",
+        Float.greaterOrEqual(2.45, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative equal",
+        Float.greaterOrEqual(-1.23, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative less",
+        Float.greaterOrEqual(-2.45, -1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative greater",
+        Float.greaterOrEqual(-1.23, -2.45),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive zeros",
+        Float.greaterOrEqual(positiveZero, positiveZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative zeros",
+        Float.greaterOrEqual(negativeZero, negativeZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive and negative zero",
+        Float.greaterOrEqual(positiveZero, negativeZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative and positive zero",
+        Float.greaterOrEqual(negativeZero, positiveZero),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "mixed signs less",
+        Float.greaterOrEqual(-1.23, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "mixed signs greater",
+        Float.greaterOrEqual(1.23, -1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "number and positive infinity",
+        Float.greaterOrEqual(1.23, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive infinity and number",
+        Float.greaterOrEqual(positiveInfinity, 1.23),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "number and negative infinity",
+        Float.greaterOrEqual(1.23, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative infinity and number",
+        Float.greaterOrEqual(negativeInfinity, 1.23),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "double positive infinity",
+        Float.greaterOrEqual(positiveInfinity, positiveInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive and negative infinity",
+        Float.greaterOrEqual(positiveInfinity, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "double negative infinity",
+        Float.greaterOrEqual(negativeInfinity, negativeInfinity),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative and positive infinity",
+        Float.greaterOrEqual(negativeInfinity, positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two positive NaNs",
+        Float.greaterOrEqual(positiveNaN, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "two negative NaNs",
+        Float.greaterOrEqual(negativeNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaNs with mixed signs",
+        Float.greaterOrEqual(positiveNaN, negativeNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "NaN and number",
+        Float.greaterOrEqual(1.23, positiveNaN),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "Number and NaN",
+        Float.greaterOrEqual(positiveNaN, -1.23),
+        M.equals(T.bool(false)),
+      ),
+    ],
+  ),
+);

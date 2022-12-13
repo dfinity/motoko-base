@@ -415,32 +415,98 @@ module {
   ///
   /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
   ///
-  /// Special case:
+  /// Special cases:
   /// | Argument `x` | Argument `y` | Result `equal(x, y)` |
   /// | ------------ | ------------ | -------------------- |
+  /// | `+0.0`       | `-0.0`       | `true`               |
+  /// | `-0.0`       | `+0.0`       | `true`               |
+  /// | `+inf`       | `+inf`       | `true`               |
+  /// | `-inf`       | `-inf`       | `true`               |
   /// | `nan`        | `nan`        | `false`              |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.equal(-12.3, -1.23e1); // returns true
+  ///   ```
   public func equal(x : Float, y : Float) : Bool { x == y };
 
   /// Returns `x != y`.
   ///
   /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
   ///
-  /// Special case:
+  /// Special cases:
   /// | Argument `x` | Argument `y` | Result `notEqual(x, y)` |
   /// | ------------ | ------------ | ----------------------- |
+  /// | `+0.0`       | `-0.0`       | `false`                 |
+  /// | `-0.0`       | `+0.0`       | `false`                 |
+  /// | `+inf`       | `+inf`       | `false`                 |
+  /// | `-inf`       | `-inf`       | `false`                 |
   /// | `nan`        | `nan`        | `true`                  |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.notEqual(-12.3, -1.23e1); // returns false
+  ///   ```
   public func notEqual(x : Float, y : Float) : Bool { x != y };
 
   /// Returns `x < y`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y` | Result `less(x, y)` |
+  /// | ------------ | ------------ | ------------------- |
+  /// | `+0.0`       | `-0.0`       | `false`             |
+  /// | `-0.0`       | `+0.0`       | `false`             |
+  /// | `nan`        | (any)        | `false`             |
+  /// | (any)        | `nan`        | `false`             |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.less(Float.e, Float.pi); // returns true
+  ///   ```
   public func less(x : Float, y : Float) : Bool { x < y };
 
   /// Returns `x <= y`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y` | Result `lessOrEqual(x, y)` |
+  /// | ------------ | ------------ | -------------------------- |
+  /// | `+0.0`       | `-0.0`       | `true`                     |
+  /// | `-0.0`       | `+0.0`       | `true`                     |
+  /// | `nan`        | (any)        | `false`                    |
+  /// | (any)        | `nan`        | `false`                    |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.lessOrEqual(0.123, 0.1234); // returns true
+  ///   ```
   public func lessOrEqual(x : Float, y : Float) : Bool { x <= y };
 
   /// Returns `x > y`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y` | Result `greater(x, y)` |
+  /// | ------------ | ------------ | ---------------------- |
+  /// | `nan`        | (any)        | `false`                |
+  /// | (any)        | `nan`        | `false`                |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.greater(Float.pi, Float.e); // returns true
+  ///   ```
   public func greater(x : Float, y : Float) : Bool { x > y };
 
   /// Returns `x >= y`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y` | Result `greaterOrEqual(x, y)` |
+  /// | ------------ | ------------ | ----------------------------- |
+  /// | `nan`        | (any)        | `false`                       |
+  /// | (any)        | `nan`        | `false`                       |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.greaterOrEqual(0.1234, 0.123); // returns true
+  ///   ```
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
