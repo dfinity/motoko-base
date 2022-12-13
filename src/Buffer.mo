@@ -708,7 +708,18 @@ module {
     };
   };
 
-  /// Returns true iff the buffer is empty.
+  /// Returns true if and only if the buffer is empty.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.isEmpty(); // true
+  ///
+  /// buffer.add(2);
+  /// buffer.add(0);
+  /// buffer.add(3);
+  /// buffer.isEmpty(); // false
+  /// ```
   ///
   /// Runtime: O(1)
   ///
