@@ -175,18 +175,53 @@ module {
   public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
 
   /// Returns the sine of the radian angle `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `sin(x)` |
+  /// | ------------ | --------------- |
+  /// | `+inf`       | `nan`           |
+  /// | `-inf`       | `nan`           |
+  /// | `nan`        | `nan`           | 
   public let sin : (x : Float) -> Float = Prim.sin;
 
   /// Returns the cosine of the radian angle `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `cos(x)` |
+  /// | ------------ | --------------- |
+  /// | `+inf`       | `nan`           |
+  /// | `-inf`       | `nan`           |
+  /// | `nan`        | `nan`           | 
   public let cos : (x : Float) -> Float = Prim.cos;
 
   /// Returns the tangent of the radian angle `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `tan(x)` |
+  /// | ------------ | --------------- |
+  /// | `+inf`       | `nan`           |
+  /// | `-inf`       | `nan`           |
+  /// | `nan`        | `nan`           | 
   public let tan : (x : Float) -> Float = Prim.tan;
 
   /// Returns the arc sine of `x` in radians.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `arcsin(x)` |
+  /// | ------------ | ------------------ |
+  /// | `> 1.0`      | `nan`              |
+  /// | `< -1.0`     | `nan`              |
+  /// | `nan`        | `nan`              | 
   public let arcsin : (x : Float) -> Float = Prim.arcsin;
 
   /// Returns the arc cosine of `x` in radians.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `arccos(x)` |
+  /// | ------------ | ------------------ |
+  /// | `> 1.0`      | `nan`              |
+  /// | `< -1.0`     | `nan`              |
+  /// | `nan`        | `nan`              | 
   public let arccos : (x : Float) -> Float = Prim.arccos;
 
   /// Returns the arc tangent of `x` in radians.

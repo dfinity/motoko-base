@@ -7,12 +7,18 @@ import M "mo:matchers/Matchers";
 
 let { run; test; suite } = Suite;
 
-class FloatTestable(number : Float) : T.TestableItem<Float> {
+class FloatTestable(number : Float, epsilon: Float) : T.TestableItem<Float> {
   public let item = number;
   public func display(number : Float) : Text {
     debug_show (number);
   };
-  public let equals = func(x : Float, y : Float) : Bool { x == y };
+  public let equals = func(x : Float, y : Float) : Bool { 
+    if (epsilon == 0.0) {
+      x == y // to also test Float.abs()
+    } else {
+      Float.abs(x - y) < epsilon
+    }
+   };
 };
 
 func isNaN(number: Float): Bool {
@@ -34,7 +40,14 @@ func isNegativeZero(number: Float): Bool {
   number == 0.0 and 1.0 / number == negativeInfinity
 };
 
-// Using exact equality below as the results are chosen to be free of numerical errors.
+let noEpsilon = 0.0;
+let smallEpsilon = 1e-6;
+
+// Some tests are adopted from Motoko compiler test `float-ops.mo`.
+
+let ninetyDegrees = Float.pi / 2.0;
+let fortyFiveDegrees = Float.pi / 4.0;
+let arbitraryAngle = 0.123;
 
 /* --------------------------------------- */
 
@@ -45,17 +58,17 @@ run(
       test(
         "positive number",
         Float.abs(1.1),
-        M.equals(FloatTestable(1.1)),
+        M.equals(FloatTestable(1.1, noEpsilon)),
       ),
       test(
         "negative number",
         Float.abs(-1.1),
-        M.equals(FloatTestable(1.1)),
+        M.equals(FloatTestable(1.1, noEpsilon)),
       ),
       test(
         "zero",
         Float.abs(0.0),
-        M.equals(FloatTestable(0.0)),
+        M.equals(FloatTestable(0.0, noEpsilon)),
       ),
       test(
         "positive zero",
@@ -70,12 +83,12 @@ run(
       test(
         "positive infinity",
         Float.abs(positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.abs(negativeInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "positive NaN",
@@ -100,12 +113,12 @@ run(
       test(
         "positive number",
         Float.sqrt(6.25),
-        M.equals(FloatTestable(2.5)),
+        M.equals(FloatTestable(2.5, noEpsilon)),
       ),
       test(
         "zero",
         Float.sqrt(0.0),
-        M.equals(FloatTestable(0.0)),
+        M.equals(FloatTestable(0.0, noEpsilon)),
       ),
       test(
         "positive zero",
@@ -120,7 +133,7 @@ run(
       test(
         "positive infinity",
         Float.sqrt(positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative",
@@ -150,22 +163,22 @@ run(
       test(
         "positive fraction",
         Float.ceil(1.1),
-        M.equals(FloatTestable(2.0)),
+        M.equals(FloatTestable(2.0, noEpsilon)),
       ),
       test(
         "negative fraction",
         Float.ceil(-1.2),
-        M.equals(FloatTestable(-1.0)),
+        M.equals(FloatTestable(-1.0, noEpsilon)),
       ),
       test(
         "integral number",
         Float.ceil(-3.0),
-        M.equals(FloatTestable(-3.0)),
+        M.equals(FloatTestable(-3.0, noEpsilon)),
       ),
       test(
         "zero",
         Float.ceil(0.0),
-        M.equals(FloatTestable(0.0)),
+        M.equals(FloatTestable(0.0, noEpsilon)),
       ),
       test(
         "positive zero",
@@ -180,12 +193,12 @@ run(
       test(
         "positive infinity",
         Float.ceil(positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.ceil(negativeInfinity),
-        M.equals(FloatTestable(negativeInfinity)),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "positive NaN",
@@ -210,22 +223,22 @@ run(
       test(
         "positive fraction",
         Float.floor(1.1),
-        M.equals(FloatTestable(1.0)),
+        M.equals(FloatTestable(1.0, noEpsilon)),
       ),
       test(
         "negative fraction",
         Float.floor(-1.2),
-        M.equals(FloatTestable(-2.0)),
+        M.equals(FloatTestable(-2.0, noEpsilon)),
       ),
       test(
         "integral number",
         Float.floor(3.0),
-        M.equals(FloatTestable(3.0)),
+        M.equals(FloatTestable(3.0, noEpsilon)),
       ),
       test(
         "zero",
         Float.floor(0.0),
-        M.equals(FloatTestable(0.0)),
+        M.equals(FloatTestable(0.0, noEpsilon)),
       ),
       test(
         "positive zero",
@@ -240,12 +253,12 @@ run(
       test(
         "positive infinity",
         Float.floor(positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.floor(negativeInfinity),
-        M.equals(FloatTestable(negativeInfinity)),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "positive NaN",
@@ -270,22 +283,22 @@ run(
       test(
         "positive fraction",
         Float.trunc(3.9123),
-        M.equals(FloatTestable(3.0)),
+        M.equals(FloatTestable(3.0, noEpsilon)),
       ),
       test(
         "negative fraction",
         Float.trunc(-3.9123),
-        M.equals(FloatTestable(-3.0)),
+        M.equals(FloatTestable(-3.0, noEpsilon)),
       ),
       test(
         "integral number",
         Float.trunc(3.0),
-        M.equals(FloatTestable(3.0)),
+        M.equals(FloatTestable(3.0, noEpsilon)),
       ),
       test(
         "zero",
         Float.trunc(0.0),
-        M.equals(FloatTestable(0.0)),
+        M.equals(FloatTestable(0.0, noEpsilon)),
       ),
       test(
         "positive zero",
@@ -300,12 +313,12 @@ run(
       test(
         "positive infinity",
         Float.trunc(positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.trunc(negativeInfinity),
-        M.equals(FloatTestable(negativeInfinity)),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "positive NaN",
@@ -330,47 +343,47 @@ run(
       test(
         "positive round up",
         Float.nearest(3.75),
-        M.equals(FloatTestable(4.0)),
+        M.equals(FloatTestable(4.0, noEpsilon)),
       ),
       test(
         "negative round down",
         Float.nearest(-3.75),
-        M.equals(FloatTestable(-4.0)),
+        M.equals(FloatTestable(-4.0, noEpsilon)),
       ),
       test(
         "positive round down",
         Float.nearest(3.25),
-        M.equals(FloatTestable(3.0)),
+        M.equals(FloatTestable(3.0, noEpsilon)),
       ),
       test(
         "negative round up",
         Float.nearest(-3.25),
-        M.equals(FloatTestable(-3.0)),
+        M.equals(FloatTestable(-3.0, noEpsilon)),
       ),
       test(
         "positive .5",
         Float.nearest(3.5),
-        M.equals(FloatTestable(4.0)),
+        M.equals(FloatTestable(4.0, noEpsilon)),
       ),
       test(
         "negative .5",
         Float.nearest(-3.5),
-        M.equals(FloatTestable(-4.0)),
+        M.equals(FloatTestable(-4.0, noEpsilon)),
       ),
       test(
         "integral number",
         Float.nearest(3.0),
-        M.equals(FloatTestable(3.0)),
+        M.equals(FloatTestable(3.0, noEpsilon)),
       ),
       test(
         "positive infinity",
         Float.nearest(positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.nearest(negativeInfinity),
-        M.equals(FloatTestable(negativeInfinity)),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "positive NaN",
@@ -395,22 +408,22 @@ run(
       test(
         "both positive",
         Float.copySign(1.2, 2.3),
-        M.equals(FloatTestable(1.2)),
+        M.equals(FloatTestable(1.2, noEpsilon)),
       ),
       test(
         "positive, negative",
         Float.copySign(1.2, -2.3),
-        M.equals(FloatTestable(-1.2)),
+        M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
       test(
         "both negative",
         Float.copySign(-1.2, -2.3),
-        M.equals(FloatTestable(-1.2)),
+        M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
       test(
         "negative, positive",
         Float.copySign(-1.2, 2.3),
-        M.equals(FloatTestable(1.2)),
+        M.equals(FloatTestable(1.2, noEpsilon)),
       ),
       test(
         "negate positive zero",
@@ -425,17 +438,17 @@ run(
       test(
         "negate by negative zero",
         Float.copySign(2.1, negativeZero),
-        M.equals(FloatTestable(-2.1)),
+        M.equals(FloatTestable(-2.1, noEpsilon)),
       ),
       test(
         "positive infinity",
         Float.copySign(1.2, positiveInfinity),
-        M.equals(FloatTestable(1.2)),
+        M.equals(FloatTestable(1.2, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.copySign(1.2, negativeInfinity),
-        M.equals(FloatTestable(-1.2)),
+        M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
       test(
         "keep positive NaN",
@@ -460,12 +473,12 @@ run(
       test(
         "second argument positive NaN",
         Float.copySign(-1.2, positiveNaN),
-        M.equals(FloatTestable(1.2)),
+        M.equals(FloatTestable(1.2, noEpsilon)),
       ),
       test(
         "second argument negative NaN",
         Float.copySign(1.2, negativeNaN),
-        M.equals(FloatTestable(-1.2)),
+        M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
     ],
   ),
@@ -480,27 +493,27 @@ run(
       test(
         "both positive",
         Float.min(1.2, 2.3),
-        M.equals(FloatTestable(1.2)),
+        M.equals(FloatTestable(1.2, noEpsilon)),
       ),
       test(
         "positive, negative",
         Float.min(1.2, -2.3),
-        M.equals(FloatTestable(-2.3)),
+        M.equals(FloatTestable(-2.3, noEpsilon)),
       ),
       test(
         "both negative",
         Float.min(-1.2, -2.3),
-        M.equals(FloatTestable(-2.3)),
+        M.equals(FloatTestable(-2.3, noEpsilon)),
       ),
       test(
         "negative, positive",
         Float.min(-1.2, 2.3),
-        M.equals(FloatTestable(-1.2)),
+        M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
       test(
         "equal values",
         Float.min(1.23, 1.23),
-        M.equals(FloatTestable(1.23)),
+        M.equals(FloatTestable(1.23, noEpsilon)),
       ),
       test(
         "zero with different signs",
@@ -510,17 +523,17 @@ run(
       test(
         "positive infinity",
         Float.min(1.23, positiveInfinity),
-        M.equals(FloatTestable(1.23)),
+        M.equals(FloatTestable(1.23, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.min(1.23, negativeInfinity),
-        M.equals(FloatTestable(negativeInfinity)),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "double negative infinity",
         Float.min(negativeInfinity, negativeInfinity),
-        M.equals(FloatTestable(negativeInfinity)),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "left NaN",
@@ -550,27 +563,27 @@ run(
       test(
         "both positive",
         Float.max(1.2, 2.3),
-        M.equals(FloatTestable(2.3)),
+        M.equals(FloatTestable(2.3, noEpsilon)),
       ),
       test(
         "positive, negative",
         Float.max(1.2, -2.3),
-        M.equals(FloatTestable(1.2)),
+        M.equals(FloatTestable(1.2, noEpsilon)),
       ),
       test(
         "both negative",
         Float.max(-1.2, -2.3),
-        M.equals(FloatTestable(-1.2)),
+        M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
       test(
         "negative, positive",
         Float.max(-1.2, 2.3),
-        M.equals(FloatTestable(2.3)),
+        M.equals(FloatTestable(2.3, noEpsilon)),
       ),
       test(
         "equal values",
         Float.max(1.23, 1.23),
-        M.equals(FloatTestable(1.23)),
+        M.equals(FloatTestable(1.23, noEpsilon)),
       ),
       test(
         "zero with different signs",
@@ -580,17 +593,17 @@ run(
       test(
         "positive infinity",
         Float.max(1.23, positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
         Float.max(1.23, negativeInfinity),
-        M.equals(FloatTestable(1.23)),
+        M.equals(FloatTestable(1.23, noEpsilon)),
       ),
       test(
         "double positive infinity",
         Float.max(positiveInfinity, positiveInfinity),
-        M.equals(FloatTestable(positiveInfinity)),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "left NaN",
@@ -612,18 +625,300 @@ run(
 );
 
 
+/* --------------------------------------- */
 
-do {
-  Debug.print("  sin");
+run(
+  suite(
+    "sin",
+    [
+      test(
+        "zero",
+        Float.sin(0.0),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "90 degrees",
+        Float.sin(ninetyDegrees),
+        M.equals(FloatTestable(1.0, smallEpsilon)),
+      ),
+      test(
+        "180 degrees",
+        Float.sin(2 * ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "270 degrees",
+        Float.sin(3 * ninetyDegrees),
+        M.equals(FloatTestable(-1.0, smallEpsilon)),
+      ),
+      test(
+        "360 degrees",
+        Float.sin(4 * ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "-90 degrees",
+        Float.sin(-ninetyDegrees),
+        M.equals(FloatTestable(-1.0, smallEpsilon)),
+      ),
+      test(
+        "-180 degrees",
+        Float.sin(-2 * ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "-270 degrees",
+        Float.sin(-3 * ninetyDegrees),
+        M.equals(FloatTestable(1.0, smallEpsilon)),
+      ),
+      test(
+        "-360 degrees",
+        Float.sin(-4 * ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "positive infinity",
+        isNaN(Float.sin(positiveInfinity)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative infinity",
+        isNaN(Float.sin(negativeInfinity)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.sin(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.sin(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
 
-  assert (Float.sin(0.0) == 0.0);
-};
+/* --------------------------------------- */
 
-do {
-  Debug.print("  cos");
+run(
+  suite(
+    "cos",
+    [
+      test(
+        "zero",
+        Float.cos(0.0),
+        M.equals(FloatTestable(1.0, noEpsilon)),
+      ),
+      test(
+        "90 degrees",
+        Float.cos(ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "180 degrees",
+        Float.cos(2 * ninetyDegrees),
+        M.equals(FloatTestable(-1.0, smallEpsilon)),
+      ),
+      test(
+        "270 degrees",
+        Float.cos(3 * ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "360 degrees",
+        Float.cos(4 * ninetyDegrees),
+        M.equals(FloatTestable(1.0, smallEpsilon)),
+      ),
+      test(
+        "-90 degrees",
+        Float.cos(-ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "-180 degrees",
+        Float.cos(-2 * ninetyDegrees),
+        M.equals(FloatTestable(-1.0, smallEpsilon)),
+      ),
+      test(
+        "-270 degrees",
+        Float.cos(-3 * ninetyDegrees),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "-360 degrees",
+        Float.cos(-4 * ninetyDegrees),
+        M.equals(FloatTestable(1.0, smallEpsilon)),
+      ),
+      test(
+        "positive infinity",
+        isNaN(Float.cos(positiveInfinity)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative infinity",
+        isNaN(Float.cos(negativeInfinity)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.cos(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.cos(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
 
-  assert (Float.cos(0.0) == 1.0);
-};
+/* --------------------------------------- */
+
+run(
+  suite(
+    "tan",
+    [
+      test(
+        "zero",
+        Float.tan(0.0),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "45 degrees",
+        Float.tan(fortyFiveDegrees),
+        M.equals(FloatTestable(1.0, smallEpsilon)),
+      ),
+      test(
+        "-45 degrees",
+        Float.tan(-fortyFiveDegrees),
+        M.equals(FloatTestable(-1.0, smallEpsilon)),
+      ),
+      test(
+        "positive infinity",
+        isNaN(Float.tan(positiveInfinity)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative infinity",
+        isNaN(Float.tan(negativeInfinity)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.tan(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.tan(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "arcsin",
+    [
+      test(
+        "zero",
+        Float.arcsin(0.0),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "90 degrees",
+        Float.arcsin(1.0),
+        M.equals(FloatTestable(ninetyDegrees, smallEpsilon)),
+      ),
+      test(
+        "-90 degrees",
+        Float.arcsin(-1.0),
+        M.equals(FloatTestable(-ninetyDegrees, smallEpsilon)),
+      ),
+      test(
+        "arbitrary angle",
+        Float.arcsin(Float.sin(arbitraryAngle)),
+        M.equals(FloatTestable(arbitraryAngle, smallEpsilon)),
+      ),
+      test(
+        "above 1",
+        isNaN(Float.arcsin(1.01)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "below 1",
+        isNaN(Float.arcsin(-1.01)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.arcsin(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.arcsin(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "arccos",
+    [
+      test(
+        "zero",
+        Float.arccos(0.0),
+        M.equals(FloatTestable(ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "90 degrees",
+        Float.arccos(1.0),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "180 degrees",
+        Float.arccos(-1.0),
+        M.equals(FloatTestable(2 * ninetyDegrees, smallEpsilon)),
+      ),
+      test(
+        "arbitrary angle",
+        Float.arccos(Float.cos(arbitraryAngle)),
+        M.equals(FloatTestable(arbitraryAngle, smallEpsilon)),
+      ),
+      test(
+        "above 1",
+        isNaN(Float.arccos(1.01)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "below 1",
+        isNaN(Float.arccos(-1.01)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.arccos(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.arccos(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
 
 do {
   Debug.print("  toFloat64");
