@@ -1039,6 +1039,22 @@ module {
 
   /// Fold over the key-value pairs of the trie, using an accumulator.
   /// The key-value pairs have no reliable or meaningful ordering.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
+  /// // create an accumulator, in our case the sum of all values
+  /// func calculateSum(k : Text, v : Nat, acc : Nat) : Nat = acc + v;
+  /// // fold over the trie using the accumulator
+  /// // note that 0 is the initial value of the accumulator
+  /// let sum = Trie.fold(trie, calculateSum, 0);
+  /// assert(sum == 77);
+  /// ```
   public func fold<K, V, X>(t : Trie<K, V>, f : (K, V, X) -> X, x : X) : X {
     func rec(t : Trie<K, V>, x : X) : X {
       switch t {
