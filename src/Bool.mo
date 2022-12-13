@@ -13,7 +13,7 @@ module {
 
   /// Conversion.
   public func toText(x : Bool) : Text {
-    if x { "true" } else { "false" };
+    if x { "true" } else { "false" }
   };
 
   /// Returns `x and y`.
@@ -24,7 +24,7 @@ module {
 
   /// Returns exclusive or of `x` and `y`, `x != y`.
   public func logxor(x : Bool, y : Bool) : Bool {
-    x != y;
+    x != y
   };
 
   /// Returns `not x`.
@@ -38,7 +38,7 @@ module {
 
   /// Returns the order of `x` and `y`, where `false < true`.
   public func compare(x : Bool, y : Bool) : { #less; #equal; #greater } {
-    if (x == y) { #equal } else if (x) { #greater } else { #less };
+    if (x == y) { #equal } else if (x) { #greater } else { #less }
   };
 
-};
+}

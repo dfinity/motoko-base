@@ -51,8 +51,8 @@ module {
   public func compare(x : Principal, y : Principal) : {
     #less;
     #equal;
-    #greater;
+    #greater
   } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
-  };
-};
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+  }
+}

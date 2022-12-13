@@ -8,11 +8,11 @@ import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
 func makeNatural(x : Int) : Result.Result<Nat, Text> = if (x >= 0) {
-  #ok(Int.abs(x));
+  #ok(Int.abs(x))
 } else { #err(Int.toText(x) # " is not a natural number.") };
 
 func largerThan10(x : Nat) : Result.Result<Nat, Text> = if (x > 10) { #ok(x) } else {
-  #err(Int.toText(x) # " is not larger than 10.");
+  #err(Int.toText(x) # " is not larger than 10.")
 };
 
 let chain = Suite.suite(
@@ -21,19 +21,19 @@ let chain = Suite.suite(
     Suite.test(
       "ok -> ok",
       Result.chain<Nat, Nat, Text>(makeNatural(11), largerThan10),
-      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #ok(11))),
+      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #ok(11)))
     ),
     Suite.test(
       "ok -> err",
       Result.chain<Nat, Nat, Text>(makeNatural(5), largerThan10),
-      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("5 is not larger than 10."))),
+      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("5 is not larger than 10.")))
     ),
     Suite.test(
       "err",
       Result.chain<Nat, Nat, Text>(makeNatural(-5), largerThan10),
-      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("-5 is not a natural number."))),
-    ),
-  ],
+      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("-5 is not a natural number.")))
+    )
+  ]
 );
 
 let flatten = Suite.suite(
@@ -42,19 +42,19 @@ let flatten = Suite.suite(
     Suite.test(
       "ok -> ok",
       Result.flatten<Nat, Text>(#ok(#ok(10))),
-      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #ok(10))),
+      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #ok(10)))
     ),
     Suite.test(
       "err",
       Result.flatten<Nat, Text>(#err("wrong")),
-      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("wrong"))),
+      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("wrong")))
     ),
     Suite.test(
       "ok -> err",
       Result.flatten<Nat, Text>(#ok(#err("wrong"))),
-      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("wrong"))),
-    ),
-  ],
+      M.equals(T.result<Nat, Text>(T.natTestable, T.textTestable, #err("wrong")))
+    )
+  ]
 );
 
 let iterate = Suite.suite(
@@ -66,8 +66,8 @@ let iterate = Suite.suite(
     tests := Array.append(tests, [Suite.test("ok", counter, M.equals(T.nat(5)))]);
     Result.iterate(makeNatural(-10), func(x : Nat) { counter += x });
     tests := Array.append(tests, [Suite.test("err", counter, M.equals(T.nat(5)))]);
-    tests;
-  },
+    tests
+  }
 );
 
 let suite = Suite.suite(
@@ -75,8 +75,8 @@ let suite = Suite.suite(
   [
     chain,
     flatten,
-    iterate,
-  ],
+    iterate
+  ]
 );
 
-Suite.run(suite);
+Suite.run(suite)
