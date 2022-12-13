@@ -405,6 +405,18 @@ module {
   public func get<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V = find(t, k, k_eq);
 
   /// Find the given key's value in the trie, or return null if nonexistent
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// var value = Trie.find(trie, key "hello", Text.equal); // Returns ?42
+  /// assert(value == ?42);
+  /// value := Trie.find(trie, key "world", Text.equal); // Returns null
+  /// assert(value == null);
+  /// ```
   public func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V {
     let key_eq = equalKey(k_eq);
     func rec(t : Trie<K, V>, bitpos : Nat) : ?V {
