@@ -14,15 +14,15 @@ do {
   for ((range, expected, revExpected) in tests.vals()) {
     var x = "";
     for (i in Iter.range(range)) {
-      x := x # Nat.toText(i);
+      x := x # Nat.toText(i)
     };
     assert (x == expected);
     x := "";
     for (i in Iter.revRange(range)) {
-      x := x # Int.toText(i);
+      x := x # Int.toText(i)
     };
-    assert (x == revExpected);
-  };
+    assert (x == revExpected)
+  }
 };
 
 do {
@@ -37,19 +37,19 @@ do {
     xs.vals(),
     func(x : Text, i : Nat) {
       y := y # x;
-      z += i;
-    },
+      z += i
+    }
   );
 
   assert (y == "abcdef");
-  assert (z == 15);
+  assert (z == 15)
 };
 
 do {
   Debug.print("  map");
 
   let isEven = func(x : Int) : Bool {
-    x % 2 == 0;
+    x % 2 == 0
   };
 
   let _actual = Iter.map<Nat, Bool>([1, 2, 3].vals(), isEven);
@@ -59,15 +59,15 @@ do {
   let expected = [false, true, false];
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
   Debug.print("  filter");
 
   let isOdd = func(x : Int) : Bool {
-    x % 2 == 1;
+    x % 2 == 1
   };
 
   let _actual = Iter.filter<Nat>([1, 2, 3].vals(), isOdd);
@@ -76,7 +76,7 @@ do {
 
   let expected = [1, 3];
 
-  assert (Array.freeze(actual) == expected);
+  assert (Array.freeze(actual) == expected)
 };
 
 do {
@@ -87,8 +87,8 @@ do {
 
   switch (y.next()) {
     case null { assert false };
-    case (?z) { assert (x == z) };
-  };
+    case (?z) { assert (x == z) }
+  }
 };
 
 do {
@@ -101,8 +101,8 @@ do {
   Iter.iterate<Nat>(_actual, func(x, i) { actual[i] := x });
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -115,8 +115,8 @@ do {
   Iter.iterate<Nat>(_actual, func(x, i) { actual[i] := x });
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -130,8 +130,8 @@ do {
   Iter.iterate<Nat>(_actual, func(x, i) { actual[i] := x });
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -143,8 +143,8 @@ do {
   assert (actual.size() == expected.size());
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -156,8 +156,8 @@ do {
   assert (actual.size() == expected.size());
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -165,7 +165,7 @@ do {
 
   let expected : List.List<Nat> = ?(1, ?(2, ?(3, List.nil<Nat>())));
   let actual = Iter.toList<Nat>([1, 2, 3].vals());
-  assert List.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 });
+  assert List.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 })
 };
 
 do {
@@ -174,5 +174,5 @@ do {
   let input : [Nat] = [4, 3, 1, 2, 5];
   let expected : [Nat] = [1, 2, 3, 4, 5];
   let actual = Iter.toArray(Iter.sort<Nat>(input.vals(), Nat.compare));
-  assert Array.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 });
-};
+  assert Array.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 })
+}

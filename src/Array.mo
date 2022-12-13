@@ -61,9 +61,9 @@ module {
     var i = 0;
     while (i < size) {
       array[i] := generator i;
-      i += 1;
+      i += 1
     };
-    array;
+    array
   };
 
   /// Transforms a mutable array into an immutable array.
@@ -96,15 +96,15 @@ module {
   public func thaw<A>(array : [A]) : [var A] {
     let size = array.size();
     if (size == 0) {
-      return [var];
+      return [var]
     };
     let newArray = Prim.Array_init<A>(size, array[0]);
     var i = 0;
     while (i < size) {
       newArray[i] := array[i];
-      i += 1;
+      i += 1
     };
-    newArray;
+    newArray
   };
 
   /// Tests if two arrays contain equal values (i.e. they represent the same
@@ -128,16 +128,16 @@ module {
     let size1 = array1.size();
     let size2 = array2.size();
     if (size1 != size2) {
-      return false;
+      return false
     };
     var i = 0;
     while (i < size1) {
       if (not equal(array1[i], array2[i])) {
-        return false;
+        return false
       };
-      i += 1;
+      i += 1
     };
-    return true;
+    return true
   };
 
   /// Returns the first value in `array` for which `predicate` returns true.
@@ -155,10 +155,10 @@ module {
   public func find<X>(array : [X], predicate : X -> Bool) : ?X {
     for (element in array.vals()) {
       if (predicate element) {
-        return ?element;
-      };
+        return ?element
+      }
     };
-    return null;
+    return null
   };
 
   /// Create a new array by appending the values of `array1` and `array2`.
@@ -180,12 +180,12 @@ module {
       size1 + size2,
       func i {
         if (i < size1) {
-          array1[i];
+          array1[i]
         } else {
-          array2[i - size1];
-        };
-      },
-    );
+          array2[i - size1]
+        }
+      }
+    )
   };
 
   // FIXME this example stack overflows. Should test with new implementation of sortInPlace
@@ -205,7 +205,7 @@ module {
   public func sort<X>(array : [X], compare : (X, X) -> Order.Order) : [X] {
     let temp : [var X] = thaw(array);
     sortInPlace(temp, compare);
-    freeze(temp);
+    freeze(temp)
   };
 
   /// Sorts the elements in the array, __in place__, according to `compare`.
@@ -227,7 +227,7 @@ module {
     // Stable merge sort in a bottom-up iterative style. Same algorithm as the sort in Buffer.
     let size = array.size();
     if (size == 0) {
-      return;
+      return
     };
     let scratchSpace = Prim.Array_init<X>(size, array[0]);
 
@@ -238,10 +238,10 @@ module {
       var leftStart = 0; // selects the current left subarray being merged
       while (leftStart < sizeDec) {
         let mid : Nat = if (leftStart + currSize - 1 : Nat < sizeDec) {
-          leftStart + currSize - 1;
+          leftStart + currSize - 1
         } else { sizeDec };
         let rightEnd : Nat = if (leftStart + (2 * currSize) - 1 : Nat < sizeDec) {
-          leftStart + (2 * currSize) - 1;
+          leftStart + (2 * currSize) - 1
         } else { sizeDec };
 
         // Merge subarrays elements[leftStart...mid] and elements[mid+1...rightEnd]
@@ -254,37 +254,37 @@ module {
           switch (compare(leftElement, rightElement)) {
             case (#less or #equal) {
               scratchSpace[nextSorted] := leftElement;
-              left += 1;
+              left += 1
             };
             case (#greater) {
               scratchSpace[nextSorted] := rightElement;
-              right += 1;
-            };
+              right += 1
+            }
           };
-          nextSorted += 1;
+          nextSorted += 1
         };
         while (left < mid + 1) {
           scratchSpace[nextSorted] := array[left];
           nextSorted += 1;
-          left += 1;
+          left += 1
         };
         while (right < rightEnd + 1) {
           scratchSpace[nextSorted] := array[right];
           nextSorted += 1;
-          right += 1;
+          right += 1
         };
 
         // Copy over merged elements
         var i = leftStart;
         while (i < rightEnd + 1) {
           array[i] := scratchSpace[i];
-          i += 1;
+          i += 1
         };
 
-        leftStart += 2 * currSize;
+        leftStart += 2 * currSize
       };
-      currSize *= 2;
-    };
+      currSize *= 2
+    }
   };
 
   /// Creates a new array by reversing the order of elements in `array`.
@@ -301,7 +301,7 @@ module {
   /// Space: O(1)
   public func reverse<X>(array : [X]) : [X] {
     let size = array.size();
-    Prim.Array_tabulate<X>(size, func i = array[size - i - 1]);
+    Prim.Array_tabulate<X>(size, func i = array[size - i - 1])
   };
 
   /// Creates a new array by applying `f` to each element in `array`. `f` "maps"
@@ -339,23 +339,23 @@ module {
       func i {
         if (predicate(array[i])) {
           count += 1;
-          true;
+          true
         } else {
-          false;
-        };
-      },
+          false
+        }
+      }
     );
     var nextKeep = 0;
     Prim.Array_tabulate<X>(
       count,
       func _ {
         while (not keep[nextKeep]) {
-          nextKeep += 1;
+          nextKeep += 1
         };
         nextKeep += 1;
-        array[nextKeep - 1];
-      },
-    );
+        array[nextKeep - 1]
+      }
+    )
   };
 
   // FIXME the arguments ordering to the higher order function are flipped
@@ -403,13 +403,13 @@ module {
         switch (result) {
           case (?element) {
             count += 1;
-            result;
+            result
           };
           case null {
-            null;
-          };
-        };
-      },
+            null
+          }
+        }
+      }
     );
 
     var nextSome = 0;
@@ -417,17 +417,17 @@ module {
       count,
       func _ {
         while (Option.isNull(options[nextSome])) {
-          nextSome += 1;
+          nextSome += 1
         };
         nextSome += 1;
         switch (options[nextSome - 1]) {
           case (?element) element;
           case null {
-            Prim.trap "Malformed array in mapFilter";
-          };
-        };
-      },
-    );
+            Prim.trap "Malformed array in mapFilter"
+          }
+        }
+      }
+    )
   };
 
   /// Creates a new array by applying `f` to each element in `array`.
@@ -462,20 +462,20 @@ module {
       func i {
         switch (f(array[i])) {
           case (#ok element) {
-            ?element;
+            ?element
           };
           case (#err e) {
             switch (error) {
               case null {
                 // only take the first error
-                error := ?(#err e);
+                error := ?(#err e)
               };
-              case _ {};
+              case _ {}
             };
-            null;
-          };
-        };
-      },
+            null
+          }
+        }
+      }
     );
 
     switch error {
@@ -487,20 +487,20 @@ module {
             func element {
               switch element {
                 case (?element) {
-                  element;
+                  element
                 };
                 case null {
-                  Prim.trap "Malformed array in mapResults";
-                };
-              };
-            },
-          ),
-        );
+                  Prim.trap "Malformed array in mapResults"
+                }
+              }
+            }
+          )
+        )
       };
       case (?error) {
-        error;
-      };
-    };
+        error
+      }
+    }
   };
 
   /// Creates a new array by applying `k` to each element in `array`,
@@ -525,8 +525,8 @@ module {
       func i {
         let subArray = k(array[i]);
         flatSize += subArray.size();
-        subArray;
-      },
+        subArray
+      }
     );
     // could replace with a call to flatten,
     // but it would require an extra pass (to compute `flatSize`)
@@ -540,11 +540,11 @@ module {
         inner += 1;
         if (inner == subArray.size()) {
           inner := 0;
-          outer += 1;
+          outer += 1
         };
-        element;
-      },
-    );
+        element
+      }
+    )
   };
 
   /// Collapses the elements in `array` into a single value by starting with `base`
@@ -572,10 +572,10 @@ module {
     var accumulation = base;
 
     for (element in array.vals()) {
-      accumulation := combine(accumulation, element);
+      accumulation := combine(accumulation, element)
     };
 
-    accumulation;
+    accumulation
   };
 
   // FIXME the type arguments are reverse order from Buffer
@@ -602,10 +602,10 @@ module {
     var i = size;
     while (i > 0) {
       i -= 1;
-      accumulation := combine(array[i], accumulation);
+      accumulation := combine(array[i], accumulation)
     };
 
-    accumulation;
+    accumulation
   };
 
   /// Flattens the array of arrays into a single array. Retains the original
@@ -623,7 +623,7 @@ module {
   public func flatten<X>(arrays : [[X]]) : [X] {
     var flatSize = 0;
     for (subArray in arrays.vals()) {
-      flatSize += subArray.size();
+      flatSize += subArray.size()
     };
 
     var outer = 0;
@@ -633,13 +633,13 @@ module {
       func _ {
         while (inner == arrays[outer].size()) {
           inner := 0;
-          outer += 1;
+          outer += 1
         };
         let element = arrays[outer][inner];
         inner += 1;
-        element;
-      },
-    );
+        element
+      }
+    )
   };
 
   /// Create an array containing a single value.
@@ -697,5 +697,5 @@ module {
   /// Runtime: O(1)
   ///
   /// Space: O(1)
-  public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys();
-};
+  public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys()
+}

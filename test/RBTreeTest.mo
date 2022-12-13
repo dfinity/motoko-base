@@ -13,7 +13,7 @@ let sorted = [
   (6, "loyalist"),
   (7, "enthusiast"),
   (8, "challenger"),
-  (9, "peacemaker"),
+  (9, "peacemaker")
 ];
 
 let unsort = [
@@ -25,7 +25,7 @@ let unsort = [
   (2, "helper"),
   (8, "challenger"),
   (5, "investigator"),
-  (7, "enthusiast"),
+  (7, "enthusiast")
 ];
 
 var t = RBT.RBTree<Nat, Text>(Nat.compare);
@@ -35,15 +35,15 @@ assert RBT.size(t.share()) == 0;
 for ((num, lab) in unsort.vals()) {
   Debug.print(Nat.toText num);
   Debug.print lab;
-  t.put(num, lab);
+  t.put(num, lab)
 };
 
 do {
   var i = 1;
   for ((num, lab) in t.entries()) {
     assert (num == i);
-    i += 1;
-  };
+    i += 1
+  }
 };
 
 assert RBT.size(t.share()) == 9;
@@ -52,12 +52,12 @@ do {
   var i = 9;
   for ((num, lab) in t.entriesRev()) {
     assert (num == i);
-    i -= 1;
-  };
+    i -= 1
+  }
 };
 
 assert RBT.size(t.share()) == 9;
 
 t.delete(5);
 
-assert RBT.size(t.share()) == 8;
+assert RBT.size(t.share()) == 8
