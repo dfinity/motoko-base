@@ -160,18 +160,28 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.copySign(1.5, 2.5); // returns 1.5
+  ///   let result = Float.copySign(1.2, -2.3); // returns -1.2
   ///   ```
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
 
   /// Returns the smaller value of `x` and `y`.
   /// 
   /// If `x` or `y` is `nan`, the result is also `nan`.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.min(1.2, -2.3); // returns -2.3
+  ///   ```
   public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
 
   /// Returns the larger value of `x` and `y`.
   /// 
   /// If `x` or `y` is `nan`, the result is also `nan`.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.max(1.2, -2.3); // returns 1.2
+  ///   ```
   public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
 
   /// Returns the sine of the radian angle `x`.
@@ -181,7 +191,12 @@ module {
   /// | ------------ | --------------- |
   /// | `+inf`       | `nan`           |
   /// | `-inf`       | `nan`           |
-  /// | `nan`        | `nan`           | 
+  /// | `nan`        | `nan`           |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.sin(pi / 2); // returns 1.0
+  ///   ```
   public let sin : (x : Float) -> Float = Prim.sin;
 
   /// Returns the cosine of the radian angle `x`.
@@ -191,7 +206,12 @@ module {
   /// | ------------ | --------------- |
   /// | `+inf`       | `nan`           |
   /// | `-inf`       | `nan`           |
-  /// | `nan`        | `nan`           | 
+  /// | `nan`        | `nan`           |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.sin(Float.pi / 2); // returns 0.0
+  ///   ```
   public let cos : (x : Float) -> Float = Prim.cos;
 
   /// Returns the tangent of the radian angle `x`.
@@ -201,7 +221,12 @@ module {
   /// | ------------ | --------------- |
   /// | `+inf`       | `nan`           |
   /// | `-inf`       | `nan`           |
-  /// | `nan`        | `nan`           | 
+  /// | `nan`        | `nan`           |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.tan(Float.pi / 4); // returns 1.0
+  ///   ``` 
   public let tan : (x : Float) -> Float = Prim.tan;
 
   /// Returns the arc sine of `x` in radians.
@@ -211,7 +236,12 @@ module {
   /// | ------------ | ------------------ |
   /// | `> 1.0`      | `nan`              |
   /// | `< -1.0`     | `nan`              |
-  /// | `nan`        | `nan`              | 
+  /// | `nan`        | `nan`              |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.arcsin(1.0); // returns Float.pi/2
+  ///   ```
   public let arcsin : (x : Float) -> Float = Prim.arcsin;
 
   /// Returns the arc cosine of `x` in radians.
@@ -221,7 +251,12 @@ module {
   /// | ------------ | ------------------ |
   /// | `> 1.0`      | `nan`              |
   /// | `< -1.0`     | `nan`              |
-  /// | `nan`        | `nan`              | 
+  /// | `nan`        | `nan`              |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.arccos(1.0); // returns 0.0
+  ///   ```
   public let arccos : (x : Float) -> Float = Prim.arccos;
 
   /// Returns the arc tangent of `x` in radians.
@@ -231,7 +266,12 @@ module {
   /// | ------------ | ------------------ |
   /// | `+inf`       | `pi / 2`           |
   /// | `-inf`       | `-pi / 2`          |
-  /// | `nan`        | `nan`              | 
+  /// | `nan`        | `nan`              |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.arctan(1.0); // returns Float.pi/4
+  ///   ```
   public let arctan : (x : Float) -> Float = Prim.arctan;
 
   /// Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
@@ -249,6 +289,12 @@ module {
   /// | `-inf`       | `-inf`       | `-3 * pi / 4`          |
   /// | `nan`        | (any)        | `nan`                  |
   /// | (any)        | `nan`        | `nan`                  |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let sqrt2over2 = Float.sqrt(2) / 2;
+  ///   let result = Float.arctan2(sqrt2over2, sqrt2over2); // returns Float.pi/4
+  ///   ```
   public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
 
   /// Returns the value of `e` raised to the `x`-th power.
@@ -258,7 +304,12 @@ module {
   /// | ------------ | --------------- |
   /// | `+inf`       | `+inf`          |
   /// | `-inf`       | `0.0`           |
-  /// | `nan`        | `nan`           | 
+  /// | `nan`        | `nan`           |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.exp(1.0); // returns Float.e
+  ///   ```
   public let exp : (x : Float) -> Float = Prim.exp;
 
   /// Returns the natural logarithm (base-`e`) of `x`.
@@ -270,7 +321,12 @@ module {
   /// | `-0.0`       | `-inf`          |
   /// | `< 0`        | `nan`           |
   /// | `+inf`       | `+inf`          |
-  /// | `nan`        | `nan`           | 
+  /// | `nan`        | `nan`           |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.log(Float.e); // returns 1.0
+  ///   ```
   public let log : (x : Float) -> Float = Prim.log;
 
   /// Formatting. `format(fmt, x)` formats `x` to `Text` according to the
@@ -285,8 +341,12 @@ module {
   /// `-0.0` is formatted with negative sign bit.
   /// Positive infinity is formatted as `inf`.
   /// Negative infinity is formatted as `-inf`.
-  /// Positive NaN is formatted as `nan`.
-  /// Negative NaN is formatted as `-nan`.
+  /// `nan` is formatted as `nan` or `-nan` depending on its sign bit.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.format(#exp 3, 123.0); // returns "1.230e+02"
+  ///   ```
   public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text = switch fmt {
     case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
     case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
@@ -296,24 +356,79 @@ module {
   };
 
   /// Conversion to Text. Use `format(fmt, x)` for more detailed control.
+  ///
+  /// `-0.0` is formatted with negative sign bit.
+  /// Positive infinity is formatted as `inf`.
+  /// Negative infinity is formatted as `-inf`.
+  /// `nan` is formatted as `nan` or `-nan` depending on its sign bit.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.toText(0.12); // returns "0.120000"
+  ///   ```
   public let toText : Float -> Text = Prim.floatToText;
 
   /// Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
+  ///
+  /// Traps if the floating point number is larger or smaller than the representable Int64.
+  /// Also traps for `inf`, `-inf`, and `nan`.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.toInt64(-12.3); // returns -12
+  ///   ```
   public let toInt64 : Float -> Int64 = Prim.floatToInt64;
 
   /// Conversion from Int64.
+  ///
+  /// Note: The floating point number may be imprecise for large or small Int64.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.fromInt64(-42); // returns -42.0
+  ///   ```
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
 
   /// Conversion to Int.
+  ///
+  /// Traps for `inf`, `-inf`, and `nan`.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.toInt(1.2e6); // returns 1200000
+  ///   ```
   public let toInt : Float -> Int = Prim.floatToInt;
 
   /// Conversion from Int. May result in `Inf`.
+  ///
+  /// Note: The floating point number may be imprecise for large or small Int values.
+  /// Returns `inf` if the integer is greater than the maximum floating point number.
+  /// Returns `-inf` if the integer is less than the minimum floating point number.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   let result = Float.fromInt(-123); // returns -123.0
+  ///   ```
   public let fromInt : Int -> Float = Prim.intToFloat;
 
   /// Returns `x == y`.
+  ///
+  /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
+  ///
+  /// Special case:
+  /// | Argument `x` | Argument `y` | Result `equal(x, y)` |
+  /// | ------------ | ------------ | -------------------- |
+  /// | `nan`        | `nan`        | `false`              |
   public func equal(x : Float, y : Float) : Bool { x == y };
 
   /// Returns `x != y`.
+  ///
+  /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
+  ///
+  /// Special case:
+  /// | Argument `x` | Argument `y` | Result `notEqual(x, y)` |
+  /// | ------------ | ------------ | ----------------------- |
+  /// | `nan`        | `nan`        | `true`                  |
   public func notEqual(x : Float, y : Float) : Bool { x != y };
 
   /// Returns `x < y`.
@@ -329,6 +444,8 @@ module {
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
+  ///
+  /// Note: This operation is discouraged as it does not consider numerical errors for equality, see comment above.
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };

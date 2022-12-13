@@ -21,6 +21,16 @@ class FloatTestable(number : Float, epsilon: Float) : T.TestableItem<Float> {
    };
 };
 
+class Int64Testable(number : Int64) : T.TestableItem<Int64> {
+  public let item = number;
+  public func display(number : Int64) : Text {
+    debug_show (number);
+  };
+  public let equals = func(x : Int64, y : Int64) : Bool { 
+    x == y
+  };
+};
+
 func isNaN(number: Float): Bool {
   number != number
 };
@@ -44,11 +54,6 @@ let noEpsilon = 0.0;
 let smallEpsilon = 1e-6;
 
 // Some tests are adopted from Motoko compiler test `float-ops.mo`.
-
-let ninetyDegrees = Float.pi / 2.0;
-let fortyFiveDegrees = Float.pi / 4.0;
-let arbitraryAngle = 0.123;
-let sqrt2over2 = Float.sqrt(2) / 2;
 
 /* --------------------------------------- */
 
@@ -627,6 +632,11 @@ run(
 
 
 /* --------------------------------------- */
+
+let ninetyDegrees = Float.pi / 2.0;
+let fortyFiveDegrees = Float.pi / 4.0;
+let arbitraryAngle = 0.123;
+let sqrt2over2 = Float.sqrt(2) / 2;
 
 run(
   suite(
@@ -1386,6 +1396,229 @@ run(
         "hex negative NaN",
         Float.format(#hex 10, negativeNaN),
         M.equals(T.text("-nan")),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "toText",
+    [
+      test(
+        "positive",
+        Float.toText(20.12345678901),
+        M.equals(T.text("20.123457")),
+      ),
+      test(
+        "negative",
+        Float.toText(-20.12345678901),
+        M.equals(T.text("-20.123457")),
+      ),
+      test(
+        "positive zero",
+        Float.toText(positiveZero),
+        M.equals(T.text("0.000000")),
+      ),
+      test(
+        "negative zero",
+        Float.toText(negativeZero),
+        M.equals(T.text("-0.000000")),
+      ),
+      test(
+        "positive infinity",
+        Float.toText(positiveInfinity),
+        M.equals(T.text("inf")),
+      ),
+      test(
+        "negative infinity",
+        Float.toText(negativeInfinity),
+        M.equals(T.text("-inf")),
+      ),
+      test(
+        "positive NaN",
+        Float.toText(positiveNaN),
+        M.equals(T.text("nan")),
+      ),
+      test(
+        "negative NaN",
+        Float.toText(negativeNaN),
+        M.equals(T.text("-nan")),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "toInt64",
+    [
+      test(
+        "positive",
+        Float.toInt64(20.987),
+        M.equals(Int64Testable(20)),
+      ),
+      test(
+        "negative",
+        Float.toInt64(-20.987),
+        M.equals(Int64Testable(-20)),
+      ),
+      test(
+        "nearly zero",
+        Float.toInt64(-1e-40),
+        M.equals(Int64Testable(0)),
+      ),
+      test(
+        "large integer",
+        Float.toInt64(9223372036854774784.0),
+        M.equals(Int64Testable(9223372036854774784)),
+      ),
+      test(
+        "small integer",
+        Float.toInt64(-9223372036854774784.0),
+        M.equals(Int64Testable(-9223372036854774784)),
+      ),
+      test(
+        "positive zero",
+        Float.toInt64(positiveZero),
+        M.equals(Int64Testable(0)),
+      ),
+      test(
+        "negative zero",
+        Float.toInt64(negativeZero),
+        M.equals(Int64Testable(0)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "fromInt64",
+    [
+      test(
+        "positive",
+        Float.fromInt64(20),
+        M.equals(FloatTestable(20.0, noEpsilon)),
+      ),
+      test(
+        "negative",
+        Float.fromInt64(-20),
+        M.equals(FloatTestable(-20.0, noEpsilon)),
+      ),
+      test(
+        "zero",
+        isPositiveZero(Float.fromInt64(0)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "max integer",
+        Float.fromInt64(9223372036854775807),
+        M.equals(FloatTestable(9223372036854775807.0, noEpsilon))
+      ),
+      test(
+        "min integer",
+        Float.fromInt64(-9223372036854775808),
+        M.equals(FloatTestable(-9223372036854775808.0, noEpsilon))
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+let arbitraryBigInt = 169_999_999_999_999_993_883_079_578_865_998_174_333_346_074_304_075_874_502_773_119_193_537_729_178_160_565_864_330_091_787_584_707_988_572_262_467_983_188_919_169_916_105_593_357_174_268_369_962_062_473_635_296_474_636_515_660_464_935_663_040_684_957_844_303_524_367_815_028_553_272_712_298_986_386_310_828_644_513_212_353_921_123_253_311_675_499_856_875_650_512_437_415_429_217_994_623_324_794_855_339_589_632;
+let arbitraryBigIntAsFloat = 1.7e308;
+
+run(
+  suite(
+    "toInt",
+    [
+      test(
+        "positive",
+        Float.toInt(20.987),
+        M.equals(T.int(20)),
+      ),
+      test(
+        "negative",
+        Float.toInt(-20.987),
+        M.equals(T.int(-20)),
+      ),
+      test(
+        "nearly zero",
+        Float.toInt(-1e-40),
+        M.equals(T.int(0)),
+      ),
+      test(
+        "positive big integer",
+        Float.toInt(arbitraryBigIntAsFloat),
+        M.equals(T.int(arbitraryBigInt)),
+      ),
+      test(
+        "negative big integer",
+        Float.toInt(-arbitraryBigIntAsFloat),
+        M.equals(T.int(-arbitraryBigInt)),
+      ),
+      test(
+        "positive zero",
+        Float.toInt(positiveZero),
+        M.equals(T.int(0)),
+      ),
+      test(
+        "negative zero",
+        Float.toInt(negativeZero),
+        M.equals(T.int(0)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "fromInt",
+    [
+      test(
+        "positive",
+        Float.fromInt(20),
+        M.equals(FloatTestable(20.0, noEpsilon)),
+      ),
+      test(
+        "negative",
+        Float.fromInt(-20),
+        M.equals(FloatTestable(-20.0, noEpsilon)),
+      ),
+      test(
+        "zero",
+        isPositiveZero(Float.fromInt(0)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive big integer",
+        Float.fromInt(arbitraryBigInt),
+        M.equals(FloatTestable(arbitraryBigIntAsFloat, noEpsilon)),
+      ),
+      test(
+        "negative big integer",
+        Float.fromInt(-arbitraryBigInt),
+        M.equals(FloatTestable(-arbitraryBigIntAsFloat, noEpsilon)),
+      ),
+      test(
+        "positive infinity",
+        Float.fromInt(3 ** 7777),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
+      ),
+      test(
+        "negative infinity",
+        Float.fromInt(-3 ** 7777),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
     ],
   ),
