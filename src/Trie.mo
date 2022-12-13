@@ -837,6 +837,26 @@ module {
   /// Returns an `Iter` over the key-value entries of the trie.
   ///
   /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// // create an Iterator over key-value pairs of trie
+  /// let iter = Trie.iter(trie); 
+  /// // add another key-value pair to trie.
+  /// // because we created our iterator before
+  /// // this update, it will not contain this new key-value pair
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
+  /// var sum : Nat = 0;
+  /// for ((k,v) in iter) {
+  ///   sum += v;
+  /// };
+  /// assert(sum == 74);
+  /// ```
   public func iter<K, V>(t : Trie<K, V>) : I.Iter<(K, V)> {
     object {
       var stack = ?(t, null) : List.List<Trie<K, V>>;
