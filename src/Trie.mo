@@ -468,6 +468,24 @@ module {
   /// note: the `disj` operation generalizes this `merge`
   /// operation in various ways, and does not (in general) lose
   /// information; this operation is a simpler, special case.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 42).0; 
+  /// // trie2 is a copy of trie
+  /// var trie2 = Trie.clone(trie); 
+  /// // trie2 has a different value for "hello"
+  /// trie2 := Trie.put(trie2, key "hello", Text.equal, 33).0; 
+  /// // mergedTrie has the value 42 for "hello", as the left Trie is preferred 
+  /// // in the case of a collision
+  /// var mergedTrie = Trie.merge(trie, trie2, Text.equal); 
+  /// var value = Trie.get(mergedTrie, key "hello", Text.equal);
+  /// assert(value == ?42);
+  /// ```
   public func merge<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
     let key_eq = equalKey(k_eq);
     func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, V>) : Trie<K, V> {
