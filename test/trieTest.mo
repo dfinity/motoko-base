@@ -167,11 +167,6 @@ let suite = Suite.suite(
       arrayTest([(0, 10), (2, 12), (4, 14), (1, 11), (3, 13)]),
     ),
     Suite.test(
-      "merge disjoint overlapping",
-      prettyArray(Trie.mergeDisjoint(trie1, trie3, Nat.equal)),
-      arrayTest([(0, 10), (2, 12), (4, 14), (1, 21), (2, 22)]),
-    ),
-    Suite.test(
       "merge disjoint one empty",
       prettyArray(Trie.mergeDisjoint(trie1, Trie.empty(), Nat.equal)),
       arrayTest([(0, 10), (2, 12), (4, 14)]),
