@@ -531,6 +531,22 @@ module {
   /// Merge tries like `merge`, except signals a
   /// dynamic error if there are collisions in common keys between the
   /// left and right inputs.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 42).0; 
+  /// // trie2 is a copy of trie
+  /// var trie2 = Trie.clone(trie); 
+  /// // trie2 has a different value for "hello"
+  /// trie2 := Trie.put(trie2, key "hello", Text.equal, 33).0; 
+  /// // mergeDisjoint signals a dynamic errror
+  /// // in the case of a collision
+  /// var mergedTrie = Trie.mergeDisjoint(trie, trie2, Text.equal); 
+  /// ```
   public func mergeDisjoint<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
     let key_eq = equalKey(k_eq);
 
