@@ -48,6 +48,7 @@ let smallEpsilon = 1e-6;
 let ninetyDegrees = Float.pi / 2.0;
 let fortyFiveDegrees = Float.pi / 4.0;
 let arbitraryAngle = 0.123;
+let sqrt2over2 = Float.sqrt(2) / 2;
 
 /* --------------------------------------- */
 
@@ -919,6 +920,267 @@ run(
     ],
   ),
 );
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "arctan",
+    [
+      test(
+        "zero",
+        Float.arctan(0.0),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "45 degrees",
+        Float.arctan(1.0),
+        M.equals(FloatTestable(fortyFiveDegrees, smallEpsilon)),
+      ),
+      test(
+        "-45 degrees",
+        Float.arctan(-1.0),
+        M.equals(FloatTestable(-fortyFiveDegrees, smallEpsilon)),
+      ),
+      test(
+        "arbitrary angle",
+        Float.arctan(Float.tan(arbitraryAngle)),
+        M.equals(FloatTestable(arbitraryAngle, smallEpsilon)),
+      ),
+      test(
+        "positive infinity",
+        Float.arctan(positiveInfinity),
+        M.equals(FloatTestable(ninetyDegrees, smallEpsilon)),
+      ),
+      test(
+        "negative infinity",
+        Float.arctan(negativeInfinity),
+        M.equals(FloatTestable(-ninetyDegrees, smallEpsilon)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.arctan(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.arctan(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "arctan2",
+    [
+      test(
+        "zero",
+        Float.arctan2(0.0, 0.0),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "left negative zero",
+        isNegativeZero(Float.arctan2(negativeZero, 0.0)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "right negative zero",
+        Float.arctan2(0.0, negativeZero),
+        M.equals(FloatTestable(2 * ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "two negative zero",
+        Float.arctan2(negativeZero, negativeZero),
+        M.equals(FloatTestable(-2 * ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "90 degrees",
+        Float.arctan2(1.0, 0.0),
+        M.equals(FloatTestable(ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "-90 degrees",
+        Float.arctan2(-1.0, 0.0),
+        M.equals(FloatTestable(-ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "45 degrees",
+        Float.arctan2(sqrt2over2, sqrt2over2),
+        M.equals(FloatTestable(fortyFiveDegrees, noEpsilon)),
+      ),
+      test(
+        "-45 degrees",
+        Float.arctan2(-sqrt2over2, sqrt2over2),
+        M.equals(FloatTestable(-fortyFiveDegrees, noEpsilon)),
+      ),
+      test(
+        "left positive infinity",
+        Float.arctan2(positiveInfinity, 0.0),
+        M.equals(FloatTestable(ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "left negative infinity",
+        Float.arctan2(negativeInfinity, 0.0),
+        M.equals(FloatTestable(-ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "right positive infinity",
+        Float.arctan2(0.0, positiveInfinity),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "right negative infinity",
+        Float.arctan2(0.0, negativeInfinity),
+        M.equals(FloatTestable(2 * ninetyDegrees, noEpsilon)),
+      ),
+      test(
+        "both positive infinity",
+        Float.arctan2(positiveInfinity, positiveInfinity),
+        M.equals(FloatTestable(fortyFiveDegrees, noEpsilon)),
+      ),
+      test(
+        "both negative infinity",
+        Float.arctan2(negativeInfinity, negativeInfinity),
+        M.equals(FloatTestable(-3 * fortyFiveDegrees, noEpsilon)),
+      ),
+      test(
+        "positive and negative infinity",
+        Float.arctan2(positiveInfinity, negativeInfinity),
+        M.equals(FloatTestable(3 * fortyFiveDegrees, noEpsilon)),
+      ),
+      test(
+        "negative and positive infinity",
+        Float.arctan2(negativeInfinity, positiveInfinity),
+        M.equals(FloatTestable(-fortyFiveDegrees, noEpsilon)),
+      ),
+      test(
+        "left positive NaN",
+        isNaN(Float.arctan2(positiveNaN, 0.0)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "left negative NaN",
+        isNaN(Float.arctan2(negativeNaN, 0.0)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "right positive NaN",
+        isNaN(Float.arctan2(0.0, positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "left negative NaN",
+        isNaN(Float.arctan2(0.0, negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "two NaNs",
+        isNaN(Float.arctan2(positiveNaN, negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "exp",
+    [
+      test(
+        "zero",
+        Float.exp(0.0),
+        M.equals(FloatTestable(1.0, noEpsilon)),
+      ),
+      test(
+        "one",
+        Float.exp(1.0),
+        M.equals(FloatTestable(Float.e, noEpsilon)),
+      ),
+      test(
+        "positive infinity",
+        Float.exp(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
+      ),
+      test(
+        "negative infinity",
+        Float.exp(negativeInfinity),
+        M.equals(FloatTestable(0.0, smallEpsilon)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.exp(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.exp(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "log",
+    [
+      test(
+        "one",
+        Float.log(1.0),
+        M.equals(FloatTestable(0.0, noEpsilon)),
+      ),
+      test(
+        "e",
+        Float.log(Float.e),
+        M.equals(FloatTestable(1.0, noEpsilon)),
+      ),
+      test(
+        "arbitrary number",
+        Float.log(Float.exp(1.23)),
+        M.equals(FloatTestable(1.23, smallEpsilon)),
+      ),
+      test(
+        "zero",
+        Float.log(0.0),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
+      ),
+      test(
+        "negative zero",
+        Float.log(negativeZero),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
+      ),
+      test(
+        "negative",
+        isNaN(Float.log(-0.01)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive infinity",
+        Float.log(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
+      ),
+      test(
+        "positive NaN",
+        isNaN(Float.log(positiveNaN)),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        isNaN(Float.log(negativeNaN)),
+        M.equals(T.bool(true)),
+      ),
+    ],
+  ),
+);
+
 
 do {
   Debug.print("  toFloat64");

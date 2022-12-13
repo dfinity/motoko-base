@@ -225,15 +225,52 @@ module {
   public let arccos : (x : Float) -> Float = Prim.arccos;
 
   /// Returns the arc tangent of `x` in radians.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `arctan(x)` |
+  /// | ------------ | ------------------ |
+  /// | `+inf`       | `pi / 2`           |
+  /// | `-inf`       | `-pi / 2`          |
+  /// | `nan`        | `nan`              | 
   public let arctan : (x : Float) -> Float = Prim.arctan;
 
   /// Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
+  ///
+  /// Special cases:
+  /// | Argument `y` | Argument `x` | Result `arctan2(y, x)` |
+  /// | ------------ | ------------ | ---------------------- |
+  /// | `0.0`        | `0.0`        | `0.0`                  |
+  /// | `-0.0`        | `0.0`       | `-0.0`                 |
+  /// | `0.0`        | `-0.0`       | `pi`                   |
+  /// | `-0.0`       | `-0.0`       | `-pi`                  |
+  /// | `+inf`       | `+inf`       | `pi / 4`               |
+  /// | `+inf`       | `-inf`       | `3 * pi / 4`           |
+  /// | `-inf`       | `+inf`       | `-pi / 4`              |
+  /// | `-inf`       | `-inf`       | `-3 * pi / 4`          |
+  /// | `nan`        | (any)        | `nan`                  |
+  /// | (any)        | `nan`        | `nan`                  |
   public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
 
   /// Returns the value of `e` raised to the `x`-th power.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `exp(x)` |
+  /// | ------------ | --------------- |
+  /// | `+inf`       | `+inf`          |
+  /// | `-inf`       | `0.0`           |
+  /// | `nan`        | `nan`           | 
   public let exp : (x : Float) -> Float = Prim.exp;
 
   /// Returns the natural logarithm (base-`e`) of `x`.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Result `log(x)` |
+  /// | ------------ | --------------- |
+  /// | `0.0`        | `-inf`          |
+  /// | `-0.0`       | `-inf`          |
+  /// | `< 0`        | `nan`           |
+  /// | `+inf`       | `+inf`          |
+  /// | `nan`        | `nan`           | 
   public let log : (x : Float) -> Float = Prim.log;
 
   /// Formatting. `format(fmt, x)` formats `x` to `Text` according to the
