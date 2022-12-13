@@ -26,22 +26,22 @@ module {
 
   /// Returns the Text representation of `x`.
   public func toText(x : Int16) : Text {
-    Int.toText(toInt(x));
+    Int.toText(toInt(x))
   };
 
   /// Returns the absolute value of `x`. Traps when `x = -2^15`.
   public func abs(x : Int16) : Int16 {
-    fromInt(Int.abs(toInt(x)));
+    fromInt(Int.abs(toInt(x)))
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Int16, y : Int16) : Int16 {
-    if (x < y) { x } else { y };
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max(x : Int16, y : Int16) : Int16 {
-    if (x < y) { y } else { x };
+    if (x < y) { y } else { x }
   };
 
   /// Returns `x == y`.
@@ -64,7 +64,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Int16, y : Int16) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the negation of `x`, `-x`. Traps on overflow.
@@ -116,22 +116,22 @@ module {
 
   /// Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
   public func bittest(x : Int16, p : Nat) : Bool {
-    Prim.btstInt16(x, Prim.intToInt16(p));
+    Prim.btstInt16(x, Prim.intToInt16(p))
   };
 
   /// Returns the value of setting bit `p mod 16` in `x` to `1`.
   public func bitset(x : Int16, p : Nat) : Int16 {
-    x | (1 << Prim.intToInt16(p));
+    x | (1 << Prim.intToInt16(p))
   };
 
   /// Returns the value of clearing bit `p mod 16` in `x` to `0`.
   public func bitclear(x : Int16, p : Nat) : Int16 {
-    x & ^(1 << Prim.intToInt16(p));
+    x & ^(1 << Prim.intToInt16(p))
   };
 
   /// Returns the value of flipping bit `p mod 16` in `x`.
   public func bitflip(x : Int16, p : Nat) : Int16 {
-    x ^ (1 << Prim.intToInt16(p));
+    x ^ (1 << Prim.intToInt16(p))
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -153,5 +153,5 @@ module {
   public func mulWrap(x : Int16, y : Int16) : Int16 { x *% y };
 
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
-  public func powWrap(x : Int16, y : Int16) : Int16 { x **% y };
-};
+  public func powWrap(x : Int16, y : Int16) : Int16 { x **% y }
+}

@@ -61,4 +61,4 @@ assert (not Char.isUppercase('x'));
 
 assert (Char.isAlphabetic('a'));
 assert (Char.isAlphabetic('京'));
-assert (not Char.isAlphabetic('㋡'));
+assert (not Char.isAlphabetic('㋡'))
