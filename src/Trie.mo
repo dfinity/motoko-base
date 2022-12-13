@@ -543,7 +543,7 @@ module {
   /// var trie2 = Trie.clone(trie); 
   /// // trie2 has a different value for "hello"
   /// trie2 := Trie.put(trie2, key "hello", Text.equal, 33).0; 
-  /// // mergeDisjoint signals a dynamic errror
+  /// // `mergeDisjoint` signals a dynamic errror
   /// // in the case of a collision
   /// var mergedTrie = Trie.mergeDisjoint(trie, trie2, Text.equal); 
   /// ```
@@ -589,9 +589,26 @@ module {
     rec(0, tl, tr);
   };
 
-  /// Difference of tries. The output consists are pairs of
+  /// Difference of tries. The output consists of pairs of
   /// the left trie whose keys are not present in the right trie; the
   /// values of the right trie are irrelevant.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 42).0; 
+  /// // trie2 is a copy of trie
+  /// var trie2 = Trie.clone(trie); 
+  /// // trie2 now has an additional key 
+  /// trie2 := Trie.put(trie2, key "ciao", Text.equal, 33).0; 
+  /// // `diff` returns a trie with the key "ciao",
+  /// // as this key is not present in trie
+  /// // (note that we pass trie2 as the left trie)
+  /// Trie.diff(trie2, trie, Text.equal); 
+  /// ```
   public func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool) : Trie<K, V> {
     let key_eq = equalKey(k_eq);
 
