@@ -24,12 +24,12 @@ module {
   /// ```
   public type AssocList<K, V> = List.List<(K, V)>;
 
-  /// Find the first value associated with key `key`, or null if no such key exists.
+  /// Find the value associated with key `key`, or null if no such key exists.
   /// Compares keys using the provided function `equal`.
   ///
   /// Example:
   /// ```motoko include=import,initialize
-  /// // Create map = [(0, 10), (1, 11)]
+  /// // Create map = [(0, 10), (1, 11), (2, 12)]
   /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
   /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
   /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
@@ -67,8 +67,8 @@ module {
   };
 
   /// Maps `key` to `value` in `map`, and overwrites the old entry if the key
-  /// was already present. Returns the old value if it existed, and null
-  /// otherwise. Compares keys using the provided function `equal`.
+  /// was already present. Returns the old value if it existed and null otherwise,
+  /// as well as the new map. Compares keys using the provided function `equal`.
   ///
   /// Example:
   /// ```motoko include=import,initialize
@@ -76,6 +76,8 @@ module {
   /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
   /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
   /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
+  /// // Override second entry
+  /// map := AssocList.replace(map, 1, Nat.equal, ?21).0;
   ///
   /// List.toArray(map)
   /// ```
@@ -210,7 +212,7 @@ module {
   ///           v2 // keep values from map2 as Text
   ///         };
   ///         case _ {
-  ///           trap "This case will never happen in mapAppend"
+  ///           trap "These cases will never happen in mapAppend"
   ///         }
   ///       }
   ///     }
@@ -278,7 +280,7 @@ module {
   ///
   /// List.toArray(newMap)
   /// ```
-  /// Runtime: O(FIXME)
+  /// Runtime: O(size1 * size2)
   ///
   /// Space: O(1)
   ///
