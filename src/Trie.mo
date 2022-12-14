@@ -1495,6 +1495,18 @@ module {
   };
 
   /// Remove the given key's value in the trie; return the new trie
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// // remove the value associated with "hello"
+  /// trie := Trie.remove(trie, key "hello", Text.equal).0;
+  /// assert (Trie.get(trie, key "hello", Text.equal) == null);
+  /// ```
   public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V) {
     replace(t, k, k_eq, null);
   };
