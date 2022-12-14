@@ -1050,7 +1050,7 @@ module {
   /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
   /// // create an accumulator, in our case the sum of all values
   /// func calculateSum(k : Text, v : Nat, acc : Nat) : Nat = acc + v;
-  /// // fold over the trie using the accumulator
+  /// // fold over the trie using the accumulator.
   /// // note that 0 is the initial value of the accumulator
   /// let sum = Trie.fold(trie, calculateSum, 0);
   /// assert(sum == 77);
@@ -1082,11 +1082,17 @@ module {
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
   /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
-  /// // `some` takes a function that returns a boolean if
+  /// // `some` takes a function that returns a boolean indicating whether
   /// // the key-value pair is present or not
-  /// var isPresent = Trie.some(trie, func(k: Text, v: Nat) : Bool = k == "bye" and v == 32);
+  /// var isPresent = Trie.some(
+  ///   trie,
+  ///   func(k : Text, v : Nat) : Bool = k == "bye" and v == 32,
+  /// );
   /// assert(isPresent == true);
-  /// isPresent := Trie.some(trie, func(k: Text, v: Nat) : Bool = k == "hello" and v == 32);
+  /// isPresent := Trie.some(
+  ///   trie,
+  ///   func(k : Text, v : Nat) : Bool = k == "hello" and v == 32,
+  /// );
   /// assert(isPresent == false);
   /// ```
   public func some<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Bool {
