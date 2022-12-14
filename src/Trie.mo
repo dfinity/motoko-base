@@ -65,6 +65,17 @@
 /// );
 /// assert (n == ?42);
 ///
+/// // `get` requires 3 arguments:
+/// // - the trie we want to get the value from
+/// // - the key of the value we want to get (note that we use the `key` function defined above)
+/// // - a function that checks for equality of keys
+/// //
+/// // if the given key is nonexistent in the Trie, `get` returns `null`.
+/// var value = Trie.get(t3, key "hello", Text.equal); // Returns ?42
+/// assert(value == ?0);
+/// value := Trie.get(t3, key "universe", Text.equal); // Returns null
+/// assert(value == null);
+///
 /// // `remove` requires 3 arguments:
 /// // - the trie we want to remove the value from
 /// // - the key of the value we want to remove (note that we use the `key` function defined above)
