@@ -8,6 +8,6 @@ do {
   Debug.print("  impossible");
 
   func showNone(x : None) : Text {
-    None.impossible<Text>(x);
-  };
-};
+    None.impossible<Text>(x)
+  }
+}

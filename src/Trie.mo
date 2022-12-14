@@ -94,13 +94,13 @@ module {
   public type Trie<K, V> = {
     #empty;
     #leaf : Leaf<K, V>;
-    #branch : Branch<K, V>;
+    #branch : Branch<K, V>
   };
 
   /// Leaf nodes of trie consist of key-value pairs as a list.
   public type Leaf<K, V> = {
     size : Nat;
-    keyvals : AssocList<Key<K>, V>;
+    keyvals : AssocList<Key<K>, V>
   };
 
   /// Branch nodes of the trie discriminate on a bit position of the keys' hashes.
@@ -109,7 +109,7 @@ module {
   public type Branch<K, V> = {
     size : Nat;
     left : Trie<K, V>;
-    right : Trie<K, V>;
+    right : Trie<K, V>
   };
 
   public type AssocList<K, V> = AssocList.AssocList<K, V>;
@@ -119,7 +119,7 @@ module {
     /// `hash` permits fast inequality checks, and permits collisions
     hash : Hash.Hash;
     /// `key` permits precise equality checks, but only used after equal hashes.
-    key : K;
+    key : K
   };
 
   type List<T> = List.List<T>;
@@ -127,8 +127,8 @@ module {
   /// Equality function for two `Key<K>`s, in terms of equality of `K`'s.
   public func equalKey<K>(keq : (K, K) -> Bool) : ((Key<K>, Key<K>) -> Bool) {
     func(key1 : Key<K>, key2 : Key<K>) : Bool {
-      Hash.equal(key1.hash, key2.hash) and keq(key1.key, key2.key);
-    };
+      Hash.equal(key1.hash, key2.hash) and keq(key1.key, key2.key)
+    }
   };
 
   /// @deprecated `isValid` is an internal predicate and will be removed in future.
@@ -136,28 +136,28 @@ module {
     func rec(t : Trie<K, V>, bitpos : ?Hash.Hash, bits : Hash.Hash, mask : Hash.Hash) : Bool {
       switch t {
         case (#empty) {
-          true;
+          true
         };
         case (#leaf(l)) {
           let len = List.size(l.keyvals);
           len <= MAX_LEAF_SIZE and len == l.size and List.all(
             l.keyvals,
-            func((k : Key<K>, v : V)) : Bool { ((k.hash & mask) == bits) },
-          );
+            func((k : Key<K>, v : V)) : Bool { ((k.hash & mask) == bits) }
+          )
         };
         case (#branch(b)) {
           let bitpos1 = switch bitpos {
             case null { Prim.natToNat32(0) };
-            case (?bp) { Prim.natToNat32(Prim.nat32ToNat(bp) + 1) };
+            case (?bp) { Prim.natToNat32(Prim.nat32ToNat(bp) + 1) }
           };
           let mask1 = mask | (Prim.natToNat32(1) << bitpos1);
           let bits1 = bits | (Prim.natToNat32(1) << bitpos1);
           let sum = size(b.left) + size(b.right);
-          (b.size == sum) and rec(b.left, ?bitpos1, bits, mask1) and rec(b.right, ?bitpos1, bits1, mask1);
-        };
-      };
+          (b.size == sum) and rec(b.left, ?bitpos1, bits, mask1) and rec(b.right, ?bitpos1, bits1, mask1)
+        }
+      }
     };
-    rec(t, null, 0, 0);
+    rec(t, null, 0, 0)
   };
 
   /// A 2D trie maps dimension-1 keys to another
@@ -178,8 +178,8 @@ module {
     switch t {
       case (#empty) { 0 };
       case (#leaf(l)) { l.size };
-      case (#branch(b)) { b.size };
-    };
+      case (#branch(b)) { b.size }
+    }
   };
 
   /// Construct a branch node, computing the size stored there.
@@ -188,8 +188,8 @@ module {
     #branch {
       size = sum;
       left = l;
-      right = r;
-    };
+      right = r
+    }
   };
 
   /// Construct a leaf node, computing the size stored there.
@@ -198,7 +198,7 @@ module {
   /// by constructing branches as necessary; to do so, it also needs the bitpos
   /// of the leaf.
   public func leaf<K, V>(kvs : AssocList<Key<K>, V>, bitpos : Nat) : Trie<K, V> {
-    fromList(null, kvs, bitpos);
+    fromList(null, kvs, bitpos)
   };
 
   module ListUtil {
@@ -211,12 +211,12 @@ module {
         switch l {
           case null { ?i };
           case (?(_, t)) {
-            if (i >= max) { null } else { rec(t, max, i + 1) };
-          };
-        };
+            if (i >= max) { null } else { rec(t, max, i + 1) }
+          }
+        }
       };
-      rec(l, max, 0);
-    };
+      rec(l, max, 0)
+    }
   };
 
   /// Transform a list into a trie, splitting input list into small (leaf) lists, if necessary.
@@ -227,33 +227,33 @@ module {
           switch (ListUtil.lenClamp(kvs, MAX_LEAF_SIZE)) {
             case null {} /* fall through to branch case. */;
             case (?len) {
-              return #leaf({ size = len; keyvals = kvs });
-            };
-          };
+              return #leaf({ size = len; keyvals = kvs })
+            }
+          }
         };
         case (?c) {
           if (c == 0) {
-            return #empty;
+            return #empty
           } else if (c <= MAX_LEAF_SIZE) {
-            return #leaf({ size = c; keyvals = kvs });
+            return #leaf({ size = c; keyvals = kvs })
           } else {
 
             //fall through to branch case
-          };
-        };
+          }
+        }
       };
       let (ls, l, rs, r) = splitList(kvs, bitpos);
       if (ls == 0 and rs == 0) {
-        #empty;
+        #empty
       } else if (rs == 0 and ls <= MAX_LEAF_SIZE) {
-        #leaf({ size = ls; keyvals = l });
+        #leaf({ size = ls; keyvals = l })
       } else if (ls == 0 and rs <= MAX_LEAF_SIZE) {
-        #leaf({ size = rs; keyvals = r });
+        #leaf({ size = rs; keyvals = r })
       } else {
-        branch(rec(?ls, l, bitpos + 1), rec(?rs, r, bitpos + 1));
-      };
+        branch(rec(?ls, l, bitpos + 1), rec(?rs, r, bitpos + 1))
+      }
     };
-    rec(kvc, kvs, bitpos);
+    rec(kvc, kvs, bitpos)
   };
 
   /// Clone the trie efficiently, via sharing.
@@ -269,33 +269,33 @@ module {
       switch t {
         case (#empty) {
           let (kvs, _) = AssocList.replace(null, k, key_eq, v);
-          (leaf(kvs, bitpos), null);
+          (leaf(kvs, bitpos), null)
         };
         case (#branch(b)) {
           let bit = Hash.bit(k.hash, bitpos);
           // rebuild either the left or right path with the (k, v) pair
           if (not bit) {
             let (l, v_) = rec(b.left, bitpos + 1);
-            (branch(l, b.right), v_);
+            (branch(l, b.right), v_)
           } else {
             let (r, v_) = rec(b.right, bitpos + 1);
-            (branch(b.left, r), v_);
-          };
+            (branch(b.left, r), v_)
+          }
         };
         case (#leaf(l)) {
           let (kvs2, old_val) = AssocList.replace(l.keyvals, k, key_eq, v);
-          (leaf(kvs2, bitpos), old_val);
-        };
-      };
+          (leaf(kvs2, bitpos), old_val)
+        }
+      }
     };
     let (to, vo) = rec(t, 0);
     //assert(isValid<K, V>(to, false));
-    (to, vo);
+    (to, vo)
   };
 
   /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any
   public func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie<K, V>, ?V) {
-    replace(t, k, k_eq, ?v);
+    replace(t, k, k_eq, ?v)
   };
 
   /// Get the value of the given key in the trie, or return null if nonexistent
@@ -308,28 +308,28 @@ module {
       switch t {
         case (#empty) { null };
         case (#leaf(l)) {
-          AssocList.find(l.keyvals, k, key_eq);
+          AssocList.find(l.keyvals, k, key_eq)
         };
         case (#branch(b)) {
           let bit = Hash.bit(k.hash, bitpos);
           if (not bit) {
-            rec(b.left, bitpos + 1);
+            rec(b.left, bitpos + 1)
           } else {
-            rec(b.right, bitpos + 1);
-          };
-        };
-      };
+            rec(b.right, bitpos + 1)
+          }
+        }
+      }
     };
-    rec(t, 0);
+    rec(t, 0)
   };
 
   func splitAssocList<K, V>(al : AssocList<Key<K>, V>, bitpos : Nat) : (AssocList<Key<K>, V>, AssocList<Key<K>, V>) {
     List.partition(
       al,
       func((k : Key<K>, v : V)) : Bool {
-        not Hash.bit(k.hash, bitpos);
-      },
-    );
+        not Hash.bit(k.hash, bitpos)
+      }
+    )
   };
 
   func splitList<K, V>(l : AssocList<Key<K>, V>, bitpos : Nat) : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>) {
@@ -339,12 +339,12 @@ module {
         case (?((k, v), t)) {
           let (cl, l, cr, r) = rec(t);
           if (not Hash.bit(k.hash, bitpos)) { (cl + 1, ?((k, v), l), cr, r) } else {
-            (cl, l, cr + 1, ?((k, v), r));
-          };
-        };
-      };
+            (cl, l, cr + 1, ?((k, v), r))
+          }
+        }
+      }
     };
-    rec(l);
+    rec(l)
   };
 
   /// Merge tries, preferring the left trie where there are collisions
@@ -369,30 +369,30 @@ module {
                 switch (x, y) {
                   case (null, null) { P.unreachable() };
                   case (null, ?v) { v };
-                  case (?v, _) { v };
-                };
-              },
+                  case (?v, _) { v }
+                }
+              }
             ),
-            bitpos,
-          );
+            bitpos
+          )
         };
         case (#leaf(l), _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr);
+          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
         case (_, #leaf(l)) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)));
+          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
         case (#branch(b1), #branch(b2)) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
-            rec(bitpos + 1, b1.right, b2.right),
-          );
-        };
-      };
+            rec(bitpos + 1, b1.right, b2.right)
+          )
+        }
+      }
     };
-    rec(0, tl, tr);
+    rec(0, tl, tr)
   };
 
   /// Merge tries like `merge`, except signals a
@@ -414,30 +414,30 @@ module {
                 switch (x, y) {
                   case (null, ?v) { v };
                   case (?v, null) { v };
-                  case (_, _) { P.unreachable() };
-                };
-              },
+                  case (_, _) { P.unreachable() }
+                }
+              }
             ),
-            bitpos,
-          );
+            bitpos
+          )
         };
         case (#leaf(l), _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr);
+          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
         case (_, #leaf(l)) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)));
+          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
         case (#branch(b1), #branch(b2)) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
-            rec(bitpos + 1, b1.right, b2.right),
-          );
-        };
-      };
+            rec(bitpos + 1, b1.right, b2.right)
+          )
+        }
+      }
     };
-    rec(0, tl, tr);
+    rec(0, tl, tr)
   };
 
   /// Difference of tries. The output consists are pairs of
@@ -455,28 +455,28 @@ module {
             AssocList.diff(
               l1.keyvals,
               l2.keyvals,
-              key_eq,
+              key_eq
             ),
-            bitpos,
-          );
+            bitpos
+          )
         };
         case (#leaf(l), _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr);
+          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
         case (_, #leaf(l)) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)));
+          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
         case (#branch(b1), #branch(b2)) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
-            rec(bitpos + 1, b1.right, b2.right),
-          );
-        };
-      };
+            rec(bitpos + 1, b1.right, b2.right)
+          )
+        }
+      }
     };
-    rec(0, tl, tr);
+    rec(0, tl, tr)
   };
 
   /// Map disjunction.
@@ -497,7 +497,7 @@ module {
     tl : Trie<K, V>,
     tr : Trie<K, W>,
     k_eq : (K, K) -> Bool,
-    vbin : (?V, ?W) -> X,
+    vbin : (?V, ?W) -> X
   ) : Trie<K, X> {
     let key_eq = equalKey(k_eq);
 
@@ -506,15 +506,15 @@ module {
       switch t {
         case (#empty) { #empty };
         case (#leaf(l)) {
-          leaf(AssocList.disj(l.keyvals, null, key_eq, vbin), bitpos);
+          leaf(AssocList.disj(l.keyvals, null, key_eq, vbin), bitpos)
         };
         case (#branch(b)) {
           branch(
             recL(b.left, bitpos + 1),
-            recL(b.right, bitpos + 1),
-          );
-        };
-      };
+            recL(b.right, bitpos + 1)
+          )
+        }
+      }
     };
 
     /* empty left case; build from right only: */
@@ -522,15 +522,15 @@ module {
       switch t {
         case (#empty) { #empty };
         case (#leaf(l)) {
-          leaf(AssocList.disj(null, l.keyvals, key_eq, vbin), bitpos);
+          leaf(AssocList.disj(null, l.keyvals, key_eq, vbin), bitpos)
         };
         case (#branch(b)) {
           branch(
             recR(b.left, bitpos + 1),
-            recR(b.right, bitpos + 1),
-          );
-        };
-      };
+            recR(b.right, bitpos + 1)
+          )
+        }
+      }
     };
 
     /* main recursion */
@@ -540,26 +540,26 @@ module {
         case (#empty, _) { recR(tr, bitpos) };
         case (_, #empty) { recL(tl, bitpos) };
         case (#leaf(l1), #leaf(l2)) {
-          leaf(AssocList.disj(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos);
+          leaf(AssocList.disj(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
         };
         case (#leaf(l), _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr);
+          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
         case (_, #leaf(l)) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)));
+          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
         case (#branch(b1), #branch(b2)) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
-            rec(bitpos + 1, b1.right, b2.right),
-          );
-        };
-      };
+            rec(bitpos + 1, b1.right, b2.right)
+          )
+        }
+      }
     };
 
-    rec(0, tl, tr);
+    rec(0, tl, tr)
   };
 
   /// Map join.
@@ -574,7 +574,7 @@ module {
     tl : Trie<K, V>,
     tr : Trie<K, W>,
     k_eq : (K, K) -> Bool,
-    vbin : (V, W) -> X,
+    vbin : (V, W) -> X
   ) : Trie<K, X> {
     let key_eq = equalKey(k_eq);
 
@@ -583,26 +583,26 @@ module {
         case (#empty, _) { #empty };
         case (_, #empty) { #empty };
         case (#leaf(l1), #leaf(l2)) {
-          leaf(AssocList.join(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos);
+          leaf(AssocList.join(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
         };
         case (#leaf(l), _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr);
+          rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
         case (_, #leaf(l)) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
-          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)));
+          rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
         case (#branch(b1), #branch(b2)) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
-            rec(bitpos + 1, b1.right, b2.right),
-          );
-        };
-      };
+            rec(bitpos + 1, b1.right, b2.right)
+          )
+        }
+      }
     };
 
-    rec(0, tl, tr);
+    rec(0, tl, tr)
   };
 
   /// This operation gives a recursor for the internal structure of
@@ -617,13 +617,13 @@ module {
           AssocList.fold(
             l.keyvals,
             empty,
-            func(k : Key<K>, v : V, x : X) : X { bin(leaf(k.key, v), x) },
-          );
+            func(k : Key<K>, v : V, x : X) : X { bin(leaf(k.key, v), x) }
+          )
         };
-        case (#branch(b)) { bin(rec(b.left), rec(b.right)) };
-      };
+        case (#branch(b)) { bin(rec(b.left), rec(b.right)) }
+      }
     };
-    rec(t);
+    rec(t)
   };
 
   /// Map product.
@@ -641,7 +641,7 @@ module {
     tl : Trie<K1, V1>,
     tr : Trie<K2, V2>,
     op : (K1, V1, K2, V2) -> ?(Key<K3>, V3),
-    k3_eq : (K3, K3) -> Bool,
+    k3_eq : (K3, K3) -> Bool
   ) : Trie<K3, V3> {
 
     /*- binary case: merge disjoint results: */
@@ -658,14 +658,14 @@ module {
           func(k2 : K2, v2 : V2) : Trie<K3, V3> {
             switch (op(k1, v1, k2, v2)) {
               case null { #empty };
-              case (?(k3, v3)) { (put(#empty, k3, k3_eq, v3)).0 };
-            };
+              case (?(k3, v3)) { (put(#empty, k3, k3_eq, v3)).0 }
+            }
           },
-          #empty,
-        );
+          #empty
+        )
       },
-      #empty,
-    );
+      #empty
+    )
   };
 
   /// Returns an `Iter` over the key-value entries of the trie.
@@ -681,25 +681,25 @@ module {
             switch trie {
               case (#empty) {
                 stack := stack2;
-                next();
+                next()
               };
               case (#leaf({ keyvals = null })) {
                 stack := stack2;
-                next();
+                next()
               };
               case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
                 stack := ?(#leaf({ size = c -1; keyvals = kvs }), stack2);
-                ?(k.key, v);
+                ?(k.key, v)
               };
               case (#branch(br)) {
                 stack := ?(br.left, ?(br.right, stack2));
-                next();
-              };
-            };
-          };
-        };
-      };
-    };
+                next()
+              }
+            }
+          }
+        }
+      }
+    }
   };
 
   /// Represent the construction of tries as data.
@@ -727,8 +727,8 @@ module {
       #seq : {
         size : Nat;
         left : Build<K, V>;
-        right : Build<K, V>;
-      };
+        right : Build<K, V>
+      }
     };
 
     /// Size of the build, measured in `#put` operations
@@ -736,14 +736,14 @@ module {
       switch tb {
         case (#skip) { 0 };
         case (#put(_, _, _)) { 1 };
-        case (#seq(seq)) { seq.size };
-      };
+        case (#seq(seq)) { seq.size }
+      }
     };
 
     /// Build sequence of two sub-builds
     public func seq<K, V>(l : Build<K, V>, r : Build<K, V>) : Build<K, V> {
       let sum = size(l) + size(r);
-      #seq({ size = sum; left = l; right = r });
+      #seq({ size = sum; left = l; right = r })
     };
 
     /// Like [`prod`](#prod), except do not actually do the put calls, just
@@ -753,15 +753,15 @@ module {
       tl : Trie<K1, V1>,
       tr : Trie<K2, V2>,
       op : (K1, V1, K2, V2) -> ?(K3, V3),
-      k3_eq : (K3, K3) -> Bool,
+      k3_eq : (K3, K3) -> Bool
     ) : Build<K3, V3> {
 
       func outer_bin(a : Build<K3, V3>, b : Build<K3, V3>) : Build<K3, V3> {
-        seq(a, b);
+        seq(a, b)
       };
 
       func inner_bin(a : Build<K3, V3>, b : Build<K3, V3>) : Build<K3, V3> {
-        seq(a, b);
+        seq(a, b)
       };
 
       /// double-nested folds
@@ -775,14 +775,14 @@ module {
             func(k2 : K2, v2 : V2) : Build<K3, V3> {
               switch (op(k1, v1, k2, v2)) {
                 case null { #skip };
-                case (?(k3, v3)) { #put(k3, null, v3) };
-              };
+                case (?(k3, v3)) { #put(k3, null, v3) }
+              }
             },
-            #skip,
-          );
+            #skip
+          )
         },
-        #skip,
-      );
+        #skip
+      )
     };
 
     /// Project the nth key-value pair from the trie build.
@@ -794,21 +794,21 @@ module {
           case (#skip) { P.unreachable() };
           case (#put(k, h, v)) {
             assert (i == 0);
-            ?(k, h, v);
+            ?(k, h, v)
           };
           case (#seq(s)) {
             let size_left = size(s.left);
             if (i < size_left) { rec(s.left, i) } else {
-              rec(s.right, i - size_left);
-            };
-          };
-        };
+              rec(s.right, i - size_left)
+            }
+          }
+        }
       };
 
       if (i >= size(tb)) {
-        return null;
+        return null
       };
-      rec(tb, i);
+      rec(tb, i)
     };
 
     /// Like [`mergeDisjoint`](#mergedisjoint), except that it avoids the
@@ -818,11 +818,11 @@ module {
       foldUp(
         t,
         func(t1 : Build<K2, V>, t2 : Build<K2, V>) : Build<K2, V> {
-          seq(t1, t2);
+          seq(t1, t2)
         },
         func(_ : K1, t : Build<K2, V>) : Build<K2, V> { t },
-        #skip,
-      );
+        #skip
+      )
     };
 
     /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
@@ -834,8 +834,8 @@ module {
         switch tb {
           case (#skip) {};
           case (#put(k, _, v)) { a[i] := ?f(k, v); i := i + 1 };
-          case (#seq(s)) { rec(s.left); rec(s.right) };
-        };
+          case (#seq(s)) { rec(s.left); rec(s.right) }
+        }
       };
       rec(tb);
       A.tabulate(
@@ -843,10 +843,10 @@ module {
         func(i : Nat) : W {
           switch (a[i]) {
             case null { P.unreachable() };
-            case (?x) { x };
-          };
-        },
-      );
+            case (?x) { x }
+          }
+        }
+      )
     };
 
   };
@@ -861,13 +861,13 @@ module {
           AssocList.fold(
             l.keyvals,
             x,
-            func(k : Key<K>, v : V, x : X) : X = f(k.key, v, x),
-          );
+            func(k : Key<K>, v : V, x : X) : X = f(k.key, v, x)
+          )
         };
-        case (#branch(b)) { rec(b.left, rec(b.right, x)) };
-      };
+        case (#branch(b)) { rec(b.left, rec(b.right, x)) }
+      }
     };
-    rec(t, x);
+    rec(t, x)
   };
 
   /// Test whether a given key-value pair is present, or not.
@@ -878,13 +878,13 @@ module {
         case (#leaf(l)) {
           List.some(
             l.keyvals,
-            func((k : Key<K>, v : V)) : Bool = f(k.key, v),
-          );
+            func((k : Key<K>, v : V)) : Bool = f(k.key, v)
+          )
         };
-        case (#branch(b)) { rec(b.left) or rec(b.right) };
-      };
+        case (#branch(b)) { rec(b.left) or rec(b.right) }
+      }
     };
-    rec(t);
+    rec(t)
   };
 
   /// Test whether all key-value pairs have a given property.
@@ -895,13 +895,13 @@ module {
         case (#leaf(l)) {
           List.all(
             l.keyvals,
-            func((k : Key<K>, v : V)) : Bool = f(k.key, v),
-          );
+            func((k : Key<K>, v : V)) : Bool = f(k.key, v)
+          )
         };
-        case (#branch(b)) { rec(b.left) and rec(b.right) };
-      };
+        case (#branch(b)) { rec(b.left) and rec(b.right) }
+      }
     };
-    rec(t);
+    rec(t)
   };
 
   /// Project the nth key-value pair from the trie.
@@ -916,15 +916,15 @@ module {
         case (#branch(b)) {
           let size_left = size(b.left);
           if (i < size_left) { rec(b.left, i) } else {
-            rec(b.right, i - size_left);
-          };
-        };
-      };
+            rec(b.right, i - size_left)
+          }
+        }
+      }
     };
     if (i >= size(t)) {
-      return null;
+      return null
     };
-    rec(t, i);
+    rec(t, i)
   };
 
   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
@@ -934,19 +934,19 @@ module {
       func(i : Nat) : W {
         let (k, v) = switch (nth(t, i)) {
           case null { P.unreachable() };
-          case (?x) { x };
+          case (?x) { x }
         };
-        f(k.key, v);
-      },
+        f(k.key, v)
+      }
     );
-    a;
+    a
   };
 
   /// Test for "deep emptiness": subtrees that have branching structure,
   /// but no leaves.  These can result from naive filtering operations;
   /// filter uses this function to avoid creating such subtrees.
   public func isEmpty<K, V>(t : Trie<K, V>) : Bool {
-    size(t) == 0;
+    size(t) == 0
   };
 
   /// Filter the key-value pairs by a given predicate.
@@ -958,23 +958,23 @@ module {
           leaf(
             List.filter(
               l.keyvals,
-              func((k : Key<K>, v : V)) : Bool = f(k.key, v),
+              func((k : Key<K>, v : V)) : Bool = f(k.key, v)
             ),
-            bitpos,
-          );
+            bitpos
+          )
         };
         case (#branch(b)) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
           if (isEmpty(fl) and isEmpty(fr)) {
-            #empty;
+            #empty
           } else {
-            branch(fl, fr);
-          };
-        };
-      };
+            branch(fl, fr)
+          }
+        }
+      }
     };
-    rec(t, 0);
+    rec(t, 0)
   };
 
   /// Map and filter the key-value pairs by a given predicate.
@@ -990,26 +990,26 @@ module {
               func((k : Key<K>, v : V)) : ?(Key<K>, W) {
                 switch (f(k.key, v)) {
                   case null { null };
-                  case (?w) { ?({ key = k.key; hash = k.hash }, w) };
-                };
-              },
+                  case (?w) { ?({ key = k.key; hash = k.hash }, w) }
+                }
+              }
             ),
-            bitpos,
-          );
+            bitpos
+          )
         };
         case (#branch(b)) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
           if (isEmpty(fl) and isEmpty(fr)) {
-            #empty;
+            #empty
           } else {
-            branch(fl, fr);
-          };
-        };
-      };
+            branch(fl, fr)
+          }
+        }
+      }
     };
 
-    rec(t, 0);
+    rec(t, 0)
   };
 
   /// Test for equality, but naively, based on structure.
@@ -1023,7 +1023,7 @@ module {
     tl : Trie<K, V>,
     tr : Trie<K, V>,
     keq : (K, K) -> Bool,
-    veq : (V, V) -> Bool,
+    veq : (V, V) -> Bool
   ) : Bool {
     func rec(tl : Trie<K, V>, tr : Trie<K, V>) : Bool {
       switch (tl, tr) {
@@ -1032,16 +1032,16 @@ module {
           List.equal(
             l1.keyvals,
             l2.keyvals,
-            func((k1 : Key<K>, v1 : V), (k2 : Key<K>, v2 : V)) : Bool = keq(k1.key, k2.key) and veq(v1, v2),
-          );
+            func((k1 : Key<K>, v1 : V), (k2 : Key<K>, v2 : V)) : Bool = keq(k1.key, k2.key) and veq(v1, v2)
+          )
         };
         case (#branch(b1), #branch(b2)) {
-          rec(b1.left, b2.left) and rec(b2.right, b2.right);
+          rec(b1.left, b2.left) and rec(b2.right, b2.right)
         };
-        case _ { false };
-      };
+        case _ { false }
+      }
     };
-    rec(tl, tr);
+    rec(tl, tr)
   };
 
   /// Replace the given key's value in the trie,
@@ -1053,13 +1053,13 @@ module {
     k_eq : (K, K) -> Bool,
     v2 : V,
     success : (Trie<K, V>, V) -> X,
-    fail : () -> X,
+    fail : () -> X
   ) : X {
     let (t2, ov) = replace(t, k, k_eq, ?v2);
     switch ov {
       case null { /* no prior value; failure to remove */ fail() };
-      case (?v1) { success(t2, v1) };
-    };
+      case (?v1) { success(t2, v1) }
+    }
   };
 
   /// Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
@@ -1067,9 +1067,9 @@ module {
     let (t2, none) = replace(t, k, k_eq, ?v);
     switch none {
       case null {};
-      case (?_) assert false;
+      case (?_) assert false
     };
-    t2;
+    t2
   };
 
   /// Put the given key's value in the 2D trie; return the new 2D trie.
@@ -1079,15 +1079,15 @@ module {
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
     k2_eq : (K2, K2) -> Bool,
-    v : V,
+    v : V
   ) : Trie2D<K1, K2, V> {
     let inner = find(t, k1, k1_eq);
     let (updated_inner, _) = switch inner {
       case null { put(#empty, k2, k2_eq, v) };
-      case (?inner) { put(inner, k2, k2_eq, v) };
+      case (?inner) { put(inner, k2, k2_eq, v) }
     };
     let (updated_outer, _) = put(t, k1, k1_eq, updated_inner);
-    updated_outer;
+    updated_outer
   };
 
   /// Put the given key's value in the trie; return the new trie;
@@ -1099,7 +1099,7 @@ module {
     k2_eq : (K2, K2) -> Bool,
     k3 : Key<K3>,
     k3_eq : (K3, K3) -> Bool,
-    v : V,
+    v : V
   ) : Trie3D<K1, K2, K3, V> {
     let inner1 = find(t, k1, k1_eq);
     let (updated_inner1, _) = switch inner1 {
@@ -1108,25 +1108,25 @@ module {
           #empty,
           k2,
           k2_eq,
-          (put(#empty, k3, k3_eq, v)).0,
-        );
+          (put(#empty, k3, k3_eq, v)).0
+        )
       };
       case (?inner1) {
         let inner2 = find(inner1, k2, k2_eq);
         let (updated_inner2, _) = switch inner2 {
           case null { put(#empty, k3, k3_eq, v) };
-          case (?inner2) { put(inner2, k3, k3_eq, v) };
+          case (?inner2) { put(inner2, k3, k3_eq, v) }
         };
-        put(inner1, k2, k2_eq, updated_inner2);
-      };
+        put(inner1, k2, k2_eq, updated_inner2)
+      }
     };
     let (updated_outer, _) = put(t, k1, k1_eq, updated_inner1);
-    updated_outer;
+    updated_outer
   };
 
   /// Remove the given key's value in the trie; return the new trie
   public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V) {
-    replace(t, k, k_eq, null);
+    replace(t, k, k_eq, null)
   };
 
   /// Remove the given key's value in the trie,
@@ -1137,13 +1137,13 @@ module {
     k : Key<K>,
     k_eq : (K, K) -> Bool,
     success : (Trie<K, V>, V) -> X,
-    fail : () -> X,
+    fail : () -> X
   ) : X {
     let (t2, ov) = replace(t, k, k_eq, null);
     switch ov {
       case null { /* no prior value; failure to remove */ fail() };
-      case (?v) { success(t2, v) };
-    };
+      case (?v) { success(t2, v) }
+    }
   };
 
   /// remove the given key-key pair's value in the 2D trie; return the
@@ -1153,16 +1153,16 @@ module {
     k1 : Key<K1>,
     k1_eq : (K1, K1) -> Bool,
     k2 : Key<K2>,
-    k2_eq : (K2, K2) -> Bool,
+    k2_eq : (K2, K2) -> Bool
   ) : (Trie2D<K1, K2, V>, ?V) {
     switch (find(t, k1, k1_eq)) {
       case null { (t, null) };
       case (?inner) {
         let (updated_inner, ov) = remove(inner, k2, k2_eq);
         let (updated_outer, _) = put(t, k1, k1_eq, updated_inner);
-        (updated_outer, ov);
-      };
-    };
+        (updated_outer, ov)
+      }
+    }
   };
 
   /// Remove the given key-key pair's value in the 3D trie; return the
@@ -1174,16 +1174,16 @@ module {
     k2 : Key<K2>,
     k2_eq : (K2, K2) -> Bool,
     k3 : Key<K3>,
-    k3_eq : (K3, K3) -> Bool,
+    k3_eq : (K3, K3) -> Bool
   ) : (Trie3D<K1, K2, K3, V>, ?V) {
     switch (find(t, k1, k1_eq)) {
       case null { (t, null) };
       case (?inner) {
         let (updated_inner, ov) = remove2D(inner, k2, k2_eq, k3, k3_eq);
         let (updated_outer, _) = put(t, k1, k1_eq, updated_inner);
-        (updated_outer, ov);
-      };
-    };
+        (updated_outer, ov)
+      }
+    }
   };
 
   /// Like [`mergeDisjoint`](#mergedisjoint), except instead of merging a
@@ -1192,16 +1192,16 @@ module {
   public func mergeDisjoint2D<K1, K2, V>(
     t : Trie2D<K1, K2, V>,
     k1_eq : (K1, K1) -> Bool,
-    k2_eq : (K2, K2) -> Bool,
+    k2_eq : (K2, K2) -> Bool
   ) : Trie<K2, V> {
     foldUp(
       t,
       func(t1 : Trie<K2, V>, t2 : Trie<K2, V>) : Trie<K2, V> {
-        mergeDisjoint(t1, t2, k2_eq);
+        mergeDisjoint(t1, t2, k2_eq)
       },
       func(_ : K1, t : Trie<K2, V>) : Trie<K2, V> { t },
-      #empty,
-    );
+      #empty
+    )
   };
 
-};
+}
