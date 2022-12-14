@@ -81,7 +81,7 @@ class NegativeZeroMatcher() : M.Matcher<Float> {
 };
 
 let noEpsilon = 0.0;
-let smallEpsilon = 1 e -6;
+let smallEpsilon = 1e-6;
 
 class NaNMatcher() : M.Matcher<Float> {
   public func describeMismatch(number : Float, description : M.Description) {
@@ -1623,7 +1623,7 @@ run(
       ),
       test(
         "nearly zero",
-        Float.toInt64(-1 e -40),
+        Float.toInt64(-1e-40),
         M.equals(Int64Testable(0)),
       ),
       test(
@@ -1706,7 +1706,7 @@ run(
       ),
       test(
         "nearly zero",
-        Float.toInt(-1 e -40),
+        Float.toInt(-1e-40),
         M.equals(T.int(0)),
       ),
       test(
