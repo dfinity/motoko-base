@@ -411,6 +411,28 @@ let get = Suite.suite(
 );
 
 
+let reverse = Suite.suite(
+  "reverse",
+  [
+    Suite.test(
+      "empty list",
+      List.reverse(List.nil<Nat>()),
+      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+
+    ),
+    Suite.test(
+      "singleton",
+      List.reverse(?(3, null)),
+      M.equals(T.list(T.natTestable, ?(3, null)))
+    ),
+    Suite.test(
+      "threesome",
+      List.reverse(?(1, ?(2, ?(3, null)))),
+      M.equals(T.list(T.natTestable, ?(3, ?(2, ?(1, null)))))
+    ),
+  ]
+);
+
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -422,4 +444,5 @@ Suite.run(Suite.suite("List", [
   last,
   pop,
   size,
-  get]))
+  get,
+  reverse]))
