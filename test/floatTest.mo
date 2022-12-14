@@ -498,6 +498,41 @@ run(
         Float.copySign(1.2, negativeNaN),
         M.equals(FloatTestable(-1.2, noEpsilon)),
       ),
+      test(
+        "both NaN",
+        isNaN(Float.copySign(negativeNaN, positiveNaN)),
+        holds,
+      ),
+      test(
+        "NaN and positive infinity",
+        isPositiveNaN(Float.copySign(positiveNaN, positiveInfinity)),
+        holds,
+      ),
+      test(
+        "NaN and negative infinity",
+        isNegativeNaN(Float.copySign(positiveNaN, negativeInfinity)),
+        holds,
+      ),
+      test(
+        "positive infinity and positive NaN",
+        Float.copySign(positiveInfinity, positiveNaN),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
+      ),
+      test(
+        "positive infinity and negative NaN",
+        Float.copySign(positiveInfinity, negativeNaN),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
+      ),
+      test(
+        "negative infinity and positive NaN",
+        Float.copySign(negativeInfinity, positiveNaN),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon)),
+      ),
+      test(
+        "negative infinity and negative NaN",
+        Float.copySign(negativeInfinity, negativeNaN),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon)),
+      ),
     ],
   ),
 );
