@@ -1421,6 +1421,18 @@ module {
   };
 
   /// Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// // note that compared to `put`, `putFresh` does not return a tuple
+  /// trie := Trie.putFresh(trie, key "hello", Text.equal, 42); 
+  /// trie := Trie.putFresh(trie, key "bye", Text.equal, 32); 
+  /// // this will fail as "hello" is already present in the trie
+  /// trie := Trie.putFresh(trie, key "hello", Text.equal, 10); 
+  /// ```
   public func putFresh<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : Trie<K, V> {
     let (t2, none) = replace(t, k, k_eq, ?v);
     switch none {
