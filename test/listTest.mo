@@ -364,6 +364,51 @@ let size = Suite.suite(
   ]
 );
 
+let get = Suite.suite(
+  "get",
+  [
+    Suite.test(
+      "empty list",
+      List.get(List.nil<Nat>(), 0),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "singleton-0",
+      List.get(?(3, null), 0),
+      M.equals(T.optional(T.natTestable, ?3 : ?Nat))
+    ),
+     Suite.test(
+      "singleton-1",
+      List.get(?(3, null), 1),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "singleton-2",
+      List.get(?(3, null), 2),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "threesome-0",
+      List.get(?(1, ?(2, ?(3, null))), 0),
+      M.equals(T.optional(T.natTestable, ?1 : ?Nat))
+    ),
+     Suite.test(
+      "threesome-1",
+      List.get(?(1, ?(2, ?(3, null))), 1),
+      M.equals(T.optional(T.natTestable, ?2 : ?Nat))
+    ),
+     Suite.test(
+      "threesome-3",
+      List.get(?(1, ?(2, ?(3, null))), 3),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "threesome-4",
+      List.get(?(1, ?(2, ?(3, null))), 4),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    )
+  ]
+);
 
 
 
@@ -376,4 +421,5 @@ Suite.run(Suite.suite("List", [
   push,
   last,
   pop,
-  size]))
+  size,
+  get]))
