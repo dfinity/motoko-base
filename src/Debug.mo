@@ -17,7 +17,7 @@ module {
   /// Debug.print(debug_show(4)) // Often used with `debug_show` to convert values to Text
   /// ```
   public func print(text : Text) {
-    Prim.debugPrint text;
+    Prim.debugPrint text
   };
 
   /// `trap(t)` traps execution with a user-provided diagnostic message.
@@ -51,6 +51,6 @@ module {
   /// }
   /// ```
   public func trap(errorMessage : Text) : None {
-    Prim.trap errorMessage;
-  };
-};
+    Prim.trap errorMessage
+  }
+}

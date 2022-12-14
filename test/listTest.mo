@@ -13,14 +13,14 @@ func opnatEq(a : ?Nat, b : ?Nat) : Bool {
   switch (a, b) {
     case (null, null) { true };
     case (?aaa, ?bbb) { aaa == bbb };
-    case (_, _) { false };
-  };
+    case (_, _) { false }
+  }
 };
 func opnat_isnull(a : ?Nat) : Bool {
   switch a {
     case (null) { true };
-    case (?aaa) { false };
-  };
+    case (?aaa) { false }
+  }
 };
 
 // ## Construction
@@ -84,7 +84,7 @@ do {
   let array = [1, 2, 3];
   let actual = List.fromArray<Nat>(array);
 
-  assert List.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 });
+  assert List.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 })
 };
 
 do {
@@ -94,7 +94,7 @@ do {
   let array = [var 1, 2, 3];
   let actual = List.fromVarArray<Nat>(array);
 
-  assert List.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 });
+  assert List.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 })
 };
 
 do {
@@ -107,8 +107,8 @@ do {
   assert (actual.size() == expected.size());
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -121,8 +121,8 @@ do {
   assert (actual.size() == expected.size());
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 do {
@@ -136,17 +136,17 @@ do {
   Iter.iterate<Nat>(_actual, func(x, i) { actual[i] := x });
 
   for (i in actual.keys()) {
-    assert (actual[i] == expected[i]);
-  };
+    assert (actual[i] == expected[i])
+  }
 };
 
 func makeNatural(x : Int) : Result.Result<Nat, Text> = if (x >= 0) {
-  #ok(Int.abs(x));
+  #ok(Int.abs(x))
 } else { #err(Int.toText(x) # " is not a natural number.") };
 
 func listRes(itm : Result.Result<List.List<Nat>, Text>) : T.TestableItem<Result.Result<List.List<Nat>, Text>> {
   let resT = T.resultTestable(T.listTestable<Nat>(T.intTestable), T.textTestable);
-  { display = resT.display; equals = resT.equals; item = itm };
+  { display = resT.display; equals = resT.equals; item = itm }
 };
 
 let mapResult = Suite.suite(
@@ -155,24 +155,24 @@ let mapResult = Suite.suite(
     Suite.test(
       "empty list",
       List.mapResult<Int, Nat, Text>(List.nil(), makeNatural),
-      M.equals(listRes(#ok(List.nil()))),
+      M.equals(listRes(#ok(List.nil())))
     ),
     Suite.test(
       "success",
       List.mapResult<Int, Nat, Text>(?(1, ?(2, ?(3, null))), makeNatural),
-      M.equals(listRes(#ok(?(1, ?(2, ?(3, null)))))),
+      M.equals(listRes(#ok(?(1, ?(2, ?(3, null))))))
     ),
     Suite.test(
       "fail fast",
       List.mapResult<Int, Nat, Text>(?(-1, ?(2, ?(3, null))), makeNatural),
-      M.equals(listRes(#err("-1 is not a natural number."))),
+      M.equals(listRes(#err("-1 is not a natural number.")))
     ),
     Suite.test(
       "fail last",
       List.mapResult<Int, Nat, Text>(?(1, ?(2, ?(-3, null))), makeNatural),
-      M.equals(listRes(#err("-3 is not a natural number."))),
-    ),
-  ],
+      M.equals(listRes(#err("-3 is not a natural number.")))
+    )
+  ]
 );
 
 Suite.run(Suite.suite("List", [mapResult]));
@@ -184,17 +184,17 @@ let replicate = Suite.suite(
       "empty-list",
       List.replicate<Nat>(0, 0),
       M.equals(
-        T.list(T.natTestable, List.nil<Nat>()),
-      ),
+        T.list(T.natTestable, List.nil<Nat>())
+      )
     ),
     Suite.test(
       "small-list",
       List.replicate(3, 0),
       M.equals(
-        T.list<Nat>(T.natTestable, ?(0, ?(0, ?(0, null)))),
-      ),
-    ),
-  ],
+        T.list<Nat>(T.natTestable, ?(0, ?(0, ?(0, null))))
+      )
+    )
+  ]
 );
 
 let tabulate = Suite.suite(
@@ -204,24 +204,24 @@ let tabulate = Suite.suite(
       "empty-list",
       List.tabulate<Nat>(0, func i { i }),
       M.equals(
-        T.list(T.natTestable, List.nil<Nat>()),
-      ),
+        T.list(T.natTestable, List.nil<Nat>())
+      )
     ),
     Suite.test(
       "small-list",
       List.tabulate<Nat>(3, func i { i * 2 }),
       M.equals(
-        T.list<Nat>(T.natTestable, ?(0, ?(2, ?(4, null)))),
-      ),
+        T.list<Nat>(T.natTestable, ?(0, ?(2, ?(4, null))))
+      )
     ),
     Suite.test(
       "large-list",
       List.tabulate<Nat>(10000, func i { 0 }),
       M.equals(
-        T.list<Nat>(T.natTestable, List.replicate(10000, 0)),
-      ),
-    ),
-  ],
+        T.list<Nat>(T.natTestable, List.replicate(10000, 0))
+      )
+    )
+  ]
 );
 
 let append = Suite.suite(
@@ -231,23 +231,23 @@ let append = Suite.suite(
       "small-list",
       List.append(
         List.tabulate<Nat>(10, func i { i }),
-        List.tabulate<Nat>(10, func i { i + 10 }),
+        List.tabulate<Nat>(10, func i { i + 10 })
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i })),
-      ),
+        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+      )
     ),
     Suite.test(
       "large-list",
       List.append(
         List.tabulate<Nat>(10000, func i { i }),
-        List.tabulate<Nat>(10000, func i { i + 10000 }),
+        List.tabulate<Nat>(10000, func i { i + 10000 })
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20000, func i { i })),
-      ),
-    ),
-  ],
+        T.list(T.natTestable, List.tabulate<Nat>(20000, func i { i }))
+      )
+    )
+  ]
 );
 
-Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append]));
+Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append]))

@@ -38,4 +38,4 @@ module {
   /// Returns the message of an error `e`.
   public let message : (e : Error) -> Text = Prim.errorMessage;
 
-};
+}
