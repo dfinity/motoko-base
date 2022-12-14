@@ -1372,6 +1372,39 @@ module {
   /// Replace the given key's value in the trie,
   /// and only if successful, do the success continuation,
   /// otherwise, return the failure value
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
+  /// // `replaceThen` takes the same arguments as `replace` but also a success continuation 
+  /// // and a failure connection that are called in the respective scenarios.
+  /// // if the replace fails, that is the key is not present in the trie, the failure continuation is called.
+  /// // if the replace succeeds, that is the key is present in the trie, the success continuation is called.
+  /// // in this example we are simply returning the Text values `success` and `fail` respectively.
+  /// var continuation = Trie.replaceThen<Text, Nat, Text>(
+  ///   trie,
+  ///   key "hello",
+  ///   Text.equal,
+  ///   12,
+  ///   func (t, v) = "success",
+  ///   func () = "fail"
+  /// );
+  /// assert (continuation == "success");
+  /// continuation := Trie.replaceThen<Text, Nat, Text>(
+  ///   trie,
+  ///   key "shalom",
+  ///   Text.equal,
+  ///   12,
+  ///   func (t, v) = "success",
+  ///   func () = "fail"
+  /// );
+  /// assert (continuation == "fail");
+  /// ```
   public func replaceThen<K, V, X>(
     t : Trie<K, V>,
     k : Key<K>,
