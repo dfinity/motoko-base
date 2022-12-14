@@ -33,7 +33,7 @@
 /// type Key<K> = Trie.Key<K>;
 ///
 /// // we have to provide `put`, `get` and `remove` with 
-/// // a record of type Key<K> = { hash : Hash.Hash; key : K },
+/// // a record of type `Key<K> = { hash : Hash.Hash; key : K }`;
 /// // thus we define the following function that takes a value of type K 
 /// // (in this case `Text`) and returns a Key<K> record.
 /// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
