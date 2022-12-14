@@ -165,8 +165,12 @@ module {
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
 
   /// Returns the smaller value of `x` and `y`.
-  /// 
-  /// If `x` or `y` is `nan`, the result is also `nan`.
+  ///
+  /// Special cases:
+  /// | Argument `y` | Argument `x` | Result `min(y, x)` |
+  /// | ------------ | ------------ | ------------------ |
+  /// | `nan`        | (any)        | `nan`              |
+  /// | (any)        | `nan`        | `nan`              |
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -176,7 +180,11 @@ module {
 
   /// Returns the larger value of `x` and `y`.
   /// 
-  /// If `x` or `y` is `nan`, the result is also `nan`.
+  /// Special cases:
+  /// | Argument `y` | Argument `x` | Result `max(y, x)` |
+  /// | ------------ | ------------ | ------------------ |
+  /// | `nan`        | (any)        | `nan`              |
+  /// | (any)        | `nan`        | `nan`              |
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -210,7 +218,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   Float.sin(Float.pi / 2) // => 0.0
+  ///   Float.cos(Float.pi / 2) // => 0.0
   ///   ```
   public let cos : (x : Float) -> Float = Prim.cos;
 
@@ -516,12 +524,12 @@ module {
   /// Issue: Undefined behavior for `nan`, not defining a total number order.
   ///
   /// Special cases:
-  /// | Argument `x` | Argument `y` | Result `lessOrEqual(x, y)` |
-  /// | ------------ | ------------ | -------------------------- |
-  /// | `+0.0`       | `-0.0`       | `#equal`                   |
-  /// | `-0.0`       | `+0.0`       | `#equal`                   |
-  /// | `nan`        | (any)        | (undefined)                |
-  /// | (any)        | `nan`        | (undefined)                |
+  /// | Argument `x` | Argument `y` | Result `compare(x, y)` |
+  /// | ------------ | ------------ | ---------------------- |
+  /// | `+0.0`       | `-0.0`       | `#equal`               |
+  /// | `-0.0`       | `+0.0`       | `#equal`               |
+  /// | `nan`        | (any)        | (undefined)            |
+  /// | (any)        | `nan`        | (undefined)            |
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -617,7 +625,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
-  /// | Argument `x`    | Argument `y` | Result `mul(x, y)` |
+  /// | Argument `x`    | Argument `y` | Result `div(x, y)` |
   /// | --------------- | ------------ | ------------------ |
   /// | `0.0`           | `0.0`        | `nan`              |
   /// | `> 0.0`         | `> 0.0`      | `+inf`             |
@@ -650,7 +658,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
-  /// | Argument `x`    | Argument `y` | Result `mul(x, y)` |
+  /// | Argument `x`    | Argument `y` | Result `rem(x, y)` |
   /// | --------------- | ------------ | ------------------ |
   /// | `0.0`           | `0.0`        | `nan`              |
   /// | `> 0.0`         | `> 0.0`      | `+inf`             |

@@ -60,10 +60,58 @@ func isNegativeZero(number: Float): Bool {
   number == 0.0 and 1.0 / number == negativeInfinity
 };
 
+class PositiveZeroMatcher() : M.Matcher<Float> {
+  public func describeMismatch(number: Float, description: M.Description) {
+    Debug.print(debug_show(number) # " should be '0.0' (positive zero)");
+  };
+
+  public func matches(number: Float): Bool {
+    isPositiveZero(number)
+  }
+};
+
+class NegativeZeroMatcher() : M.Matcher<Float> {
+  public func describeMismatch(number: Float, description: M.Description) {
+    Debug.print(debug_show(number) # " should be '-0.0' (negative zero)");
+  };
+
+  public func matches(number: Float): Bool {
+    isNegativeZero(number)
+  }
+};
+
 let noEpsilon = 0.0;
 let smallEpsilon = 1e-6;
 
-let holds = M.equals(T.bool(true));
+class NaNMatcher() : M.Matcher<Float> {
+  public func describeMismatch(number: Float, description: M.Description) {
+    Debug.print(debug_show(number) # " should be 'nan' or '-nan'");
+  };
+
+  public func matches(number: Float): Bool {
+    isNaN(number)
+  }
+};
+
+class PositiveNaNMatcher() : M.Matcher<Float> {
+  public func describeMismatch(number: Float, description: M.Description) {
+    Debug.print(debug_show(number) # " should be 'nan' (positive)");
+  };
+
+  public func matches(number: Float): Bool {
+    isPositiveNaN(number)
+  }
+};
+
+class NegativeNaNMatcher() : M.Matcher<Float> {
+  public func describeMismatch(number: Float, description: M.Description) {
+    Debug.print(debug_show(number) # " should be '-nan' (negative)");
+  };
+
+  public func matches(number: Float): Bool {
+    isNegativeNaN(number)
+  }
+};
 
 // Some tests are adopted from Motoko compiler test `float-ops.mo`.
 
@@ -90,13 +138,13 @@ run(
       ),
       test(
         "positive zero",
-        isPositiveZero(Float.abs(positiveZero)), 
-        holds,
+        Float.abs(positiveZero),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative zero",
-        isPositiveZero(Float.abs(negativeZero)), 
-        holds,
+        Float.abs(negativeZero), 
+        PositiveZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -110,13 +158,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.abs(positiveNaN)),
-        holds,
+        Float.abs(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.abs(negativeNaN)),
-        holds,
+        Float.abs(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -140,13 +188,13 @@ run(
       ),
       test(
         "positive zero",
-        isPositiveZero(Float.sqrt(positiveZero)),
-        holds,
+        Float.sqrt(positiveZero),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative zero",
-        isNegativeZero(Float.sqrt(negativeZero)),
-        holds,
+        Float.sqrt(negativeZero),
+        NegativeZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -155,18 +203,18 @@ run(
       ),
       test(
         "negative",
-        isNaN(Float.sqrt(-16.0)),
-        holds,
+        Float.sqrt(-16.0),
+        NaNMatcher(),
       ),
       test(
         "positive NaN",
-        isNaN(Float.sqrt(positiveNaN)),
-        holds,
+        Float.sqrt(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.sqrt(negativeNaN)),
-        holds,
+        Float.sqrt(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -200,13 +248,13 @@ run(
       ),
       test(
         "positive zero",
-        isPositiveZero(Float.ceil(positiveZero)),
-        holds,
+        Float.ceil(positiveZero),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative zero",
-        isNegativeZero(Float.ceil(negativeZero)),
-        holds,
+        Float.ceil(negativeZero),
+        NegativeZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -220,13 +268,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.ceil(positiveNaN)),
-        holds,
+        Float.ceil(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.ceil(negativeNaN)),
-        holds,
+        Float.ceil(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -260,13 +308,13 @@ run(
       ),
       test(
         "positive zero",
-        isPositiveZero(Float.floor(positiveZero)),
-        holds,
+        Float.floor(positiveZero),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative zero",
-        isNegativeZero(Float.floor(negativeZero)),
-        holds,
+        Float.floor(negativeZero),
+        NegativeZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -280,13 +328,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.floor(positiveNaN)),
-        holds,
+        Float.floor(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.floor(negativeNaN)),
-        holds,
+        Float.floor(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -320,13 +368,13 @@ run(
       ),
       test(
         "positive zero",
-        isPositiveZero(Float.trunc(positiveZero)),
-        holds,
+        Float.trunc(positiveZero),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative zero",
-        isNegativeZero(Float.trunc(negativeZero)),
-        holds,
+        Float.trunc(negativeZero),
+        NegativeZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -340,13 +388,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.trunc(positiveNaN)),
-        holds,
+        Float.trunc(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.trunc(negativeNaN)),
-        holds,
+        Float.trunc(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -405,13 +453,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.nearest(positiveNaN)),
-        holds,
+        Float.nearest(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.nearest(negativeNaN)),
-        holds,
+        Float.nearest(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -445,13 +493,13 @@ run(
       ),
       test(
         "negate positive zero",
-        isNegativeZero(Float.copySign(0.0, -1)),
-        holds,
+        Float.copySign(0.0, -1),
+        NegativeZeroMatcher(),
       ),
       test(
         "keep positive zero",
-        isPositiveZero(Float.copySign(0.0, 1)),
-        holds,
+        Float.copySign(0.0, 1),
+        PositiveZeroMatcher(),
       ),
       test(
         "negate by negative zero",
@@ -470,23 +518,23 @@ run(
       ),
       test(
         "keep positive NaN",
-        isPositiveNaN(Float.copySign(positiveNaN, 1.0)),
-        holds,
+        Float.copySign(positiveNaN, 1.0),
+        PositiveNaNMatcher(),
       ),
       test(
         "negate positive NaN",
-        isNegativeNaN(Float.copySign(positiveNaN, -1.0)),
-        holds,
+        Float.copySign(positiveNaN, -1.0),
+        NegativeNaNMatcher(),
       ),
       test(
         "keep negative NaN",
-        isNegativeNaN(Float.copySign(negativeNaN, -1.0)),
-        holds,
+        Float.copySign(negativeNaN, -1.0),
+        NegativeNaNMatcher(),
       ),
       test(
         "negate negative NaN",
-        isPositiveNaN(Float.copySign(negativeNaN, 1.0)),
-        holds,
+        Float.copySign(negativeNaN, 1.0),
+        PositiveNaNMatcher(),
       ),
       test(
         "second argument positive NaN",
@@ -500,18 +548,18 @@ run(
       ),
       test(
         "both NaN",
-        isNaN(Float.copySign(negativeNaN, positiveNaN)),
-        holds,
+        Float.copySign(negativeNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isPositiveNaN(Float.copySign(positiveNaN, positiveInfinity)),
-        holds,
+        Float.copySign(positiveNaN, positiveInfinity),
+        PositiveNaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNegativeNaN(Float.copySign(positiveNaN, negativeInfinity)),
-        holds,
+        Float.copySign(positiveNaN, negativeInfinity),
+        NegativeNaNMatcher(),
       ),
       test(
         "positive infinity and positive NaN",
@@ -570,8 +618,8 @@ run(
       ),
       test(
         "zero with different signs",
-        isNegativeZero(Float.min(positiveZero, negativeZero)),
-        holds,
+        Float.min(positiveZero, negativeZero),
+        NegativeZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -590,38 +638,38 @@ run(
       ),
       test(
         "left NaN",
-        isNaN(Float.min(positiveNaN, 1.0)),
-        holds,
+        Float.min(positiveNaN, 1.0),
+        NaNMatcher(),
       ),
       test(
         "right NaN",
-        isNaN(Float.min(-1.0, positiveNaN)),
-        holds,
+        Float.min(-1.0, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "both NaN",
-        isNaN(Float.min(negativeNaN, positiveNaN)),
-        holds,
+        Float.min(negativeNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.min(positiveNaN, positiveInfinity)),
-        holds,
+        Float.min(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.min(positiveNaN, negativeInfinity)),
-        holds,
+        Float.min(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.min(positiveInfinity, positiveNaN)),
-        holds,
+        Float.min(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.min(negativeInfinity, positiveNaN)),
-        holds,
+        Float.min(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -660,8 +708,8 @@ run(
       ),
       test(
         "zero with different signs",
-        isPositiveZero(Float.max(positiveZero, negativeZero)),
-        holds,
+        Float.max(positiveZero, negativeZero),
+        PositiveZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -680,38 +728,38 @@ run(
       ),
       test(
         "left NaN",
-        isNaN(Float.max(positiveNaN, 1.0)),
-        holds,
+        Float.max(positiveNaN, 1.0),
+        NaNMatcher(),
       ),
       test(
         "right NaN",
-        isNaN(Float.max(-1.0, positiveNaN)),
-        holds,
+        Float.max(-1.0, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "both NaN",
-        isNaN(Float.max(negativeNaN, positiveNaN)),
-        holds,
+        Float.max(negativeNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.max(positiveNaN, positiveInfinity)),
-        holds,
+        Float.max(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.max(positiveNaN, negativeInfinity)),
-        holds,
+        Float.max(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.max(positiveInfinity, positiveNaN)),
-        holds,
+        Float.max(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.max(negativeInfinity, positiveNaN)),
-        holds,
+        Float.max(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -776,23 +824,23 @@ run(
       ),
       test(
         "positive infinity",
-        isNaN(Float.sin(positiveInfinity)),
-        holds,
+        Float.sin(positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative infinity",
-        isNaN(Float.sin(negativeInfinity)),
-        holds,
+        Float.sin(negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive NaN",
-        isNaN(Float.sin(positiveNaN)),
-        holds,
+        Float.sin(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.sin(negativeNaN)),
-        holds,
+        Float.sin(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -851,23 +899,23 @@ run(
       ),
       test(
         "positive infinity",
-        isNaN(Float.cos(positiveInfinity)),
-        holds,
+        Float.cos(positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative infinity",
-        isNaN(Float.cos(negativeInfinity)),
-        holds,
+        Float.cos(negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive NaN",
-        isNaN(Float.cos(positiveNaN)),
-        holds,
+        Float.cos(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.cos(negativeNaN)),
-        holds,
+        Float.cos(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -896,23 +944,23 @@ run(
       ),
       test(
         "positive infinity",
-        isNaN(Float.tan(positiveInfinity)),
-        holds,
+        Float.tan(positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative infinity",
-        isNaN(Float.tan(negativeInfinity)),
-        holds,
+        Float.tan(negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive NaN",
-        isNaN(Float.tan(positiveNaN)),
-        holds,
+        Float.tan(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.tan(negativeNaN)),
-        holds,
+        Float.tan(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -946,23 +994,23 @@ run(
       ),
       test(
         "above 1",
-        isNaN(Float.arcsin(1.01)),
-        holds,
+        Float.arcsin(1.01),
+        NaNMatcher(),
       ),
       test(
         "below 1",
-        isNaN(Float.arcsin(-1.01)),
-        holds,
+        Float.arcsin(-1.01),
+        NaNMatcher(),
       ),
       test(
         "positive NaN",
-        isNaN(Float.arcsin(positiveNaN)),
-        holds,
+        Float.arcsin(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.arcsin(negativeNaN)),
-        holds,
+        Float.arcsin(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -996,23 +1044,23 @@ run(
       ),
       test(
         "above 1",
-        isNaN(Float.arccos(1.01)),
-        holds,
+        Float.arccos(1.01),
+        NaNMatcher(),
       ),
       test(
         "below 1",
-        isNaN(Float.arccos(-1.01)),
-        holds,
+        Float.arccos(-1.01),
+        NaNMatcher(),
       ),
       test(
         "positive NaN",
-        isNaN(Float.arccos(positiveNaN)),
-        holds,
+        Float.arccos(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.arccos(negativeNaN)),
-        holds,
+        Float.arccos(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -1056,13 +1104,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.arctan(positiveNaN)),
-        holds,
+        Float.arctan(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.arctan(negativeNaN)),
-        holds,
+        Float.arctan(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -1081,8 +1129,8 @@ run(
       ),
       test(
         "left negative zero",
-        isNegativeZero(Float.arctan2(negativeZero, 0.0)),
-        M.equals(T.bool(true)),
+        Float.arctan2(negativeZero, 0.0),
+        NegativeZeroMatcher(),
       ),
       test(
         "right negative zero",
@@ -1156,48 +1204,48 @@ run(
       ),
       test(
         "left positive NaN",
-        isNaN(Float.arctan2(positiveNaN, 0.0)),
-        holds,
+        Float.arctan2(positiveNaN, 0.0),
+        NaNMatcher(),
       ),
       test(
         "left negative NaN",
-        isNaN(Float.arctan2(negativeNaN, 0.0)),
-        holds,
+        Float.arctan2(negativeNaN, 0.0),
+        NaNMatcher(),
       ),
       test(
         "right positive NaN",
-        isNaN(Float.arctan2(0.0, positiveNaN)),
-        holds,
+        Float.arctan2(0.0, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "left negative NaN",
-        isNaN(Float.arctan2(0.0, negativeNaN)),
-        holds,
+        Float.arctan2(0.0, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "two NaNs",
-        isNaN(Float.arctan2(positiveNaN, negativeNaN)),
-        holds,
+        Float.arctan2(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.arctan2(positiveNaN, positiveInfinity)),
-        holds,
+        Float.arctan2(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.arctan2(positiveNaN, negativeInfinity)),
-        holds,
+        Float.arctan2(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.arctan2(positiveInfinity, positiveNaN)),
-        holds,
+        Float.arctan2(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.arctan2(negativeInfinity, positiveNaN)),
-        holds,
+        Float.arctan2(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -1231,13 +1279,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.exp(positiveNaN)),
-        holds,
+        Float.exp(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.exp(negativeNaN)),
-        holds,
+        Float.exp(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -1276,8 +1324,8 @@ run(
       ),
       test(
         "negative",
-        isNaN(Float.log(-0.01)),
-        holds,
+        Float.log(-0.01),
+        NaNMatcher(),
       ),
       test(
         "positive infinity",
@@ -1286,13 +1334,13 @@ run(
       ),
       test(
         "positive NaN",
-        isNaN(Float.log(positiveNaN)),
-        holds,
+        Float.log(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN",
-        isNaN(Float.log(negativeNaN)),
-        holds,
+        Float.log(negativeNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -1621,8 +1669,8 @@ run(
       ),
       test(
         "zero",
-        isPositiveZero(Float.fromInt64(0)),
-        M.equals(T.bool(true)),
+        Float.fromInt64(0),
+        PositiveZeroMatcher(),
       ),
       test(
         "max integer",
@@ -1704,8 +1752,8 @@ run(
       ),
       test(
         "zero",
-        isPositiveZero(Float.fromInt(0)),
-        M.equals(T.bool(true)),
+        Float.fromInt(0),
+        PositiveZeroMatcher(),
       ),
       test(
         "positive big integer",
@@ -2787,13 +2835,13 @@ run(
       // fails due to issue, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive zero",
-      //   isNegativeZero(Float.neq(positiveZero)), 
-      //   holds,
+      //   Float.neq(positiveZero), 
+      //   NegativeZeroMatcher(),
       // ),
       test(
         "negative zero",
-        isPositiveZero(Float.neq(negativeZero)), 
-        holds,
+        Float.neq(negativeZero), 
+        PositiveZeroMatcher(),
       ),
       test(
         "positive infinity",
@@ -2807,24 +2855,24 @@ run(
       ),
       test(
         "positive NaN (provisional test)",
-        isNaN(Float.neq(positiveNaN)),
-        holds,
+        Float.neq(positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative NaN (provisional test)",
-        isNaN(Float.neq(negativeNaN)),
-        holds,
+        Float.neq(negativeNaN),
+        NaNMatcher(),
       ),
       // Not working correctly, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive NaN",
-      //   isNegativeNaN(Float.neq(positiveNaN)),
-      //   holds,
+      //   Float.neq(positiveNaN),
+      //   NegativeNaNMatcher(),
       // ),
       // test(
       //   "negative NaN",
-      //   isPositiveNaN(Float.neq(negativeNaN)),
-      //   holds,
+      //   Float.neq(negativeNaN),
+      //   PositiveNaNMatcher(),
       // ),
     ],
   ),
@@ -2899,8 +2947,8 @@ run(
       ),
       test(
         "positive and negative infinity",
-        isNaN(Float.add(positiveInfinity, negativeInfinity)),
-        holds,
+        Float.add(positiveInfinity, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "double negative infinity",
@@ -2909,58 +2957,58 @@ run(
       ),
       test(
         "negative and positive infinity",
-        isNaN(Float.add(negativeInfinity, positiveInfinity)),
-        holds,
+        Float.add(negativeInfinity, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "two positive NaNs",
-        isNaN(Float.add(positiveNaN, positiveNaN)),
-        holds,
+        Float.add(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "two negative NaNs",
-        isNaN(Float.add(negativeNaN, negativeNaN)),
-        holds,
+        Float.add(negativeNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaNs with mixed signs",
-        isNaN(Float.add(positiveNaN, negativeNaN)),
-        holds,
+        Float.add(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "number and NaN",
-        isNaN(Float.add(1.23, positiveNaN)),
-        holds,
+        Float.add(1.23, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and number",
-        isNaN(Float.add(positiveNaN, -1.23)),
-        holds,
+        Float.add(positiveNaN, -1.23),
+        NaNMatcher(),
       ),
       test(
         "NaN and NaN",
-        isNaN(Float.add(positiveNaN, positiveNaN)),
-        holds,
+        Float.add(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.add(positiveNaN, positiveInfinity)),
-        holds,
+        Float.add(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.add(positiveNaN, negativeInfinity)),
-        holds,
+        Float.add(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.add(positiveInfinity, positiveNaN)),
-        holds,
+        Float.add(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.add(negativeInfinity, positiveNaN)),
-        holds,
+        Float.add(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -3029,8 +3077,8 @@ run(
       ),
       test(
         "double positive infinity",
-        isNaN(Float.sub(positiveInfinity, positiveInfinity)),
-        holds,
+        Float.sub(positiveInfinity, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive and negative infinity",
@@ -3039,8 +3087,8 @@ run(
       ),
       test(
         "double negative infinity",
-        isNaN(Float.sub(negativeInfinity, negativeInfinity)),
-        holds,
+        Float.sub(negativeInfinity, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative and positive infinity",
@@ -3049,53 +3097,53 @@ run(
       ),
       test(
         "two positive NaNs",
-        isNaN(Float.sub(positiveNaN, positiveNaN)),
-        holds,
+        Float.sub(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "two negative NaNs",
-        isNaN(Float.sub(negativeNaN, negativeNaN)),
-        holds,
+        Float.sub(negativeNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaNs with mixed signs",
-        isNaN(Float.sub(positiveNaN, negativeNaN)),
-        holds,
+        Float.sub(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "number and NaN",
-        isNaN(Float.sub(1.23, positiveNaN)),
-        holds,
+        Float.sub(1.23, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and number",
-        isNaN(Float.sub(positiveNaN, -1.23)),
-        holds,
+        Float.sub(positiveNaN, -1.23),
+        NaNMatcher(),
       ),
       test(
         "NaN and NaN",
-        isNaN(Float.sub(positiveNaN, positiveNaN)),
-        holds,
+        Float.sub(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.sub(positiveNaN, positiveInfinity)),
-        holds,
+        Float.sub(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.sub(positiveNaN, negativeInfinity)),
-        holds,
+        Float.sub(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.sub(positiveInfinity, positiveNaN)),
-        holds,
+        Float.sub(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.sub(negativeInfinity, positiveNaN)),
-        holds,
+        Float.sub(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -3155,8 +3203,8 @@ run(
       ),
       test(
         "zero and positive infinity",
-        isNaN(Float.mul(0.0, positiveInfinity)),
-        holds,
+        Float.mul(0.0, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and positive number",
@@ -3170,8 +3218,8 @@ run(
       ),
       test(
         "positive infinity and zero",
-        isNaN(Float.mul(positiveInfinity, 0.0)),
-        holds,
+        Float.mul(positiveInfinity, 0.0),
+        NaNMatcher(),
       ),
       test(
         "positive number and negative infinity",
@@ -3185,8 +3233,8 @@ run(
       ),
       test(
         "zero and negative infinity",
-        isNaN(Float.mul(0.0, negativeInfinity)),
-        holds,
+        Float.mul(0.0, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and positive number",
@@ -3200,8 +3248,8 @@ run(
       ),
       test(
         "negative infinity and zero",
-        isNaN(Float.mul(negativeInfinity, 0.0)),
-        holds,
+        Float.mul(negativeInfinity, 0.0),
+        NaNMatcher(),
       ),
       test(
         "double positive infinity",
@@ -3225,63 +3273,63 @@ run(
       ),
       test(
         "two positive NaNs",
-        isNaN(Float.mul(positiveNaN, positiveNaN)),
-        holds,
+        Float.mul(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "two negative NaNs",
-        isNaN(Float.mul(negativeNaN, negativeNaN)),
-        holds,
+        Float.mul(negativeNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaNs with mixed signs",
-        isNaN(Float.mul(positiveNaN, negativeNaN)),
-        holds,
+        Float.mul(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "number and NaN",
-        isNaN(Float.mul(1.23, positiveNaN)),
-        holds,
+        Float.mul(1.23, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "zero and NaN",
-        isNaN(Float.mul(0.0, positiveNaN)),
-        holds,
+        Float.mul(0.0, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and number",
-        isNaN(Float.mul(positiveNaN, -1.23)),
-        holds,
+        Float.mul(positiveNaN, -1.23),
+        NaNMatcher(),
       ),
       test(
         "NaN and zero",
-        isNaN(Float.mul(positiveNaN, 0.0)),
-        holds,
+        Float.mul(positiveNaN, 0.0),
+        NaNMatcher(),
       ),
       test(
         "NaN and NaN",
-        isNaN(Float.mul(positiveNaN, positiveNaN)),
-        holds,
+        Float.mul(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.mul(positiveNaN, positiveInfinity)),
-        holds,
+        Float.mul(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.mul(positiveNaN, negativeInfinity)),
-        holds,
+        Float.mul(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.mul(positiveInfinity, positiveNaN)),
-        holds,
+        Float.mul(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.mul(negativeInfinity, positiveNaN)),
-        holds,
+        Float.mul(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -3310,33 +3358,33 @@ run(
       ),
       test(
         "positive zeros",
-        isNaN(Float.div(positiveZero, positiveZero)),
-        holds,
+        Float.div(positiveZero, positiveZero),
+        NaNMatcher(),
       ),
       test(
         "negative zeros",
-        isNaN(Float.div(negativeZero, negativeZero)),
-        holds,
+        Float.div(negativeZero, negativeZero),
+        NaNMatcher(),
       ),
       test(
         "positive and negative zero",
-        isNegativeNaN(Float.div(positiveZero, negativeZero)),
-        holds,
+        Float.div(positiveZero, negativeZero),
+        NaNMatcher(),
       ),
       test(
         "negative and positive zero",
-        isNegativeNaN(Float.div(negativeZero, positiveZero)),
-        holds,
+        Float.div(negativeZero, positiveZero),
+        NaNMatcher(),
       ),
       test(
         "positive number and positive infinity",
-        isPositiveZero(Float.div(1.23, positiveInfinity)),
-        holds,
+        Float.div(1.23, positiveInfinity),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative number and positive infinity",
-        isNegativeZero(Float.div(-1.23, positiveInfinity)),
-        holds,
+        Float.div(-1.23, positiveInfinity),
+        NegativeZeroMatcher(),
       ),
       test(
         "positive infinity and negative number",
@@ -3355,13 +3403,13 @@ run(
       ),
       test(
         "positive number and negative infinity",
-        isNegativeZero(Float.div(1.23, negativeInfinity)),
-        holds,
+        Float.div(1.23, negativeInfinity),
+        NegativeZeroMatcher(),
       ),
       test(
         "negative number and negative infinity",
-        isPositiveZero(Float.div(-1.23, negativeInfinity)),
-        holds,
+        Float.div(-1.23, negativeInfinity),
+        PositiveZeroMatcher(),
       ),
       test(
         "negative infinity and positive number",
@@ -3380,73 +3428,73 @@ run(
       ),
       test(
         "double positive infinity",
-        isNaN(Float.div(positiveInfinity, positiveInfinity)),
-        holds,
+        Float.div(positiveInfinity, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive and negative infinity",
-        isNegativeNaN(Float.div(positiveInfinity, negativeInfinity)),
-        holds,
+        Float.div(positiveInfinity, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "double negative infinity",
-        isNaN(Float.div(negativeInfinity, negativeInfinity)),
-        holds,
+        Float.div(negativeInfinity, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative and positive infinity",
-        isNegativeNaN(Float.div(negativeInfinity, positiveInfinity)),
-        holds,
+        Float.div(negativeInfinity, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "two positive NaNs",
-        isNaN(Float.div(positiveNaN, positiveNaN)),
-        holds,
+        Float.div(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "two negative NaNs",
-        isNaN(Float.div(negativeNaN, negativeNaN)),
-        holds,
+        Float.div(negativeNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaNs with mixed signs",
-        isNaN(Float.div(positiveNaN, negativeNaN)),
-        holds,
+        Float.div(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "number and NaN",
-        isNaN(Float.div(1.23, positiveNaN)),
-        holds,
+        Float.div(1.23, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and number",
-        isNaN(Float.div(positiveNaN, -1.23)),
-        holds,
+        Float.div(positiveNaN, -1.23),
+        NaNMatcher(),
       ),
       test(
         "NaN and NaN",
-        isNaN(Float.div(positiveNaN, positiveNaN)),
-        holds,
+        Float.div(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.div(positiveNaN, positiveInfinity)),
-        holds,
+        Float.div(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.div(positiveNaN, negativeInfinity)),
-        holds,
+        Float.div(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.div(positiveInfinity, positiveNaN)),
-        holds,
+        Float.div(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.div(negativeInfinity, positiveNaN)),
-        holds,
+        Float.div(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -3480,23 +3528,23 @@ run(
       ),
       test(
         "positive zeros",
-        isNaN(Float.rem(positiveZero, positiveZero)),
-        holds,
+        Float.rem(positiveZero, positiveZero),
+        NaNMatcher(),
       ),
       test(
         "negative zeros",
-        isNaN(Float.rem(negativeZero, negativeZero)),
-        holds,
+        Float.rem(negativeZero, negativeZero),
+        NaNMatcher(),
       ),
       test(
         "positive and negative zero",
-        isNegativeNaN(Float.rem(positiveZero, negativeZero)),
-        holds,
+        Float.rem(positiveZero, negativeZero),
+        NegativeNaNMatcher(),
       ),
       test(
         "negative and positive zero",
-        isNegativeNaN(Float.rem(negativeZero, positiveZero)),
-        holds,
+        Float.rem(negativeZero, positiveZero),
+        NegativeNaNMatcher(),
       ),
       test(
         "positive number and positive infinity",
@@ -3515,18 +3563,18 @@ run(
       ),
       test(
         "positive infinity and positive number",
-        isNaN(Float.rem(positiveInfinity, 1.23)),
-        holds,
+        Float.rem(positiveInfinity, 1.23),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and negative number",
-        isNaN(Float.rem(positiveInfinity, -1.23)),
-        holds,
+        Float.rem(positiveInfinity, -1.23),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and zero",
-        isNaN(Float.rem(positiveInfinity, 0.0)),
-        holds,
+        Float.rem(positiveInfinity, 0.0),
+        NaNMatcher(),
       ),
       test(
         "positive number and negative infinity",
@@ -3545,88 +3593,88 @@ run(
       ),
       test(
         "negative infinity and positive number",
-        isNaN(Float.rem(negativeInfinity, 1.23)),
-        holds,
+        Float.rem(negativeInfinity, 1.23),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and negative number",
-        isNaN(Float.rem(negativeInfinity, -1.23)),
-        holds,
+        Float.rem(negativeInfinity, -1.23),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and zero",
-        isNaN(Float.rem(negativeInfinity, 0.0)),
-        holds,
+        Float.rem(negativeInfinity, 0.0),
+        NaNMatcher(),
       ),
       test(
         "double positive infinity",
-        isNaN(Float.rem(positiveInfinity, positiveInfinity)),
-        holds,
+        Float.rem(positiveInfinity, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive and negative infinity",
-        isNegativeNaN(Float.rem(positiveInfinity, negativeInfinity)),
-        holds,
+        Float.rem(positiveInfinity, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "double negative infinity",
-        isNaN(Float.rem(negativeInfinity, negativeInfinity)),
-        holds,
+        Float.rem(negativeInfinity, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "negative and positive infinity",
-        isNegativeNaN(Float.rem(negativeInfinity, positiveInfinity)),
-        holds,
+        Float.rem(negativeInfinity, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "two positive NaNs",
-        isNaN(Float.rem(positiveNaN, positiveNaN)),
-        holds,
+        Float.rem(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "two negative NaNs",
-        isNaN(Float.rem(negativeNaN, negativeNaN)),
-        holds,
+        Float.rem(negativeNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaNs with mixed signs",
-        isNaN(Float.rem(positiveNaN, negativeNaN)),
-        holds,
+        Float.rem(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "number and NaN",
-        isNaN(Float.rem(1.23, positiveNaN)),
-        holds,
+        Float.rem(1.23, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and number",
-        isNaN(Float.rem(positiveNaN, -1.23)),
-        holds,
+        Float.rem(positiveNaN, -1.23),
+        NaNMatcher(),
       ),
       test(
         "NaN and NaN",
-        isNaN(Float.rem(positiveNaN, positiveNaN)),
-        holds,
+        Float.rem(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.rem(positiveNaN, positiveInfinity)),
-        holds,
+        Float.rem(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative infinity",
-        isNaN(Float.rem(positiveNaN, negativeInfinity)),
-        holds,
+        Float.rem(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "positive infinity and NaN",
-        isNaN(Float.rem(positiveInfinity, positiveNaN)),
-        holds,
+        Float.rem(positiveInfinity, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "negative infinity and NaN",
-        isNaN(Float.rem(negativeInfinity, positiveNaN)),
-        holds,
+        Float.rem(negativeInfinity, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
@@ -3670,8 +3718,8 @@ run(
       ),
       test(
         "negative base, positive non-integral exponent",
-        isNaN(Float.pow(-7.2, 3.2)),
-        holds,
+        Float.pow(-7.2, 3.2),
+        NaNMatcher(),
       ),
       test(
         "negative base, zero exponent",
@@ -3685,8 +3733,8 @@ run(
       ),
       test(
         "negative base, negative non-integral exponent",
-        isNaN(Float.pow(-7.2, -3.2)),
-        holds,
+        Float.pow(-7.2, -3.2),
+        NaNMatcher(),
       ),
       test(
         "positive zeros",
@@ -3810,28 +3858,28 @@ run(
       ),
       test(
         "two positive NaNs",
-        isNaN(Float.pow(positiveNaN, positiveNaN)),
-        holds,
+        Float.pow(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "two negative NaNs",
-        isNaN(Float.pow(negativeNaN, negativeNaN)),
-        holds,
+        Float.pow(negativeNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "NaNs with mixed signs",
-        isNaN(Float.pow(positiveNaN, negativeNaN)),
-        holds,
+        Float.pow(positiveNaN, negativeNaN),
+        NaNMatcher(),
       ),
       test(
         "number and NaN",
-        isNaN(Float.pow(1.23, positiveNaN)),
-        holds,
+        Float.pow(1.23, positiveNaN),
+        NaNMatcher(),
       ),
       test(
         "NaN and number",
-        isNaN(Float.pow(positiveNaN, 2.0)),
-        holds,
+        Float.pow(positiveNaN, 2.0),
+        NaNMatcher(),
       ),
       test(
         "NaN and zero",
@@ -3840,18 +3888,18 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        isNaN(Float.pow(positiveNaN, positiveInfinity)),
-        holds,
+        Float.pow(positiveNaN, positiveInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and negative Infinity",
-        isNaN(Float.pow(positiveNaN, negativeInfinity)),
-        holds,
+        Float.pow(positiveNaN, negativeInfinity),
+        NaNMatcher(),
       ),
       test(
         "NaN and NaN",
-        isNaN(Float.pow(positiveNaN, positiveNaN)),
-        holds,
+        Float.pow(positiveNaN, positiveNaN),
+        NaNMatcher(),
       ),
     ],
   ),
