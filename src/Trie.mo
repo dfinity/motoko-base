@@ -529,6 +529,8 @@ module {
     rec(0, tl, tr);
   };
 
+  /// <a name="mergedisjoint"></a>
+  ///
   /// Merge tries like `merge`, except signals a
   /// dynamic error if there are collisions in common keys between the
   /// left and right inputs.
