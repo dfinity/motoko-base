@@ -11,7 +11,7 @@ import M "mo:matchers/Matchers";
 
 // Utilities to work with Matchers
 func arrayTest(array : [(Nat, Nat)]) : M.Matcher<[(Nat, Nat)]> {
-  M.equals<[(Nat, Nat)]>(T.array<(Nat, Nat)>(T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable), array));
+  M.equals<[(Nat, Nat)]>(T.array<(Nat, Nat)>(T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable), array))
 };
 
 // Sample maps to use for testing
@@ -31,26 +31,21 @@ let suite = Suite.suite(
     Suite.test(
       "size",
       map1.size(),
-      M.equals(T.nat(3)),
+      M.equals(T.nat(3))
     ),
     Suite.test(
       "size empty",
       TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).size(),
-      M.equals(T.nat(0)),
-    ),
-    Suite.test(
-      "size empty",
-      TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).size(),
-      M.equals(T.nat(0)),
+      M.equals(T.nat(0))
     ),
     Suite.test(
       "put",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         map.put(5, 15);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)]),
+      arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)])
     ),
     Suite.test(
       "put overwrite",
@@ -58,9 +53,9 @@ let suite = Suite.suite(
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         map.put(0, 20);
         map.put(4, 24);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 20), (2, 12), (4, 24)]),
+      arrayTest([(0, 20), (2, 12), (4, 24)])
     ),
     Suite.test(
       "put empty",
@@ -68,34 +63,34 @@ let suite = Suite.suite(
         let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
         map.put(0, 10);
         map.put(2, 12);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (2, 12)]),
+      arrayTest([(0, 10), (2, 12)])
     ),
     Suite.test(
       "replace old value",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
-        map.replace(5, 15);
+        map.replace(5, 15)
       },
-      M.equals(T.optional<Nat>(T.natTestable, null)),
+      M.equals(T.optional<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "replace new map",
       do {
         let map = TrieMap.clone<Nat, Nat>(map1, Nat.equal, Hash.hash);
         ignore map.replace(5, 15);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)]),
+      arrayTest([(0, 10), (2, 12), (4, 14), (5, 15)])
     ),
     Suite.test(
       "replace overwrite old value",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
-        map.replace(0, 20);
+        map.replace(0, 20)
       },
-      M.equals(T.optional(T.natTestable, ?10)),
+      M.equals(T.optional(T.natTestable, ?10))
     ),
     Suite.test(
       "replace overwrite new map",
@@ -103,9 +98,9 @@ let suite = Suite.suite(
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         ignore map.replace(0, 20);
         ignore map.replace(4, 24);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 20), (2, 12), (4, 24)]),
+      arrayTest([(0, 20), (2, 12), (4, 24)])
     ),
     Suite.test(
       "replace empty",
@@ -113,137 +108,137 @@ let suite = Suite.suite(
         let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
         ignore map.replace(0, 20);
         ignore map.replace(4, 24);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 20), (4, 24)]),
+      arrayTest([(0, 20), (4, 24)])
     ),
     Suite.test(
       "get",
       map1.get(4),
-      M.equals(T.optional(T.natTestable, ?14)),
+      M.equals(T.optional(T.natTestable, ?14))
     ),
     Suite.test(
       "get key not present",
       map1.get(3),
-      M.equals(T.optional<Nat>(T.natTestable, null)),
+      M.equals(T.optional<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "get empty",
       TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).get(3),
-      M.equals(T.optional<Nat>(T.natTestable, null)),
+      M.equals(T.optional<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "delete",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         map.delete(2);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (4, 14)]),
+      arrayTest([(0, 10), (4, 14)])
     ),
     Suite.test(
       "delete key not present",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         map.delete(3);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (2, 12), (4, 14)]),
+      arrayTest([(0, 10), (2, 12), (4, 14)])
     ),
     Suite.test(
       "delete empty",
       do {
         let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
         map.delete(3);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "remove old value",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
-        map.remove(4);
+        map.remove(4)
       },
-      M.equals(T.optional(T.natTestable, ?14)),
+      M.equals(T.optional(T.natTestable, ?14))
     ),
     Suite.test(
       "remove new map",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         ignore map.remove(4);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (2, 12)]),
+      arrayTest([(0, 10), (2, 12)])
     ),
     Suite.test(
       "remove key not present old value",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
-        map.remove(3);
+        map.remove(3)
       },
-      M.equals(T.optional<Nat>(T.natTestable, null)),
+      M.equals(T.optional<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "remove key not present new map",
       do {
         let map = TrieMap.clone(map1, Nat.equal, Hash.hash);
         ignore map.remove(3);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([(0, 10), (2, 12), (4, 14)]),
+      arrayTest([(0, 10), (2, 12), (4, 14)])
     ),
     Suite.test(
       "remove empty old value",
       do {
         let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
-        map.remove(3);
+        map.remove(3)
       },
-      M.equals(T.optional<Nat>(T.natTestable, null)),
+      M.equals(T.optional<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "remove empty new map",
       do {
         let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash);
         ignore map.remove(3);
-        Iter.toArray(map.entries());
+        Iter.toArray(map.entries())
       },
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "keys",
       Iter.toArray(map1.keys()),
-      M.equals(T.array(T.natTestable, [0, 2, 4])),
+      M.equals(T.array(T.natTestable, [0, 2, 4]))
     ),
     Suite.test(
       "keys empty",
       Iter.toArray(TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).keys()),
-      M.equals(T.array<Nat>(T.natTestable, [])),
+      M.equals(T.array<Nat>(T.natTestable, []))
     ),
     Suite.test(
       "vals",
       Iter.toArray(map1.vals()),
-      M.equals(T.array(T.natTestable, [10, 12, 14])),
+      M.equals(T.array(T.natTestable, [10, 12, 14]))
     ),
     Suite.test(
       "vals empty",
       Iter.toArray(TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).vals()),
-      M.equals(T.array<Nat>(T.natTestable, [])),
+      M.equals(T.array<Nat>(T.natTestable, []))
     ),
     Suite.test(
       "entries",
       Iter.toArray(map1.entries()),
-      arrayTest([(0, 10), (2, 12), (4, 14)]),
+      arrayTest([(0, 10), (2, 12), (4, 14)])
     ),
     Suite.test(
       "entries empty",
       Iter.toArray(TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash).entries()),
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "clone",
       Iter.toArray(TrieMap.clone<Nat, Nat>(map1, Nat.equal, Hash.hash).entries()),
-      arrayTest([(0, 10), (2, 12), (4, 14)]),
+      arrayTest([(0, 10), (2, 12), (4, 14)])
     ),
     Suite.test(
       "clone empty",
@@ -251,10 +246,10 @@ let suite = Suite.suite(
         TrieMap.clone(
           TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash),
           Nat.equal,
-          Hash.hash,
-        ).entries(),
+          Hash.hash
+        ).entries()
       ),
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "fromEntries round trip",
@@ -262,10 +257,10 @@ let suite = Suite.suite(
         TrieMap.fromEntries<Nat, Nat>(
           [(0, 10), (2, 12), (4, 14)].vals(),
           Nat.equal,
-          Hash.hash,
-        ).entries(),
+          Hash.hash
+        ).entries()
       ),
-      arrayTest([(0, 10), (2, 12), (4, 14)]),
+      arrayTest([(0, 10), (2, 12), (4, 14)])
     ),
     Suite.test(
       "fromEntries empty round trip",
@@ -273,10 +268,10 @@ let suite = Suite.suite(
         TrieMap.fromEntries<Nat, Nat>(
           [].vals(),
           Nat.equal,
-          Hash.hash,
-        ).entries(),
+          Hash.hash
+        ).entries()
       ),
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "map",
@@ -285,10 +280,10 @@ let suite = Suite.suite(
           map1,
           Nat.equal,
           Hash.hash,
-          Nat.add,
-        ).entries(),
+          Nat.add
+        ).entries()
       ),
-      arrayTest([(0, 10), (2, 14), (4, 18)]),
+      arrayTest([(0, 10), (2, 14), (4, 18)])
     ),
     Suite.test(
       "map empty",
@@ -297,10 +292,10 @@ let suite = Suite.suite(
           TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash),
           Nat.equal,
           Hash.hash,
-          Nat.add,
-        ).entries(),
+          Nat.add
+        ).entries()
       ),
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "mapFilter",
@@ -311,14 +306,14 @@ let suite = Suite.suite(
           Hash.hash,
           func(k, v) {
             if (k == 0) {
-              null;
+              null
             } else {
-              ?(k + v);
-            };
-          },
-        ).entries(),
+              ?(k + v)
+            }
+          }
+        ).entries()
       ),
-      arrayTest([(2, 14), (4, 18)]),
+      arrayTest([(2, 14), (4, 18)])
     ),
     Suite.test(
       "mapFilter all",
@@ -327,10 +322,10 @@ let suite = Suite.suite(
           map1,
           Nat.equal,
           Hash.hash,
-          func _ = null,
-        ).entries(),
+          func _ = null
+        ).entries()
       ),
-      arrayTest([]),
+      arrayTest([])
     ),
     Suite.test(
       "mapFilter none",
@@ -339,24 +334,24 @@ let suite = Suite.suite(
           map1,
           Nat.equal,
           Hash.hash,
-          func(k, v) = ?(k + v),
-        ).entries(),
+          func(k, v) = ?(k + v)
+        ).entries()
       ),
-      arrayTest([(0, 10), (2, 14), (4, 18)]),
+      arrayTest([(0, 10), (2, 14), (4, 18)])
     ),
     Suite.test(
-      "mapFilter e",
+      "mapFilter empty",
       Iter.toArray(
         TrieMap.mapFilter<Nat, Nat, Nat>(
           TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash),
           Nat.equal,
           Hash.hash,
-          func(k, v) = ?(k + v),
-        ).entries(),
+          func(k, v) = ?(k + v)
+        ).entries()
       ),
-      arrayTest([]),
-    ),
-  ],
+      arrayTest([])
+    )
+  ]
 );
 
 Suite.run(suite);
