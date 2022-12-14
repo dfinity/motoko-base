@@ -304,18 +304,53 @@ let last = Suite.suite(
        M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
-      "success",
+      "singleton",
       List.last(?(3, null)),
       M.equals(T.optional(T.natTestable, ?3))
     ),
     Suite.test(
-      "success",
+      "threesome",
       List.last(?(1, ?(2, ?(3, null)))),
       M.equals(T.optional(T.natTestable, ?3))
     )
   ]
 );
 
-//let pop = ..
+let pop = Suite.suite(
+  "pop",
+  [
+    Suite.test(
+      "empty list",
+      List.pop(List.nil<Nat>()),
+      M.equals(T.tuple2(T.optionalTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (null, null) : (?Nat, List.List<Nat>) ))
+    ),
+    Suite.test(
+      "singleton",
+      List.pop(?(3, null)),
+      M.equals(T.tuple2(T.optionalTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (?3, null) : (?Nat, List.List<Nat>) ))
+    ),
+    Suite.test(
+      "threesome",
+      List.pop(?(1, ?(2, ?(3, null)))),
+      M.equals(T.tuple2(T.optionalTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (?1, ?(2, ?(3, null))) : (?Nat, List.List<Nat>) ))
+    ),
+  ]
+);
 
-Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append, isNil, push, last]))
+
+
+Suite.run(Suite.suite("List", [
+  mapResult,
+  replicate,
+  tabulate,
+  append,
+  isNil,
+  push,
+  last,
+  pop]))
