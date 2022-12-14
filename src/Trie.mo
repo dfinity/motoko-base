@@ -1206,7 +1206,6 @@ module {
   /// 
   /// Example:
   /// ```motoko include=initialize
-  /// import Array "mo:base/Array";
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
   /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
@@ -1246,7 +1245,6 @@ module {
   /// 
   /// Example:
   /// ```motoko include=initialize
-  /// import Array "mo:base/Array";
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
   /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
@@ -1287,6 +1285,24 @@ module {
   };
 
   /// Map and filter the key-value pairs by a given predicate.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
+  /// // `mapFilter` takes a function that takes a key-value tuple
+  /// // and returns a possibly-distinct value if the key-value pair should be included.
+  /// // in our case we filter for values greater than 20 and map them to their square
+  /// let filteredTrie = Trie.mapFilter<Text, Nat, Nat>(
+  ///   trie,
+  ///   func (k, v) = if (v > 20) return ?(v**2) else return null
+  /// );
+  /// assert (Trie.all<Text, Nat>(filteredTrie, func(k, v) = v > 60) == true);
+  /// ```
   public func mapFilter<K, V, W>(t : Trie<K, V>, f : (K, V) -> ?W) : Trie<K, W> {
     func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, W> {
       switch t {
