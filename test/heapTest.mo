@@ -10,20 +10,20 @@ do {
   for (i in I.revRange(100, 0)) {
     pq.put(i);
     let x = pq.peekMin();
-    assert (O.unwrap(x) == i);
+    assert (O.unwrap(x) == i)
   };
   for (i in I.range(0, 100)) {
     pq.put(i);
     let x = pq.peekMin();
-    assert (O.unwrap(x) == 0);
+    assert (O.unwrap(x) == 0)
   };
   for (i in I.range(0, 100)) {
     pq.deleteMin();
     let x = pq.peekMin();
     pq.deleteMin();
-    assert (O.unwrap(x) == i);
+    assert (O.unwrap(x) == i)
   };
-  O.assertNull(pq.peekMin());
+  O.assertNull(pq.peekMin())
 };
 
 // fromIter
@@ -34,18 +34,18 @@ do {
     for (i in I.range(0, 10)) {
       let x = pq.peekMin();
       assert (O.unwrap(x) == i);
-      pq.deleteMin();
+      pq.deleteMin()
     };
-    O.assertNull(pq.peekMin());
+    O.assertNull(pq.peekMin())
   };
 
   do {
     let pq = H.fromIter<Int>([].vals(), order);
-    O.assertNull(pq.peekMin());
+    O.assertNull(pq.peekMin())
   };
 
   do {
     let pq = H.fromIter<Int>([100].vals(), order);
-    assert (O.unwrap(pq.peekMin()) == 100);
-  };
-};
+    assert (O.unwrap(pq.peekMin()) == 100)
+  }
+}
