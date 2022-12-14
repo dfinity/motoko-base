@@ -15,21 +15,21 @@ let simpleTests = do {
       Suite.test(
         "mem",
         TrieSet.mem<Nat>(set1, 1, 1, Nat.equal),
-        M.equals(T.bool true),
+        M.equals(T.bool true)
       ),
       Suite.test(
         "size",
         TrieSet.size(set1),
-        M.equals(T.nat 3),
+        M.equals(T.nat 3)
       ),
       Suite.test(
         "toArray",
         TrieSet.toArray<Nat>(set1),
-        M.equals(T.array<Nat>(T.natTestable, [1, 2, 3])),
-      ),
-    ],
+        M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
+      )
+    ]
   );
-  Suite.run(suite);
+  Suite.run(suite)
 };
 
 let binopTests = do {
@@ -42,19 +42,19 @@ let binopTests = do {
       Suite.test(
         "union",
         TrieSet.toArray(TrieSet.union(a, b, Nat.equal)),
-        M.equals(T.array<Nat>(T.natTestable, [1, 2, 3])),
+        M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
       ),
       Suite.test(
         "intersect",
         TrieSet.toArray(TrieSet.intersect(a, b, Nat.equal)),
-        M.equals(T.array<Nat>(T.natTestable, [3])),
+        M.equals(T.array<Nat>(T.natTestable, [3]))
       ),
       Suite.test(
         "diff",
         TrieSet.toArray(TrieSet.diff(a, b, Nat.equal)),
-        M.equals(T.array<Nat>(T.natTestable, [1])),
-      ),
-    ],
+        M.equals(T.array<Nat>(T.natTestable, [1]))
+      )
+    ]
   );
-  Suite.run(suite);
-};
+  Suite.run(suite)
+}

@@ -18,7 +18,7 @@ module {
   /// Conversion.
   public let toText : Int -> Text = func(x) {
     if (x == 0) {
-      return "0";
+      return "0"
     };
 
     let isNegative = x < 0;
@@ -41,23 +41,23 @@ module {
           case 7 { "7" };
           case 8 { "8" };
           case 9 { "9" };
-          case _ { Prelude.unreachable() };
-        },
+          case _ { Prelude.unreachable() }
+        }
       ) # text;
-      int := int / base;
+      int := int / base
     };
 
-    return if isNegative { "-" # text } else { text };
+    return if isNegative { "-" # text } else { text }
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Int, y : Int) : Int {
-    if (x < y) { x } else { y };
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max(x : Int, y : Int) : Int {
-    if (x < y) { y } else { x };
+    if (x < y) { y } else { x }
   };
 
   // this is a local copy of deprecated Hash.hashNat8 (redefined to suppress the warning)
@@ -66,12 +66,12 @@ module {
     for (natOfKey in key.vals()) {
       hash := hash +% natOfKey;
       hash := hash +% hash << 10;
-      hash := hash ^ (hash >> 6);
+      hash := hash ^ (hash >> 6)
     };
     hash := hash +% hash << 3;
     hash := hash ^ (hash >> 11);
     hash := hash +% hash << 15;
-    return hash;
+    return hash
   };
 
   /// Computes a hash from the least significant 32-bits of `i`, ignoring other bits.
@@ -83,8 +83,8 @@ module {
       j & (255 << 0),
       j & (255 << 8),
       j & (255 << 16),
-      j & (255 << 24),
-    ]);
+      j & (255 << 24)
+    ])
   };
 
   /// @deprecated This function will be removed in future.
@@ -96,8 +96,8 @@ module {
       j & (255 << 0),
       j & (255 << 8),
       j & (255 << 16),
-      j & (255 << 24),
-    ]);
+      j & (255 << 24)
+    ])
   };
 
   /// Returns `x == y`.
@@ -120,7 +120,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Int, y : Int) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the negation of `x`, `-x` .
@@ -146,4 +146,4 @@ module {
   /// Returns `x` to the power of `y`, `x ** y`.
   public func pow(x : Int, y : Int) : Int { x ** y };
 
-};
+}
