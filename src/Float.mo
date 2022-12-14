@@ -1,15 +1,15 @@
 /// Double precision (64-bit) floating-point numbers in IEEE 754 representation.
 ///
 /// Common floating-point constants and functions.
-/// 
+///
 /// Notation for special values in the documentation below:
 /// `+inf`: Positive infinity
 /// `-inf`: Negative infinity
 /// `nan`: "not a number" (can have different sign bit values, but `nan != nan` regardless of the sign).
-/// 
-/// Note: 
+///
+/// Note:
 /// Floating point numbers have limited precision and operations may inherently result in numerical errors.
-/// 
+///
 /// Examples of numerical errors:
 ///   ```motoko name=initialize
 ///   assert(0.1 + 0.1 + 0.1 == 0.3); // Fails!
@@ -18,11 +18,11 @@
 ///   ```motoko name=initialize
 ////  assert(1e16 + 1.0 != 1e16); // Fails!
 ///   ```
-/// 
+///
 ////  (and many more cases)
-/// 
+///
 /// Advice:
-/// * Floating point number comparisons by `==` or `!=` are discouraged. Instead, it is better to compare 
+/// * Floating point number comparisons by `==` or `!=` are discouraged. Instead, it is better to compare
 ///   floating-point numbers with a numerical epsilon.
 ///
 ///   Example:
@@ -31,7 +31,7 @@
 ///   let equals = Float.abs(x - y) < epsilon;
 ///   ```
 ///
-/// * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base 
+/// * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base
 //    and a Nat for the exponent (decimal point).
 ///
 
@@ -58,9 +58,9 @@ module {
   /// | ------------ | --------------- |
   /// | `+inf`       | `+inf`          |
   /// | `-inf`       | `+inf`          |
-  /// | `nan`        | `nan`           | 
+  /// | `nan`        | `nan`           |
   /// | `-0.0`       | `0.0`           |
-  /// 
+  ///
   ///   Example:
   ///   ```motoko name=initialize
   ///   Float.abs(-1.2) // => 1.2
@@ -75,7 +75,7 @@ module {
   /// | `+inf`       | `+inf`           |
   /// | `-0.0`       | `-0.0`           |
   /// | `< 0.0`      | `nan`            |
-  /// | `nan`        | `nan`            | 
+  /// | `nan`        | `nan`            |
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -90,10 +90,10 @@ module {
   /// | ------------ | ---------------- |
   /// | `+inf`       | `+inf`           |
   /// | `-inf`       | `-inf`           |
-  /// | `nan`        | `nan`            | 
+  /// | `nan`        | `nan`            |
   /// | `0.0`        | `0.0`            |
   /// | `-0.0`       | `-0.0`           |
-  /// 
+  ///
   ///   Example:
   ///   ```motoko name=initialize
   ///   Float.ceil(1.2) // => 2.0
@@ -107,10 +107,10 @@ module {
   /// | ------------ | ----------------- |
   /// | `+inf`       | `+inf`            |
   /// | `-inf`       | `-inf`            |
-  /// | `nan`        | `nan`             | 
+  /// | `nan`        | `nan`             |
   /// | `0.0`        | `0.0`             |
   /// | `-0.0`       | `-0.0`            |
-  /// 
+  ///
   ///   Example:
   ///   ```motoko name=initialize
   ///   Float.floor(1.2) // => 1.0
@@ -125,10 +125,10 @@ module {
   /// | ------------ | ----------------- |
   /// | `+inf`       | `+inf`            |
   /// | `-inf`       | `-inf`            |
-  /// | `nan`        | `nan`             | 
+  /// | `nan`        | `nan`             |
   /// | `0.0`        | `0.0`             |
   /// | `-0.0`       | `-0.0`            |
-  /// 
+  ///
   ///   Example:
   ///   ```motoko name=initialize
   ///   Float.trunc(2.75) // => 2.0
@@ -136,7 +136,7 @@ module {
   public let trunc : (x : Float) -> Float = Prim.floatTrunc;
 
   /// Returns the nearest integral float to `x`.
-  /// A decimal place of exactly .5 is rounded up for `x > 0` 
+  /// A decimal place of exactly .5 is rounded up for `x > 0`
   /// and rounded down for `x < 0`
   ///
   /// Special cases:
@@ -144,10 +144,10 @@ module {
   /// | ------------ | ------------------- |
   /// | `+inf`       | `+inf`              |
   /// | `-inf`       | `-inf`              |
-  /// | `nan`        | `nan`               | 
+  /// | `nan`        | `nan`               |
   /// | `0.0`        | `0.0`               |
   /// | `-0.0`       | `-0.0`              |
-  /// 
+  ///
   ///   Example:
   ///   ```motoko name=initialize
   ///   Float.nearest(2.75) // => 3.0
@@ -156,7 +156,7 @@ module {
 
   /// Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
   ///
-  /// The sign bit of zero, infinity, and `nan` is considered. 
+  /// The sign bit of zero, infinity, and `nan` is considered.
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -179,7 +179,7 @@ module {
   public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
 
   /// Returns the larger value of `x` and `y`.
-  /// 
+  ///
   /// Special cases:
   /// | Argument `y` | Argument `x` | Result `max(y, x)` |
   /// | ------------ | ------------ | ------------------ |
@@ -234,7 +234,7 @@ module {
   ///   Example:
   ///   ```motoko name=initialize
   ///   Float.tan(Float.pi / 4) // => 1.0
-  ///   ``` 
+  ///   ```
   public let tan : (x : Float) -> Float = Prim.tan;
 
   /// Returns the arc sine of `x` in radians.
@@ -520,7 +520,7 @@ module {
   /// Returns the order of `x` and `y`.
   ///
   /// Note: This operation is discouraged as it does not consider numerical errors for equality, see comment above.
-  /// 
+  ///
   /// Issue: Undefined behavior for `nan`, not defining a total number order.
   ///
   /// Special cases:
@@ -540,9 +540,9 @@ module {
   };
 
   /// Returns the negation of `x`, `-x` .
-  /// 
+  ///
   /// Changes the sign bit for infinity.
-  /// Issue: Inconsistent behavior for zero and `NaN`. Probably related to 
+  /// Issue: Inconsistent behavior for zero and `NaN`. Probably related to
   /// https://github.com/dfinity/motoko/issues/3646
   ///
   ///   Example:
