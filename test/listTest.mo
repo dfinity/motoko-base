@@ -343,6 +343,28 @@ let pop = Suite.suite(
   ]
 );
 
+let size = Suite.suite(
+  "size",
+  [
+    Suite.test(
+      "empty list",
+      List.size(List.nil<Nat>()),
+      M.equals(T.nat(0))
+    ),
+    Suite.test(
+      "singleton",
+      List.size(?(3, null)),
+      M.equals(T.nat(1))
+    ),
+    Suite.test(
+      "threesome",
+      List.size(?(1, ?(2, ?(3, null)))),
+      M.equals(T.nat(3))
+    ),
+  ]
+);
+
+
 
 
 Suite.run(Suite.suite("List", [
@@ -353,4 +375,5 @@ Suite.run(Suite.suite("List", [
   isNil,
   push,
   last,
-  pop]))
+  pop,
+  size]))
