@@ -54,12 +54,14 @@ module {
   /// Returns the absolute value of `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `abs(x)` |
   /// | ------------ | --------------- |
   /// | `+inf`       | `+inf`          |
   /// | `-inf`       | `+inf`          |
   /// | `nan`        | `nan`           |
   /// | `-0.0`       | `0.0`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -70,12 +72,14 @@ module {
   /// Returns the square root of `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `sqrt(x)` |
   /// | ------------ | ---------------- |
   /// | `+inf`       | `+inf`           |
   /// | `-0.0`       | `-0.0`           |
   /// | `< 0.0`      | `nan`            |
   /// | `nan`        | `nan`            |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -86,6 +90,7 @@ module {
   /// Returns the smallest integral float greater than or equal to `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `ceil(x)` |
   /// | ------------ | ---------------- |
   /// | `+inf`       | `+inf`           |
@@ -93,6 +98,7 @@ module {
   /// | `nan`        | `nan`            |
   /// | `0.0`        | `0.0`            |
   /// | `-0.0`       | `-0.0`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -103,6 +109,7 @@ module {
   /// Returns the largest integral float less than or equal to `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `floor(x)` |
   /// | ------------ | ----------------- |
   /// | `+inf`       | `+inf`            |
@@ -110,6 +117,7 @@ module {
   /// | `nan`        | `nan`             |
   /// | `0.0`        | `0.0`             |
   /// | `-0.0`       | `-0.0`            |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -121,6 +129,7 @@ module {
   /// This is equilvent to returning `x` with truncating its decimal places.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `trunc(x)` |
   /// | ------------ | ----------------- |
   /// | `+inf`       | `+inf`            |
@@ -128,6 +137,7 @@ module {
   /// | `nan`        | `nan`             |
   /// | `0.0`        | `0.0`             |
   /// | `-0.0`       | `-0.0`            |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -140,6 +150,7 @@ module {
   /// and rounded down for `x < 0`
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `nearest(x)` |
   /// | ------------ | ------------------- |
   /// | `+inf`       | `+inf`              |
@@ -147,6 +158,7 @@ module {
   /// | `nan`        | `nan`               |
   /// | `0.0`        | `0.0`               |
   /// | `-0.0`       | `-0.0`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -167,10 +179,12 @@ module {
   /// Returns the smaller value of `x` and `y`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `y` | Argument `x` | Result `min(y, x)` |
   /// | ------------ | ------------ | ------------------ |
   /// | `nan`        | (any)        | `nan`              |
   /// | (any)        | `nan`        | `nan`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -181,10 +195,12 @@ module {
   /// Returns the larger value of `x` and `y`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `y` | Argument `x` | Result `max(y, x)` |
   /// | ------------ | ------------ | ------------------ |
   /// | `nan`        | (any)        | `nan`              |
   /// | (any)        | `nan`        | `nan`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -195,11 +211,13 @@ module {
   /// Returns the sine of the radian angle `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `sin(x)` |
   /// | ------------ | --------------- |
   /// | `+inf`       | `nan`           |
   /// | `-inf`       | `nan`           |
   /// | `nan`        | `nan`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -210,11 +228,13 @@ module {
   /// Returns the cosine of the radian angle `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `cos(x)` |
   /// | ------------ | --------------- |
   /// | `+inf`       | `nan`           |
   /// | `-inf`       | `nan`           |
   /// | `nan`        | `nan`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -225,11 +245,13 @@ module {
   /// Returns the tangent of the radian angle `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `tan(x)` |
   /// | ------------ | --------------- |
   /// | `+inf`       | `nan`           |
   /// | `-inf`       | `nan`           |
   /// | `nan`        | `nan`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -240,11 +262,13 @@ module {
   /// Returns the arc sine of `x` in radians.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `arcsin(x)` |
   /// | ------------ | ------------------ |
   /// | `> 1.0`      | `nan`              |
   /// | `< -1.0`     | `nan`              |
   /// | `nan`        | `nan`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -255,11 +279,13 @@ module {
   /// Returns the arc cosine of `x` in radians.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `arccos(x)` |
   /// | ------------ | ------------------ |
   /// | `> 1.0`      | `nan`              |
   /// | `< -1.0`     | `nan`              |
   /// | `nan`        | `nan`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -270,11 +296,13 @@ module {
   /// Returns the arc tangent of `x` in radians.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `arctan(x)` |
   /// | ------------ | ------------------ |
   /// | `+inf`       | `pi / 2`           |
   /// | `-inf`       | `-pi / 2`          |
   /// | `nan`        | `nan`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -285,10 +313,11 @@ module {
   /// Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `y` | Argument `x` | Result `arctan2(y, x)` |
   /// | ------------ | ------------ | ---------------------- |
   /// | `0.0`        | `0.0`        | `0.0`                  |
-  /// | `-0.0`        | `0.0`       | `-0.0`                 |
+  /// | `-0.0`       | `0.0`        | `-0.0`                 |
   /// | `0.0`        | `-0.0`       | `pi`                   |
   /// | `-0.0`       | `-0.0`       | `-pi`                  |
   /// | `+inf`       | `+inf`       | `pi / 4`               |
@@ -297,6 +326,7 @@ module {
   /// | `-inf`       | `-inf`       | `-3 * pi / 4`          |
   /// | `nan`        | (any)        | `nan`                  |
   /// | (any)        | `nan`        | `nan`                  |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -308,11 +338,13 @@ module {
   /// Returns the value of `e` raised to the `x`-th power.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `exp(x)` |
   /// | ------------ | --------------- |
   /// | `+inf`       | `+inf`          |
   /// | `-inf`       | `0.0`           |
   /// | `nan`        | `nan`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -323,6 +355,7 @@ module {
   /// Returns the natural logarithm (base-`e`) of `x`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Result `log(x)` |
   /// | ------------ | --------------- |
   /// | `0.0`        | `-inf`          |
@@ -330,6 +363,7 @@ module {
   /// | `< 0`        | `nan`           |
   /// | `+inf`       | `+inf`          |
   /// | `nan`        | `nan`           |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -424,6 +458,7 @@ module {
   /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `equal(x, y)` |
   /// | ------------ | ------------ | -------------------- |
   /// | `+0.0`       | `-0.0`       | `true`               |
@@ -431,6 +466,7 @@ module {
   /// | `+inf`       | `+inf`       | `true`               |
   /// | `-inf`       | `-inf`       | `true`               |
   /// | `nan`        | `nan`        | `false`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -443,6 +479,7 @@ module {
   /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `notEqual(x, y)` |
   /// | ------------ | ------------ | ----------------------- |
   /// | `+0.0`       | `-0.0`       | `false`                 |
@@ -450,6 +487,7 @@ module {
   /// | `+inf`       | `+inf`       | `false`                 |
   /// | `-inf`       | `-inf`       | `false`                 |
   /// | `nan`        | `nan`        | `true`                  |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -460,12 +498,14 @@ module {
   /// Returns `x < y`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `less(x, y)` |
   /// | ------------ | ------------ | ------------------- |
   /// | `+0.0`       | `-0.0`       | `false`             |
   /// | `-0.0`       | `+0.0`       | `false`             |
   /// | `nan`        | (any)        | `false`             |
   /// | (any)        | `nan`        | `false`             |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -476,12 +516,14 @@ module {
   /// Returns `x <= y`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `lessOrEqual(x, y)` |
   /// | ------------ | ------------ | -------------------------- |
   /// | `+0.0`       | `-0.0`       | `true`                     |
   /// | `-0.0`       | `+0.0`       | `true`                     |
   /// | `nan`        | (any)        | `false`                    |
   /// | (any)        | `nan`        | `false`                    |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -492,10 +534,12 @@ module {
   /// Returns `x > y`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `greater(x, y)` |
   /// | ------------ | ------------ | ---------------------- |
   /// | `nan`        | (any)        | `false`                |
   /// | (any)        | `nan`        | `false`                |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -506,10 +550,12 @@ module {
   /// Returns `x >= y`.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `greaterOrEqual(x, y)` |
   /// | ------------ | ------------ | ----------------------------- |
   /// | `nan`        | (any)        | `false`                       |
   /// | (any)        | `nan`        | `false`                       |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -524,12 +570,14 @@ module {
   /// Issue: Undefined behavior for `nan`, not defining a total number order.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `compare(x, y)` |
   /// | ------------ | ------------ | ---------------------- |
   /// | `+0.0`       | `-0.0`       | `#equal`               |
   /// | `-0.0`       | `+0.0`       | `#equal`               |
   /// | `nan`        | (any)        | (undefined)            |
   /// | (any)        | `nan`        | (undefined)            |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
@@ -556,6 +604,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y`     | Result `add(x, y)` |
   /// | ------------ | ---------------- | ------------------ |
   /// | `+inf`       | `+inf`           | `+inf`             |
@@ -564,6 +613,7 @@ module {
   /// | `-inf`       | (normal number)  | `-inf`             |
   /// | `+inf`       | `-inf`           | `nan`              |
   /// | `nan`        | (any)            | `nan`              |
+  /// ```
   /// The same cases apply communtatively, i.e. for `add(y, x)`.
   /// (A normal number means any value except infinity or `nan`.)
   ///
@@ -578,6 +628,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x`     | Argument `y`     | Result `sub(x, y)` |
   /// | ---------------- | ---------------- | ------------------ |
   /// | `+inf`           | `+inf`           | `nan`              |
@@ -590,6 +641,7 @@ module {
   /// | (normal number)  | `-inf`           | `+inf`             |
   /// | `nan`            | (any)            | `nan`              |
   /// | (any)            | `nan`            | `nan`              |
+  /// ```
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
@@ -603,6 +655,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x` | Argument `y` | Result `mul(x, y)` |
   /// | ------------ | ------------ | ------------------ |
   /// | `+inf`       | `> 0.0`      | `+inf`             |
@@ -612,6 +665,7 @@ module {
   /// | `+inf`       | `0.0`        | `nan`              |
   /// | `-inf`       | `0.0`        | `nan`              |
   /// | `nan`        | (any)        | `nan`              |
+  /// ```
   /// The same cases apply communtatively, i.e. for `mul(y, x)`.
   ///
   ///   Example:
@@ -625,6 +679,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x`    | Argument `y` | Result `div(x, y)` |
   /// | --------------- | ------------ | ------------------ |
   /// | `0.0`           | `0.0`        | `nan`              |
@@ -644,6 +699,7 @@ module {
   /// | `-inf`          | `< 0.0`      | `+inf`             |
   /// | `nan`           | (any)        | `nan`              |
   /// | (any)           | `nan`        | `nan`              |
+  /// ```
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
@@ -658,6 +714,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x`    | Argument `y` | Result `rem(x, y)` |
   /// | --------------- | ------------ | ------------------ |
   /// | `0.0`           | `0.0`        | `nan`              |
@@ -671,6 +728,7 @@ module {
   /// | `-inf`          | (any)        | `nan`              |
   /// | `nan`           | (any)        | `nan`              |
   /// | (any)           | `nan`        | `nan`              |
+  /// ```
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
@@ -684,6 +742,7 @@ module {
   /// Note: Numerical errors may occur, see comment above.
   ///
   /// Special cases:
+  /// ```
   /// | Argument `x`    | Argument `y`          | Result `pow(x, y)` |
   /// | --------------- | --------------------- | ------------------ |
   /// | `+inf`          | `> 0.0`               | `+inf`             |
@@ -707,6 +766,7 @@ module {
   /// | `nan`           | `!= 0.0`              | `nan`              |
   /// | `nan`           | `0.0`                 | `1.0`              |
   /// | (any)           | `nan`                 | `nan`              |
+  /// ```
   ///
   ///   Example:
   ///   ```motoko name=initialize
