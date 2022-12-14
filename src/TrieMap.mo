@@ -24,8 +24,6 @@ import I "Iter";
 import Hash "Hash";
 import List "List";
 
-// FIXME Hash.hash deprecated and warning shows up in interpreter
-
 module {
   public class TrieMap<K, V>(isEq : (K, K) -> Bool, hashOf : K -> Hash.Hash) {
     var map = T.empty<K, V>();
