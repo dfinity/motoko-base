@@ -7,18 +7,18 @@ import M "mo:matchers/Matchers";
 
 let { run; test; suite } = Suite;
 
-class FloatTestable(number : Float, epsilon: Float) : T.TestableItem<Float> {
+class FloatTestable(number : Float, epsilon : Float) : T.TestableItem<Float> {
   public let item = number;
   public func display(number : Float) : Text {
     debug_show (number);
   };
-  public let equals = func(x : Float, y : Float) : Bool { 
+  public let equals = func(x : Float, y : Float) : Bool {
     if (epsilon == 0.0) {
       x == y // to also test Float.abs()
     } else {
-      Float.abs(x - y) < epsilon
-    }
-   };
+      Float.abs(x - y) < epsilon;
+    };
+  };
 };
 
 class Int64Testable(number : Int64) : T.TestableItem<Int64> {
@@ -26,91 +26,91 @@ class Int64Testable(number : Int64) : T.TestableItem<Int64> {
   public func display(number : Int64) : Text {
     debug_show (number);
   };
-  public let equals = func(x : Int64, y : Int64) : Bool { 
-    x == y
+  public let equals = func(x : Int64, y : Int64) : Bool {
+    x == y;
   };
 };
 
-func isNaN(number: Float): Bool {
-  number != number
+func isNaN(number : Float) : Bool {
+  number != number;
 };
 
-let positiveInfinity = 1.0/0.0;
-let negativeInfinity = -1.0/0.0;
+let positiveInfinity = 1.0 / 0.0;
+let negativeInfinity = -1.0 / 0.0;
 
-let negativeNaN = 0.0/0.0;
+let negativeNaN = 0.0 / 0.0;
 let positiveNaN = Float.copySign(negativeNaN, 1.0); // Compiler issue, NaN are represented negative by default. https://github.com/dfinity/motoko/issues/3647
 
-func isPositiveNaN(number: Float): Bool {
-  debug_show(number) == "nan"
+func isPositiveNaN(number : Float) : Bool {
+  debug_show (number) == "nan";
 };
 
-func isNegativeNaN(number: Float): Bool {
-  debug_show(number) == "-nan"
+func isNegativeNaN(number : Float) : Bool {
+  debug_show (number) == "-nan";
 };
 
 let positiveZero = 0.0;
 let negativeZero = Float.copySign(0.0, -1.0); // Compiler bug, cannot use literal `-0.0`. https://github.com/dfinity/motoko/issues/3646
 
-func isPositiveZero(number: Float): Bool {
-  number == 0.0 and 1.0 / number == positiveInfinity
+func isPositiveZero(number : Float) : Bool {
+  number == 0.0 and 1.0 / number == positiveInfinity;
 };
 
-func isNegativeZero(number: Float): Bool {
-  number == 0.0 and 1.0 / number == negativeInfinity
+func isNegativeZero(number : Float) : Bool {
+  number == 0.0 and 1.0 / number == negativeInfinity;
 };
 
 class PositiveZeroMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number: Float, description: M.Description) {
-    Debug.print(debug_show(number) # " should be '0.0' (positive zero)");
+  public func describeMismatch(number : Float, description : M.Description) {
+    Debug.print(debug_show (number) # " should be '0.0' (positive zero)");
   };
 
-  public func matches(number: Float): Bool {
-    isPositiveZero(number)
-  }
+  public func matches(number : Float) : Bool {
+    isPositiveZero(number);
+  };
 };
 
 class NegativeZeroMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number: Float, description: M.Description) {
-    Debug.print(debug_show(number) # " should be '-0.0' (negative zero)");
+  public func describeMismatch(number : Float, description : M.Description) {
+    Debug.print(debug_show (number) # " should be '-0.0' (negative zero)");
   };
 
-  public func matches(number: Float): Bool {
-    isNegativeZero(number)
-  }
+  public func matches(number : Float) : Bool {
+    isNegativeZero(number);
+  };
 };
 
 let noEpsilon = 0.0;
-let smallEpsilon = 1e-6;
+let smallEpsilon = 1 e -6;
 
 class NaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number: Float, description: M.Description) {
-    Debug.print(debug_show(number) # " should be 'nan' or '-nan'");
+  public func describeMismatch(number : Float, description : M.Description) {
+    Debug.print(debug_show (number) # " should be 'nan' or '-nan'");
   };
 
-  public func matches(number: Float): Bool {
-    isNaN(number)
-  }
+  public func matches(number : Float) : Bool {
+    isNaN(number);
+  };
 };
 
 class PositiveNaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number: Float, description: M.Description) {
-    Debug.print(debug_show(number) # " should be 'nan' (positive)");
+  public func describeMismatch(number : Float, description : M.Description) {
+    Debug.print(debug_show (number) # " should be 'nan' (positive)");
   };
 
-  public func matches(number: Float): Bool {
-    isPositiveNaN(number)
-  }
+  public func matches(number : Float) : Bool {
+    isPositiveNaN(number);
+  };
 };
 
 class NegativeNaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number: Float, description: M.Description) {
-    Debug.print(debug_show(number) # " should be '-nan' (negative)");
+  public func describeMismatch(number : Float, description : M.Description) {
+    Debug.print(debug_show (number) # " should be '-nan' (negative)");
   };
 
-  public func matches(number: Float): Bool {
-    isNegativeNaN(number)
-  }
+  public func matches(number : Float) : Bool {
+    isNegativeNaN(number);
+  };
 };
 
 // Some tests are adopted from Motoko compiler test `float-ops.mo`.
@@ -143,7 +143,7 @@ run(
       ),
       test(
         "negative zero",
-        Float.abs(negativeZero), 
+        Float.abs(negativeZero),
         PositiveZeroMatcher(),
       ),
       test(
@@ -764,7 +764,6 @@ run(
     ],
   ),
 );
-
 
 /* --------------------------------------- */
 
@@ -1624,7 +1623,7 @@ run(
       ),
       test(
         "nearly zero",
-        Float.toInt64(-1e-40),
+        Float.toInt64(-1 e -40),
         M.equals(Int64Testable(0)),
       ),
       test(
@@ -1675,12 +1674,12 @@ run(
       test(
         "max integer",
         Float.fromInt64(9223372036854775807),
-        M.equals(FloatTestable(9223372036854775807.0, noEpsilon))
+        M.equals(FloatTestable(9223372036854775807.0, noEpsilon)),
       ),
       test(
         "min integer",
         Float.fromInt64(-9223372036854775808),
-        M.equals(FloatTestable(-9223372036854775808.0, noEpsilon))
+        M.equals(FloatTestable(-9223372036854775808.0, noEpsilon)),
       ),
     ],
   ),
@@ -1707,7 +1706,7 @@ run(
       ),
       test(
         "nearly zero",
-        Float.toInt(-1e-40),
+        Float.toInt(-1 e -40),
         M.equals(T.int(0)),
       ),
       test(
@@ -2648,8 +2647,8 @@ class OrderTestable(value : Order) : T.TestableItem<Order> {
   public func display(value : Order) : Text {
     debug_show (value);
   };
-  public let equals = func(x : Order, y : Order) : Bool { 
-    x == y
+  public let equals = func(x : Order, y : Order) : Bool {
+    x == y;
   };
 };
 
@@ -2765,7 +2764,7 @@ run(
       test(
         "two negative NaNs",
         Float.compare(negativeNaN, negativeNaN),
-       M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
       ),
       test(
         "NaNs with mixed signs",
@@ -2835,12 +2834,12 @@ run(
       // fails due to issue, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive zero",
-      //   Float.neq(positiveZero), 
+      //   Float.neq(positiveZero),
       //   NegativeZeroMatcher(),
       // ),
       test(
         "negative zero",
-        Float.neq(negativeZero), 
+        Float.neq(negativeZero),
         PositiveZeroMatcher(),
       ),
       test(
@@ -2877,7 +2876,6 @@ run(
     ],
   ),
 );
-
 
 /* --------------------------------------- */
 
@@ -3148,7 +3146,6 @@ run(
     ],
   ),
 );
-
 
 /* --------------------------------------- */
 
