@@ -149,6 +149,8 @@ func listRes(itm : Result.Result<List.List<Nat>, Text>) : T.TestableItem<Result.
   { display = resT.display; equals = resT.equals; item = itm }
 };
 
+
+
 let mapResult = Suite.suite(
   "mapResult",
   [
@@ -250,4 +252,25 @@ let append = Suite.suite(
   ]
 );
 
-Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append]))
+let last = Suite.suite(
+  "last",
+  [
+    Suite.test(
+      "empty list",
+      List.last(List.nil<Nat>()),
+       M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "success",
+      List.last(?(3, null)),
+      M.equals(T.optional(T.natTestable, ?3))
+    ),
+    Suite.test(
+      "success",
+      List.last(?(1, ?(2, ?(3, null)))),
+      M.equals(T.optional(T.natTestable, ?3))
+    )
+  ]
+);
+
+Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append, last]))
