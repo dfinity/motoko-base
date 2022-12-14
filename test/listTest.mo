@@ -252,6 +252,49 @@ let append = Suite.suite(
   ]
 );
 
+let isNil = Suite.suite(
+  "isNil",
+  [
+    Suite.test(
+      "empty",
+      List.isNil(List.nil<Nat>()),
+       M.equals(T.bool(true))
+    ),
+    Suite.test(
+      "singleton",
+      List.isNil(?(3, null)),
+      M.equals(T.bool(false))
+    ),
+    Suite.test(
+      "nary",
+      List.isNil(?(1, ?(2, ?(3, null)))),
+      M.equals(T.bool(false))
+    )
+  ]
+);
+
+let push = Suite.suite(
+  "push",
+  [
+    Suite.test(
+      "empty",
+      List.push(0, List.nil<Nat>()),
+      M.equals(T.list(T.natTestable, ?(0, null)))
+    ),
+    Suite.test(
+      "singleton",
+      List.push(1, List.push(0, List.nil<Nat>())),
+      M.equals(T.list(T.natTestable, ?(1, ?(0, null))))
+    ),
+    Suite.test(
+      "nary",
+      List.push(2, List.push(1, List.push(0, List.nil<Nat>()))),
+      M.equals(T.list(T.natTestable, ?(2, ?(1, ?(0, null)))))
+    )
+  ]
+);
+
+
 let last = Suite.suite(
   "last",
   [
@@ -273,4 +316,6 @@ let last = Suite.suite(
   ]
 );
 
-Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append, last]))
+//let pop = ..
+
+Suite.run(Suite.suite("List", [mapResult, replicate, tabulate, append, isNil, push, last]))
