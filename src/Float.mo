@@ -63,7 +63,7 @@ module {
   /// 
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.abs(-1.2); // result is 1.2
+  ///   Float.abs(-1.2) // => 1.2
   ///   ```
   public let abs : (x : Float) -> Float = Prim.floatAbs;
 
@@ -79,7 +79,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.sqrt(6.25); // result is 2.5
+  ///   Float.sqrt(6.25) // => 2.5
   ///   ```
   public let sqrt : (x : Float) -> Float = Prim.floatSqrt;
 
@@ -96,7 +96,7 @@ module {
   /// 
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.ceil(1.2); // result is 2.0
+  ///   Float.ceil(1.2) // => 2.0
   ///   ```
   public let ceil : (x : Float) -> Float = Prim.floatCeil;
 
@@ -113,7 +113,7 @@ module {
   /// 
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.floor(1.2); // returns 1.0
+  ///   Float.floor(1.2) // => 1.0
   ///   ```
   public let floor : (x : Float) -> Float = Prim.floatFloor;
 
@@ -131,7 +131,7 @@ module {
   /// 
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.trunc(2.75); // returns 2.0
+  ///   Float.trunc(2.75) // => 2.0
   ///   ```
   public let trunc : (x : Float) -> Float = Prim.floatTrunc;
 
@@ -150,7 +150,7 @@ module {
   /// 
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.nearest(2.75); // returns 3.0
+  ///   Float.nearest(2.75) // => 3.0
   ///   ```
   public let nearest : (x : Float) -> Float = Prim.floatNearest;
 
@@ -160,7 +160,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.copySign(1.2, -2.3); // returns -1.2
+  ///   Float.copySign(1.2, -2.3) // => -1.2
   ///   ```
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
 
@@ -170,7 +170,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.min(1.2, -2.3); // returns -2.3
+  ///   Float.min(1.2, -2.3) // => -2.3
   ///   ```
   public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
 
@@ -180,7 +180,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.max(1.2, -2.3); // returns 1.2
+  ///   Float.max(1.2, -2.3) // => 1.2
   ///   ```
   public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
 
@@ -195,7 +195,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.sin(pi / 2); // returns 1.0
+  ///   Float.sin(pi / 2) // => 1.0
   ///   ```
   public let sin : (x : Float) -> Float = Prim.sin;
 
@@ -210,7 +210,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.sin(Float.pi / 2); // returns 0.0
+  ///   Float.sin(Float.pi / 2) // => 0.0
   ///   ```
   public let cos : (x : Float) -> Float = Prim.cos;
 
@@ -225,7 +225,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.tan(Float.pi / 4); // returns 1.0
+  ///   Float.tan(Float.pi / 4) // => 1.0
   ///   ``` 
   public let tan : (x : Float) -> Float = Prim.tan;
 
@@ -240,7 +240,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.arcsin(1.0); // returns Float.pi/2
+  ///   Float.arcsin(1.0) // => Float.pi/2
   ///   ```
   public let arcsin : (x : Float) -> Float = Prim.arcsin;
 
@@ -255,7 +255,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.arccos(1.0); // returns 0.0
+  ///   Float.arccos(1.0) // => 0.0
   ///   ```
   public let arccos : (x : Float) -> Float = Prim.arccos;
 
@@ -270,7 +270,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.arctan(1.0); // returns Float.pi/4
+  ///   Float.arctan(1.0) // => Float.pi/4
   ///   ```
   public let arctan : (x : Float) -> Float = Prim.arctan;
 
@@ -293,7 +293,7 @@ module {
   ///   Example:
   ///   ```motoko name=initialize
   ///   let sqrt2over2 = Float.sqrt(2) / 2;
-  ///   let result = Float.arctan2(sqrt2over2, sqrt2over2); // returns Float.pi/4
+  ///   Float.arctan2(sqrt2over2, sqrt2over2) // => Float.pi/4
   ///   ```
   public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
 
@@ -308,7 +308,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.exp(1.0); // returns Float.e
+  ///   Float.exp(1.0) // => Float.e
   ///   ```
   public let exp : (x : Float) -> Float = Prim.exp;
 
@@ -325,7 +325,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.log(Float.e); // returns 1.0
+  ///   Float.log(Float.e) // => 1.0
   ///   ```
   public let log : (x : Float) -> Float = Prim.log;
 
@@ -345,7 +345,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.format(#exp 3, 123.0); // returns "1.230e+02"
+  ///   Float.format(#exp 3, 123.0) // => "1.230e+02"
   ///   ```
   public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text = switch fmt {
     case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
@@ -364,7 +364,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.toText(0.12); // returns "0.120000"
+  ///   Float.toText(0.12) // => "0.120000"
   ///   ```
   public let toText : Float -> Text = Prim.floatToText;
 
@@ -375,7 +375,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.toInt64(-12.3); // returns -12
+  ///   Float.toInt64(-12.3) // => -12
   ///   ```
   public let toInt64 : Float -> Int64 = Prim.floatToInt64;
 
@@ -385,7 +385,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.fromInt64(-42); // returns -42.0
+  ///   Float.fromInt64(-42) // => -42.0
   ///   ```
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
 
@@ -395,7 +395,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.toInt(1.2e6); // returns 1200000
+  ///   Float.toInt(1.2e6) // => 1200000
   ///   ```
   public let toInt : Float -> Int = Prim.floatToInt;
 
@@ -407,7 +407,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.fromInt(-123); // returns -123.0
+  ///   Float.fromInt(-123) // => -123.0
   ///   ```
   public let fromInt : Int -> Float = Prim.intToFloat;
 
@@ -426,7 +426,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.equal(-12.3, -1.23e1); // returns true
+  ///   Float.equal(-12.3, -1.23e1) // => true
   ///   ```
   public func equal(x : Float, y : Float) : Bool { x == y };
 
@@ -445,7 +445,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.notEqual(-12.3, -1.23e1); // returns false
+  ///   Float.notEqual(-12.3, -1.23e1) // => false
   ///   ```
   public func notEqual(x : Float, y : Float) : Bool { x != y };
 
@@ -461,7 +461,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.less(Float.e, Float.pi); // returns true
+  ///   Float.less(Float.e, Float.pi) // => true
   ///   ```
   public func less(x : Float, y : Float) : Bool { x < y };
 
@@ -477,7 +477,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.lessOrEqual(0.123, 0.1234); // returns true
+  ///   Float.lessOrEqual(0.123, 0.1234) // => true
   ///   ```
   public func lessOrEqual(x : Float, y : Float) : Bool { x <= y };
 
@@ -491,7 +491,7 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.greater(Float.pi, Float.e); // returns true
+  ///   Float.greater(Float.pi, Float.e) // => true
   ///   ```
   public func greater(x : Float, y : Float) : Bool { x > y };
 
@@ -505,36 +505,205 @@ module {
   ///
   ///   Example:
   ///   ```motoko name=initialize
-  ///   let result = Float.greaterOrEqual(0.1234, 0.123); // returns true
+  ///   Float.greaterOrEqual(0.1234, 0.123) // => true
   ///   ```
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
   ///
   /// Note: This operation is discouraged as it does not consider numerical errors for equality, see comment above.
+  /// 
+  /// Issue: Undefined behavior for `nan`, not defining a total number order.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y` | Result `lessOrEqual(x, y)` |
+  /// | ------------ | ------------ | -------------------------- |
+  /// | `+0.0`       | `-0.0`       | `#equal`                   |
+  /// | `-0.0`       | `+0.0`       | `#equal`                   |
+  /// | `nan`        | (any)        | (undefined)                |
+  /// | (any)        | `nan`        | (undefined)                |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.compare(0.123, 0.1234) // => #greater
+  ///   ```
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the negation of `x`, `-x` .
-  public func neq(x : Float) : Float { -x };
+  /// 
+  /// Changes the sign bit for infinity.
+  /// Issue: Inconsistent behavior for zero and `NaN`. Probably related to 
+  /// https://github.com/dfinity/motoko/issues/3646
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.neq(1.23) // => -1.23
+  ///   ```
+  public func neq(x : Float) : Float { -x }; // Typo: Should be changed to `neg`
 
   /// Returns the sum of `x` and `y`, `x + y`.
+  ///
+  /// Note: Numerical errors may occur, see comment above.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y`     | Result `add(x, y)` |
+  /// | ------------ | ---------------- | ------------------ |
+  /// | `+inf`       | `+inf`           | `+inf`             |
+  /// | `+inf`       | (normal number)  | `+inf`             |
+  /// | `-inf`       | `-inf`           | `-inf`             |
+  /// | `-inf`       | (normal number)  | `-inf`             |
+  /// | `+inf`       | `-inf`           | `nan`              |
+  /// | `nan`        | (any)            | `nan`              |
+  /// The same cases apply communtatively, i.e. for `add(y, x)`.
+  /// (A normal number means any value except infinity or `nan`.)
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.add(1.23, 0.123) // => 1.353
+  ///   ```
   public func add(x : Float, y : Float) : Float { x + y };
 
   /// Returns the difference of `x` and `y`, `x - y`.
+  ///
+  /// Note: Numerical errors may occur, see comment above.
+  ///
+  /// Special cases:
+  /// | Argument `x`     | Argument `y`     | Result `sub(x, y)` |
+  /// | ---------------- | ---------------- | ------------------ |
+  /// | `+inf`           | `+inf`           | `nan`              |
+  /// | `+inf`           | (normal number)  | `+inf`             |
+  /// | `+inf`           | `-inf`           | `+inf`             |
+  /// | (normal number)  | `+inf`           | `-inf`             |
+  /// | `-inf`           | `-inf`           | `nan`              |
+  /// | `-inf`           | (normal number)  | `-inf`             |
+  /// | `-inf`           | `+inf`           | `-inf`             |
+  /// | (normal number)  | `-inf`           | `+inf`             |
+  /// | `nan`            | (any)            | `nan`              |
+  /// | (any)            | `nan`            | `nan`              |
+  /// (A normal number means any value except infinity or `nan`.)
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.sub(1.23, 0.123) // => 1.107
+  ///   ```
   public func sub(x : Float, y : Float) : Float { x - y };
 
   /// Returns the product of `x` and `y`, `x * y`.
+  ///
+  /// Note: Numerical errors may occur, see comment above.
+  ///
+  /// Special cases:
+  /// | Argument `x` | Argument `y` | Result `mul(x, y)` |
+  /// | ------------ | ------------ | ------------------ |
+  /// | `+inf`       | `> 0.0`      | `+inf`             |
+  /// | `-inf`       | `> 0.0`      | `-inf`             |
+  /// | `+inf`       | `< 0.0`      | `-inf`             |
+  /// | `-inf`       | `< 0.0`      | `+inf`             |
+  /// | `+inf`       | `0.0`        | `nan`              |
+  /// | `-inf`       | `0.0`        | `nan`              |
+  /// | `nan`        | (any)        | `nan`              |
+  /// The same cases apply communtatively, i.e. for `mul(y, x)`.
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.mul(1.23, 1e2) // => 123.0
+  ///   ```
   public func mul(x : Float, y : Float) : Float { x * y };
 
   /// Returns the division of `x` by `y`, `x / y`.
+  ///
+  /// Note: Numerical errors may occur, see comment above.
+  ///
+  /// Special cases:
+  /// | Argument `x`    | Argument `y` | Result `mul(x, y)` |
+  /// | --------------- | ------------ | ------------------ |
+  /// | `0.0`           | `0.0`        | `nan`              |
+  /// | `> 0.0`         | `> 0.0`      | `+inf`             |
+  /// | `< 0.0`         | `> 0.0`      | `-inf`             |
+  /// | `> 0.0`         | `< 0.0`      | `-inf`             |
+  /// | `< 0.0`         | `< 0.0`      | `+inf`             |
+  /// | (normal number) | `+inf`       | `0.0`              |
+  /// | (normal number) | `-inf`       | `0.0`              |
+  /// | `+inf`          | `+inf`       | `nan`              |
+  /// | `+inf`          | `-inf`       | `nan`              |
+  /// | `-inf`          | `+inf`       | `nan`              |
+  /// | `-inf`          | `-inf`       | `nan`              |
+  /// | `+inf`          | `>= 0.0`     | `+inf`             |
+  /// | `+inf`          | `< 0.0`      | `-inf`             |
+  /// | `-inf`          | `>= 0.0`     | `-inf`             |
+  /// | `-inf`          | `< 0.0`      | `+inf`             |
+  /// | `nan`           | (any)        | `nan`              |
+  /// | (any)           | `nan`        | `nan`              |
+  /// (A normal number means any value except infinity or `nan`.)
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.div(1.23, 1e2) // => 0.0123
+  ///   ```
   public func div(x : Float, y : Float) : Float { x / y };
 
-  /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Returns the floating point division remainder `x % y`,
+  /// which is defined as `x - trunc(x / y) * y`.
+  ///
+  /// Note: Numerical errors may occur, see comment above.
+  ///
+  /// Special cases:
+  /// | Argument `x`    | Argument `y` | Result `mul(x, y)` |
+  /// | --------------- | ------------ | ------------------ |
+  /// | `0.0`           | `0.0`        | `nan`              |
+  /// | `> 0.0`         | `> 0.0`      | `+inf`             |
+  /// | `< 0.0`         | `> 0.0`      | `-inf`             |
+  /// | `> 0.0`         | `< 0.0`      | `-inf`             |
+  /// | `< 0.0`         | `< 0.0`      | `+inf`             |
+  /// | (normal number) | `+inf`       | `x`                |
+  /// | (normal number) | `-inf`       | `x`                |
+  /// | `+inf`          | (any)        | `nan`              |
+  /// | `-inf`          | (any)        | `nan`              |
+  /// | `nan`           | (any)        | `nan`              |
+  /// | (any)           | `nan`        | `nan`              |
+  /// (A normal number means any value except infinity or `nan`.)
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.rem(7.2, 2.3) // => 0.3
+  ///   ```
   public func rem(x : Float, y : Float) : Float { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
+  ///
+  /// Note: Numerical errors may occur, see comment above.
+  ///
+  /// Special cases:
+  /// | Argument `x`    | Argument `y`          | Result `pow(x, y)` |
+  /// | --------------- | --------------------- | ------------------ |
+  /// | `+inf`          | `> 0.0`               | `+inf`             |
+  /// | `+inf`          | `0.0`                 | `1.0`              |
+  /// | `+inf`          | `< 0.0`               | `0.0`              |
+  /// | `+inf`          | `+inf`                | `+inf`             |
+  /// | `+inf`          | `-inf`                | `0.0`              |
+  /// | `> 0.0`         | `+inf`                | `+inf`             |
+  /// | `0.0`           | `+inf`                | `0.0`              |
+  /// | `0.0`           | `-inf`                | `+inf`             |
+  /// | `< 0.0`         | `+inf`                | `+inf`             |
+  /// | (normal number) | `-inf`                | `0.0`              |
+  /// | `< 0.0`         | non-integral          | `nan`              |
+  /// | `-inf`          | non-integral, `> 0.0` | `+inf`             |
+  /// | `-inf`          | even integral `> 0.0` | `+inf`             |
+  /// | `-inf`          | odd integral `> 0.0`  | `-inf`             |
+  /// | `-inf`          | `< 0.0`               | `0.0`              |
+  /// | `-inf`          | `0.0`                 | `1.0`              |
+  /// | `-inf`          | `+inf`                | `+inf`             |
+  /// | `-inf`          | `-inf`                | `1.0`              |
+  /// | `nan`           | `!= 0.0`              | `nan`              |
+  /// | `nan`           | `0.0`                 | `1.0`              |
+  /// | (any)           | `nan`                 | `nan`              |
+  ///
+  ///   Example:
+  ///   ```motoko name=initialize
+  ///   Float.pow(2.5, 2.0) // => 6.25
+  ///   ```
   public func pow(x : Float, y : Float) : Float { x ** y };
 
 };
