@@ -224,6 +224,7 @@ module {
   ///
   /// Example:
   /// ```motoko name=initialize
+  /// import { print } "mo:base/Debug";
   /// import Trie "mo:base/Trie";
   /// import Text "mo:base/Text";
   ///
@@ -1156,6 +1157,29 @@ module {
   ///
   /// Note: This position is not meaningful; it's only here so that we
   /// can inject tries into arrays using functions like `Array.tabulate`.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
+  /// // `tabulate` takes a size parameter, so we check the size of
+  /// // the trie first
+  /// let size = Trie.size(trie);
+  /// // now we can create an array of the same size passing `nth` as
+  /// // the generator used to fill the array.
+  /// // note that `toArray` is a convenience function that does the
+  /// // same thing without you having to check whether the tuple is 
+  /// // `null` or not, which we're not doing in this example
+  /// let array = Array.tabulate<?(Key<Text>, Nat)>(
+  ///   size,
+  ///   func n = Trie.nth(trie, n)
+  /// );
+  /// ```
   public func nth<K, V>(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) {
     func rec(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) {
       switch t {
@@ -1176,6 +1200,24 @@ module {
   };
 
   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
+  /// // `toArray` takes a function that takes a key-value tuple
+  /// // and returns a value of the type you want to use to fill
+  /// // the array. in our case we just return the value
+  /// let array = Trie.toArray<Text, Nat, Nat>(
+  ///   trie,
+  ///   func (k, v) = v
+  /// );
+  /// ```
   public func toArray<K, V, W>(t : Trie<K, V>, f : (K, V) -> W) : [W] {
     let a = A.tabulate<W>(
       size(t),
@@ -1198,6 +1240,25 @@ module {
   };
 
   /// Filter the key-value pairs by a given predicate.
+  ///
+  /// For a more detailed overview of how to use a Trie,
+  /// see the [User's Overview](#overview).
+  /// 
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
+  /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
+  /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
+  /// // `filter` takes a function that takes a key-value tuple
+  /// // and returns true if the key-value pair should be included.
+  /// // in our case those are pairs with a value greater than 20
+  /// let filteredTrie = Trie.filter<Text, Nat>(
+  ///   trie,
+  ///   func (k, v) = v > 20
+  /// );
+  /// assert (Trie.all<Text, Nat>(filteredTrie, func(k, v) = v > 20) == true);
+  /// ```
   public func filter<K, V>(t : Trie<K, V>, f : (K, V) -> Bool) : Trie<K, V> {
     func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {
