@@ -581,6 +581,41 @@ let partition = Suite.suite(
   ]
 );
 
+
+let mapFilter = Suite.suite(
+  "mapFilter",
+  [
+    Suite.test(
+      "empty list",
+      List.mapFilter<Nat, Text>(
+       List.nil<Nat>(),
+       func n { if (n % 2 == 0) ?(debug_show n) else null }),
+      M.equals(T.list(T.textTestable, null : List.List<Text>))
+    ),
+    Suite.test(
+      "singleton",
+      List.mapFilter<Nat, Text>(
+        ?(3, null),
+       func n { if (n % 2 == 0) ?(debug_show n) else null }),
+      M.equals(T.list(T.textTestable, null : List.List<Text>))
+    ),
+    Suite.test(
+      "threesome",
+      List.mapFilter<Nat, Text>(
+        ?(1, ?(2, ?(3, null))),
+       func n { if (n % 2 == 0) ?(debug_show n) else null }),
+      M.equals(T.list(T.textTestable, ?("2", null)))
+    ),
+    Suite.test(
+      "foursome",
+      List.mapFilter<Nat, Text>(
+        ?(1, ?(2, ?(3, ?(4, null)))),
+        func n { if (n % 2 == 0) ?(debug_show n) else null }),
+      M.equals(T.list(T.textTestable, ?("2", ?("4", null))))
+    ),
+  ]
+);
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -596,4 +631,5 @@ Suite.run(Suite.suite("List", [
   iterate,
   map,
   filter,
-  partition]))
+  partition,
+  mapFilter]))
