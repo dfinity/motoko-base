@@ -528,6 +528,58 @@ let filter = Suite.suite(
   ]
 );
 
+let partition = Suite.suite(
+  "partition",
+  [
+    Suite.test(
+      "empty list",
+      List.partition<Nat>(
+       List.nil<Nat>(),
+       func n { n % 2 == 0 }),
+      M.equals(T.tuple2(T.listTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (null, null) : (List.List<Nat>, List.List<Nat>)))
+    ),
+    Suite.test(
+      "singleton-false",
+      List.partition<Nat>(
+        ?(3, null),
+      func n { n % 2 == 0 }),
+      M.equals(T.tuple2(T.listTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (null, ?(3, null)) : (List.List<Nat>, List.List<Nat>)))
+
+    ),
+    Suite.test(
+      "singleton-true",
+      List.partition<Nat>(
+        ?(2, null),
+      func n { n % 2 == 0 }),
+      M.equals(T.tuple2(T.listTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (?(2, null), null) : (List.List<Nat>, List.List<Nat>)))
+    ),
+    Suite.test(
+      "threesome",
+      List.partition<Nat>(
+        ?(1, ?(2, ?(3, null))),
+        func n { n % 2 == 0 }),
+      M.equals(T.tuple2(T.listTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (?(2, null), ?(1, ?(3, null))) : (List.List<Nat>, List.List<Nat>)))
+    ),
+    Suite.test(
+      "foursome",
+      List.partition<Nat>(
+        ?(1, ?(2, ?(3, ?(4, null)))),
+        func n { n % 2 == 0 }),
+      M.equals(T.tuple2(T.listTestable(T.natTestable),
+                        T.listTestable(T.natTestable),
+                        (?(2, ?(4, null)),
+                         ?(1, ?(3, null))) : (List.List<Nat>, List.List<Nat>)))
+    ),
+  ]
+);
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -543,4 +595,5 @@ Suite.run(Suite.suite("List", [
   reverse,
   iterate,
   map,
-  filter]))
+  filter,
+  partition]))
