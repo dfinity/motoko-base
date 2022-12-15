@@ -126,11 +126,11 @@ module {
   /// Compares `t1` and `t2` lexicographically.
   ///
   /// ```motoko include=import
-  /// assert Text.compare("abc", "abc") == #equal;
-  /// assert Text.compare("abc", "def") == #less;
-  /// assert Text.compare("abc", "ABC") == #greater;
+  /// import { print } "mo:base/Debug";
   ///
-  /// Text.compare("", "") // Try it yourself
+  /// print(debug_show Text.compare("abc", "abc")); // #equal
+  /// print(debug_show Text.compare("abc", "def")); // #less
+  /// print(debug_show Text.compare("abc", "ABC")); // #greater
   /// ```
   public func compare(t1 : Text, t2 : Text) : { #less; #equal; #greater } {
     let c = Prim.textCompare(t1, t2);
