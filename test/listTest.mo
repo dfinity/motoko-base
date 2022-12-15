@@ -616,6 +616,74 @@ let mapFilter = Suite.suite(
   ]
 );
 
+
+let flatten = Suite.suite(
+  "flatten",
+  [
+    Suite.test(
+      "small-list",
+      List.flatten(
+        List.tabulate<List.List<Nat>>(10, func i { List.tabulate<Nat>(10, func j { i * 10 + j })})
+      ),
+      M.equals(
+        T.list(T.natTestable, List.tabulate<Nat>(100, func i { i }))
+      )
+    ),
+    Suite.test(
+      "small-nulls",
+      List.flatten(
+        List.tabulate<List.List<Nat>>(10, func i { null : List.List<Nat> })
+      ),
+      M.equals(
+        T.list(T.natTestable, null : List.List<Nat>)
+      )
+    ),
+   Suite.test(
+      "flatten",
+      List.flatten<Int>(?(?(1, ?(2, ?(3, null))),
+                          ?(null,
+                            ?(?(1, null),
+                              null)))),
+      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
+    ),
+    Suite.test(
+      "flatten empty start",
+      List.flatten<Int>(?(null,
+                         ?(?(1, ?(2, (?(3, null)))),
+                           ?(null,
+                             ?(?(1, null),
+                               null))))),
+      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
+    ),
+    Suite.test(
+      "flatten empty end",
+      List.flatten<Int>(?(?(1, ?(2, (?(3, null)))),
+                          ?(null,
+                            ?(?(1, null),
+                              ?(null,
+                                null))))),
+      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
+    ),
+    Suite.test(
+      "flatten singleton",
+      List.flatten<Int>(?(?(1, ?(2, (?(3, null)))),
+                          null)),
+      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, (?(3, null))))))
+    ),
+    Suite.test(
+      "flatten singleton empty",
+      List.flatten<Int>(?(null, null)),
+      M.equals(T.list<Int>(T.intTestable, null))
+    ),
+    Suite.test(
+      "flatten empty",
+      List.flatten<Int>(null),
+      M.equals(T.list<Int>(T.intTestable, null))
+    ),
+  ]
+);
+
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -632,4 +700,7 @@ Suite.run(Suite.suite("List", [
   map,
   filter,
   partition,
-  mapFilter]))
+  mapFilter,
+  flatten
+  ]))
+

@@ -182,6 +182,7 @@ module {
   /// Concatenate a list of lists.
   ///
   /// In some languages, this operation is also known as a `list join`.
+  //FIXME: this is quadratic, not linear
   public func flatten<T>(l : List<List<T>>) : List<T> {
     foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a, b) })
   };
