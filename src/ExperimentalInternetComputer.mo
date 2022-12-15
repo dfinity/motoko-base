@@ -13,6 +13,17 @@ module {
   /// * The error code and textual message data of an IC reject determines the future's `Error` value.
   ///
   /// Note: `call` is an asynchronous function and can only be applied in an asynchronous context.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import IC "mo:base/ExperimentalInternetComputer";
+  /// import Principal "mo:base/Principal";
+  ///
+  /// let ledger = Principal.fromText("ryjl3-tyaaa-aaaaa-aaaba-cai");
+  /// let method = "decimals";
+  /// let input = ();
+  /// let rawReply = await IC.call(ledger, method, to_candid(input));
+  /// ```
   public let call : (canister : Principal, name : Text, data : Blob) -> async (reply : Blob) = Prim.call_raw;
 
   /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
@@ -22,6 +33,15 @@ module {
   /// (see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
   ///
   /// NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import IC "mo:base/ExperimentalInternetComputer";
+  ///
+  /// let count = IC.countInstructions(func() {
+  ///   // ...
+  /// });
+  /// ```
   public func countInstructions(comp : () -> ()) : Nat64 {
     let init = Prim.performanceCounter(0);
     let pre = Prim.performanceCounter(0);
