@@ -501,7 +501,7 @@ module {
   /// Returns the input text `t` with all matches of pattern `p` replaced by text `r`.
   ///
   /// ```motoko include=import
-  /// let result = Text.replace("abc", #char 'a', "A"); // "Abc"
+  /// let result = Text.replace("abcabc", #char 'a', "A"); // "AbcAbc"
   /// ```
   public func replace(t : Text, p : Pattern, r : Text) : Text {
     let match = matchOfPattern(p);
