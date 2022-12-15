@@ -683,13 +683,15 @@ let flatten = Suite.suite(
   ]
 );
 
-let make= Suite.suite(
+let make = Suite.suite(
   "make",
+  [
     Suite.test(
       "make",
-      Array.make<Int>(0),
+      List.make<Int>(0),
       M.equals(T.list<Int>(T.intTestable, ?(0, null)))
     ),
+  ]
 );
 
 Suite.run(Suite.suite("List", [
