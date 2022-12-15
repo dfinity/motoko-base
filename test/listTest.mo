@@ -740,6 +740,58 @@ let take = Suite.suite(
   ]
 );
 
+let drop = Suite.suite(
+  "drop",
+  [
+    Suite.test(
+      "empty list",
+      List.drop(List.nil<Nat>(), 0),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    ),
+    Suite.test(
+      "singleton-0",
+      List.drop(?(3, null), 0),
+      M.equals(T.list<Nat>(T.natTestable, ?(3,null)))
+    ),
+     Suite.test(
+      "singleton-1",
+      List.drop(?(3, null), 1),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    ),
+    Suite.test(
+      "singleton-2",
+      List.drop(?(3, null), 2),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    ),
+    Suite.test(
+      "threesome-0",
+      List.drop(?(1, ?(2, ?(3, null))), 0),
+      M.equals(T.list<Nat>(T.natTestable, ?(1, ?(2, ?(3, null)))))
+    ),
+     Suite.test(
+      "threesome-1",
+      List.drop(?(1, ?(2, ?(3, null))), 1),
+      M.equals(T.list(T.natTestable, ?(2, ?(3, null))))
+    ),
+     Suite.test(
+      "threesome-2",
+      List.drop(?(1, ?(2, ?(3, null))), 2),
+      M.equals(T.list(T.natTestable, ?(3, null)))
+    ),
+    Suite.test(
+      "threesome-3",
+      List.drop(?(1, ?(2, ?(3, null))), 3),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    ),
+    Suite.test(
+      "threesome-4",
+      List.drop(?(1, ?(2, ?(3, null))), 4),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    )
+  ]
+);
+
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -759,6 +811,7 @@ Suite.run(Suite.suite("List", [
   mapFilter,
   flatten,
   make,
-  take
+  take,
+  drop
   ]))
 
