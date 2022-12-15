@@ -433,6 +433,39 @@ let reverse = Suite.suite(
   ]
 );
 
+let iterate = Suite.suite(
+  "iterate",
+  [
+    Suite.test(
+      "empty list",
+      do {
+        var t = "";
+        List.iterate<Nat>(List.nil<Nat>(), func n { t #= debug_show n });
+        t
+      },
+      M.equals(T.text(""))
+    ),
+    Suite.test(
+      "singleton",
+      do {
+        var t = "";
+        List.iterate<Nat>(?(3, null), func n { t #= debug_show n });
+        t
+      },
+      M.equals(T.text("3"))
+    ),
+    Suite.test(
+      "threesome",
+      do {
+        var t = "";
+        List.iterate<Nat>(?(1, ?(2, ?(3, null))), func n { t #= debug_show n });
+        t
+      },
+      M.equals(T.text("123"))
+    ),
+  ]
+);
+
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -445,4 +478,5 @@ Suite.run(Suite.suite("List", [
   pop,
   size,
   get,
-  reverse]))
+  reverse,
+  iterate]))
