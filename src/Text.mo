@@ -49,14 +49,18 @@ module {
   /// Equivalent to calling the `t.chars()` method where `t` is a `Text` value.
   ///
   /// ```motoko include=import
-  /// let iter = Text.toIter("abc"); // iterator ('a', 'b', 'c')
+  /// import { print } "mo:base/Debug";
+  ///
+  /// for (c in Text.toIter("abc")) {
+  ///   print(debug_show c);
+  /// }
   /// ```
   public func toIter(t : Text) : Iter.Iter<Char> = t.chars();
 
   /// Creates a `Text` value from a `Char` iterator.
   ///
   /// ```motoko include=import
-  /// let iter = Text.toIter("abc"); // iterator ('a', 'b', 'c')
+  /// let text = Text.fromIter(['a', 'b', 'c'].vals()); // "abc"
   /// ```
   public func fromIter(cs : Iter.Iter<Char>) : Text {
     var r = "";
@@ -71,8 +75,7 @@ module {
   /// Equivalent to calling `t.size()` where `t` is a `Text` value.
   ///
   /// ```motoko include=import
-  /// let iter = "abc".chars(); // iterator ('a', 'b', 'c')
-  /// let text = Text.fromIter(iter); // "abc"
+  /// let size = Text.size("abc"); // 3
   /// ```
   public func size(t : Text) : Nat { t.size() };
 
@@ -93,6 +96,13 @@ module {
   };
 
   /// Returns `t1 # t2`, where `#` is the `Text` concatenation operator.
+  ///
+  /// ```motoko
+  /// let a = "Hello";
+  /// let b = "There";
+  /// let together = a # b; // "HelloThere"
+  /// let withSpace = a # " " # b; // "Hello There"
+  /// ```
   public func concat(t1 : Text, t2 : Text) : Text = t1 # t2;
 
   /// Returns `t1 == t2`.
@@ -113,12 +123,14 @@ module {
   /// Returns `t1 >= t2`.
   public func greaterOrEqual(t1 : Text, t2 : Text) : Bool { t1 >= t2 };
 
-  /// Returns the order of `t1` and `t2`.
+  /// Compares `t1` and `t2` lexicographically.
   ///
   /// ```motoko include=import
   /// assert Text.compare("abc", "abc") == #equal;
   /// assert Text.compare("abc", "def") == #less;
   /// assert Text.compare("abc", "ABC") == #greater;
+  ///
+  /// Text.compare("", "") // Try it yourself
   /// ```
   public func compare(t1 : Text, t2 : Text) : { #less; #equal; #greater } {
     let c = Prim.textCompare(t1, t2);
@@ -435,7 +447,7 @@ module {
   /// Returns `true` if the input `Text` contains a match for the specified `Pattern`.
   ///
   /// ```motoko include=import
-  /// assert Text.contains("Motoko", #text "ok");
+  /// Text.contains("Motoko", #text "oto") // true
   /// ```
   public func contains(t : Text, p : Pattern) : Bool {
     let match = matchOfPattern(p);
@@ -464,7 +476,7 @@ module {
   /// Returns `true` if the input `Text` starts with a prefix matching the specified `Pattern`.
   ///
   /// ```motoko include=import
-  /// assert Text.startsWith("Motoko", #text "Mo");
+  /// Text.startsWith("Motoko", #text "Mo") // true
   /// ```
   public func startsWith(t : Text, p : Pattern) : Bool {
     var cs = t.chars();
@@ -478,7 +490,7 @@ module {
   /// Returns `true` if the input `Text` ends with a suffix matching the specified `Pattern`.
   ///
   /// ```motoko include=import
-  /// assert Text.endsWith("Motoko", #char "o");
+  /// Text.endsWith("Motoko", #char "o") // true
   /// ```
   public func endsWith(t : Text, p : Pattern) : Bool {
     let s2 = sizeOfPattern(p);
@@ -543,9 +555,9 @@ module {
   ///
   /// ```motoko include=import
   /// // Try to strip a nonexistent character
-  /// let none = Text.stripStart("abc", #char ' '); // null
+  /// let none = Text.stripStart("abc", #char '-'); // null
   /// // Strip just one space
-  /// let one = Text.stripStart("   abc", #char ' '); // ?"  abc"
+  /// let one = Text.stripStart("--abc", #char '-'); // ?"-abc"
   /// ```
   public func stripStart(t : Text, p : Pattern) : ?Text {
     let s = sizeOfPattern(p);
@@ -563,9 +575,9 @@ module {
   ///
   /// ```motoko include=import
   /// // Try to strip a nonexistent character
-  /// let none = Text.stripEnd("xyz", #char ' '); // null
+  /// let none = Text.stripEnd("xyz", #char '-'); // null
   /// // Strip just one space
-  /// let one = Text.stripEnd("xyz   ", #char ' '); // ?"xyz  "
+  /// let one = Text.stripEnd("xyz--", #char '-'); // ?"xyz-"
   /// ```
   public func stripEnd(t : Text, p : Pattern) : ?Text {
     let s2 = sizeOfPattern(p);
@@ -589,7 +601,7 @@ module {
   /// If you only want to remove a single instance of the pattern, use `Text.stripStart()` instead.
   ///
   /// ```motoko include=import
-  /// let trimmed = Text.trimStart("   abc", #char ' '); // "abc"
+  /// let trimmed = Text.trimStart("---abc", #char '-'); // "abc"
   /// ```
   public func trimStart(t : Text, p : Pattern) : Text {
     let cs = t.chars();
@@ -624,7 +636,7 @@ module {
   /// If you only want to remove a single instance of the pattern, use `Text.stripEnd()` instead.
   ///
   /// ```motoko include=import
-  /// let trimmed = Text.trimEnd("xyz   ", #char ' '); // "xyz"
+  /// let trimmed = Text.trimEnd("xyz---", #char '-'); // "xyz"
   /// ```
   public func trimEnd(t : Text, p : Pattern) : Text {
     let cs = CharBuffer(t.chars());
@@ -656,7 +668,7 @@ module {
   /// Trims the given `Pattern` from both the start and end of the input `Text`.
   ///
   /// ```motoko include=import
-  /// let trimmed = Text.trim("   abcxyz   ", #char ' '); // "abcxyz"
+  /// let trimmed = Text.trim("---abcxyz---", #char '-'); // "abcxyz"
   /// ```
   public func trim(t : Text, p : Pattern) : Text {
     let cs = t.chars();
@@ -706,7 +718,8 @@ module {
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
-  /// assert Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) == #greater;
+  ///
+  /// Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) // #greater
   /// ```
   public func compareWith(
     t1 : Text,
