@@ -15,7 +15,7 @@ module {
   /// Note: `call` is an asynchronous function and can only be applied in an asynchronous context.
   ///
   /// Example:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import IC "mo:base/ExperimentalInternetComputer";
   /// import Principal "mo:base/Principal";
   ///
@@ -35,7 +35,7 @@ module {
   /// NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
   ///
   /// Example:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import IC "mo:base/ExperimentalInternetComputer";
   ///
   /// let count = IC.countInstructions(func() {
