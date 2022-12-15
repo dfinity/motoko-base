@@ -466,6 +466,33 @@ let iterate = Suite.suite(
   ]
 );
 
+let map = Suite.suite(
+  "map",
+  [
+    Suite.test(
+      "empty list",
+      List.map<Nat,Nat>(
+       List.nil<Nat>(),
+      func n { n + 1 }),
+      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+    ),
+    Suite.test(
+      "singleton",
+      List.map<Nat,Nat>(
+        ?(3, null),
+        func n { n + 1 }),
+      M.equals(T.list(T.natTestable, ?(4, null)))
+    ),
+    Suite.test(
+      "threesome",
+      List.map<Nat,Nat>(
+        ?(1, ?(2, ?(3, null))),
+        func n { n + 1 }),
+      M.equals(T.list(T.natTestable, ?(2, ?(3, ?(4, null)))))
+    ),
+  ]
+);
+
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -479,4 +506,5 @@ Suite.run(Suite.suite("List", [
   size,
   get,
   reverse,
-  iterate]))
+  iterate,
+  map]))
