@@ -494,6 +494,41 @@ let map = Suite.suite(
 );
 
 
+let filter = Suite.suite(
+  "filter",
+  [
+    Suite.test(
+      "empty list",
+      List.filter<Nat>(
+       List.nil<Nat>(),
+       func n { n % 2 == 0 }),
+      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+    ),
+    Suite.test(
+      "singleton",
+      List.filter<Nat>(
+        ?(3, null),
+      func n { n % 2 == 0 }),
+      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+    ),
+    Suite.test(
+      "threesome",
+      List.filter<Nat>(
+        ?(1, ?(2, ?(3, null))),
+        func n { n % 2 == 0 }),
+      M.equals(T.list(T.natTestable, ?(2, null)))
+    ),
+    Suite.test(
+      "foursome",
+      List.filter<Nat>(
+        ?(1, ?(2, ?(3, ?(4, null)))),
+        func n { n % 2 == 0 }),
+      M.equals(T.list(T.natTestable, ?(2, ?(4, null))))
+    ),
+  ]
+);
+
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -507,4 +542,5 @@ Suite.run(Suite.suite("List", [
   get,
   reverse,
   iterate,
-  map]))
+  map,
+  filter]))
