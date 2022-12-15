@@ -198,11 +198,11 @@ module {
   /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
   ///
   /// ```motoko include=import
-  /// // Replace all occurrences of '?' with '!'
-  /// let result = Text.map("Motoko?", func(c) {
-  ///   if (c == '?') '!'
-  ///   else c
-  /// }); // "Motoko!"
+  /// // Replace all occurrences of '?' with "!!"
+  /// let result = Text.translate("Motoko?", func(c) {
+  ///   if (c == '?') "!!"
+  ///   else Text.fromChar(c)
+  /// }); // "Motoko!!"
   /// ```
   public func translate(t : Text, f : Char -> Text) : Text {
     var r = "";
