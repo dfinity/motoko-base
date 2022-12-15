@@ -694,6 +694,52 @@ let make = Suite.suite(
   ]
 );
 
+let take = Suite.suite(
+  "take",
+  [
+    Suite.test(
+      "empty list",
+      List.take(List.nil<Nat>(), 0),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    ),
+    Suite.test(
+      "singleton-0",
+      List.take(?(3, null), 0),
+      M.equals(T.list<Nat>(T.natTestable, null))
+    ),
+     Suite.test(
+      "singleton-1",
+      List.take(?(3, null), 1),
+      M.equals(T.list(T.natTestable, ?(3, null)))
+    ),
+    Suite.test(
+      "singleton-2",
+      List.take(?(3, null), 2),
+      M.equals(T.list(T.natTestable, ?(3, null)))
+    ),
+    Suite.test(
+      "threesome-0",
+      List.take(?(1, ?(2, ?(3, null))), 0),
+      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+    ),
+     Suite.test(
+      "threesome-1",
+      List.take(?(1, ?(2, ?(3, null))), 1),
+      M.equals(T.list(T.natTestable, ?(1, null)))
+    ),
+     Suite.test(
+      "threesome-3",
+      List.take(?(1, ?(2, ?(3, null))), 3),
+      M.equals(T.list(T.natTestable, ?(1, ?(2, ?(3, null)))))
+    ),
+    Suite.test(
+      "threesome-4",
+      List.take(?(1, ?(2, ?(3, null))), 4),
+      M.equals(T.list(T.natTestable, ?(1, ?(2, ?(3, null)))))
+    )
+  ]
+);
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -712,6 +758,7 @@ Suite.run(Suite.suite("List", [
   partition,
   mapFilter,
   flatten,
-  make
+  make,
+  take
   ]))
 
