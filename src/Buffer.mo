@@ -740,7 +740,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(0);
   /// buffer.add(3);
-  /// Buffer.contains<Nat>(buffer, 2, func (x, y) { x == y });
+  /// Buffer.contains<Nat>(buffer, 2, Nat.equals);
   /// ```
   ///
   /// Runtime: O(size)
