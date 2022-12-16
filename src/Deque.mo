@@ -120,8 +120,8 @@ module {
   };
 
   /// Shorten a deque by removing the element on the front end.
-  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of 
-  /// the first element and a new deque that contains all the elements of `deque`, 
+  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
+  /// the first element and a new deque that contains all the elements of `deque`,
   /// however, without the front element.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
@@ -131,9 +131,14 @@ module {
   /// import Deque "mo:base/Deque";
   ///
   /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
-  /// let result = Deque.popFront(initial);
-  /// let removedElement = result.0; // ?1
-  /// let reducedDeque = result.1; // deque with element [2].
+  /// let reduced = Deque.popFront(initial);
+  /// switch reduced {
+  ///     case null assert(false);
+  ///     case (?result) {
+  ///         let removedElement = result.0; // 1
+  ///         let reducedDeque = result.1; // deque with element [2].
+  ///     }
+  /// }
   /// ```
   ///
   /// Runtime: `O(n)` worst-case, amortized to `O(1)`.
@@ -194,7 +199,7 @@ module {
   };
 
   /// Shorten a deque by removing the element on the back end.
-  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of 
+  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
   /// a new deque that contains all the elements of `deque` without the back element
   /// and as second pair item, the back element.
   ///
@@ -205,9 +210,14 @@ module {
   /// import Deque "mo:base/Deque";
   ///
   /// let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
-  /// let result = Deque.popFront(initial);
-  /// let removedElement = result.0; // ?2
-  /// let reducedDeque = result.1; // deque with element [1].
+  /// let reduced = Deque.popBack(initial);
+  /// switch reduced {
+  ///     case null assert(false);
+  ///     case (?result) {
+  ///         let reducedDeque = result.0; // deque with element [1].
+  ///         let removedElement = result.1; // 2
+  ///     }
+  /// }
   /// ```
   ///
   /// Runtime: `O(n)` worst-case, amortized to `O(1)`.
