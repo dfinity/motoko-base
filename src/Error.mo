@@ -7,10 +7,10 @@ import Prim "mo:⛔";
 
 module {
 
-  /// Error values resulting from  `async` computations
+  /// Error value resulting from  `async` computations
   public type Error = Prim.Types.Error;
 
-  /// Error codes (user and system), where module `Prim` defines:
+  /// Error code to classify differnt kinds of user and system errors:
   /// ```motoko
   /// type ErrorCode = {
   ///   // Fatal error.
@@ -29,13 +29,44 @@ module {
   /// ```
   public type ErrorCode = Prim.ErrorCode;
 
-  /// Create an error from message `m` with code #canister_reject.
-  public let reject : (m : Text) -> Error = Prim.error;
+  /// Create an error from the message with the code `#canister_reject`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Error "mo:base/Error";
+  /// 
+  /// throw Error.reject("Example error");
+  /// ```
+  public let reject : (message : Text) -> Error = Prim.error;
 
-  /// Returns the code of an error `e`.
-  public let code : (e : Error) -> ErrorCode = Prim.errorCode;
+  /// Returns the code of an error.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Error "mo:base/Error";
+  /// import Debug "mo:base/Debug";
+  ///
+  /// try {
+  ///    throw Error.reject("Example error");
+  ///  } catch (error) {
+  ///    Debug.print("The error code is " # debug_show(Error.code(error)));
+  /// }
+  /// ```
+  public let code : (error : Error) -> ErrorCode = Prim.errorCode;
 
-  /// Returns the message of an error `e`.
-  public let message : (e : Error) -> Text = Prim.errorMessage;
+  /// Returns the message of an error.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Error "mo:base/Error";
+  /// import Debug "mo:base/Debug";
+  ///
+  /// try {
+  ///    throw Error.reject("Example error");
+  /// } catch (error) {
+  ///    Debug.print("The error message is " # debug_show(Error.message(error)));
+  /// }
+  /// ```
+  public let message : (error : Error) -> Text = Prim.errorMessage;
 
 }
