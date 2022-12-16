@@ -1587,7 +1587,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
@@ -1616,7 +1615,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
@@ -1645,7 +1643,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
@@ -1671,6 +1668,18 @@ module {
   };
 
   /// Creates an array containing elements from `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.toArray<Nat>(buffer);
+  /// 
+  /// ```
   ///
   /// Runtime: O(size)
   ///
