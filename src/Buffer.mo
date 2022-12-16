@@ -1935,7 +1935,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// let newBuf = Buffer.mapFilter<Nat, Nat>(buffer, func (k) {
+  /// let newBuf = Buffer.mapFilter<Nat, Nat>(buffer, func (x) {
   ///   if (k > 1) {
   ///     ?(k * 2);
   ///   } else {
