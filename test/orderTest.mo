@@ -8,7 +8,7 @@ do {
 
   assert (Order.isLess(#less));
   assert (not Order.isLess(#equal));
-  assert (not Order.isLess(#greater));
+  assert (not Order.isLess(#greater))
 };
 
 do {
@@ -16,7 +16,7 @@ do {
 
   assert (not Order.isEqual(#less));
   assert (Order.isEqual(#equal));
-  assert (not Order.isEqual(#greater));
+  assert (not Order.isEqual(#greater))
 };
 
 do {
@@ -24,5 +24,5 @@ do {
 
   assert (not Order.isGreater(#less));
   assert (not Order.isGreater(#equal));
-  assert (Order.isGreater(#greater));
-};
+  assert (Order.isGreater(#greater))
+}
