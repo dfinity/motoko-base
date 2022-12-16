@@ -1755,6 +1755,17 @@ module {
 
   /// Creates a buffer containing elements from `array`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let array = Array.init<Nat>(3, 1);
+  ///
+  /// let buf = Buffer.fromVarArray<Nat>(array);
+  /// Buffer.toText(buf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
