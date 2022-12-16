@@ -1201,6 +1201,29 @@ module {
   /// Behavior is undefined if `buffer` is not sorted. Uses `compare` to
   /// perform the search. Returns an index of `element` if it is found.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// Buffer.binarySearch<Nat>(5, buffer, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// ```
+  ///
   /// Runtime: O(log(size))
   ///
   /// Space: O(1)
