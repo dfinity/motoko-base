@@ -2450,6 +2450,21 @@ module {
   /// have less than `size` elements if the number of elements is not divisible
   /// by the chunk size.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// Buffer.chunk<Nat>(buffer, 3);
+  /// ```
+  ///
   /// Runtime: O(number of elements in buffer)
   ///
   /// Space: O(number of elements in buffer)
