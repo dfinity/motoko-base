@@ -1268,10 +1268,7 @@ module {
   /// buffer.add(6);
   ///
   /// let sub = Buffer.subBuffer(buffer, 3, 2);
-  /// Buffer.toText(
-  ///   sub, 
-  ///   Nat.toText
-  /// );
+  /// Buffer.toText(sub, Nat.toText);
   /// ```
   ///
   /// Runtime: O(length)
@@ -1381,10 +1378,7 @@ module {
   /// buffer.add(4);
   ///
   /// let pre = Buffer.prefix(buffer, 3);
-  /// Buffer.toText(
-  ///   pre, 
-  ///   Nat.toText
-  /// );
+  /// Buffer.toText(pre, Nat.toText);
   /// ```
   ///
   /// Runtime: O(length)
@@ -1409,6 +1403,20 @@ module {
 
   /// Checks if `prefix` is a prefix of `buffer`. Uses `equal` to
   /// compare elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let pre = Buffer.prefix(buffer, 3);
+  /// Buffer.isPrefixOf(pre, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size of prefix)
   ///
