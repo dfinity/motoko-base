@@ -2219,7 +2219,7 @@ module {
   /// b.add(5);
   /// b.add(6);
   ///
-  /// let merged = Buffer.merge(a, b, func (x, y) {
+  /// let merged = Buffer.merge<Nat>(a, b, func (x, y) {
   ///   if (x > y) {
   ///     #greater;
   ///   } else if (x == y) {
