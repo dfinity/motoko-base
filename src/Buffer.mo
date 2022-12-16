@@ -1809,6 +1809,18 @@ module {
 
   /// Reallocates the array underlying `buffer` such that capacity == size.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.trimToSize<Nat>(buffer);
+  /// buffer.size();
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
