@@ -767,7 +767,8 @@ module {
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// 
-  /// Buffer.clone(buffer);
+  /// let clone = Buffer.clone(buffer);
+  /// Buffer.toArray(clone);
   /// ```
   ///
   /// Runtime: O(size)
