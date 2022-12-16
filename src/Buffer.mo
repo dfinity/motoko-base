@@ -1925,6 +1925,25 @@ module {
   /// Creates a new buffer by applying `f` to each element in `buffer`,
   /// and keeping all non-null elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.mapFilter<Nat, Nat>(buffer, func (k) {
+  ///   if (k > 1) {
+  ///     ?(k * 2);
+  ///   } else {
+  ///    null;
+  ///   }
+  // });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
