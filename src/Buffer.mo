@@ -1051,6 +1051,19 @@ module {
   /// Finds the first index of `element` in `buffer` using equality of elements defined
   /// by `equal`. Returns `null` if `element` is not found.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.indexOf<Nat>(3, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
