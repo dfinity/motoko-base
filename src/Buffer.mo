@@ -1891,6 +1891,19 @@ module {
 
   /// Applies `f` to each element in `buffer` and its index.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.mapEntries<Nat, Nat>(buffer, func (x, i) { x + i + 1 });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
