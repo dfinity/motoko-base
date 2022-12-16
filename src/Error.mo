@@ -35,7 +35,7 @@ module {
   /// ```motoko
   /// import Error "mo:base/Error";
   ///
-  /// throw Error.reject("Example error");
+  /// Error.reject("Example error") // can be used as throw argument
   /// ```
   public let reject : (message : Text) -> Error = Prim.error;
 
@@ -44,13 +44,9 @@ module {
   /// Example:
   /// ```motoko
   /// import Error "mo:base/Error";
-  /// import Debug "mo:base/Debug";
   ///
-  /// try {
-  ///    throw Error.reject("Example error");
-  ///  } catch (error) {
-  ///    Debug.print("The error code is " # debug_show(Error.code(error)));
-  /// }
+  /// let error = Error.reject("Example error");
+  /// Error.code(error) // #canister_reject
   /// ```
   public let code : (error : Error) -> ErrorCode = Prim.errorCode;
 
@@ -61,11 +57,8 @@ module {
   /// import Error "mo:base/Error";
   /// import Debug "mo:base/Debug";
   ///
-  /// try {
-  ///    throw Error.reject("Example error");
-  /// } catch (error) {
-  ///    Debug.print("The error message is " # debug_show(Error.message(error)));
-  /// }
+  /// let error = Error.reject("Example error");
+  /// Error.message(error) // "Example error"
   /// ```
   public let message : (error : Error) -> Text = Prim.errorMessage;
 
