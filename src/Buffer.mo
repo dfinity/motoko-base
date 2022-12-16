@@ -1257,6 +1257,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
@@ -1297,6 +1298,24 @@ module {
 
   /// Checks if `subBuffer` is a sub-Buffer of `buffer`. Uses `equal` to
   /// compare elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let sub = Buffer.Buffer<Nat>(2);
+  /// sub.add(1);
+  /// sub.add(2);
+  /// Buffer.isSubBufferOf(sub, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size of subBuffer + size of buffer)
   ///
