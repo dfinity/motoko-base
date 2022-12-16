@@ -101,7 +101,8 @@ module {
       T.find<K, V>(map, keyObj, isEq)
     };
 
-    /// Delete the entry associated with key `key`, if it exists.
+    /// Delete the entry associated with key `key`, if it exists. If the key is
+    /// absent, there is no effect.
     ///
     /// Example:
     /// ```motoko include=initialize
@@ -131,8 +132,8 @@ module {
     ///
     /// *Runtime and space assumes that the trie is reasonably balanced and the
     /// map is using a constant time and space equality and hash function.
-    public func remove(k : K) : ?V {
-      let keyObj = { key = k; hash = hashOf(k) };
+    public func remove(key : K) : ?V {
+      let keyObj = { key; hash = hashOf(key) };
       let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
       map := t;
       switch (ov) {
@@ -164,6 +165,9 @@ module {
     ///
     /// Runtime: O(1)
     /// Space: O(1)
+    ///
+    /// *The above runtime and space are for the construction of the iterator.
+    /// The iteration itself takes linear time and logarithmic space to execute.
     public func keys() : I.Iter<K> {
       I.map(entries(), func(kv : (K, V)) : K { kv.0 })
     };
@@ -190,6 +194,9 @@ module {
     ///
     /// Runtime: O(1)
     /// Space: O(1)
+    ///
+    /// *The above runtime and space are for the construction of the iterator.
+    /// The iteration itself takes linear time and logarithmic space to execute.
     public func vals() : I.Iter<V> {
       I.map(entries(), func(kv : (K, V)) : V { kv.1 })
     };
@@ -216,6 +223,9 @@ module {
     ///
     /// Runtime: O(1)
     /// Space: O(1)
+    ///
+    /// *The above runtime and space are for the construction of the iterator.
+    /// The iteration itself takes linear time and logarithmic space to execute.
     public func entries() : I.Iter<(K, V)> {
       object {
         var stack = ?(map, null) : List.List<T.Trie<K, V>>;
