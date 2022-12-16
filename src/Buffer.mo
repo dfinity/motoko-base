@@ -1016,6 +1016,20 @@ module {
   /// The deterministic hash function is a function of the elements in the Buffer, as well
   /// as their ordering.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  /// import Nat32 "mo:base/Nat32";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(1000);
+  ///
+  /// Buffer.hash<Nat>(buffer, Nat32.fromNat);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
