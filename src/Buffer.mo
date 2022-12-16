@@ -1370,6 +1370,23 @@ module {
   /// Returns the prefix of `buffer` of length `length`. Traps if `length`
   /// is greater than the size of `buffer`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let pre = Buffer.prefix(buffer, 3);
+  /// Buffer.toText(
+  ///   pre, 
+  ///   Nat.toText
+  /// );
+  /// ```
+  ///
   /// Runtime: O(length)
   ///
   /// Space: O(length)
