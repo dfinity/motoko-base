@@ -1557,6 +1557,20 @@ module {
   /// Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
   /// elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let suf = Buffer.suffix(buffer, 3);
+  /// Buffer.isStrictSuffixOf(suf, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(length of suffix)
   ///
   /// Space: O(length of suffix)
