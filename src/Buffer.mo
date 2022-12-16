@@ -2402,6 +2402,22 @@ module {
   /// elements with indices greater than or equal to `index`. Traps if `index` is out
   /// of bounds.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let tup = Buffer.split<Nat>(buffer, 3);
+  /// Buffer.toText(tup.0, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
