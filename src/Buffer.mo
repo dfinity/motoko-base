@@ -2289,7 +2289,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.removeDuplicates(buffer, func (x, y) {
+  /// Buffer.removeDuplicates<Nat>(buffer, func (x, y) {
   ///   if (x > y) {
   ///     #greater;
   ///   } else if (x == y) {
