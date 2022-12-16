@@ -760,13 +760,14 @@ module {
 
   /// Returns a copy of `buffer`, with the same capacity.
   ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// 
-  /// let _ = Buffer.clone(buffer);
+  /// Buffer.clone(buffer);
   /// ```
   ///
   /// Runtime: O(size)
@@ -783,8 +784,10 @@ module {
   /// Finds the greatest element in `buffer` defined by `compare`.
   /// Returns `null` if `buffer` is empty.
   ///
+  ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Order "mo:base/Order";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
@@ -827,6 +830,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Order "mo:base/Order";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
@@ -868,6 +872,22 @@ module {
   /// buffers. Returns true iff the two buffers are of the same size, and `equal`
   /// evaluates to true for every pair of elements in the two buffers of the same
   /// index.
+  ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(1);
+  /// b.add(2);
+  /// 
+  /// Buffer.equal(a, b, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
