@@ -2360,6 +2360,22 @@ module {
   /// Splits `buffer` into a pair of buffers where all elements in the left
   /// buffer satisfy `predicate` and all elements in the right buffer do not.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let tup = Buffer.partition<Nat>(buffer, func (x) { x > 3 });
+  /// Buffer.toText(tup.0, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
