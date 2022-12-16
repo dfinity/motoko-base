@@ -1788,8 +1788,8 @@ module {
   /// import Nat "mo:base/Nat";
   /// import Iter "mo:base/Iter";
   ///
-  /// let array = Array.init<Nat>(3, 1);
-  /// let iter = Iter.fromArrayMut(array);
+  /// let array = [1, 1, 1];
+  /// let iter = array.vals();
   ///
   /// let buf = Buffer.fromIter<Nat>(array);
   /// Buffer.toText(buf, Nat.toText);
