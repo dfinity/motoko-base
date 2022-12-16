@@ -2452,7 +2452,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
@@ -2495,6 +2494,20 @@ module {
   };
 
   /// Groups equal and adjacent elements in the list into sub lists.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// Buffer.groupBy<Nat>(buffer, func (x, y) { x == y });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -2563,6 +2576,22 @@ module {
   /// elements with the same index. If one buffer is longer than the other, the
   /// remaining elements from the longer buffer are not included.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  /// a.add(3);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(4);
+  /// b.add(5);
+  /// b.add(6);
+  ///
+  /// Buffer.zip(a, b);
+  /// ```
+  ///
   /// Runtime: O(min(size1, size2))
   ///
   /// Space: O(min(size1, size2))
@@ -2575,6 +2604,22 @@ module {
   /// elements with the same index and combining them using `zip`. If
   /// one buffer is longer than the other, the remaining elements from
   /// the longer buffer are not included.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  /// a.add(3);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(4);
+  /// b.add(5);
+  /// b.add(6);
+  ///
+  /// Buffer.zipWith<Nat, Nat, Bool>(a, b, func (x, y) { x > y });
+  /// ```
   ///
   /// Runtime: O(min(size1, size2))
   ///
