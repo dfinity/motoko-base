@@ -2011,6 +2011,24 @@ module {
   /// and concatenating the resulting buffers in order. This operation
   /// is similar to what in other functional languages is known as monadic bind.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  ///
+  /// let chain = Buffer.chain<Nat, Nat>(buffer, func (x) { 
+  ///   let b = Buffer.Buffer<Nat>(2);
+  ///   b.add(x * 2);
+  ///   return b;
+  /// });
+  /// Buffer.toText(chain, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
