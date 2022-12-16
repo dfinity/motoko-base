@@ -1781,6 +1781,19 @@ module {
 
   /// Creates a buffer containing elements from `iter`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
+  ///
+  /// let array = Array.init<Nat>(3, 1);
+  /// let iter = Iter.fromArrayMut(array);
+  ///
+  /// let buf = Buffer.fromIter<Nat>(array);
+  /// Buffer.toText(buf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
