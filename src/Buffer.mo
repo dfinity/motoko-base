@@ -1940,7 +1940,7 @@ module {
   ///   } else {
   ///    null;
   ///   }
-  // });
+  /// });
   /// Buffer.toText(newBuf, Nat.toText);
   /// ```
   ///
@@ -1967,6 +1967,23 @@ module {
   /// Creates a new buffer by applying `f` to each element in `buffer`.
   /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
   /// Returns an `#ok` containing the new buffer.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.mapResult<Nat, Nat, Text>(buffer, func (k) {
+  /// if (k > 0) {
+  ///   #ok(k);
+  /// } else {
+  ///   #err("One or more elements are negative.");
+  /// }
+  /// });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
