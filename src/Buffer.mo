@@ -796,6 +796,8 @@ module {
   /// Buffer.max(buffer, func (x: Nat, y: Nat): Order.Order {
   ///   if (x > y) {
   ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
   ///   } else {
   ///     #less;
   ///   }
@@ -839,6 +841,8 @@ module {
   /// Buffer.min(buffer, func (x: Nat, y: Nat): Order.Order {
   ///   if (x > y) {
   ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
   ///   } else {
   ///     #less;
   ///   }
@@ -914,6 +918,30 @@ module {
 
   /// Defines comparison for two buffers, using `compare` to recursively compare elements in the
   /// buffers. Comparison is defined lexicographically.
+  ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Order "mo:base/Order";
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+
+  /// let b = Buffer.Buffer<Nat>(3);
+  /// b.add(3);
+  /// b.add(4);
+  ///
+  /// Buffer.compare<Nat>(a, b, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
