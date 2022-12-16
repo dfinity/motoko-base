@@ -1123,6 +1123,26 @@ module {
 
   /// Searches for `subBuffer` in `buffer`, and returns the starting index if it is found.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let sub = Buffer.Buffer<Nat>(2);
+  /// sub.add(4);
+  /// sub.add(5);
+  /// sub.add(6);
+  ///
+  /// Buffer.indexOfBuffer<Nat>(sub, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size of buffer + size of subBuffer)
   ///
   /// Space: O(size of subBuffer)
