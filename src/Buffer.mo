@@ -1085,6 +1085,21 @@ module {
   /// Finds the last index of `element` in `buffer` using equality of elements defined
   /// by `equal`. Returns `null` if `element` is not found.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(2);
+  /// buffer.add(2);
+  ///
+  /// Buffer.lastIndexOf<Nat>(2, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
