@@ -1813,7 +1813,7 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// let buffer = Buffer.Buffer<Nat>(10);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
