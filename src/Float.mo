@@ -12,11 +12,11 @@
 ///
 /// Examples of numerical errors:
 ///   ```
-///   assert(0.1 + 0.1 + 0.1 == 0.3); // Fails!
+///   0.1 + 0.1 + 0.1 == 0.3 // Fails!
 ///   ```
 ///
 ///   ```
-////  assert(1e16 + 1.0 != 1e16); // Fails!
+////  1e16 + 1.0 != 1e16; // Fails!
 ///   ```
 ///
 ////  (and many more cases)
