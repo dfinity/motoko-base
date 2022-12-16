@@ -761,6 +761,15 @@ module {
 
   /// Returns a copy of `buffer`, with the same capacity.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// 
+  /// let _ = Buffer.clone(buffer);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
