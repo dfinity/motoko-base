@@ -1977,11 +1977,11 @@ module {
   /// buffer.add(3);
   ///
   /// Buffer.mapResult<Nat, Nat, Text>(buffer, func (k) {
-  /// if (k > 0) {
-  ///   #ok(k);
-  /// } else {
-  ///   #err("One or more elements are negative.");
-  /// }
+  ///   if (k > 0) {
+  ///     #ok(k);
+  ///   } else {
+  ///     #err("One or more elements are negative.");
+  ///   }
   /// });
   /// ```
   ///
@@ -2203,6 +2203,32 @@ module {
   /// Merges two sorted buffers into a single sorted buffer, using `compare` to define
   /// the ordering. The final ordering is stable. Behavior is undefined if either
   /// `buffer1` or `buffer2` is not sorted.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  /// a.add(3);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(4);
+  /// b.add(5);
+  /// b.add(6);
+  ///
+  /// let merged = Buffer.merge(a, b, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// Buffer.toText(merged, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size1 + size2)
   ///
