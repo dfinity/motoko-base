@@ -1585,6 +1585,18 @@ module {
 
   /// Returns true iff every element in `buffer` satisfies `predicate`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.forAll<Nat>(buffer, func (x) { x > 1 });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -1602,6 +1614,18 @@ module {
 
   /// Returns true iff some element in `buffer` satisfies `predicate`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.forSome<Nat>(buffer, func (x) { x > 3 });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -1618,6 +1642,18 @@ module {
   };
 
   /// Returns true iff no element in `buffer` satisfies `predicate`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.forNone<Nat>(buffer, func (x) { x == 0 });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
