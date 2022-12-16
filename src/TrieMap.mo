@@ -315,7 +315,7 @@ module {
     h
   };
 
-  /// Transform (map) the values in `map` using function `f`, retaining its keys.
+  /// Transform (map) the values in `map` using function `f`, retaining the keys.
   /// Uses `keyEq` to compare keys and `keyHash` to hash keys.
   ///
   /// Example:
@@ -331,8 +331,8 @@ module {
   /// Runtime: O(size * log(size))
   /// Space: O(size)
   ///
-  /// *Runtime and space assumes that `entries` returns elements in O(1) time,
-  /// and `f`, `keyEq`, and `keyHash` run in O(1) time and space.
+  /// *Runtime and space assumes that `f`, `keyEq`, and `keyHash` run in O(1)
+  /// time and space.
   public func map<K, V1, V2>(
     map : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,
@@ -370,8 +370,8 @@ module {
   /// Runtime: O(size * log(size))
   /// Space: O(size)
   ///
-  /// *Runtime and space assumes that `entries` returns elements in O(1) time,
-  /// and `f`, `keyEq`, and `keyHash` run in O(1) time and space.
+  /// *Runtime and space assumes that `f`, `keyEq`, and `keyHash` run in O(1)
+  /// time and space.
   public func mapFilter<K, V1, V2>(
     map : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,
