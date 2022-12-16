@@ -2276,6 +2276,30 @@ module {
   /// Eliminates all duplicate elements in `buffer` as defined by `compare`.
   /// Elimination is stable with respect to the original ordering of the elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.removeDuplicates(buffer, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size * log(size))
   ///
   /// Space: O(size)
