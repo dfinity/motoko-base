@@ -22,8 +22,13 @@ module {
   /// let ledger = Principal.fromText("ryjl3-tyaaa-aaaaa-aaaba-cai");
   /// let method = "decimals";
   /// let input = ();
-  /// let rawReply = await IC.call(ledger, method, to_candid(input));
+  /// type OutputType = { decimals: Nat32 };
+  ///
+  /// let rawReply = await IC.call(ledger, method, to_candid(input)); // serialized Candid
+  /// let output : ?OutputType = from_candid(rawReply); // { decimals = 8 }
   /// ```
+  ///
+  /// [Learn more about Candid serialization](https://internetcomputer.org/docs/current/developer-docs/build/cdks/motoko-dfinity/language-manual#candid-serialization)
   public let call : (canister : Principal, name : Text, data : Blob) -> async (reply : Blob) = Prim.call_raw;
 
   /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
