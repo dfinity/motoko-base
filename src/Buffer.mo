@@ -712,7 +712,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
   /// buffer.add(0);
   /// buffer.add(3);
@@ -720,7 +719,6 @@ module {
   /// ```
   ///
   /// ```motoko include=initialize
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// Buffer.isEmpty(buffer); // true
   /// ```
   ///
@@ -736,7 +734,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
   /// buffer.add(0);
   /// buffer.add(3);
@@ -764,7 +761,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// 
   /// let clone = Buffer.clone(buffer);
@@ -788,21 +784,12 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Order "mo:base/Order";
+  /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// 
-  /// Buffer.max(buffer, func (x: Nat, y: Nat): Order.Order {
-  ///   if (x > y) {
-  ///     #greater;
-  ///   } else if (x == y) {
-  ///     #equal;
-  ///   } else {
-  ///     #less;
-  ///   }
-  /// });
+  /// Buffer.max(buffer, Nat.compare);
   /// ```
   ///
   /// Runtime: O(size)
@@ -833,21 +820,12 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Order "mo:base/Order";
+  /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// 
-  /// Buffer.min(buffer, func (x: Nat, y: Nat): Order.Order {
-  ///   if (x > y) {
-  ///     #greater;
-  ///   } else if (x == y) {
-  ///     #equal;
-  ///   } else {
-  ///     #less;
-  ///   }
-  /// });
+  /// Buffer.min(buffer, Nat.compare);
   /// ```
   ///
   /// Runtime: O(size)
@@ -983,7 +961,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1022,7 +999,6 @@ module {
   /// import Nat "mo:base/Nat";
   /// import Nat32 "mo:base/Nat32";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1056,7 +1032,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1090,7 +1065,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1128,7 +1102,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1205,7 +1178,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1260,7 +1232,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1301,7 +1272,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1335,7 +1305,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1372,7 +1341,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1409,7 +1377,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1449,7 +1416,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1481,7 +1447,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1520,7 +1485,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1562,7 +1526,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1589,7 +1552,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(4);
@@ -1617,7 +1579,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(4);
@@ -1645,7 +1606,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(4);
@@ -1673,7 +1633,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1697,7 +1656,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1838,7 +1796,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1869,7 +1826,6 @@ module {
   /// import Nat "mo:base/Nat";
   /// import Debug "mo:base/Debug";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1896,7 +1852,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1930,7 +1885,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1972,7 +1926,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2016,7 +1969,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2051,7 +2003,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2081,7 +2032,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2115,7 +2065,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2133,7 +2082,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2171,7 +2119,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2281,7 +2228,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2365,7 +2311,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2407,7 +2352,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2454,7 +2398,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2499,7 +2442,6 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2669,7 +2611,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2703,7 +2644,6 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
