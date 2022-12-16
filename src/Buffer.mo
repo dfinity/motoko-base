@@ -1333,6 +1333,22 @@ module {
   /// strictly contained inside both the first and last indices of `buffer`.
   /// Uses `equal` to compare elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let sub = Buffer.Buffer<Nat>(2);
+  /// sub.add(2);
+  /// sub.add(3);
+  /// Buffer.isStrictSubBufferOf(sub, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size of subBuffer + size of buffer)
   ///
   /// Space: O(size of subBuffer)
