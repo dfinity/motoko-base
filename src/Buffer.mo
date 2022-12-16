@@ -2020,7 +2020,6 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  ///
   /// let chain = Buffer.chain<Nat, Nat>(buffer, func (x) { 
   ///   let b = Buffer.Buffer<Nat>(2);
   ///   b.add(x * 2);
@@ -2048,6 +2047,17 @@ module {
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// left to right.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.foldLeft<Nat, Nat>(buffer, 0, func (a, x) { a + x });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -2066,6 +2076,17 @@ module {
   /// Collapses the elements in `buffer` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// right to left.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.foldRight<Nat, Nat>(buffer, 0, func (a, x) { a + x });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -2089,6 +2110,17 @@ module {
   };
 
   /// Returns the first element of `buffer`. Traps if `buffer` is empty.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.first(buffer);
+  /// ```
   ///
   /// Runtime: O(1)
   ///
