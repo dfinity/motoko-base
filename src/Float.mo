@@ -11,11 +11,11 @@
 /// Floating point numbers have limited precision and operations may inherently result in numerical errors.
 ///
 /// Examples of numerical errors:
-///   ```motoko name=initialize
+///   ```
 ///   assert(0.1 + 0.1 + 0.1 == 0.3); // Fails!
 ///   ```
 ///
-///   ```motoko name=initialize
+///   ```
 ////  assert(1e16 + 1.0 != 1e16); // Fails!
 ///   ```
 ///
@@ -26,8 +26,11 @@
 ///   floating-point numbers with a numerical epsilon.
 ///
 ///   Example:
-///   ```motoko name=initialize
+///   ```
 ///   import Float "mo:base/Float";
+///   let x = 0.1 + 0.1 + 0.1;
+///   let y = 0.3;
+///
 ///   let epsilon = 1e-6; // This depends on the application case (needs a numerical error analysis).
 ///   let equals = Float.abs(x - y) < epsilon;
 ///   ```
@@ -65,7 +68,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.abs(-1.2) // => 1.2
   ///   ```
   public let abs : (x : Float) -> Float = Prim.floatAbs;
@@ -83,7 +88,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.sqrt(6.25) // => 2.5
   ///   ```
   public let sqrt : (x : Float) -> Float = Prim.floatSqrt;
@@ -102,7 +109,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.ceil(1.2) // => 2.0
   ///   ```
   public let ceil : (x : Float) -> Float = Prim.floatCeil;
@@ -121,7 +130,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.floor(1.2) // => 1.0
   ///   ```
   public let floor : (x : Float) -> Float = Prim.floatFloor;
@@ -141,7 +152,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.trunc(2.75) // => 2.0
   ///   ```
   public let trunc : (x : Float) -> Float = Prim.floatTrunc;
@@ -162,7 +175,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.nearest(2.75) // => 3.0
   ///   ```
   public let nearest : (x : Float) -> Float = Prim.floatNearest;
@@ -172,7 +187,9 @@ module {
   /// The sign bit of zero, infinity, and `nan` is considered.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ////   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.copySign(1.2, -2.3) // => -1.2
   ///   ```
   public let copySign : (x : Float, y : Float) -> Float = Prim.floatCopySign;
@@ -188,7 +205,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.min(1.2, -2.3) // => -2.3
   ///   ```
   public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
@@ -204,7 +223,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.max(1.2, -2.3) // => 1.2
   ///   ```
   public let max : (x : Float, y : Float) -> Float = Prim.floatMax;
@@ -221,8 +242,10 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
-  ///   Float.sin(pi / 2) // => 1.0
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
+  ///   Float.sin(Float.pi / 2) // => 1.0
   ///   ```
   public let sin : (x : Float) -> Float = Prim.sin;
 
@@ -238,7 +261,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.cos(Float.pi / 2) // => 0.0
   ///   ```
   public let cos : (x : Float) -> Float = Prim.cos;
@@ -255,7 +280,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.tan(Float.pi / 4) // => 1.0
   ///   ```
   public let tan : (x : Float) -> Float = Prim.tan;
@@ -272,7 +299,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.arcsin(1.0) // => Float.pi/2
   ///   ```
   public let arcsin : (x : Float) -> Float = Prim.arcsin;
@@ -289,7 +318,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.arccos(1.0) // => 0.0
   ///   ```
   public let arccos : (x : Float) -> Float = Prim.arccos;
@@ -306,7 +337,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.arctan(1.0) // => Float.pi/4
   ///   ```
   public let arctan : (x : Float) -> Float = Prim.arctan;
@@ -330,7 +363,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   let sqrt2over2 = Float.sqrt(2) / 2;
   ///   Float.arctan2(sqrt2over2, sqrt2over2) // => Float.pi/4
   ///   ```
@@ -348,7 +383,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.exp(1.0) // => Float.e
   ///   ```
   public let exp : (x : Float) -> Float = Prim.exp;
@@ -367,7 +404,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.log(Float.e) // => 1.0
   ///   ```
   public let log : (x : Float) -> Float = Prim.log;
@@ -387,7 +426,9 @@ module {
   /// `nan` is formatted as `nan` or `-nan` depending on its sign bit.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.format(#exp 3, 123.0) // => "1.230e+02"
   ///   ```
   public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text = switch fmt {
@@ -395,7 +436,7 @@ module {
     case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
     case (#gen(prec)) { Prim.floatToFormattedText(x, prec, 2) };
     case (#hex(prec)) { Prim.floatToFormattedText(x, prec, 3) };
-    case (#exact) { Prim.floatToFormattedText(x, 17, 2) };
+    case (#exact) { Prim.floatToFormattedText(x, 17, 2) }
   };
 
   /// Conversion to Text. Use `format(fmt, x)` for more detailed control.
@@ -406,7 +447,9 @@ module {
   /// `nan` is formatted as `nan` or `-nan` depending on its sign bit.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.toText(0.12) // => "0.120000"
   ///   ```
   public let toText : Float -> Text = Prim.floatToText;
@@ -417,7 +460,9 @@ module {
   /// Also traps for `inf`, `-inf`, and `nan`.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.toInt64(-12.3) // => -12
   ///   ```
   public let toInt64 : Float -> Int64 = Prim.floatToInt64;
@@ -427,7 +472,9 @@ module {
   /// Note: The floating point number may be imprecise for large or small Int64.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.fromInt64(-42) // => -42.0
   ///   ```
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
@@ -437,8 +484,10 @@ module {
   /// Traps for `inf`, `-inf`, and `nan`.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
-  ///   Float.toInt(1.2e6) // => 1200000
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
+  ///   Float.toInt(1.2e6) // => +1_200_000
   ///   ```
   public let toInt : Float -> Int = Prim.floatToInt;
 
@@ -449,7 +498,9 @@ module {
   /// Returns `-inf` if the integer is less than the minimum floating point number.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.fromInt(-123) // => -123.0
   ///   ```
   public let fromInt : Int -> Float = Prim.intToFloat;
@@ -470,7 +521,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.equal(-12.3, -1.23e1) // => true
   ///   ```
   public func equal(x : Float, y : Float) : Bool { x == y };
@@ -491,7 +544,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.notEqual(-12.3, -1.23e1) // => false
   ///   ```
   public func notEqual(x : Float, y : Float) : Bool { x != y };
@@ -509,7 +564,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.less(Float.e, Float.pi) // => true
   ///   ```
   public func less(x : Float, y : Float) : Bool { x < y };
@@ -527,7 +584,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.lessOrEqual(0.123, 0.1234) // => true
   ///   ```
   public func lessOrEqual(x : Float, y : Float) : Bool { x <= y };
@@ -543,7 +602,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.greater(Float.pi, Float.e) // => true
   ///   ```
   public func greater(x : Float, y : Float) : Bool { x > y };
@@ -559,7 +620,9 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.greaterOrEqual(0.1234, 0.123) // => true
   ///   ```
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
@@ -581,11 +644,13 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
-  ///   Float.compare(0.123, 0.1234) // => #greater
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
+  ///   Float.compare(0.123, 0.1234) // => #less
   ///   ```
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the negation of `x`, `-x` .
@@ -595,7 +660,9 @@ module {
   /// https://github.com/dfinity/motoko/issues/3646
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.neq(1.23) // => -1.23
   ///   ```
   public func neq(x : Float) : Float { -x }; // Typo: Should be changed to `neg`
@@ -619,7 +686,9 @@ module {
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.add(1.23, 0.123) // => 1.353
   ///   ```
   public func add(x : Float, y : Float) : Float { x + y };
@@ -646,7 +715,9 @@ module {
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.sub(1.23, 0.123) // => 1.107
   ///   ```
   public func sub(x : Float, y : Float) : Float { x - y };
@@ -670,7 +741,9 @@ module {
   /// The same cases apply communtatively, i.e. for `mul(y, x)`.
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.mul(1.23, 1e2) // => 123.0
   ///   ```
   public func mul(x : Float, y : Float) : Float { x * y };
@@ -704,7 +777,9 @@ module {
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.div(1.23, 1e2) // => 0.0123
   ///   ```
   public func div(x : Float, y : Float) : Float { x / y };
@@ -733,7 +808,9 @@ module {
   /// (A normal number means any value except infinity or `nan`.)
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.rem(7.2, 2.3) // => 0.3
   ///   ```
   public func rem(x : Float, y : Float) : Float { x % y };
@@ -770,9 +847,11 @@ module {
   /// ```
   ///
   ///   Example:
-  ///   ```motoko name=initialize
+  ///   ```
+  ///   import Float "mo:base/Float";
+  ///
   ///   Float.pow(2.5, 2.0) // => 6.25
   ///   ```
   public func pow(x : Float, y : Float) : Float { x ** y };
 
-};
+}
