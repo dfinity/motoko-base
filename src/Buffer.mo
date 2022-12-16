@@ -2505,6 +2505,7 @@ module {
   ///
   /// buffer.add(inner1);
   /// buffer.add(inner2);
+  /// // buffer = [[1, 2], [3, 4]]
   ///
   /// let flat = Buffer.flatten<Nat>(buffer);
   /// Buffer.toText(flat, Nat.toText);
