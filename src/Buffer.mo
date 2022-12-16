@@ -1693,6 +1693,17 @@ module {
 
   /// Creates a mutable array containing elements from `buffer`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.toVarArray<Nat>(buffer);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1710,6 +1721,17 @@ module {
   };
 
   /// Creates a buffer containing elements from `array`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let array = Array.make(2);
+  ///
+  /// let buf = Buffer.fromArray<Nat>(array);
+  /// Buffer.toText(buf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
