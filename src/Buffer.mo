@@ -2147,6 +2147,14 @@ module {
 
   /// Returns a new buffer with capacity and size 1, containing `element`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// Buffer.make<Nat>(1);
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(1)
   ///
   /// Space: O(1)
@@ -2157,6 +2165,19 @@ module {
   };
 
   /// Reverses the order of elements in `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.reverse(buffer);
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
