@@ -1203,7 +1203,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(1);
@@ -1255,6 +1254,24 @@ module {
   /// Returns the sub-buffer of `buffer` starting at index `start`
   /// of length `length`. Traps if `start` is out of bounds, or `start + length`
   /// is greater than the size of `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let sub = Buffer.subBuffer(buffer, 3, 2);
+  /// Buffer.toText(
+  ///   sub, 
+  ///   Nat.toText
+  /// );
+  /// ```
   ///
   /// Runtime: O(length)
   ///
