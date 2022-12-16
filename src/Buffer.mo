@@ -1819,7 +1819,7 @@ module {
   /// buffer.add(3);
   ///
   /// Buffer.trimToSize<Nat>(buffer);
-  /// buffer.size();
+  /// buffer.capacity();
   /// ```
   ///
   /// Runtime: O(size)
