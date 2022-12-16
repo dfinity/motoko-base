@@ -13,12 +13,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-18.04]
-        ghc: ["8.8.4"]
-        spec:
-          - release-0.16 # https://github.com/dfinity-lab/ic-ref/tree/release-0.16
-        node:
-          - 14
+        os: [ubuntu-22.04]
+        node: [14]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node }}
