@@ -15,7 +15,6 @@
 /// Note on the costs of push and pop functions:
 /// * Runtime: `O(1) amortized costs, `O(n)` worst case cost per single call.
 /// * Space: `O(1) amortized costs, `O(n)` worst case cost per single call.
-/// * Garbage: The implementation creates `O(n)` short-lived objects on splitting.
 ///
 /// `n` denotes the number of elements stored in the deque.
 
