@@ -735,13 +735,12 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
   ///
   /// let buffer = Buffer.Buffer<Nat>(2);
   /// buffer.add(2);
   /// buffer.add(0);
   /// buffer.add(3);
-  /// Buffer.contains(buffer, 2, Nat.equal);
+  /// Buffer.contains<Nat>(buffer, 2, func (x, y) { x == y });
   /// ```
   ///
   /// Runtime: O(size)
@@ -783,6 +782,22 @@ module {
 
   /// Finds the greatest element in `buffer` defined by `compare`.
   /// Returns `null` if `buffer` is empty.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// 
+  /// Buffer.max(buffer, func (x: Nat, y: Nat): Order.Order {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
