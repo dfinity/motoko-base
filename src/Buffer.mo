@@ -1444,6 +1444,23 @@ module {
   /// Checks if `prefix` is a strict prefix of `buffer`. Uses `equal` to
   /// compare elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let pre = Buffer.Buffer<Nat>(3);
+  /// pre.add(1);
+  /// pre.add(2);
+  /// pre.add(3);
+  /// Buffer.isStrictPrefixOf(pre, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size of prefix)
   ///
   /// Space: O(size of prefix)
