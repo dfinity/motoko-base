@@ -825,6 +825,22 @@ module {
   /// Finds the least element in `buffer` defined by `compare`.
   /// Returns `null` if `buffer` is empty.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// 
+  /// Buffer.min(buffer, func (x: Nat, y: Nat): Order.Order {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
