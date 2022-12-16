@@ -922,7 +922,6 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Order "mo:base/Order";
   ///
   /// let a = Buffer.Buffer<Nat>(2);
   /// a.add(1);
@@ -978,6 +977,19 @@ module {
 
   /// Creates a textual representation of `buffer`, using `toText` to recursively
   /// convert the elements into Text.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
