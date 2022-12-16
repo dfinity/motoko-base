@@ -2643,6 +2643,19 @@ module {
   /// Creates a new buffer taking elements in order from `buffer` until predicate
   /// returns false.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.takeWhile<Nat>(a, func (x) { x > 0 });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -2663,6 +2676,19 @@ module {
 
   /// Creates a new buffer excluding elements in order from `buffer` until predicate
   /// returns false.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.dropWhile<Nat>(a, func (x) { x > 1 });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
