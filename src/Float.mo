@@ -12,7 +12,7 @@
 ///
 /// Examples of numerical errors:
 ///   ```motoko name=initialize
-///   assert(0.1 + 0.1 + 0.1 == 0.3); // Fails!
+///   0.1 + 0.1 + 0.1 == 0.3 // False!
 ///   ```
 ///
 ///   ```motoko name=initialize
