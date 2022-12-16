@@ -30,7 +30,7 @@ module {
   /// Create a new empty deque.
   ///
   /// Example:
-  /// ```
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// Deque.empty<Nat>()
@@ -45,7 +45,7 @@ module {
   /// Returns true if `deque` is empty, otherwise `false`.
   ///
   /// Example:
-  /// ```
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// let deque = Deque.empty<Nat>();
@@ -81,7 +81,7 @@ module {
   /// This may involve dynamic splitting of the internally used two lists.
   ///
   /// Example:
-  /// ```
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1) // deque with elements [1, 2]
@@ -100,7 +100,7 @@ module {
   /// Returns `null` if `deque` is empty. Otherwise, the front element of `deque`.
   ///
   /// Example:
-  /// ```
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// let deque = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
@@ -127,7 +127,7 @@ module {
   /// This may involve dynamic splitting of the internally used two lists.
   ///
   /// Example:
-  /// ```motoko name=initialize
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
@@ -179,7 +179,7 @@ module {
   /// Returns `null` if `deque` is empty. Otherwise, the back element of `deque`.
   ///
   /// Example:
-  /// ```
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// let deque = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
@@ -206,7 +206,7 @@ module {
   /// This may involve dynamic splitting of the internally used two lists.
   ///
   /// Example:
-  /// ```motoko name=initialize
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
