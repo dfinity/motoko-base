@@ -22,7 +22,7 @@ module {
   /// let ledger = Principal.fromText("ryjl3-tyaaa-aaaaa-aaaba-cai");
   /// let method = "decimals";
   /// let input = ();
-  /// type OutputType = { decimals: Nat32 };
+  /// type OutputType = { decimals : Nat32 };
   ///
   /// let rawReply = await IC.call(ledger, method, to_candid(input)); // serialized Candid
   /// let output : ?OutputType = from_candid(rawReply); // { decimals = 8 }
