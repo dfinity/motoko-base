@@ -2546,6 +2546,27 @@ module {
 
   /// Flattens the buffer of buffers into a single buffer.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Buffer.Buffer<Nat>>(1);
+  ///
+  /// let inner1 = Buffer.Buffer<Nat>(2);
+  /// inner1.add(1);
+  /// inner1.add(2);
+  ///
+  /// let inner2 = Buffer.Buffer<Nat>(2);
+  /// inner2.add(3);
+  /// inner2.add(4);
+  ///
+  /// buffer.add(inner1);
+  /// buffer.add(inner2);
+  ///
+  /// let flat = Buffer.flatten<Nat>(buffer);
+  /// Buffer.toText(flat, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(number of elements in buffer)
   ///
   /// Space: O(number of elements in buffer)
