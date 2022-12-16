@@ -34,7 +34,7 @@ module {
   /// Example:
   /// ```motoko
   /// import Error "mo:base/Error";
-  /// 
+  ///
   /// throw Error.reject("Example error");
   /// ```
   public let reject : (message : Text) -> Error = Prim.error;
