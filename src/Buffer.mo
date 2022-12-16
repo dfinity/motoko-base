@@ -2129,6 +2129,17 @@ module {
 
   /// Returns the last element of `buffer`. Traps if `buffer` is empty.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(2);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.last(buffer);
+  /// ```
+  ///
   /// Runtime: O(1)
   ///
   /// Space: O(1)
