@@ -1127,7 +1127,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(0, func i { i  *  i}))
+        T.list(T.natTestable, null : List.List<Nat>)
       )),
     Suite.test(
       "small-list-empty-right",
@@ -1137,7 +1137,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(0, func i { i  *  i}))
+        T.list(T.natTestable, null : List.List<Nat>)
       )),
     Suite.test(
       "small-list-both-empty",
@@ -1151,6 +1151,73 @@ let zipWith = Suite.suite(
       )),
   ]
 );
+
+let zip = Suite.suite(
+  "zip",
+  [
+    Suite.test(
+      "small-list-equal-len",
+      List.zip<Nat, Nat>(
+        List.tabulate<Nat>(10, func i { i }),
+        List.tabulate<Nat>(10, func i { i })
+      ),
+      M.equals(
+        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+          List.tabulate<(Nat, Nat)>(10, func i { (i, i) }))
+      )),
+    Suite.test(
+      "small-list-shorter",
+      List.zip<Nat, Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(11, func i { i })
+      ),
+      M.equals(
+        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+          List.tabulate<(Nat, Nat)>(10, func i { (i, i) }))
+      )),
+    Suite.test(
+      "small-list-longer",
+      List.zip<Nat, Nat>(
+        List.tabulate<Nat>(11, func i { i  }),
+        List.tabulate<Nat>(10, func i { i })
+      ),
+      M.equals(
+        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+          List.tabulate<(Nat, Nat)>(10, func i { (i, i) }))
+      )),
+    Suite.test(
+      "small-list-empty-left",
+      List.zip<Nat, Nat>(
+        null,
+        List.tabulate<Nat>(10, func i { i })
+      ),
+      M.equals(
+        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+          null : List.List<(Nat, Nat)>)
+      )),
+    Suite.test(
+      "small-list-empty-right",
+      List.zip<Nat, Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        null
+      ),
+      M.equals(
+        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+          null : List.List<(Nat, Nat)>)
+      )),
+    Suite.test(
+      "small-list-both-empty",
+      List.zip<Nat, Nat>(
+        null,
+        null
+      ),
+      M.equals(
+        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+          null : List.List<(Nat, Nat)>)
+      )),
+  ]
+);
+
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -1181,6 +1248,7 @@ Suite.run(Suite.suite("List", [
   merge,
   compare,
   equal,
-  zipWith
+  zipWith,
+  zip
   ]))
 
