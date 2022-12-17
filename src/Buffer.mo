@@ -2405,7 +2405,8 @@ module {
   /// buffer.add(5);
   /// buffer.add(6);
   ///
-  /// Buffer.chunk<Nat>(buffer, 3);
+  /// let chunks = Buffer.chunk<Nat>(buffer, 3);
+  /// Buffer.toText<Buffer.Buffer<Nat>>(chunks, func buf = Buffer.toText(buf, Nat.toText));
   /// ```
   ///
   /// Runtime: O(number of elements in buffer)
@@ -2449,7 +2450,8 @@ module {
   /// buffer.add(5);
   /// buffer.add(6);
   ///
-  /// Buffer.groupBy<Nat>(buffer, func (x, y) { x == y });
+  /// let grouped = Buffer.groupBy<Nat>(buffer, func (x, y) { x == y });
+  /// Buffer.toText<Buffer.Buffer<Nat>>(grouped, func buf = Buffer.toText(buf, Nat.toText));
   /// ```
   ///
   /// Runtime: O(size)
@@ -2554,7 +2556,8 @@ module {
   /// b.add(5);
   /// b.add(6);
   ///
-  /// Buffer.zip(a, b);
+  /// let zipped = Buffer.zip(a, b);
+  /// Buffer.toText<Buffer.Buffer<Nat>>(zipped, func buf = Buffer.toText(buf, Nat.toText));
   /// ```
   ///
   /// Runtime: O(min(size1, size2))
