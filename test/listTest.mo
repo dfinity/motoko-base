@@ -1015,7 +1015,7 @@ let compare = Suite.suite(
       M.equals(ordT(#less))
      ),
     Suite.test(
-      "small-list-less",
+      "small-list-greater",
       List.compare<Nat>(
         List.tabulate<Nat>(10, func i { if (i < 9) { i } else { i + 1 } }),
         List.tabulate<Nat>(10, func i { i }),
@@ -1025,6 +1025,67 @@ let compare = Suite.suite(
      ),
   ]
 );
+
+let equal = Suite.suite(
+  "equal",
+  [
+    Suite.test(
+      "small-list-equal",
+      List.equal<Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(10, func i { i }),
+        Nat.equal
+      ),
+      M.equals(T.bool(true))
+      ),
+    Suite.test(
+      "small-list-less",
+f      List.equal<Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(11, func i { i }),
+        Nat.equal
+      ),
+      M.equals(T.bool(false))
+     ),
+    Suite.test(
+      "small-list-less",
+      List.equal<Nat>(
+        List.tabulate<Nat>(11, func i { i  }),
+        List.tabulate<Nat>(10, func i { i }),
+        Nat.equal
+      ),
+      M.equals(T.bool(false))
+     ),
+    Suite.test(
+      "empty-list-equal",
+      List.equal<Nat>(
+        null,
+        null,
+        Nat.equal
+      ),
+      M.equals(T.bool(true))
+      ),
+    Suite.test(
+      "small-list-less",
+      List.equal<Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(10, func i { if (i < 9) { i } else { i + 1 } }),
+        Nat.equal
+      ),
+      M.equals(T.bool(false))
+     ),
+    Suite.test(
+      "small-list-greater",
+      List.equal<Nat>(
+        List.tabulate<Nat>(10, func i { if (i < 9) { i } else { i + 1 } }),
+        List.tabulate<Nat>(10, func i { i }),
+        Nat.equal
+      ),
+      M.equals(T.bool(false))
+     ),
+  ]
+);
+
 
 
 
@@ -1055,6 +1116,7 @@ Suite.run(Suite.suite("List", [
   all,
   some,
   merge,
-  compare
+  compare,
+  equals
   ]))
 
