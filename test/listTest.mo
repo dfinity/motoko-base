@@ -1306,6 +1306,35 @@ let split = Suite.suite(
   ]
 );
 
+let chunks = Suite.suite(
+  "chunks",
+  [
+    Suite.test(
+      "five-even-split",
+      List.chunks<Nat>(5,
+        List.tabulate<Nat>(10, func i { i }),
+      ),
+      M.equals(
+        T.list(
+          T.listTestable(T.natTestable),
+          (List.tabulate<List.List<Nat>>(2, func i {
+            List.tabulate<Nat>(5, func j { i * 5 + j }) })))
+      )),
+    Suite.test(
+      "five-remainder",
+      List.chunks<Nat>(5,
+        List.tabulate<Nat>(13, func i { i }),
+      ),
+      M.equals(
+        T.list(
+          T.listTestable(T.natTestable),
+          (List.tabulate<List.List<Nat>>((13+4)/5, func i {
+            List.tabulate<Nat>(if (i < 13 / 5) 5 else 13 % 5, func j { i * 5 + j }) })))
+      )),
+  ]
+);
+
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -1337,6 +1366,7 @@ Suite.run(Suite.suite("List", [
   equal,
   zipWith,
   zip,
-  split
+  split,
+  chunks
   ]))
 
