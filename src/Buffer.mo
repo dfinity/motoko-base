@@ -996,15 +996,14 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Nat "mo:base/Nat";
-  /// import Nat32 "mo:base/Nat32";
+  /// import Hash "mo:base/Hash";
   ///
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(1000);
   ///
-  /// Buffer.hash<Nat>(buffer, Nat32.fromNat);
+  /// Buffer.hash<Nat>(buffer, Hash.hash);
   /// ```
   ///
   /// Runtime: O(size)
