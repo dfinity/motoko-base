@@ -1086,8 +1086,20 @@ let equal = Suite.suite(
   ]
 );
 
-
-
+let zipWith = Suite.suite(
+  "zipWith",
+  [
+    Suite.test(
+      "small-list-equal",
+      List.zipWith<Nat, Nat, Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(10, func i { i }),
+        func (i, j) -> (i * j)
+      ),
+        T.list(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
+      ),
+  ]
+);
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -1117,6 +1129,7 @@ Suite.run(Suite.suite("List", [
   some,
   merge,
   compare,
-  equal
+  equal,
+  zipWith
   ]))
 
