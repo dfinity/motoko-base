@@ -841,6 +841,46 @@ let find = Suite.suite(
   ]
 );
 
+let all = Suite.suite(
+  "all", [
+    Suite.test(
+      "all non-empty true",
+      List.all<Nat>(?(1, ?(9, ?(4, ?(8, null)))), func x = x > 0),
+      M.equals(T.bool(true))
+    ),
+    Suite.test(
+      "all non-empty false",
+      List.all<Nat>(?(1, ?(9, ?(4, ?(8, null)))), func x =  x > 1),
+      M.equals(T.bool(false))
+    ),
+    Suite.test(
+      "all empty",
+      List.all<Nat>(null, func x = x >= 1),
+      M.equals(T.bool(true))
+    ),
+  ]
+);
+
+let some = Suite.suite(
+  "some", [
+    Suite.test(
+      "non-empty true",
+      List.some<Nat>(?(1, ?(9, ?(4, ?(8, null)))), func x = x >= 8),
+      M.equals(T.bool(true))
+    ),
+    Suite.test(
+      "non-empty false",
+      List.some<Nat>(?(1, ?(9, ?(4, ?(8, null)))), func x =  x > 9),
+      M.equals(T.bool(false))
+    ),
+    Suite.test(
+      "empty",
+      List.some<Nat>(null, func x = true),
+      M.equals(T.bool(false))
+    ),
+  ]
+);
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -864,6 +904,8 @@ Suite.run(Suite.suite("List", [
   drop,
   foldLeft,
   foldRight,
-  find
+  find,
+  all,
+  some
   ]))
 
