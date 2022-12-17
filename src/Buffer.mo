@@ -733,6 +733,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// buffer.add(2);
   /// buffer.add(0);
