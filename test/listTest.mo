@@ -7,6 +7,19 @@ import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
+/*
+
+FIXME:
+
+* flatten is quadratic
+* Array.mo doesn't implement `all`, `some`
+* merge takes lte predicate of type (T,T)-> Bool, not comparison of type: (T,T) -> Ord
+* does chunks diverge on 0?
+
+TODO:
+  * most of these test don't test evaluation order or short-circuiting.
+*/
+
 type X = Nat;
 
 func opnatEq(a : ?Nat, b : ?Nat) : Bool {
@@ -881,6 +894,58 @@ let some = Suite.suite(
   ]
 );
 
+
+let merge = Suite.suite(
+  "merge",
+  [
+    Suite.test(
+      "small-list",
+      List.merge<Nat>(
+        List.tabulate<Nat>(10, func i { 2 * i  }),
+        List.tabulate<Nat>(10, func i { 2 * i + 1 }),
+        func (i, j) { i <= j }
+      ),
+      M.equals(
+        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+      )
+    ),
+
+    Suite.test(
+      "small-list-alternating",
+      List.merge<Nat>(
+        List.tabulate<Nat>(10, func i {
+          if (i % 2 == 0)
+            { 2 * i }
+          else
+            { 2 * i + 1 } }),
+        List.tabulate<Nat>(10, func i {
+          if (not (i % 2 == 0)) // flipped!
+            { 2 * i }
+          else
+            { 2 * i + 1 }
+        }),
+        func (i, j) { i <= j }
+      ),
+      M.equals(
+        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+      )
+    ),
+
+    Suite.test(
+      "large-list",
+      List.merge<Nat>(
+        List.tabulate<Nat>(1000, func i { 2 * i }),
+        List.tabulate<Nat>(1000, func i { 2 * i + 1 }),
+        func (i, j) { i <= j }
+      ),
+      M.equals(
+        T.list(T.natTestable, List.tabulate<Nat>(2000, func i { i }))
+      )
+    )
+  ]
+);
+
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -906,6 +971,7 @@ Suite.run(Suite.suite("List", [
   foldRight,
   find,
   all,
-  some
+  some,
+  merge
   ]))
 

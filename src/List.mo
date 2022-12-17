@@ -285,9 +285,6 @@ module {
   };
 
   /// Compare two lists for equality as specified by the given relation `eq` on the elements.
-  ///
-  /// The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1, l2) && lessThanEq(l2, l1)`,
-  /// but the former is more efficient.
   public func equal<T>(l1 : List<T>, l2 : List<T>, eq : (T, T) -> Bool) : Bool {
     switch (l1, l2) {
       case (null, null) { true };
