@@ -1342,6 +1342,16 @@ let chunks = Suite.suite(
           (List.tabulate<List.List<Nat>>(1, func i {
             List.tabulate<Nat>(3, func j { i * 5 + j }) })))
       )),
+    Suite.test(
+      "split-zero",
+      List.chunks<Nat>(0,
+        List.tabulate<Nat>(5, func i { i }),
+      ),
+      M.equals(
+        T.list(
+          T.listTestable(T.natTestable),
+          (null : List.List<List.List<Nat>>))
+      )),
   ]
 );
 
