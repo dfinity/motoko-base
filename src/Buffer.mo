@@ -2652,7 +2652,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// let newBuf = Buffer.dropWhile<Nat>(a, func (x) { x > 1 });
+  /// let newBuf = Buffer.dropWhile<Nat>(buffer, func x  = x < 3);
   /// Buffer.toText(newBuf, Nat.toText);
   /// ```
   ///
