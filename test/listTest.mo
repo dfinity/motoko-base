@@ -16,6 +16,7 @@ FIXME:
 * flatten is quadratic
 * Array.mo doesn't implement `all`, `some`, `compare`
 * merge takes lte predicate of type (T,T)-> Bool, not comparison of type: (T,T) -> Ord
+* split is not tail recursive and calls redundant helpers
 * does chunks diverge on 0?
 
 TODO:
@@ -1218,6 +1219,92 @@ let zip = Suite.suite(
   ]
 );
 
+let split = Suite.suite(
+  "split",
+  [
+    Suite.test(
+      "split-zero-nonempty",
+      List.split<Nat>(0,
+        List.tabulate<Nat>(10, func i { i }),
+      ),
+      M.equals(
+        T.tuple2(
+          T.listTestable(T.natTestable),
+          T.listTestable(T.natTestable),
+          (null : List.List<Nat>,
+           List.tabulate<Nat>(10, func i { i })))
+      )),
+
+    Suite.test(
+      "split-zero-empty",
+      List.split<Nat>(0,
+        null
+      ),
+      M.equals(
+        T.tuple2(
+          T.listTestable(T.natTestable),
+          T.listTestable(T.natTestable),
+          (null : List.List<Nat>,
+           null : List.List<Nat>))
+      )),
+
+    Suite.test(
+      "split-nonzero-empty",
+      List.split<Nat>(15,
+        null
+      ),
+      M.equals(
+        T.tuple2(
+          T.listTestable(T.natTestable),
+          T.listTestable(T.natTestable),
+          (null : List.List<Nat>,
+           null : List.List<Nat>))
+      )),
+
+    Suite.test(
+      "split-too-few",
+      List.split<Nat>(15,
+        List.tabulate<Nat>(10, func i { i }),
+      ),
+      M.equals(
+        T.tuple2(
+          T.listTestable(T.natTestable),
+          T.listTestable(T.natTestable),
+          (List.tabulate<Nat>(10, func i { i }),
+           null : List.List<Nat>
+           ))
+      )),
+
+    Suite.test(
+      "split-too-many",
+      List.split<Nat>(10,
+        List.tabulate<Nat>(15, func i { i }),
+      ),
+      M.equals(
+        T.tuple2(
+          T.listTestable(T.natTestable),
+          T.listTestable(T.natTestable),
+          (List.tabulate<Nat>(10, func i { i }),
+           List.tabulate<Nat>(5, func i { 10 + i })
+           ))
+      )),
+
+    Suite.test(
+      "split-one",
+      List.split<Nat>(1,
+        List.tabulate<Nat>(15, func i { i }),
+      ),
+      M.equals(
+        T.tuple2(
+          T.listTestable(T.natTestable),
+          T.listTestable(T.natTestable),
+          (List.tabulate<Nat>(1, func i { i }),
+           List.tabulate<Nat>(14, func i { 1 + i })
+           ))
+      )),
+
+  ]
+);
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -1249,6 +1336,7 @@ Suite.run(Suite.suite("List", [
   compare,
   equal,
   zipWith,
-  zip
+  zip,
+  split
   ]))
 
