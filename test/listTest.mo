@@ -1331,6 +1331,17 @@ let chunks = Suite.suite(
           (List.tabulate<List.List<Nat>>((13+4)/5, func i {
             List.tabulate<Nat>(if (i < 13 / 5) 5 else 13 % 5, func j { i * 5 + j }) })))
       )),
+    Suite.test(
+      "five-too-few",
+      List.chunks<Nat>(5,
+        List.tabulate<Nat>(3, func i { i }),
+      ),
+      M.equals(
+        T.list(
+          T.listTestable(T.natTestable),
+          (List.tabulate<List.List<Nat>>(1, func i {
+            List.tabulate<Nat>(3, func j { i * 5 + j }) })))
+      )),
   ]
 );
 
