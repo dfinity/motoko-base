@@ -12,7 +12,7 @@ import T "mo:matchers/Testable";
 FIXME:
 
 * flatten is quadratic
-* Array.mo doesn't implement `all`, `some`
+* Array.mo doesn't implement `all`, `some`, `compare`
 * merge takes lte predicate of type (T,T)-> Bool, not comparison of type: (T,T) -> Ord
 * does chunks diverge on 0?
 
@@ -928,6 +928,18 @@ let merge = Suite.suite(
       ),
       M.equals(
         T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+      )
+    ),
+
+    Suite.test(
+      "small-list-equal",
+      List.merge<Nat>(
+        List.tabulate<Nat>(10, func i { 2 * i  }),
+        List.tabulate<Nat>(10, func i { 2 * i }),
+        func (i, j) { i <= j }
+      ),
+      M.equals(
+        T.list(T.natTestable, List.tabulate<Nat>(20, func i { 2 * (i / 2) }))
       )
     ),
 
