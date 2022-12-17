@@ -791,6 +791,55 @@ let drop = Suite.suite(
   ]
 );
 
+let foldLeft = Suite.suite(
+  "foldLeft", [
+  Suite.test(
+      "foldLeft",
+      List.foldLeft<Text, Text>(?("a", ?("b", ?("c", null))), "", func(acc, x) = acc # x),
+      M.equals(T.text("abc"))
+    ),
+    Suite.test(
+      "foldLeft empty",
+      List.foldLeft<Text, Text>(null, "base", func(x, acc) = acc # x),
+      M.equals(T.text("base"))
+    ),
+  ]
+);
+
+let foldRight = Suite.suite(
+  "foldRight", [
+    Suite.test(
+      "foldRight",
+      List.foldRight<Text, Text>(?("a", ?("b", ?("c", null))), "", func(x, acc) = acc # x),
+      M.equals(T.text("cba"))
+    ),
+    Suite.test(
+      "foldRight empty",
+      List.foldRight<Text, Text>(null, "base", func(x, acc) = acc # x),
+      M.equals(T.text("base"))
+    ),
+  ]
+);
+
+let find = Suite.suite(
+  "find", [
+    Suite.test(
+      "find",
+      List.find<Nat>(?(1, ?(9, ?(4, ?(8, null)))), func x = x == 9),
+      M.equals(T.optional(T.natTestable, ?9))
+    ),
+    Suite.test(
+      "find fail",
+      List.find<Nat>(?(1, ?(9, ?(4, ?(8, null)))), func _ = false),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "find empty",
+      List.find<Nat>(null, func _ = true),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+  ]
+);
 
 Suite.run(Suite.suite("List", [
   mapResult,
@@ -812,6 +861,9 @@ Suite.run(Suite.suite("List", [
   flatten,
   make,
   take,
-  drop
+  drop,
+  foldLeft,
+  foldRight,
+  find
   ]))
 
