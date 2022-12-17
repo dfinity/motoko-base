@@ -17,6 +17,18 @@ module {
   ///
   /// Must be called from an update method, else traps.
   /// Must be passed a blob of at most 32 bytes, else traps.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import CertifiedData "mo:base/CertifiedData";
+  /// import Blob "mo:base/Blob";
+  ///
+  /// let a: [Nat8] = [1, 2, 3];
+  /// let b = Blob.fromArray(a);
+  /// CertifiedData.set(b);
+  ///
+  /// ```
+  ///
   public let set : (data : Blob) -> () = Prim.setCertifiedData;
 
   /// Gets a certificate
@@ -24,6 +36,13 @@ module {
   /// Returns `null` if no certificate is available, e.g. when processing an
   /// update call or inter-canister call. This returns a non-`null` value only
   /// when processing a query call.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import CertifiedData "mo:base/CertifiedData";
+  /// 
+  /// CertifiedData.getCertificate();
+  /// ```
+  ///
   public let getCertificate : () -> ?Blob = Prim.getCertificate;
-
 }
