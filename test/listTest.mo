@@ -1040,7 +1040,7 @@ let equal = Suite.suite(
       ),
     Suite.test(
       "small-list-less",
-f      List.equal<Nat>(
+      List.equal<Nat>(
         List.tabulate<Nat>(10, func i { i  }),
         List.tabulate<Nat>(11, func i { i }),
         Nat.equal
@@ -1117,6 +1117,6 @@ Suite.run(Suite.suite("List", [
   some,
   merge,
   compare,
-  equals
+  equal
   ]))
 
