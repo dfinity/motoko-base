@@ -1,4 +1,6 @@
 import List "mo:base/List";
+import Nat "mo:base/Nat";
+import Order "mo:base/Order";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
@@ -19,6 +21,12 @@ FIXME:
 TODO:
   * most of these test don't test evaluation order or short-circuiting.
 */
+
+func ordT(o : Order.Order) : T.TestableItem<Order.Order> = {
+  item = o;
+  display = func(o : Order.Order) : Text { debug_show (o) };
+  equals = Order.equal
+};
 
 type X = Nat;
 
@@ -958,6 +966,68 @@ let merge = Suite.suite(
 );
 
 
+let compare = Suite.suite(
+  "compare",
+  [
+    Suite.test(
+      "small-list-equal",
+      List.compare<Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(10, func i { i }),
+        Nat.compare
+      ),
+      M.equals(ordT(#equal))
+      ),
+    Suite.test(
+      "small-list-less",
+      List.compare<Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(11, func i { i }),
+        Nat.compare
+      ),
+      M.equals(ordT(#less))
+     ),
+    Suite.test(
+      "small-list-less",
+      List.compare<Nat>(
+        List.tabulate<Nat>(11, func i { i  }),
+        List.tabulate<Nat>(10, func i { i }),
+        Nat.compare
+      ),
+      M.equals(ordT(#greater))
+     ),
+    Suite.test(
+      "empty-list-equal",
+      List.compare<Nat>(
+        null,
+        null,
+        Nat.compare
+      ),
+      M.equals(ordT(#equal))
+      ),
+    Suite.test(
+      "small-list-less",
+      List.compare<Nat>(
+        List.tabulate<Nat>(10, func i { i  }),
+        List.tabulate<Nat>(10, func i { if (i < 9) { i } else { i + 1 } }),
+        Nat.compare
+      ),
+      M.equals(ordT(#less))
+     ),
+    Suite.test(
+      "small-list-less",
+      List.compare<Nat>(
+        List.tabulate<Nat>(10, func i { if (i < 9) { i } else { i + 1 } }),
+        List.tabulate<Nat>(10, func i { i }),
+        Nat.compare
+      ),
+      M.equals(ordT(#greater))
+     ),
+  ]
+);
+
+
+
 Suite.run(Suite.suite("List", [
   mapResult,
   replicate,
@@ -984,6 +1054,7 @@ Suite.run(Suite.suite("List", [
   find,
   all,
   some,
-  merge
+  merge,
+  compare
   ]))
 
