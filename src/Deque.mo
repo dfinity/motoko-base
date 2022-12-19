@@ -154,7 +154,7 @@ module {
     }
   };
 
-  /// Extend a deque by inserting a new element on the back end.
+/// Add `element` to the back of `deque`.
   /// Returns a new deque with all the elements of `deque`, followed by `element` on the back.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
