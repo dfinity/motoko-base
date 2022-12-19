@@ -17,7 +17,6 @@ FIXME:
 * Array.mo doesn't implement `all`, `some`, `compare`
 * merge takes lte predicate of type (T,T)-> Bool, not comparison of type: (T,T) -> Ord
 * split is not tail recursive and calls redundant helpers
-* does chunks diverge on 0?
 
 TODO:
   * most of these test don't test evaluation order or short-circuiting.
