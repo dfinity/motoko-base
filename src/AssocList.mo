@@ -74,6 +74,7 @@ module {
   /// Example:
   /// ```motoko include=import,initialize
   /// // Add three entries to the map
+  /// // map = [(0, 10), (1, 11), (2, 12)]
   /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
   /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
   /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
