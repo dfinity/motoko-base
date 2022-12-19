@@ -760,7 +760,7 @@ module {
   /// pow(0.0, -inf)  => +inf
   /// pow(x, y)       => nan if x < 0.0 and y is a non-integral Float
   /// pow(-inf, y)    => +inf if y > 0.0 and y is a non-integral or an even integral Float
-  /// pow(-inf, y)    => -inf if y > 0.0 and y is a odd integral Float
+  /// pow(-inf, y)    => -inf if y > 0.0 and y is an odd integral Float
   /// pow(-inf, 0.0)  => 1.0
   /// pow(-inf, y)    => 0.0 if y < 0.0
   /// pow(-inf, +inf) => +inf
