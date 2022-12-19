@@ -21,6 +21,7 @@ FIXME:
 
 TODO:
   * most of these test don't test evaluation order or short-circuiting.
+  * from/to(Var)Array functions could use matchers tests beyond the existing assert only tests
 */
 
 func ordT(o : Order.Order) : T.TestableItem<Order.Order> = {
