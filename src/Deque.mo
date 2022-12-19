@@ -75,8 +75,8 @@ module {
     }
   };
 
-  /// Extend a deque by inserting a new element on the front end.
-  /// Returns a new deque with `element` in the front followed by the elements of `deque`.
+  /// Insert a new element on the front end of a deque.
+  /// Returns the new deque with `element` in the front followed by the elements of `deque`.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
   ///
@@ -119,9 +119,9 @@ module {
     }
   };
 
-  /// Shorten a deque by removing the element on the front end.
+  /// Remove the element on the front end of a deque.
   /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  /// the first element and a new deque that contains all the elements of `deque`,
+  /// the first element and the new deque that contains all the elements of `deque`,
   /// however, without the front element.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
@@ -129,16 +129,18 @@ module {
   /// Example:
   /// ```motoko
   /// import Deque "mo:base/Deque";
-  /// import Prim "mo:prim";
+  /// import Debug "mo:base/Debug";
   ///
   /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
   /// let reduced = Deque.popFront(initial);
   /// switch reduced {
-  ///     case null Prim.trap("should not be null");
-  ///     case (?result) {
-  ///         let removedElement = result.0; // 1
-  ///         let reducedDeque = result.1; // deque with element [2].
-  ///     }
+  ///   case null {
+  ///     Debug.trap "Empty queue impossible"
+  ///   };
+  ///   case (?result) {
+  ///     let removedElement = result.0; // 1
+  ///     let reducedDeque = result.1; // deque with element [2].
+  ///   }
   /// }
   /// ```
   ///
@@ -155,8 +157,8 @@ module {
     }
   };
 
-  /// Extend a deque by inserting a new element on the back end.
-  /// Returns a new deque with all the elements of `deque`, followed by `element` on the back.
+  /// Insert a new element on the back end of a deque.
+  /// Returns the new deque with all the elements of `deque`, followed by `element` on the back.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
   ///
@@ -199,26 +201,28 @@ module {
     }
   };
 
-  /// Shorten a deque by removing the element on the back end.
+  /// Remove the element on the back end of a deque.
   /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  /// a new deque that contains all the elements of `deque` without the back element
-  /// and as second pair item, the back element.
+  /// the new deque that contains all the elements of `deque` without the back element
+  /// and as the second pair item, the back element.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
   ///
   /// Example:
   /// ```motoko
   /// import Deque "mo:base/Deque";
-  /// import Prim "mo:prim";
+  /// import Debug "mo:base/Debug";
   ///
   /// let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
   /// let reduced = Deque.popBack(initial);
   /// switch reduced {
-  ///     case null Prim.trap("should not be null");
-  ///     case (?result) {
-  ///         let reducedDeque = result.0; // deque with element [1].
-  ///         let removedElement = result.1; // 2
-  ///     }
+  ///   case null {
+  ///     Debug.trap "Empty queue impossible"
+  ///   };
+  ///   case (?result) {
+  ///     let reducedDeque = result.0; // deque with element [1].
+  ///     let removedElement = result.1; // 2
+  ///   }
   /// }
   /// ```
   ///
