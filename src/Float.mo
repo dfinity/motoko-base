@@ -59,12 +59,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `abs(x)` |
-  /// | ------------ | --------------- |
-  /// | `+inf`       | `+inf`          |
-  /// | `-inf`       | `+inf`          |
-  /// | `nan`        | `nan`           |
-  /// | `-0.0`       | `0.0`           |
+  /// abs(+inf) => +inf
+  /// abs(-inf) => +inf
+  /// abs(nan)  => nan
+  /// abs(-0.0) => 0.0
   /// ```
   ///
   /// Example:
@@ -79,12 +77,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `sqrt(x)` |
-  /// | ------------ | ---------------- |
-  /// | `+inf`       | `+inf`           |
-  /// | `-0.0`       | `-0.0`           |
-  /// | `< 0.0`      | `nan`            |
-  /// | `nan`        | `nan`            |
+  /// sqrt(+inf) => +inf
+  /// sqrt(-0.0) => -0.0
+  /// sqrt(x)    => nan if x < 0.0
+  /// sqrt(nan)  => nan
   /// ```
   ///
   /// Example:
@@ -99,13 +95,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `ceil(x)` |
-  /// | ------------ | ---------------- |
-  /// | `+inf`       | `+inf`           |
-  /// | `-inf`       | `-inf`           |
-  /// | `nan`        | `nan`            |
-  /// | `0.0`        | `0.0`            |
-  /// | `-0.0`       | `-0.0`           |
+  /// ceil(+inf) => +inf
+  /// ceil(-inf) => -inf
+  /// ceil(nan)  => nan
+  /// ceil(0.0)  => 0.0
+  /// ceil(-0.0) => -0.0
   /// ```
   ///
   /// Example:
@@ -120,13 +114,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `floor(x)` |
-  /// | ------------ | ----------------- |
-  /// | `+inf`       | `+inf`            |
-  /// | `-inf`       | `-inf`            |
-  /// | `nan`        | `nan`             |
-  /// | `0.0`        | `0.0`             |
-  /// | `-0.0`       | `-0.0`            |
+  /// floor(+inf) => +inf
+  /// floor(-inf) => -inf
+  /// floor(nan)  => nan
+  /// floor(0.0)  => 0.0
+  /// floor(-0.0) => -0.0
   /// ```
   ///
   /// Example:
@@ -142,13 +134,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `trunc(x)` |
-  /// | ------------ | ----------------- |
-  /// | `+inf`       | `+inf`            |
-  /// | `-inf`       | `-inf`            |
-  /// | `nan`        | `nan`             |
-  /// | `0.0`        | `0.0`             |
-  /// | `-0.0`       | `-0.0`            |
+  /// trunc(+inf) => +inf
+  /// trunc(-inf) => -inf
+  /// trunc(nan)  => nan
+  /// trunc(0.0)  => 0.0
+  /// trunc(-0.0) => -0.0
   /// ```
   ///
   /// Example:
@@ -165,13 +155,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `nearest(x)` |
-  /// | ------------ | ------------------- |
-  /// | `+inf`       | `+inf`              |
-  /// | `-inf`       | `-inf`              |
-  /// | `nan`        | `nan`               |
-  /// | `0.0`        | `0.0`               |
-  /// | `-0.0`       | `-0.0`              |
+  /// nearest(+inf) => +inf
+  /// nearest(-inf) => -inf
+  /// nearest(nan)  => nan
+  /// nearest(0.0)  => 0.0
+  /// nearest(-0.0) => -0.0
   /// ```
   ///
   /// Example:
@@ -198,10 +186,8 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `y` | Argument `x` | Result `min(y, x)` |
-  /// | ------------ | ------------ | ------------------ |
-  /// | `nan`        | (any)        | `nan`              |
-  /// | (any)        | `nan`        | `nan`              |
+  /// min(nan, y) => nan for any Float y
+  /// min(x, nan) => nan for any Float x
   /// ```
   ///
   /// Example:
@@ -216,10 +202,8 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `y` | Argument `x` | Result `max(y, x)` |
-  /// | ------------ | ------------ | ------------------ |
-  /// | `nan`        | (any)        | `nan`              |
-  /// | (any)        | `nan`        | `nan`              |
+  /// max(nan, y) => nan for any Float y
+  /// max(x, nan) => nan for any Float x
   /// ```
   ///
   /// Example:
@@ -234,11 +218,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `sin(x)` |
-  /// | ------------ | --------------- |
-  /// | `+inf`       | `nan`           |
-  /// | `-inf`       | `nan`           |
-  /// | `nan`        | `nan`           |
+  /// sin(+inf) => nan
+  /// sin(-inf) => nan
+  /// sin(nan) => nan
   /// ```
   ///
   /// Example:
@@ -253,11 +235,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `cos(x)` |
-  /// | ------------ | --------------- |
-  /// | `+inf`       | `nan`           |
-  /// | `-inf`       | `nan`           |
-  /// | `nan`        | `nan`           |
+  /// cos(+inf) => nan
+  /// cos(-inf) => nan
+  /// cos(nan)  => nan
   /// ```
   ///
   /// Example:
@@ -272,11 +252,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `tan(x)` |
-  /// | ------------ | --------------- |
-  /// | `+inf`       | `nan`           |
-  /// | `-inf`       | `nan`           |
-  /// | `nan`        | `nan`           |
+  /// tan(+inf) => nan
+  /// tan(-inf) => nan
+  /// tan(nan)  => nan
   /// ```
   ///
   /// Example:
@@ -291,18 +269,16 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `arcsin(x)` |
-  /// | ------------ | ------------------ |
-  /// | `> 1.0`      | `nan`              |
-  /// | `< -1.0`     | `nan`              |
-  /// | `nan`        | `nan`              |
+  /// arcsin(x)   => nan if x > 1.0
+  /// arcsin(x)   => nan if x < -1.0
+  /// arcsin(nan) => nan
   /// ```
   ///
   /// Example:
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.arcsin(1.0) // => Float.pi/2
+  /// Float.arcsin(1.0) // => Float.pi / 2
   /// ```
   public let arcsin : (x : Float) -> Float = Prim.arcsin;
 
@@ -310,11 +286,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `arccos(x)` |
-  /// | ------------ | ------------------ |
-  /// | `> 1.0`      | `nan`              |
-  /// | `< -1.0`     | `nan`              |
-  /// | `nan`        | `nan`              |
+  /// arccos(x)  => nan if x > 1.0
+  /// arccos(x)  => nan if x < -1.0
+  /// arcos(nan) => nan
   /// ```
   ///
   /// Example:
@@ -329,18 +303,16 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `arctan(x)` |
-  /// | ------------ | ------------------ |
-  /// | `+inf`       | `pi / 2`           |
-  /// | `-inf`       | `-pi / 2`          |
-  /// | `nan`        | `nan`              |
+  /// arctan(+inf) => pi / 2
+  /// arctan(-inf) => -pi / 2
+  /// arctan(nan)  => nan
   /// ```
   ///
   /// Example:
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.arctan(1.0) // => Float.pi/4
+  /// Float.arctan(1.0) // => Float.pi / 4
   /// ```
   public let arctan : (x : Float) -> Float = Prim.arctan;
 
@@ -348,18 +320,16 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `y` | Argument `x` | Result `arctan2(y, x)` |
-  /// | ------------ | ------------ | ---------------------- |
-  /// | `0.0`        | `0.0`        | `0.0`                  |
-  /// | `-0.0`       | `0.0`        | `-0.0`                 |
-  /// | `0.0`        | `-0.0`       | `pi`                   |
-  /// | `-0.0`       | `-0.0`       | `-pi`                  |
-  /// | `+inf`       | `+inf`       | `pi / 4`               |
-  /// | `+inf`       | `-inf`       | `3 * pi / 4`           |
-  /// | `-inf`       | `+inf`       | `-pi / 4`              |
-  /// | `-inf`       | `-inf`       | `-3 * pi / 4`          |
-  /// | `nan`        | (any)        | `nan`                  |
-  /// | (any)        | `nan`        | `nan`                  |
+  /// arctan2(0.0, 0.0)   => 0.0
+  /// arctan2(-0.0, 0.0)  => -0.0
+  /// arctan2(0.0, -0.0)  => pi
+  /// arctan2(-0.0, -0.0) => -pi
+  /// arctan2(+inf, +inf) => pi / 4
+  /// arctan2(+inf, -inf) => 3 * pi / 4
+  /// arctan2(-inf, +inf) => -pi / 4
+  /// arctan2(-inf, -inf) => -3 * pi / 4
+  /// arctan2(nan, x)     => nan for any Float x
+  /// arctan2(y, nan)     => nan for any Float y
   /// ```
   ///
   /// Example:
@@ -367,7 +337,7 @@ module {
   /// import Float "mo:base/Float";
   ///
   /// let sqrt2over2 = Float.sqrt(2) / 2;
-  /// Float.arctan2(sqrt2over2, sqrt2over2) // => Float.pi/4
+  /// Float.arctan2(sqrt2over2, sqrt2over2) // => Float.pi / 4
   /// ```
   public let arctan2 : (y : Float, x : Float) -> Float = Prim.arctan2;
 
@@ -375,11 +345,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `exp(x)` |
-  /// | ------------ | --------------- |
-  /// | `+inf`       | `+inf`          |
-  /// | `-inf`       | `0.0`           |
-  /// | `nan`        | `nan`           |
+  /// exp(+inf) => +inf
+  /// exp(-inf) => 0.0
+  /// exp(nan)  => nan
   /// ```
   ///
   /// Example:
@@ -394,13 +362,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Result `log(x)` |
-  /// | ------------ | --------------- |
-  /// | `0.0`        | `-inf`          |
-  /// | `-0.0`       | `-inf`          |
-  /// | `< 0`        | `nan`           |
-  /// | `+inf`       | `+inf`          |
-  /// | `nan`        | `nan`           |
+  /// log(0.0)  => -inf
+  /// log(-0.0) => -inf
+  /// log(x)    => nan if x < 0.0
+  /// log(+inf) => +inf
+  /// log(nan)  => nan
   /// ```
   ///
   /// Example:
@@ -511,13 +477,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `equal(x, y)` |
-  /// | ------------ | ------------ | -------------------- |
-  /// | `+0.0`       | `-0.0`       | `true`               |
-  /// | `-0.0`       | `+0.0`       | `true`               |
-  /// | `+inf`       | `+inf`       | `true`               |
-  /// | `-inf`       | `-inf`       | `true`               |
-  /// | `nan`        | `nan`        | `false`              |
+  /// equal(+0.0, -0.0) => true
+  /// equal(-0.0, +0.0) => true
+  /// equal(+inf, +inf) => true
+  /// equal(-inf, -inf) => true
+  /// equal(nan, nan)   => false
   /// ```
   ///
   /// Example:
@@ -534,13 +498,11 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `notEqual(x, y)` |
-  /// | ------------ | ------------ | ----------------------- |
-  /// | `+0.0`       | `-0.0`       | `false`                 |
-  /// | `-0.0`       | `+0.0`       | `false`                 |
-  /// | `+inf`       | `+inf`       | `false`                 |
-  /// | `-inf`       | `-inf`       | `false`                 |
-  /// | `nan`        | `nan`        | `true`                  |
+  /// notEqual(+0.0, -0.0) => false
+  /// notEqual(-0.0, +0.0) => false
+  /// notEqual(+inf, +inf) => false
+  /// notEqual(-inf, -inf) => false
+  /// notEqual(nan, nan)   => true
   /// ```
   ///
   /// Example:
@@ -555,12 +517,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `less(x, y)` |
-  /// | ------------ | ------------ | ------------------- |
-  /// | `+0.0`       | `-0.0`       | `false`             |
-  /// | `-0.0`       | `+0.0`       | `false`             |
-  /// | `nan`        | (any)        | `false`             |
-  /// | (any)        | `nan`        | `false`             |
+  /// less(+0.0, -0.0) => false
+  /// less(-0.0, +0.0) => false
+  /// less(nan, y)     => false for any Float y
+  /// less(x, nan)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -575,12 +535,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `lessOrEqual(x, y)` |
-  /// | ------------ | ------------ | -------------------------- |
-  /// | `+0.0`       | `-0.0`       | `true`                     |
-  /// | `-0.0`       | `+0.0`       | `true`                     |
-  /// | `nan`        | (any)        | `false`                    |
-  /// | (any)        | `nan`        | `false`                    |
+  /// lessOrEqual(+0.0, -0.0) => true
+  /// lessOrEqual(-0.0, +0.0) => true
+  /// lessOrEqual(nan, y)     => false for any Float y
+  /// lessOrEqual(x, nan)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -595,10 +553,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `greater(x, y)` |
-  /// | ------------ | ------------ | ---------------------- |
-  /// | `nan`        | (any)        | `false`                |
-  /// | (any)        | `nan`        | `false`                |
+  /// greater(+0.0, -0.0) => false
+  /// greater(-0.0, +0.0) => false
+  /// greater(nan, y)     => false for any Float y
+  /// greater(x, nan)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -613,10 +571,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `greaterOrEqual(x, y)` |
-  /// | ------------ | ------------ | ----------------------------- |
-  /// | `nan`        | (any)        | `false`                       |
-  /// | (any)        | `nan`        | `false`                       |
+  /// greaterOrEqual(+0.0, -0.0) => true
+  /// greaterOrEqual(-0.0, +0.0) => true
+  /// greaterOrEqual(nan, y)     => false for any Float y
+  /// greaterOrEqual(x, nan)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -635,12 +593,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `compare(x, y)` |
-  /// | ------------ | ------------ | ---------------------- |
-  /// | `+0.0`       | `-0.0`       | `#equal`               |
-  /// | `-0.0`       | `+0.0`       | `#equal`               |
-  /// | `nan`        | (any)        | (undefined)            |
-  /// | (any)        | `nan`        | (undefined)            |
+  /// compare(+0.0, -0.0) => #equal
+  /// compare(-0.0, +0.0) => #equal
+  /// compare(nan, y) is undefined for any Float y
+  /// compare(x, nan) is undefined for any Float x
   /// ```
   ///
   /// Example:
@@ -673,17 +629,12 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y`     | Result `add(x, y)` |
-  /// | ------------ | ---------------- | ------------------ |
-  /// | `+inf`       | `+inf`           | `+inf`             |
-  /// | `+inf`       | (normal number)  | `+inf`             |
-  /// | `-inf`       | `-inf`           | `-inf`             |
-  /// | `-inf`       | (normal number)  | `-inf`             |
-  /// | `+inf`       | `-inf`           | `nan`              |
-  /// | `nan`        | (any)            | `nan`              |
+  /// add(+inf, y)    => +inf if y is any Float except -inf and nan
+  /// add(-inf, y)    => -inf if y is any Float except +inf and nan
+  /// add(+inf, -inf) => nan
+  /// add(nan, y)     => nan for any Float y
   /// ```
-  /// The same cases apply communtatively, i.e. for `add(y, x)`.
-  /// (A normal number means any value except infinity or `nan`.)
+  /// The same cases apply commutatively, i.e. for `add(y, x)`.
   ///
   /// Example:
   /// ```motoko
@@ -699,20 +650,15 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x`     | Argument `y`     | Result `sub(x, y)` |
-  /// | ---------------- | ---------------- | ------------------ |
-  /// | `+inf`           | `+inf`           | `nan`              |
-  /// | `+inf`           | (normal number)  | `+inf`             |
-  /// | `+inf`           | `-inf`           | `+inf`             |
-  /// | (normal number)  | `+inf`           | `-inf`             |
-  /// | `-inf`           | `-inf`           | `nan`              |
-  /// | `-inf`           | (normal number)  | `-inf`             |
-  /// | `-inf`           | `+inf`           | `-inf`             |
-  /// | (normal number)  | `-inf`           | `+inf`             |
-  /// | `nan`            | (any)            | `nan`              |
-  /// | (any)            | `nan`            | `nan`              |
+  /// sub(+inf, y)    => +inf if y is any Float except +inf or nan
+  /// sub(-inf, y)    => -inf if y is any Float except -inf and nan
+  /// sub(x, +inf)    => -inf if x is any Float except +inf and nan
+  /// sub(x, -inf)    => +inf if x is any Float except -inf and nan
+  /// sub(+inf, +inf) => nan
+  /// sub(-inf, -inf) => nan
+  /// sub(nan, y)     => nan for any Float y
+  /// sub(x, nan)     => nan for any Float x
   /// ```
-  /// (A normal number means any value except infinity or `nan`.)
   ///
   /// Example:
   /// ```motoko
@@ -728,17 +674,15 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x` | Argument `y` | Result `mul(x, y)` |
-  /// | ------------ | ------------ | ------------------ |
-  /// | `+inf`       | `> 0.0`      | `+inf`             |
-  /// | `-inf`       | `> 0.0`      | `-inf`             |
-  /// | `+inf`       | `< 0.0`      | `-inf`             |
-  /// | `-inf`       | `< 0.0`      | `+inf`             |
-  /// | `+inf`       | `0.0`        | `nan`              |
-  /// | `-inf`       | `0.0`        | `nan`              |
-  /// | `nan`        | (any)        | `nan`              |
+  /// mul(+inf, y) => +inf if y > 0.0
+  /// mul(-inf, y) => -inf if y > 0.0
+  /// mul(+inf, y) => -inf if y < 0.0
+  /// mul(-inf, y) => +inf if y < 0.0
+  /// mul(+inf, 0.0) => nan
+  /// mul(-inf, 0.0) => nan
+  /// mul(nan, y) => nan for any Float y
   /// ```
-  /// The same cases apply communtatively, i.e. for `mul(y, x)`.
+  /// The same cases apply commutatively, i.e. for `mul(y, x)`.
   ///
   /// Example:
   /// ```motoko
@@ -754,27 +698,18 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x`    | Argument `y` | Result `div(x, y)` |
-  /// | --------------- | ------------ | ------------------ |
-  /// | `0.0`           | `0.0`        | `nan`              |
-  /// | `> 0.0`         | `> 0.0`      | `+inf`             |
-  /// | `< 0.0`         | `> 0.0`      | `-inf`             |
-  /// | `> 0.0`         | `< 0.0`      | `-inf`             |
-  /// | `< 0.0`         | `< 0.0`      | `+inf`             |
-  /// | (normal number) | `+inf`       | `0.0`              |
-  /// | (normal number) | `-inf`       | `0.0`              |
-  /// | `+inf`          | `+inf`       | `nan`              |
-  /// | `+inf`          | `-inf`       | `nan`              |
-  /// | `-inf`          | `+inf`       | `nan`              |
-  /// | `-inf`          | `-inf`       | `nan`              |
-  /// | `+inf`          | `>= 0.0`     | `+inf`             |
-  /// | `+inf`          | `< 0.0`      | `-inf`             |
-  /// | `-inf`          | `>= 0.0`     | `-inf`             |
-  /// | `-inf`          | `< 0.0`      | `+inf`             |
-  /// | `nan`           | (any)        | `nan`              |
-  /// | (any)           | `nan`        | `nan`              |
+  /// div(0.0, 0.0) => nan
+  /// div(x, 0.0)   => +inf for x > 0.0
+  /// div(x, 0.0)   => -inf for x < 0.0
+  /// div(x, +inf)  => 0.0 for any x except +inf, -inf, and nan
+  /// div(x, -inf)  => 0.0 for any x except +inf, -inf, and nan
+  /// div(+inf, y)  => +inf if y >= 0.0
+  /// div(+inf, y)  => -inf if y < 0.0
+  /// div(-inf, y)  => -inf if y >= 0.0
+  /// div(-inf, y)  => +inf if y < 0.0
+  /// div(nan, y)   => nan for any Float y
+  /// div(x, nan)   => nan for any Float x
   /// ```
-  /// (A normal number means any value except infinity or `nan`.)
   ///
   /// Example:
   /// ```motoko
@@ -791,21 +726,16 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x`    | Argument `y` | Result `rem(x, y)` |
-  /// | --------------- | ------------ | ------------------ |
-  /// | `0.0`           | `0.0`        | `nan`              |
-  /// | `> 0.0`         | `> 0.0`      | `+inf`             |
-  /// | `< 0.0`         | `> 0.0`      | `-inf`             |
-  /// | `> 0.0`         | `< 0.0`      | `-inf`             |
-  /// | `< 0.0`         | `< 0.0`      | `+inf`             |
-  /// | (normal number) | `+inf`       | `x`                |
-  /// | (normal number) | `-inf`       | `x`                |
-  /// | `+inf`          | (any)        | `nan`              |
-  /// | `-inf`          | (any)        | `nan`              |
-  /// | `nan`           | (any)        | `nan`              |
-  /// | (any)           | `nan`        | `nan`              |
+  /// rem(0.0, 0.0) => nan
+  /// rem(x, y)     => +inf if sign(x) == sign(y) for any x and y not being +inf, -inf, or nan
+  /// rem(x, y)     => -inf if sign(x) != sign(y) for any x and y not being +inf, -inf, or nan
+  /// rem(x, +inf)  => x for any x except +inf, -inf, and nan
+  /// rem(x, -inf)  => x for any x except +inf, -inf, and nan
+  /// rem(+inf, y)  => nan for any Float y
+  /// rem(-inf, y)  => nan for any Float y
+  /// rem(nan, y)   => nan for any Float y
+  /// rem(x, nan)   => nan for any Float x
   /// ```
-  /// (A normal number means any value except infinity or `nan`.)
   ///
   /// Example:
   /// ```motoko
@@ -821,29 +751,23 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// | Argument `x`    | Argument `y`          | Result `pow(x, y)` |
-  /// | --------------- | --------------------- | ------------------ |
-  /// | `+inf`          | `> 0.0`               | `+inf`             |
-  /// | `+inf`          | `0.0`                 | `1.0`              |
-  /// | `+inf`          | `< 0.0`               | `0.0`              |
-  /// | `+inf`          | `+inf`                | `+inf`             |
-  /// | `+inf`          | `-inf`                | `0.0`              |
-  /// | `> 0.0`         | `+inf`                | `+inf`             |
-  /// | `0.0`           | `+inf`                | `0.0`              |
-  /// | `0.0`           | `-inf`                | `+inf`             |
-  /// | `< 0.0`         | `+inf`                | `+inf`             |
-  /// | (normal number) | `-inf`                | `0.0`              |
-  /// | `< 0.0`         | non-integral          | `nan`              |
-  /// | `-inf`          | non-integral, `> 0.0` | `+inf`             |
-  /// | `-inf`          | even integral `> 0.0` | `+inf`             |
-  /// | `-inf`          | odd integral `> 0.0`  | `-inf`             |
-  /// | `-inf`          | `< 0.0`               | `0.0`              |
-  /// | `-inf`          | `0.0`                 | `1.0`              |
-  /// | `-inf`          | `+inf`                | `+inf`             |
-  /// | `-inf`          | `-inf`                | `1.0`              |
-  /// | `nan`           | `!= 0.0`              | `nan`              |
-  /// | `nan`           | `0.0`                 | `1.0`              |
-  /// | (any)           | `nan`                 | `nan`              |
+  /// pow(+inf, y)    => +inf for any y > 0.0 including +inf
+  /// pow(+inf, 0.0)  => 1.0
+  /// pow(+inf, y)    => 0.0 for any y < 0.0 including -inf
+  /// pow(x, +inf)    => +inf if x > 0.0 or x < 0.0
+  /// pow(0.0, +inf)  => 0.0
+  /// pow(x, -inf)    => 0.0 if x > 0.0 or x < 0.0
+  /// pow(0.0, -inf)  => +inf
+  /// pow(x, y)       => nan if x < 0.0 and y is a non-integral Float
+  /// pow(-inf, y)    => +inf if y > 0.0 and y is a non-integral or an even integral Float
+  /// pow(-inf, y)    => -inf if y > 0.0 and y is a odd integral Float
+  /// pow(-inf, 0.0)  => 1.0
+  /// pow(-inf, y)    => 0.0 if y < 0.0
+  /// pow(-inf, +inf) => +inf
+  /// pow(-inf, -inf) => 1.0
+  /// pow(nan, y)     => nan if y != 0.0
+  /// pow(nan, 0.0)   => 1.0
+  /// pow(x, nan)     => nan for any Float x
   /// ```
   ///
   /// Example:
