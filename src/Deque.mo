@@ -130,7 +130,7 @@ module {
   /// ```motoko
   /// import Deque "mo:base/Deque";
   /// import Debug "mo:base/Debug";
-  ///
+  /// // initial = [2, 1]
   /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
   /// let reduced = Deque.popFront(initial);
   /// switch reduced {
