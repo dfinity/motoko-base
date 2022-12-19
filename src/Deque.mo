@@ -130,8 +130,8 @@ module {
   /// ```motoko
   /// import Deque "mo:base/Deque";
   /// import Debug "mo:base/Debug";
-  /// // initial = [2, 1]
   /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
+  /// // initial deque with elements [1, 2]
   /// let reduced = Deque.popFront(initial);
   /// switch reduced {
   ///   case null {
@@ -214,6 +214,7 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
+  /// // initial deque with elements [1, 2]
   /// let reduced = Deque.popBack(initial);
   /// switch reduced {
   ///   case null {
