@@ -129,11 +129,12 @@ module {
   /// Example:
   /// ```motoko
   /// import Deque "mo:base/Deque";
+  /// import Prim "mo:prim";
   ///
   /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
   /// let reduced = Deque.popFront(initial);
   /// switch reduced {
-  ///     case null assert(false);
+  ///     case null Prim.trap("should not be null");
   ///     case (?result) {
   ///         let removedElement = result.0; // 1
   ///         let reducedDeque = result.1; // deque with element [2].
@@ -160,7 +161,7 @@ module {
   /// This may involve dynamic splitting of the internally used two lists.
   ///
   /// Example:
-  /// ```
+  /// ```motoko
   /// import Deque "mo:base/Deque";
   ///
   /// Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2) // deque with elements [1, 2]
@@ -208,11 +209,12 @@ module {
   /// Example:
   /// ```motoko
   /// import Deque "mo:base/Deque";
+  /// import Prim "mo:prim";
   ///
   /// let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
   /// let reduced = Deque.popBack(initial);
   /// switch reduced {
-  ///     case null assert(false);
+  ///     case null Prim.trap("should not be null");
   ///     case (?result) {
   ///         let reducedDeque = result.0; // deque with element [1].
   ///         let removedElement = result.1; // 2
