@@ -198,10 +198,9 @@ module {
     }
   };
 
-  /// Shorten a deque by removing the element on the back end.
-  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  /// a new deque that contains all the elements of `deque` without the back element
-  /// and as second pair item, the back element.
+  /// Remove an element from the back of the deque.
+  /// Returns `null` if `deque` is empty. Otherwise, returns a pair of
+  /// the removed element and the remaining elements in a new deque.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
   ///
