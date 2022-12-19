@@ -75,7 +75,7 @@ module {
     }
   };
 
-  /// Extend a deque by inserting a new element on the front end.
+  /// Add `element` to the front of `deque`.
   /// Returns a new deque with `element` in the front followed by the elements of `deque`.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
