@@ -16,10 +16,10 @@
 ///   ```
 ///
 ///   ```motoko
-////  1e16 + 1.0 != 1e16; // Fails!
+///  1e16 + 1.0 != 1e16 // Fails!
 ///   ```
 ///
-////  (and many more cases)
+///  (and many more cases)
 ///
 /// Advice:
 /// * Floating point number comparisons by `==` or `!=` are discouraged. Instead, it is better to compare
@@ -36,7 +36,7 @@
 ///   ```
 ///
 /// * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base
-//    and a Nat for the exponent (decimal point).
+///   and a Nat for the exponent (decimal point).
 ///
 
 import Prim "mo:⛔";
@@ -208,7 +208,7 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.min(1.2, -2.3) // => -2.3
+  /// Float.min(1.2, -2.3) // => -2.3 (with numerical imprecision)
   /// ```
   public let min : (x : Float, y : Float) -> Float = Prim.floatMin;
 
@@ -264,7 +264,7 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.cos(Float.pi / 2) // => 0.0
+  /// Float.cos(Float.pi / 2) // => 0.0 (with numerical imprecision)
   /// ```
   public let cos : (x : Float) -> Float = Prim.cos;
 
@@ -283,7 +283,7 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.tan(Float.pi / 4) // => 1.0
+  /// Float.tan(Float.pi / 4) // => 1.0 (with numerical imprecision)
   /// ```
   public let tan : (x : Float) -> Float = Prim.tan;
 
@@ -450,7 +450,7 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.toText(0.12) // => "0.120000"
+  /// Float.toText(0.12) // => "0.12"
   /// ```
   public let toText : Float -> Text = Prim.floatToText;
 
@@ -811,7 +811,7 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.rem(7.2, 2.3) // => 0.3
+  /// Float.rem(7.2, 2.3) // => 0.3 (with numerical imprecision)
   /// ```
   public func rem(x : Float, y : Float) : Float { x % y };
 
