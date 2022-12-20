@@ -462,7 +462,7 @@ expected := expectedEntries(Array.sort(testKeys, Nat.compare));
 
 run(
   suite(
-    "Random tree",
+    "random tree",
     [
       test(
         "size",
