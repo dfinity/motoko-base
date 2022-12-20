@@ -423,15 +423,6 @@ module {
     }
   };
 
-  func height<X, Y>(t : Tree<X, Y>) : Nat {
-    switch t {
-      case (#leaf) { 0 };
-      case (#node(_, l, _, r)) {
-        Nat.max(height(l), height(r)) + 1
-      }
-    }
-  };
-
   /// Determine the size of the tree as the number of key-value entries.
   ///
   /// Example:
