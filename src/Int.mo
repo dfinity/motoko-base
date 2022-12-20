@@ -116,7 +116,8 @@ module {
     ])
   };
 
-  /// @deprecated This function will be removed in future.
+  /// Computes an accumulated hash from `h1` and the least significant 32-bits of `i`, ignoring other bits in `i`.
+  /// @deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
@@ -130,49 +131,159 @@ module {
   };
 
   /// Returns `x == y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.equal(123, 123) // => true
+  /// ```
   public func equal(x : Int, y : Int) : Bool { x == y };
 
   /// Returns `x != y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.notEqual(123, 123) // => false
+  /// ```
   public func notEqual(x : Int, y : Int) : Bool { x != y };
 
   /// Returns `x < y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.less(123, 1234) // => true
+  /// ```
   public func less(x : Int, y : Int) : Bool { x < y };
 
   /// Returns `x <= y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.lessOrEqual(123, 1234) // => true
+  /// ```
   public func lessOrEqual(x : Int, y : Int) : Bool { x <= y };
 
   /// Returns `x > y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.greater(1234, 123) // => true
+  /// ```
   public func greater(x : Int, y : Int) : Bool { x > y };
 
   /// Returns `x >= y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.greaterOrEqual(1234, 123) // => true
+  /// ```
   public func greaterOrEqual(x : Int, y : Int) : Bool { x >= y };
 
   /// Returns the order of `x` and `y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.compare(123, 1234) // => #less
+  /// ```
   public func compare(x : Int, y : Int) : { #less; #equal; #greater } {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the negation of `x`, `-x` .
-  public func neq(x : Int) : Int { -x };
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.neq(123) // => -123
+  /// ```
+  public func neq(x : Int) : Int { -x }; // Typo: Should be changed to `neg`
 
   /// Returns the sum of `x` and `y`, `x + y`.
+  ///
+  /// No overflow since `Int` has infinite precision.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.add(1234, 123) // => 1_357
+  /// ```
   public func add(x : Int, y : Int) : Int { x + y };
 
   /// Returns the difference of `x` and `y`, `x - y`.
+  ///
+  /// No overflow since `Int` has infinite precision.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.sub(1234, 123) // => 1_111
+  /// ```
   public func sub(x : Int, y : Int) : Int { x - y };
 
   /// Returns the product of `x` and `y`, `x * y`.
+  ///
+  /// No overflow since `Int` has infinite precision.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.mul(123, 100) // => 12_300
+  /// ```
   public func mul(x : Int, y : Int) : Int { x * y };
 
-  /// Returns the division of `x` by `y`,  `x / y`.
+  /// Returns the signed integer division of `x` by `y`,  `x / y`.
+  /// Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
+  ///
   /// Traps when `y` is zero.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.div(123, 10) // => 12
+  /// ```
   public func div(x : Int, y : Int) : Int { x / y };
 
-  /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Returns the signed integer remainder of `x` divided by `y`, `x % y`,
+  /// which is defined as `x - x / y * y`.
+  ///
   /// Traps when `y` is zero.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.rem(123, 10) // => 3
+  /// ```
   public func rem(x : Int, y : Int) : Int { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
+  ///
+  /// No overflow since `Int` has infinite precision.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.pow(2, 10) // => 1_024
+  /// ```
   public func pow(x : Int, y : Int) : Int { x ** y };
 
 }
