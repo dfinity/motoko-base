@@ -1,7 +1,7 @@
-/// Integer numbers
+/// Signed integer numbers with infinite precision (also called big integers).
 ///
-/// Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
-/// This module provides equivalent functions and `Text` conversion.
+/// Common integer functions.
+/// Most operations on integers (e.g. addition) are also available as built-in operators (e.g. `1 + 1`).
 
 import Prim "mo:⛔";
 import Prelude "Prelude";
@@ -12,10 +12,25 @@ module {
   /// Infinite precision signed integers.
   public type Int = Prim.Types.Int;
 
-  /// Returns the absolute value of the number
-  public let abs : Int -> Nat = Prim.abs;
+  /// Returns the absolute value of `x`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.abs(-12) // => 12
+  /// ```
+  public let abs : (x : Int) -> Nat = Prim.abs;
 
-  /// Conversion.
+  /// Conversion to Text.
+  /// Formats the integer in decimal representation without underscore separators for blocks of thousands.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.toText(-1234) // => "-1234"
+  /// ```
   public let toText : Int -> Text = func(x) {
     if (x == 0) {
       return "0"
@@ -51,11 +66,25 @@ module {
   };
 
   /// Returns the minimum of `x` and `y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.min(+2, -3) // => -3
+  /// ```
   public func min(x : Int, y : Int) : Int {
     if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Int "mo:base/Int";
+  ///
+  /// Int.max(+2, -3) // => 2
+  /// ```
   public func max(x : Int, y : Int) : Int {
     if (x < y) { y } else { x }
   };
