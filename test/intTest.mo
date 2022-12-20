@@ -787,7 +787,7 @@ run(
 
 run(
   suite(
-    "mul",
+    "div",
     [
       test(
         "positive multiple",

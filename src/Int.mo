@@ -261,7 +261,7 @@ module {
   /// ```
   public func div(x : Int, y : Int) : Int { x / y };
 
-  /// Returns the signed integer remainder of `x` divided by `y`, `x % y`,
+  /// Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
   /// which is defined as `x - x / y * y`.
   ///
   /// Traps when `y` is zero.
