@@ -276,6 +276,7 @@ module {
 
   /// Returns `x` to the power of `y`, `x ** y`.
   ///
+  /// Traps when `y` is negative or `y > 2 ** 32 - 1`.
   /// No overflow since `Int` has infinite precision.
   ///
   /// Example:
