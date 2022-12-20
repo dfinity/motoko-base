@@ -26,8 +26,9 @@ module {
   /// let a: [Nat8] = [1, 2, 3];
   /// let b = Blob.fromArray(a);
   /// CertifiedData.set(b);
-  ///
   /// ```
+  ///
+  /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
   ///
   public let set : (data : Blob) -> () = Prim.setCertifiedData;
 
@@ -43,6 +44,7 @@ module {
   /// 
   /// CertifiedData.getCertificate();
   /// ```
+  /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
   ///
   public let getCertificate : () -> ?Blob = Prim.getCertificate;
 }
