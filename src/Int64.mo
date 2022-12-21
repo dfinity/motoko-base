@@ -490,7 +490,7 @@ module {
 
   /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
   ///
-  /// Wraps on overflow.
+  /// Wraps on overflow/underflow.
   ///
   ///
   /// Example:
@@ -503,8 +503,8 @@ module {
 
   /// Returns `x` to the power of `y`, `x **% y`.
   ///
-  /// Wraps on overflow.
-  /// Traps if `y < 0`.
+  /// Wraps on overflow/underflow.
+  /// Traps if `y < 0 or y >= 64`.
   ///
   ///
   /// Example:

@@ -2023,4 +2023,259 @@ run(
             )
         ]
     )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "addWrap",
+        [
+            test(
+                "positive",
+                Int64.addWrap(123, 123),
+                M.equals(Int64Testable(246))
+            ),
+            test(
+                "negative",
+                Int64.addWrap(-123, -123),
+                M.equals(Int64Testable(-246))
+            ),
+            test(
+                "mixed signs",
+                Int64.addWrap(-123, 223),
+                M.equals(Int64Testable(100))
+            ),
+            test(
+                "zero",
+                Int64.addWrap(0, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minimum and maximum",
+                Int64.addWrap(minimumInt64, maximumInt64),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "small overflow",
+                Int64.addWrap(maximumInt64, 1),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "large overflow",
+                Int64.addWrap(maximumInt64, maximumInt64),
+                M.equals(Int64Testable(-2))
+            ),
+            test(
+                "small underflow",
+                Int64.addWrap(minimumInt64, -1),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "large underflow",
+                Int64.addWrap(minimumInt64, minimumInt64),
+                M.equals(Int64Testable(0))
+            ),
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "subWrap",
+        [
+            test(
+                "positive",
+                Int64.subWrap(123, 123),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "negative",
+                Int64.subWrap(-123, -123),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "mixed signs",
+                Int64.subWrap(-123, 223),
+                M.equals(Int64Testable(-346))
+            ),
+            test(
+                "zero",
+                Int64.subWrap(0, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "maximum and maximum",
+                Int64.subWrap(maximumInt64, maximumInt64),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "small overflow",
+                Int64.subWrap(maximumInt64, -1),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "large overflow",
+                Int64.subWrap(maximumInt64, minimumInt64),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "small underflow",
+                Int64.subWrap(minimumInt64, 1),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "large underflow",
+                Int64.subWrap(minimumInt64, maximumInt64),
+                M.equals(Int64Testable(1))
+            ),
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "mulWrap",
+        [
+            test(
+                "positive",
+                Int64.mulWrap(123, 234),
+                M.equals(Int64Testable(28782))
+            ),
+            test(
+                "negative",
+                Int64.mulWrap(-123, -234),
+                M.equals(Int64Testable(28782))
+            ),
+            test(
+                "mixed signs",
+                Int64.mulWrap(-123, 234),
+                M.equals(Int64Testable(-28782))
+            ),
+            test(
+                "zeros",
+                Int64.mulWrap(0, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "zero and maximum",
+                Int64.mulWrap(0, maximumInt64),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minimum and zero",
+                Int64.mulWrap(minimumInt64, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "one and maximum",
+                Int64.mulWrap(1, maximumInt64),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "minimum and one",
+                Int64.mulWrap(minimumInt64, 1),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "small overflow",
+                Int64.mulWrap(2, maximumInt64),
+                M.equals(Int64Testable(-2))
+            ),
+            test(
+                "large overflow",
+                Int64.mulWrap(maximumInt64, maximumInt64),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "small underflow",
+                Int64.mulWrap(minimumInt64, 2),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "large underflow",
+                Int64.mulWrap(minimumInt64, minimumInt64),
+                M.equals(Int64Testable(0))
+            ),
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "powWrap",
+        [
+            test(
+                "positive base, positive exponent",
+                Int64.powWrap(72, 3),
+                M.equals(Int64Testable(373248))
+            ),
+            test(
+                "positive base, zero exponent",
+                Int64.powWrap(72, 0),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "negative base, positive exponent",
+                Int64.powWrap(-72, 3),
+                M.equals(Int64Testable(-373248))
+            ),
+            test(
+                "negative base, zero exponent",
+                Int64.powWrap(-72, 0),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "maximum and zero",
+                Int64.powWrap(maximumInt64, 0),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "minimum and zero",
+                Int64.powWrap(minimumInt64, 0),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "plus one and maximum",
+                Int64.powWrap(1, maximumInt64),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "minus one and maximum",
+                Int64.powWrap(-1, maximumInt64),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "minimum value",
+                Int64.powWrap(-2, 63),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "small overflow",
+                Int64.powWrap(2, 63),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "large overflow",
+                Int64.powWrap(maximumInt64, 10),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "small underflow",
+                Int64.powWrap(-2, 65),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "large underflow",
+                Int64.powWrap(minimumInt64, 10),
+                M.equals(Int64Testable(0))
+            ),
+        ]
+    )
 )
