@@ -89,7 +89,7 @@ module {
   /// ```motoko
   /// import Int32 "mo:base/Int32";
   ///
-  /// Int32.abs(123456) // => +123_456
+  /// Int32.abs(-123456) // => +123_456
   /// ```
   public func abs(x : Int32) : Int32 {
     fromInt(Int.abs(toInt(x)))
