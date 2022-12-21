@@ -1151,9 +1151,14 @@ run(
                 M.equals(Int64Testable(1))
             ),
             test(
-                "negative base, positive exponent",
+                "negative base, odd exponent",
                 Int64.pow(-72, 3),
                 M.equals(Int64Testable(-373248))
+            ),
+            test(
+                "negative base, even exponent",
+                Int64.pow(-72, 4),
+                M.equals(Int64Testable(26_873_856))
             ),
             test(
                 "negative base, zero exponent",

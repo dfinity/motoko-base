@@ -1152,9 +1152,14 @@ run(
                 M.equals(Int16Testable(1))
             ),
             test(
-                "negative base, positive exponent",
+                "negative base, odd exponent",
                 Int16.pow(-24, 3),
                 M.equals(Int16Testable(-13824))
+            ),
+            test(
+                "negative base, even exponent",
+                Int16.pow(-24, 2),
+                M.equals(Int16Testable(576))
             ),
             test(
                 "negative base, zero exponent",
