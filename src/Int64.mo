@@ -1,4 +1,4 @@
-/// 64-bit signed integers with checked arithmetic
+/// 64-bit signed integers with checked arithmetic.
 ///
 /// Common 64-bit integer functions.
 /// Most operations are available as built-in operators (e.g. `1 + 1`).
@@ -40,7 +40,7 @@ module {
   /// ```motoko
   /// import Int64 "mo:base/Int64";
   ///
-  /// Int64.fromIntWrap(-123_456) // => -123_456 : Int
+  /// Int64.fromIntWrap(-123_456) // => -123_456 : Int64
   /// ```
   public let fromIntWrap : Int -> Int64 = Prim.intToInt64Wrap;
 
@@ -52,7 +52,7 @@ module {
   /// ```motoko
   /// import Int64 "mo:base/Int64";
   ///
-  /// Int64.fromNat64(123_456) // => +123_456 : Int
+  /// Int64.fromNat64(123_456) // => +123_456 : Int64
   /// ```
   public let fromNat64 : Nat64 -> Int64 = Prim.nat64ToInt64;
 
