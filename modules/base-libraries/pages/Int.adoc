@@ -1,10 +1,10 @@
 [[module.Int]]
 = Int
 
-Integer numbers
+Signed integer numbers with infinite precision (also called big integers).
 
-Most operations on integers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
-This module provides equivalent functions and `Text` conversion.
+Common integer functions.
+Most operations on integers (e.g. addition) are also available as built-in operators (e.g. `1 + 1`).
 
 [[type.Int]]
 == Int
@@ -21,10 +21,17 @@ Infinite precision signed integers.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let abs : xref:#type.Int[Int] -> Nat
+let abs : (x : xref:#type.Int[Int]) -> Nat
 ----
 
-Returns the absolute value of the number
+Returns the absolute value of `x`.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.abs(-12) // => 12
+```
 
 [[toText]]
 == toText
@@ -34,7 +41,15 @@ Returns the absolute value of the number
 let toText : xref:#type.Int[Int] -> Text
 ----
 
-Conversion.
+Conversion to Text.
+Formats the integer in decimal representation without underscore separators for blocks of thousands.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.toText(-1234) // => "-1234"
+```
 
 [[min]]
 == min
@@ -46,6 +61,13 @@ func min(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 
 Returns the minimum of `x` and `y`.
 
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.min(+2, -3) // => -3
+```
+
 [[max]]
 == max
 
@@ -55,6 +77,13 @@ func max(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the maximum of `x` and `y`.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.max(+2, -3) // => 2
+```
 
 [[hash]]
 == hash
@@ -75,7 +104,8 @@ Computes a hash from the least significant 32-bits of `i`, ignoring other bits.
 func hashAcc(h1 : xref:Hash.adoc#type.Hash[Hash.Hash], i : xref:#type.Int[Int]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
-@deprecated This function will be removed in future.
+Computes an accumulated hash from `h1` and the least significant 32-bits of `i`, ignoring other bits in `i`.
+@deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
 
 [[equal]]
 == equal
@@ -87,6 +117,13 @@ func equal(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 
 Returns `x == y`.
 
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.equal(123, 123) // => true
+```
+
 [[notEqual]]
 == notEqual
 
@@ -96,6 +133,13 @@ func notEqual(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x != y`.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.notEqual(123, 123) // => false
+```
 
 [[less]]
 == less
@@ -107,6 +151,13 @@ func less(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 
 Returns `x < y`.
 
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.less(123, 1234) // => true
+```
+
 [[lessOrEqual]]
 == lessOrEqual
 
@@ -116,6 +167,13 @@ func lessOrEqual(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x <= y`.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.lessOrEqual(123, 1234) // => true
+```
 
 [[greater]]
 == greater
@@ -127,6 +185,13 @@ func greater(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 
 Returns `x > y`.
 
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.greater(1234, 123) // => true
+```
+
 [[greaterOrEqual]]
 == greaterOrEqual
 
@@ -136,6 +201,13 @@ func greaterOrEqual(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : Bool
 ----
 
 Returns `x >= y`.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.greaterOrEqual(1234, 123) // => true
+```
 
 [[compare]]
 == compare
@@ -147,6 +219,13 @@ func compare(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : {#less; #equal;
 
 Returns the order of `x` and `y`.
 
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.compare(123, 1234) // => #less
+```
+
 [[neq]]
 == neq
 
@@ -156,6 +235,13 @@ func neq(x : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the negation of `x`, `-x` .
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.neq(123) // => -123
+```
 
 [[add]]
 == add
@@ -167,6 +253,15 @@ func add(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 
 Returns the sum of `x` and `y`, `x + y`.
 
+No overflow since `Int` has infinite precision.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.add(1234, 123) // => 1_357
+```
+
 [[sub]]
 == sub
 
@@ -176,6 +271,15 @@ func sub(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the difference of `x` and `y`, `x - y`.
+
+No overflow since `Int` has infinite precision.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.sub(1234, 123) // => 1_111
+```
 
 [[mul]]
 == mul
@@ -187,6 +291,15 @@ func mul(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 
 Returns the product of `x` and `y`, `x * y`.
 
+No overflow since `Int` has infinite precision.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.mul(123, 100) // => 12_300
+```
+
 [[div]]
 == div
 
@@ -195,8 +308,17 @@ Returns the product of `x` and `y`, `x * y`.
 func div(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
-Returns the division of `x` by `y`,  `x / y`.
+Returns the signed integer division of `x` by `y`,  `x / y`.
+Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
+
 Traps when `y` is zero.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.div(123, 10) // => 12
+```
 
 [[rem]]
 == rem
@@ -206,8 +328,17 @@ Traps when `y` is zero.
 func rem(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
-Returns the remainder of `x` divided by `y`, `x % y`.
+Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
+which is defined as `x - x / y * y`.
+
 Traps when `y` is zero.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.rem(123, 10) // => 3
+```
 
 [[pow]]
 == pow
@@ -218,4 +349,14 @@ func pow(x : xref:#type.Int[Int], y : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns `x` to the power of `y`, `x ** y`.
+
+Traps when `y` is negative or `y > 2 ** 32 - 1`.
+No overflow since `Int` has infinite precision.
+
+Example:
+```motoko
+import Int "mo:base/Int";
+
+Int.pow(2, 10) // => 1_024
+```
 
