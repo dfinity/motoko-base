@@ -1,5 +1,6 @@
 import Int64 "mo:base/Int64";
 import Order "mo:base/Order";
+import Iter "mo:base/Iter";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -1178,7 +1179,848 @@ run(
                 "minus one and maximum",
                 Int64.pow(-1, maximumInt64),
                 M.equals(Int64Testable(-1))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+let unused = 0 : Int64; // Issue: bitnot has superfluous second argument.
+
+run(
+    suite(
+        "bitnot",
+        [
+            test(
+                "zero",
+                Int64.bitnot(0, unused),
+                M.equals(Int64Testable(-1))
             ),
+            test(
+                "minus 1",
+                Int64.bitnot(-1, unused),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "maximum",
+                Int64.bitnot(maximumInt64, unused),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "minimum",
+                Int64.bitnot(minimumInt64, unused),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitnot(1234, 0),
+                M.equals(Int64Testable(-1235))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitand",
+        [
+            test(
+                "inverted",
+                Int64.bitand(0xf0f0, 0x0f0f),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "overlap",
+                Int64.bitand(0x0ff0, 0xffff),
+                M.equals(Int64Testable(0xff0))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitand(0x1234_5678_90ab_cdef, 0x7654_3210_fedc_ba98),
+                M.equals(Int64Testable(0x1214_1210_9088_8888))
+            ),
+            test(
+                "negative",
+                Int64.bitand(-123, -123),
+                M.equals(Int64Testable(-123))
+            ),
+            test(
+                "mixed signs",
+                Int64.bitand(-256, 255),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "zero",
+                Int64.bitand(0, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "zero and maximum",
+                Int64.bitand(0, maximumInt64),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minimum and zero",
+                Int64.bitand(minimumInt64, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minimum and maximum",
+                Int64.bitand(minimumInt64, maximumInt64),
+                M.equals(Int64Testable(0))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitor",
+        [
+            test(
+                "inverted",
+                Int64.bitor(0xf0f0, 0x0f0f),
+                M.equals(Int64Testable(0xffff))
+            ),
+            test(
+                "overlap",
+                Int64.bitor(0x0ff0, 0xffff),
+                M.equals(Int64Testable(0xffff))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitor(0x1234_5678_90ab_cdef, 0x7654_3210_fedc_ba98),
+                M.equals(Int64Testable(0x7674_7678_feff_ffff))
+            ),
+            test(
+                "negative",
+                Int64.bitor(-123, -123),
+                M.equals(Int64Testable(-123))
+            ),
+            test(
+                "mixed signs",
+                Int64.bitor(-256, 255),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "zero",
+                Int64.bitor(0, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "zero and maximum",
+                Int64.bitor(0, maximumInt64),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "minimum and zero",
+                Int64.bitor(minimumInt64, 0),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "minimum and maximum",
+                Int64.bitor(minimumInt64, maximumInt64),
+                M.equals(Int64Testable(-1))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitxor",
+        [
+            test(
+                "inverted",
+                Int64.bitxor(0xf0f0, 0x0f0f),
+                M.equals(Int64Testable(0xffff))
+            ),
+            test(
+                "overlap",
+                Int64.bitxor(0x0ff0, 0xffff),
+                M.equals(Int64Testable(0xf00f))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitxor(0x1234_5678_90ab_cdef, 0x7654_3210_fedc_ba98),
+                M.equals(Int64Testable(0x6460_6468_6e77_7777))
+            ),
+            test(
+                "negative",
+                Int64.bitxor(-123, -123),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "mixed signs",
+                Int64.bitxor(-256, 255),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "zero",
+                Int64.bitxor(0, 0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "zero and maximum",
+                Int64.bitxor(0, maximumInt64),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "minimum and zero",
+                Int64.bitxor(minimumInt64, 0),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "minimum and maximum",
+                Int64.bitxor(minimumInt64, maximumInt64),
+                M.equals(Int64Testable(-1))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitshiftLeft",
+        [
+            test(
+                "positive number",
+                Int64.bitshiftLeft(0xf0f0, 4),
+                M.equals(Int64Testable(0xf_0f00))
+            ),
+            test(
+                "negative number",
+                Int64.bitshiftLeft(-256, 4),
+                M.equals(Int64Testable(-4096))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitshiftLeft(1234_5678, 7),
+                M.equals(Int64Testable(1_580_246_784))
+            ),
+            test(
+                "zero shift",
+                Int64.bitshiftLeft(1234, 0),
+                M.equals(Int64Testable(1234))
+            ),
+            test(
+                "one maximum shift",
+                Int64.bitshiftLeft(1, 63),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "minimum number",
+                Int64.bitshiftLeft(-1, 63),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "discard overflow",
+                Int64.bitshiftLeft(0x7fff_ffff_0000_0000, 32),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "beyond bit length positive",
+                Int64.bitshiftLeft(0x1234_5678_90ab_cdef, 128 + 7),
+                M.equals(Int64Testable(Int64.bitshiftLeft(0x1234_5678_90ab_cdef, 7)))
+            ),
+            test(
+                "beyond bit length negative",
+                Int64.bitshiftLeft(-0x1234_5678_90ab_cdef, 64 + 7),
+                M.equals(Int64Testable(Int64.bitshiftLeft(-0x1234_5678_90ab_cdef, 7)))
+            ),
+            test(
+                "negative shift argument",
+                Int64.bitshiftLeft(0x1234_5678_90ab_cdef, -7),
+                M.equals(Int64Testable(Int64.bitshiftLeft(0x1234_5678_90ab_cdef, 64 - 7)))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitshiftRight",
+        [
+            test(
+                "positive number",
+                Int64.bitshiftRight(0xf0f0, 4),
+                M.equals(Int64Testable(0x0f0f))
+            ),
+            test(
+                "negative number",
+                Int64.bitshiftRight(-256, 4),
+                M.equals(Int64Testable(-16))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitshiftRight(1234_5678, 7),
+                M.equals(Int64Testable(96_450))
+            ),
+            test(
+                "zero shift",
+                Int64.bitshiftRight(1234, 0),
+                M.equals(Int64Testable(1234))
+            ),
+            test(
+                "minus one maximum shift",
+                Int64.bitshiftRight(-1, 63),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "minimum number",
+                Int64.bitshiftRight(minimumInt64, 63),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "discard underflow",
+                Int64.bitshiftRight(0x0000_0000_ffff_ffff, 32),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "beyond bit length positive",
+                Int64.bitshiftRight(0x1234_5678_90ab_cdef, 128 + 7),
+                M.equals(Int64Testable(Int64.bitshiftRight(0x1234_5678_90ab_cdef, 7)))
+            ),
+            test(
+                "beyond bit length negative",
+                Int64.bitshiftRight(-0x1234_5678_90ab_cdef, 64 + 7),
+                M.equals(Int64Testable(Int64.bitshiftRight(-0x1234_5678_90ab_cdef, 7)))
+            ),
+            test(
+                "negative shift argument",
+                Int64.bitshiftRight(0x1234_5678_90ab_cdef, -7),
+                M.equals(Int64Testable(Int64.bitshiftRight(0x1234_5678_90ab_cdef, 64 - 7)))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitrotLeft",
+        [
+            test(
+                "positive number non-overflow",
+                Int64.bitrotLeft(0xf0f0, 4),
+                M.equals(Int64Testable(0xf_0f00))
+            ),
+            test(
+                "positive number overflow",
+                Int64.bitrotLeft(0x5600_0000_0000_1234, 8),
+                M.equals(Int64Testable(0x12_3456))
+            ),
+            test(
+                "negative number",
+                Int64.bitrotLeft(-256, 4),
+                M.equals(Int64Testable(-4081))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitrotLeft(123_4567_8901_2345_6789, 7),
+                M.equals(Int64Testable(-799_6006_7275_8349_5544))
+            ),
+            test(
+                "zero shift",
+                Int64.bitrotLeft(1234, 0),
+                M.equals(Int64Testable(1234))
+            ),
+            test(
+                "minus one maximum rotate",
+                Int64.bitrotLeft(-1, 63),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "maximum number",
+                Int64.bitrotLeft(maximumInt64, 1),
+                M.equals(Int64Testable(-2))
+            ),
+            test(
+                "minimum number",
+                Int64.bitrotLeft(1, 63),
+                M.equals(Int64Testable(minimumInt64))
+            ),
+            test(
+                "opposite rotation",
+                Int64.bitrotLeft(256, -2),
+                M.equals(Int64Testable(64))
+            ),
+            test(
+                "rotate beyond bit length",
+                Int64.bitrotLeft(128, 66),
+                M.equals(Int64Testable(512))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitrotRight",
+        [
+            test(
+                "positive number non-underflow",
+                Int64.bitrotRight(0xf0f0, 4),
+                M.equals(Int64Testable(0x0f0f))
+            ),
+            test(
+                "positive number underflow",
+                Int64.bitrotRight(0x5600_0000_0000_1234, 8),
+                M.equals(Int64Testable(0x3456_0000_0000_0012))
+            ),
+            test(
+                "negative number",
+                Int64.bitrotRight(-256, 8),
+                M.equals(Int64Testable(0x00ff_ffff_ffff_ffff))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitrotRight(123_4567_8901_2345_6789, 7),
+                M.equals(Int64Testable(303_6064_0112_3456_2818))
+            ),
+            test(
+                "zero shift",
+                Int64.bitrotRight(1234, 0),
+                M.equals(Int64Testable(1234))
+            ),
+            test(
+                "minus one maximum rotate",
+                Int64.bitrotRight(-1, 63),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "maximum number",
+                Int64.bitrotRight(-2, 1),
+                M.equals(Int64Testable(maximumInt64))
+            ),
+            test(
+                "minimum number",
+                Int64.bitrotRight(minimumInt64, 63),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "opposite rotation",
+                Int64.bitrotRight(256, -2),
+                M.equals(Int64Testable(1024))
+            ),
+            test(
+                "rotate beyond bit length",
+                Int64.bitrotRight(128, 66),
+                M.equals(Int64Testable(32))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bittest",
+        [
+            test(
+                "set bit",
+                Int64.bittest(128, 7),
+                M.equals(T.bool(true))
+            ),
+            test(
+                "cleared bit",
+                Int64.bittest(-129, 7),
+                M.equals(T.bool(false))
+            ),
+            test(
+                "all zero",
+                do {
+                    let number = 0 : Int64;
+                    var count = 0;
+                    for (index in Iter.range(0, 63)) {
+                        if (Int64.bittest(number, index)) {
+                            count += 1
+                        }
+                    };
+                    count
+                },
+                M.equals(T.int(0))
+            ),
+            test(
+                "all one",
+                do {
+                    let number = -1 : Int64;
+                    var count = 0;
+                    for (index in Iter.range(0, 63)) {
+                        if (Int64.bittest(number, index)) {
+                            count += 1
+                        }
+                    };
+                    count
+                },
+                M.equals(T.int(64))
+            ),
+            test(
+                "set bit beyond bit length",
+                Int64.bittest(128, 64 + 7),
+                M.equals(T.bool(true))
+            ),
+            test(
+                "cleared bit beyond bit length",
+                Int64.bittest(-129, 128 + 7),
+                M.equals(T.bool(false))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitset",
+        [
+            test(
+                "set bit",
+                Int64.bitset(0, 7),
+                M.equals(Int64Testable(128))
+            ),
+            test(
+                "minus one",
+                Int64.bitset(-129, 7),
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "no effect",
+                Int64.bitset(128, 7),
+                M.equals(Int64Testable(128))
+            ),
+            test(
+                "set all",
+                do {
+                    var number = 0 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitset(number, index)
+                    };
+                    number
+                },
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "all no effect",
+                do {
+                    var number = -1 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitset(number, index)
+                    };
+                    number
+                },
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "set bit beyond bit length",
+                Int64.bitset(0, 64 + 7),
+                M.equals(Int64Testable(128))
+            ),
+            test(
+                "minus one beyond bit length",
+                Int64.bitset(-129, 128 + 7),
+                M.equals(Int64Testable(-1))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitclear",
+        [
+            test(
+                "clear bit",
+                Int64.bitclear(128, 7),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minus one",
+                Int64.bitclear(-1, 7),
+                M.equals(Int64Testable(-129))
+            ),
+            test(
+                "no effect",
+                Int64.bitclear(0, 7),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "clear all",
+                do {
+                    var number = -1 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitclear(number, index)
+                    };
+                    number
+                },
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "all no effect",
+                do {
+                    var number = 0 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitclear(number, index)
+                    };
+                    number
+                },
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "clear bit beyond bit length",
+                Int64.bitclear(128, 64 + 7),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minus one beyond bit length",
+                Int64.bitclear(-1, 128 + 7),
+                M.equals(Int64Testable(-129))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitflip",
+        [
+            test(
+                "clear bit",
+                Int64.bitflip(255, 7),
+                M.equals(Int64Testable(127))
+            ),
+            test(
+                "set bit",
+                Int64.bitflip(127, 7),
+                M.equals(Int64Testable(255))
+            ),
+            test(
+                "double flip",
+                Int64.bitflip(Int64.bitflip(0x1234_5678_90ab_cdef, 13), 13),
+                M.equals(Int64Testable(0x1234_5678_90ab_cdef))
+            ),
+            test(
+                "clear all",
+                do {
+                    var number = -1 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitflip(number, index)
+                    };
+                    number
+                },
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "set all",
+                do {
+                    var number = 0 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitflip(number, index)
+                    };
+                    number
+                },
+                M.equals(Int64Testable(-1))
+            ),
+            test(
+                "clear bit beyond bit length",
+                Int64.bitflip(255, 64 + 7),
+                M.equals(Int64Testable(127))
+            ),
+            test(
+                "set bit beyond bit length",
+                Int64.bitflip(127, 128 + 7),
+                M.equals(Int64Testable(255))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitcountNonZero",
+        [
+            test(
+                "zero",
+                Int64.bitcountNonZero(0),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minus one",
+                Int64.bitcountNonZero(-1),
+                M.equals(Int64Testable(64))
+            ),
+            test(
+                "minus two",
+                Int64.bitcountNonZero(-2),
+                M.equals(Int64Testable(63))
+            ),
+            test(
+                "one",
+                Int64.bitcountNonZero(1),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "minimum value",
+                Int64.bitcountNonZero(minimumInt64),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "maximum value",
+                Int64.bitcountNonZero(maximumInt64),
+                M.equals(Int64Testable(63))
+            ),
+            test(
+                "alternating bits positive",
+                Int64.bitcountNonZero(0x5555_5555_5555_5555),
+                M.equals(Int64Testable(32))
+            ),
+            test(
+                "alternating bits negative",
+                Int64.bitcountNonZero(-0x5555_5555_5555_5556),
+                M.equals(Int64Testable(32))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitcountLeadingZero",
+        [
+            test(
+                "zero",
+                Int64.bitcountLeadingZero(0),
+                M.equals(Int64Testable(64))
+            ),
+            test(
+                "minus one",
+                Int64.bitcountLeadingZero(-1),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minus two",
+                Int64.bitcountLeadingZero(-2),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "one",
+                Int64.bitcountLeadingZero(1),
+                M.equals(Int64Testable(63))
+            ),
+            test(
+                "two",
+                Int64.bitcountLeadingZero(2),
+                M.equals(Int64Testable(62))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitcountLeadingZero(0x0000_1020_3040_5060),
+                M.equals(Int64Testable(19))
+            ),
+            test(
+                "minimum value",
+                Int64.bitcountLeadingZero(minimumInt64),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "maximum value",
+                Int64.bitcountLeadingZero(maximumInt64),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "alternating bits positive",
+                Int64.bitcountLeadingZero(0x5555_5555_5555_5555),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "alternating bits negative",
+                Int64.bitcountLeadingZero(-0x5555_5555_5555_5556),
+                M.equals(Int64Testable(0))
+            )
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
+        "bitcountTrailingZero",
+        [
+            test(
+                "zero",
+                Int64.bitcountTrailingZero(0),
+                M.equals(Int64Testable(64))
+            ),
+            test(
+                "minus one",
+                Int64.bitcountTrailingZero(-1),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "minus two",
+                Int64.bitcountTrailingZero(-2),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "one",
+                Int64.bitcountTrailingZero(1),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "two",
+                Int64.bitcountTrailingZero(2),
+                M.equals(Int64Testable(1))
+            ),
+            test(
+                "arbitrary",
+                Int64.bitcountTrailingZero(0x1020_3040_5060_0000),
+                M.equals(Int64Testable(21))
+            ),
+            test(
+                "minimum value",
+                Int64.bitcountTrailingZero(minimumInt64),
+                M.equals(Int64Testable(63))
+            ),
+            test(
+                "maximum value",
+                Int64.bitcountTrailingZero(maximumInt64),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "alternating bits positive",
+                Int64.bitcountTrailingZero(0x5555_5555_5555_5555),
+                M.equals(Int64Testable(0))
+            ),
+            test(
+                "alternating bits negative",
+                Int64.bitcountTrailingZero(-0x5555_5555_5555_5556),
+                M.equals(Int64Testable(1))
+            )
         ]
     )
 )
