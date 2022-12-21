@@ -268,7 +268,7 @@ module {
 
   /// Returns `x` to the power of `y`, `x ** y`.
   ///
-  /// Traps on overflow/underflow and when `y` is negative.
+  /// Traps on overflow/underflow and when `y < 0 or y >= 64`.
   ///
   /// Example:
   /// ```motoko
@@ -286,7 +286,7 @@ module {
   /// import Int64 "mo:base/Int64";
   ///
   /// let unused = 0 : Int64; // will be fixed in future
-  /// Int64.bitnot(-256 /* 0xffff_ffff_ff00 */, unused) // => +255 // 0xff
+  /// Int64.bitnot(-256 /* 0xffff_ffff_ffff_ff00 */, unused) // => +255 // 0xff
   /// ```
   public func bitnot(x : Int64, y : Int64) : Int64 { ^x };
 
@@ -300,7 +300,7 @@ module {
   /// ```
   public func bitand(x : Int64, y : Int64) : Int64 { x & y };
 
-  /// Returns the bitwise "or" of `x` and `y`, `x \| y`.
+  /// Returns the bitwise "or" of `x` and `y`, `x | y`.
   ///
   /// Example:
   /// ```motoko
