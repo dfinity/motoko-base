@@ -1,4 +1,3 @@
-import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Order "mo:base/Order";
 
