@@ -1520,8 +1520,8 @@ run(
         [
             test(
                 "positive number non-overflow",
-                Int16.bitrotLeft(0x70f0, 4),
-                M.equals(Int16Testable(0x0f07))
+                Int16.bitrotLeft(0x070f, 4),
+                M.equals(Int16Testable(0x70f0))
             ),
             test(
                 "positive number overflow",
