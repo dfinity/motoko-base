@@ -20,6 +20,11 @@
 /// These are provided for performance (and convenience) reasons, and need
 /// special care when used. Similar caveats apply for user-defined (pseudo)
 /// random number generators.
+///
+/// Usage:
+/// ```motoko no-repl
+/// import Random "mo:base/Random";
+/// ```
 
 import I "Iter";
 import Option "Option";
@@ -34,11 +39,25 @@ module {
   /// stated for each method. The uniformity of outcomes is
   /// guaranteed only when the supplied entropy is originally obtained
   /// by the `blob()` call, and is never reused.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// import Random "mo:base/Random";
+  ///
+  /// let random = Random.Finite(await Random.blob());
+  /// let seedRandom = Random.Finite("seed");
+  /// ```
   public class Finite(entropy : Blob) {
     let it : I.Iter<Nat8> = entropy.vals();
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 255].
     /// Consumes 1 byte of entropy.
+    ///
+    /// Example:
+    /// ```motoko no-repl
+    /// let random = Random.Finite("seed");
+    /// random.byte() // => ?115
+    /// ```
     public func byte() : ?Nat8 {
       it.next()
     };
@@ -67,12 +86,24 @@ module {
 
     /// Simulates a coin toss. Both outcomes have equal probability.
     /// Consumes 1 bit of entropy (amortised).
+    ///
+    /// Example:
+    /// ```motoko no-repl
+    /// let random = Random.Finite("seed");
+    /// random.coin() // => ?false
+    /// ```
     public func coin() : ?Bool {
       bit.next()
     };
 
     /// Uniformly distributes outcomes in the numeric range [0 .. 2^p - 1].
     /// Consumes ⌈p/8⌉ bytes of entropy.
+    ///
+    /// Example:
+    /// ```motoko no-repl
+    /// let random = Random.Finite("seed1234567890");
+    /// random.range(32) // => ?1936024932
+    /// ```
     public func range(p : Nat8) : ?Nat {
       var pp = p;
       var acc : Nat = 0;
@@ -91,6 +122,12 @@ module {
 
     /// Counts the number of heads in `n` fair coin tosses.
     /// Consumes ⌈p/8⌉ bytes of entropy.
+    ///
+    /// Example:
+    /// ```motoko no-repl
+    /// let random = Random.Finite("seed");
+    /// random.binomial(5) // => ?3
+    /// ```
     public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
       var acc : Nat8 = 0;
@@ -112,6 +149,11 @@ module {
 
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// Random.byteFrom("seed") // => 115
+  /// ```
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.vals().next()) {
       case (?w) { w };
@@ -121,6 +163,11 @@ module {
 
   /// Simulates a coin toss.
   /// Seed blob must contain at least a byte.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// Random.coinFrom("seed") // => false
+  /// ```
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.vals().next()) {
       case (?w) { w > (127 : Nat8) };
@@ -129,10 +176,20 @@ module {
   };
 
   /// Obtains a full blob (32 bytes) worth of fresh entropy.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// let random = Random.Finite(await Random.blob());
+  /// ```
   public let blob : shared () -> async Blob = raw_rand;
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// Random.rangeFrom(32, "seed1234567890") // => 1936024932
+  /// ```
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
     rangeIter(p, seed.vals())
   };
@@ -156,6 +213,11 @@ module {
 
   /// Counts the number of heads in `n` coin tosses.
   /// Seed blob must contain at least ((n+7) / 8) bytes.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// Random.binomialFrom(5, "seed") // => 3
+  /// ```
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
     binomialIter(n, seed.vals())
   };
