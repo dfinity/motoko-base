@@ -33,7 +33,7 @@
 /// All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 ///
 /// Usage:
-/// ```name=import
+/// ```motoko no-repl
 /// import StableMemory "mo:base/ExperimentalStableMemory";
 /// ```
 
