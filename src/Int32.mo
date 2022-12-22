@@ -10,6 +10,12 @@ module {
   /// 32-bit signed integers.
   public type Int32 = Prim.Types.Int32;
 
+  /// Minimum 32-bit integer value, `-2 ** 31`.
+  public let minimumValue = -2_147_483_648 : Int32;
+
+  /// Maximum 32-bit integer value, `+2 ** 31 - 1`.
+  public let maximumValue = 2_147_483_647 : Int32;
+
   /// Converts a 32-bit signed integer to a signed integer with infinite precision.
   ///
   /// Example:
@@ -279,16 +285,14 @@ module {
   public func pow(x : Int32, y : Int32) : Int32 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
-  /// Issue: The argument `y` is not needed and will be removed in future.
   ///
   /// Example:
   /// ```motoko
   /// import Int32 "mo:base/Int32";
   ///
-  /// let unused = 0 : Int32; // will be fixed in future
-  /// Int32.bitnot(-256 /* 0xffff_ff00 */, unused) // => +255 // 0xff
+  /// Int32.bitnot(-256 /* 0xffff_ff00 */) // => +255 // 0xff
   /// ```
-  public func bitnot(x : Int32, y : Int32) : Int32 { ^x };
+  public func bitnot(x : Int32) : Int32 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
   ///
