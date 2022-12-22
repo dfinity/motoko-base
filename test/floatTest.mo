@@ -2780,6 +2780,8 @@ class OrderTestable(value : Order) : T.TestableItem<Order> {
   }
 };
 
+let subnormal = 2.2250738585072014e-308;
+
 run(
   suite(
     "compare",
@@ -2833,6 +2835,26 @@ run(
         "negative and positive zero",
         Float.compare(negativeZero, positiveZero),
         M.equals(OrderTestable(#equal))
+      ),
+      test(
+        "subnormal negative number and negative number",
+        Float.compare(-subnormal, -1e-100),
+        M.equals(OrderTestable(#greater))
+      ),
+      test(
+        "subnormal negative number and zero",
+        Float.compare(-subnormal, negativeZero),
+        M.equals(OrderTestable(#less))
+      ),
+      test(
+        "subnormal positive number and zero",
+        Float.compare(subnormal, positiveZero),
+        M.equals(OrderTestable(#greater))
+      ),
+      test(
+        "subnormal positive number and positive number",
+        Float.compare(subnormal, 1e-100),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "mixed signs less",
