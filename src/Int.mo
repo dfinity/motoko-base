@@ -208,9 +208,9 @@ module {
   /// ```motoko
   /// import Int "mo:base/Int";
   ///
-  /// Int.neq(123) // => -123
+  /// Int.neg(123) // => -123
   /// ```
-  public func neq(x : Int) : Int { -x }; // Typo: Should be changed to `neg`
+  public func neg(x : Int) : Int { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
   ///
