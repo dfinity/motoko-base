@@ -12,11 +12,11 @@
 ///
 /// Examples of numerical errors:
 ///   ```motoko
-///   0.1 + 0.1 + 0.1 == 0.3 // Fails!
+///   0.1 + 0.1 + 0.1 == 0.3 // => false
 ///   ```
 ///
 ///   ```motoko
-///  1e16 + 1.0 != 1e16 // Fails!
+///  1e16 + 1.0 != 1e16 // => false
 ///   ```
 ///
 ///  (and many more cases)
@@ -32,7 +32,7 @@
 ///   let y = 0.3;
 ///
 ///   let epsilon = 1e-6; // This depends on the application case (needs a numerical error analysis).
-///   let equals = Float.abs(x - y) <= epsilon;
+///   Float.equals(x, y, epsilon) // => true
 ///   ```
 ///
 /// * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base
@@ -64,10 +64,7 @@ module {
   ///
   /// Float.positiveInfinity() // => +inf
   /// ```
-  public func positiveInfinity(): Float { 
-    1.0 / 0.0 
-  };
-
+  public func positiveInfinity() : Float { 1.0 / 0.0 };
 
   /// Returns negative infinity as a floating point value.
   /// Note: Negative infinity is equal to itself.
@@ -78,9 +75,7 @@ module {
   ///
   /// Float.negativeInfinity() // => -inf
   /// ```
-  public func negativeInfinity(): Float { 
-    -1.0 / 0.0 
-  };
+  public func negativeInfinity() : Float { -1.0 / 0.0 };
 
   /// Determines whether the `number` is a `nan` ("not a number" in the floating point representation).
   /// Notes:
@@ -514,17 +509,20 @@ module {
   /// ```
   public let fromInt : Int -> Float = Prim.intToFloat;
 
-  /// Returns `x == y`.
+  /// Determines whether `x` is equal to `y` within the defined tolerance of `epsilon`.
+  /// The `epsilon` considers numerical erros, see comment above.
+  /// Equivalent to `Float.abs(x - y) <= epsilon` for a non-negative epsilon.
   ///
-  /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
+  /// Traps if `epsilon` is negative or `nan`.
   ///
   /// Special cases:
   /// ```
-  /// equal(+0.0, -0.0) => true
-  /// equal(-0.0, +0.0) => true
-  /// equal(+inf, +inf) => true
-  /// equal(-inf, -inf) => true
-  /// equal(nan, nan)   => false
+  /// equal(+0.0, -0.0, epsilon) => true for any `epsilon >= 0.0`
+  /// equal(-0.0, +0.0, epsilon) => true for any `epsilon >= 0.0`
+  /// equal(+inf, +inf, epsilon) => true for any `epsilon >= 0.0`
+  /// equal(-inf, -inf, epsilon) => true for any `epsilon >= 0.0`
+  /// equal(x, nan, epsilon)     => false for any x and `epsilon >= 0.0`
+  /// equal(nan, y, epsilon)     => false for any y and `epsilon >= 0.0`
   /// ```
   ///
   /// Example:
@@ -533,19 +531,28 @@ module {
   ///
   /// Float.equal(-12.3, -1.23e1) // => true
   /// ```
-  public func equal(x : Float, y : Float) : Bool { x == y };
+  public func equal(x : Float, y : Float, epsilon : Float) : Bool {
+    if (not (epsilon >= 0.0)) {
+      // also considers nan, not identical to `epsilon < 0.0`
+      Prim.trap("epsilon must be greater or equal 0.0")
+    };
+    x == y or abs(x - y) <= epsilon // `x == y` to also consider infinity equal
+  };
 
-  /// Returns `x != y`.
+  /// Determines whether `x` is not equal to `y` within the defined tolerance of `epsilon`.
+  /// The `epsilon` considers numerical erros, see comment above.
+  /// Equivalent to `not equal(x, y, epsilon)`.
   ///
-  /// Note: This operation is discouraged as it does not consider numerical errors, see comment above.
+  /// Traps if `epsilon` is negative or `nan`.
   ///
   /// Special cases:
   /// ```
-  /// notEqual(+0.0, -0.0) => false
-  /// notEqual(-0.0, +0.0) => false
-  /// notEqual(+inf, +inf) => false
-  /// notEqual(-inf, -inf) => false
-  /// notEqual(nan, nan)   => true
+  /// notEqual(+0.0, -0.0, epsilon) => false for any `epsilon >= 0.0`
+  /// notEqual(-0.0, +0.0, epsilon) => false for any `epsilon >= 0.0`
+  /// notEqual(+inf, +inf, epsilon) => false for any `epsilon >= 0.0`
+  /// notEqual(-inf, -inf, epsilon) => false for any `epsilon >= 0.0`
+  /// notEqual(x, nan, epsilon)     => true for any x and `epsilon >= 0.0`
+  /// notEqual(nan, y, epsilon)     => true for any y and `epsilon >= 0.0`
   /// ```
   ///
   /// Example:
@@ -554,7 +561,9 @@ module {
   ///
   /// Float.notEqual(-12.3, -1.23e1) // => false
   /// ```
-  public func notEqual(x : Float, y : Float) : Bool { x != y };
+  public func notEqual(x : Float, y : Float, epsilon : Float) : Bool {
+    not equal(x, y, epsilon)
+  };
 
   /// Returns `x < y`.
   ///
