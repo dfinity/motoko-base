@@ -10,6 +10,12 @@ module {
   /// 64-bit signed integers.
   public type Int64 = Prim.Types.Int64;
 
+  /// Minimum 64-bit integer value, `-2 ** 63`.
+  public let minimumValue = -9_223_372_036_854_775_808 : Int64;
+
+  /// Maximum 64-bit integer value, `+2 ** 63 - 1`.
+  public let maximumValue = 9_223_372_036_854_775_807 : Int64;
+
   /// Converts a 64-bit signed integer to a signed integer with infinite precision.
   ///
   /// Example:
@@ -279,16 +285,14 @@ module {
   public func pow(x : Int64, y : Int64) : Int64 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
-  /// Issue: The argument `y` is not needed and will be removed in future.
   ///
   /// Example:
   /// ```motoko
   /// import Int64 "mo:base/Int64";
   ///
-  /// let unused = 0 : Int64; // will be fixed in future
-  /// Int64.bitnot(-256 /* 0xffff_ffff_ffff_ff00 */, unused) // => +255 // 0xff
+  /// Int64.bitnot(-256 /* 0xffff_ffff_ffff_ff00 */) // => +255 // 0xff
   /// ```
-  public func bitnot(x : Int64, y : Int64) : Int64 { ^x };
+  public func bitnot(x : Int64) : Int64 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
   ///
