@@ -1211,35 +1211,33 @@ run(
 
 /* --------------------------------------- */
 
-let unused = 0 : Int8; // Issue: bitnot has superfluous second argument.
-
 run(
     suite(
         "bitnot",
         [
             test(
                 "zero",
-                Int8.bitnot(0, unused),
+                Int8.bitnot(0),
                 M.equals(Int8Testable(-1))
             ),
             test(
                 "minus 1",
-                Int8.bitnot(-1, unused),
+                Int8.bitnot(-1),
                 M.equals(Int8Testable(0))
             ),
             test(
                 "maximum",
-                Int8.bitnot(Int8.maximumValue, unused),
+                Int8.bitnot(Int8.maximumValue),
                 M.equals(Int8Testable(Int8.minimumValue))
             ),
             test(
                 "minimum",
-                Int8.bitnot(Int8.minimumValue, unused),
+                Int8.bitnot(Int8.minimumValue),
                 M.equals(Int8Testable(Int8.maximumValue))
             ),
             test(
                 "arbitrary",
-                Int8.bitnot(123, 0),
+                Int8.bitnot(123),
                 M.equals(Int8Testable(-124))
             )
         ]
