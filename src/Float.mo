@@ -55,6 +55,33 @@ module {
   /// Note: Limited precision.
   public let e : Float = 2.7182818284590452354; // taken from musl math.h
 
+  /// Returns positive infinity as a floating point value.
+  /// Note: Positive infinity is equal to itself.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Float "mo:base/Float";
+  ///
+  /// Float.positiveInfinity() // => +inf
+  /// ```
+  public func positiveInfinity(): Float { 
+    1.0 / 0.0 
+  };
+
+
+  /// Returns negative infinity as a floating point value.
+  /// Note: Negative infinity is equal to itself.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Float "mo:base/Float";
+  ///
+  /// Float.negativeInfinity() // => -inf
+  /// ```
+  public func negativeInfinity(): Float { 
+    -1.0 / 0.0 
+  };
+
   /// Determines whether the `number` is a `nan` ("not a number" in the floating point representation).
   /// Notes:
   /// * Equality test of `nan` with itself or another number is always `false`.
