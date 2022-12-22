@@ -55,6 +55,22 @@ module {
   /// Note: Limited precision.
   public let e : Float = 2.7182818284590452354; // taken from musl math.h
 
+  /// Determines whether the `number` is a `nan` ("not a number" in the floating point representation).
+  /// Notes:
+  /// * Equality test of `nan` with itself or another number is always `false`.
+  /// * There exist many internal `nan` value representations, such as positive and negative nan,
+  ///   signalling and quiet nans, each with many different bit representations.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Float "mo:base/Float";
+  ///
+  /// Float.isNaN(0.0/0.0) // => true
+  /// ```
+  public func isNaN(number : Float) : Bool {
+    number != number
+  };
+
   /// Returns the absolute value of `x`.
   ///
   /// Special cases:
@@ -619,9 +635,9 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.neq(1.23) // => -1.23
+  /// Float.neg(1.23) // => -1.23
   /// ```
-  public func neq(x : Float) : Float { -x }; // Typo: Should be changed to `neg`
+  public func neg(x : Float) : Float { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
   ///

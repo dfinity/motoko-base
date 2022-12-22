@@ -31,10 +31,6 @@ class Int64Testable(number : Int64) : T.TestableItem<Int64> {
   };
 };
 
-func isNaN(number : Float) : Bool {
-  number != number;
-};
-
 let positiveInfinity = 1.0 / 0.0;
 let negativeInfinity = -1.0 / 0.0;
 
@@ -89,7 +85,7 @@ class NaNMatcher() : M.Matcher<Float> {
   };
 
   public func matches(number : Float) : Bool {
-    isNaN(number);
+    Float.isNaN(number);
   };
 };
 
@@ -114,6 +110,61 @@ class NegativeNaNMatcher() : M.Matcher<Float> {
 };
 
 // Some tests are adopted from Motoko compiler test `float-ops.mo`.
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "isNaN",
+    [
+      test(
+        "positive NaN",
+        Float.isNaN(positiveNaN),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "negative NaN",
+        Float.isNaN(negativeNaN),
+        M.equals(T.bool(true)),
+      ),
+      test(
+        "positive number",
+        Float.isNaN(1.1),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative number",
+        Float.isNaN(-1.1),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "zero",
+        Float.isNaN(0.0),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive zero",
+        Float.isNaN(positiveZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative zero",
+        Float.isNaN(negativeZero),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "positive infinity",
+        Float.isNaN(positiveInfinity),
+        M.equals(T.bool(false)),
+      ),
+      test(
+        "negative infinity",
+        Float.isNaN(negativeInfinity),
+        M.equals(T.bool(false)),
+      ),
+    ],
+  ),
+);
 
 /* --------------------------------------- */
 
@@ -2818,59 +2869,59 @@ run(
     [
       test(
         "positive number",
-        Float.neq(1.1),
+        Float.neg(1.1),
         M.equals(FloatTestable(-1.1, noEpsilon)),
       ),
       test(
         "negative number",
-        Float.neq(-1.1),
+        Float.neg(-1.1),
         M.equals(FloatTestable(1.1, noEpsilon)),
       ),
       test(
         "zero",
-        Float.neq(0.0),
+        Float.neg(0.0),
         M.equals(FloatTestable(0.0, noEpsilon)),
       ),
       // fails due to issue, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive zero",
-      //   Float.neq(positiveZero),
+      //   Float.neg(positiveZero),
       //   NegativeZeroMatcher(),
       // ),
       test(
         "negative zero",
-        Float.neq(negativeZero),
+        Float.neg(negativeZero),
         PositiveZeroMatcher(),
       ),
       test(
         "positive infinity",
-        Float.neq(positiveInfinity),
+        Float.neg(positiveInfinity),
         M.equals(FloatTestable(negativeInfinity, noEpsilon)),
       ),
       test(
         "negative infinity",
-        Float.neq(negativeInfinity),
+        Float.neg(negativeInfinity),
         M.equals(FloatTestable(positiveInfinity, noEpsilon)),
       ),
       test(
         "positive NaN (provisional test)",
-        Float.neq(positiveNaN),
+        Float.neg(positiveNaN),
         NaNMatcher(),
       ),
       test(
         "negative NaN (provisional test)",
-        Float.neq(negativeNaN),
+        Float.neg(negativeNaN),
         NaNMatcher(),
       ),
       // Not working correctly, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive NaN",
-      //   Float.neq(positiveNaN),
+      //   Float.neg(positiveNaN),
       //   NegativeNaNMatcher(),
       // ),
       // test(
       //   "negative NaN",
-      //   Float.neq(negativeNaN),
+      //   Float.neg(negativeNaN),
       //   PositiveNaNMatcher(),
       // ),
     ],
