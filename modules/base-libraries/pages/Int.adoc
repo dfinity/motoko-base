@@ -226,12 +226,12 @@ import Int "mo:base/Int";
 Int.compare(123, 1234) // => #less
 ```
 
-[[neq]]
-== neq
+[[neg]]
+== neg
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func neq(x : xref:#type.Int[Int]) : xref:#type.Int[Int]
+func neg(x : xref:#type.Int[Int]) : xref:#type.Int[Int]
 ----
 
 Returns the negation of `x`, `-x` .
@@ -240,7 +240,7 @@ Example:
 ```motoko
 import Int "mo:base/Int";
 
-Int.neq(123) // => -123
+Int.neg(123) // => -123
 ```
 
 [[add]]
