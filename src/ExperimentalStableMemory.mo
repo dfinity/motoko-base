@@ -60,7 +60,7 @@ module {
   /// Each page is 64KiB (65536 bytes).
   /// Returns the previous `size` when able to grow.
   /// Returns `0xFFFF_FFFF_FFFF_FFFF` if remaining pages insufficient.
-  /// Every new page is zero-initialized, containing byte 0 at every offset.
+  /// Every new page is zero-initialized, containing byte 0x00 at every offset.
   /// Function `grow` is capped by a soft limit on `size` controlled by compile-time flag
   ///  `--max-stable-pages <n>` (the default is 65536, or 4GiB).
   ///
