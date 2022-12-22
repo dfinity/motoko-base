@@ -2887,52 +2887,122 @@ run(
       test(
         "two positive NaNs",
         Float.compare(positiveNaN, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#equal)),
       ),
       test(
         "two negative NaNs",
         Float.compare(negativeNaN, negativeNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#equal)),
       ),
       test(
-        "NaNs with mixed signs",
+        "positive NaN, negative NaN",
         Float.compare(positiveNaN, negativeNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "number and NaN",
+        "negative NaN, positive NaN",
+        Float.compare(negativeNaN, positiveNaN),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "number and positive NaN",
         Float.compare(1.23, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#less)),
       ),
       test(
-        "NaN and number",
+        "number and negative NaN",
+        Float.compare(1.23, negativeNaN),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "positive NaN and positive number",
         Float.compare(positiveNaN, -1.23),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "NaN and NaN",
+        "positive NaN and negative number",
+        Float.compare(positiveNaN, -1.23),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "negative NaN and positive number",
+        Float.compare(negativeNaN, -1.23),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative NaN and negative number",
+        Float.compare(negativeNaN, -1.23),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "positive NaN and positive NaN",
         Float.compare(positiveNaN, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Inconsistent, needs to be fixed
+        M.equals(OrderTestable(#equal)),
       ),
       test(
-        "NaN and positive infinity",
+        "negative NaN and positive NaN",
+        Float.compare(negativeNaN, positiveNaN),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "positive NaN and negative NaN",
+        Float.compare(positiveNaN, negativeNaN),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "negative NaN and negative NaN",
+        Float.compare(negativeNaN, negativeNaN),
+        M.equals(OrderTestable(#equal)),
+      ),
+      test(
+        "positive NaN and positive infinity",
         Float.compare(positiveNaN, Float.positiveInfinity()),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "NaN and negative infinity",
+        "positive NaN and negative infinity",
         Float.compare(positiveNaN, Float.negativeInfinity()),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "positive infinity and NaN",
+        "positive NaN and positive infinity",
+        Float.compare(positiveNaN, Float.positiveInfinity()),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "negative NaN and negative infinity",
+        Float.compare(negativeNaN, Float.negativeInfinity()),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative NaN and positive infinity",
+        Float.compare(negativeNaN, Float.positiveInfinity()),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "positive infinity and positive NaN",
         Float.compare(Float.positiveInfinity(), positiveNaN),
-        M.equals(OrderTestable(#greater)), // Inconsistent, needs to be fixed
+        M.equals(OrderTestable(#less)),
       ),
       test(
-        "negative infinity and NaN",
+        "positive infinity and negative NaN",
+        Float.compare(Float.positiveInfinity(), negativeNaN),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "positive infinity and positive NaN",
+        Float.compare(Float.positiveInfinity(), positiveNaN),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative infinity and positive NaN",
         Float.compare(Float.negativeInfinity(), positiveNaN),
-        M.equals(OrderTestable(#greater)), // Inconsistent, needs to be fixed
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative infinity and negative NaN",
+        Float.compare(Float.negativeInfinity(), negativeNaN),
+        M.equals(OrderTestable(#greater)),
       )
     ]
   )

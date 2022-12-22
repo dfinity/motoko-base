@@ -637,19 +637,23 @@ module {
   /// ```
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
 
-  /// Returns the order of `x` and `y`.
+  /// Defines a total order of `x` and `y` for use in sorting.
   ///
-  /// Note: This operation is discouraged as it does not consider numerical errors for equality, see comment above.
+  /// Note: Using this operation to determine equality or inequality is discouraged for two reasons:
+  /// * It does not consider numerical errors, see comment above. Use `equal(x, y)` or 
+  ///   `notEqual(x, y)` to test for equality or inequality, respectively.
+  /// * `nan` are here considered equal if their sign matches, which is different to the standard equality
+  ///    by `==` or when using `equal()` or `notEqual()`.
   ///
-  /// Issue: Undefined behavior for `nan`, not defining a total number order.
-  ///
-  /// Special cases:
-  /// ```
-  /// compare(+0.0, -0.0) => #equal
-  /// compare(-0.0, +0.0) => #equal
-  /// compare(nan, y) is undefined for any Float y
-  /// compare(x, nan) is undefined for any Float x
-  /// ```
+  /// Total order:
+  /// * negative nan (no distinction between signalling and quiet negative nan)
+  /// * negative infinity
+  /// * negative numbers (including negative subnormal numbers in standard order)
+  /// * negative zero (`-0.0`)
+  /// * positive zero (`+0.0`)
+  /// * positive numbers (including positive subnormal numbers in standard order)
+  /// * positive infinity
+  /// * positive nan (no distinction between signalling and quiet positive nan)
   ///
   /// Example:
   /// ```motoko
@@ -658,7 +662,30 @@ module {
   /// Float.compare(0.123, 0.1234) // => #less
   /// ```
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+    let isNegative = func (number: Float): Bool {
+      copySign(1.0, number) < 0.0
+    };
+    if (isNaN(x)) {
+      if (isNegative(x)) {
+        if (isNaN(y) and isNegative(y)) { #equal } else { #less }
+      } else {
+        if (isNaN(y) and not isNegative(y)) { #equal } else { #greater }
+      }
+    } else if (isNaN(y)) {
+      if (isNegative(y)) {
+        #greater
+      } else {
+        #less
+      }
+    } else {
+      if (x == y) { 
+        #equal 
+      } else if (x < y) { 
+        #less 
+      } else { 
+        #greater 
+      }
+    }
   };
 
   /// Returns the negation of `x`, `-x` .
