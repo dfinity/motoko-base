@@ -23,7 +23,7 @@
 ///
 /// Advice:
 /// * Floating point number comparisons by `==` or `!=` are discouraged. Instead, it is better to compare
-///   floating-point numbers with a numerical epsilon.
+///   floating-point numbers with a numerical tolerance, called epsilon.
 ///
 ///   Example:
 ///   ```motoko
@@ -32,7 +32,7 @@
 ///   let y = 0.3;
 ///
 ///   let epsilon = 1e-6; // This depends on the application case (needs a numerical error analysis).
-///   let equals = Float.abs(x - y) < epsilon;
+///   let equals = Float.abs(x - y) <= epsilon;
 ///   ```
 ///
 /// * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base
