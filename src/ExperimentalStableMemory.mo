@@ -48,7 +48,7 @@ module {
   /// stable memory.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let beforeSize = StableMemory.size();
   /// ignore StableMemory.grow(10);
   /// let afterSize = StableMemory.size();
@@ -65,7 +65,7 @@ module {
   ///  `--max-stable-pages <n>` (the default is 65536, or 4GiB).
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// import Error "mo:base/Error";
   ///
   /// let beforeSize = StableMemory.grow(10);
@@ -85,7 +85,7 @@ module {
   /// The query can only be called by the enclosing actor and will trap for other callers.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// actor {
   ///   public func example() : async Text {
   ///     let memoryUsage = StableMemory.stableVarQuery();
@@ -102,7 +102,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat32(offset, value);
@@ -114,7 +114,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat32(offset, value);
@@ -126,7 +126,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat8(offset, value);
@@ -138,7 +138,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat8(offset, value);
@@ -150,7 +150,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat16(offset, value);
@@ -162,7 +162,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat16(offset, value);
@@ -174,7 +174,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat64(offset, value);
@@ -186,7 +186,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeNat64(offset, value);
@@ -198,7 +198,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt32(offset, value);
@@ -210,7 +210,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt32(offset, value);
@@ -222,7 +222,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt8(offset, value);
@@ -234,7 +234,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt8(offset, value);
@@ -246,7 +246,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt16(offset, value);
@@ -258,7 +258,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt16(offset, value);
@@ -270,7 +270,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt64(offset, value);
@@ -282,7 +282,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 123;
   /// StableMemory.storeInt64(offset, value);
@@ -294,7 +294,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 1.25;
   /// StableMemory.storeFloat(offset, value);
@@ -306,7 +306,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// let offset = 0;
   /// let value = 1.25;
   /// StableMemory.storeFloat(offset, value);
@@ -318,7 +318,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// import Blob "mo:base/Blob";
   ///
   /// let offset = 0;
@@ -333,7 +333,7 @@ module {
   /// Traps on an out-of-bounds access.
   ///
   /// Example:
-  /// ```motoko include=import
+  /// ```motoko no-repl
   /// import Blob "mo:base/Blob";
   ///
   /// let offset = 0;
