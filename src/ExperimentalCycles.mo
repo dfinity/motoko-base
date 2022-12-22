@@ -19,7 +19,7 @@
 ///         Debug.print("Main balance: " # debug_show(Cycles.balance()));
 ///         Cycles.add(15_000_000);
 ///         await operation(); // accepts 10_000_000 cycles
-///         Debug.print("Main refunded: " # debug_show(Cycles.refunded())); // 5_000_000 
+///         Debug.print("Main refunded: " # debug_show(Cycles.refunded())); // 5_000_000
 ///         Debug.print("Main balance: " # debug_show(Cycles.balance())); // decreased by around 10_000_000
 ///     };
 ///
@@ -46,7 +46,7 @@ module {
   /// actor {
   ///     public func main(): async() {
   ///         let balance = Cycles.balance();
-  ///         Debug.print("Balance: " # debug_show(balance)); 
+  ///         Debug.print("Balance: " # debug_show(balance));
   ///     }
   /// }
   /// ```
@@ -66,7 +66,7 @@ module {
   /// actor {
   ///     public func main(): async() {
   ///         let available = Cycles.available();
-  ///         Debug.print("Available: " # debug_show(available)); 
+  ///         Debug.print("Available: " # debug_show(available));
   ///     }
   /// }
   /// ```
@@ -143,7 +143,7 @@ module {
   ///     public func main(): async() {
   ///         Cycles.add(15_000_000);
   ///         await operation(); // accepts 10_000_000 cycles
-  ///         Debug.print("Refunded: " # debug_show(Cycles.refunded())); // 5_000_000 
+  ///         Debug.print("Refunded: " # debug_show(Cycles.refunded())); // 5_000_000
   ///     }
   /// }
   /// ```
