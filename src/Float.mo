@@ -529,7 +529,8 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.equal(-12.3, -1.23e1) // => true
+  /// let epsilon = 1e-6;
+  /// Float.equal(-12.3, -1.23e1, epsilon) // => true
   /// ```
   public func equal(x : Float, y : Float, epsilon : Float) : Bool {
     if (not (epsilon >= 0.0)) {
@@ -559,7 +560,8 @@ module {
   /// ```motoko
   /// import Float "mo:base/Float";
   ///
-  /// Float.notEqual(-12.3, -1.23e1) // => false
+  /// let epsilon = 1e-6;
+  /// Float.notEqual(-12.3, -1.23e1, epsilon) // => false
   /// ```
   public func notEqual(x : Float, y : Float, epsilon : Float) : Bool {
     not equal(x, y, epsilon)
@@ -640,7 +642,7 @@ module {
   /// Defines a total order of `x` and `y` for use in sorting.
   ///
   /// Note: Using this operation to determine equality or inequality is discouraged for two reasons:
-  /// * It does not consider numerical errors, see comment above. Use `equal(x, y)` or 
+  /// * It does not consider numerical errors, see comment above. Use `equal(x, y)` or
   ///   `notEqual(x, y)` to test for equality or inequality, respectively.
   /// * `nan` are here considered equal if their sign matches, which is different to the standard equality
   ///    by `==` or when using `equal()` or `notEqual()`.
@@ -662,7 +664,7 @@ module {
   /// Float.compare(0.123, 0.1234) // => #less
   /// ```
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
-    let isNegative = func (number: Float): Bool {
+    let isNegative = func(number : Float) : Bool {
       copySign(1.0, number) < 0.0
     };
     if (isNaN(x)) {
@@ -678,13 +680,7 @@ module {
         #less
       }
     } else {
-      if (x == y) { 
-        #equal 
-      } else if (x < y) { 
-        #less 
-      } else { 
-        #greater 
-      }
+      if (x == y) { #equal } else if (x < y) { #less } else { #greater }
     }
   };
 
