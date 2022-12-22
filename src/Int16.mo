@@ -10,6 +10,12 @@ module {
   /// 16-bit signed integers.
   public type Int16 = Prim.Types.Int16;
 
+  /// Minimum 16-bit integer value, `-2 ** 15`.
+  public let minimumValue = -32_768 : Int16;
+
+  /// Maximum 16-bit integer value, `+2 ** 15 - 1`.
+  public let maximumValue = 32_767 : Int16;
+
   /// Converts a 16-bit signed integer to a signed integer with infinite precision.
   ///
   /// Example:
@@ -279,16 +285,14 @@ module {
   public func pow(x : Int16, y : Int16) : Int16 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
-  /// Issue: The argument `y` is not needed and will be removed in future.
   ///
   /// Example:
   /// ```motoko
   /// import Int16 "mo:base/Int16";
   ///
-  /// let unused = 0 : Int16; // will be fixed in future
-  /// Int16.bitnot(-256 /* 0xff00 */, unused) // => +255 // 0xff
+  /// Int16.bitnot(-256 /* 0xff00 */) // => +255 // 0xff
   /// ```
-  public func bitnot(x : Int16, y : Int16) : Int16 { ^x };
+  public func bitnot(x : Int16) : Int16 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
   ///
