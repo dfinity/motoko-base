@@ -707,7 +707,7 @@ module {
   /// ```motoko include=import
   ///
   /// let array = [10, 11, 12];
-  /// array.size();
+  /// let size = Array.size(array);
   /// ```
   ///
   /// Runtime: O(1)
