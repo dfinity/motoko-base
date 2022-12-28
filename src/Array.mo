@@ -698,7 +698,7 @@ module {
   ///
   /// Space: O(1)
   public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys()
-}
+
   /// Returns the size of `array`.
   ///
   /// NOTE: You can also use `array.size()` instead of this function. See example
