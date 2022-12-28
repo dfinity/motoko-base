@@ -697,7 +697,7 @@ module {
   /// Runtime: O(1)
   ///
   /// Space: O(1)
-  public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys()
+  public func keys<X>(array : [X]) : I.Iter<Nat> = array.keys();
 
   /// Returns the size of `array`.
   ///
