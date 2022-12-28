@@ -27,7 +27,7 @@ module {
   /// func alarmUser() : async () {
   ///   // ...
   /// };
-  /// appt.reminder = setTimer(#nanoseconds (appt.when - now - thirtyMinutes), alarmUser);
+  /// appt.reminder = setTimer(#nanoseconds (Int.abs(appt.when - now - thirtyMinutes)), alarmUser);
   /// ```
   public func setTimer(d : Duration, job : () -> async ()) : TimerId {
     setTimerNano(toNanos d, false, job)
