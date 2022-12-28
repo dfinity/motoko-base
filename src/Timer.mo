@@ -12,27 +12,27 @@ module {
 
   func toNanos(d : Duration) : Nat64 =
     fromIntWrap (switch d {
-      case (#seconds s) 1000_000_000 * s;
+      case (#seconds s) s * 1000_000_000;
       case (#nanoseconds ns) ns });
 
-  /// installs a one-off timer that upon expiration after given duration `d`
-  /// executes the future `job()`
+  /// Installs a one-off timer that upon expiration after given duration `d`
+  /// executes the future `job()`.
   ///
   public func setTimer(d : Duration, job : () -> async ()) : TimerId {
     setTimerNano(toNanos d, false, job)
   };
 
-  /// installs a recurring timer that upon expiration after given duration `d`
-  /// executes the future `job()` and reinserts itself for expiration
+  /// Installs a recurring timer that upon expiration after given duration `d`
+  /// executes the future `job()` and reinserts itself for another expiration.
   ///
-  /// Note: a duration of 0 will only expire once
+  /// Note: A duration of 0 will only expire once.
   ///
   public func recurringTimer(d : Duration, job : () -> async ()) : TimerId {
     setTimerNano(toNanos d, true, job)
   };
 
-  /// cancels a still active timer with `(id : TimerId)`. For expired timers
-  /// and not recognised `id`s nothing happens
+  /// Cancels a still active timer with `(id : TimerId)`. For expired timers
+  /// and not recognised `id`s nothing happens.
   public let cancelTimer : TimerId -> () = cancel;
 
 }
