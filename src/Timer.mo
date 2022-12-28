@@ -33,6 +33,6 @@ module {
 
   /// cancels a still active timer with `(id : TimerId)`. For expired timers
   /// and not recognised `id`s nothing happens
-  public let cancelTimer = cancel;
+  public let cancelTimer : TimerId -> () = cancel;
 
 }
