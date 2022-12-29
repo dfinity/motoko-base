@@ -1,12 +1,12 @@
 import Function "mo:base/Func";
-import Debug "mo:base/Debug";
+import { print } = "mo:base/Debug";
 import Text "mo:base/Text";
 
 import { run; test; suite } "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
-Debug.print("Function");
+print("Function");
 
 func isEven(x : Int) : Bool { x % 2 == 0 };
 func not_(x : Bool) : Bool { not x };
@@ -34,10 +34,27 @@ run(
 
 /* --------------------------------------- */
 
-do {
-  Debug.print("  const");
+run(
+  suite(
+    "const",
+    [
+      test(
+        "abc is ignored",
+        Function.const<Bool, Text>(true)("abc"),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "same for flipped const",
+        Function.const<Bool, Text>(false)("abc"),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "same for structured ignoree",
+        Function.const<Bool, (Text, Text)>(false)("abc", "abc"),
+        M.equals(T.bool(false))
+      )
+    ]
+  )
+);
 
-  assert (Function.const<Bool, Text>(true)("abc"));
-  assert (Function.const<Bool, Text>(false)("abc") == false);
-  assert (Function.const<Bool, (Text, Text)>(false)("abc", "abc") == false)
-}
+/* --------------------------------------- */
