@@ -41,6 +41,7 @@
 ** xref:./Stack.adoc[Stack]
 ** xref:./Text.adoc[Text]
 ** xref:./Time.adoc[Time]
+** xref:./Timer.adoc[Timer]
 ** xref:./Trie.adoc[Trie]
 ** xref:./TrieMap.adoc[TrieMap]
 ** xref:./TrieSet.adoc[TrieSet]
