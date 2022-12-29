@@ -6,7 +6,7 @@ const glob = require("fast-glob");
 
 const srcDirectory = join(__dirname, "../../src");
 
-// Detect "mo:base/..." imports within the base library itself (important for )
+// Detect "mo:base/..." imports within the base library itself (https://github.com/dfinity/motoko-base/pull/487)
 
 glob.sync(join(srcDirectory, "**/*.mo")).forEach((srcPath) => {
   const source = readFileSync(srcPath, "utf8");
