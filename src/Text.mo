@@ -97,11 +97,12 @@ module {
 
   /// Returns `t1 # t2`, where `#` is the `Text` concatenation operator.
   ///
-  /// ```motoko
+  /// ```motoko include=import
   /// let a = "Hello";
   /// let b = "There";
   /// let together = a # b; // "HelloThere"
   /// let withSpace = a # " " # b; // "Hello There"
+  /// let togetherAgain = Text.concat(a,b); // "HelloThere"
   /// ```
   public func concat(t1 : Text, t2 : Text) : Text = t1 # t2;
 
@@ -235,7 +236,7 @@ module {
   /// ```motoko include=import
   /// let charPattern = #char 'A';
   /// let textPattern = #text "phrase";
-  /// let predicatePattern : Text.Pattern = #predicate (func(c) { c == 'A' or c == 'B' }); // matches "ABABAB"
+  /// let predicatePattern : Text.Pattern = #predicate (func(c) { c == 'A' or c == 'B' }); // matches "A" or "B"
   /// ```
   public type Pattern = {
     #char : Char;
