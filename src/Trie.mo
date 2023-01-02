@@ -92,8 +92,8 @@
 /// ).1;
 /// assert (removedValue == ?0);
 ///
-/// // to iterate over the Trie, we use the `iter` function that takes a Trie
-/// // of Type Trie<K,V> and returns an Iterator of type Iter<(K,V)> 
+/// // To iterate over the Trie, we use the `iter` function that takes a trie
+/// // of type `Trie<K,V>` and returns an iterator of type `Iter<(K,V)>`:
 /// var sum : Nat = 0;
 /// for (kv in Trie.iter(t3)) {
 ///   sum += kv.1;
@@ -178,8 +178,8 @@ module {
   public type AssocList<K, V> = AssocList.AssocList<K, V>;
 
   /// A `Key` for the trie has an associated hash value
-  /// - `hash` permits fast inequality checks, and permits collisions
-  /// - `key` permits precise equality checks, but only used after equal hashes.
+  /// - `hash` permits fast inequality checks, and permits collisions, while
+  /// - `key` permits precise equality checks, but is only used on values with equal hashes.
   public type Key<K> = {
     hash : Hash.Hash;
     key : K
@@ -228,7 +228,7 @@ module {
   public type Trie2D<K1, K2, V> = Trie<K1, Trie<K2, V>>;
 
   /// A 3D trie maps dimension-1 keys to another
-  /// layer of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
+  /// Composition of 2D tries, each keyed on the dimension-2 and dimension-3 keys.
   public type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V>>;
 
   /// An empty trie. This is usually the starting point for building a trie.
@@ -244,10 +244,10 @@ module {
   /// type Trie<K, V> = Trie.Trie<K, V>;
   /// type Key<K> = Trie.Key<K>;
   ///
-  /// // we have to provide `put`, `get` and `remove` with 
-  /// // a function of return type Key<K> = { hash : Hash.Hash; key : K }
+  /// // We have to provide `put`, `get` and `remove` with 
+  /// // a function of return type `Key<K> = { hash : Hash.Hash; key : K }`
   /// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
-  /// // we start off by creating an empty Trie
+  /// // We start off by creating an empty `Trie`
   /// var trie : Trie<Text, Nat> = Trie.empty();
   /// ```
   public func empty<K, V>() : Trie<K, V> { #empty };
@@ -255,12 +255,12 @@ module {
 
   /// Get the size in O(1) time. 
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
   /// ```motoko include=initialize
-  /// var size = Trie.size(trie); // Returns 0, as Trie is empty
+  /// var size = Trie.size(trie); // Returns 0, as `trie` is empty
   /// assert(size == 0);
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
   /// size := Trie.size(trie); // Returns 1, as we just added a new entry
@@ -388,7 +388,7 @@ module {
 
   /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -409,24 +409,24 @@ module {
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
-  /// var value = Trie.get(trie, key "hello", Text.equal); // Returns ?42
+  /// var value = Trie.get(trie, key "hello", Text.equal); // Returns `?42`
   /// assert(value == ?42);
-  /// value := Trie.get(trie, key "world", Text.equal); // Returns null
+  /// value := Trie.get(trie, key "world", Text.equal); // Returns `null`
   /// assert(value == null);
   /// ```
   public func get<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V = find(t, k, k_eq);
 
-  /// Find the given key's value in the trie, or return null if nonexistent
+  /// Find the given key's value in the trie, or return `null` if nonexistent
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
-  /// var value = Trie.find(trie, key "hello", Text.equal); // Returns ?42
+  /// var value = Trie.find(trie, key "hello", Text.equal); // Returns `?42`
   /// assert(value == ?42);
-  /// value := Trie.find(trie, key "world", Text.equal); // Returns null
+  /// value := Trie.find(trie, key "world", Text.equal); // Returns `null`
   /// assert(value == null);
   /// ```
   public func find<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V {
