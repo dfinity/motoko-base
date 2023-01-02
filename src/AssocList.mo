@@ -1,134 +1,297 @@
-/// Lists of key-value entries ("associations").
+/// Map implemented as a linked-list of key-value pairs ("Associations").
 ///
-/// Implements the same operations as library `Trie`, but uses a
-/// linked-list of entries and no hashing.
+/// NOTE: This map implementation is mainly used as underlying buckets for other map
+/// structures. Thus, other map implementations are easier to use in most cases.
 
 import List "List";
 
 module {
-
-  /// polymorphic association linked lists between keys and values
+  /// Import from the base library to use this module.
+  ///
+  /// ```motoko name=import
+  /// import AssocList "mo:base/AssocList";
+  /// import List "mo:base/List";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// type AssocList<K, V> = AssocList.AssocList<K, V>;
+  /// ```
+  ///
+  /// Initialize an empty map using an empty list.
+  /// ```motoko name=initialize include=import
+  /// var map : AssocList<Nat, Nat> = List.nil(); // Empty list as an empty map
+  /// map := null; // Alternative: null as empty list.
+  /// map
+  /// ```
   public type AssocList<K, V> = List.List<(K, V)>;
 
-  /// Find the value associated with a given key, or null if absent.
+  /// Find the value associated with key `key`, or `null` if no such key exists.
+  /// Compares keys using the provided function `equal`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Create map = [(0, 10), (1, 11), (2, 12)]
+  /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
+  /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
+  /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
+  ///
+  /// // Find value associated with key 1
+  /// AssocList.find(map, 1, Nat.equal)
+  /// ```
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func find<K, V>(
-    al : AssocList<K, V>,
-    k : K,
-    k_eq : (K, K) -> Bool,
+    map : AssocList<K, V>,
+    key : K,
+    equal : (K, K) -> Bool
   ) : ?V {
     func rec(al : AssocList<K, V>) : ?V {
       label profile_assocList_find_rec : (?V) switch (al) {
         case (null) { label profile_assocList_find_end_fail : (?V) { null } };
         case (?((hd_k, hd_v), tl)) {
-          if (k_eq(k, hd_k)) {
+          if (equal(key, hd_k)) {
             label profile_assocList_find_end_success : (?V) {
-              ?hd_v;
-            };
+              ?hd_v
+            }
           } else {
-            rec(tl);
-          };
-        };
-      };
+            rec(tl)
+          }
+        }
+      }
     };
     label profile_assocList_find_begin : (?V) {
-      rec(al);
-    };
+      rec(map)
+    }
   };
 
-  /// replace the value associated with a given key, or add it, if missing.
-  /// returns old value, or null, if no prior value existed.
+  /// Maps `key` to `value` in `map`, and overwrites the old entry if the key
+  /// was already present. Returns the old value in an option if it existed and
+  /// `null` otherwise, as well as the new map. Compares keys using the provided
+  /// function `equal`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Add three entries to the map
+  /// // map = [(0, 10), (1, 11), (2, 12)]
+  /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
+  /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
+  /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
+  /// // Override second entry
+  /// map := AssocList.replace(map, 1, Nat.equal, ?21).0;
+  ///
+  /// List.toArray(map)
+  /// ```
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func replace<K, V>(
-    al : AssocList<K, V>,
-    k : K,
-    k_eq : (K, K) -> Bool,
-    ov : ?V,
+    map : AssocList<K, V>,
+    key : K,
+    equal : (K, K) -> Bool,
+    value : ?V
   ) : (AssocList<K, V>, ?V) {
     func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
       switch (al) {
         case (null) {
-          switch ov {
+          switch value {
             case (null) { (null, null) };
-            case (?v) { (?((k, v), null), null) };
-          };
+            case (?value) { (?((key, value), null), null) }
+          }
         };
         case (?((hd_k, hd_v), tl)) {
-          if (k_eq(k, hd_k)) {
+          if (equal(key, hd_k)) {
             // if value is null, remove the key; otherwise, replace key's old value
             // return old value
-            switch ov {
+            switch value {
               case (null) { (tl, ?hd_v) };
-              case (?v) { (?((hd_k, v), tl), ?hd_v) };
-            };
+              case (?value) { (?((hd_k, value), tl), ?hd_v) }
+            }
           } else {
             let (tl2, old_v) = rec(tl);
-            (?((hd_k, hd_v), tl2), old_v);
-          };
-        };
-      };
+            (?((hd_k, hd_v), tl2), old_v)
+          }
+        }
+      }
     };
-    rec(al);
+    rec(map)
   };
 
-  /// The entries of the final list consist of those pairs of
-  /// the left list whose keys are not present in the right list; the
-  /// "extra" values of the right list are irrelevant.
+  /// Produces a new map containing all entries from `map1` whose keys are not
+  /// contained in `map2`. The "extra" entries in `map2` are ignored. Compares
+  /// keys using the provided function `equal`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
+  /// var map1 : AssocList<Nat, Nat> = null;
+  /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
+  /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
+  /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
+  ///
+  /// // Create map2 = [(2, 12), (3, 13)]
+  /// var map2 : AssocList<Nat, Nat> = null;
+  /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
+  /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
+  ///
+  /// // Take the difference
+  /// let newMap = AssocList.diff(map1, map2, Nat.equal);
+  /// List.toArray(newMap)
+  /// ```
+  /// Runtime: O(size1 * size2)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func diff<K, V, W>(
-    al1 : AssocList<K, V>,
-    al2 : AssocList<K, W>,
-    keq : (K, K) -> Bool,
+    map1 : AssocList<K, V>,
+    map2 : AssocList<K, W>,
+    equal : (K, K) -> Bool
   ) : AssocList<K, V> {
     func rec(al1 : AssocList<K, V>) : AssocList<K, V> {
       switch al1 {
         case (null) { null };
         case (?((k, v1), tl)) {
-          switch (find<K, W>(al2, k, keq)) {
+          switch (find<K, W>(map2, k, equal)) {
             case (null) { ?((k, v1), rec(tl)) };
-            case (?v2) { rec(tl) };
-          };
-        };
-      };
+            case (?v2) { rec(tl) }
+          }
+        }
+      }
     };
-    rec(al1);
+    rec(map1)
   };
 
-  /// Transform and combine the entries of two association lists.
+  /// @deprecated
   public func mapAppend<K, V, W, X>(
-    al1 : AssocList<K, V>,
-    al2 : AssocList<K, W>,
-    vbin : (?V, ?W) -> X,
+    map1 : AssocList<K, V>,
+    map2 : AssocList<K, W>,
+    f : (?V, ?W) -> X
   ) : AssocList<K, X> = label profile_assocList_mapAppend : AssocList<K, X> {
     func rec(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> = label profile_assocList_mapAppend_rec : AssocList<K, X> {
       switch (al1, al2) {
         case (null, null) { null };
-        case (?((k, v), al1_), _) { ?((k, vbin(?v, null)), rec(al1_, al2)) };
-        case (null, ?((k, v), al2_)) { ?((k, vbin(null, ?v)), rec(null, al2_)) };
-      };
+        case (?((k, v), al1_), _) { ?((k, f(?v, null)), rec(al1_, al2)) };
+        case (null, ?((k, v), al2_)) { ?((k, f(null, ?v)), rec(null, al2_)) }
+      }
     };
-    rec(al1, al2);
+    rec(map1, map2)
   };
 
-  /// Specialized version of `disj`, optimized for disjoint sub-spaces of keyspace (no matching keys).
-  public func disjDisjoint<K, V, W, X>(
-    al1 : AssocList<K, V>,
-    al2 : AssocList<K, W>,
-    vbin : (?V, ?W) -> X,
-  ) : AssocList<K, X> = label profile_assocList_disjDisjoint : AssocList<K, X> {
-    mapAppend<K, V, W, X>(al1, al2, vbin);
-  };
-
-  /// This operation generalizes the notion of "set union" to finite maps.
-  /// Produces a "disjunctive image" of the two lists, where the values of
-  /// matching keys are combined with the given binary operator.
+  /// Produces a new map by mapping entries in `map1` and `map2` using `f` and
+  /// concatenating the results. Assumes that there are no collisions between
+  /// keys in `map1` and `map2`.
   ///
-  /// For unmatched entries, the operator is still applied to
-  /// create the value in the image.  To accomodate these various
-  /// situations, the operator accepts optional values, but is never
-  /// applied to (null, null).
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// import { trap } "mo:base/Debug";
+  ///
+  /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
+  /// var map1 : AssocList<Nat, Nat> = null;
+  /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
+  /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
+  /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
+  ///
+  /// // Create map2 = [(4, "14"), (3, "13")]
+  /// var map2 : AssocList<Nat, Text> = null;
+  /// map2 := AssocList.replace(map2, 4, Nat.equal, ?"14").0;
+  /// map2 := AssocList.replace(map2, 3, Nat.equal, ?"13").0;
+  ///
+  /// // Map and append the two AssocLists
+  /// let newMap =
+  ///   AssocList.disjDisjoint<Nat, Nat, Text, Text>(
+  ///     map1,
+  ///     map2,
+  ///     func((v1, v2) : (?Nat, ?Text)) {
+  ///       switch(v1, v2) {
+  ///         case(?v1, null) {
+  ///           debug_show(v1) // convert values from map1 to Text
+  ///         };
+  ///         case(null, ?v2) {
+  ///           v2 // keep values from map2 as Text
+  ///         };
+  ///         case _ {
+  ///           trap "These cases will never happen in mapAppend"
+  ///         }
+  ///       }
+  ///     }
+  ///   );
+  ///
+  /// List.toArray(newMap)
+  /// ```
+  /// Runtime: O(size1 + size2)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+  public func disjDisjoint<K, V, W, X>(
+    map1 : AssocList<K, V>,
+    map2 : AssocList<K, W>,
+    f : (?V, ?W) -> X
+  ) : AssocList<K, X> = label profile_assocList_disjDisjoint : AssocList<K, X> {
+    mapAppend<K, V, W, X>(map1, map2, f)
+  };
+
+  /// Creates a new map by merging entries from `map1` and `map2`, and mapping
+  /// them using `combine`. `combine` is also used to combine the values of colliding keys.
+  /// Keys are compared using the given `equal` function.
+  ///
+  /// NOTE: `combine` will never be applied to `(null, null)`.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// import { trap } "mo:base/Debug";
+  ///
+  /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
+  /// var map1 : AssocList<Nat, Nat> = null;
+  /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
+  /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
+  /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
+  ///
+  /// // Create map2 = [(2, 12), (3, 13)]
+  /// var map2 : AssocList<Nat, Nat> = null;
+  /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
+  /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
+  ///
+  /// // Merge the two maps using `combine`
+  /// let newMap =
+  ///   AssocList.disj<Nat, Nat, Nat, Nat>(
+  ///     map1,
+  ///     map2,
+  ///     Nat.equal,
+  ///     func((v1, v2) : (?Nat, ?Nat)) : Nat {
+  ///       switch(v1, v2) {
+  ///         case(?v1, ?v2) {
+  ///           v1 + v2 // combine values of colliding keys by adding them
+  ///         };
+  ///         case(?v1, null) {
+  ///           v1 // when a key doesn't collide, keep the original value
+  ///         };
+  ///         case(null, ?v2) {
+  ///           v2
+  ///         };
+  ///         case _ {
+  ///           trap "This case will never happen in disj"
+  ///         }
+  ///       }
+  ///     }
+  ///   );
+  ///
+  /// List.toArray(newMap)
+  /// ```
+  /// Runtime: O(size1 * size2)
+  ///
+  /// Space: O(size1 + size2)
+  ///
+  /// *Runtime and space assumes that `equal` and `combine` runs in O(1) time and space.
   public func disj<K, V, W, X>(
-    al1 : AssocList<K, V>,
-    al2 : AssocList<K, W>,
-    keq : (K, K) -> Bool,
-    vbin : (?V, ?W) -> X,
+    map1 : AssocList<K, V>,
+    map2 : AssocList<K, W>,
+    equal : (K, K) -> Bool,
+    combine : (?V, ?W) -> X
   ) : AssocList<K, X> {
     func rec1(al1Rec : AssocList<K, V>) : AssocList<K, X> {
       switch al1Rec {
@@ -137,63 +300,105 @@ module {
             switch al2 {
               case (null) { null };
               case (?((k, v2), tl)) {
-                switch (find<K, V>(al1, k, keq)) {
-                  case (null) { ?((k, vbin(null, ?v2)), rec2(tl)) };
-                  case (?v1) { ?((k, vbin(?v1, ?v2)), rec2(tl)) };
-                };
-              };
-            };
+                switch (find<K, V>(map1, k, equal)) {
+                  case (null) { ?((k, combine(null, ?v2)), rec2(tl)) };
+                  case (?v1) { ?((k, combine(?v1, ?v2)), rec2(tl)) }
+                }
+              }
+            }
           };
-          rec2(al2);
+          rec2(map2)
         };
         case (?((k, v1), tl)) {
-          switch (find<K, W>(al2, k, keq)) {
-            case (null) { ?((k, vbin(?v1, null)), rec1(tl)) };
-            case (?v2) { /* handled above */ rec1(tl) };
-          };
-        };
-      };
+          switch (find<K, W>(map2, k, equal)) {
+            case (null) { ?((k, combine(?v1, null)), rec1(tl)) };
+            case (?v2) { /* handled above */ rec1(tl) }
+          }
+        }
+      }
     };
-    rec1(al1);
+    rec1(map1)
   };
 
-  /// This operation generalizes the notion of "set intersection" to
-  /// finite maps.  Produces a "conjuctive image" of the two lists, where
-  /// the values of matching keys are combined with the given binary
-  /// operator, and unmatched entries are not present in the output.
+  /// Takes the intersection of `map1` and `map2`, only keeping colliding keys
+  /// and combining values using the `combine` function. Keys are compared using
+  /// the `equal` function.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
+  /// var map1 : AssocList<Nat, Nat> = null;
+  /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
+  /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
+  /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
+  ///
+  /// // Create map2 = [(2, 12), (3, 13)]
+  /// var map2 : AssocList<Nat, Nat> = null;
+  /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
+  /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
+  ///
+  /// // Take the intersection of the two maps, combining values by adding them
+  /// let newMap = AssocList.join<Nat, Nat, Nat, Nat>(map1, map2, Nat.equal, Nat.add);
+  ///
+  /// List.toArray(newMap)
+  /// ```
+  /// Runtime: O(size1 * size2)
+  ///
+  /// Space: O(size1 + size2)
+  ///
+  /// *Runtime and space assumes that `equal` and `combine` runs in O(1) time and space.
   public func join<K, V, W, X>(
-    al1 : AssocList<K, V>,
-    al2 : AssocList<K, W>,
-    keq : (K, K) -> Bool,
-    vbin : (V, W) -> X,
+    map1 : AssocList<K, V>,
+    map2 : AssocList<K, W>,
+    equal : (K, K) -> Bool,
+    combine : (V, W) -> X
   ) : AssocList<K, X> {
     func rec(al1 : AssocList<K, V>) : AssocList<K, X> {
       switch al1 {
         case (null) { null };
         case (?((k, v1), tl)) {
-          switch (find<K, W>(al2, k, keq)) {
+          switch (find<K, W>(map2, k, equal)) {
             case (null) { rec(tl) };
-            case (?v2) { ?((k, vbin(v1, v2)), rec(tl)) };
-          };
-        };
-      };
+            case (?v2) { ?((k, combine(v1, v2)), rec(tl)) }
+          }
+        }
+      }
     };
-    rec(al1);
+    rec(map1)
   };
 
-  /// Fold the entries based on the recursive list structure.
+  /// Collapses the elements in `map` into a single value by starting with `base`
+  /// and progessively combining elements into `base` with `combine`. Iteration runs
+  /// left to right.
+  ///
+  /// Example:
+  /// ```motoko include=import,initialize
+  /// // Create map = [(0, 10), (1, 11), (2, 12)]
+  /// var map : AssocList<Nat, Nat> = null;
+  /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
+  /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
+  /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
+  ///
+  /// // (0 * 10) + (1 * 11) + (2 * 12)
+  /// AssocList.fold<Nat, Nat, Nat>(map, 0, func(k, v, sumSoFar) = (k * v) + sumSoFar)
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `combine` runs in O(1) time and space.
   public func fold<K, V, X>(
-    al : AssocList<K, V>,
-    nil : X,
-    cons : (K, V, X) -> X,
+    map : AssocList<K, V>,
+    base : X,
+    combine : (K, V, X) -> X
   ) : X {
     func rec(al : AssocList<K, V>) : X {
       switch al {
-        case null { nil };
-        case (?((k, v), t)) { cons(k, v, rec(t)) };
-      };
+        case null { base };
+        case (?((k, v), t)) { combine(k, v, rec(t)) }
+      }
     };
-    rec(al);
-  };
-
-};
+    rec(map)
+  }
+}

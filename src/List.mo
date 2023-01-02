@@ -20,8 +20,8 @@ module {
   public func isNil<T>(l : List<T>) : Bool {
     switch l {
       case null { true };
-      case _ { false };
-    };
+      case _ { false }
+    }
   };
 
   /// Construct a list by pre-pending a value.
@@ -33,8 +33,8 @@ module {
     switch l {
       case null { null };
       case (?(x, null)) { ?x };
-      case (?(_, t)) { last<T>(t) };
-    };
+      case (?(_, t)) { last<T>(t) }
+    }
   };
 
   /// Treat the list as a stack.
@@ -42,8 +42,8 @@ module {
   public func pop<T>(l : List<T>) : (?T, List<T>) {
     switch l {
       case null { (null, null) };
-      case (?(h, t)) { (?h, t) };
-    };
+      case (?(h, t)) { (?h, t) }
+    }
   };
 
   /// Return the length of the list.
@@ -51,10 +51,10 @@ module {
     func rec(l : List<T>, n : Nat) : Nat {
       switch l {
         case null { n };
-        case (?(_, t)) { rec(t, n + 1) };
-      };
+        case (?(_, t)) { rec(t, n + 1) }
+      }
     };
-    rec(l, 0);
+    rec(l, 0)
   };
   /// Access any item in a list, zero-based.
   ///
@@ -65,8 +65,8 @@ module {
     switch (n, l) {
       case (_, null) { null };
       case (0, (?(h, t))) { ?h };
-      case (_, (?(_, t))) { get<T>(t, n - 1) };
-    };
+      case (_, (?(_, t))) { get<T>(t, n - 1) }
+    }
   };
 
   /// Reverses the list
@@ -74,10 +74,10 @@ module {
     func rec(l : List<T>, r : List<T>) : List<T> {
       switch l {
         case null { r };
-        case (?(h, t)) { rec(t, ?(h, r)) };
-      };
+        case (?(h, t)) { rec(t, ?(h, r)) }
+      }
     };
-    rec(l, null);
+    rec(l, null)
   };
 
   /// Call the given function with each list element in turn.
@@ -87,8 +87,8 @@ module {
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
       case null { () };
-      case (?(h, t)) { f(h); iterate<T>(t, f) };
-    };
+      case (?(h, t)) { f(h); iterate<T>(t, f) }
+    }
   };
 
   /// Call the given function on each list element and collect the results
@@ -96,8 +96,8 @@ module {
   public func map<T, S>(l : List<T>, f : T -> S) : List<S> {
     switch l {
       case null { null };
-      case (?(h, t)) { ?(f(h), map<T, S>(t, f)) };
-    };
+      case (?(h, t)) { ?(f(h), map<T, S>(t, f)) }
+    }
   };
 
   /// Create a new list with only those elements of the original list for which
@@ -107,12 +107,12 @@ module {
       case null { null };
       case (?(h, t)) {
         if (f(h)) {
-          ?(h, filter<T>(t, f));
+          ?(h, filter<T>(t, f))
         } else {
-          filter<T>(t, f);
-        };
-      };
-    };
+          filter<T>(t, f)
+        }
+      }
+    }
   };
 
   /// Create two new lists from the results of a given function (`f`).
@@ -126,13 +126,13 @@ module {
         if (f(h)) {
           // call f in-order
           let (l, r) = partition<T>(t, f);
-          (?(h, l), r);
+          (?(h, l), r)
         } else {
           let (l, r) = partition<T>(t, f);
-          (l, ?(h, r));
-        };
-      };
-    };
+          (l, ?(h, r))
+        }
+      }
+    }
   };
 
   /// Call the given function on each list element, and collect the non-null results
@@ -143,10 +143,10 @@ module {
       case (?(h, t)) {
         switch (f(h)) {
           case null { mapFilter<T, S>(t, f) };
-          case (?h_) { ?(h_, mapFilter<T, S>(t, f)) };
-        };
-      };
-    };
+          case (?h_) { ?(h_, mapFilter<T, S>(t, f)) }
+        }
+      }
+    }
   };
 
   /// Maps a Result-returning function over a List and returns either
@@ -158,32 +158,33 @@ module {
         case (?(head, tail)) {
           switch (f(head)) {
             case (#err(err)) { #err(err) };
-            case (#ok(ok)) { go(tail, ?(ok, acc)) };
-          };
-        };
-      };
+            case (#ok(ok)) { go(tail, ?(ok, acc)) }
+          }
+        }
+      }
     };
-    Result.mapOk(go(xs, null), func(xs : List<R>) : List<R> = reverse(xs));
+    Result.mapOk(go(xs, null), func(xs : List<R>) : List<R> = reverse(xs))
   };
 
   /// Append the elements from the reverse of one list to another list.
   func revAppend<T>(l : List<T>, m : List<T>) : List<T> {
     switch l {
       case null { m };
-      case (?(h, t)) { revAppend(t, ?(h, m)) };
-    };
+      case (?(h, t)) { revAppend(t, ?(h, m)) }
+    }
   };
 
   /// Append the elements from one list to another list.
   public func append<T>(l : List<T>, m : List<T>) : List<T> {
-    revAppend(reverse(l), m);
+    revAppend(reverse(l), m)
   };
 
   /// Concatenate a list of lists.
   ///
   /// In some languages, this operation is also known as a `list join`.
+  //FIXME: this is quadratic, not linear
   public func flatten<T>(l : List<List<T>>) : List<T> {
-    foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a, b) });
+    foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a, b) })
   };
 
   /// Returns the first `n` elements of the given list.
@@ -193,8 +194,8 @@ module {
     switch (l, n) {
       case (_, 0) { null };
       case (null, _) { null };
-      case (?(h, t), m) { ?(h, take<T>(t, m - 1)) };
-    };
+      case (?(h, t), m) { ?(h, take<T>(t, m - 1)) }
+    }
   };
 
   /// Drop the first `n` elements from the given list.
@@ -202,24 +203,24 @@ module {
     switch (l, n) {
       case (l_, 0) { l_ };
       case (null, _) { null };
-      case ((?(h, t)), m) { drop<T>(t, m - 1) };
-    };
+      case ((?(h, t)), m) { drop<T>(t, m - 1) }
+    }
   };
 
   /// Fold the list left-to-right using the given function (`f`).
   public func foldLeft<T, S>(l : List<T>, a : S, f : (S, T) -> S) : S {
     switch l {
       case null { a };
-      case (?(h, t)) { foldLeft(t, f(a, h), f) };
-    };
+      case (?(h, t)) { foldLeft(t, f(a, h), f) }
+    }
   };
 
   /// Fold the list right-to-left using the given function (`f`).
   public func foldRight<T, S>(l : List<T>, a : S, f : (T, S) -> S) : S {
     switch l {
       case null { a };
-      case (?(h, t)) { f(h, foldRight<T, S>(t, a, f)) };
-    };
+      case (?(h, t)) { f(h, foldRight<T, S>(t, a, f)) }
+    }
   };
 
   /// Return the first element for which the given predicate `f` is true,
@@ -227,8 +228,8 @@ module {
   public func find<T>(l : List<T>, f : T -> Bool) : ?T {
     switch l {
       case null { null };
-      case (?(h, t)) { if (f(h)) { ?h } else { find<T>(t, f) } };
-    };
+      case (?(h, t)) { if (f(h)) { ?h } else { find<T>(t, f) } }
+    }
   };
 
   /// Return true if there exists a list element for which
@@ -236,8 +237,8 @@ module {
   public func some<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null { false };
-      case (?(h, t)) { f(h) or some<T>(t, f) };
-    };
+      case (?(h, t)) { f(h) or some<T>(t, f) }
+    }
   };
 
   /// Return true if the given predicate `f` is true for all list
@@ -245,8 +246,8 @@ module {
   public func all<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null { true };
-      case (?(h, t)) { f(h) and all<T>(t, f) };
-    };
+      case (?(h, t)) { f(h) and all<T>(t, f) }
+    }
   };
 
   /// Merge two ordered lists into a single ordered list.
@@ -258,12 +259,12 @@ module {
       case (_, null) { l1 };
       case (?(h1, t1), ?(h2, t2)) {
         if (lte(h1, h2)) {
-          ?(h1, merge<T>(t1, l2, lte));
+          ?(h1, merge<T>(t1, l2, lte))
         } else {
-          ?(h2, merge<T>(l1, t2, lte));
-        };
-      };
-    };
+          ?(h2, merge<T>(l1, t2, lte))
+        }
+      }
+    }
   };
 
   /// Compare two lists using lexicographic ordering specified by the given relation `lte`.
@@ -275,25 +276,22 @@ module {
       case (?(h1, t1), ?(h2, t2)) {
         let hOrder = compElm(h1, h2);
         if (Order.isEqual(hOrder)) {
-          compare<T>(t1, t2, compElm);
+          compare<T>(t1, t2, compElm)
         } else {
-          hOrder;
-        };
-      };
-    };
+          hOrder
+        }
+      }
+    }
   };
 
   /// Compare two lists for equality as specified by the given relation `eq` on the elements.
-  ///
-  /// The function `isEq(l1, l2)` is equivalent to `lessThanEq(l1, l2) && lessThanEq(l2, l1)`,
-  /// but the former is more efficient.
   public func equal<T>(l1 : List<T>, l2 : List<T>, eq : (T, T) -> Bool) : Bool {
     switch (l1, l2) {
       case (null, null) { true };
       case (null, _) { false };
       case (_, null) { false };
-      case (?(h1, t1), ?(h2, t2)) { eq(h1, h2) and equal<T>(t1, t2, eq) };
-    };
+      case (?(h1, t1), ?(h2, t2)) { eq(h1, h2) and equal<T>(t1, t2, eq) }
+    }
   };
 
   /// Generate a list based on a length and a function that maps from
@@ -303,9 +301,9 @@ module {
     var l : List<T> = null;
     while (i < n) {
       l := ?(f(i), l);
-      i += 1;
+      i += 1
     };
-    reverse(l);
+    reverse(l)
   };
 
   /// Create a list with exactly one element.
@@ -317,9 +315,9 @@ module {
     var l : List<X> = null;
     while (i < n) {
       l := ?(x, l);
-      i += 1;
+      i += 1
     };
-    l;
+    l
   };
 
   /// Create a list of pairs from a pair of lists.
@@ -336,7 +334,7 @@ module {
   public func zipWith<X, Y, Z>(
     xs : List<X>,
     ys : List<Y>,
-    f : (X, Y) -> Z,
+    f : (X, Y) -> Z
   ) : List<Z> {
     switch (pop<X>(xs)) {
       case (null, _) { null };
@@ -344,11 +342,11 @@ module {
         switch (pop<Y>(ys)) {
           case (null, _) { null };
           case (?y, yt) {
-            push<Z>(f(x, y), zipWith<X, Y, Z>(xt, yt, f));
-          };
-        };
-      };
-    };
+            push<Z>(f(x, y), zipWith<X, Y, Z>(xt, yt, f))
+          }
+        }
+      }
+    }
   };
 
   /// Split the given list at the given zero-based index.
@@ -360,13 +358,13 @@ module {
           case (?h, t) {
             if (n == 1) { (make<X>(h), t) } else {
               let (l, r) = rec(n - 1, t);
-              (push<X>(h, l), r);
-            };
-          };
-        };
+              (push<X>(h, l), r)
+            }
+          }
+        }
       };
-      rec(n, xs);
-    };
+      rec(n, xs)
+    }
   };
 
   /// Split the given list into chunks of length `n`.
@@ -375,10 +373,10 @@ module {
   public func chunks<X>(n : Nat, xs : List<X>) : List<List<X>> {
     let (l, r) = split<X>(n, xs);
     if (isNil<X>(l)) {
-      null;
+      null
     } else {
-      push<List<X>>(l, chunks<X>(n, r));
-    };
+      push<List<X>>(l, chunks<X>(n, r))
+    }
   };
 
   /// Convert an array into a list.
@@ -387,9 +385,9 @@ module {
       xs,
       nil<A>(),
       func(x : A, ys : List<A>) : List<A> {
-        push<A>(x, ys);
-      },
-    );
+        push<A>(x, ys)
+      }
+    )
   };
 
   /// Convert a mutable array into a list.
@@ -406,10 +404,10 @@ module {
         list := popped.1;
         switch (popped.0) {
           case null { loop { assert false } };
-          case (?x) x;
-        };
-      },
-    );
+          case (?x) x
+        }
+      }
+    )
   };
 
   /// Create a mutable array from a list.
@@ -421,9 +419,9 @@ module {
     object {
       public func next() : ?A = switch state {
         case (?(hd, tl)) { state := tl; ?hd };
-        case _ null;
-      };
-    };
+        case _ null
+      }
+    }
   }
 
-};
+}

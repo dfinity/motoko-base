@@ -12,7 +12,7 @@ do {
   let isOdd = Function.compose<Int, Bool, Bool>(not_, isEven);
 
   assert (isOdd(0) == false);
-  assert (isOdd(1));
+  assert (isOdd(1))
 };
 
 do {
@@ -20,5 +20,5 @@ do {
 
   assert (Function.const<Bool, Text>(true)("abc"));
   assert (Function.const<Bool, Text>(false)("abc") == false);
-  assert (Function.const<Bool, (Text, Text)>(false)("abc", "abc") == false);
-};
+  assert (Function.const<Bool, (Text, Text)>(false)("abc", "abc") == false)
+}

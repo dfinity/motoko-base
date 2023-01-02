@@ -20,12 +20,12 @@ debug {
       var found = false;
       label here : () {
         for (y in b.vals()) {
-          if (eq(x, y)) { found := true; break here };
-        };
+          if (eq(x, y)) { found := true; break here }
+        }
       };
-      if (not found) { return false };
+      if (not found) { return false }
     };
-    return true;
+    return true
   };
 
   // note that `put("hello", ..., 0)` happens "after" t2, but map is immutable (applicative).
@@ -34,5 +34,5 @@ debug {
   func equalKV(a : (Text, Nat), b : (Text, Nat)) : Bool { a == b };
   assert (isSubSet(actual, expected, equalKV));
   assert (isSubSet(expected, actual, equalKV));
-  assert Trie.isValid(t2, false);
-};
+  assert Trie.isValid(t2, false)
+}
