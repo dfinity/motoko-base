@@ -34,26 +34,26 @@
 ///
 /// // we have to provide `put`, `get` and `remove` with 
 /// // a record of type `Key<K> = { hash : Hash.Hash; key : K }`;
-/// // thus we define the following function that takes a value of type K 
+/// // thus we define the following function that takes a value of type `K`
 /// // (in this case `Text`) and returns a `Key<K>` record.
 /// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
 ///
-/// // we start off by creating an empty Trie
+/// // we start off by creating an empty `Trie`
 /// let t0 : Trie<Text, Nat> = Trie.empty();
 ///
 /// // `put` requires 4 arguments:
-/// // - the trie we want to insert the value into
-/// // - the key of the value we want to insert (note that we use the `key` function defined above)
-/// // - a function that checks for equality of keys
-/// // - the value we want to insert
+/// // - the trie we want to insert the value into,
+/// // - the key of the value we want to insert (note that we use the `key` function defined above),
+/// // - a function that checks for equality of keys, and
+/// // - the value we want to insert.
 /// // 
-/// // when inserting a value, `put` returns a tuple of type (Trie<K, V>, ?V).
+/// // When inserting a value, `put` returns a tuple of type `(Trie<K, V>, ?V)`.
 /// // to get the new trie that contains the value,  we use the `0` projection 
 /// // and assign it to `t1` and `t2` respectively.
 /// let t1 : Trie<Text, Nat> = Trie.put(t0, key "hello", Text.equal, 42).0;
 /// let t2 : Trie<Text, Nat> = Trie.put(t1, key "world", Text.equal, 24).0;
 ///
-/// // if for a given key there already was a value in the Trie, `put` returns
+/// // If for a given key there already was a value in the trie, `put` returns
 /// // that previous value as the second element of the tuple.
 /// // in our case we have already inserted the value 42 for the key "hello", so
 /// // `put` returns 42 as the second element of the tuple.
@@ -70,19 +70,19 @@
 /// // - the key of the value we want to get (note that we use the `key` function defined above)
 /// // - a function that checks for equality of keys
 /// //
-/// // if the given key is nonexistent in the Trie, `get` returns `null`.
-/// var value = Trie.get(t3, key "hello", Text.equal); // Returns ?42
+/// // If the given key is nonexistent in the trie, `get` returns `null`.
+/// var value = Trie.get(t3, key "hello", Text.equal); // Returns `?42`
 /// assert(value == ?0);
-/// value := Trie.get(t3, key "universe", Text.equal); // Returns null
+/// value := Trie.get(t3, key "universe", Text.equal); // Returns `null`
 /// assert(value == null);
 ///
 /// // `remove` requires 3 arguments:
-/// // - the trie we want to remove the value from
-/// // - the key of the value we want to remove (note that we use the `key` function defined above)
-/// // - a function that checks for equality of keys
+/// // - the trie we want to remove the value from,
+/// // - the key of the value we want to remove (note that we use the `key` function defined above), and
+/// // - a function that checks for equality of keys.
 /// //
-/// // in the case of keys of type Text, we can use `Text.equal`
-/// // to check for equality of keys. `remove` returns a tuple of type (Trie<K, V>, ?V).
+/// // In the case of keys of type `Text`, we can use `Text.equal`
+/// // to check for equality of keys. Function `remove` returns a tuple of type `(Trie<K, V>, ?V)`.
 /// // where the second element of the tuple is the value that was removed, or `null` if
 /// // there was no value for the given key.
 /// let removedValue : ?Nat = Trie.remove(
