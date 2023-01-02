@@ -557,7 +557,7 @@ module {
   /// ```motoko include=import
   /// // Try to strip a nonexistent character
   /// let none = Text.stripStart("abc", #char '-'); // null
-  /// // Strip just one space
+  /// // Strip just one '-'
   /// let one = Text.stripStart("--abc", #char '-'); // ?"-abc"
   /// ```
   public func stripStart(t : Text, p : Pattern) : ?Text {
@@ -577,7 +577,7 @@ module {
   /// ```motoko include=import
   /// // Try to strip a nonexistent character
   /// let none = Text.stripEnd("xyz", #char '-'); // null
-  /// // Strip just one space
+  /// // Strip just one '-'
   /// let one = Text.stripEnd("xyz--", #char '-'); // ?"xyz-"
   /// ```
   public func stripEnd(t : Text, p : Pattern) : ?Text {
