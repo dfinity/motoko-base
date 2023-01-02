@@ -1253,7 +1253,7 @@ module {
 
   /// Filter the key-value pairs by a given predicate.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1263,7 +1263,7 @@ module {
   /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
   /// // `filter` takes a function that takes a key-value tuple
   /// // and returns true if the key-value pair should be included.
-  /// // in our case those are pairs with a value greater than 20
+  /// // In our case those are pairs with a value greater than 20
   /// let filteredTrie = Trie.filter<Text, Nat>(
   ///   trie,
   ///   func (k, v) = v > 20
@@ -1299,7 +1299,7 @@ module {
 
   /// Map and filter the key-value pairs by a given predicate.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1309,7 +1309,7 @@ module {
   /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
   /// // `mapFilter` takes a function that takes a key-value tuple
   /// // and returns a possibly-distinct value if the key-value pair should be included.
-  /// // in our case we filter for values greater than 20 and map them to their square
+  /// // In our case, we filter for values greater than 20 and map them to their square.
   /// let filteredTrie = Trie.mapFilter<Text, Nat, Nat>(
   ///   trie,
   ///   func (k, v) = if (v > 20) return ?(v**2) else return null
@@ -1435,7 +1435,7 @@ module {
 
   /// Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1509,7 +1509,7 @@ module {
 
   /// Remove the given key's value in the trie; return the new trie
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
