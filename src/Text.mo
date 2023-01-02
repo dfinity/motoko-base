@@ -490,7 +490,7 @@ module {
   /// Returns `true` if the input `Text` ends with a suffix matching the specified `Pattern`.
   ///
   /// ```motoko include=import
-  /// Text.endsWith("Motoko", #char "o") // true
+  /// Text.endsWith("Motoko", #char 'o') // true
   /// ```
   public func endsWith(t : Text, p : Pattern) : Bool {
     let s2 = sizeOfPattern(p);
