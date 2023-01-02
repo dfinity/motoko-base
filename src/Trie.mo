@@ -481,7 +481,7 @@ module {
   /// operation in various ways, and does not (in general) lose
   /// information; this operation is a simpler, special case.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -492,7 +492,7 @@ module {
   /// var trie2 = Trie.clone(trie); 
   /// // trie2 has a different value for "hello"
   /// trie2 := Trie.put(trie2, key "hello", Text.equal, 33).0; 
-  /// // mergedTrie has the value 42 for "hello", as the left Trie is preferred 
+  /// // mergedTrie has the value 42 for "hello", as the left trie is preferred 
   /// // in the case of a collision
   /// var mergedTrie = Trie.merge(trie, trie2, Text.equal); 
   /// var value = Trie.get(mergedTrie, key "hello", Text.equal);
@@ -542,11 +542,10 @@ module {
 
   /// <a name="mergedisjoint"></a>
   ///
-  /// Merge tries like `merge`, except signals a
-  /// dynamic error if there are collisions in common keys between the
+  /// Merge tries like `merge`, but traps if there are collisions in common keys between the
   /// left and right inputs.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -607,7 +606,7 @@ module {
   /// the left trie whose keys are not present in the right trie; the
   /// values of the right trie are irrelevant.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -619,8 +618,8 @@ module {
   /// // trie2 now has an additional key 
   /// trie2 := Trie.put(trie2, key "ciao", Text.equal, 33).0; 
   /// // `diff` returns a trie with the key "ciao",
-  /// // as this key is not present in trie
-  /// // (note that we pass trie2 as the left trie)
+  /// // as this key is not present in `trie`
+  /// // (note that we pass `trie2` as the left trie)
   /// Trie.diff(trie2, trie, Text.equal); 
   /// ```
   public func diff<K, V, W>(tl : Trie<K, V>, tr : Trie<K, W>, k_eq : (K, K) -> Bool) : Trie<K, V> {
@@ -848,11 +847,11 @@ module {
     )
   };
 
-  /// Returns an `Iter` over the key-value entries of the trie.
+  /// Returns an iterator of type `Iter` over the key-value entries of the trie.
   ///
   /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -861,7 +860,7 @@ module {
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
   /// // create an Iterator over key-value pairs of trie
   /// let iter = Trie.iter(trie); 
-  /// // add another key-value pair to trie.
+  /// // add another key-value pair to `trie`.
   /// // because we created our iterator before
   /// // this update, it will not contain this new key-value pair
   /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
@@ -1054,7 +1053,7 @@ module {
   /// Fold over the key-value pairs of the trie, using an accumulator.
   /// The key-value pairs have no reliable or meaningful ordering.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1064,8 +1063,8 @@ module {
   /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
   /// // create an accumulator, in our case the sum of all values
   /// func calculateSum(k : Text, v : Nat, acc : Nat) : Nat = acc + v;
-  /// // fold over the trie using the accumulator.
-  /// // note that 0 is the initial value of the accumulator
+  /// // Fold over the trie using the accumulator.
+  /// // Note that 0 is the initial value of the accumulator.
   /// let sum = Trie.fold(trie, calculateSum, 0);
   /// assert(sum == 77);
   /// ```
@@ -1088,7 +1087,7 @@ module {
 
   /// Test whether a given key-value pair is present, or not.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1096,7 +1095,7 @@ module {
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0; 
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0; 
   /// trie := Trie.put(trie, key "ciao", Text.equal, 3).0; 
-  /// // `some` takes a function that returns a boolean indicating whether
+  /// // `some` takes a function that returns a Boolean indicating whether
   /// // the key-value pair is present or not
   /// var isPresent = Trie.some(
   ///   trie,
@@ -1127,7 +1126,7 @@ module {
 
   /// Test whether all key-value pairs have a given property.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1171,7 +1170,7 @@ module {
   /// Note: This position is not meaningful; it's only here so that we
   /// can inject tries into arrays using functions like `Array.tabulate`.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1183,9 +1182,9 @@ module {
   /// // `tabulate` takes a size parameter, so we check the size of
   /// // the trie first
   /// let size = Trie.size(trie);
-  /// // now we can create an array of the same size passing `nth` as
+  /// // Now we can create an array of the same size passing `nth` as
   /// // the generator used to fill the array.
-  /// // note that `toArray` is a convenience function that does the
+  /// // Note that `toArray` is a convenience function that does the
   /// // same thing without you having to check whether the tuple is 
   /// // `null` or not, which we're not doing in this example
   /// let array = Array.tabulate<?(Key<Text>, Nat)>(
@@ -1214,7 +1213,7 @@ module {
 
   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
   ///
-  /// For a more detailed overview of how to use a Trie,
+  /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
   /// 
   /// Example:
@@ -1224,7 +1223,8 @@ module {
   /// trie := Trie.put(trie, key "ciao", Text.equal, 10).0; 
   /// // `toArray` takes a function that takes a key-value tuple
   /// // and returns a value of the type you want to use to fill
-  /// // the array. in our case we just return the value
+  /// // the array. 
+  /// // In our case we just return the value
   /// let array = Trie.toArray<Text, Nat, Nat>(
   ///   trie,
   ///   func (k, v) = v
