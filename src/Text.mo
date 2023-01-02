@@ -102,7 +102,7 @@ module {
   /// let b = "There";
   /// let together = a # b; // "HelloThere"
   /// let withSpace = a # " " # b; // "Hello There"
-  /// let togetherAgain = Text.concat(a,b); // "HelloThere"
+  /// let togetherAgain = Text.concat(a, b); // "HelloThere"
   /// ```
   public func concat(t1 : Text, t2 : Text) : Text = t1 # t2;
 
