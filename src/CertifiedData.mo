@@ -17,6 +17,21 @@ module {
   ///
   /// Must be called from an update method, else traps.
   /// Must be passed a blob of at most 32 bytes, else traps.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// import CertifiedData "mo:base/CertifiedData";
+  /// import Blob "mo:base/Blob";
+  ///
+  /// // Must be in an update call
+  ///
+  /// let array : [Nat8] = [1, 2, 3];
+  /// let blob = Blob.fromArray(a);
+  /// CertifiedData.set(blob);
+  /// ```
+  ///
+  /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
+  ///
   public let set : (data : Blob) -> () = Prim.setCertifiedData;
 
   /// Gets a certificate
@@ -24,6 +39,15 @@ module {
   /// Returns `null` if no certificate is available, e.g. when processing an
   /// update call or inter-canister call. This returns a non-`null` value only
   /// when processing a query call.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// import CertifiedData "mo:base/CertifiedData";
+  /// // Must be in a query call
+  ///
+  /// CertifiedData.getCertificate();
+  /// ```
+  /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
+  ///
   public let getCertificate : () -> ?Blob = Prim.getCertificate;
-
 }
