@@ -87,10 +87,11 @@ module {
   /// Example:
   /// ```motoko no-repl
   /// actor {
+  ///   stable var state = "";
   ///   public func example() : async Text {
   ///     let memoryUsage = StableMemory.stableVarQuery();
   ///     let beforeSize = (await memoryUsage()).size;
-  ///     ignore StableMemory.grow(10);
+  ///     state #= "abcdefghijklmnopqrstuvwxyz";
   ///     let afterSize = (await memoryUsage()).size;
   ///     debug_show (afterSize - beforeSize)
   ///   };
