@@ -19,13 +19,15 @@ module {
   /// Must be passed a blob of at most 32 bytes, else traps.
   ///
   /// Example:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import CertifiedData "mo:base/CertifiedData";
   /// import Blob "mo:base/Blob";
   ///
-  /// let a: [Nat8] = [1, 2, 3];
-  /// let b = Blob.fromArray(a);
-  /// CertifiedData.set(b);
+  /// // Must be in an update call
+  ///
+  /// let array : [Nat8] = [1, 2, 3];
+  /// let blob = Blob.fromArray(a);
+  /// CertifiedData.set(blob);
   /// ```
   ///
   /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
@@ -39,9 +41,10 @@ module {
   /// when processing a query call.
   ///
   /// Example:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import CertifiedData "mo:base/CertifiedData";
-  /// 
+  /// // Must be in a query call
+  ///
   /// CertifiedData.getCertificate();
   /// ```
   /// See a full example on how to use certified variables here: https://github.com/dfinity/examples/tree/master/motoko/cert-var
