@@ -29,7 +29,7 @@
 /// page size reported by Motoko function `size()`.
 /// This (and the cap on growth) are to accommodate Motoko's stable variables.
 /// Applications that plan to use Motoko stable variables sparingly or not at all can
-/// increase `--max-stable-pages` as desired, approaching the IC maximum (currently 8GiB).
+/// increase `--max-stable-pages` as desired, approaching the IC maximum (initially 8GiB, then 32Gib, currently 48Gib).
 /// All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 ///
 /// Usage:
