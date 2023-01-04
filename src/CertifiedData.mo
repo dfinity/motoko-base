@@ -26,7 +26,7 @@ module {
   /// // Must be in an update call
   ///
   /// let array : [Nat8] = [1, 2, 3];
-  /// let blob = Blob.fromArray(a);
+  /// let blob = Blob.fromArray(array);
   /// CertifiedData.set(blob);
   /// ```
   ///
