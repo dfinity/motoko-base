@@ -1,4 +1,11 @@
 {
-  "semi": false,
-  "trailingComma": "none"
+  "overrides": [
+    {
+      "files": "*.mo",
+      "options": {
+        "semi": false,
+        "trailingComma": "none"
+      }
+    }
+  ]
 }

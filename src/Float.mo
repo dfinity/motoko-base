@@ -1,6 +1,6 @@
 /// Double precision (64-bit) floating-point numbers in IEEE 754 representation.
 ///
-/// Common floating-point constants and functions.
+/// This module contains common floating-point constants and utility functions.
 ///
 /// Notation for special values in the documentation below:
 /// `+inf`: Positive infinity
@@ -684,6 +684,11 @@ module {
     }
   };
 
+
+  /// Returns the negation of `x`, `-x` .
+  /// @deprecated Use `Float.neg()` since this function name is misspelled.
+  public func neq(x : Float) : Float { -x }; // Typo: Should be changed to `neg`
+
   /// Returns the negation of `x`, `-x` .
   ///
   /// Changes the sign bit for infinity.
@@ -697,7 +702,7 @@ module {
   /// Float.neg(1.23) // => -1.23
   /// ```
   public func neg(x : Float) : Float { -x };
-
+  
   /// Returns the sum of `x` and `y`, `x + y`.
   ///
   /// Note: Numerical errors may occur, see comment above.
