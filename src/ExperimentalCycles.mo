@@ -1,7 +1,7 @@
 /// Managing cycles within actors on the Internet Computer (IC).
 ///
 /// The usage of the Internet Computer is measured, and paid for, in _cycles_.
-/// This library provides imperative operations for observing cycles, transferring cycles and
+/// This library provides imperative operations for observing cycles, transferring cycles, and
 /// observing refunds of cycles.
 ///
 /// **WARNING:** This low-level API is **experimental** and likely to change or even disappear.
