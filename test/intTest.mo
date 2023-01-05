@@ -630,27 +630,27 @@ run(
     [
       test(
         "positive number",
-        Int.neq(123),
+        Int.neg(123),
         M.equals(T.int(-123))
       ),
       test(
         "negative number",
-        Int.neq(-123),
+        Int.neg(-123),
         M.equals(T.int(123))
       ),
       test(
         "zero",
-        Int.neq(0),
+        Int.neg(0),
         M.equals(T.int(0))
       ),
       test(
         "positive large number",
-        Int.neq(largeNumber),
+        Int.neg(largeNumber),
         M.equals(T.int(-largeNumber))
       ),
       test(
         "negative large number",
-        Int.neq(-largeNumber),
+        Int.neg(-largeNumber),
         M.equals(T.int(largeNumber))
       )
     ]
