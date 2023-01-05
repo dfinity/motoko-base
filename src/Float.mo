@@ -664,9 +664,6 @@ module {
   /// Float.compare(0.123, 0.1234) // => #less
   /// ```
   public func compare(x : Float, y : Float) : { #less; #equal; #greater } {
-    let isNegative = func(number : Float) : Bool {
-      copySign(1.0, number) < 0.0
-    };
     if (isNaN(x)) {
       if (isNegative(x)) {
         if (isNaN(y) and isNegative(y)) { #equal } else { #less }
@@ -682,6 +679,10 @@ module {
     } else {
       if (x == y) { #equal } else if (x < y) { #less } else { #greater }
     }
+  };
+
+  func isNegative(number : Float) : Bool {
+    copySign(1.0, number) < 0.0
   };
 
   /// Returns the negation of `x`, `-x` .
