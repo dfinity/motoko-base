@@ -125,7 +125,7 @@ module {
   /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
   /// the first element and a new deque that contains all the remaining elements of `deque`.
   ///
-  /// This may involve dynamic splitting of the internally used two lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   ///
   /// Example:
   /// ```motoko
