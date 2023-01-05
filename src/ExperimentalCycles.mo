@@ -76,7 +76,7 @@ module {
   /// Returns the amount actually transferred, which may be less than
   /// requested, for example, if less is available, or if canister balance limits are reached.
   ///
-  /// Example for use on the IC:
+  /// Example for use on the IC (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
@@ -106,7 +106,7 @@ module {
   /// **Note**: The implicit register of added amounts is reset to zero on entry to
   /// a shared function and after each shared function call or resume from an await.
   ///
-  /// Example for use on the IC:
+  /// Example for use on the IC (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   ///
@@ -129,7 +129,7 @@ module {
   /// Instead, refunds are automatically added to the current balance,
   /// whether or not `refunded` is used to observe them.
   ///
-  /// Example for use on the IC:
+  /// Example for use on the IC (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
