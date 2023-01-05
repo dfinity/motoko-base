@@ -131,7 +131,7 @@ module {
   /// whether or not `refunded` is used to observe them.
   ///
   /// Example for use on the IC:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
   ///
