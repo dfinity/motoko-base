@@ -51,12 +51,12 @@ module {
   };
 
   /// A map from keys of type `K` to values of type `V` implemented as a red-black tree.
-  /// The entries of key-value pairs are ordered by `compareTo` function applied to the keys.
+  /// The entries of key-value pairs are ordered by `compare` function applied to the keys.
   ///
   /// The class enables imperative usage in object-oriented-style.
   /// However, internally, the class uses a functional implementation.
   ///
-  /// The `compareTo` function should implement a consistent total order among all possible values of `K` and
+  /// The `compare` function should implement a consistent total order among all possible values of `K` and
   /// for efficiency, only involves `O(1)` runtime costs without space allocation.
   ///
   /// Example:
@@ -70,7 +70,7 @@ module {
   /// Costs of instantiation (only empty tree):
   /// Runtime: `O(1)`.
   /// Space: `O(1)`.
-  public class RBTree<K, V>(compareTo : (K, K) -> O.Order) {
+  public class RBTree<K, V>(compare : (K, K) -> O.Order) {
 
     var tree : Tree<K, V> = (#leaf : Tree<K, V>);
 
@@ -97,7 +97,7 @@ module {
     };
 
     /// Retrieve the value associated with a given key, if present. Returns `null`, if the key is absent.
-    /// The key is searched according to the `compareTo` function defined on the class instantiation.
+    /// The key is searched according to the `compare` function defined on the class instantiation.
     ///
     /// Example:
     /// ```motoko include=initialize
@@ -111,11 +111,11 @@ module {
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compareTo` function implements an `O(1)` comparison.
+    /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func get(key : K) : ?V {
-      getRec(key, compareTo, tree)
+      getRec(key, compare, tree)
     };
 
     /// Replace the value associated with a given key, if the key is present.
@@ -138,11 +138,11 @@ module {
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compareTo` function implements an `O(1)` comparison.
+    /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func replace(key : K, value : V) : ?V {
-      let (res, t) = insertRoot(key, compareTo, value, tree);
+      let (res, t) = insertRoot(key, compare, value, tree);
       tree := t;
       res
     };
@@ -162,11 +162,11 @@ module {
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compareTo` function implements an `O(1)` comparison.
+    /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func put(key : K, value : V) {
-      let (res, t) = insertRoot(key, compareTo, value, tree);
+      let (res, t) = insertRoot(key, compare, value, tree);
       tree := t
     };
 
@@ -188,11 +188,11 @@ module {
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compareTo` function implements an `O(1)` comparison.
+    /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func delete(key : K) {
-      let (res, t) = removeRec(key, compareTo, tree);
+      let (res, t) = removeRec(key, compare, tree);
       tree := t
     };
 
@@ -213,11 +213,11 @@ module {
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compareTo` function implements an `O(1)` comparison.
+    /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func remove(key : K) : ?V {
-      let (res, t) = removeRec(key, compareTo, tree);
+      let (res, t) = removeRec(key, compare, tree);
       tree := t;
       res
     };
@@ -343,18 +343,18 @@ module {
   };
 
   /// Remove the value associated with a given key.
-  func removeRec<X, Y>(x : X, compareTo : (X, X) -> O.Order, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
+  func removeRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
     switch t {
       case (#leaf) { (null, #leaf) };
       case (#node(c, l, xy, r)) {
-        switch (compareTo(x, xy.0)) {
+        switch (compare(x, xy.0)) {
           case (#less) {
-            let (yo, l2) = removeRec(x, compareTo, l);
+            let (yo, l2) = removeRec(x, compare, l);
             (yo, #node(c, l2, xy, r))
           };
           case (#equal) { (xy.1, #node(c, l, (x, null), r)) };
           case (#greater) {
-            let (yo, r2) = removeRec(x, compareTo, r);
+            let (yo, r2) = removeRec(x, compare, r);
             (yo, #node(c, l, xy, r2))
           }
         }
@@ -382,25 +382,25 @@ module {
     }
   };
 
-  func insertRoot<X, Y>(x : X, compareTo : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
-    switch (insertRec(x, compareTo, y, t)) {
+  func insertRoot<X, Y>(x : X, compare : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
+    switch (insertRec(x, compare, y, t)) {
       case (_, #leaf) { assert false; loop {} };
       case (yo, #node(_, l, xy, r)) { (yo, #node(#B, l, xy, r)) }
     }
   };
 
-  func insertRec<X, Y>(x : X, compareTo : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
+  func insertRec<X, Y>(x : X, compare : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
     switch t {
       case (#leaf) { (null, #node(#R, #leaf, (x, ?y), #leaf)) };
       case (#node(c, l, xy, r)) {
-        switch (compareTo(x, xy.0)) {
+        switch (compare(x, xy.0)) {
           case (#less) {
-            let (yo, l2) = insertRec(x, compareTo, y, l);
+            let (yo, l2) = insertRec(x, compare, y, l);
             (yo, bal(c, l2, xy, r))
           };
           case (#equal) { (xy.1, #node(c, l, (x, ?y), r)) };
           case (#greater) {
-            let (yo, r2) = insertRec(x, compareTo, y, r);
+            let (yo, r2) = insertRec(x, compare, y, r);
             (yo, bal(c, l, xy, r2))
           }
         }
@@ -408,14 +408,14 @@ module {
     }
   };
 
-  func getRec<X, Y>(x : X, compareTo : (X, X) -> O.Order, t : Tree<X, Y>) : ?Y {
+  func getRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : ?Y {
     switch t {
       case (#leaf) { null };
       case (#node(c, l, xy, r)) {
-        switch (compareTo(x, xy.0)) {
-          case (#less) { getRec(x, compareTo, l) };
+        switch (compare(x, xy.0)) {
+          case (#less) { getRec(x, compare, l) };
           case (#equal) { xy.1 };
-          case (#greater) { getRec(x, compareTo, r) }
+          case (#greater) { getRec(x, compare, r) }
         }
       }
     }
