@@ -684,11 +684,6 @@ module {
     }
   };
 
-
-  /// Returns the negation of `x`, `-x` .
-  /// @deprecated Use `Float.neg()` since this function name is misspelled.
-  public func neq(x : Float) : Float { -x }; // Function name contains a typo, only retained for compatibility.
-
   /// Returns the negation of `x`, `-x` .
   ///
   /// Changes the sign bit for infinity.
@@ -702,7 +697,7 @@ module {
   /// Float.neg(1.23) // => -1.23
   /// ```
   public func neg(x : Float) : Float { -x };
-  
+
   /// Returns the sum of `x` and `y`, `x + y`.
   ///
   /// Note: Numerical errors may occur, see comment above.
