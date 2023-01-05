@@ -77,7 +77,7 @@ module {
   /// requested, for example, if less is available, or if canister balance limits are reached.
   ///
   /// Example for use on the IC:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
   ///
