@@ -123,8 +123,7 @@ module {
 
   /// Remove the element on the front end of a deque.
   /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  /// the first element and the new deque that contains all the elements of `deque`,
-  /// however, without the front element.
+  /// the first element and a new deque that contains all the remaining elements of `deque`.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
   ///
