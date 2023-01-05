@@ -30,7 +30,7 @@
 ///     Debug.print("Operation obtained: " # debug_show(obtained)); // => 10_000_000
 ///     Debug.print("Operation balance: " # debug_show(Cycles.balance())); // increased by 10_000_000
 ///     Debug.print("Operation available: " # debug_show(Cycles.available())); // decreased by 10_000_000
-/// }
+///   }
 /// }
 /// ```
 import Prim "mo:⛔";
@@ -44,10 +44,10 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// actor {
-  ///     public func main(): async() {
-  ///         let balance = Cycles.balance();
-  ///         Debug.print("Balance: " # debug_show(balance));
-  ///     }
+  ///   public func main() : async() {
+  ///     let balance = Cycles.balance();
+  ///     Debug.print("Balance: " # debug_show(balance));
+  ///   }
   /// }
   /// ```
   public let balance : () -> (amount : Nat) = Prim.cyclesBalance;
@@ -64,10 +64,10 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// actor {
-  ///     public func main(): async() {
-  ///         let available = Cycles.available();
-  ///         Debug.print("Available: " # debug_show(available));
-  ///     }
+  ///   public func main() : async() {
+  ///     let available = Cycles.available();
+  ///     Debug.print("Available: " # debug_show(available));
+  ///   }
   /// }
   /// ```
   public let available : () -> (amount : Nat) = Prim.cyclesAvailable;
@@ -82,15 +82,15 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// actor {
-  ///     public func main(): async() {
-  ///         Cycles.add(15_000_000);
-  ///         await operation(); // accepts 10_000_000 cycles
-  ///     };
+  ///   public func main() : async() {
+  ///     Cycles.add(15_000_000);
+  ///     await operation(); // accepts 10_000_000 cycles
+  ///   };
   ///
-  ///     func operation(): async() {
-  ///         let obtained = Cycles.accept(10_000_000);
-  ///         Debug.print("Obtained: " # debug_show(obtained)); // => 10_000_000
-  ///     }
+  ///   func operation() : async() {
+  ///     let obtained = Cycles.accept(10_000_000);
+  ///     Debug.print("Obtained: " # debug_show(obtained)); // => 10_000_000
+  ///   }
   /// }
   /// ```
   public let accept : (amount : Nat) -> (accepted : Nat) = Prim.cyclesAccept;
@@ -109,17 +109,16 @@ module {
   /// Example for use on the IC:
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
-  /// import Debug "mo:base/Debug";
   ///
   /// actor {
-  ///     func operation(): async() {
-  ///         ignore Cycles.accept(10_000_000);
-  ///     };
+  ///   func operation() : async() {
+  ///     ignore Cycles.accept(10_000_000);
+  ///   };
   ///
-  ///     public func main(): async() {
-  ///         Cycles.add(15_000_000);
-  ///         await operation();
-  ///     }
+  ///   public func main() : async() {
+  ///     Cycles.add(15_000_000);
+  ///     await operation();
+  ///   }
   /// }
   /// ```
   public let add : (amount : Nat) -> () = Prim.cyclesAdd;
@@ -136,15 +135,15 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// actor {
-  ///     func operation(): async() {
-  ///         ignore Cycles.accept(10_000_000);
-  ///     };
+  ///   func operation() : async() {
+  ///     ignore Cycles.accept(10_000_000);
+  ///   };
   ///
-  ///     public func main(): async() {
-  ///         Cycles.add(15_000_000);
-  ///         await operation(); // accepts 10_000_000 cycles
-  ///         Debug.print("Refunded: " # debug_show(Cycles.refunded())); // 5_000_000
-  ///     }
+  ///   public func main() : async() {
+  ///     Cycles.add(15_000_000);
+  ///     await operation(); // accepts 10_000_000 cycles
+  ///     Debug.print("Refunded: " # debug_show(Cycles.refunded())); // 5_000_000
+  ///   }
   /// }
   /// ```
   public let refunded : () -> (amount : Nat) = Prim.cyclesRefunded;
