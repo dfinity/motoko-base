@@ -107,7 +107,7 @@ module {
   /// a shared function and after each shared function call or resume from an await.
   ///
   /// Example for use on the IC:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
   ///
