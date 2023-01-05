@@ -203,6 +203,10 @@ module {
   };
 
   /// Returns the negation of `x`, `-x` .
+  /// @deprecated Use `Int.neg()` since this function name is misspelled.;
+  public func neq(x : Int) : Int { -x }; // function name contains a typo, only retained for compatibility.
+
+  /// Returns the negation of `x`, `-x` .
   ///
   /// Example:
   /// ```motoko
