@@ -8,12 +8,10 @@ import M "mo:matchers/Matchers";
 
 let { run; test; suite } = Suite;
 
-let maximumInt32 = 2_147_483_647 : Int32;
-let maximumInt32asInt = 2_147_483_647 : Int;
-let maximumInt32asNat32 = 2_147_483_647 : Nat32;
+let maximumInt32asInt = +2 ** 31 - 1 : Int;
+let maximumInt32asNat32 = 2 ** 31 - 1 : Nat32;
 
-let minimumInt32 = -2_147_483_648 : Int32;
-let minimumInt32asInt = -2_147_483_648 : Int;
+let minimumInt32asInt = -2 ** 31 : Int;
 
 let maximumNat32 = 4_294_967_295 : Nat32;
 
@@ -53,16 +51,36 @@ class OrderTestable(value : Order) : T.TestableItem<Order> {
 
 run(
     suite(
+        "constants",
+        [
+            test(
+                "minimum value",
+                Int32.minimumValue,
+                M.equals(Int32Testable(Int32.fromInt(-2 ** 31)))
+            ),
+            test(
+                "maximum value",
+                Int32.maximumValue,
+                M.equals(Int32Testable(Int32.fromInt(+2 ** 31 - 1)))
+            ),
+        ]
+    )
+);
+
+/* --------------------------------------- */
+
+run(
+    suite(
         "toInt",
         [
             test(
                 "maximum number",
-                Int32.toInt(maximumInt32),
+                Int32.toInt(Int32.maximumValue),
                 M.equals(T.int(maximumInt32asInt))
             ),
             test(
                 "minimum number",
-                Int32.toInt(minimumInt32),
+                Int32.toInt(Int32.minimumValue),
                 M.equals(T.int(minimumInt32asInt))
             ),
             test(
@@ -93,12 +111,12 @@ run(
             test(
                 "maximum number",
                 Int32.fromInt(maximumInt32asInt),
-                M.equals(Int32Testable(maximumInt32))
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum number",
                 Int32.fromInt(minimumInt32asInt),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "one",
@@ -128,12 +146,12 @@ run(
             test(
                 "maximum number",
                 Int32.fromIntWrap(maximumInt32asInt),
-                M.equals(Int32Testable(maximumInt32))
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum number",
                 Int32.fromIntWrap(minimumInt32asInt),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "one",
@@ -153,12 +171,12 @@ run(
             test(
                 "overflow",
                 Int32.fromIntWrap(maximumInt32asInt + 1),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "underflow",
                 Int32.fromIntWrap(minimumInt32asInt - 1),
-                M.equals(Int32Testable(maximumInt32))
+                M.equals(Int32Testable(Int32.maximumValue))
             )
         ]
     )
@@ -173,7 +191,7 @@ run(
             test(
                 "maximum number",
                 Int32.fromNat32(maximumInt32asNat32),
-                M.equals(Int32Testable(maximumInt32))
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "one",
@@ -188,7 +206,7 @@ run(
             test(
                 "overflow",
                 Int32.fromNat32(maximumInt32asNat32 + 1),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             )
         ]
     )
@@ -202,7 +220,7 @@ run(
         [
             test(
                 "maximum number",
-                Int32.toNat32(maximumInt32),
+                Int32.toNat32(Int32.maximumValue),
                 M.equals(Nat32Testable(maximumInt32asNat32))
             ),
             test(
@@ -247,12 +265,12 @@ run(
             ),
             test(
                 "maximum number",
-                Int32.toText(maximumInt32),
+                Int32.toText(Int32.maximumValue),
                 M.equals(T.text("2147483647"))
             ),
             test(
                 "minimum number",
-                Int32.toText(minimumInt32),
+                Int32.toText(Int32.minimumValue),
                 M.equals(T.text("-2147483648"))
             )
         ]
@@ -283,13 +301,13 @@ run(
             ),
             test(
                 "maximum number",
-                Int32.abs(maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.abs(Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "smallest possible",
-                Int32.abs(-maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.abs(-Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             )
         ]
     )
@@ -328,8 +346,8 @@ run(
             ),
             test(
                 "maximum and minimum number",
-                Int32.min(maximumInt32, minimumInt32),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.min(Int32.maximumValue, Int32.minimumValue),
+                M.equals(Int32Testable(Int32.minimumValue))
             )
         ]
     )
@@ -368,8 +386,8 @@ run(
             ),
             test(
                 "maximum and minimum number",
-                Int32.max(maximumInt32, minimumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.max(Int32.maximumValue, Int32.minimumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             )
         ]
     )
@@ -413,17 +431,17 @@ run(
             ),
             test(
                 "maxmimum equal",
-                Int32.equal(maximumInt32, maximumInt32),
+                Int32.equal(Int32.maximumValue, Int32.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum equal",
-                Int32.equal(minimumInt32, minimumInt32),
+                Int32.equal(Int32.minimumValue, Int32.minimumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and maximum",
-                Int32.equal(minimumInt32, maximumInt32),
+                Int32.equal(Int32.minimumValue, Int32.maximumValue),
                 M.equals(T.bool(false))
             )
         ]
@@ -468,17 +486,17 @@ run(
             ),
             test(
                 "maxmimum equal",
-                Int32.notEqual(maximumInt32, maximumInt32),
+                Int32.notEqual(Int32.maximumValue, Int32.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum equal",
-                Int32.notEqual(minimumInt32, minimumInt32),
+                Int32.notEqual(Int32.minimumValue, Int32.minimumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and maximum",
-                Int32.notEqual(minimumInt32, maximumInt32),
+                Int32.notEqual(Int32.minimumValue, Int32.maximumValue),
                 M.equals(T.bool(true))
             )
         ]
@@ -538,22 +556,22 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.less(minimumInt32, maximumInt32),
+                Int32.less(Int32.minimumValue, Int32.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and minimum",
-                Int32.less(maximumInt32, minimumInt32),
+                Int32.less(Int32.maximumValue, Int32.minimumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and maximum",
-                Int32.less(maximumInt32, maximumInt32),
+                Int32.less(Int32.maximumValue, Int32.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and minimum",
-                Int32.less(minimumInt32, minimumInt32),
+                Int32.less(Int32.minimumValue, Int32.minimumValue),
                 M.equals(T.bool(false))
             )
         ]
@@ -613,22 +631,22 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.lessOrEqual(minimumInt32, maximumInt32),
+                Int32.lessOrEqual(Int32.minimumValue, Int32.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and minimum",
-                Int32.lessOrEqual(maximumInt32, minimumInt32),
+                Int32.lessOrEqual(Int32.maximumValue, Int32.minimumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and maximum",
-                Int32.lessOrEqual(maximumInt32, maximumInt32),
+                Int32.lessOrEqual(Int32.maximumValue, Int32.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and minimum",
-                Int32.lessOrEqual(minimumInt32, minimumInt32),
+                Int32.lessOrEqual(Int32.minimumValue, Int32.minimumValue),
                 M.equals(T.bool(true))
             )
         ]
@@ -688,22 +706,22 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.greater(minimumInt32, maximumInt32),
+                Int32.greater(Int32.minimumValue, Int32.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and minimum",
-                Int32.greater(maximumInt32, minimumInt32),
+                Int32.greater(Int32.maximumValue, Int32.minimumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and maximum",
-                Int32.greater(maximumInt32, maximumInt32),
+                Int32.greater(Int32.maximumValue, Int32.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and minimum",
-                Int32.greater(minimumInt32, minimumInt32),
+                Int32.greater(Int32.minimumValue, Int32.minimumValue),
                 M.equals(T.bool(false))
             )
         ]
@@ -763,22 +781,22 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.greaterOrEqual(minimumInt32, maximumInt32),
+                Int32.greaterOrEqual(Int32.minimumValue, Int32.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and minimum",
-                Int32.greaterOrEqual(maximumInt32, minimumInt32),
+                Int32.greaterOrEqual(Int32.maximumValue, Int32.minimumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and maximum",
-                Int32.greaterOrEqual(maximumInt32, maximumInt32),
+                Int32.greaterOrEqual(Int32.maximumValue, Int32.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and minimum",
-                Int32.greaterOrEqual(minimumInt32, minimumInt32),
+                Int32.greaterOrEqual(Int32.minimumValue, Int32.minimumValue),
                 M.equals(T.bool(true))
             )
         ]
@@ -838,22 +856,22 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.compare(minimumInt32, maximumInt32),
+                Int32.compare(Int32.minimumValue, Int32.maximumValue),
                 M.equals(OrderTestable(#less))
             ),
             test(
                 "maximum and minimum",
-                Int32.compare(maximumInt32, minimumInt32),
+                Int32.compare(Int32.maximumValue, Int32.minimumValue),
                 M.equals(OrderTestable(#greater))
             ),
             test(
                 "maximum and maximum",
-                Int32.compare(maximumInt32, maximumInt32),
+                Int32.compare(Int32.maximumValue, Int32.maximumValue),
                 M.equals(OrderTestable(#equal))
             ),
             test(
                 "minimum and minimum",
-                Int32.compare(minimumInt32, minimumInt32),
+                Int32.compare(Int32.minimumValue, Int32.minimumValue),
                 M.equals(OrderTestable(#equal))
             )
         ]
@@ -883,13 +901,13 @@ run(
             ),
             test(
                 "maximum number",
-                Int32.neg(maximumInt32),
-                M.equals(Int32Testable(-maximumInt32))
+                Int32.neg(Int32.maximumValue),
+                M.equals(Int32Testable(-Int32.maximumValue))
             ),
             test(
                 "smallest possible",
-                Int32.neg(-maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.neg(-Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             )
         ]
     )
@@ -923,7 +941,7 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.add(minimumInt32, maximumInt32),
+                Int32.add(Int32.minimumValue, Int32.maximumValue),
                 M.equals(Int32Testable(-1))
             )
         ]
@@ -958,7 +976,7 @@ run(
             ),
             test(
                 "maximum and maximum",
-                Int32.sub(maximumInt32, maximumInt32),
+                Int32.sub(Int32.maximumValue, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             )
         ]
@@ -993,23 +1011,23 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.mul(0, maximumInt32),
+                Int32.mul(0, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "minimum and zero",
-                Int32.mul(minimumInt32, 0),
+                Int32.mul(Int32.minimumValue, 0),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "one and maximum",
-                Int32.mul(1, maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.mul(1, Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum and one",
-                Int32.mul(minimumInt32, 1),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.mul(Int32.minimumValue, 1),
+                M.equals(Int32Testable(Int32.minimumValue))
             )
         ]
     )
@@ -1053,22 +1071,22 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.div(0, maximumInt32),
+                Int32.div(0, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "zero and minimum",
-                Int32.div(0, minimumInt32),
+                Int32.div(0, Int32.minimumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "maximum and maximum",
-                Int32.div(maximumInt32, maximumInt32),
+                Int32.div(Int32.maximumValue, Int32.maximumValue),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "minimum and minimum",
-                Int32.div(minimumInt32, minimumInt32),
+                Int32.div(Int32.minimumValue, Int32.minimumValue),
                 M.equals(Int32Testable(1))
             )
         ]
@@ -1113,22 +1131,22 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.rem(0, maximumInt32),
+                Int32.rem(0, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "zero and minimum",
-                Int32.rem(0, minimumInt32),
+                Int32.rem(0, Int32.minimumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "maximum and maximum",
-                Int32.rem(maximumInt32, maximumInt32),
+                Int32.rem(Int32.maximumValue, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "minimum and minimum",
-                Int32.rem(minimumInt32, minimumInt32),
+                Int32.rem(Int32.minimumValue, Int32.minimumValue),
                 M.equals(Int32Testable(0))
             )
         ]
@@ -1168,22 +1186,22 @@ run(
             ),
             test(
                 "maximum and zero",
-                Int32.pow(maximumInt32, 0),
+                Int32.pow(Int32.maximumValue, 0),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "minimum and zero",
-                Int32.pow(minimumInt32, 0),
+                Int32.pow(Int32.minimumValue, 0),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "plus one and maximum",
-                Int32.pow(1, maximumInt32),
+                Int32.pow(1, Int32.maximumValue),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "minus one and maximum",
-                Int32.pow(-1, maximumInt32),
+                Int32.pow(-1, Int32.maximumValue),
                 M.equals(Int32Testable(-1))
             )
         ]
@@ -1192,35 +1210,33 @@ run(
 
 /* --------------------------------------- */
 
-let unused = 0 : Int32; // Issue: bitnot has superfluous second argument.
-
 run(
     suite(
         "bitnot",
         [
             test(
                 "zero",
-                Int32.bitnot(0, unused),
+                Int32.bitnot(0),
                 M.equals(Int32Testable(-1))
             ),
             test(
                 "minus 1",
-                Int32.bitnot(-1, unused),
+                Int32.bitnot(-1),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "maximum",
-                Int32.bitnot(maximumInt32, unused),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.bitnot(Int32.maximumValue),
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "minimum",
-                Int32.bitnot(minimumInt32, unused),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.bitnot(Int32.minimumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "arbitrary",
-                Int32.bitnot(1234, 0),
+                Int32.bitnot(1234),
                 M.equals(Int32Testable(-1235))
             )
         ]
@@ -1265,17 +1281,17 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.bitand(0, maximumInt32),
+                Int32.bitand(0, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "minimum and zero",
-                Int32.bitand(minimumInt32, 0),
+                Int32.bitand(Int32.minimumValue, 0),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "minimum and maximum",
-                Int32.bitand(minimumInt32, maximumInt32),
+                Int32.bitand(Int32.minimumValue, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             )
         ]
@@ -1320,17 +1336,17 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.bitor(0, maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.bitor(0, Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum and zero",
-                Int32.bitor(minimumInt32, 0),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.bitor(Int32.minimumValue, 0),
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "minimum and maximum",
-                Int32.bitor(minimumInt32, maximumInt32),
+                Int32.bitor(Int32.minimumValue, Int32.maximumValue),
                 M.equals(Int32Testable(-1))
             )
         ]
@@ -1375,17 +1391,17 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.bitxor(0, maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.bitxor(0, Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum and zero",
-                Int32.bitxor(minimumInt32, 0),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.bitxor(Int32.minimumValue, 0),
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "minimum and maximum",
-                Int32.bitxor(minimumInt32, maximumInt32),
+                Int32.bitxor(Int32.minimumValue, Int32.maximumValue),
                 M.equals(Int32Testable(-1))
             )
         ]
@@ -1421,12 +1437,12 @@ run(
             test(
                 "one maximum shift",
                 Int32.bitshiftLeft(1, 31),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "minimum number",
                 Int32.bitshiftLeft(-1, 31),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "discard overflow",
@@ -1485,7 +1501,7 @@ run(
             ),
             test(
                 "minimum number",
-                Int32.bitshiftRight(minimumInt32, 31),
+                Int32.bitshiftRight(Int32.minimumValue, 31),
                 M.equals(Int32Testable(-1))
             ),
             test(
@@ -1550,13 +1566,13 @@ run(
             ),
             test(
                 "maximum number",
-                Int32.bitrotLeft(maximumInt32, 1),
+                Int32.bitrotLeft(Int32.maximumValue, 1),
                 M.equals(Int32Testable(-2))
             ),
             test(
                 "minimum number",
                 Int32.bitrotLeft(1, 31),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "opposite rotation",
@@ -1611,11 +1627,11 @@ run(
             test(
                 "maximum number",
                 Int32.bitrotRight(-2, 1),
-                M.equals(Int32Testable(maximumInt32))
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum number",
-                Int32.bitrotRight(minimumInt32, 31),
+                Int32.bitrotRight(Int32.minimumValue, 31),
                 M.equals(Int32Testable(1))
             ),
             test(
@@ -1889,12 +1905,12 @@ run(
             ),
             test(
                 "minimum value",
-                Int32.bitcountNonZero(minimumInt32),
+                Int32.bitcountNonZero(Int32.minimumValue),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "maximum value",
-                Int32.bitcountNonZero(maximumInt32),
+                Int32.bitcountNonZero(Int32.maximumValue),
                 M.equals(Int32Testable(31))
             ),
             test(
@@ -1949,12 +1965,12 @@ run(
             ),
             test(
                 "minimum value",
-                Int32.bitcountLeadingZero(minimumInt32),
+                Int32.bitcountLeadingZero(Int32.minimumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "maximum value",
-                Int32.bitcountLeadingZero(maximumInt32),
+                Int32.bitcountLeadingZero(Int32.maximumValue),
                 M.equals(Int32Testable(1))
             ),
             test(
@@ -2009,12 +2025,12 @@ run(
             ),
             test(
                 "minimum value",
-                Int32.bitcountTrailingZero(minimumInt32),
+                Int32.bitcountTrailingZero(Int32.minimumValue),
                 M.equals(Int32Testable(31))
             ),
             test(
                 "maximum value",
-                Int32.bitcountTrailingZero(maximumInt32),
+                Int32.bitcountTrailingZero(Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
@@ -2059,27 +2075,27 @@ run(
             ),
             test(
                 "minimum and maximum",
-                Int32.addWrap(minimumInt32, maximumInt32),
+                Int32.addWrap(Int32.minimumValue, Int32.maximumValue),
                 M.equals(Int32Testable(-1))
             ),
             test(
                 "small overflow",
-                Int32.addWrap(maximumInt32, 1),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.addWrap(Int32.maximumValue, 1),
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "large overflow",
-                Int32.addWrap(maximumInt32, maximumInt32),
+                Int32.addWrap(Int32.maximumValue, Int32.maximumValue),
                 M.equals(Int32Testable(-2))
             ),
             test(
                 "small underflow",
-                Int32.addWrap(minimumInt32, -1),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.addWrap(Int32.minimumValue, -1),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "large underflow",
-                Int32.addWrap(minimumInt32, minimumInt32),
+                Int32.addWrap(Int32.minimumValue, Int32.minimumValue),
                 M.equals(Int32Testable(0))
             ),
         ]
@@ -2114,27 +2130,27 @@ run(
             ),
             test(
                 "maximum and maximum",
-                Int32.subWrap(maximumInt32, maximumInt32),
+                Int32.subWrap(Int32.maximumValue, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "small overflow",
-                Int32.subWrap(maximumInt32, -1),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.subWrap(Int32.maximumValue, -1),
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "large overflow",
-                Int32.subWrap(maximumInt32, minimumInt32),
+                Int32.subWrap(Int32.maximumValue, Int32.minimumValue),
                 M.equals(Int32Testable(-1))
             ),
             test(
                 "small underflow",
-                Int32.subWrap(minimumInt32, 1),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.subWrap(Int32.minimumValue, 1),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "large underflow",
-                Int32.subWrap(minimumInt32, maximumInt32),
+                Int32.subWrap(Int32.minimumValue, Int32.maximumValue),
                 M.equals(Int32Testable(1))
             ),
         ]
@@ -2169,42 +2185,42 @@ run(
             ),
             test(
                 "zero and maximum",
-                Int32.mulWrap(0, maximumInt32),
+                Int32.mulWrap(0, Int32.maximumValue),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "minimum and zero",
-                Int32.mulWrap(minimumInt32, 0),
+                Int32.mulWrap(Int32.minimumValue, 0),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "one and maximum",
-                Int32.mulWrap(1, maximumInt32),
-                M.equals(Int32Testable(maximumInt32))
+                Int32.mulWrap(1, Int32.maximumValue),
+                M.equals(Int32Testable(Int32.maximumValue))
             ),
             test(
                 "minimum and one",
-                Int32.mulWrap(minimumInt32, 1),
-                M.equals(Int32Testable(minimumInt32))
+                Int32.mulWrap(Int32.minimumValue, 1),
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "small overflow",
-                Int32.mulWrap(2, maximumInt32),
+                Int32.mulWrap(2, Int32.maximumValue),
                 M.equals(Int32Testable(-2))
             ),
             test(
                 "large overflow",
-                Int32.mulWrap(maximumInt32, maximumInt32),
+                Int32.mulWrap(Int32.maximumValue, Int32.maximumValue),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "small underflow",
-                Int32.mulWrap(minimumInt32, 2),
+                Int32.mulWrap(Int32.minimumValue, 2),
                 M.equals(Int32Testable(0))
             ),
             test(
                 "large underflow",
-                Int32.mulWrap(minimumInt32, minimumInt32),
+                Int32.mulWrap(Int32.minimumValue, Int32.minimumValue),
                 M.equals(Int32Testable(0))
             ),
         ]
@@ -2239,37 +2255,37 @@ run(
             ),
             test(
                 "maximum and zero",
-                Int32.powWrap(maximumInt32, 0),
+                Int32.powWrap(Int32.maximumValue, 0),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "minimum and zero",
-                Int32.powWrap(minimumInt32, 0),
+                Int32.powWrap(Int32.minimumValue, 0),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "plus one and maximum",
-                Int32.powWrap(1, maximumInt32),
+                Int32.powWrap(1, Int32.maximumValue),
                 M.equals(Int32Testable(1))
             ),
             test(
                 "minus one and maximum",
-                Int32.powWrap(-1, maximumInt32),
+                Int32.powWrap(-1, Int32.maximumValue),
                 M.equals(Int32Testable(-1))
             ),
             test(
                 "minimum value",
                 Int32.powWrap(-2, 31),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "small overflow",
                 Int32.powWrap(2, 31),
-                M.equals(Int32Testable(minimumInt32))
+                M.equals(Int32Testable(Int32.minimumValue))
             ),
             test(
                 "large overflow",
-                Int32.powWrap(maximumInt32, 10),
+                Int32.powWrap(Int32.maximumValue, 10),
                 M.equals(Int32Testable(1))
             ),
             test(
@@ -2279,7 +2295,7 @@ run(
             ),
             test(
                 "large underflow",
-                Int32.powWrap(minimumInt32, 10),
+                Int32.powWrap(Int32.minimumValue, 10),
                 M.equals(Int32Testable(0))
             ),
         ]

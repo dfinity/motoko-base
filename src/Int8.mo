@@ -10,6 +10,12 @@ module {
   /// 8-bit signed integers.
   public type Int8 = Prim.Types.Int8;
 
+  /// Minimum 8-bit integer value, `-2 ** 7`.
+  public let minimumValue = -128 : Int8;
+
+  /// Maximum 8-bit integer value, `+2 ** 7 - 1`.
+  public let maximumValue = 127 : Int8;
+
   /// Converts a 8-bit signed integer to a signed integer with infinite precision.
   ///
   /// Example:
@@ -279,16 +285,14 @@ module {
   public func pow(x : Int8, y : Int8) : Int8 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
-  /// Issue: The argument `y` is not needed and will be removed in future.
   ///
   /// Example:
   /// ```motoko
   /// import Int8 "mo:base/Int8";
   ///
-  /// let unused = 0 : Int8; // will be fixed in future
-  /// Int8.bitnot(-16 /* 0xf0 */, unused) // => +15 // 0x0f
+  /// Int8.bitnot(-16 /* 0xf0 */) // => +15 // 0x0f
   /// ```
-  public func bitnot(x : Int8, y : Int8) : Int8 { ^x };
+  public func bitnot(x : Int8) : Int8 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
   ///
