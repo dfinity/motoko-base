@@ -1,8 +1,8 @@
 /// Double-ended queue (deque) of a generic element type `T`.
 ///
 /// The interface to deques is purely functional, not imperative, and deques are immutable values.
-/// In particular, deque operations such as push and pop do not update their input deque but,  instead, return the 
-/// value of the modified deque, alongside any other data. 
+/// In particular, deque operations such as push and pop do not update their input deque but,  instead, return the
+/// value of the modified deque, alongside any other data.
 /// The input deque is left unchanged.
 ///
 /// Examples of use-cases:
@@ -161,7 +161,7 @@ module {
   /// Insert a new element on the back end of a deque.
   /// Returns the new deque with all the elements of `deque`, followed by `element` on the back.
   ///
- /// This may involve dynamic rebalancing of the two, internally used lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   ///
   /// Example:
   /// ```motoko
@@ -204,7 +204,7 @@ module {
 
   /// Remove the element on the back end of a deque.
   /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  /// a new deque that contains the remaining elements of `deque` 
+  /// a new deque that contains the remaining elements of `deque`
   /// and, as the second pair item, the removed back element.
   ///
   /// This may involve dynamic rebalancing of the two, internally used lists.
