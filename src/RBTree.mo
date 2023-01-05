@@ -131,9 +131,8 @@ module {
     /// tree.put(1, "old one");
     /// tree.put(2, "two");
     ///
-    /// let oldEntry = tree.replace(1, "new one"); // => ?"old one"
-    /// // tree now contains [(1, "new one"), (2, "two")]
-    /// (oldEntry, Iter.toArray(tree.entries())) /// => (?"old one", [(1, "new one"), (2, "two")])
+    /// ignore tree.replace(1, "new one");
+    /// Iter.toArray(tree.entries()) // => [(1, "new one"), (2, "two")]
     /// ```
     ///
     /// Runtime: `O(log(n))`.
@@ -183,7 +182,7 @@ module {
     /// tree.put(2, "two");
     ///
     /// tree.delete(1);
-    /// Iter.toArray(tree.entries()) // now only contains [(2, "two")].
+    /// Iter.toArray(tree.entries()) // => [(2, "two")].
     /// ```
     ///
     /// Runtime: `O(log(n))`.
@@ -207,9 +206,8 @@ module {
     /// tree.put(1, "one");
     /// tree.put(2, "two");
     ///
-    /// let removedEntry = tree.remove(1); // => ?"one"
-    /// // tree now only contains [(2, "two")].
-    /// (removedEntry, Iter.toArray(tree.entries())) // => (?"one", [(2, "two")])
+    /// ignore tree.remove(1);
+    /// Iter.toArray(tree.entries()) // => [(2, "two")].
     /// ```
     ///
     /// Runtime: `O(log(n))`.
