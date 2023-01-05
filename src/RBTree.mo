@@ -87,7 +87,7 @@ module {
     /// RBTree.size(treeSnapshot) // => 1 (Only the first insertion is part of the snapshot.)
     /// ```
     ///
-    /// Useful for determining the size, pretty-printing, and sharing it across async function calls,
+    /// Useful for storing the tree as a stable variable, determining its size, pretty-printing, and sharing it across async function calls,
     /// i.e. passing it in async arguments or async results.
     ///
     /// Runtime: `O(1)`.
