@@ -243,11 +243,11 @@ module {
     /// ```
     ///
     /// Cost of iteration over all elements:
-    /// Runtime: `O(n*log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree.
     ///
-    /// Note: Full tree iteration creates `O(n * log(n))` temporary objects that will be collected as garbage.
+    /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
     public func entries() : I.Iter<(K, V)> { iter(tree, #fwd) };
 
     /// An iterator for the key-value entries of the map, in descending key order.
@@ -272,11 +272,11 @@ module {
     /// ```
     ///
     /// Cost of iteration over all elements:
-    /// Runtime: `O(n*log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the tree.
     ///
-    /// Note: Full tree iteration creates `O(n * log(n))` temporary objects that will be collected as garbage.
+    /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
     public func entriesRev() : I.Iter<(K, V)> { iter(tree, #bwd) };
 
   };
@@ -307,11 +307,11 @@ module {
   /// ```
   ///
   /// Cost of iteration over all elements:
-  /// Runtime: `O(n*log(n))`.
-  /// Space: `O(1)` retained memory plus garbage, see the note below.
+  /// Runtime: `O(n)`.
+  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
   /// where `n` denotes the number of key-value entries stored in the tree.
   ///
-  /// Note: Full tree iteration creates `O(n * log(n))` temporary objects that will be collected as garbage.
+  /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
   public func iter<X, Y>(tree : Tree<X, Y>, direction : { #fwd; #bwd }) : I.Iter<(X, Y)> {
     object {
       var trees : IterRep<X, Y> = ?(#tr(tree), null);
