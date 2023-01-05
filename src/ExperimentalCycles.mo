@@ -39,7 +39,7 @@ module {
   /// Returns the actor's current balance of cycles as `amount`.
   ///
   /// Example for use on the IC:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
   ///
