@@ -1,6 +1,6 @@
 /// Double precision (64-bit) floating-point numbers in IEEE 754 representation.
 ///
-/// Common floating-point constants and functions.
+/// This module contains common floating-point constants and utility functions.
 ///
 /// Notation for special values in the documentation below:
 /// `+inf`: Positive infinity
