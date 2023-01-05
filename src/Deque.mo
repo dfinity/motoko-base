@@ -207,7 +207,7 @@ module {
   /// a new deque that contains the remaining elements of `deque` 
   /// and, as the second pair item, the removed back element.
   ///
-  /// This may involve dynamic splitting of the internally used two lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   ///
   /// Example:
   /// ```motoko
