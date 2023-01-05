@@ -204,8 +204,8 @@ module {
 
   /// Remove the element on the back end of a deque.
   /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  /// the new deque that contains all the elements of `deque` without the back element
-  /// and as the second pair item, the back element.
+  /// a new deque that contains the remaining elements of `deque` 
+  /// and, as the second pair item, the removed back element.
   ///
   /// This may involve dynamic splitting of the internally used two lists.
   ///
