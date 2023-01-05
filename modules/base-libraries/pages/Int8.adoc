@@ -1,8 +1,9 @@
 [[module.Int8]]
 = Int8
 
-8-bit signed integers with checked arithmetic
+8-bit signed integers with checked arithmetic.
 
+Common 8-bit integer functions.
 Most operations are available as built-in operators (e.g. `1 + 1`).
 
 [[type.Int8]]
@@ -15,6 +16,26 @@ type Int8 = Prim.Types.Int8
 
 8-bit signed integers.
 
+[[minimumValue]]
+== minimumValue
+
+[source.no-repl,motoko,subs=+macros]
+----
+let minimumValue : xref:#type.Int8[Int8]
+----
+
+Minimum 8-bit integer value, `-2 ** 7`.
+
+[[maximumValue]]
+== maximumValue
+
+[source.no-repl,motoko,subs=+macros]
+----
+let maximumValue : xref:#type.Int8[Int8]
+----
+
+Maximum 8-bit integer value, `+2 ** 7 - 1`.
+
 [[toInt]]
 == toInt
 
@@ -23,7 +44,14 @@ type Int8 = Prim.Types.Int8
 let toInt : xref:#type.Int8[Int8] -> Int
 ----
 
-Conversion.
+Converts a 8-bit signed integer to a signed integer with infinite precision.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.toInt(123) // => 123 : Int
+```
 
 [[fromInt]]
 == fromInt
@@ -33,7 +61,16 @@ Conversion.
 let fromInt : Int -> xref:#type.Int8[Int8]
 ----
 
-Conversion. Traps on overflow/underflow.
+Converts a signed integer with infinite precision to a 8-bit signed integer.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.fromInt(123) // => +123 : Int8
+```
 
 [[fromIntWrap]]
 == fromIntWrap
@@ -43,7 +80,16 @@ Conversion. Traps on overflow/underflow.
 let fromIntWrap : Int -> xref:#type.Int8[Int8]
 ----
 
-Conversion. Wraps on overflow/underflow.
+Converts a signed integer with infinite precision to a 8-bit signed integer.
+
+Wraps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.fromIntWrap(-123) // => -123 : Int
+```
 
 [[fromNat8]]
 == fromNat8
@@ -53,7 +99,16 @@ Conversion. Wraps on overflow/underflow.
 let fromNat8 : Nat8 -> xref:#type.Int8[Int8]
 ----
 
-Conversion. Wraps on overflow/underflow.
+Converts an unsigned 8-bit integer to a signed 8-bit integer.
+
+Wraps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.fromNat8(123) // => +123 : Int8
+```
 
 [[toNat8]]
 == toNat8
@@ -63,7 +118,16 @@ Conversion. Wraps on overflow/underflow.
 let toNat8 : xref:#type.Int8[Int8] -> Nat8
 ----
 
-Conversion. Wraps on overflow/underflow.
+Converts a signed 8-bit integer to an unsigned 8-bit integer.
+
+Wraps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.toNat8(-1) // => 255 : Nat8 // underflow
+```
 
 [[toText]]
 == toText
@@ -74,6 +138,14 @@ func toText(x : xref:#type.Int8[Int8]) : Text
 ----
 
 Returns the Text representation of `x`.
+Formats the integer in decimal representation.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.toText(-123) // => "-123"
+```
 
 [[abs]]
 == abs
@@ -83,7 +155,16 @@ Returns the Text representation of `x`.
 func abs(x : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the absolute value of `x`. Traps when `x = -2^7`.
+Returns the absolute value of `x`.
+
+Traps when `x == -2 ** 7` (the minimum `Int8` value).
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.abs(-123) // => +123
+```
 
 [[min]]
 == min
@@ -95,6 +176,13 @@ func min(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8
 
 Returns the minimum of `x` and `y`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.min(+2, -3) // => -3
+```
+
 [[max]]
 == max
 
@@ -104,6 +192,13 @@ func max(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8
 ----
 
 Returns the maximum of `x` and `y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.max(+2, -3) // => +2
+```
 
 [[equal]]
 == equal
@@ -115,6 +210,13 @@ func equal(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : Bool
 
 Returns `x == y`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.equal(123, 123) // => true
+```
+
 [[notEqual]]
 == notEqual
 
@@ -124,6 +226,13 @@ func notEqual(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : Bool
 ----
 
 Returns `x != y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.notEqual(123, 123) // => false
+```
 
 [[less]]
 == less
@@ -135,6 +244,13 @@ func less(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : Bool
 
 Returns `x < y`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.less(123, 124) // => true
+```
+
 [[lessOrEqual]]
 == lessOrEqual
 
@@ -144,6 +260,13 @@ func lessOrEqual(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : Bool
 ----
 
 Returns `x <= y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.lessOrEqual(123, 124) // => true
+```
 
 [[greater]]
 == greater
@@ -155,6 +278,13 @@ func greater(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : Bool
 
 Returns `x > y`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.greater(124, 123) // => true
+```
+
 [[greaterOrEqual]]
 == greaterOrEqual
 
@@ -164,6 +294,13 @@ func greaterOrEqual(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : Bool
 ----
 
 Returns `x >= y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.greaterOrEqual(124, 123) // => true
+```
 
 [[compare]]
 == compare
@@ -175,6 +312,13 @@ func compare(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : {#less; #eq
 
 Returns the order of `x` and `y`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.compare(123, 124) // => #less
+```
+
 [[neg]]
 == neg
 
@@ -183,7 +327,17 @@ Returns the order of `x` and `y`.
 func neg(x : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the negation of `x`, `-x`. Traps on overflow.
+Returns the negation of `x`, `-x`.
+
+Traps on overflow, i.e. for `neg(-2 ** 7)`.
+
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.neg(123) // => -123
+```
 
 [[add]]
 == add
@@ -193,7 +347,16 @@ Returns the negation of `x`, `-x`. Traps on overflow.
 func add(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+Returns the sum of `x` and `y`, `x + y`.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.add(100, 23) // => +123
+```
 
 [[sub]]
 == sub
@@ -203,7 +366,16 @@ Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
 func sub(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+Returns the difference of `x` and `y`, `x - y`.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.sub(123, 23) // => +100
+```
 
 [[mul]]
 == mul
@@ -213,7 +385,16 @@ Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
 func mul(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+Returns the product of `x` and `y`, `x * y`.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.mul(12, 10) // => +120
+```
 
 [[div]]
 == div
@@ -223,8 +404,17 @@ Returns the product of `x` and `y`, `x * y`. Traps on overflow.
 func div(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the division of `x by y`, `x / y`.
+Returns the signed integer division of `x` by `y`, `x / y`.
+Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
+
 Traps when `y` is zero.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.div(123, 10) // => +12
+```
 
 [[rem]]
 == rem
@@ -234,8 +424,17 @@ Traps when `y` is zero.
 func rem(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the remainder of `x` divided by `y`, `x % y`.
+Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
+which is defined as `x - x / y * y`.
+
 Traps when `y` is zero.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.rem(123, 10) // => +3
+```
 
 [[pow]]
 == pow
@@ -245,17 +444,33 @@ Traps when `y` is zero.
 func pow(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+Returns `x` to the power of `y`, `x ** y`.
+
+Traps on overflow/underflow and when `y < 0 or y >= 8`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.pow(2, 6) // => +64
+```
 
 [[bitnot]]
 == bitnot
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitnot(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
+func bitnot(x : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
 Returns the bitwise negation of `x`, `^x`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitnot(-16 /* 0xf0 */) // => +15 // 0x0f
+```
 
 [[bitand]]
 == bitand
@@ -265,7 +480,14 @@ Returns the bitwise negation of `x`, `^x`.
 func bitand(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise and of `x` and `y`, `x & y`.
+Returns the bitwise "and" of `x` and `y`, `x & y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitand(0x1f, 0x70) // => +16 // 0x10
+```
 
 [[bitor]]
 == bitor
@@ -275,7 +497,14 @@ Returns the bitwise and of `x` and `y`, `x & y`.
 func bitor(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise or of `x` and `y`, `x \| y`.
+Returns the bitwise "or" of `x` and `y`, `x | y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitor(0x0f, 0x70) // => +127 // 0x7f
+```
 
 [[bitxor]]
 == bitxor
@@ -285,7 +514,14 @@ Returns the bitwise or of `x` and `y`, `x \| y`.
 func bitxor(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitxor(0x70, 0x7f) // => +15 // 0x0f
+```
 
 [[bitshiftLeft]]
 == bitshiftLeft
@@ -295,7 +531,19 @@ Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 func bitshiftLeft(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise shift left of `x` by `y`, `x << y`.
+Returns the bitwise left shift of `x` by `y`, `x << y`.
+The right bits of the shift filled with zeros.
+Left-overflowing bits, including the sign bit, are discarded.
+
+For `y >= 8`, the semantics is the same as for `bitshiftLeft(x, y % 8)`.
+For `y < 0`,  the semantics is the same as for `bitshiftLeft(x, y + y % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitshiftLeft(1, 4) // => +16 // 0x10 equivalent to `2 ** 4`.
+```
 
 [[bitshiftRight]]
 == bitshiftRight
@@ -305,7 +553,19 @@ Returns the bitwise shift left of `x` by `y`, `x << y`.
 func bitshiftRight(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise shift right of `x` by `y`, `x >> y`.
+Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
+The sign bit is retained and the left side is filled with the sign bit.
+Right-underflowing bits are discarded, i.e. not rotated to the left side.
+
+For `y >= 8`, the semantics is the same as for `bitshiftRight(x, y % 8)`.
+For `y < 0`,  the semantics is the same as for `bitshiftRight (x, y + y % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitshiftRight(64, 4) // => +4 // equivalent to `64 / (2 ** 4)`
+```
 
 [[bitrotLeft]]
 == bitrotLeft
@@ -315,7 +575,19 @@ Returns the bitwise shift right of `x` by `y`, `x >> y`.
 func bitrotLeft(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
+Each left-overflowing bit is inserted again on the right side.
+The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
+
+Changes the direction of rotation for negative `y`.
+For `y >= 8`, the semantics is the same as for `bitrotLeft(x, y % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitrotLeft(0x11 /* 0b0001_0001 */, 2) // => +68 // 0b0100_0100 == 0x44.
+```
 
 [[bitrotRight]]
 == bitrotRight
@@ -325,7 +597,19 @@ Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 func bitrotRight(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
+Each right-underflowing bit is inserted again on the right side.
+The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
+
+Changes the direction of rotation for negative `y`.
+For `y >= 8`, the semantics is the same as for `bitrotRight(x, y % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitrotRight(0x11 /* 0b0001_0001 */, 1) // => -120 // 0b1000_1000 == 0x88.
+```
 
 [[bittest]]
 == bittest
@@ -335,7 +619,15 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 func bittest(x : xref:#type.Int8[Int8], p : Nat) : Bool
 ----
 
-Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
+Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
+If `p >= 8`, the semantics is the same as for `bittest(x, p % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bittest(64, 6) // => true
+```
 
 [[bitset]]
 == bitset
@@ -345,7 +637,15 @@ Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
 func bitset(x : xref:#type.Int8[Int8], p : Nat) : xref:#type.Int8[Int8]
 ----
 
-Returns the value of setting bit `p mod 8` in `x` to `1`.
+Returns the value of setting bit `p` in `x` to `1`.
+If `p >= 8`, the semantics is the same as for `bitset(x, p % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitset(0, 6) // => +64
+```
 
 [[bitclear]]
 == bitclear
@@ -355,7 +655,15 @@ Returns the value of setting bit `p mod 8` in `x` to `1`.
 func bitclear(x : xref:#type.Int8[Int8], p : Nat) : xref:#type.Int8[Int8]
 ----
 
-Returns the value of clearing bit `p mod 8` in `x` to `0`.
+Returns the value of clearing bit `p` in `x` to `0`.
+If `p >= 8`, the semantics is the same as for `bitclear(x, p % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitclear(-1, 6) // => -65
+```
 
 [[bitflip]]
 == bitflip
@@ -365,7 +673,15 @@ Returns the value of clearing bit `p mod 8` in `x` to `0`.
 func bitflip(x : xref:#type.Int8[Int8], p : Nat) : xref:#type.Int8[Int8]
 ----
 
-Returns the value of flipping bit `p mod 8` in `x`.
+Returns the value of flipping bit `p` in `x`.
+If `p >= 8`, the semantics is the same as for `bitclear(x, p % 8)`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitflip(127, 6) // => +63
+```
 
 [[bitcountNonZero]]
 == bitcountNonZero
@@ -377,6 +693,13 @@ let bitcountNonZero : (x : xref:#type.Int8[Int8]) -> xref:#type.Int8[Int8]
 
 Returns the count of non-zero bits in `x`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitcountNonZero(0x0f) // => +4
+```
+
 [[bitcountLeadingZero]]
 == bitcountLeadingZero
 
@@ -386,6 +709,13 @@ let bitcountLeadingZero : (x : xref:#type.Int8[Int8]) -> xref:#type.Int8[Int8]
 ----
 
 Returns the count of leading zero bits in `x`.
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitcountLeadingZero(0x08) // => +4
+```
 
 [[bitcountTrailingZero]]
 == bitcountTrailingZero
@@ -397,6 +727,13 @@ let bitcountTrailingZero : (x : xref:#type.Int8[Int8]) -> xref:#type.Int8[Int8]
 
 Returns the count of trailing zero bits in `x`.
 
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.bitcountTrailingZero(0x10) // => +4
+```
+
 [[addWrap]]
 == addWrap
 
@@ -405,7 +742,17 @@ Returns the count of trailing zero bits in `x`.
 func addWrap(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+Returns the sum of `x` and `y`, `x +% y`.
+
+Wraps on overflow/underflow.
+
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.addWrap(2 ** 6, 2 ** 6) // => -128 // overflow
+```
 
 [[subWrap]]
 == subWrap
@@ -415,7 +762,17 @@ Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
 func subWrap(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+Returns the difference of `x` and `y`, `x -% y`.
+
+Wraps on overflow/underflow.
+
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.subWrap(-2 ** 7, 1) // => +127 // underflow
+```
 
 [[mulWrap]]
 == mulWrap
@@ -427,6 +784,16 @@ func mulWrap(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.
 
 Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
+Wraps on overflow/underflow.
+
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.mulWrap(2 ** 4, 2 ** 4) // => 0 // overflow
+```
+
 [[powWrap]]
 == powWrap
 
@@ -435,5 +802,16 @@ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 func powWrap(x : xref:#type.Int8[Int8], y : xref:#type.Int8[Int8]) : xref:#type.Int8[Int8]
 ----
 
-Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
+Returns `x` to the power of `y`, `x **% y`.
+
+Wraps on overflow/underflow.
+Traps if `y < 0 or y >= 8`.
+
+
+Example:
+```motoko
+import Int8 "mo:base/Int8";
+
+Int8.powWrap(2, 7) // => -128 // overflow
+```
 

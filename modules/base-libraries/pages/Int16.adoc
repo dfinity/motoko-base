@@ -1,8 +1,9 @@
 [[module.Int16]]
 = Int16
 
-16-bit signed integers with checked arithmetic
+16-bit signed integers with checked arithmetic.
 
+Common 16-bit integer functions.
 Most operations are available as built-in operators (e.g. `1 + 1`).
 
 [[type.Int16]]
@@ -13,7 +14,27 @@ Most operations are available as built-in operators (e.g. `1 + 1`).
 type Int16 = Prim.Types.Int16
 ----
 
-16-bit signed integers
+16-bit signed integers.
+
+[[minimumValue]]
+== minimumValue
+
+[source.no-repl,motoko,subs=+macros]
+----
+let minimumValue : xref:#type.Int16[Int16]
+----
+
+Minimum 16-bit integer value, `-2 ** 15`.
+
+[[maximumValue]]
+== maximumValue
+
+[source.no-repl,motoko,subs=+macros]
+----
+let maximumValue : xref:#type.Int16[Int16]
+----
+
+Maximum 16-bit integer value, `+2 ** 15 - 1`.
 
 [[toInt]]
 == toInt
@@ -23,7 +44,14 @@ type Int16 = Prim.Types.Int16
 let toInt : xref:#type.Int16[Int16] -> Int
 ----
 
-Conversion.
+Converts a 16-bit signed integer to a signed integer with infinite precision.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.toInt(12_345) // => 12_345 : Int
+```
 
 [[fromInt]]
 == fromInt
@@ -33,7 +61,16 @@ Conversion.
 let fromInt : Int -> xref:#type.Int16[Int16]
 ----
 
-Conversion. Traps on overflow/underflow.
+Converts a signed integer with infinite precision to a 16-bit signed integer.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.fromInt(12_345) // => +12_345 : Int16
+```
 
 [[fromIntWrap]]
 == fromIntWrap
@@ -43,7 +80,16 @@ Conversion. Traps on overflow/underflow.
 let fromIntWrap : Int -> xref:#type.Int16[Int16]
 ----
 
-Conversion. Wraps on overflow/underflow.
+Converts a signed integer with infinite precision to a 16-bit signed integer.
+
+Wraps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.fromIntWrap(-12_345) // => -12_345 : Int
+```
 
 [[fromNat16]]
 == fromNat16
@@ -53,7 +99,16 @@ Conversion. Wraps on overflow/underflow.
 let fromNat16 : Nat16 -> xref:#type.Int16[Int16]
 ----
 
-Conversion. Wraps on overflow/underflow.
+Converts an unsigned 16-bit integer to a signed 16-bit integer.
+
+Wraps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.fromNat16(12_345) // => +12_345 : Int16
+```
 
 [[toNat16]]
 == toNat16
@@ -63,7 +118,16 @@ Conversion. Wraps on overflow/underflow.
 let toNat16 : xref:#type.Int16[Int16] -> Nat16
 ----
 
-Conversion. Wraps on overflow/underflow.
+Converts a signed 16-bit integer to an unsigned 16-bit integer.
+
+Wraps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.toNat16(-1) // => 65_535 : Nat16 // underflow
+```
 
 [[toText]]
 == toText
@@ -74,6 +138,14 @@ func toText(x : xref:#type.Int16[Int16]) : Text
 ----
 
 Returns the Text representation of `x`.
+Formats the integer in decimal representation without underscore separators for thousand figures.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.toText(-12345) // => "-12345"
+```
 
 [[abs]]
 == abs
@@ -83,7 +155,16 @@ Returns the Text representation of `x`.
 func abs(x : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the absolute value of `x`. Traps when `x = -2^15`.
+Returns the absolute value of `x`.
+
+Traps when `x == -2 ** 15` (the minimum `Int16` value).
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.abs(-12345) // => +12_345
+```
 
 [[min]]
 == min
@@ -95,6 +176,13 @@ func min(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.
 
 Returns the minimum of `x` and `y`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.min(+2, -3) // => -3
+```
+
 [[max]]
 == max
 
@@ -104,6 +192,13 @@ func max(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.
 ----
 
 Returns the maximum of `x` and `y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.max(+2, -3) // => +2
+```
 
 [[equal]]
 == equal
@@ -115,6 +210,13 @@ func equal(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : Bool
 
 Returns `x == y`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.equal(123, 123) // => true
+```
+
 [[notEqual]]
 == notEqual
 
@@ -124,6 +226,13 @@ func notEqual(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : Bool
 ----
 
 Returns `x != y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.notEqual(123, 123) // => false
+```
 
 [[less]]
 == less
@@ -135,6 +244,13 @@ func less(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : Bool
 
 Returns `x < y`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.less(123, 1234) // => true
+```
+
 [[lessOrEqual]]
 == lessOrEqual
 
@@ -144,6 +260,13 @@ func lessOrEqual(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : Boo
 ----
 
 Returns `x <= y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.lessOrEqual(123, 1234) // => true
+```
 
 [[greater]]
 == greater
@@ -155,6 +278,13 @@ func greater(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : Bool
 
 Returns `x > y`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.greater(1234, 123) // => true
+```
+
 [[greaterOrEqual]]
 == greaterOrEqual
 
@@ -164,6 +294,13 @@ func greaterOrEqual(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : 
 ----
 
 Returns `x >= y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.greaterOrEqual(1234, 123) // => true
+```
 
 [[compare]]
 == compare
@@ -175,6 +312,13 @@ func compare(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : {#less;
 
 Returns the order of `x` and `y`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.compare(123, 1234) // => #less
+```
+
 [[neg]]
 == neg
 
@@ -183,7 +327,17 @@ Returns the order of `x` and `y`.
 func neg(x : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the negation of `x`, `-x`. Traps on overflow.
+Returns the negation of `x`, `-x`.
+
+Traps on overflow, i.e. for `neg(-2 ** 15)`.
+
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.neg(123) // => -123
+```
 
 [[add]]
 == add
@@ -193,7 +347,16 @@ Returns the negation of `x`, `-x`. Traps on overflow.
 func add(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
+Returns the sum of `x` and `y`, `x + y`.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.add(1234, 123) // => +1_357
+```
 
 [[sub]]
 == sub
@@ -203,7 +366,16 @@ Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
 func sub(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
+Returns the difference of `x` and `y`, `x - y`.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.sub(1234, 123) // => +1_111
+```
 
 [[mul]]
 == mul
@@ -213,7 +385,16 @@ Returns the difference of `x` and `y`, `x - y`. Traps on underflow.
 func mul(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the product of `x` and `y`, `x * y`. Traps on overflow.
+Returns the product of `x` and `y`, `x * y`.
+
+Traps on overflow/underflow.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.mul(123, 100) // => +12_300
+```
 
 [[div]]
 == div
@@ -223,8 +404,17 @@ Returns the product of `x` and `y`, `x * y`. Traps on overflow.
 func div(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the division of `x by y`, `x / y`.
+Returns the signed integer division of `x` by `y`, `x / y`.
+Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
+
 Traps when `y` is zero.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.div(123, 10) // => +12
+```
 
 [[rem]]
 == rem
@@ -234,8 +424,17 @@ Traps when `y` is zero.
 func rem(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the remainder of `x` divided by `y`, `x % y`.
+Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
+which is defined as `x - x / y * y`.
+
 Traps when `y` is zero.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.rem(123, 10) // => +3
+```
 
 [[pow]]
 == pow
@@ -245,17 +444,33 @@ Traps when `y` is zero.
 func pow(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+Returns `x` to the power of `y`, `x ** y`.
+
+Traps on overflow/underflow and when `y < 0 or y >= 16`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.pow(2, 10) // => +1_024
+```
 
 [[bitnot]]
 == bitnot
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitnot(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
+func bitnot(x : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
 Returns the bitwise negation of `x`, `^x`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitnot(-256 /* 0xff00 */) // => +255 // 0xff
+```
 
 [[bitand]]
 == bitand
@@ -265,7 +480,14 @@ Returns the bitwise negation of `x`, `^x`.
 func bitand(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise and of `x` and `y`, `x & y`.
+Returns the bitwise "and" of `x` and `y`, `x & y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitand(0x0fff, 0x00f0) // => +240 // 0xf0
+```
 
 [[bitor]]
 == bitor
@@ -275,7 +497,14 @@ Returns the bitwise and of `x` and `y`, `x & y`.
 func bitor(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise or of `x` and `y`, `x \| y`.
+Returns the bitwise "or" of `x` and `y`, `x | y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitor(0x0f0f, 0x00f0) // => +4_095 // 0x0fff
+```
 
 [[bitxor]]
 == bitxor
@@ -285,7 +514,14 @@ Returns the bitwise or of `x` and `y`, `x \| y`.
 func bitxor(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitxor(0x0fff, 0x00f0) // => +3_855 // 0x0f0f
+```
 
 [[bitshiftLeft]]
 == bitshiftLeft
@@ -295,7 +531,19 @@ Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 func bitshiftLeft(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise shift left of `x` by `y`, `x << y`.
+Returns the bitwise left shift of `x` by `y`, `x << y`.
+The right bits of the shift filled with zeros.
+Left-overflowing bits, including the sign bit, are discarded.
+
+For `y >= 16`, the semantics is the same as for `bitshiftLeft(x, y % 16)`.
+For `y < 0`,  the semantics is the same as for `bitshiftLeft(x, y + y % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitshiftLeft(1, 8) // => +256 // 0x100 equivalent to `2 ** 8`.
+```
 
 [[bitshiftRight]]
 == bitshiftRight
@@ -305,7 +553,19 @@ Returns the bitwise shift left of `x` by `y`, `x << y`.
 func bitshiftRight(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise shift right of `x` by `y`, `x >> y`.
+Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
+The sign bit is retained and the left side is filled with the sign bit.
+Right-underflowing bits are discarded, i.e. not rotated to the left side.
+
+For `y >= 16`, the semantics is the same as for `bitshiftRight(x, y % 16)`.
+For `y < 0`,  the semantics is the same as for `bitshiftRight (x, y + y % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitshiftRight(1024, 8) // => +4 // equivalent to `1024 / (2 ** 8)`
+```
 
 [[bitrotLeft]]
 == bitrotLeft
@@ -315,7 +575,19 @@ Returns the bitwise shift right of `x` by `y`, `x >> y`.
 func bitrotLeft(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
+Each left-overflowing bit is inserted again on the right side.
+The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
+
+Changes the direction of rotation for negative `y`.
+For `y >= 16`, the semantics is the same as for `bitrotLeft(x, y % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitrotLeft(0x2001, 4) // => +18 // 0x12.
+```
 
 [[bitrotRight]]
 == bitrotRight
@@ -325,7 +597,19 @@ Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 func bitrotRight(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
+Each right-underflowing bit is inserted again on the right side.
+The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
+
+Changes the direction of rotation for negative `y`.
+For `y >= 16`, the semantics is the same as for `bitrotRight(x, y % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitrotRight(0x2010, 8) // => +4_128 // 0x01020.
+```
 
 [[bittest]]
 == bittest
@@ -335,7 +619,15 @@ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 func bittest(x : xref:#type.Int16[Int16], p : Nat) : Bool
 ----
 
-Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
+Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
+If `p >= 16`, the semantics is the same as for `bittest(x, p % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bittest(128, 7) // => true
+```
 
 [[bitset]]
 == bitset
@@ -345,7 +637,15 @@ Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`
 func bitset(x : xref:#type.Int16[Int16], p : Nat) : xref:#type.Int16[Int16]
 ----
 
-Returns the value of setting bit `p mod 16` in `x` to `1`.
+Returns the value of setting bit `p` in `x` to `1`.
+If `p >= 16`, the semantics is the same as for `bitset(x, p % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitset(0, 7) // => +128
+```
 
 [[bitclear]]
 == bitclear
@@ -355,7 +655,15 @@ Returns the value of setting bit `p mod 16` in `x` to `1`.
 func bitclear(x : xref:#type.Int16[Int16], p : Nat) : xref:#type.Int16[Int16]
 ----
 
-Returns the value of clearing bit `p mod 16` in `x` to `0`.
+Returns the value of clearing bit `p` in `x` to `0`.
+If `p >= 16`, the semantics is the same as for `bitclear(x, p % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitclear(-1, 7) // => -129
+```
 
 [[bitflip]]
 == bitflip
@@ -365,7 +673,15 @@ Returns the value of clearing bit `p mod 16` in `x` to `0`.
 func bitflip(x : xref:#type.Int16[Int16], p : Nat) : xref:#type.Int16[Int16]
 ----
 
-Returns the value of flipping bit `p mod 16` in `x`.
+Returns the value of flipping bit `p` in `x`.
+If `p >= 16`, the semantics is the same as for `bitclear(x, p % 16)`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitflip(255, 7) // => +127
+```
 
 [[bitcountNonZero]]
 == bitcountNonZero
@@ -377,6 +693,13 @@ let bitcountNonZero : (x : xref:#type.Int16[Int16]) -> xref:#type.Int16[Int16]
 
 Returns the count of non-zero bits in `x`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitcountNonZero(0xff) // => +8
+```
+
 [[bitcountLeadingZero]]
 == bitcountLeadingZero
 
@@ -386,6 +709,13 @@ let bitcountLeadingZero : (x : xref:#type.Int16[Int16]) -> xref:#type.Int16[Int1
 ----
 
 Returns the count of leading zero bits in `x`.
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitcountLeadingZero(0x80) // => +8
+```
 
 [[bitcountTrailingZero]]
 == bitcountTrailingZero
@@ -397,6 +727,13 @@ let bitcountTrailingZero : (x : xref:#type.Int16[Int16]) -> xref:#type.Int16[Int
 
 Returns the count of trailing zero bits in `x`.
 
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.bitcountTrailingZero(0x0100) // => +8
+```
+
 [[addWrap]]
 == addWrap
 
@@ -405,7 +742,17 @@ Returns the count of trailing zero bits in `x`.
 func addWrap(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+Returns the sum of `x` and `y`, `x +% y`.
+
+Wraps on overflow/underflow.
+
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.addWrap(2 ** 14, 2 ** 14) // => -32_768 // overflow
+```
 
 [[subWrap]]
 == subWrap
@@ -415,7 +762,17 @@ Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
 func subWrap(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+Returns the difference of `x` and `y`, `x -% y`.
+
+Wraps on overflow/underflow.
+
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.subWrap(-2 ** 15, 1) // => +32_767 // underflow
+```
 
 [[mulWrap]]
 == mulWrap
@@ -427,6 +784,16 @@ func mulWrap(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#t
 
 Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
+Wraps on overflow/underflow.
+
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.mulWrap(2 ** 8, 2 ** 8) // => 0 // overflow
+```
+
 [[powWrap]]
 == powWrap
 
@@ -435,5 +802,16 @@ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 func powWrap(x : xref:#type.Int16[Int16], y : xref:#type.Int16[Int16]) : xref:#type.Int16[Int16]
 ----
 
-Returns `x` to the power of `y`, `x **% y`. Wraps on overflow. Traps if `y < 0`.
+Returns `x` to the power of `y`, `x **% y`.
+
+Wraps on overflow/underflow.
+Traps if `y < 0 or y >= 16`.
+
+
+Example:
+```motoko
+import Int16 "mo:base/Int16";
+
+Int16.powWrap(2, 15) // => -32_768 // overflow
+```
 
