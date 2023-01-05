@@ -7,7 +7,7 @@
 /// Queue (FIFO) by using `pushBack()` and `popFront()`.
 /// Stack (LIFO) by using `pushFront()` and `popFront()`.
 ///
-/// It is internally implemented as two lists, a head access list and a tail access list,
+/// A deque is internally implemented as two lists, a head access list and a (reversed) tail access list,
 /// that are dynamically size-balanced by splitting.
 ///
 /// Construction: Create a new deque with the `empty<T>()` function.
