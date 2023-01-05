@@ -10,7 +10,7 @@
 /// **NOTE:** Since cycles measure computational resources, the value of  `balance()` can change from one call to the next.
 ///
 /// Example for use on IC:
-/// ```motoko
+/// ```motoko no-repl
 /// import Cycles "mo:base/ExperimentalCycles";
 /// import Debug "mo:base/Debug";
 ///
