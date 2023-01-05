@@ -80,7 +80,7 @@ module {
   /// Insert a new element on the front end of a deque.
   /// Returns the new deque with `element` in the front followed by the elements of `deque`.
   ///
-  /// This may involve dynamic splitting of the internally used two lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   ///
   /// Example:
   /// ```motoko
