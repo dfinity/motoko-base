@@ -5,7 +5,7 @@
 /// Notation for special values in the documentation below:
 /// `+inf`: Positive infinity
 /// `-inf`: Negative infinity
-/// `nan`: "not a number" (can have different sign bit values, but `nan != nan` regardless of the sign).
+/// `NaN`: "not a number" (can have different sign bit values, but `NaN != NaN` regardless of the sign).
 ///
 /// Note:
 /// Floating point numbers have limited precision and operations may inherently result in numerical errors.
@@ -77,10 +77,10 @@ module {
   /// ```
   public func negativeInfinity() : Float { -1.0 / 0.0 };
 
-  /// Determines whether the `number` is a `nan` ("not a number" in the floating point representation).
+  /// Determines whether the `number` is a `NaN` ("not a number" in the floating point representation).
   /// Notes:
-  /// * Equality test of `nan` with itself or another number is always `false`.
-  /// * There exist many internal `nan` value representations, such as positive and negative nan,
+  /// * Equality test of `NaN` with itself or another number is always `false`.
+  /// * There exist many internal `NaN` value representations, such as positive and negative NaN,
   ///   signalling and quiet nans, each with many different bit representations.
   ///
   /// Example:
@@ -99,7 +99,7 @@ module {
   /// ```
   /// abs(+inf) => +inf
   /// abs(-inf) => +inf
-  /// abs(nan)  => nan
+  /// abs(NaN)  => NaN
   /// abs(-0.0) => 0.0
   /// ```
   ///
@@ -117,8 +117,8 @@ module {
   /// ```
   /// sqrt(+inf) => +inf
   /// sqrt(-0.0) => -0.0
-  /// sqrt(x)    => nan if x < 0.0
-  /// sqrt(nan)  => nan
+  /// sqrt(x)    => NaN if x < 0.0
+  /// sqrt(NaN)  => NaN
   /// ```
   ///
   /// Example:
@@ -135,7 +135,7 @@ module {
   /// ```
   /// ceil(+inf) => +inf
   /// ceil(-inf) => -inf
-  /// ceil(nan)  => nan
+  /// ceil(NaN)  => NaN
   /// ceil(0.0)  => 0.0
   /// ceil(-0.0) => -0.0
   /// ```
@@ -154,7 +154,7 @@ module {
   /// ```
   /// floor(+inf) => +inf
   /// floor(-inf) => -inf
-  /// floor(nan)  => nan
+  /// floor(NaN)  => NaN
   /// floor(0.0)  => 0.0
   /// floor(-0.0) => -0.0
   /// ```
@@ -174,7 +174,7 @@ module {
   /// ```
   /// trunc(+inf) => +inf
   /// trunc(-inf) => -inf
-  /// trunc(nan)  => nan
+  /// trunc(NaN)  => NaN
   /// trunc(0.0)  => 0.0
   /// trunc(-0.0) => -0.0
   /// ```
@@ -195,7 +195,7 @@ module {
   /// ```
   /// nearest(+inf) => +inf
   /// nearest(-inf) => -inf
-  /// nearest(nan)  => nan
+  /// nearest(NaN)  => NaN
   /// nearest(0.0)  => 0.0
   /// nearest(-0.0) => -0.0
   /// ```
@@ -210,7 +210,7 @@ module {
 
   /// Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
   ///
-  /// The sign bit of zero, infinity, and `nan` is considered.
+  /// The sign bit of zero, infinity, and `NaN` is considered.
   ///
   /// Example:
   /// ```motoko
@@ -224,8 +224,8 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// min(nan, y) => nan for any Float y
-  /// min(x, nan) => nan for any Float x
+  /// min(NaN, y) => NaN for any Float y
+  /// min(x, NaN) => NaN for any Float x
   /// ```
   ///
   /// Example:
@@ -240,8 +240,8 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// max(nan, y) => nan for any Float y
-  /// max(x, nan) => nan for any Float x
+  /// max(NaN, y) => NaN for any Float y
+  /// max(x, NaN) => NaN for any Float x
   /// ```
   ///
   /// Example:
@@ -256,9 +256,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// sin(+inf) => nan
-  /// sin(-inf) => nan
-  /// sin(nan) => nan
+  /// sin(+inf) => NaN
+  /// sin(-inf) => NaN
+  /// sin(NaN) => NaN
   /// ```
   ///
   /// Example:
@@ -273,9 +273,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// cos(+inf) => nan
-  /// cos(-inf) => nan
-  /// cos(nan)  => nan
+  /// cos(+inf) => NaN
+  /// cos(-inf) => NaN
+  /// cos(NaN)  => NaN
   /// ```
   ///
   /// Example:
@@ -290,9 +290,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// tan(+inf) => nan
-  /// tan(-inf) => nan
-  /// tan(nan)  => nan
+  /// tan(+inf) => NaN
+  /// tan(-inf) => NaN
+  /// tan(NaN)  => NaN
   /// ```
   ///
   /// Example:
@@ -307,9 +307,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// arcsin(x)   => nan if x > 1.0
-  /// arcsin(x)   => nan if x < -1.0
-  /// arcsin(nan) => nan
+  /// arcsin(x)   => NaN if x > 1.0
+  /// arcsin(x)   => NaN if x < -1.0
+  /// arcsin(NaN) => NaN
   /// ```
   ///
   /// Example:
@@ -324,9 +324,9 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// arccos(x)  => nan if x > 1.0
-  /// arccos(x)  => nan if x < -1.0
-  /// arcos(nan) => nan
+  /// arccos(x)  => NaN if x > 1.0
+  /// arccos(x)  => NaN if x < -1.0
+  /// arcos(NaN) => NaN
   /// ```
   ///
   /// Example:
@@ -343,7 +343,7 @@ module {
   /// ```
   /// arctan(+inf) => pi / 2
   /// arctan(-inf) => -pi / 2
-  /// arctan(nan)  => nan
+  /// arctan(NaN)  => NaN
   /// ```
   ///
   /// Example:
@@ -366,8 +366,8 @@ module {
   /// arctan2(+inf, -inf) => 3 * pi / 4
   /// arctan2(-inf, +inf) => -pi / 4
   /// arctan2(-inf, -inf) => -3 * pi / 4
-  /// arctan2(nan, x)     => nan for any Float x
-  /// arctan2(y, nan)     => nan for any Float y
+  /// arctan2(NaN, x)     => NaN for any Float x
+  /// arctan2(y, NaN)     => NaN for any Float y
   /// ```
   ///
   /// Example:
@@ -385,7 +385,7 @@ module {
   /// ```
   /// exp(+inf) => +inf
   /// exp(-inf) => 0.0
-  /// exp(nan)  => nan
+  /// exp(NaN)  => NaN
   /// ```
   ///
   /// Example:
@@ -402,9 +402,9 @@ module {
   /// ```
   /// log(0.0)  => -inf
   /// log(-0.0) => -inf
-  /// log(x)    => nan if x < 0.0
+  /// log(x)    => NaN if x < 0.0
   /// log(+inf) => +inf
-  /// log(nan)  => nan
+  /// log(NaN)  => NaN
   /// ```
   ///
   /// Example:
@@ -427,7 +427,7 @@ module {
   /// `-0.0` is formatted with negative sign bit.
   /// Positive infinity is formatted as `inf`.
   /// Negative infinity is formatted as `-inf`.
-  /// `nan` is formatted as `nan` or `-nan` depending on its sign bit.
+  /// `NaN` is formatted as `NaN` or `-NaN` depending on its sign bit.
   ///
   /// Example:
   /// ```motoko
@@ -448,7 +448,7 @@ module {
   /// `-0.0` is formatted with negative sign bit.
   /// Positive infinity is formatted as `inf`.
   /// Negative infinity is formatted as `-inf`.
-  /// `nan` is formatted as `nan` or `-nan` depending on its sign bit.
+  /// `NaN` is formatted as `NaN` or `-NaN` depending on its sign bit.
   ///
   /// Example:
   /// ```motoko
@@ -461,7 +461,7 @@ module {
   /// Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
   ///
   /// Traps if the floating point number is larger or smaller than the representable Int64.
-  /// Also traps for `inf`, `-inf`, and `nan`.
+  /// Also traps for `inf`, `-inf`, and `NaN`.
   ///
   /// Example:
   /// ```motoko
@@ -485,7 +485,7 @@ module {
 
   /// Conversion to Int.
   ///
-  /// Traps for `inf`, `-inf`, and `nan`.
+  /// Traps for `inf`, `-inf`, and `NaN`.
   ///
   /// Example:
   /// ```motoko
@@ -513,7 +513,7 @@ module {
   /// The `epsilon` considers numerical erros, see comment above.
   /// Equivalent to `Float.abs(x - y) <= epsilon` for a non-negative epsilon.
   ///
-  /// Traps if `epsilon` is negative or `nan`.
+  /// Traps if `epsilon` is negative or `NaN`.
   ///
   /// Special cases:
   /// ```
@@ -521,8 +521,8 @@ module {
   /// equal(-0.0, +0.0, epsilon) => true for any `epsilon >= 0.0`
   /// equal(+inf, +inf, epsilon) => true for any `epsilon >= 0.0`
   /// equal(-inf, -inf, epsilon) => true for any `epsilon >= 0.0`
-  /// equal(x, nan, epsilon)     => false for any x and `epsilon >= 0.0`
-  /// equal(nan, y, epsilon)     => false for any y and `epsilon >= 0.0`
+  /// equal(x, NaN, epsilon)     => false for any x and `epsilon >= 0.0`
+  /// equal(NaN, y, epsilon)     => false for any y and `epsilon >= 0.0`
   /// ```
   ///
   /// Example:
@@ -534,7 +534,7 @@ module {
   /// ```
   public func equal(x : Float, y : Float, epsilon : Float) : Bool {
     if (not (epsilon >= 0.0)) {
-      // also considers nan, not identical to `epsilon < 0.0`
+      // also considers NaN, not identical to `epsilon < 0.0`
       Prim.trap("epsilon must be greater or equal 0.0")
     };
     x == y or abs(x - y) <= epsilon // `x == y` to also consider infinity equal
@@ -544,7 +544,7 @@ module {
   /// The `epsilon` considers numerical erros, see comment above.
   /// Equivalent to `not equal(x, y, epsilon)`.
   ///
-  /// Traps if `epsilon` is negative or `nan`.
+  /// Traps if `epsilon` is negative or `NaN`.
   ///
   /// Special cases:
   /// ```
@@ -552,8 +552,8 @@ module {
   /// notEqual(-0.0, +0.0, epsilon) => false for any `epsilon >= 0.0`
   /// notEqual(+inf, +inf, epsilon) => false for any `epsilon >= 0.0`
   /// notEqual(-inf, -inf, epsilon) => false for any `epsilon >= 0.0`
-  /// notEqual(x, nan, epsilon)     => true for any x and `epsilon >= 0.0`
-  /// notEqual(nan, y, epsilon)     => true for any y and `epsilon >= 0.0`
+  /// notEqual(x, NaN, epsilon)     => true for any x and `epsilon >= 0.0`
+  /// notEqual(NaN, y, epsilon)     => true for any y and `epsilon >= 0.0`
   /// ```
   ///
   /// Example:
@@ -573,8 +573,8 @@ module {
   /// ```
   /// less(+0.0, -0.0) => false
   /// less(-0.0, +0.0) => false
-  /// less(nan, y)     => false for any Float y
-  /// less(x, nan)     => false for any Float x
+  /// less(NaN, y)     => false for any Float y
+  /// less(x, NaN)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -591,8 +591,8 @@ module {
   /// ```
   /// lessOrEqual(+0.0, -0.0) => true
   /// lessOrEqual(-0.0, +0.0) => true
-  /// lessOrEqual(nan, y)     => false for any Float y
-  /// lessOrEqual(x, nan)     => false for any Float x
+  /// lessOrEqual(NaN, y)     => false for any Float y
+  /// lessOrEqual(x, NaN)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -609,8 +609,8 @@ module {
   /// ```
   /// greater(+0.0, -0.0) => false
   /// greater(-0.0, +0.0) => false
-  /// greater(nan, y)     => false for any Float y
-  /// greater(x, nan)     => false for any Float x
+  /// greater(NaN, y)     => false for any Float y
+  /// greater(x, NaN)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -627,8 +627,8 @@ module {
   /// ```
   /// greaterOrEqual(+0.0, -0.0) => true
   /// greaterOrEqual(-0.0, +0.0) => true
-  /// greaterOrEqual(nan, y)     => false for any Float y
-  /// greaterOrEqual(x, nan)     => false for any Float x
+  /// greaterOrEqual(NaN, y)     => false for any Float y
+  /// greaterOrEqual(x, NaN)     => false for any Float x
   /// ```
   ///
   /// Example:
@@ -644,18 +644,18 @@ module {
   /// Note: Using this operation to determine equality or inequality is discouraged for two reasons:
   /// * It does not consider numerical errors, see comment above. Use `equal(x, y)` or
   ///   `notEqual(x, y)` to test for equality or inequality, respectively.
-  /// * `nan` are here considered equal if their sign matches, which is different to the standard equality
+  /// * `NaN` are here considered equal if their sign matches, which is different to the standard equality
   ///    by `==` or when using `equal()` or `notEqual()`.
   ///
   /// Total order:
-  /// * negative nan (no distinction between signalling and quiet negative nan)
+  /// * negative NaN (no distinction between signalling and quiet negative NaN)
   /// * negative infinity
   /// * negative numbers (including negative subnormal numbers in standard order)
   /// * negative zero (`-0.0`)
   /// * positive zero (`+0.0`)
   /// * positive numbers (including positive subnormal numbers in standard order)
   /// * positive infinity
-  /// * positive nan (no distinction between signalling and quiet positive nan)
+  /// * positive NaN (no distinction between signalling and quiet positive NaN)
   ///
   /// Example:
   /// ```motoko
@@ -704,10 +704,10 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// add(+inf, y)    => +inf if y is any Float except -inf and nan
-  /// add(-inf, y)    => -inf if y is any Float except +inf and nan
-  /// add(+inf, -inf) => nan
-  /// add(nan, y)     => nan for any Float y
+  /// add(+inf, y)    => +inf if y is any Float except -inf and NaN
+  /// add(-inf, y)    => -inf if y is any Float except +inf and NaN
+  /// add(+inf, -inf) => NaN
+  /// add(NaN, y)     => NaN for any Float y
   /// ```
   /// The same cases apply commutatively, i.e. for `add(y, x)`.
   ///
@@ -725,14 +725,14 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// sub(+inf, y)    => +inf if y is any Float except +inf or nan
-  /// sub(-inf, y)    => -inf if y is any Float except -inf and nan
-  /// sub(x, +inf)    => -inf if x is any Float except +inf and nan
-  /// sub(x, -inf)    => +inf if x is any Float except -inf and nan
-  /// sub(+inf, +inf) => nan
-  /// sub(-inf, -inf) => nan
-  /// sub(nan, y)     => nan for any Float y
-  /// sub(x, nan)     => nan for any Float x
+  /// sub(+inf, y)    => +inf if y is any Float except +inf or NaN
+  /// sub(-inf, y)    => -inf if y is any Float except -inf and NaN
+  /// sub(x, +inf)    => -inf if x is any Float except +inf and NaN
+  /// sub(x, -inf)    => +inf if x is any Float except -inf and NaN
+  /// sub(+inf, +inf) => NaN
+  /// sub(-inf, -inf) => NaN
+  /// sub(NaN, y)     => NaN for any Float y
+  /// sub(x, NaN)     => NaN for any Float x
   /// ```
   ///
   /// Example:
@@ -753,9 +753,9 @@ module {
   /// mul(-inf, y) => -inf if y > 0.0
   /// mul(+inf, y) => -inf if y < 0.0
   /// mul(-inf, y) => +inf if y < 0.0
-  /// mul(+inf, 0.0) => nan
-  /// mul(-inf, 0.0) => nan
-  /// mul(nan, y) => nan for any Float y
+  /// mul(+inf, 0.0) => NaN
+  /// mul(-inf, 0.0) => NaN
+  /// mul(NaN, y) => NaN for any Float y
   /// ```
   /// The same cases apply commutatively, i.e. for `mul(y, x)`.
   ///
@@ -773,17 +773,17 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// div(0.0, 0.0) => nan
+  /// div(0.0, 0.0) => NaN
   /// div(x, 0.0)   => +inf for x > 0.0
   /// div(x, 0.0)   => -inf for x < 0.0
-  /// div(x, +inf)  => 0.0 for any x except +inf, -inf, and nan
-  /// div(x, -inf)  => 0.0 for any x except +inf, -inf, and nan
+  /// div(x, +inf)  => 0.0 for any x except +inf, -inf, and NaN
+  /// div(x, -inf)  => 0.0 for any x except +inf, -inf, and NaN
   /// div(+inf, y)  => +inf if y >= 0.0
   /// div(+inf, y)  => -inf if y < 0.0
   /// div(-inf, y)  => -inf if y >= 0.0
   /// div(-inf, y)  => +inf if y < 0.0
-  /// div(nan, y)   => nan for any Float y
-  /// div(x, nan)   => nan for any Float x
+  /// div(NaN, y)   => NaN for any Float y
+  /// div(x, NaN)   => NaN for any Float x
   /// ```
   ///
   /// Example:
@@ -801,15 +801,15 @@ module {
   ///
   /// Special cases:
   /// ```
-  /// rem(0.0, 0.0) => nan
-  /// rem(x, y)     => +inf if sign(x) == sign(y) for any x and y not being +inf, -inf, or nan
-  /// rem(x, y)     => -inf if sign(x) != sign(y) for any x and y not being +inf, -inf, or nan
-  /// rem(x, +inf)  => x for any x except +inf, -inf, and nan
-  /// rem(x, -inf)  => x for any x except +inf, -inf, and nan
-  /// rem(+inf, y)  => nan for any Float y
-  /// rem(-inf, y)  => nan for any Float y
-  /// rem(nan, y)   => nan for any Float y
-  /// rem(x, nan)   => nan for any Float x
+  /// rem(0.0, 0.0) => NaN
+  /// rem(x, y)     => +inf if sign(x) == sign(y) for any x and y not being +inf, -inf, or NaN
+  /// rem(x, y)     => -inf if sign(x) != sign(y) for any x and y not being +inf, -inf, or NaN
+  /// rem(x, +inf)  => x for any x except +inf, -inf, and NaN
+  /// rem(x, -inf)  => x for any x except +inf, -inf, and NaN
+  /// rem(+inf, y)  => NaN for any Float y
+  /// rem(-inf, y)  => NaN for any Float y
+  /// rem(NaN, y)   => NaN for any Float y
+  /// rem(x, NaN)   => NaN for any Float x
   /// ```
   ///
   /// Example:
@@ -833,16 +833,16 @@ module {
   /// pow(0.0, +inf)  => 0.0
   /// pow(x, -inf)    => 0.0 if x > 0.0 or x < 0.0
   /// pow(0.0, -inf)  => +inf
-  /// pow(x, y)       => nan if x < 0.0 and y is a non-integral Float
+  /// pow(x, y)       => NaN if x < 0.0 and y is a non-integral Float
   /// pow(-inf, y)    => +inf if y > 0.0 and y is a non-integral or an even integral Float
   /// pow(-inf, y)    => -inf if y > 0.0 and y is an odd integral Float
   /// pow(-inf, 0.0)  => 1.0
   /// pow(-inf, y)    => 0.0 if y < 0.0
   /// pow(-inf, +inf) => +inf
   /// pow(-inf, -inf) => 1.0
-  /// pow(nan, y)     => nan if y != 0.0
-  /// pow(nan, 0.0)   => 1.0
-  /// pow(x, nan)     => nan for any Float x
+  /// pow(NaN, y)     => NaN if y != 0.0
+  /// pow(NaN, 0.0)   => 1.0
+  /// pow(x, NaN)     => NaN for any Float x
   /// ```
   ///
   /// Example:
