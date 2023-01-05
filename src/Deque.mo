@@ -161,7 +161,7 @@ module {
   /// Insert a new element on the back end of a deque.
   /// Returns the new deque with all the elements of `deque`, followed by `element` on the back.
   ///
-  /// This may involve dynamic splitting of the internally used two lists.
+ /// This may involve dynamic rebalancing of the two, internally used lists.
   ///
   /// Example:
   /// ```motoko
