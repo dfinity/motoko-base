@@ -687,7 +687,7 @@ module {
 
   /// Returns the negation of `x`, `-x` .
   /// @deprecated Use `Float.neg()` since this function name is misspelled.
-  public func neq(x : Float) : Float { -x }; // Typo: Should be changed to `neg`
+  public func neq(x : Float) : Float { -x }; // Function name contains a typo, only retained for compatibility.
 
   /// Returns the negation of `x`, `-x` .
   ///
