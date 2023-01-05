@@ -240,7 +240,7 @@ module {
   /// ```
   public func mul(x : Int8, y : Int8) : Int8 { x * y };
 
-  /// Returns the signed integer division of `x by y`, `x / y`.
+  /// Returns the signed integer division of `x` by `y`, `x / y`.
   /// Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
   ///
   /// Traps when `y` is zero.
