@@ -8,15 +8,16 @@ module {
   ///
   /// ```motoko name=import
   /// import { compose; const; identity } = "mo:base/Func";
+  /// import Text = "mo:base/Text";
+  /// import Char = "mo:base/Char";
   /// ```
 
   /// The composition of two functions `f` and `g` is a function that applies `g` and then `f`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// func hexDigit(10) : Char = 'A';
-  /// func add1(n : Nat) : Nat = n + 1;
-  /// assert compose(hexDigit, add1)(9) == 'A';
+  /// let textFromNat32 = compose(Text.fromChar, Char.fromNat32);
+  /// assert textFromNat32(65) == "A";
   /// ```
   public func compose<A, B, C>(f : B -> C, g : A -> B) : A -> C {
     func(x : A) : C {
