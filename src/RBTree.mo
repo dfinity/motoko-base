@@ -122,7 +122,7 @@ module {
     /// Otherwise, if the key does not yet exist, insert the key-value entry.
     ///
     /// Returns the previous value of the key, if the key already existed.
-    /// Otherwise, `null, if the key did not yet exist before.
+    /// Otherwise, `null`, if the key did not yet exist before.
     ///
     /// Example:
     /// ```motoko include=initialize
