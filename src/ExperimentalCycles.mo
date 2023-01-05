@@ -59,7 +59,7 @@ module {
   /// any remaining available amount is automatically refunded to the caller/context.
   ///
   /// Example for use on the IC:
-  /// ```motoko
+  /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
   ///
