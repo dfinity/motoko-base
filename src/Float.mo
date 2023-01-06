@@ -509,6 +509,14 @@ module {
   /// ```
   public let fromInt : Int -> Float = Prim.intToFloat;
 
+  /// Returns `x==y`.
+  /// @deprecated Use `Float.equalWithin()` as this function does not consider numerical errors.
+  public func equal(x : Float, y : Float) : Bool { x == y };
+
+  /// Returns `x!=y`.
+  /// @deprecated Use `Float.equalWithin()` as this function does not consider numerical errors.
+  public func notEqual(x : Float, y : Float) : Bool { x != y };
+
   /// Determines whether `x` is equal to `y` within the defined tolerance of `epsilon`.
   /// The `epsilon` considers numerical erros, see comment above.
   /// Equivalent to `Float.abs(x - y) <= epsilon` for a non-negative epsilon.
@@ -532,7 +540,7 @@ module {
   /// let epsilon = 1e-6;
   /// Float.equal(-12.3, -1.23e1, epsilon) // => true
   /// ```
-  public func equal(x : Float, y : Float, epsilon : Float) : Bool {
+  public func equalWithin(x : Float, y : Float, epsilon : Float) : Bool {
     if (not (epsilon >= 0.0)) {
       // also considers NaN, not identical to `epsilon < 0.0`
       Prim.trap("epsilon must be greater or equal 0.0")
@@ -563,8 +571,8 @@ module {
   /// let epsilon = 1e-6;
   /// Float.notEqual(-12.3, -1.23e1, epsilon) // => false
   /// ```
-  public func notEqual(x : Float, y : Float, epsilon : Float) : Bool {
-    not equal(x, y, epsilon)
+  public func notEqualWithin(x : Float, y : Float, epsilon : Float) : Bool {
+    not equalWithin(x, y, epsilon)
   };
 
   /// Returns `x < y`.
