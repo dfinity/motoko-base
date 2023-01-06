@@ -31,6 +31,9 @@ class Int64Testable(number : Int64) : T.TestableItem<Int64> {
   }
 };
 
+let positiveInfinity = 1.0 / 0.0;
+let negativeInfinity = -1.0 / 0.0;
+
 let negativeNaN = 0.0 / 0.0;
 let positiveNaN = Float.copySign(negativeNaN, 1.0); // Compiler issue, NaN are represented negative by default. https://github.com/dfinity/motoko/issues/3647
 
@@ -46,11 +49,11 @@ let positiveZero = 0.0;
 let negativeZero = Float.copySign(0.0, -1.0); // Compiler bug, cannot use literal `-0.0`. https://github.com/dfinity/motoko/issues/3646
 
 func isPositiveZero(number : Float) : Bool {
-  number == 0.0 and 1.0 / number == Float.positiveInfinity()
+  number == 0.0 and 1.0 / number == positiveInfinity
 };
 
 func isNegativeZero(number : Float) : Bool {
-  number == 0.0 and 1.0 / number == Float.negativeInfinity()
+  number == 0.0 and 1.0 / number == negativeInfinity
 };
 
 class PositiveZeroMatcher() : M.Matcher<Float> {
@@ -116,12 +119,12 @@ run(
     [
       test(
         "positive infinity",
-        Float.positiveInfinity(),
+        positiveInfinity,
         M.equals(FloatTestable(1.0 / 0.0, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.negativeInfinity(),
+        negativeInfinity,
         M.equals(FloatTestable(-1.0 / 0.0, noEpsilon))
       )
     ]
@@ -171,12 +174,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.isNaN(Float.positiveInfinity()),
+        Float.isNaN(positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity",
-        Float.isNaN(Float.negativeInfinity()),
+        Float.isNaN(negativeInfinity),
         M.equals(T.bool(false))
       )
     ]
@@ -216,13 +219,13 @@ run(
       ),
       test(
         "positive infinity",
-        Float.abs(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.abs(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.abs(Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.abs(negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive NaN",
@@ -266,8 +269,8 @@ run(
       ),
       test(
         "positive infinity",
-        Float.sqrt(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.sqrt(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative",
@@ -326,13 +329,13 @@ run(
       ),
       test(
         "positive infinity",
-        Float.ceil(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.ceil(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.ceil(Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.ceil(negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive NaN",
@@ -386,13 +389,13 @@ run(
       ),
       test(
         "positive infinity",
-        Float.floor(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.floor(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.floor(Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.floor(negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive NaN",
@@ -446,13 +449,13 @@ run(
       ),
       test(
         "positive infinity",
-        Float.trunc(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.trunc(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.trunc(Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.trunc(negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive NaN",
@@ -511,13 +514,13 @@ run(
       ),
       test(
         "positive infinity",
-        Float.nearest(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.nearest(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.nearest(Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.nearest(negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive NaN",
@@ -576,12 +579,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.copySign(1.2, Float.positiveInfinity()),
+        Float.copySign(1.2, positiveInfinity),
         M.equals(FloatTestable(1.2, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.copySign(1.2, Float.negativeInfinity()),
+        Float.copySign(1.2, negativeInfinity),
         M.equals(FloatTestable(-1.2, noEpsilon))
       ),
       test(
@@ -621,33 +624,33 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.copySign(positiveNaN, Float.positiveInfinity()),
+        Float.copySign(positiveNaN, positiveInfinity),
         PositiveNaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.copySign(positiveNaN, Float.negativeInfinity()),
+        Float.copySign(positiveNaN, negativeInfinity),
         NegativeNaNMatcher()
       ),
       test(
         "positive infinity and positive NaN",
-        Float.copySign(Float.positiveInfinity(), positiveNaN),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.copySign(positiveInfinity, positiveNaN),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive infinity and negative NaN",
-        Float.copySign(Float.positiveInfinity(), negativeNaN),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.copySign(positiveInfinity, negativeNaN),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity and positive NaN",
-        Float.copySign(Float.negativeInfinity(), positiveNaN),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.copySign(negativeInfinity, positiveNaN),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and negative NaN",
-        Float.copySign(Float.negativeInfinity(), negativeNaN),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.copySign(negativeInfinity, negativeNaN),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       )
     ]
   )
@@ -691,18 +694,18 @@ run(
       ),
       test(
         "positive infinity",
-        Float.min(1.23, Float.positiveInfinity()),
+        Float.min(1.23, positiveInfinity),
         M.equals(FloatTestable(1.23, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.min(1.23, Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.min(1.23, negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "double negative infinity",
-        Float.min(Float.negativeInfinity(), Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.min(negativeInfinity, negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "left NaN",
@@ -721,22 +724,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.min(positiveNaN, Float.positiveInfinity()),
+        Float.min(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.min(positiveNaN, Float.negativeInfinity()),
+        Float.min(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.min(Float.positiveInfinity(), positiveNaN),
+        Float.min(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.min(Float.negativeInfinity(), positiveNaN),
+        Float.min(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -781,18 +784,18 @@ run(
       ),
       test(
         "positive infinity",
-        Float.max(1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.max(1.23, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.max(1.23, Float.negativeInfinity()),
+        Float.max(1.23, negativeInfinity),
         M.equals(FloatTestable(1.23, noEpsilon))
       ),
       test(
         "double positive infinity",
-        Float.max(Float.positiveInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.max(positiveInfinity, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "left NaN",
@@ -811,22 +814,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.max(positiveNaN, Float.positiveInfinity()),
+        Float.max(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.max(positiveNaN, Float.negativeInfinity()),
+        Float.max(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.max(Float.positiveInfinity(), positiveNaN),
+        Float.max(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.max(Float.negativeInfinity(), positiveNaN),
+        Float.max(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -891,12 +894,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.sin(Float.positiveInfinity()),
+        Float.sin(positiveInfinity),
         NaNMatcher()
       ),
       test(
         "negative infinity",
-        Float.sin(Float.negativeInfinity()),
+        Float.sin(negativeInfinity),
         NaNMatcher()
       ),
       test(
@@ -966,12 +969,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.cos(Float.positiveInfinity()),
+        Float.cos(positiveInfinity),
         NaNMatcher()
       ),
       test(
         "negative infinity",
-        Float.cos(Float.negativeInfinity()),
+        Float.cos(negativeInfinity),
         NaNMatcher()
       ),
       test(
@@ -1011,12 +1014,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.tan(Float.positiveInfinity()),
+        Float.tan(positiveInfinity),
         NaNMatcher()
       ),
       test(
         "negative infinity",
-        Float.tan(Float.negativeInfinity()),
+        Float.tan(negativeInfinity),
         NaNMatcher()
       ),
       test(
@@ -1161,12 +1164,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.arctan(Float.positiveInfinity()),
+        Float.arctan(positiveInfinity),
         M.equals(FloatTestable(ninetyDegrees, smallEpsilon))
       ),
       test(
         "negative infinity",
-        Float.arctan(Float.negativeInfinity()),
+        Float.arctan(negativeInfinity),
         M.equals(FloatTestable(-ninetyDegrees, smallEpsilon))
       ),
       test(
@@ -1231,42 +1234,42 @@ run(
       ),
       test(
         "left positive infinity",
-        Float.arctan2(Float.positiveInfinity(), 0.0),
+        Float.arctan2(positiveInfinity, 0.0),
         M.equals(FloatTestable(ninetyDegrees, noEpsilon))
       ),
       test(
         "left negative infinity",
-        Float.arctan2(Float.negativeInfinity(), 0.0),
+        Float.arctan2(negativeInfinity, 0.0),
         M.equals(FloatTestable(-ninetyDegrees, noEpsilon))
       ),
       test(
         "right positive infinity",
-        Float.arctan2(0.0, Float.positiveInfinity()),
+        Float.arctan2(0.0, positiveInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "right negative infinity",
-        Float.arctan2(0.0, Float.negativeInfinity()),
+        Float.arctan2(0.0, negativeInfinity),
         M.equals(FloatTestable(2 * ninetyDegrees, noEpsilon))
       ),
       test(
         "both positive infinity",
-        Float.arctan2(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.arctan2(positiveInfinity, positiveInfinity),
         M.equals(FloatTestable(fortyFiveDegrees, noEpsilon))
       ),
       test(
         "both negative infinity",
-        Float.arctan2(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.arctan2(negativeInfinity, negativeInfinity),
         M.equals(FloatTestable(-3 * fortyFiveDegrees, noEpsilon))
       ),
       test(
         "positive and negative infinity",
-        Float.arctan2(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.arctan2(positiveInfinity, negativeInfinity),
         M.equals(FloatTestable(3 * fortyFiveDegrees, noEpsilon))
       ),
       test(
         "negative and positive infinity",
-        Float.arctan2(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.arctan2(negativeInfinity, positiveInfinity),
         M.equals(FloatTestable(-fortyFiveDegrees, noEpsilon))
       ),
       test(
@@ -1296,22 +1299,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.arctan2(positiveNaN, Float.positiveInfinity()),
+        Float.arctan2(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.arctan2(positiveNaN, Float.negativeInfinity()),
+        Float.arctan2(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.arctan2(Float.positiveInfinity(), positiveNaN),
+        Float.arctan2(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.arctan2(Float.negativeInfinity(), positiveNaN),
+        Float.arctan2(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -1336,12 +1339,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.exp(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.exp(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.exp(Float.negativeInfinity()),
+        Float.exp(negativeInfinity),
         M.equals(FloatTestable(0.0, smallEpsilon))
       ),
       test(
@@ -1382,12 +1385,12 @@ run(
       test(
         "zero",
         Float.log(0.0),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative zero",
         Float.log(negativeZero),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative",
@@ -1396,8 +1399,8 @@ run(
       ),
       test(
         "positive infinity",
-        Float.log(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.log(positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive NaN",
@@ -1441,12 +1444,12 @@ run(
       ),
       test(
         "exact positive infinity",
-        Float.format(#exact, Float.positiveInfinity()),
+        Float.format(#exact, positiveInfinity),
         M.equals(T.text("inf"))
       ),
       test(
         "exact negative infinity",
-        Float.format(#exact, Float.negativeInfinity()),
+        Float.format(#exact, negativeInfinity),
         M.equals(T.text("-inf"))
       ),
       test(
@@ -1481,12 +1484,12 @@ run(
       ),
       test(
         "fix positive infinity",
-        Float.format(#fix 6, Float.positiveInfinity()),
+        Float.format(#fix 6, positiveInfinity),
         M.equals(T.text("inf"))
       ),
       test(
         "fix negative infinity",
-        Float.format(#fix 6, Float.negativeInfinity()),
+        Float.format(#fix 6, negativeInfinity),
         M.equals(T.text("-inf"))
       ),
       test(
@@ -1521,12 +1524,12 @@ run(
       ),
       test(
         "exp positive infinity",
-        Float.format(#exp 9, Float.positiveInfinity()),
+        Float.format(#exp 9, positiveInfinity),
         M.equals(T.text("inf"))
       ),
       test(
         "exp negative infinity",
-        Float.format(#exp 9, Float.negativeInfinity()),
+        Float.format(#exp 9, negativeInfinity),
         M.equals(T.text("-inf"))
       ),
       test(
@@ -1561,12 +1564,12 @@ run(
       ),
       test(
         "gen positive infinity",
-        Float.format(#gen 12, Float.positiveInfinity()),
+        Float.format(#gen 12, positiveInfinity),
         M.equals(T.text("inf"))
       ),
       test(
         "gen negative infinity",
-        Float.format(#gen 12, Float.negativeInfinity()),
+        Float.format(#gen 12, negativeInfinity),
         M.equals(T.text("-inf"))
       ),
       test(
@@ -1601,12 +1604,12 @@ run(
       ),
       test(
         "hex positive infinity",
-        Float.format(#hex 10, Float.positiveInfinity()),
+        Float.format(#hex 10, positiveInfinity),
         M.equals(T.text("inf"))
       ),
       test(
         "hex negative infinity",
-        Float.format(#hex 10, Float.negativeInfinity()),
+        Float.format(#hex 10, negativeInfinity),
         M.equals(T.text("-inf"))
       ),
       test(
@@ -1651,12 +1654,12 @@ run(
       ),
       test(
         "positive infinity",
-        Float.toText(Float.positiveInfinity()),
+        Float.toText(positiveInfinity),
         M.equals(T.text("inf"))
       ),
       test(
         "negative infinity",
-        Float.toText(Float.negativeInfinity()),
+        Float.toText(negativeInfinity),
         M.equals(T.text("-inf"))
       ),
       test(
@@ -1835,12 +1838,12 @@ run(
       test(
         "positive infinity",
         Float.fromInt(3 ** 7777),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
         Float.fromInt(-3 ** 7777),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       )
     ]
   )
@@ -1899,27 +1902,27 @@ run(
       ),
       test(
         "positive infinity, no epsilon",
-        Float.equalWithin(Float.positiveInfinity(), Float.positiveInfinity(), noEpsilon),
+        Float.equalWithin(positiveInfinity, positiveInfinity, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "positive infinity, small epsilon",
-        Float.equalWithin(Float.positiveInfinity(), Float.positiveInfinity(), smallEpsilon),
+        Float.equalWithin(positiveInfinity, positiveInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "negative infinity, no epsilon",
-        Float.equalWithin(Float.negativeInfinity(), Float.negativeInfinity(), noEpsilon),
+        Float.equalWithin(negativeInfinity, negativeInfinity, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "negative infinity, small epsilon",
-        Float.equalWithin(Float.negativeInfinity(), Float.negativeInfinity(), smallEpsilon),
+        Float.equalWithin(negativeInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "mixed infinity signs",
-        Float.equalWithin(Float.positiveInfinity(), Float.negativeInfinity(), smallEpsilon),
+        Float.equalWithin(positiveInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
@@ -1964,22 +1967,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.equalWithin(positiveNaN, Float.positiveInfinity(), smallEpsilon),
+        Float.equalWithin(positiveNaN, positiveInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and negative infinity",
-        Float.equalWithin(positiveNaN, Float.negativeInfinity(), smallEpsilon),
+        Float.equalWithin(positiveNaN, negativeInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and NaN",
-        Float.equalWithin(Float.positiveInfinity(), positiveNaN, smallEpsilon),
+        Float.equalWithin(positiveInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and NaN",
-        Float.equalWithin(Float.negativeInfinity(), positiveNaN, smallEpsilon),
+        Float.equalWithin(negativeInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(false))
       )
     ]
@@ -2039,27 +2042,27 @@ run(
       ),
       test(
         "positive infinity, no epsilon",
-        Float.notEqualWithin(Float.positiveInfinity(), Float.positiveInfinity(), noEpsilon),
+        Float.notEqualWithin(positiveInfinity, positiveInfinity, noEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity, small epsilon",
-        Float.notEqualWithin(Float.positiveInfinity(), Float.positiveInfinity(), smallEpsilon),
+        Float.notEqualWithin(positiveInfinity, positiveInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity, no epsilon",
-        Float.notEqualWithin(Float.negativeInfinity(), Float.negativeInfinity(), noEpsilon),
+        Float.notEqualWithin(negativeInfinity, negativeInfinity, noEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity, small epsilon",
-        Float.notEqualWithin(Float.negativeInfinity(), Float.negativeInfinity(), smallEpsilon),
+        Float.notEqualWithin(negativeInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "mixed infinity signs",
-        Float.notEqualWithin(Float.positiveInfinity(), Float.negativeInfinity(), smallEpsilon),
+        Float.notEqualWithin(positiveInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
@@ -2104,22 +2107,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.notEqualWithin(positiveNaN, Float.positiveInfinity(), smallEpsilon),
+        Float.notEqualWithin(positiveNaN, positiveInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "NaN and negative infinity",
-        Float.notEqualWithin(positiveNaN, Float.negativeInfinity(), smallEpsilon),
+        Float.notEqualWithin(positiveNaN, negativeInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "positive infinity and NaN",
-        Float.notEqualWithin(Float.positiveInfinity(), positiveNaN, smallEpsilon),
+        Float.notEqualWithin(positiveInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "negative infinity and NaN",
-        Float.notEqualWithin(Float.negativeInfinity(), positiveNaN, smallEpsilon),
+        Float.notEqualWithin(negativeInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(true))
       )
     ]
@@ -2194,42 +2197,42 @@ run(
       ),
       test(
         "number and positive infinity",
-        Float.less(1.23, Float.positiveInfinity()),
+        Float.less(1.23, positiveInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "positive infinity and number",
-        Float.less(Float.positiveInfinity(), 1.23),
+        Float.less(positiveInfinity, 1.23),
         M.equals(T.bool(false))
       ),
       test(
         "number and negative infinity",
-        Float.less(1.23, Float.negativeInfinity()),
+        Float.less(1.23, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and number",
-        Float.less(Float.negativeInfinity(), 1.23),
+        Float.less(negativeInfinity, 1.23),
         M.equals(T.bool(true))
       ),
       test(
         "double positive infinity",
-        Float.less(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.less(positiveInfinity, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive and negative infinity",
-        Float.less(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.less(positiveInfinity, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "double negative infinity",
-        Float.less(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.less(negativeInfinity, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "negative and positive infinity",
-        Float.less(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.less(negativeInfinity, positiveInfinity),
         M.equals(T.bool(true))
       ),
       test(
@@ -2264,22 +2267,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.less(positiveNaN, Float.positiveInfinity()),
+        Float.less(positiveNaN, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and negative infinity",
-        Float.less(positiveNaN, Float.negativeInfinity()),
+        Float.less(positiveNaN, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and NaN",
-        Float.less(Float.positiveInfinity(), positiveNaN),
+        Float.less(positiveInfinity, positiveNaN),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and NaN",
-        Float.less(Float.negativeInfinity(), positiveNaN),
+        Float.less(negativeInfinity, positiveNaN),
         M.equals(T.bool(false))
       )
     ]
@@ -2354,42 +2357,42 @@ run(
       ),
       test(
         "number and positive infinity",
-        Float.lessOrEqual(1.23, Float.positiveInfinity()),
+        Float.lessOrEqual(1.23, positiveInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "positive infinity and number",
-        Float.lessOrEqual(Float.positiveInfinity(), 1.23),
+        Float.lessOrEqual(positiveInfinity, 1.23),
         M.equals(T.bool(false))
       ),
       test(
         "number and negative infinity",
-        Float.lessOrEqual(1.23, Float.negativeInfinity()),
+        Float.lessOrEqual(1.23, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and number",
-        Float.lessOrEqual(Float.negativeInfinity(), 1.23),
+        Float.lessOrEqual(negativeInfinity, 1.23),
         M.equals(T.bool(true))
       ),
       test(
         "double positive infinity",
-        Float.lessOrEqual(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.lessOrEqual(positiveInfinity, positiveInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "positive and negative infinity",
-        Float.lessOrEqual(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.lessOrEqual(positiveInfinity, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "double negative infinity",
-        Float.lessOrEqual(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.lessOrEqual(negativeInfinity, negativeInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "negative and positive infinity",
-        Float.lessOrEqual(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.lessOrEqual(negativeInfinity, positiveInfinity),
         M.equals(T.bool(true))
       ),
       test(
@@ -2424,22 +2427,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.lessOrEqual(positiveNaN, Float.positiveInfinity()),
+        Float.lessOrEqual(positiveNaN, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and negative infinity",
-        Float.lessOrEqual(positiveNaN, Float.negativeInfinity()),
+        Float.lessOrEqual(positiveNaN, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and NaN",
-        Float.lessOrEqual(Float.positiveInfinity(), positiveNaN),
+        Float.lessOrEqual(positiveInfinity, positiveNaN),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and NaN",
-        Float.lessOrEqual(Float.negativeInfinity(), positiveNaN),
+        Float.lessOrEqual(negativeInfinity, positiveNaN),
         M.equals(T.bool(false))
       )
     ]
@@ -2514,42 +2517,42 @@ run(
       ),
       test(
         "less than positive infinity",
-        Float.greater(1.23, Float.positiveInfinity()),
+        Float.greater(1.23, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and number",
-        Float.greater(Float.positiveInfinity(), 1.23),
+        Float.greater(positiveInfinity, 1.23),
         M.equals(T.bool(true))
       ),
       test(
         "number and negative infinity",
-        Float.greater(1.23, Float.negativeInfinity()),
+        Float.greater(1.23, negativeInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "negative infinity and number",
-        Float.greater(Float.negativeInfinity(), 1.23),
+        Float.greater(negativeInfinity, 1.23),
         M.equals(T.bool(false))
       ),
       test(
         "double positive infinity",
-        Float.greater(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.greater(positiveInfinity, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive and negative infinity",
-        Float.greater(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.greater(positiveInfinity, negativeInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "double negative infinity",
-        Float.greater(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.greater(negativeInfinity, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "negative and positive infinity",
-        Float.greater(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.greater(negativeInfinity, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
@@ -2584,22 +2587,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.greater(positiveNaN, Float.positiveInfinity()),
+        Float.greater(positiveNaN, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and negative infinity",
-        Float.greater(positiveNaN, Float.negativeInfinity()),
+        Float.greater(positiveNaN, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and NaN",
-        Float.greater(Float.positiveInfinity(), positiveNaN),
+        Float.greater(positiveInfinity, positiveNaN),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and NaN",
-        Float.greater(Float.negativeInfinity(), positiveNaN),
+        Float.greater(negativeInfinity, positiveNaN),
         M.equals(T.bool(false))
       )
     ]
@@ -2674,42 +2677,42 @@ run(
       ),
       test(
         "number and positive infinity",
-        Float.greaterOrEqual(1.23, Float.positiveInfinity()),
+        Float.greaterOrEqual(1.23, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and number",
-        Float.greaterOrEqual(Float.positiveInfinity(), 1.23),
+        Float.greaterOrEqual(positiveInfinity, 1.23),
         M.equals(T.bool(true))
       ),
       test(
         "number and negative infinity",
-        Float.greaterOrEqual(1.23, Float.negativeInfinity()),
+        Float.greaterOrEqual(1.23, negativeInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "negative infinity and number",
-        Float.greaterOrEqual(Float.negativeInfinity(), 1.23),
+        Float.greaterOrEqual(negativeInfinity, 1.23),
         M.equals(T.bool(false))
       ),
       test(
         "double positive infinity",
-        Float.greaterOrEqual(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.greaterOrEqual(positiveInfinity, positiveInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "positive and negative infinity",
-        Float.greaterOrEqual(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.greaterOrEqual(positiveInfinity, negativeInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "double negative infinity",
-        Float.greaterOrEqual(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.greaterOrEqual(negativeInfinity, negativeInfinity),
         M.equals(T.bool(true))
       ),
       test(
         "negative and positive infinity",
-        Float.greaterOrEqual(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.greaterOrEqual(negativeInfinity, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
@@ -2744,22 +2747,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.greaterOrEqual(positiveNaN, Float.positiveInfinity()),
+        Float.greaterOrEqual(positiveNaN, positiveInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and negative infinity",
-        Float.greaterOrEqual(positiveNaN, Float.negativeInfinity()),
+        Float.greaterOrEqual(positiveNaN, negativeInfinity),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and NaN",
-        Float.greaterOrEqual(Float.positiveInfinity(), positiveNaN),
+        Float.greaterOrEqual(positiveInfinity, positiveNaN),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and NaN",
-        Float.greaterOrEqual(Float.negativeInfinity(), positiveNaN),
+        Float.greaterOrEqual(negativeInfinity, positiveNaN),
         M.equals(T.bool(false))
       )
     ]
@@ -2868,42 +2871,42 @@ run(
       ),
       test(
         "number and positive infinity",
-        Float.compare(1.23, Float.positiveInfinity()),
+        Float.compare(1.23, positiveInfinity),
         M.equals(OrderTestable(#less))
       ),
       test(
         "positive infinity and number",
-        Float.compare(Float.positiveInfinity(), 1.23),
+        Float.compare(positiveInfinity, 1.23),
         M.equals(OrderTestable(#greater))
       ),
       test(
         "number and negative infinity",
-        Float.compare(1.23, Float.negativeInfinity()),
+        Float.compare(1.23, negativeInfinity),
         M.equals(OrderTestable(#greater))
       ),
       test(
         "negative infinity and number",
-        Float.compare(Float.negativeInfinity(), 1.23),
+        Float.compare(negativeInfinity, 1.23),
         M.equals(OrderTestable(#less))
       ),
       test(
         "double positive infinity",
-        Float.compare(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.compare(positiveInfinity, positiveInfinity),
         M.equals(OrderTestable(#equal))
       ),
       test(
         "positive and negative infinity",
-        Float.compare(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.compare(positiveInfinity, negativeInfinity),
         M.equals(OrderTestable(#greater))
       ),
       test(
         "double negative infinity",
-        Float.compare(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.compare(negativeInfinity, negativeInfinity),
         M.equals(OrderTestable(#equal))
       ),
       test(
         "negative and positive infinity",
-        Float.compare(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.compare(negativeInfinity, positiveInfinity),
         M.equals(OrderTestable(#less))
       ),
       test(
@@ -2978,52 +2981,52 @@ run(
       ),
       test(
         "positive NaN and positive infinity",
-        Float.compare(positiveNaN, Float.positiveInfinity()),
+        Float.compare(positiveNaN, positiveInfinity),
         M.equals(OrderTestable(#greater)),
       ),
       test(
         "positive NaN and negative infinity",
-        Float.compare(positiveNaN, Float.negativeInfinity()),
+        Float.compare(positiveNaN, negativeInfinity),
         M.equals(OrderTestable(#greater)),
       ),
       test(
         "positive NaN and positive infinity",
-        Float.compare(positiveNaN, Float.positiveInfinity()),
+        Float.compare(positiveNaN, positiveInfinity),
         M.equals(OrderTestable(#greater)),
       ),
       test(
         "negative NaN and negative infinity",
-        Float.compare(negativeNaN, Float.negativeInfinity()),
+        Float.compare(negativeNaN, negativeInfinity),
         M.equals(OrderTestable(#less)),
       ),
       test(
         "negative NaN and positive infinity",
-        Float.compare(negativeNaN, Float.positiveInfinity()),
+        Float.compare(negativeNaN, positiveInfinity),
         M.equals(OrderTestable(#less)),
       ),
       test(
         "positive infinity and positive NaN",
-        Float.compare(Float.positiveInfinity(), positiveNaN),
+        Float.compare(positiveInfinity, positiveNaN),
         M.equals(OrderTestable(#less)),
       ),
       test(
         "positive infinity and negative NaN",
-        Float.compare(Float.positiveInfinity(), negativeNaN),
+        Float.compare(positiveInfinity, negativeNaN),
         M.equals(OrderTestable(#greater)),
       ),
       test(
         "positive infinity and positive NaN",
-        Float.compare(Float.positiveInfinity(), positiveNaN),
+        Float.compare(positiveInfinity, positiveNaN),
         M.equals(OrderTestable(#less)),
       ),
       test(
         "negative infinity and positive NaN",
-        Float.compare(Float.negativeInfinity(), positiveNaN),
+        Float.compare(negativeInfinity, positiveNaN),
         M.equals(OrderTestable(#less)),
       ),
       test(
         "negative infinity and negative NaN",
-        Float.compare(Float.negativeInfinity(), negativeNaN),
+        Float.compare(negativeInfinity, negativeNaN),
         M.equals(OrderTestable(#greater)),
       )
     ]
@@ -3064,13 +3067,13 @@ run(
       ),
       test(
         "positive infinity",
-        Float.neg(Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.neg(positiveInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.neg(Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.neg(negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive NaN (provisional test)",
@@ -3140,42 +3143,42 @@ run(
       ),
       test(
         "number and positive infinity",
-        Float.add(1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.add(1.23, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive infinity and number",
-        Float.add(Float.positiveInfinity(), -1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.add(positiveInfinity, -1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "number and negative infinity",
-        Float.add(1.23, Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.add(1.23, negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity and number",
-        Float.add(Float.negativeInfinity(), 1.23),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.add(negativeInfinity, 1.23),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "double positive infinity",
-        Float.add(Float.positiveInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.add(positiveInfinity, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive and negative infinity",
-        Float.add(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.add(positiveInfinity, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "double negative infinity",
-        Float.add(Float.negativeInfinity(), Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.add(negativeInfinity, negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative and positive infinity",
-        Float.add(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.add(negativeInfinity, positiveInfinity),
         NaNMatcher()
       ),
       test(
@@ -3210,22 +3213,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.add(positiveNaN, Float.positiveInfinity()),
+        Float.add(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.add(positiveNaN, Float.negativeInfinity()),
+        Float.add(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.add(Float.positiveInfinity(), positiveNaN),
+        Float.add(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.add(Float.negativeInfinity(), positiveNaN),
+        Float.add(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -3275,43 +3278,43 @@ run(
       ),
       test(
         "number and positive infinity",
-        Float.sub(1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.sub(1.23, positiveInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive infinity and number",
-        Float.sub(Float.positiveInfinity(), -1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.sub(positiveInfinity, -1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "number and negative infinity",
-        Float.sub(1.23, Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.sub(1.23, negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and number",
-        Float.sub(Float.negativeInfinity(), 1.23),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.sub(negativeInfinity, 1.23),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "double positive infinity",
-        Float.sub(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.sub(positiveInfinity, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "positive and negative infinity",
-        Float.sub(Float.positiveInfinity(), Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.sub(positiveInfinity, negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "double negative infinity",
-        Float.sub(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.sub(negativeInfinity, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "negative and positive infinity",
-        Float.sub(Float.negativeInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.sub(negativeInfinity, positiveInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "two positive NaNs",
@@ -3345,22 +3348,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.sub(positiveNaN, Float.positiveInfinity()),
+        Float.sub(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.sub(positiveNaN, Float.negativeInfinity()),
+        Float.sub(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.sub(Float.positiveInfinity(), positiveNaN),
+        Float.sub(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.sub(Float.negativeInfinity(), positiveNaN),
+        Float.sub(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -3410,83 +3413,83 @@ run(
       ),
       test(
         "positive number and positive infinity",
-        Float.mul(1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.mul(1.23, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative number and positive infinity",
-        Float.mul(-1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.mul(-1.23, positiveInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "zero and positive infinity",
-        Float.mul(0.0, Float.positiveInfinity()),
+        Float.mul(0.0, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and positive number",
-        Float.mul(Float.positiveInfinity(), 1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.mul(positiveInfinity, 1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive infinity and negative number",
-        Float.mul(Float.positiveInfinity(), -1.23),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.mul(positiveInfinity, -1.23),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive infinity and zero",
-        Float.mul(Float.positiveInfinity(), 0.0),
+        Float.mul(positiveInfinity, 0.0),
         NaNMatcher()
       ),
       test(
         "positive number and negative infinity",
-        Float.mul(1.23, Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.mul(1.23, negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative number and negative infinity",
-        Float.mul(-1.23, Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.mul(-1.23, negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "zero and negative infinity",
-        Float.mul(0.0, Float.negativeInfinity()),
+        Float.mul(0.0, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "negative infinity and positive number",
-        Float.mul(Float.negativeInfinity(), 1.23),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.mul(negativeInfinity, 1.23),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity and negative number",
-        Float.mul(Float.negativeInfinity(), -1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.mul(negativeInfinity, -1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and zero",
-        Float.mul(Float.negativeInfinity(), 0.0),
+        Float.mul(negativeInfinity, 0.0),
         NaNMatcher()
       ),
       test(
         "double positive infinity",
-        Float.mul(Float.positiveInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.mul(positiveInfinity, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive and negative infinity",
-        Float.mul(Float.positiveInfinity(), Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.mul(positiveInfinity, negativeInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "double negative infinity",
-        Float.mul(Float.negativeInfinity(), Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.mul(negativeInfinity, negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative and positive infinity",
-        Float.mul(Float.negativeInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.mul(negativeInfinity, positiveInfinity),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "two positive NaNs",
@@ -3530,22 +3533,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.mul(positiveNaN, Float.positiveInfinity()),
+        Float.mul(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.mul(positiveNaN, Float.negativeInfinity()),
+        Float.mul(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.mul(Float.positiveInfinity(), positiveNaN),
+        Float.mul(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.mul(Float.negativeInfinity(), positiveNaN),
+        Float.mul(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -3595,72 +3598,72 @@ run(
       ),
       test(
         "positive number and positive infinity",
-        Float.div(1.23, Float.positiveInfinity()),
+        Float.div(1.23, positiveInfinity),
         PositiveZeroMatcher()
       ),
       test(
         "negative number and positive infinity",
-        Float.div(-1.23, Float.positiveInfinity()),
+        Float.div(-1.23, positiveInfinity),
         NegativeZeroMatcher()
       ),
       test(
         "positive infinity and negative number",
-        Float.div(Float.positiveInfinity(), -1.23),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.div(positiveInfinity, -1.23),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "positive infinity and zero",
-        Float.div(Float.positiveInfinity(), 0.0),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.div(positiveInfinity, 0.0),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive infinity and positive number",
-        Float.div(Float.positiveInfinity(), 1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.div(positiveInfinity, 1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive number and negative infinity",
-        Float.div(1.23, Float.negativeInfinity()),
+        Float.div(1.23, negativeInfinity),
         NegativeZeroMatcher()
       ),
       test(
         "negative number and negative infinity",
-        Float.div(-1.23, Float.negativeInfinity()),
+        Float.div(-1.23, negativeInfinity),
         PositiveZeroMatcher()
       ),
       test(
         "negative infinity and positive number",
-        Float.div(Float.negativeInfinity(), 1.23),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.div(negativeInfinity, 1.23),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity and negative number",
-        Float.div(Float.negativeInfinity(), -1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.div(negativeInfinity, -1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and zero",
-        Float.div(Float.negativeInfinity(), 0.0),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.div(negativeInfinity, 0.0),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "double positive infinity",
-        Float.div(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.div(positiveInfinity, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "positive and negative infinity",
-        Float.div(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.div(positiveInfinity, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "double negative infinity",
-        Float.div(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.div(negativeInfinity, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "negative and positive infinity",
-        Float.div(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.div(negativeInfinity, positiveInfinity),
         NaNMatcher()
       ),
       test(
@@ -3695,22 +3698,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.div(positiveNaN, Float.positiveInfinity()),
+        Float.div(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.div(positiveNaN, Float.negativeInfinity()),
+        Float.div(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.div(Float.positiveInfinity(), positiveNaN),
+        Float.div(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.div(Float.negativeInfinity(), positiveNaN),
+        Float.div(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -3765,82 +3768,82 @@ run(
       ),
       test(
         "positive number and positive infinity",
-        Float.rem(1.23, Float.positiveInfinity()),
+        Float.rem(1.23, positiveInfinity),
         M.equals(FloatTestable(1.23, noEpsilon))
       ),
       test(
         "negative number and positive infinity",
-        Float.rem(-1.23, Float.positiveInfinity()),
+        Float.rem(-1.23, positiveInfinity),
         M.equals(FloatTestable(-1.23, noEpsilon))
       ),
       test(
         "zero and positive infinity",
-        Float.rem(0.0, Float.positiveInfinity()),
+        Float.rem(0.0, positiveInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "positive infinity and positive number",
-        Float.rem(Float.positiveInfinity(), 1.23),
+        Float.rem(positiveInfinity, 1.23),
         NaNMatcher()
       ),
       test(
         "positive infinity and negative number",
-        Float.rem(Float.positiveInfinity(), -1.23),
+        Float.rem(positiveInfinity, -1.23),
         NaNMatcher()
       ),
       test(
         "positive infinity and zero",
-        Float.rem(Float.positiveInfinity(), 0.0),
+        Float.rem(positiveInfinity, 0.0),
         NaNMatcher()
       ),
       test(
         "positive number and negative infinity",
-        Float.rem(1.23, Float.negativeInfinity()),
+        Float.rem(1.23, negativeInfinity),
         M.equals(FloatTestable(1.23, noEpsilon))
       ),
       test(
         "negative number and negative infinity",
-        Float.rem(-1.23, Float.negativeInfinity()),
+        Float.rem(-1.23, negativeInfinity),
         M.equals(FloatTestable(-1.23, noEpsilon))
       ),
       test(
         "zero and negative infinity",
-        Float.rem(0.0, Float.negativeInfinity()),
+        Float.rem(0.0, negativeInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "negative infinity and positive number",
-        Float.rem(Float.negativeInfinity(), 1.23),
+        Float.rem(negativeInfinity, 1.23),
         NaNMatcher()
       ),
       test(
         "negative infinity and negative number",
-        Float.rem(Float.negativeInfinity(), -1.23),
+        Float.rem(negativeInfinity, -1.23),
         NaNMatcher()
       ),
       test(
         "negative infinity and zero",
-        Float.rem(Float.negativeInfinity(), 0.0),
+        Float.rem(negativeInfinity, 0.0),
         NaNMatcher()
       ),
       test(
         "double positive infinity",
-        Float.rem(Float.positiveInfinity(), Float.positiveInfinity()),
+        Float.rem(positiveInfinity, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "positive and negative infinity",
-        Float.rem(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.rem(positiveInfinity, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "double negative infinity",
-        Float.rem(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.rem(negativeInfinity, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "negative and positive infinity",
-        Float.rem(Float.negativeInfinity(), Float.positiveInfinity()),
+        Float.rem(negativeInfinity, positiveInfinity),
         NaNMatcher()
       ),
       test(
@@ -3875,22 +3878,22 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.rem(positiveNaN, Float.positiveInfinity()),
+        Float.rem(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative infinity",
-        Float.rem(positiveNaN, Float.negativeInfinity()),
+        Float.rem(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
         "positive infinity and NaN",
-        Float.rem(Float.positiveInfinity(), positiveNaN),
+        Float.rem(positiveInfinity, positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative infinity and NaN",
-        Float.rem(Float.negativeInfinity(), positiveNaN),
+        Float.rem(negativeInfinity, positiveNaN),
         NaNMatcher()
       )
     ]
@@ -3975,103 +3978,103 @@ run(
       ),
       test(
         "positive number and positive infinity",
-        Float.pow(1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(1.23, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "zero and positive infinity",
-        Float.pow(0.0, Float.positiveInfinity()),
+        Float.pow(0.0, positiveInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "negative number and positive infinity",
-        Float.pow(-1.23, Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(-1.23, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive infinity and positive number",
-        Float.pow(Float.positiveInfinity(), 1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(positiveInfinity, 1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive infinity and negative number",
-        Float.pow(Float.positiveInfinity(), -0.1),
+        Float.pow(positiveInfinity, -0.1),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "positive infinity and zero",
-        Float.pow(Float.positiveInfinity(), 0.0),
+        Float.pow(positiveInfinity, 0.0),
         M.equals(FloatTestable(1.0, noEpsilon))
       ),
       test(
         "positive number and negative infinity",
-        Float.pow(1.23, Float.negativeInfinity()),
+        Float.pow(1.23, negativeInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "negative number and negative infinity",
-        Float.pow(-1.23, Float.negativeInfinity()),
+        Float.pow(-1.23, negativeInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "zero and negative infinity",
-        Float.pow(0.0, Float.negativeInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(0.0, negativeInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and positive odd positive number",
-        Float.pow(Float.negativeInfinity(), 3.0),
-        M.equals(FloatTestable(Float.negativeInfinity(), noEpsilon))
+        Float.pow(negativeInfinity, 3.0),
+        M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity and positive odd negative number",
-        Float.pow(Float.negativeInfinity(), -3.0),
+        Float.pow(negativeInfinity, -3.0),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "negative infinity and positive even positive number",
-        Float.pow(Float.negativeInfinity(), 4.0),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(negativeInfinity, 4.0),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and positive even negative number",
-        Float.pow(Float.negativeInfinity(), -4.0),
+        Float.pow(negativeInfinity, -4.0),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "negative infinity and zero",
-        Float.pow(Float.negativeInfinity(), 0.0),
+        Float.pow(negativeInfinity, 0.0),
         M.equals(FloatTestable(1.0, noEpsilon))
       ),
       test(
         "negative infinity and non-integral positive number",
-        Float.pow(Float.negativeInfinity(), 1.23),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(negativeInfinity, 1.23),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "negative infinity and non-integral negative number",
-        Float.pow(Float.negativeInfinity(), -1.23),
+        Float.pow(negativeInfinity, -1.23),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "double positive infinity",
-        Float.pow(Float.positiveInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(positiveInfinity, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive and negative infinity",
-        Float.pow(Float.positiveInfinity(), Float.negativeInfinity()),
+        Float.pow(positiveInfinity, negativeInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "double negative infinity",
-        Float.pow(Float.negativeInfinity(), Float.negativeInfinity()),
+        Float.pow(negativeInfinity, negativeInfinity),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       test(
         "negative and positive infinity",
-        Float.pow(Float.negativeInfinity(), Float.positiveInfinity()),
-        M.equals(FloatTestable(Float.positiveInfinity(), noEpsilon))
+        Float.pow(negativeInfinity, positiveInfinity),
+        M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "two positive NaNs",
@@ -4105,12 +4108,12 @@ run(
       ),
       test(
         "NaN and positive infinity",
-        Float.pow(positiveNaN, Float.positiveInfinity()),
+        Float.pow(positiveNaN, positiveInfinity),
         NaNMatcher()
       ),
       test(
         "NaN and negative Infinity",
-        Float.pow(positiveNaN, Float.negativeInfinity()),
+        Float.pow(positiveNaN, negativeInfinity),
         NaNMatcher()
       ),
       test(
