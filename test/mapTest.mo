@@ -11,10 +11,9 @@ import M "mo:matchers/Matchers";
 let map1 = Map<Text, Nat>(Text);
 
 module Mod {
-  class C() {
+  public class C() {
     public let x = 4
   };
-
   public func compare(c1 : C, c2 : C) : Order.Order {
     Nat.compare(c1.x, c2.x)
   };
@@ -23,10 +22,27 @@ module Mod {
   }
 };
 
-let map2 = Map<C, Nat>(Mod);
-let map3 = Map<C, Nat>(module { public let compare = compare; public let hash = hash });
-// map4 = Map<C, Nat>({ compare; hash })
-// map5 = Map<C, Nat>(compare, hash);
+let map2 = Map<Mod.C, Nat>(Mod);
+
+class D() {
+  public let x = 4
+};
+
+func compare2(d1 : D, d2 : D) : Order.Order {
+  Nat.compare(d1.x, d2.x)
+};
+func hash2(d : D) : Hash.Hash {
+  Hash.hash(d.x)
+};
+
+let map3 = Map<D, Nat>(
+  module {
+    public let compare : (D, D) -> Order.Order = compare2;
+    public let hash : D -> Hash.Hash = hash2
+  }
+);
+// map4 = Map<Mod.C, Nat>({ compare; hash })
+// map5 = Map<Mod.C, Nat>(compare, hash);
 
 let suite = Suite.suite(
   "Map",
