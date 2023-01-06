@@ -1,11 +1,11 @@
-import Map "mo:base/Map";
+import { Map } "mo:base/Map";
 import Nat "mo:base/Nat";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
-let map = Map.Map<Nat, Text>(Nat);
+let map = Map<Nat, Text>(Nat);
 
 let suite = Suite.suite(
   "Map",
