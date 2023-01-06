@@ -34,8 +34,9 @@ module Mod {
 // But this also seems nice to use
 let map2 = Map<C, Nat>(Mod);
 
-// Alternatively, you don't technically have to wrap the class in a module
-// But then you get an ugly initialization again
+// Alternatively, you can create the module here (e.g. if compare and hash are defined
+// in separate places)
+// But then you get an ugly initialization
 let map3 = Map<C, Nat>(module { public let compare = compare; public let hash = hash });
 
 // If modules could be considered subtypes of records, then this is possible
