@@ -2,6 +2,7 @@ import TrieMap "TrieMap";
 import Order "Order";
 import Hash "Hash";
 import Nat "Nat";
+import Iter "Iter";
 
 class Map<Key, Value>(
   utilities : module {
@@ -41,5 +42,13 @@ class Map<Key, Value>(
 
   public func clear() {
     map := TrieMap.TrieMap<Key, Value>(equal, hash)
+  };
+
+  public func share() : [(Key, Value)] {
+    Iter.toArray(map.entries())
+  };
+
+  public func unshare(entries : [(Key, Value)]) {
+    map := TrieMap.fromEntries<Key, Value>(entries.vals(), equal, hash)
   }
 }
