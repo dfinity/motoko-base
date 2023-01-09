@@ -45,7 +45,9 @@ module {
   /// import Random "mo:base/Random";
   ///
   /// let random = Random.Finite(await Random.blob());
-  /// let seedRandom = Random.Finite("seed");
+  ///
+  /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+  /// let seedRandom = Random.Finite(seed);
   /// ```
   public class Finite(entropy : Blob) {
     let it : I.Iter<Nat8> = entropy.vals();
@@ -55,8 +57,9 @@ module {
     ///
     /// Example:
     /// ```motoko no-repl
-    /// let random = Random.Finite("seed");
-    /// random.byte() // => ?115
+    /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+    /// let random = Random.Finite(seed);
+    /// random.byte() // => ?20
     /// ```
     public func byte() : ?Nat8 {
       it.next()
@@ -89,7 +92,8 @@ module {
     ///
     /// Example:
     /// ```motoko no-repl
-    /// let random = Random.Finite("seed");
+    /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+    /// let random = Random.Finite(seed);
     /// random.coin() // => ?false
     /// ```
     public func coin() : ?Bool {
@@ -101,8 +105,9 @@ module {
     ///
     /// Example:
     /// ```motoko no-repl
-    /// let random = Random.Finite("seed1234567890");
-    /// random.range(32) // => ?1936024932
+    /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+    /// let random = Random.Finite(seed);
+    /// random.range(32) // => ?348746249
     /// ```
     public func range(p : Nat8) : ?Nat {
       var pp = p;
@@ -125,8 +130,9 @@ module {
     ///
     /// Example:
     /// ```motoko no-repl
-    /// let random = Random.Finite("seed");
-    /// random.binomial(5) // => ?3
+    /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+    /// let random = Random.Finite(seed);
+    /// random.binomial(5) // => ?1
     /// ```
     public func binomial(n : Nat8) : ?Nat8 {
       var nn = n;
@@ -152,7 +158,8 @@ module {
   ///
   /// Example:
   /// ```motoko no-repl
-  /// Random.byteFrom("seed") // => 115
+  /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+  /// Random.byteFrom(seed) // => 20
   /// ```
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.vals().next()) {
@@ -166,7 +173,8 @@ module {
   ///
   /// Example:
   /// ```motoko no-repl
-  /// Random.coinFrom("seed") // => false
+  /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+  /// Random.coinFrom(seed) // => false
   /// ```
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.vals().next()) {
@@ -188,7 +196,8 @@ module {
   ///
   /// Example:
   /// ```motoko no-repl
-  /// Random.rangeFrom(32, "seed1234567890") // => 1936024932
+  /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+  /// Random.rangeFrom(32, seed) // => 348746249
   /// ```
   public func rangeFrom(p : Nat8, seed : Blob) : Nat {
     rangeIter(p, seed.vals())
@@ -216,7 +225,8 @@ module {
   ///
   /// Example:
   /// ```motoko no-repl
-  /// Random.binomialFrom(5, "seed") // => 3
+  /// let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+  /// Random.binomialFrom(5, seed) // => 1
   /// ```
   public func binomialFrom(n : Nat8, seed : Blob) : Nat8 {
     binomialIter(n, seed.vals())
