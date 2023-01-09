@@ -1,6 +1,7 @@
 import Prim "mo:prim";
 import Random "mo:base/Random";
 import Nat8 "mo:base/Nat8";
+import Blob "mo:base/Blob";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -17,9 +18,35 @@ let nat8Testable : T.Testable<Nat8> = object {
 
 let { run; test; suite } = Suite;
 
+func toBits(b : Blob) : Nat -> Bool {
+   let bytes = Blob.toArray(b);
+   func (n : Nat) : Bool {
+     let byte = bytes[n / 8];
+     let mask = 0x80 >> (Nat8.fromNat(n % 8));
+     0 != byte & mask
+   }
+};
+
+
+func toWords(b : Blob, bits : Nat) : Nat -> Nat {
+   let bytes = Blob.toArray(b);
+   func (n : Nat) : Nat {
+     let o = n/bits/8;
+     var acc = 0;
+     var i = 0;
+     while (i < bits / 8) {
+       let byte = bytes[o + i];
+       acc := acc * 256 + Nat8.toNat(byte);
+       i += 1;
+     };
+     acc
+   }
+};
+
 
 run(
-  suite(
+
+   suite(
     "random-coin",
     [
       test(
@@ -37,6 +64,25 @@ run(
         Random.Finite("\7F").coin(),
         M.equals(T.optional(T.boolTestable, ?false : ?Bool))
       ),
+
+      test(
+        "random coin echoes bits",
+        do {
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let bits = toBits(blob);
+          var i = 0;
+          var max = blob.size()*8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.coin() == ?bits(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
     ]
   )
 );
@@ -70,6 +116,64 @@ run(
         Random.Finite("\FF\FF").range(16),
         M.equals(T.optional(T.natTestable, ?65535 : ?Nat))
       ),
+
+      test(
+        "random range echoes bits 32",
+        do {
+          let bits = 32;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let words = toWords(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.range(Nat8.fromNat(bits)) == ?words(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
+      test(
+        "random range echoes bits 8",
+        do {
+          let bits = 8;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let words = toWords(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.range(Nat8.fromNat(bits)) == ?words(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
+      test(
+        "random range echoes bits 16",
+        do {
+          let bits = 16;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let words = toWords(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.range(Nat8.fromNat(bits)) == ?words(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
     ]
   )
 );
