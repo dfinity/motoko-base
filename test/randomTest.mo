@@ -43,6 +43,20 @@ func toWords(b : Blob, bits : Nat) : Nat -> Nat {
    }
 };
 
+func toPopcounts(b : Blob, bits : Nat) : Nat -> Nat8 {
+   let bytes = Blob.toArray(b);
+   func (n : Nat) : Nat8 {
+     let o = n/bits/8;
+     var acc : Nat8 = 0;
+     var i = 0;
+     while (i < bits / 8) {
+       let byte = bytes[o + i];
+       acc := Nat8.bitcountNonZero(byte);
+       i += 1;
+     };
+     acc
+   }
+};
 
 run(
 
@@ -222,6 +236,64 @@ run(
         Random.Finite("\AA\AA").binomial(16),
         M.equals(T.optional(nat8Testable, ?8 : ?Nat8))
       ),
+
+      test(
+        "random range echoes bits 32",
+        do {
+          let bits = 32;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let popcounts = toPopcounts(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.binomial(Nat8.fromNat(bits)) == ?popcounts(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
+      test(
+        "random range echoes bits 8",
+        do {
+          let bits = 8;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let popcounts = toPopcounts(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.binomial(Nat8.fromNat(bits)) == ?popcounts(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
+      test(
+        "random binomial echoes bits 16",
+        do {
+          let bits = 16;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let popcounts = toPopcounts(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.binomial(Nat8.fromNat(bits)) == ?popcounts(i);
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true : Bool))
+      ),
+
     ]
   )
 )
