@@ -6,7 +6,7 @@
   "scripts": {
     "prettier:check": "npx -p prettier -p pretty-quick pretty-quick --check",
     "prettier:format": "npx -p prettier -p pretty-quick pretty-quick",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/dfinity/motoko-base#readme",
   "devDependencies": {
+    "fast-glob": "^3.2.12",
     "husky": "^8.0.2",
     "prettier": "^2.8.1",
     "prettier-plugin-motoko": "^0.2.3",

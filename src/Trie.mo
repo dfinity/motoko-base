@@ -74,7 +74,7 @@
 // list.
 //
 
-import Debug "mo:base/Debug";
+import Debug "Debug";
 
 import Prim "mo:⛔";
 import P "Prelude";
