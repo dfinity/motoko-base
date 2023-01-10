@@ -32,6 +32,14 @@ import Prim "mo:⛔";
 
 module {
 
+  /// Obtains a full blob (32 bytes) worth of fresh entropy.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// let random = Random.Finite(await Random.blob());
+  /// ```
+  public let blob : shared () -> async Blob = raw_rand;
+
   /// Drawing from a finite supply of entropy, `Finite` provides
   /// methods to obtain random values. When the entropy is used up,
   /// `null` is returned. Otherwise the outcomes' distributions are
@@ -190,14 +198,6 @@ module {
       case _ { Prim.trap "Random.coinFrom" }
     }
   };
-
-  /// Obtains a full blob (32 bytes) worth of fresh entropy.
-  ///
-  /// Example:
-  /// ```motoko no-repl
-  /// let random = Random.Finite(await Random.blob());
-  /// ```
-  public let blob : shared () -> async Blob = raw_rand;
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
