@@ -145,7 +145,7 @@ module {
 
     /// Returns an iterator over the keys of the map.
     ///
-    /// Each iterator gets a _persistent view_ of the mapping, and is unaffected
+    /// Each iterator gets a _snapshot view_ of the mapping, and is unaffected
     /// by concurrent updates to the iterated map.
     ///
     /// Example:
@@ -174,7 +174,7 @@ module {
 
     /// Returns an iterator over the values in the map.
     ///
-    /// Each iterator gets a _persistent view_ of the mapping, and is unaffected
+    /// Each iterator gets a _snapshot view_ of the mapping, and is unaffected
     /// by concurrent updates to the iterated map.
     ///
     /// Example:
@@ -203,7 +203,7 @@ module {
 
     /// Returns an iterator over the entries (key-value pairs) in the map.
     ///
-    /// Each iterator gets a _persistent view_ of the mapping, and is unaffected
+    /// Each iterator gets a _snapshot view_ of the mapping, and is unaffected
     /// by concurrent updates to the iterated map.
     ///
     /// Example:
