@@ -1,6 +1,7 @@
 import Prim "mo:prim";
 import Random "mo:base/Random";
 import Nat8 "mo:base/Nat8";
+import Nat16 "mo:base/Nat16";
 import Blob "mo:base/Blob";
 
 import Suite "mo:matchers/Suite";
@@ -14,6 +15,12 @@ let nat8Testable : T.Testable<Nat8> = object {
   public func equals(first : Nat8, second : Nat8) : Bool {
     first == second
   }
+};
+
+func nat8(n : Nat8) : T.TestableItem<Nat8> = {
+  item = n;
+  display = nat8Testable.display;
+  equals = nat8Testable.equals;
 };
 
 let { run; test; suite } = Suite;
@@ -435,6 +442,44 @@ run(
         "random 2 byte range 16 FFFF",
         Random.rangeFrom(16,"\FF\FF"),
         M.equals(T.nat(65535))
+      ),
+  ]
+ )
+);
+
+run(
+  suite(
+    "random-binomialFrom",
+    [
+      test(
+        "random 1 byte range 8 FF",
+        Random.binomialFrom(8,"\FF"),
+        M.equals(nat8(8))
+      ),
+      test(
+        "random 1 byte range 8 CAFE",
+        Random.binomialFrom(8,"\CAFE"),
+        M.equals(nat8(Nat8.bitcountNonZero(0xCA)))
+      ),
+      test(
+        "random 1 byte range 8 00",
+        Random.binomialFrom(8,"\00"),
+        M.equals(nat8(0))
+      ),
+      test(
+        "random 2 byte range 16 0000",
+        Random.binomialFrom(16,"\00\00"),
+        M.equals(nat8(0))
+      ),
+      test(
+        "random 2 byte range 16 CAFEBA",
+        Random.binomialFrom(16,"\CA\FE\BA"),
+        M.equals(nat8(Nat8.fromNat(Nat16.toNat(Nat16.bitcountNonZero(0xCAFE)))))
+      ),
+      test(
+        "random 2 byte range 16 FFFF",
+        Random.binomialFrom(16,"\FF\FF"),
+        M.equals(nat8(16))
       ),
   ]
  )
