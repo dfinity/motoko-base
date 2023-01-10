@@ -333,43 +333,6 @@ run(
   )
 );
 
-run(
-  suite(
-    "random-rangeFrom",
-    [
-      test(
-        "random 1 byte range 8",
-        Random.rangeFrom(8,"\FF"),
-        M.equals(T.nat(255))
-      ),
-      test(
-        "random 1 byte range 8",
-        Random.rangeFrom(8,"\00"),
-        M.equals(T.nat(0))
-      ),
-      test(
-        "random 1 byte range 8",
-        Random.rangeFrom(8,"\CA"),
-        M.equals(T.nat(0xCA))
-      ),
-      test(
-        "random 2 byte range 16",
-        Random.rangeFrom(16,"\00\00"),
-        M.equals(T.nat(0))
-      ),
-      test(
-        "random 2 byte range 16",
-        Random.rangeFrom(16,"\CA\FE"),
-        M.equals(T.nat(0xCAFE))
-      ),
-      test(
-        "random 2 byte range 16",
-        Random.rangeFrom(16,"\FF\FF"),
-        M.equals(T.nat(65535))
-      ),
-  ]
- )
-);
 
 run(
   suite(
@@ -480,6 +443,44 @@ run(
         "random 2 byte range 16 FFFF",
         Random.binomialFrom(16,"\FF\FF"),
         M.equals(nat8(16))
+      ),
+  ]
+ )
+);
+
+run(
+  suite(
+    "random-byteFrom",
+    [
+      test(
+        "random byte FF",
+        Random.byteFrom("\FF"),
+        M.equals(nat8(255))
+      ),
+      test(
+        "random byte 00",
+        Random.byteFrom("\00"),
+        M.equals(nat8(0))
+      ),
+      test(
+        "random byte CA",
+        Random.byteFrom("\CA"),
+        M.equals(nat8(0xCA))
+      ),
+      test(
+        "random byte 0000",
+        Random.byteFrom("\00\00"),
+        M.equals(nat8(0))
+      ),
+      test(
+        "random byte CAFE",
+        Random.byteFrom("\CA\FE"),
+        M.equals(nat8(0xCA))
+      ),
+      test(
+        "random byte FFFF",
+        Random.byteFrom("\FF\FF"),
+        M.equals(nat8(255))
       ),
   ]
  )
