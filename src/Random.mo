@@ -108,8 +108,6 @@ module {
     }
   };
 
-  let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
-
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
   public func byteFrom(seed : Blob) : Nat8 {
@@ -129,7 +127,14 @@ module {
   };
 
   /// Obtains a full blob (32 bytes) worth of fresh entropy.
-  public let blob : shared () -> async Blob = raw_rand;
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// let random = Random.Finite(await Random.blob());
+  /// ```
+  public func blob() : async Blob {
+    await (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand()
+  };
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
