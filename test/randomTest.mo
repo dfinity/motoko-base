@@ -94,7 +94,7 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
     ]
@@ -147,7 +147,7 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
       test(
@@ -166,7 +166,7 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
       test(
@@ -185,7 +185,7 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
     ]
@@ -253,7 +253,7 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
       test(
@@ -272,7 +272,7 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
       test(
@@ -291,9 +291,38 @@ run(
           };
           eq;
          },
-        M.equals(T.bool(true : Bool))
+        M.equals(T.bool(true))
       ),
 
     ]
   )
-)
+);
+
+run(
+   suite(
+    "random-coinFrom",
+    [
+      test(
+        "random non-empty coin - true",
+        Random.coinFrom("\FF"),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "random non-empty coin - false",
+        Random.coinFrom("\7F"),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "random non-empty coin - true",
+        Random.coinFrom("\FF\CA\FE\BA\BE"),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "random non-empty coin - false",
+        Random.coinFrom("\7F\CA\FE\BA\BE"),
+        M.equals(T.bool(false))
+      )
+    ]
+  )
+);
+
