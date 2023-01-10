@@ -66,7 +66,6 @@ func toPopcounts(b : Blob, bits : Nat) : Nat -> Nat8 {
 };
 
 run(
-
    suite(
     "random-coin",
     [
@@ -484,4 +483,58 @@ run(
       ),
   ]
  )
+);
+
+
+run(
+  suite(
+    "random-byte",
+    [
+      test(
+        "random byte empty",
+        Random.Finite("").byte(),
+        M.equals(T.optional(nat8Testable, null : ?Nat8))
+      ),
+      test(
+        "random byte FF",
+        Random.Finite("\FF").byte(),
+        M.equals(T.optional(nat8Testable, ?255 : ?Nat8))
+      ),
+      test(
+        "random byte 00",
+        Random.Finite("\00").byte(),
+        M.equals(T.optional(nat8Testable, ?0 : ?Nat8))
+      ),
+      test(
+        "random byte CA",
+        Random.Finite("\CA").byte(),
+        M.equals(T.optional(nat8Testable, ?0xCA : ?Nat8))
+      ),
+       test(
+        "random byte CAFE",
+        Random.Finite("\CA\FE").byte(),
+        M.equals(T.optional(nat8Testable, ?0xCA : ?Nat8))
+      ),
+
+      test(
+        "random byte echoes blob",
+        do {
+          let bits = 8;
+          let blob : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
+          let f = Random.Finite(blob);
+          let bytes = toWords(blob, bits);
+          var i = 0;
+          var max = blob.size() / bits / 8;
+          var eq = true;
+          while (i < max) {
+            eq := eq and f.byte() == ?(Nat8.fromNat(bytes(i)));
+            i += 1;
+          };
+          eq;
+         },
+        M.equals(T.bool(true))
+      ),
+
+    ]
+  )
 );
