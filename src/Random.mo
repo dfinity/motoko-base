@@ -32,6 +32,8 @@ import Prim "mo:⛔";
 
 module {
 
+  let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
+
   /// Obtains a full blob (32 bytes) worth of fresh entropy.
   ///
   /// Example:
@@ -166,8 +168,6 @@ module {
       else null
     }
   };
-
-  let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
 
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
