@@ -28,7 +28,6 @@
 
 import I "Iter";
 import Option "Option";
-import P "Prelude";
 import Prim "mo:⛔";
 
 module {
@@ -173,7 +172,7 @@ module {
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.vals().next()) {
       case (?w) { w };
-      case _ { P.unreachable() }
+      case _ { Prim.trap "Random.byteFrom" }
     }
   };
 
@@ -188,7 +187,7 @@ module {
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.vals().next()) {
       case (?w) { w > (127 : Nat8) };
-      case _ { P.unreachable() }
+      case _ { Prim.trap "Random.coinFrom" }
     }
   };
 
@@ -228,7 +227,10 @@ module {
       };
       pp -= 8
     };
-    P.unreachable()
+    if (0 : Nat8 == pp) {
+      return acc
+    }
+    else Prim.trap("Random.rangeFrom")
   };
 
   /// Counts the number of heads in `n` coin tosses.
@@ -259,7 +261,10 @@ module {
       };
       nn -= 8
     };
-    P.unreachable()
+    if (0 : Nat8 == nn) {
+      return acc
+    }
+    else Prim.trap("Random.binomialFrom")
   }
 
 }

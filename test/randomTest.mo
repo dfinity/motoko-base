@@ -326,3 +326,116 @@ run(
   )
 );
 
+run(
+  suite(
+    "random-rangeFrom",
+    [
+      test(
+        "random 1 byte range 8",
+        Random.rangeFrom(8,"\FF"),
+        M.equals(T.nat(255))
+      ),
+      test(
+        "random 1 byte range 8",
+        Random.rangeFrom(8,"\00"),
+        M.equals(T.nat(0))
+      ),
+      test(
+        "random 1 byte range 8",
+        Random.rangeFrom(8,"\CA"),
+        M.equals(T.nat(0xCA))
+      ),
+      test(
+        "random 2 byte range 16",
+        Random.rangeFrom(16,"\00\00"),
+        M.equals(T.nat(0))
+      ),
+      test(
+        "random 2 byte range 16",
+        Random.rangeFrom(16,"\CA\FE"),
+        M.equals(T.nat(0xCAFE))
+      ),
+      test(
+        "random 2 byte range 16",
+        Random.rangeFrom(16,"\FF\FF"),
+        M.equals(T.nat(65535))
+      ),
+  ]
+ )
+);
+
+run(
+  suite(
+    "random-rangeFrom",
+    [
+      test(
+        "random 1 byte range 8 FF",
+        Random.rangeFrom(8,"\FF"),
+        M.equals(T.nat(255))
+      ),
+      test(
+        "random 1 byte range 8 CAFE",
+        Random.rangeFrom(8,"\CAFE"),
+        M.equals(T.nat(0xCA))
+      ),
+      test(
+        "random 1 byte range 8 00",
+        Random.rangeFrom(8,"\00"),
+        M.equals(T.nat(0))
+      ),
+      test(
+        "random 2 byte range 16 0000",
+        Random.rangeFrom(16,"\00\00"),
+        M.equals(T.nat(0))
+      ),
+      test(
+        "random 2 byte range 16 CAFEBA",
+        Random.rangeFrom(16,"\CA\FE\BA"),
+        M.equals(T.nat(0xCAFE))
+      ),
+      test(
+        "random 2 byte range 16 FF",
+        Random.rangeFrom(16,"\FF\FF"),
+        M.equals(T.nat(65535))
+      ),
+  ]
+ )
+);
+
+run(
+  suite(
+    "random-rangeFrom",
+    [
+      test(
+        "random 1 byte range 8 FF",
+        Random.rangeFrom(8,"\FF"),
+        M.equals(T.nat(255))
+      ),
+      test(
+        "random 1 byte range 8 CAFE",
+        Random.rangeFrom(8,"\CAFE"),
+        M.equals(T.nat(0xCA))
+      ),
+      test(
+        "random 1 byte range 8 00",
+        Random.rangeFrom(8,"\00"),
+        M.equals(T.nat(0))
+      ),
+      test(
+        "random 2 byte range 16 0000",
+        Random.rangeFrom(16,"\00\00"),
+        M.equals(T.nat(0))
+      ),
+      test(
+        "random 2 byte range 16 CAFEBA",
+        Random.rangeFrom(16,"\CA\FE\BA"),
+        M.equals(T.nat(0xCAFE))
+      ),
+      test(
+        "random 2 byte range 16 FFFF",
+        Random.rangeFrom(16,"\FF\FF"),
+        M.equals(T.nat(65535))
+      ),
+  ]
+ )
+);
