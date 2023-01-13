@@ -212,7 +212,7 @@ Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func bitnot(x : xref:#type.Nat16[Nat16], y : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
+func bitnot(x : xref:#type.Nat16[Nat16]) : xref:#type.Nat16[Nat16]
 ----
 
 Returns the bitwise negation of `x`, `^x`.
