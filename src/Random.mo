@@ -28,10 +28,19 @@
 
 import I "Iter";
 import Option "Option";
-import P "Prelude";
 import Prim "mo:⛔";
 
 module {
+
+  let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
+
+  /// Obtains a full blob (32 bytes) worth of fresh entropy.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// let random = Random.Finite(await Random.blob());
+  /// ```
+  public let blob : shared () -> async Blob = raw_rand;
 
   /// Drawing from a finite supply of entropy, `Finite` provides
   /// methods to obtain random values. When the entropy is used up,
@@ -67,7 +76,7 @@ module {
 
     /// Bool iterator splitting up a byte of entropy into 8 bits
     let bit : I.Iter<Bool> = object {
-      var mask = 0x80 : Nat8;
+      var mask = 0x00 : Nat8;
       var byte = 0x00 : Nat8;
       public func next() : ?Bool {
         if (0 : Nat8 == mask) {
@@ -113,7 +122,10 @@ module {
       var pp = p;
       var acc : Nat = 0;
       for (i in it) {
-        if (8 : Nat8 <= pp) { acc := acc * 256 + Prim.nat8ToNat(i) } else if (0 : Nat8 == pp) {
+        if (8 : Nat8 <= pp) {
+          acc := acc * 256 + Prim.nat8ToNat(i)
+        }
+        else if (0 : Nat8 == pp) {
           return ?acc
         } else {
           acc *= Prim.nat8ToNat(1 << pp);
@@ -122,11 +134,13 @@ module {
         };
         pp -= 8
       };
-      null
+      if (0 : Nat8 == pp)
+        ?acc
+      else null
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
-    /// Consumes ⌈p/8⌉ bytes of entropy.
+    /// Consumes ⌈n/8⌉ bytes of entropy.
     ///
     /// Example:
     /// ```motoko no-repl
@@ -138,7 +152,9 @@ module {
       var nn = n;
       var acc : Nat8 = 0;
       for (i in it) {
-        if (8 : Nat8 <= nn) { acc +%= Prim.popcntNat8(i) } else if (0 : Nat8 == nn) {
+        if (8 : Nat8 <= nn) {
+          acc +%= Prim.popcntNat8(i)
+        } else if (0 : Nat8 == nn) {
           return ?acc
         } else {
           let mask : Nat8 = 0xff << (8 - nn);
@@ -147,11 +163,11 @@ module {
         };
         nn -= 8
       };
-      null
+      if (0 : Nat8 == nn)
+        ?acc
+      else null
     }
   };
-
-  let raw_rand = (actor "aaaaa-aa" : actor { raw_rand : () -> async Blob }).raw_rand;
 
   /// Distributes outcomes in the numeric range [0 .. 255].
   /// Seed blob must contain at least a byte.
@@ -164,7 +180,7 @@ module {
   public func byteFrom(seed : Blob) : Nat8 {
     switch (seed.vals().next()) {
       case (?w) { w };
-      case _ { P.unreachable() }
+      case _ { Prim.trap "Random.byteFrom" }
     }
   };
 
@@ -179,17 +195,9 @@ module {
   public func coinFrom(seed : Blob) : Bool {
     switch (seed.vals().next()) {
       case (?w) { w > (127 : Nat8) };
-      case _ { P.unreachable() }
+      case _ { Prim.trap "Random.coinFrom" }
     }
   };
-
-  /// Obtains a full blob (32 bytes) worth of fresh entropy.
-  ///
-  /// Example:
-  /// ```motoko no-repl
-  /// let random = Random.Finite(await Random.blob());
-  /// ```
-  public let blob : shared () -> async Blob = raw_rand;
 
   /// Distributes outcomes in the numeric range [0 .. 2^p - 1].
   /// Seed blob must contain at least ((p+7) / 8) bytes.
@@ -208,7 +216,9 @@ module {
     var pp = p;
     var acc : Nat = 0;
     for (i in it) {
-      if (8 : Nat8 <= pp) { acc := acc * 256 + Prim.nat8ToNat(i) } else if (0 : Nat8 == pp) {
+      if (8 : Nat8 <= pp) {
+        acc := acc * 256 + Prim.nat8ToNat(i)
+      } else if (0 : Nat8 == pp) {
         return acc
       } else {
         acc *= Prim.nat8ToNat(1 << pp);
@@ -217,7 +227,10 @@ module {
       };
       pp -= 8
     };
-    P.unreachable()
+    if (0 : Nat8 == pp) {
+      return acc
+    }
+    else Prim.trap("Random.rangeFrom")
   };
 
   /// Counts the number of heads in `n` coin tosses.
@@ -237,7 +250,9 @@ module {
     var nn = n;
     var acc : Nat8 = 0;
     for (i in it) {
-      if (8 : Nat8 <= nn) { acc +%= Prim.popcntNat8(i) } else if (0 : Nat8 == nn) {
+      if (8 : Nat8 <= nn) {
+        acc +%= Prim.popcntNat8(i)
+      } else if (0 : Nat8 == nn) {
         return acc
       } else {
         let mask : Nat8 = 0xff << (8 - nn);
@@ -246,7 +261,10 @@ module {
       };
       nn -= 8
     };
-    P.unreachable()
+    if (0 : Nat8 == nn) {
+      return acc
+    }
+    else Prim.trap("Random.binomialFrom")
   }
 
 }
