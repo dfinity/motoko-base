@@ -15,11 +15,47 @@
 import Trie "Trie";
 import Hash "Hash";
 import List "List";
+import Iter "Iter";
 
 module {
 
   public type Hash = Hash.Hash;
   public type Set<T> = Trie.Trie<T, ()>;
+  type Key<K> = Trie.Key<K>;
+  type Trie<K, V> = Trie.Trie<K, V>;
+
+  // helper for defining equal and sub, avoiding Trie.diff.
+  // TODO: add to Trie.mo?
+  private func keys<K>(t : Trie<K, Any>) : Iter.Iter<Key<K>> {
+    object {
+      var stack = ?(t, null) : List.List<Trie<K, Any>>;
+      public func next() : ?Key<K> {
+        switch stack {
+          case null { null };
+          case (?(trie, stack2)) {
+            switch trie {
+              case (#empty) {
+                stack := stack2;
+                next()
+              };
+              case (#leaf({ keyvals = null })) {
+                stack := stack2;
+                next()
+              };
+              case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
+                stack := ?(#leaf({ size = c - 1; keyvals = kvs }), stack2);
+                ?k
+              };
+              case (#branch(br)) {
+                stack := ?(br.left, ?(br.right, stack2));
+                next()
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 
   /// Empty set.
   public func empty<T>() : Set<T> { Trie.empty<T, ()>() };
@@ -38,19 +74,34 @@ module {
 
   /// Test if two sets are equal.
   public func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
-    // XXX: Todo: use a smarter check
-    func unitEqual(_ : (), _ : ()) : Bool { true };
-    Trie.equalStructure<T, ()>(s1, s2, eq, unitEqual)
+    if (Trie.size(s1) != Trie.size(s2)) return false;
+    for (k in keys(s1)) {
+      if (Trie.find<T,()>(s2, k, eq) == null) {
+        return false;
+      }
+    };
+    return true;
   };
 
   /// The number of set elements, set's cardinality.
   public func size<T>(s : Set<T>) : Nat {
-    Trie.foldUp<T, (), Nat>(
-      s,
-      func(n : Nat, m : Nat) : Nat { n + m },
-      func(_ : T, _ : ()) : Nat { 1 },
-      0
-    )
+    Trie.size(s);
+  };
+
+  /// Test if `s` is the empty set.
+  public func isEmpty<T>(s : Set<T>) : Bool {
+    Trie.size(s) == 0;
+  };
+
+  /// Test if `s1` is a subset of `s2`.
+  public func isSubset<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
+    if (Trie.size(s1) > Trie.size(s2)) return false;
+    for (k in keys(s1)) {
+      if (Trie.find<T,()>(s2, k, eq) == null) {
+        return false;
+      }
+    };
+    return true;
   };
 
   /// Test if a set contains a given element.
