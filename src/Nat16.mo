@@ -77,7 +77,7 @@ module {
   public func pow(x : Nat16, y : Nat16) : Nat16 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
-  public func bitnot(x : Nat16, y : Nat16) : Nat16 { ^x };
+  public func bitnot(x : Nat16) : Nat16 { ^x };
 
   /// Returns the bitwise and of `x` and `y`, `x & y`.
   public func bitand(x : Nat16, y : Nat16) : Nat16 { x & y };
