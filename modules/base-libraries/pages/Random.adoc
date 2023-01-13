@@ -29,6 +29,21 @@ Usage:
 import Random "mo:base/Random";
 ```
 
+[[blob]]
+== blob
+
+[source.no-repl,motoko,subs=+macros]
+----
+let blob : shared () -> async Blob
+----
+
+Obtains a full blob (32 bytes) worth of fresh entropy.
+
+Example:
+```motoko no-repl
+let random = Random.Finite(await Random.blob());
+```
+
 [[type.Finite]]
 == Finite
 
@@ -119,7 +134,7 @@ func binomial(n : Nat8) : ?Nat8
 ----
 
 Counts the number of heads in `n` fair coin tosses.
-Consumes ⌈p/8⌉ bytes of entropy.
+Consumes ⌈n/8⌉ bytes of entropy.
 
 Example:
 ```motoko no-repl
@@ -160,21 +175,6 @@ Example:
 ```motoko no-repl
 let seed : Blob = "\14\C9\72\09\03\D4\D5\72\82\95\E5\43\AF\FA\A9\44\49\2F\25\56\13\F3\6E\C7\B0\87\DC\76\08\69\14\CF";
 Random.coinFrom(seed) // => false
-```
-
-[[blob]]
-== blob
-
-[source.no-repl,motoko,subs=+macros]
-----
-let blob : shared () -> async Blob
-----
-
-Obtains a full blob (32 bytes) worth of fresh entropy.
-
-Example:
-```motoko no-repl
-let random = Random.Finite(await Random.blob());
 ```
 
 [[rangeFrom]]
