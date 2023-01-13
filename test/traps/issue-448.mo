@@ -13,5 +13,4 @@ var trie2 = Trie.clone(trie);
 trie2 := Trie.put(trie2, key "hello", Text.equal, 33).0;
 // mergeDisjoint should signal a dynamic error
 // in the case of a collision
-var mergedTrie = Trie.mergeDisjoint(trie, trie2, Text.equal);
-mergedTrie
+Trie.mergeDisjoint(trie, trie2, Text.equal); // should trap
