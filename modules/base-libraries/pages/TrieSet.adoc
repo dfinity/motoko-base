@@ -76,6 +76,26 @@ func size<T>(s : xref:#type.Set[Set]<T>) : Nat
 
 The number of set elements, set's cardinality.
 
+[[isEmpty]]
+== isEmpty
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isEmpty<T>(s : xref:#type.Set[Set]<T>) : Bool
+----
+
+Test if `s` is the empty set.
+
+[[isSubset]]
+== isSubset
+
+[source.no-repl,motoko,subs=+macros]
+----
+func isSubset<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : Bool
+----
+
+Test if `s1` is a subset of `s2`.
+
 [[mem]]
 == mem
 
