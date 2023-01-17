@@ -17,13 +17,15 @@ module {
     /// ```motoko
     /// import Stack "mo:base/Stack";
     ///
-    /// let s = Stack.Stack<Nat>();
-    /// s.push(1);
-    /// s.push(2);
-    /// s.push(3);
-    /// s.peek();
+    /// let stack = Stack.Stack<Nat>();
+    /// stack.push(1);
+    /// stack.push(2);
+    /// stack.push(3);
+    /// stack.peek();
     /// ```
     ///
+    /// Runtime: O(1)
+    /// Space: O(1)
     public func push(x : T) {
       stack := ?(x, stack)
     };
@@ -34,10 +36,12 @@ module {
     /// ```motoko
     /// import Stack "mo:base/Stack";
     ///
-    /// let s = Stack.Stack<Nat>();
-    /// s.isEmpty();
+    /// let stack = Stack.Stack<Nat>();
+    /// stack.isEmpty();
     /// ```
     ///
+    /// Runtime: O(1)
+    /// Space: O(1)
     public func isEmpty() : Bool {
       List.isNil<T>(stack)
     };
@@ -48,13 +52,15 @@ module {
     /// ```motoko
     /// import Stack "mo:base/Stack";
     ///
-    /// let s = Stack.Stack<Nat>();
-    /// s.push(1);
-    /// s.push(2);
-    /// s.push(3);
-    /// s.peek();
+    /// let stack = Stack.Stack<Nat>();
+    /// stack.push(1);
+    /// stack.push(2);
+    /// stack.push(3);
+    /// stack.peek();
     /// ```
     ///
+    /// Runtime: O(1)
+    /// Space: O(1)
     public func peek() : ?T {
       switch stack {
         case null { null };
@@ -68,13 +74,15 @@ module {
     /// ```motoko
     /// import Stack "mo:base/Stack";
     ///
-    /// let s = Stack.Stack<Nat>();
-    /// s.push(1);
+    /// let stack = Stack.Stack<Nat>();
+    /// stack.push(1);
     ///
-    /// let _ = s.pop();
-    /// s.isEmpty();
+    /// ignore stack.pop();
+    /// stack.isEmpty();
     /// ```
     ///
+    /// Runtime: O(1)
+    /// Space: O(1)
     public func pop() : ?T {
       switch stack {
         case null { null };
