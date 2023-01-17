@@ -1,8 +1,17 @@
-/// Stack collection (LIFO discipline).
+/// Class `Stack<X>` provides a Minimal LIFO stack of elements of type `X`.
 ///
-/// Minimal LIFO (last in first out) implementation, as a class.
 /// See library `Deque` for mixed LIFO/FIFO behavior.
 ///
+/// Example:
+/// ```motoko name=initialize
+/// import Stack "mo:base/Stack";
+///
+/// let stack = Stack.Stack<Nat>(); // create a stack
+/// ```
+/// Runtime: O(1)
+///
+/// Space: O(1)
+
 import List "List";
 
 module {
@@ -14,45 +23,38 @@ module {
     /// Push an element on the top of the stack.
     ///
     /// Example:
-    /// ```motoko
-    /// import Stack "mo:base/Stack";
-    ///
-    /// let stack = Stack.Stack<Nat>();
+    /// ```motoko include=initialize
     /// stack.push(1);
     /// stack.push(2);
     /// stack.push(3);
-    /// stack.peek();
+    /// stack.peek(); // examine the top most element
     /// ```
     ///
     /// Runtime: O(1)
+    ///
     /// Space: O(1)
     public func push(x : T) {
       stack := ?(x, stack)
     };
 
-    /// True when the stack is empty.
+    /// True when the stack is empty and false otherwise.
     ///
     /// Example:
-    /// ```motoko
-    /// import Stack "mo:base/Stack";
-    ///
-    /// let stack = Stack.Stack<Nat>();
+    /// ```motoko include=initialize
     /// stack.isEmpty();
     /// ```
     ///
     /// Runtime: O(1)
+    ///
     /// Space: O(1)
     public func isEmpty() : Bool {
       List.isNil<T>(stack)
     };
 
-    /// Return and retain the top element, or return null.
+    /// Return (without removing) the top element, or return null if the stack is empty.
     ///
     /// Example:
-    /// ```motoko
-    /// import Stack "mo:base/Stack";
-    ///
-    /// let stack = Stack.Stack<Nat>();
+    /// ```motoko include=initialize
     /// stack.push(1);
     /// stack.push(2);
     /// stack.push(3);
@@ -60,6 +62,7 @@ module {
     /// ```
     ///
     /// Runtime: O(1)
+    ///
     /// Space: O(1)
     public func peek() : ?T {
       switch stack {
@@ -68,20 +71,17 @@ module {
       }
     };
 
-    /// Remove and return the top element, or return null.
+    /// Remove and return the top element, or return null if the stack is empty.
     ///
     /// Example:
-    /// ```motoko
-    /// import Stack "mo:base/Stack";
-    ///
-    /// let stack = Stack.Stack<Nat>();
+    /// ```motoko include=initialize
     /// stack.push(1);
-    ///
     /// ignore stack.pop();
     /// stack.isEmpty();
     /// ```
     ///
     /// Runtime: O(1)
+    ///
     /// Space: O(1)
     public func pop() : ?T {
       switch stack {
