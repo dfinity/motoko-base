@@ -708,7 +708,19 @@ module {
     }
   };
 
-  /// Returns true iff the buffer is empty.
+  /// Returns true if and only if the buffer is empty.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// buffer.add(2);
+  /// buffer.add(0);
+  /// buffer.add(3);
+  /// Buffer.isEmpty(buffer); // false
+  /// ```
+  ///
+  /// ```motoko include=initialize
+  /// Buffer.isEmpty(buffer); // true
+  /// ```
   ///
   /// Runtime: O(1)
   ///
@@ -717,6 +729,17 @@ module {
 
   /// Returns true iff `buffer` contains `element` with respect to equality
   /// defined by `equal`.
+  ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(2);
+  /// buffer.add(0);
+  /// buffer.add(3);
+  /// Buffer.contains<Nat>(buffer, 2, Nat.equals);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -735,6 +758,16 @@ module {
 
   /// Returns a copy of `buffer`, with the same capacity.
   ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// 
+  /// let clone = Buffer.clone(buffer);
+  /// Buffer.toArray(clone);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -748,6 +781,17 @@ module {
 
   /// Finds the greatest element in `buffer` defined by `compare`.
   /// Returns `null` if `buffer` is empty.
+  ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// 
+  /// Buffer.max(buffer, Nat.compare);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -774,6 +818,16 @@ module {
 
   /// Finds the least element in `buffer` defined by `compare`.
   /// Returns `null` if `buffer` is empty.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// 
+  /// Buffer.min(buffer, Nat.compare);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -803,6 +857,22 @@ module {
   /// evaluates to true for every pair of elements in the two buffers of the same
   /// index.
   ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(1);
+  /// b.add(2);
+  /// 
+  /// Buffer.equal(a, b, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -828,6 +898,29 @@ module {
 
   /// Defines comparison for two buffers, using `compare` to recursively compare elements in the
   /// buffers. Comparison is defined lexicographically.
+  ///
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+
+  /// let b = Buffer.Buffer<Nat>(3);
+  /// b.add(3);
+  /// b.add(4);
+  ///
+  /// Buffer.compare<Nat>(a, b, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -865,6 +958,18 @@ module {
   /// Creates a textual representation of `buffer`, using `toText` to recursively
   /// convert the elements into Text.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -890,6 +995,18 @@ module {
   /// The deterministic hash function is a function of the elements in the Buffer, as well
   /// as their ordering.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Hash "mo:base/Hash";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(1000);
+  ///
+  /// Buffer.hash<Nat>(buffer, Hash.hash);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -911,6 +1028,18 @@ module {
   /// Finds the first index of `element` in `buffer` using equality of elements defined
   /// by `equal`. Returns `null` if `element` is not found.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.indexOf<Nat>(3, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -931,6 +1060,20 @@ module {
 
   /// Finds the last index of `element` in `buffer` using equality of elements defined
   /// by `equal`. Returns `null` if `element` is not found.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(2);
+  /// buffer.add(2);
+  ///
+  /// Buffer.lastIndexOf<Nat>(2, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -954,6 +1097,25 @@ module {
   };
 
   /// Searches for `subBuffer` in `buffer`, and returns the starting index if it is found.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let sub = Buffer.Buffer<Nat>(2);
+  /// sub.add(4);
+  /// sub.add(5);
+  /// sub.add(6);
+  ///
+  /// Buffer.indexOfBuffer<Nat>(sub, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size of buffer + size of subBuffer)
   ///
@@ -1013,6 +1175,27 @@ module {
   /// Behavior is undefined if `buffer` is not sorted. Uses `compare` to
   /// perform the search. Returns an index of `element` if it is found.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// Buffer.binarySearch<Nat>(5, buffer, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// ```
+  ///
   /// Runtime: O(log(size))
   ///
   /// Space: O(1)
@@ -1045,6 +1228,21 @@ module {
   /// of length `length`. Traps if `start` is out of bounds, or `start + length`
   /// is greater than the size of `buffer`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let sub = Buffer.subBuffer(buffer, 3, 2);
+  /// Buffer.toText(sub, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(length)
   ///
   /// Space: O(length)
@@ -1070,6 +1268,23 @@ module {
   /// Checks if `subBuffer` is a sub-Buffer of `buffer`. Uses `equal` to
   /// compare elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let sub = Buffer.Buffer<Nat>(2);
+  /// sub.add(1);
+  /// sub.add(2);
+  /// Buffer.isSubBufferOf(sub, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size of subBuffer + size of buffer)
   ///
   /// Space: O(size of subBuffer)
@@ -1085,6 +1300,21 @@ module {
   /// Checks if `subBuffer` is a strict subBuffer of `buffer`, i.e. `subBuffer` must be
   /// strictly contained inside both the first and last indices of `buffer`.
   /// Uses `equal` to compare elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let sub = Buffer.Buffer<Nat>(2);
+  /// sub.add(2);
+  /// sub.add(3);
+  /// Buffer.isStrictSubBufferOf(sub, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size of subBuffer + size of buffer)
   ///
@@ -1106,6 +1336,19 @@ module {
 
   /// Returns the prefix of `buffer` of length `length`. Traps if `length`
   /// is greater than the size of `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let pre = Buffer.prefix(buffer, 3);
+  /// Buffer.toText(pre, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(length)
   ///
@@ -1129,6 +1372,19 @@ module {
 
   /// Checks if `prefix` is a prefix of `buffer`. Uses `equal` to
   /// compare elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let pre = Buffer.prefix(buffer, 3);
+  /// Buffer.isPrefixOf(pre, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(size of prefix)
   ///
@@ -1156,6 +1412,22 @@ module {
   /// Checks if `prefix` is a strict prefix of `buffer`. Uses `equal` to
   /// compare elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let pre = Buffer.Buffer<Nat>(3);
+  /// pre.add(1);
+  /// pre.add(2);
+  /// pre.add(3);
+  /// Buffer.isStrictPrefixOf(pre, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(size of prefix)
   ///
   /// Space: O(size of prefix)
@@ -1170,6 +1442,19 @@ module {
 
   /// Returns the suffix of `buffer` of length `length`.
   /// Traps if `length`is greater than the size of `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let suf = Buffer.suffix(buffer, 3);
+  /// Buffer.toText(suf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(length)
   ///
@@ -1195,6 +1480,19 @@ module {
 
   /// Checks if `suffix` is a suffix of `buffer`. Uses `equal` to compare
   /// elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let suf = Buffer.suffix(buffer, 3);
+  /// Buffer.isSuffixOf(suf, buffer, Nat.equal);
+  /// ```
   ///
   /// Runtime: O(length of suffix)
   ///
@@ -1224,6 +1522,19 @@ module {
   /// Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
   /// elements.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// let suf = Buffer.suffix(buffer, 3);
+  /// Buffer.isStrictSuffixOf(suf, buffer, Nat.equal);
+  /// ```
+  ///
   /// Runtime: O(length of suffix)
   ///
   /// Space: O(length of suffix)
@@ -1237,6 +1548,16 @@ module {
   };
 
   /// Returns true iff every element in `buffer` satisfies `predicate`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.forAll<Nat>(buffer, func (x) { x > 1 });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1255,6 +1576,16 @@ module {
 
   /// Returns true iff some element in `buffer` satisfies `predicate`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.forSome<Nat>(buffer, func (x) { x > 3 });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -1271,6 +1602,16 @@ module {
   };
 
   /// Returns true iff no element in `buffer` satisfies `predicate`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  ///
+  /// Buffer.forNone<Nat>(buffer, func (x) { x == 0 });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1289,6 +1630,17 @@ module {
 
   /// Creates an array containing elements from `buffer`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.toArray<Nat>(buffer);
+  /// 
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1300,6 +1652,16 @@ module {
   );
 
   /// Creates a mutable array containing elements from `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.toVarArray<Nat>(buffer);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1318,6 +1680,17 @@ module {
   };
 
   /// Creates a buffer containing elements from `array`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let array = Array.make(2);
+  ///
+  /// let buf = Buffer.fromArray<Nat>(array);
+  /// Buffer.toText(buf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1341,6 +1714,17 @@ module {
 
   /// Creates a buffer containing elements from `array`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let array = Array.init<Nat>(3, 1);
+  ///
+  /// let buf = Buffer.fromVarArray<Nat>(array);
+  /// Buffer.toText(buf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1355,6 +1739,19 @@ module {
   };
 
   /// Creates a buffer containing elements from `iter`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Array "mo:base/Array";
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
+  ///
+  /// let array = [1, 1, 1];
+  /// let iter = array.vals();
+  ///
+  /// let buf = Buffer.fromIter<Nat>(array);
+  /// Buffer.toText(buf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1371,6 +1768,18 @@ module {
 
   /// Reallocates the array underlying `buffer` such that capacity == size.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let buffer = Buffer.Buffer<Nat>(10);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.trimToSize<Nat>(buffer);
+  /// buffer.capacity();
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1382,6 +1791,18 @@ module {
   };
 
   /// Creates a new buffer by applying `f` to each element in `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.map<Nat, Nat>(buffer, func (x) { x + 1 });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1400,6 +1821,20 @@ module {
 
   /// Applies `f` to each element in `buffer`.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  /// import Debug "mo:base/Debug";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.iterate<Nat>(buffer, func (x) {
+  ///   Debug.print(Nat.toText(x));
+  /// });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1412,6 +1847,18 @@ module {
   };
 
   /// Applies `f` to each element in `buffer` and its index.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.mapEntries<Nat, Nat>(buffer, func (x, i) { x + i + 1 });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1433,6 +1880,24 @@ module {
 
   /// Creates a new buffer by applying `f` to each element in `buffer`,
   /// and keeping all non-null elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.mapFilter<Nat, Nat>(buffer, func (x) {
+  ///   if (k > 1) {
+  ///     ?(k * 2);
+  ///   } else {
+  ///    null;
+  ///   }
+  /// });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1457,6 +1922,22 @@ module {
   /// Creates a new buffer by applying `f` to each element in `buffer`.
   /// If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
   /// Returns an `#ok` containing the new buffer.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.mapResult<Nat, Nat, Text>(buffer, func (k) {
+  ///   if (k > 0) {
+  ///     #ok(k);
+  ///   } else {
+  ///     #err("One or more elements are negative.");
+  ///   }
+  /// });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1484,6 +1965,22 @@ module {
   /// and concatenating the resulting buffers in order. This operation
   /// is similar to what in other functional languages is known as monadic bind.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let chain = Buffer.chain<Nat, Nat>(buffer, func (x) { 
+  ///   let b = Buffer.Buffer<Nat>(2);
+  ///   b.add(x * 2);
+  ///   return b;
+  /// });
+  /// Buffer.toText(chain, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1503,6 +2000,16 @@ module {
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// left to right.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.foldLeft<Nat, Nat>(buffer, 0, func (a, x) { a + x });
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(1)
@@ -1521,6 +2028,16 @@ module {
   /// Collapses the elements in `buffer` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// right to left.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.foldRight<Nat, Nat>(buffer, 0, func (a, x) { a + x });
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1545,6 +2062,16 @@ module {
 
   /// Returns the first element of `buffer`. Traps if `buffer` is empty.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.first(buffer);
+  /// ```
+  ///
   /// Runtime: O(1)
   ///
   /// Space: O(1)
@@ -1552,12 +2079,30 @@ module {
 
   /// Returns the last element of `buffer`. Traps if `buffer` is empty.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.last(buffer);
+  /// ```
+  ///
   /// Runtime: O(1)
   ///
   /// Space: O(1)
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
   /// Returns a new buffer with capacity and size 1, containing `element`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// Buffer.make<Nat>(1);
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(1)
   ///
@@ -1569,6 +2114,18 @@ module {
   };
 
   /// Reverses the order of elements in `buffer`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.reverse(buffer);
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1594,6 +2151,32 @@ module {
   /// Merges two sorted buffers into a single sorted buffer, using `compare` to define
   /// the ordering. The final ordering is stable. Behavior is undefined if either
   /// `buffer1` or `buffer2` is not sorted.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  /// a.add(3);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(4);
+  /// b.add(5);
+  /// b.add(6);
+  ///
+  /// let merged = Buffer.merge<Nat>(a, b, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// Buffer.toText(merged, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size1 + size2)
   ///
@@ -1640,6 +2223,29 @@ module {
 
   /// Eliminates all duplicate elements in `buffer` as defined by `compare`.
   /// Elimination is stable with respect to the original ordering of the elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// Buffer.removeDuplicates<Nat>(buffer, func (x, y) {
+  ///   if (x > y) {
+  ///     #greater;
+  ///   } else if (x == y) {
+  ///     #equal;
+  ///   } else {
+  ///     #less;
+  ///   }
+  /// });
+  /// Buffer.toText(buffer, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size * log(size))
   ///
@@ -1701,6 +2307,21 @@ module {
   /// Splits `buffer` into a pair of buffers where all elements in the left
   /// buffer satisfy `predicate` and all elements in the right buffer do not.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let tup = Buffer.partition<Nat>(buffer, func (x) { x > 3 });
+  /// Buffer.toText(tup.0, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1726,6 +2347,21 @@ module {
   /// all elements with indices less than `index`, and the right buffer contains all
   /// elements with indices greater than or equal to `index`. Traps if `index` is out
   /// of bounds.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let tup = Buffer.split<Nat>(buffer, 3);
+  /// Buffer.toText(tup.0, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1759,6 +2395,20 @@ module {
   /// have less than `size` elements if the number of elements is not divisible
   /// by the chunk size.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let chunks = Buffer.chunk<Nat>(buffer, 3);
+  /// Buffer.toText<Buffer.Buffer<Nat>>(chunks, func buf = Buffer.toText(buf, Nat.toText));
+  /// ```
+  ///
   /// Runtime: O(number of elements in buffer)
   ///
   /// Space: O(number of elements in buffer)
@@ -1789,6 +2439,20 @@ module {
   };
 
   /// Groups equal and adjacent elements in the list into sub lists.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  /// buffer.add(4);
+  /// buffer.add(5);
+  /// buffer.add(6);
+  ///
+  /// let grouped = Buffer.groupBy<Nat>(buffer, func (x, y) { x == y });
+  /// Buffer.toText<Buffer.Buffer<Nat>>(grouped, func buf = Buffer.toText(buf, Nat.toText));
+  /// ```
   ///
   /// Runtime: O(size)
   ///
@@ -1827,6 +2491,28 @@ module {
 
   /// Flattens the buffer of buffers into a single buffer.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// let buffer = Buffer.Buffer<Buffer.Buffer<Nat>>(1);
+  ///
+  /// let inner1 = Buffer.Buffer<Nat>(2);
+  /// inner1.add(1);
+  /// inner1.add(2);
+  ///
+  /// let inner2 = Buffer.Buffer<Nat>(2);
+  /// inner2.add(3);
+  /// inner2.add(4);
+  ///
+  /// buffer.add(inner1);
+  /// buffer.add(inner2);
+  /// // buffer = [[1, 2], [3, 4]]
+  ///
+  /// let flat = Buffer.flatten<Nat>(buffer);
+  /// Buffer.toText(flat, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(number of elements in buffer)
   ///
   /// Space: O(number of elements in buffer)
@@ -1857,6 +2543,23 @@ module {
   /// elements with the same index. If one buffer is longer than the other, the
   /// remaining elements from the longer buffer are not included.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  /// a.add(3);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(4);
+  /// b.add(5);
+  /// b.add(6);
+  ///
+  /// let zipped = Buffer.zip(a, b);
+  /// Buffer.toText<Buffer.Buffer<Nat>>(zipped, func buf = Buffer.toText(buf, Nat.toText));
+  /// ```
+  ///
   /// Runtime: O(min(size1, size2))
   ///
   /// Space: O(min(size1, size2))
@@ -1869,6 +2572,22 @@ module {
   /// elements with the same index and combining them using `zip`. If
   /// one buffer is longer than the other, the remaining elements from
   /// the longer buffer are not included.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// let a = Buffer.Buffer<Nat>(2);
+  /// a.add(1);
+  /// a.add(2);
+  /// a.add(3);
+  ///
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(4);
+  /// b.add(5);
+  /// b.add(6);
+  ///
+  /// Buffer.zipWith<Nat, Nat, Bool>(a, b, func (x, y) { x > y });
+  /// ```
   ///
   /// Runtime: O(min(size1, size2))
   ///
@@ -1892,6 +2611,18 @@ module {
   /// Creates a new buffer taking elements in order from `buffer` until predicate
   /// returns false.
   ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.takeWhile<Nat>(buffer, func (x) { x < 3 });
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
+  ///
   /// Runtime: O(size)
   ///
   /// Space: O(size)
@@ -1912,6 +2643,18 @@ module {
 
   /// Creates a new buffer excluding elements in order from `buffer` until predicate
   /// returns false.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// buffer.add(1);
+  /// buffer.add(2);
+  /// buffer.add(3);
+  ///
+  /// let newBuf = Buffer.dropWhile<Nat>(buffer, func x  = x < 3);
+  /// Buffer.toText(newBuf, Nat.toText);
+  /// ```
   ///
   /// Runtime: O(size)
   ///
