@@ -1,15 +1,37 @@
-/// Mutable hash map (aka Hashtable)
-///
-/// This module defines an imperative hash map (hash table), with a general key and value type.
-///
-/// It has a minimal object-oriented interface: `get`, `set`, `delete`, `count` and `entries`.
-///
+/// Class `HashMap<Key, Value>` provides a hashmap from keys of type `Key` to values of type `Value`.
+
 /// The class is parameterized by the key's equality and hash functions,
-/// and an initial capacity.  However, as with the `Buffer` class, no array allocation
-/// happens until the first `set`.
+/// and an initial capacity.  However, the underlying allocation happens only when
+/// the first key-value entry is inserted.
 ///
-/// Internally, table growth policy is very simple, for now:
-///  Double the current capacity when the expected bucket list size grows beyond a certain constant.
+/// Internally, the map is represented as an array of `AssocList` (buckets).
+/// The growth policy of the underyling array is very simple, for now: double
+/// the current capacity when the expected bucket list size grows beyond a
+/// certain constant.
+///
+/// WARNING: Certain operations are amortized O(1) time, such as `put`, but run
+/// in worst case O(n) time. These worst case runtimes may exceed the cycles limit
+/// per message if the size of the map is large enough. Grow these structures
+/// with discretion. All amortized operations below also list the worst case runtime.
+///
+/// For maps without amortization, see `TrieMap`.
+///
+/// Note on the constructor:
+/// The argument `initCapacity` determines the initial number of buckets in the
+/// underyling array.
+///
+/// Example:
+/// ```motoko name=initialize
+/// import HashMap "mo:base/HashMap";
+/// import Nat "mo:base/Nat";
+/// import Hash "mo:base/Hash";
+///
+/// let map = HashMap.HashMap<Nat, Nat>(5, Nat.equal, Hash.hash);
+/// ```
+///
+/// Runtime: O(1)
+///
+/// Space: O(1)
 
 import Prim "mo:⛔";
 import P "Prelude";
