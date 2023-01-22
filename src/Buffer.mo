@@ -72,7 +72,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// buffer.size()
+    /// buffer.size() // 0
     /// ```
     ///
     /// Runtime: O(1)
@@ -90,7 +90,7 @@ module {
     /// buffer.add(1);
     /// buffer.add(2);
     /// buffer.add(3); // causes underlying array to increase in capacity
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // [0, 1, 2, 3]
     /// ```
     ///
     /// Amortized Runtime: O(1), Worst Case Runtime: O(size)
@@ -111,7 +111,7 @@ module {
     ///
     /// buffer.add(10);
     /// buffer.add(11);
-    /// let x = buffer.get(0); // evaluates to 10
+    /// let x = buffer.get(0); // 10
     /// ```
     ///
     /// Runtime: O(1)
@@ -132,8 +132,8 @@ module {
     ///
     /// buffer.add(10);
     /// buffer.add(11);
-    /// let x = buffer.getOpt(0); // evaluates to ?10
-    /// let y = buffer.getOpt(2); // evaluates to null
+    /// let x = buffer.getOpt(0); // ?10
+    /// let y = buffer.getOpt(2); // null
     /// ```
     ///
     /// Runtime: O(1)
@@ -155,7 +155,7 @@ module {
     ///
     /// buffer.add(10);
     /// buffer.put(0, 20); // overwrites 10 at index 0 with 20
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // [20]
     /// ```
     ///
     /// Runtime: O(1)
@@ -176,7 +176,7 @@ module {
     ///
     /// buffer.add(10);
     /// buffer.add(11);
-    /// let x = buffer.removeLast(); // evaluates to ?11
+    /// let x = buffer.removeLast(); // ?11
     /// ```
     ///
     /// Amortized Runtime: O(1), Worst Case Runtime: O(size)
@@ -217,7 +217,7 @@ module {
     /// buffer.add(11);
     /// buffer.add(12);
     /// let x = buffer.remove(1); // evaluates to 11. 11 no longer in list.
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // [10, 12]
     /// ```
     ///
     /// Runtime: O(size)
@@ -278,7 +278,7 @@ module {
     /// buffer.add(11);
     /// buffer.add(12);
     /// buffer.clear(); // buffer is now empty
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // []
     /// ```
     ///
     /// Runtime: O(1)
@@ -300,7 +300,7 @@ module {
     /// buffer.add(11);
     /// buffer.add(12);
     /// buffer.filterEntries(func(_, x) = x % 2 == 0); // only keep even elements
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // [10, 12]
     /// ```
     ///
     /// Runtime: O(size)
@@ -374,10 +374,10 @@ module {
     ///
     /// let buffer = Buffer.Buffer<Nat>(2); // underlying array has capacity 2
     /// buffer.add(10);
-    /// let c1 = buffer.capacity(); // evaluates to 2
+    /// let c1 = buffer.capacity(); // 2
     /// buffer.add(11);
     /// buffer.add(12); // causes capacity to increase by factor of 1.5
-    /// let c2 = buffer.capacity(); // evaluates to 3
+    /// let c2 = buffer.capacity(); // 3
     /// ```
     ///
     /// Runtime: O(1)
@@ -392,7 +392,7 @@ module {
     /// buffer.reserve(4);
     /// buffer.add(10);
     /// buffer.add(11);
-    /// let c = buffer.capacity(); // evaluates to 4
+    /// let c = buffer.capacity(); // 4
     /// ```
     ///
     /// Runtime: O(capacity)
@@ -423,7 +423,7 @@ module {
     /// buffer2.add(12);
     /// buffer2.add(13);
     /// buffer1.append(buffer2); // adds elements from buffer2 to buffer1
-    /// Buffer.toArray(buffer1)
+    /// Buffer.toArray(buffer1) // [10, 11, 12, 13]
     /// ```
     ///
     /// Amortized Runtime: O(size2), Worst Case Runtime: O(size1 + size2)
@@ -454,7 +454,7 @@ module {
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.insert(1, 9);
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // [10, 9, 11]
     /// ```
     ///
     /// Runtime: O(size)
@@ -505,7 +505,7 @@ module {
     /// buffer2.add(12);
     /// buffer2.add(13);
     /// buffer1.insertBuffer(1, buffer2);
-    /// Buffer.toArray(buffer1)
+    /// Buffer.toArray(buffer1) // [10, 12, 13, 11]
     /// ```
     ///
     /// Runtime: O(size)
@@ -564,7 +564,7 @@ module {
     /// buffer.add(12);
     /// buffer.add(10);
     /// buffer.sort(Nat.compare);
-    /// Buffer.toArray(buffer)
+    /// Buffer.toArray(buffer) // [10, 11, 12]
     /// ```
     ///
     /// Runtime: O(size * log(size))
@@ -655,7 +655,7 @@ module {
     /// for (element in buffer.vals()) {
     ///   sum += element;
     /// };
-    /// sum
+    /// sum // 33
     /// ```
     ///
     /// Runtime: O(1)
@@ -738,7 +738,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(0);
   /// buffer.add(3);
-  /// Buffer.contains<Nat>(buffer, 2, Nat.equals);
+  /// Buffer.contains<Nat>(buffer, 2, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(size)
@@ -763,9 +763,9 @@ module {
   /// ```motoko include=initialize
   ///
   /// buffer.add(1);
-  /// 
+  ///
   /// let clone = Buffer.clone(buffer);
-  /// Buffer.toArray(clone);
+  /// Buffer.toArray(clone); // [1]
   /// ```
   ///
   /// Runtime: O(size)
@@ -789,8 +789,8 @@ module {
   ///
   /// buffer.add(1);
   /// buffer.add(2);
-  /// 
-  /// Buffer.max(buffer, Nat.compare);
+  ///
+  /// Buffer.max(buffer, Nat.compare); // ?2
   /// ```
   ///
   /// Runtime: O(size)
@@ -825,8 +825,8 @@ module {
   ///
   /// buffer.add(1);
   /// buffer.add(2);
-  /// 
-  /// Buffer.min(buffer, Nat.compare);
+  ///
+  /// Buffer.min(buffer, Nat.compare); // ?1
   /// ```
   ///
   /// Runtime: O(size)
@@ -862,15 +862,15 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let a = Buffer.Buffer<Nat>(2);
-  /// a.add(1);
-  /// a.add(2);
+  /// let buffer1 = Buffer.Buffer<Nat>(2);
+  /// buffer1.add(1);
+  /// buffer1.add(2);
   ///
-  /// let b = Buffer.Buffer<Nat>(2);
-  /// b.add(1);
-  /// b.add(2);
-  /// 
-  /// Buffer.equal(a, b, Nat.equal);
+  /// let buffer2 = Buffer.Buffer<Nat>(5);
+  /// buffer2.add(1);
+  /// buffer2.add(2);
+  ///
+  /// Buffer.equal(buffer1, buffer2, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(size)
@@ -902,24 +902,17 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
-  /// let a = Buffer.Buffer<Nat>(2);
-  /// a.add(1);
-  /// a.add(2);
-
-  /// let b = Buffer.Buffer<Nat>(3);
-  /// b.add(3);
-  /// b.add(4);
+  /// let buffer1 = Buffer.Buffer<Nat>(2);
+  /// buffer1.add(1);
+  /// buffer1.add(2);
   ///
-  /// Buffer.compare<Nat>(a, b, func (x, y) {
-  ///   if (x > y) {
-  ///     #greater;
-  ///   } else if (x == y) {
-  ///     #equal;
-  ///   } else {
-  ///     #less;
-  ///   }
-  /// });
+  /// let buffer2 = Buffer.Buffer<Nat>(3);
+  /// buffer2.add(3);
+  /// buffer2.add(4);
+  ///
+  /// Buffer.compare<Nat>(buffer1, buffer2, Nat.compare); // #less
   /// ```
   ///
   /// Runtime: O(size)
@@ -967,7 +960,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// Buffer.toText(buffer, Nat.toText);
+  /// Buffer.toText(buffer, Nat.toText); // "[1, 2, 3, 4]"
   /// ```
   ///
   /// Runtime: O(size)
@@ -1004,7 +997,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(1000);
   ///
-  /// Buffer.hash<Nat>(buffer, Hash.hash);
+  /// Buffer.hash<Nat>(buffer, Hash.hash); // 2_872_640_342
   /// ```
   ///
   /// Runtime: O(size)
@@ -1037,7 +1030,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// Buffer.indexOf<Nat>(3, buffer, Nat.equal);
+  /// Buffer.indexOf<Nat>(3, buffer, Nat.equal); // ?2
   /// ```
   ///
   /// Runtime: O(size)
@@ -1072,7 +1065,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(2);
   ///
-  /// Buffer.lastIndexOf<Nat>(2, buffer, Nat.equal);
+  /// Buffer.lastIndexOf<Nat>(2, buffer, Nat.equal); // ?5
   /// ```
   ///
   /// Runtime: O(size)
@@ -1114,7 +1107,7 @@ module {
   /// sub.add(5);
   /// sub.add(6);
   ///
-  /// Buffer.indexOfBuffer<Nat>(sub, buffer, Nat.equal);
+  /// Buffer.indexOfBuffer<Nat>(sub, buffer, Nat.equal); // ?3
   /// ```
   ///
   /// Runtime: O(size of buffer + size of subBuffer)
@@ -1177,23 +1170,14 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// buffer.add(1);
-  /// buffer.add(2);
-  /// buffer.add(3);
   /// buffer.add(4);
   /// buffer.add(5);
   /// buffer.add(6);
   ///
-  /// Buffer.binarySearch<Nat>(5, buffer, func (x, y) {
-  ///   if (x > y) {
-  ///     #greater;
-  ///   } else if (x == y) {
-  ///     #equal;
-  ///   } else {
-  ///     #less;
-  ///   }
-  /// });
+  /// Buffer.binarySearch<Nat>(5, buffer, Nat.compare); // ?2
   /// ```
   ///
   /// Runtime: O(log(size))
@@ -1240,7 +1224,7 @@ module {
   /// buffer.add(6);
   ///
   /// let sub = Buffer.subBuffer(buffer, 3, 2);
-  /// Buffer.toText(sub, Nat.toText);
+  /// Buffer.toText(sub, Nat.toText); // [4, 5]
   /// ```
   ///
   /// Runtime: O(length)
@@ -1280,9 +1264,9 @@ module {
   /// buffer.add(6);
   ///
   /// let sub = Buffer.Buffer<Nat>(2);
-  /// sub.add(1);
   /// sub.add(2);
-  /// Buffer.isSubBufferOf(sub, buffer, Nat.equal);
+  /// sub.add(3);
+  /// Buffer.isSubBufferOf(sub, buffer, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(size of subBuffer + size of buffer)
@@ -1313,7 +1297,7 @@ module {
   /// let sub = Buffer.Buffer<Nat>(2);
   /// sub.add(2);
   /// sub.add(3);
-  /// Buffer.isStrictSubBufferOf(sub, buffer, Nat.equal);
+  /// Buffer.isStrictSubBufferOf(sub, buffer, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(size of subBuffer + size of buffer)
@@ -1346,7 +1330,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// let pre = Buffer.prefix(buffer, 3);
+  /// let pre = Buffer.prefix(buffer, 3); // [1, 2, 3]
   /// Buffer.toText(pre, Nat.toText);
   /// ```
   ///
@@ -1382,8 +1366,10 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// let pre = Buffer.prefix(buffer, 3);
-  /// Buffer.isPrefixOf(pre, buffer, Nat.equal);
+  /// let pre = Buffer.Buffer<Nat>(2);
+  /// pre.add(1);
+  /// pre.add(2);
+  /// Buffer.isPrefixOf(pre, buffer, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(size of prefix)
@@ -1425,7 +1411,7 @@ module {
   /// pre.add(1);
   /// pre.add(2);
   /// pre.add(3);
-  /// Buffer.isStrictPrefixOf(pre, buffer, Nat.equal);
+  /// Buffer.isStrictPrefixOf(pre, buffer, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(size of prefix)
@@ -1452,7 +1438,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// let suf = Buffer.suffix(buffer, 3);
+  /// let suf = Buffer.suffix(buffer, 3); // [2, 3, 4]
   /// Buffer.toText(suf, Nat.toText);
   /// ```
   ///
@@ -1490,8 +1476,11 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// let suf = Buffer.suffix(buffer, 3);
-  /// Buffer.isSuffixOf(suf, buffer, Nat.equal);
+  /// let suf = Buffer.Buffer<Nat>(3);
+  /// suf.add(2);
+  /// suf.add(3);
+  /// suf.add(4);
+  /// Buffer.isSuffixOf(suf, buffer, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(length of suffix)
@@ -1531,8 +1520,11 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// let suf = Buffer.suffix(buffer, 3);
-  /// Buffer.isStrictSuffixOf(suf, buffer, Nat.equal);
+  /// let suf = Buffer.Buffer<Nat>(3);
+  /// suf.add(2);
+  /// suf.add(3);
+  /// suf.add(4);
+  /// Buffer.isStrictSuffixOf(suf, buffer, Nat.equal); // true
   /// ```
   ///
   /// Runtime: O(length of suffix)
@@ -1556,7 +1548,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// Buffer.forAll<Nat>(buffer, func (x) { x > 1 });
+  /// Buffer.forAll<Nat>(buffer, func x { x > 1 }); // true
   /// ```
   ///
   /// Runtime: O(size)
@@ -1583,7 +1575,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// Buffer.forSome<Nat>(buffer, func (x) { x > 3 });
+  /// Buffer.forSome<Nat>(buffer, func x { x > 3 }); // true
   /// ```
   ///
   /// Runtime: O(size)
@@ -1610,7 +1602,7 @@ module {
   /// buffer.add(3);
   /// buffer.add(4);
   ///
-  /// Buffer.forNone<Nat>(buffer, func (x) { x == 0 });
+  /// Buffer.forNone<Nat>(buffer, func x { x == 0 }); // true
   /// ```
   ///
   /// Runtime: O(size)
@@ -1637,8 +1629,8 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.toArray<Nat>(buffer);
-  /// 
+  /// Buffer.toArray<Nat>(buffer); // [1, 2, 3]
+  ///
   /// ```
   ///
   /// Runtime: O(size)
@@ -1660,7 +1652,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.toVarArray<Nat>(buffer);
+  /// Buffer.toVarArray<Nat>(buffer); // [1, 2, 3]
   /// ```
   ///
   /// Runtime: O(size)
@@ -1683,12 +1675,11 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
   ///
-  /// let array = Array.make(2);
+  /// let array = [2, 3];
   ///
-  /// let buf = Buffer.fromArray<Nat>(array);
+  /// let buf = Buffer.fromArray<Nat>(array); // [2, 3]
   /// Buffer.toText(buf, Nat.toText);
   /// ```
   ///
@@ -1716,12 +1707,11 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
   ///
-  /// let array = Array.init<Nat>(3, 1);
+  /// let array = [var 1, 2, 3];
   ///
-  /// let buf = Buffer.fromVarArray<Nat>(array);
+  /// let buf = Buffer.fromVarArray<Nat>(array); // [1, 2, 3]
   /// Buffer.toText(buf, Nat.toText);
   /// ```
   ///
@@ -1742,14 +1732,12 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// import Array "mo:base/Array";
   /// import Nat "mo:base/Nat";
-  /// import Iter "mo:base/Iter";
   ///
   /// let array = [1, 1, 1];
   /// let iter = array.vals();
   ///
-  /// let buf = Buffer.fromIter<Nat>(array);
+  /// let buf = Buffer.fromIter<Nat>(iter); // [1, 1, 1]
   /// Buffer.toText(buf, Nat.toText);
   /// ```
   ///
@@ -1777,7 +1765,7 @@ module {
   /// buffer.add(3);
   ///
   /// Buffer.trimToSize<Nat>(buffer);
-  /// buffer.capacity();
+  /// buffer.capacity(); // 3
   /// ```
   ///
   /// Runtime: O(size)
@@ -1801,7 +1789,7 @@ module {
   /// buffer.add(3);
   ///
   /// let newBuf = Buffer.map<Nat, Nat>(buffer, func (x) { x + 1 });
-  /// Buffer.toText(newBuf, Nat.toText);
+  /// Buffer.toText(newBuf, Nat.toText); // [2, 3, 4]
   /// ```
   ///
   /// Runtime: O(size)
@@ -1831,7 +1819,7 @@ module {
   /// buffer.add(3);
   ///
   /// Buffer.iterate<Nat>(buffer, func (x) {
-  ///   Debug.print(Nat.toText(x));
+  ///   Debug.print(Nat.toText(x)); // prints each element in buffer
   /// });
   /// ```
   ///
@@ -1857,7 +1845,7 @@ module {
   /// buffer.add(3);
   ///
   /// let newBuf = Buffer.mapEntries<Nat, Nat>(buffer, func (x, i) { x + i + 1 });
-  /// Buffer.toText(newBuf, Nat.toText);
+  /// Buffer.toText(newBuf, Nat.toText); // [2, 4, 6]
   /// ```
   ///
   /// Runtime: O(size)
@@ -1890,13 +1878,13 @@ module {
   /// buffer.add(3);
   ///
   /// let newBuf = Buffer.mapFilter<Nat, Nat>(buffer, func (x) {
-  ///   if (k > 1) {
-  ///     ?(k * 2);
+  ///   if (x > 1) {
+  ///     ?(x * 2);
   ///   } else {
-  ///    null;
+  ///     null;
   ///   }
   /// });
-  /// Buffer.toText(newBuf, Nat.toText);
+  /// Buffer.toText(newBuf, Nat.toText); // [4, 6]
   /// ```
   ///
   /// Runtime: O(size)
@@ -1925,18 +1913,21 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Result "mo:base/Result";
   ///
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.mapResult<Nat, Nat, Text>(buffer, func (k) {
+  /// let result = Buffer.mapResult<Nat, Nat, Text>(buffer, func (k) {
   ///   if (k > 0) {
   ///     #ok(k);
   ///   } else {
   ///     #err("One or more elements are negative.");
   ///   }
   /// });
+  ///
+  /// Result.mapOk<Buffer.Buffer<Nat>, [Nat], Text>(result, func buffer = Buffer.toArray(buffer)) // #ok([1, 2, 3])
   /// ```
   ///
   /// Runtime: O(size)
@@ -1973,12 +1964,13 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// let chain = Buffer.chain<Nat, Nat>(buffer, func (x) { 
+  /// let chain = Buffer.chain<Nat, Nat>(buffer, func (x) {
   ///   let b = Buffer.Buffer<Nat>(2);
+  ///   b.add(x);
   ///   b.add(x * 2);
   ///   return b;
   /// });
-  /// Buffer.toText(chain, Nat.toText);
+  /// Buffer.toText(chain, Nat.toText); // [1, 2, 2, 4, 3, 6]
   /// ```
   ///
   /// Runtime: O(size)
@@ -2002,12 +1994,13 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.foldLeft<Nat, Nat>(buffer, 0, func (a, x) { a + x });
+  /// Buffer.foldLeft<Text, Nat>(buffer, "", func (acc, x) { acc # Nat.toText(x)}); // "123"
   /// ```
   ///
   /// Runtime: O(size)
@@ -2031,12 +2024,13 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.foldRight<Nat, Nat>(buffer, 0, func (a, x) { a + x });
+  /// Buffer.foldRight<Nat, Text>(buffer, "", func (x, acc) { Nat.toText(x) # acc }); // "123"
   /// ```
   ///
   /// Runtime: O(size)
@@ -2069,7 +2063,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.first(buffer);
+  /// Buffer.first(buffer); // 1
   /// ```
   ///
   /// Runtime: O(1)
@@ -2086,7 +2080,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.last(buffer);
+  /// Buffer.last(buffer); // 3
   /// ```
   ///
   /// Runtime: O(1)
@@ -2100,8 +2094,8 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// Buffer.make<Nat>(1);
-  /// Buffer.toText(buffer, Nat.toText);
+  /// let buffer = Buffer.make<Nat>(1);
+  /// Buffer.toText(buffer, Nat.toText); // [1]
   /// ```
   ///
   /// Runtime: O(1)
@@ -2124,7 +2118,7 @@ module {
   /// buffer.add(3);
   ///
   /// Buffer.reverse(buffer);
-  /// Buffer.toText(buffer, Nat.toText);
+  /// Buffer.toText(buffer, Nat.toText); // [3, 2, 1]
   /// ```
   ///
   /// Runtime: O(size)
@@ -2156,26 +2150,18 @@ module {
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
   ///
-  /// let a = Buffer.Buffer<Nat>(2);
-  /// a.add(1);
-  /// a.add(2);
-  /// a.add(3);
+  /// let buffer1 = Buffer.Buffer<Nat>(2);
+  /// buffer1.add(1);
+  /// buffer1.add(2);
+  /// buffer1.add(4);
   ///
-  /// let b = Buffer.Buffer<Nat>(2);
-  /// b.add(4);
-  /// b.add(5);
-  /// b.add(6);
+  /// let buffer2 = Buffer.Buffer<Nat>(2);
+  /// buffer2.add(2);
+  /// buffer2.add(4);
+  /// buffer2.add(6);
   ///
-  /// let merged = Buffer.merge<Nat>(a, b, func (x, y) {
-  ///   if (x > y) {
-  ///     #greater;
-  ///   } else if (x == y) {
-  ///     #equal;
-  ///   } else {
-  ///     #less;
-  ///   }
-  /// });
-  /// Buffer.toText(merged, Nat.toText);
+  /// let merged = Buffer.merge<Nat>(buffer1, buffer2, Nat.compare);
+  /// Buffer.toText(merged, Nat.toText); // [1, 2, 2, 4, 4, 6]
   /// ```
   ///
   /// Runtime: O(size1 + size2)
@@ -2235,16 +2221,8 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// Buffer.removeDuplicates<Nat>(buffer, func (x, y) {
-  ///   if (x > y) {
-  ///     #greater;
-  ///   } else if (x == y) {
-  ///     #equal;
-  ///   } else {
-  ///     #less;
-  ///   }
-  /// });
-  /// Buffer.toText(buffer, Nat.toText);
+  /// Buffer.removeDuplicates<Nat>(buffer, Nat.compare);
+  /// Buffer.toText(buffer, Nat.toText); // [1, 2, 3]
   /// ```
   ///
   /// Runtime: O(size * log(size))
@@ -2318,8 +2296,8 @@ module {
   /// buffer.add(5);
   /// buffer.add(6);
   ///
-  /// let tup = Buffer.partition<Nat>(buffer, func (x) { x > 3 });
-  /// Buffer.toText(tup.0, Nat.toText);
+  /// let partitions = Buffer.partition<Nat>(buffer, func (x) { x % 2 == 0 });
+  /// (Buffer.toArray(partitions.0), Buffer.toArray(partitions.1)) // ([2, 4, 6], [1, 3, 5])
   /// ```
   ///
   /// Runtime: O(size)
@@ -2359,8 +2337,8 @@ module {
   /// buffer.add(5);
   /// buffer.add(6);
   ///
-  /// let tup = Buffer.split<Nat>(buffer, 3);
-  /// Buffer.toText(tup.0, Nat.toText);
+  /// let split = Buffer.split<Nat>(buffer, 3);
+  /// (Buffer.toArray(split.0), Buffer.toArray(split.1)) // ([1, 2, 3], [4, 5, 6])
   /// ```
   ///
   /// Runtime: O(size)
@@ -2397,6 +2375,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// buffer.add(1);
   /// buffer.add(2);
@@ -2406,7 +2385,7 @@ module {
   /// buffer.add(6);
   ///
   /// let chunks = Buffer.chunk<Nat>(buffer, 3);
-  /// Buffer.toText<Buffer.Buffer<Nat>>(chunks, func buf = Buffer.toText(buf, Nat.toText));
+  /// Buffer.toText<Buffer.Buffer<Nat>>(chunks, func buf = Buffer.toText(buf, Nat.toText)); // [[1, 2, 3], [4, 5, 6]]
   /// ```
   ///
   /// Runtime: O(number of elements in buffer)
@@ -2442,16 +2421,17 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
   ///
   /// buffer.add(1);
   /// buffer.add(2);
-  /// buffer.add(3);
+  /// buffer.add(2);
   /// buffer.add(4);
   /// buffer.add(5);
-  /// buffer.add(6);
+  /// buffer.add(5);
   ///
   /// let grouped = Buffer.groupBy<Nat>(buffer, func (x, y) { x == y });
-  /// Buffer.toText<Buffer.Buffer<Nat>>(grouped, func buf = Buffer.toText(buf, Nat.toText));
+  /// Buffer.toText<Buffer.Buffer<Nat>>(grouped, func buf = Buffer.toText(buf, Nat.toText)); // [[1], [2, 2], [4], [5, 5]]
   /// ```
   ///
   /// Runtime: O(size)
@@ -2510,7 +2490,7 @@ module {
   /// // buffer = [[1, 2], [3, 4]]
   ///
   /// let flat = Buffer.flatten<Nat>(buffer);
-  /// Buffer.toText(flat, Nat.toText);
+  /// Buffer.toText<Nat>(flat, Nat.toText); // [1, 2, 3, 4]
   /// ```
   ///
   /// Runtime: O(number of elements in buffer)
@@ -2546,18 +2526,17 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let a = Buffer.Buffer<Nat>(2);
-  /// a.add(1);
-  /// a.add(2);
-  /// a.add(3);
+  /// let buffer1 = Buffer.Buffer<Nat>(2);
+  /// buffer1.add(1);
+  /// buffer1.add(2);
+  /// buffer1.add(3);
   ///
-  /// let b = Buffer.Buffer<Nat>(2);
-  /// b.add(4);
-  /// b.add(5);
-  /// b.add(6);
+  /// let buffer2 = Buffer.Buffer<Nat>(2);
+  /// buffer2.add(4);
+  /// buffer2.add(5);
   ///
-  /// let zipped = Buffer.zip(a, b);
-  /// Buffer.toText<Buffer.Buffer<Nat>>(zipped, func buf = Buffer.toText(buf, Nat.toText));
+  /// let zipped = Buffer.zip(buffer1, buffer2);
+  /// Buffer.toArray(zipped); // [(1, 4), (2, 5)]
   /// ```
   ///
   /// Runtime: O(min(size1, size2))
@@ -2576,17 +2555,18 @@ module {
   /// Example:
   /// ```motoko include=initialize
   ///
-  /// let a = Buffer.Buffer<Nat>(2);
-  /// a.add(1);
-  /// a.add(2);
-  /// a.add(3);
+  /// let buffer1 = Buffer.Buffer<Nat>(2);
+  /// buffer1.add(1);
+  /// buffer1.add(2);
+  /// buffer1.add(3);
   ///
-  /// let b = Buffer.Buffer<Nat>(2);
-  /// b.add(4);
-  /// b.add(5);
-  /// b.add(6);
+  /// let buffer2 = Buffer.Buffer<Nat>(2);
+  /// buffer2.add(4);
+  /// buffer2.add(5);
+  /// buffer2.add(6);
   ///
-  /// Buffer.zipWith<Nat, Nat, Bool>(a, b, func (x, y) { x > y });
+  /// let zipped = Buffer.zipWith<Nat, Nat, Nat>(buffer1, buffer2, func (x, y) { x + y });
+  /// Buffer.toArray(zipped) // [5, 7, 9]
   /// ```
   ///
   /// Runtime: O(min(size1, size2))
@@ -2620,7 +2600,7 @@ module {
   /// buffer.add(3);
   ///
   /// let newBuf = Buffer.takeWhile<Nat>(buffer, func (x) { x < 3 });
-  /// Buffer.toText(newBuf, Nat.toText);
+  /// Buffer.toText(newBuf, Nat.toText); // [1, 2]
   /// ```
   ///
   /// Runtime: O(size)
@@ -2652,7 +2632,7 @@ module {
   /// buffer.add(2);
   /// buffer.add(3);
   ///
-  /// let newBuf = Buffer.dropWhile<Nat>(buffer, func x  = x < 3);
+  /// let newBuf = Buffer.dropWhile<Nat>(buffer, func x { x < 3 }); // [3]
   /// Buffer.toText(newBuf, Nat.toText);
   /// ```
   ///
