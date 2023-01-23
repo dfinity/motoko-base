@@ -1,6 +1,23 @@
-/// Priority Queue
+/// Class `Heap<X>` provides a priority queue of elements of type `X`.
 ///
-/// This module provides purely-functional priority queue based on leftist heap
+/// The class wraps a purely-functional implementation based on a leftist heap.
+///
+/// Note on the constructor:
+/// The constructor takes in a comparison function `compare` that defines the
+/// ordering between elements of type `X`. Most primitive types have a default
+/// version of this comparison function defined in their modules (e.g. Nat.compare).
+///
+/// Example:
+/// ```motoko name=initialize
+/// import Heap "mo:base/Heap";
+/// import Text "mo:base/Text";
+///
+/// let queue = Heap.Heap<Nat>(Text.compare);
+/// ```
+///
+/// Runtime: O(1)
+///
+/// Space: O(1)
 
 import O "Order";
 import P "Prelude";
