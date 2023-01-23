@@ -31,10 +31,6 @@ class Int64Testable(number : Int64) : T.TestableItem<Int64> {
   }
 };
 
-func isNaN(number : Float) : Bool {
-  number != number
-};
-
 let positiveInfinity = 1.0 / 0.0;
 let negativeInfinity = -1.0 / 0.0;
 
@@ -89,7 +85,7 @@ class NaNMatcher() : M.Matcher<Float> {
   };
 
   public func matches(number : Float) : Bool {
-    isNaN(number)
+    Float.isNaN(number)
   }
 };
 
@@ -114,6 +110,81 @@ class NegativeNaNMatcher() : M.Matcher<Float> {
 };
 
 // Some tests are adopted from Motoko compiler test `float-ops.mo`.
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "constant functions",
+    [
+      test(
+        "positive infinity",
+        positiveInfinity,
+        M.equals(FloatTestable(1.0 / 0.0, noEpsilon))
+      ),
+      test(
+        "negative infinity",
+        negativeInfinity,
+        M.equals(FloatTestable(-1.0 / 0.0, noEpsilon))
+      )
+    ]
+  )
+);
+
+/* --------------------------------------- */
+
+run(
+  suite(
+    "isNaN",
+    [
+      test(
+        "positive NaN",
+        Float.isNaN(positiveNaN),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "negative NaN",
+        Float.isNaN(negativeNaN),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "positive number",
+        Float.isNaN(1.1),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative number",
+        Float.isNaN(-1.1),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "zero",
+        Float.isNaN(0.0),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "positive zero",
+        Float.isNaN(positiveZero),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative zero",
+        Float.isNaN(negativeZero),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "positive infinity",
+        Float.isNaN(positiveInfinity),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative infinity",
+        Float.isNaN(negativeInfinity),
+        M.equals(T.bool(false))
+      )
+    ]
+  )
+);
 
 /* --------------------------------------- */
 
@@ -1782,106 +1853,136 @@ run(
 
 run(
   suite(
-    "equal",
+    "equalWithin",
     [
       test(
-        "positive equal",
-        Float.equal(1.23, 1.23),
+        "positive equal, no epsilon",
+        Float.equalWithin(1.23, 1.23, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
-        "negative equal",
-        Float.equal(-1.23, -1.23),
+        "positive equal, small epsilon",
+        Float.equalWithin(0.1 + 0.1 + 0.1, 0.3, smallEpsilon),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "negative equal, no epsilon",
+        Float.equalWithin(-1.23, -1.23, noEpsilon),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "negative equal, small epsilon",
+        Float.equalWithin(-0.1 - 0.1 - 0.1, -0.3, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "zero",
-        Float.equal(0.0, 0.0),
+        Float.equalWithin(0.0, 0.0, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "mixed zero signs",
-        Float.equal(positiveZero, negativeZero),
+        Float.equalWithin(positiveZero, negativeZero, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
-        "positive not equal",
-        Float.equal(1.23, 1.24),
+        "positive not equal, small epsilon",
+        Float.equalWithin(1.23, 1.24, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "negative not equal",
-        Float.equal(-1.23, -1.24),
+        "negative not equal, small epsilon",
+        Float.equalWithin(-1.23, -1.24, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "mixed signs",
-        Float.equal(1.23, -1.23),
+        "mixed signs, smallEpsilon",
+        Float.equalWithin(1.23, -1.23, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "positive infinity",
-        Float.equal(positiveInfinity, positiveInfinity),
+        "positive infinity, no epsilon",
+        Float.equalWithin(positiveInfinity, positiveInfinity, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
-        "negative infinity",
-        Float.equal(negativeInfinity, negativeInfinity),
+        "positive infinity, small epsilon",
+        Float.equalWithin(positiveInfinity, positiveInfinity, smallEpsilon),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "negative infinity, no epsilon",
+        Float.equalWithin(negativeInfinity, negativeInfinity, noEpsilon),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "negative infinity, small epsilon",
+        Float.equalWithin(negativeInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "mixed infinity signs",
-        Float.equal(positiveInfinity, negativeInfinity),
+        Float.equalWithin(positiveInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "two positive NaNs",
-        Float.equal(positiveNaN, positiveNaN),
+        Float.equalWithin(positiveNaN, positiveNaN, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "two negative NaNs",
-        Float.equal(negativeNaN, negativeNaN),
+        Float.equalWithin(negativeNaN, negativeNaN, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "NaNs with mixed signs",
-        Float.equal(positiveNaN, negativeNaN),
+        Float.equalWithin(positiveNaN, negativeNaN, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "number and NaN",
-        Float.equal(1.23, positiveNaN),
+        "number and NaN, no epsilon",
+        Float.equalWithin(1.23, positiveNaN, noEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "NaN and number",
-        Float.equal(positiveNaN, -1.23),
+        "number and NaN, small epsilon",
+        Float.equalWithin(1.23, positiveNaN, smallEpsilon),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "NaN and number, no epsilon",
+        Float.equalWithin(positiveNaN, -1.23, noEpsilon),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "NaN and number, small epsilon",
+        Float.equalWithin(positiveNaN, -1.23, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and NaN",
-        Float.equal(positiveNaN, positiveNaN),
+        Float.equalWithin(positiveNaN, positiveNaN, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and positive infinity",
-        Float.equal(positiveNaN, positiveInfinity),
+        Float.equalWithin(positiveNaN, positiveInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "NaN and negative infinity",
-        Float.equal(positiveNaN, negativeInfinity),
+        Float.equalWithin(positiveNaN, negativeInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "positive infinity and NaN",
-        Float.equal(positiveInfinity, positiveNaN),
+        Float.equalWithin(positiveInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "negative infinity and NaN",
-        Float.equal(negativeInfinity, positiveNaN),
+        Float.equalWithin(negativeInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(false))
       )
     ]
@@ -1892,106 +1993,136 @@ run(
 
 run(
   suite(
-    "notEqual",
+    "notEqualWithin",
     [
       test(
-        "positive equal",
-        Float.notEqual(1.23, 1.23),
+        "positive equal, no epsilon",
+        Float.notEqualWithin(1.23, 1.23, noEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "negative equal",
-        Float.notEqual(-1.23, -1.23),
+        "positive equal, small epsilon",
+        Float.notEqualWithin(0.1 + 0.1 + 0.1, 0.3, smallEpsilon),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative equal, no epsilon",
+        Float.notEqualWithin(-1.23, -1.23, noEpsilon),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative equal, small epsilon",
+        Float.notEqualWithin(-0.1 - 0.1 - 0.1, -0.3, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "zero",
-        Float.notEqual(0.0, 0.0),
+        Float.notEqualWithin(0.0, 0.0, noEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "mixed zero signs",
-        Float.notEqual(positiveZero, negativeZero),
+        Float.notEqualWithin(positiveZero, negativeZero, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "positive not equal",
-        Float.notEqual(1.23, 1.24),
+        Float.notEqualWithin(1.23, 1.24, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "negative not equal",
-        Float.notEqual(-1.23, -1.24),
+        Float.notEqualWithin(-1.23, -1.24, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "mixed signs",
-        Float.notEqual(1.23, -1.23),
+        Float.notEqualWithin(1.23, -1.23, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
-        "positive infinity",
-        Float.notEqual(positiveInfinity, positiveInfinity),
+        "positive infinity, no epsilon",
+        Float.notEqualWithin(positiveInfinity, positiveInfinity, noEpsilon),
         M.equals(T.bool(false))
       ),
       test(
-        "negative infinity",
-        Float.notEqual(negativeInfinity, negativeInfinity),
+        "positive infinity, small epsilon",
+        Float.notEqualWithin(positiveInfinity, positiveInfinity, smallEpsilon),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative infinity, no epsilon",
+        Float.notEqualWithin(negativeInfinity, negativeInfinity, noEpsilon),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "negative infinity, small epsilon",
+        Float.notEqualWithin(negativeInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(false))
       ),
       test(
         "mixed infinity signs",
-        Float.notEqual(positiveInfinity, negativeInfinity),
+        Float.notEqualWithin(positiveInfinity, negativeInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "two positive NaNs",
-        Float.notEqual(positiveNaN, positiveNaN),
+        Float.notEqualWithin(positiveNaN, positiveNaN, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "two negative NaNs",
-        Float.notEqual(negativeNaN, negativeNaN),
+        Float.notEqualWithin(negativeNaN, negativeNaN, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "NaNs with mixed signs",
-        Float.notEqual(positiveNaN, negativeNaN),
+        Float.notEqualWithin(positiveNaN, negativeNaN, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
-        "number and NaN",
-        Float.notEqual(1.23, positiveNaN),
+        "number and NaN, no epsilon",
+        Float.notEqualWithin(1.23, positiveNaN, noEpsilon),
         M.equals(T.bool(true))
       ),
       test(
-        "NaN and number",
-        Float.notEqual(positiveNaN, -1.23),
+        "number and NaN, small epsilon",
+        Float.notEqualWithin(1.23, positiveNaN, smallEpsilon),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "NaN and number, no epsilon",
+        Float.notEqualWithin(positiveNaN, -1.23, noEpsilon),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "NaN and number, small epsilon",
+        Float.notEqualWithin(positiveNaN, -1.23, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "NaN and NaN",
-        Float.notEqual(positiveNaN, positiveNaN),
+        Float.notEqualWithin(positiveNaN, positiveNaN, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "NaN and positive infinity",
-        Float.notEqual(positiveNaN, positiveInfinity),
+        Float.notEqualWithin(positiveNaN, positiveInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "NaN and negative infinity",
-        Float.notEqual(positiveNaN, negativeInfinity),
+        Float.notEqualWithin(positiveNaN, negativeInfinity, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "positive infinity and NaN",
-        Float.notEqual(positiveInfinity, positiveNaN),
+        Float.notEqualWithin(positiveInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(true))
       ),
       test(
         "negative infinity and NaN",
-        Float.notEqual(negativeInfinity, positiveNaN),
+        Float.notEqualWithin(negativeInfinity, positiveNaN, smallEpsilon),
         M.equals(T.bool(true))
       )
     ]
@@ -2652,6 +2783,8 @@ class OrderTestable(value : Order) : T.TestableItem<Order> {
   }
 };
 
+let subnormal = 2.2250738585072014e-308;
+
 run(
   suite(
     "compare",
@@ -2707,6 +2840,26 @@ run(
         M.equals(OrderTestable(#equal))
       ),
       test(
+        "subnormal negative number and negative number",
+        Float.compare(-subnormal, -1e-100),
+        M.equals(OrderTestable(#greater))
+      ),
+      test(
+        "subnormal negative number and zero",
+        Float.compare(-subnormal, negativeZero),
+        M.equals(OrderTestable(#less))
+      ),
+      test(
+        "subnormal positive number and zero",
+        Float.compare(subnormal, positiveZero),
+        M.equals(OrderTestable(#greater))
+      ),
+      test(
+        "subnormal positive number and positive number",
+        Float.compare(subnormal, 1e-100),
+        M.equals(OrderTestable(#less))
+      ),
+      test(
         "mixed signs less",
         Float.compare(-1.23, 1.23),
         M.equals(OrderTestable(#less))
@@ -2759,52 +2912,122 @@ run(
       test(
         "two positive NaNs",
         Float.compare(positiveNaN, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#equal)),
       ),
       test(
         "two negative NaNs",
         Float.compare(negativeNaN, negativeNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#equal)),
       ),
       test(
-        "NaNs with mixed signs",
+        "positive NaN, negative NaN",
         Float.compare(positiveNaN, negativeNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "number and NaN",
+        "negative NaN, positive NaN",
+        Float.compare(negativeNaN, positiveNaN),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "number and positive NaN",
         Float.compare(1.23, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#less)),
       ),
       test(
-        "NaN and number",
+        "number and negative NaN",
+        Float.compare(1.23, negativeNaN),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "positive NaN and positive number",
         Float.compare(positiveNaN, -1.23),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "NaN and NaN",
+        "positive NaN and negative number",
+        Float.compare(positiveNaN, -1.23),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "negative NaN and positive number",
+        Float.compare(negativeNaN, -1.23),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative NaN and negative number",
+        Float.compare(negativeNaN, -1.23),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "positive NaN and positive NaN",
         Float.compare(positiveNaN, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Inconsistent, needs to be fixed
+        M.equals(OrderTestable(#equal)),
       ),
       test(
-        "NaN and positive infinity",
+        "negative NaN and positive NaN",
+        Float.compare(negativeNaN, positiveNaN),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "positive NaN and negative NaN",
+        Float.compare(positiveNaN, negativeNaN),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "negative NaN and negative NaN",
+        Float.compare(negativeNaN, negativeNaN),
+        M.equals(OrderTestable(#equal)),
+      ),
+      test(
+        "positive NaN and positive infinity",
         Float.compare(positiveNaN, positiveInfinity),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "NaN and negative infinity",
+        "positive NaN and negative infinity",
         Float.compare(positiveNaN, negativeInfinity),
-        M.equals(OrderTestable(#greater)), // Conceptually wrong, needs to be fixed
+        M.equals(OrderTestable(#greater)),
       ),
       test(
-        "positive infinity and NaN",
+        "positive NaN and positive infinity",
+        Float.compare(positiveNaN, positiveInfinity),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "negative NaN and negative infinity",
+        Float.compare(negativeNaN, negativeInfinity),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative NaN and positive infinity",
+        Float.compare(negativeNaN, positiveInfinity),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "positive infinity and positive NaN",
         Float.compare(positiveInfinity, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Inconsistent, needs to be fixed
+        M.equals(OrderTestable(#less)),
       ),
       test(
-        "negative infinity and NaN",
+        "positive infinity and negative NaN",
+        Float.compare(positiveInfinity, negativeNaN),
+        M.equals(OrderTestable(#greater)),
+      ),
+      test(
+        "positive infinity and positive NaN",
+        Float.compare(positiveInfinity, positiveNaN),
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative infinity and positive NaN",
         Float.compare(negativeInfinity, positiveNaN),
-        M.equals(OrderTestable(#greater)), // Inconsistent, needs to be fixed
+        M.equals(OrderTestable(#less)),
+      ),
+      test(
+        "negative infinity and negative NaN",
+        Float.compare(negativeInfinity, negativeNaN),
+        M.equals(OrderTestable(#greater)),
       )
     ]
   )
@@ -2818,59 +3041,59 @@ run(
     [
       test(
         "positive number",
-        Float.neq(1.1),
+        Float.neg(1.1),
         M.equals(FloatTestable(-1.1, noEpsilon))
       ),
       test(
         "negative number",
-        Float.neq(-1.1),
+        Float.neg(-1.1),
         M.equals(FloatTestable(1.1, noEpsilon))
       ),
       test(
         "zero",
-        Float.neq(0.0),
+        Float.neg(0.0),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
       // fails due to issue, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive zero",
-      //   Float.neq(positiveZero),
+      //   Float.neg(positiveZero),
       //   NegativeZeroMatcher(),
       // ),
       test(
         "negative zero",
-        Float.neq(negativeZero),
+        Float.neg(negativeZero),
         PositiveZeroMatcher()
       ),
       test(
         "positive infinity",
-        Float.neq(positiveInfinity),
+        Float.neg(positiveInfinity),
         M.equals(FloatTestable(negativeInfinity, noEpsilon))
       ),
       test(
         "negative infinity",
-        Float.neq(negativeInfinity),
+        Float.neg(negativeInfinity),
         M.equals(FloatTestable(positiveInfinity, noEpsilon))
       ),
       test(
         "positive NaN (provisional test)",
-        Float.neq(positiveNaN),
+        Float.neg(positiveNaN),
         NaNMatcher()
       ),
       test(
         "negative NaN (provisional test)",
-        Float.neq(negativeNaN),
+        Float.neg(negativeNaN),
         NaNMatcher()
       ),
       // Not working correctly, probably related to https://github.com/dfinity/motoko/issues/3646
       // test(
       //   "positive NaN",
-      //   Float.neq(positiveNaN),
+      //   Float.neg(positiveNaN),
       //   NegativeNaNMatcher(),
       // ),
       // test(
       //   "negative NaN",
-      //   Float.neq(negativeNaN),
+      //   Float.neg(negativeNaN),
       //   PositiveNaNMatcher(),
       // ),
     ]
