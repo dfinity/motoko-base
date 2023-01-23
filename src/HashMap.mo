@@ -10,7 +10,7 @@
 /// certain constant.
 ///
 /// WARNING: Certain operations are amortized O(1) time, such as `put`, but run
-/// in worst case O(n) time. These worst case runtimes may exceed the cycles limit
+/// in worst case O(size) time. These worst case runtimes may exceed the cycles limit
 /// per message if the size of the map is large enough. Further, this runtime analysis
 /// assumes that the hash functions uniformly maps keys over the hash space. Grow these structures
 /// with discretion, and with good hash functions. All amortized operations
@@ -81,7 +81,7 @@ module {
     /// map.get("key") // ?3
     /// ```
     ///
-    /// Expected Runtime: O(1), Worst Case Runtime: O(n)
+    /// Expected Runtime: O(1), Worst Case Runtime: O(size)
     ///
     /// Space: O(1)
     public func get(key : K) : (value : ?V) {
@@ -102,9 +102,9 @@ module {
     /// map.get("key") // ?3
     /// ```
     ///
-    /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(n)
+    /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(size)
     ///
-    /// Expected Amortized Space: O(1), Worst Case Space: O(n)
+    /// Expected Amortized Space: O(1), Worst Case Space: O(size)
     ///
     /// Note: If this is the first entry into this map, this operation will cause
     /// the initial allocation of the underlying array.
@@ -120,9 +120,9 @@ module {
     /// map.get("key") // ?2
     /// ```
     ///
-    /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(n)
+    /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(size)
     ///
-    /// Expected Amortized Space: O(1), Worst Case Space: O(n)
+    /// Expected Amortized Space: O(1), Worst Case Space: O(size)
     ///
     /// Note: If this is the first entry into this map, this operation will cause
     /// the initial allocation of the underlying array.
@@ -174,9 +174,9 @@ module {
     /// map.get("key"); // null
     /// ```
     ///
-    /// Expected Runtime: O(1), Worst Case Runtime: O(n)
+    /// Expected Runtime: O(1), Worst Case Runtime: O(size)
     ///
-    /// Expected Space: O(1), Worst Case Space: O(n)
+    /// Expected Space: O(1), Worst Case Space: O(size)
     public func delete(key : K) = ignore remove(key);
 
     func keyHash_(k : K) : Key<K> = (keyHash(k), k);
@@ -194,9 +194,9 @@ module {
     /// map.remove("key"); // ?3
     /// ```
     ///
-    /// Expected Runtime: O(1), Worst Case Runtime: O(n)
+    /// Expected Runtime: O(1), Worst Case Runtime: O(size)
     ///
-    /// Expected Space: O(1), Worst Case Space: O(n)
+    /// Expected Space: O(1), Worst Case Space: O(size)
     public func remove(key : K) : (oldValue : ?V) {
       let m = table.size();
       if (m > 0) {
@@ -234,7 +234,7 @@ module {
     ///
     /// Cost of iteration over all keys:
     ///
-    /// Runtime: O(n)
+    /// Runtime: O(size)
     ///
     /// Space: O(1)
     public func keys() : Iter.Iter<K> {
@@ -261,7 +261,7 @@ module {
     ///
     /// Cost of iteration over all values:
     ///
-    /// Runtime: O(n)
+    /// Runtime: O(size)
     ///
     /// Space: O(1)
     public func vals() : Iter.Iter<V> {
@@ -289,7 +289,7 @@ module {
     ///
     /// Cost of iteration over all pairs:
     ///
-    /// Runtime: O(n)
+    /// Runtime: O(size)
     ///
     /// Space: O(1)
     public func entries() : Iter.Iter<(K, V)> {
@@ -337,7 +337,7 @@ module {
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
   ///
-  /// Expected Space: O(size), Worst Case Space: O(size * size)
+  /// Expected Space: O(size), Worst Case Space: O(size)
   public func clone<K, V>(
     map : HashMap<K, V>,
     keyEq : (K, K) -> Bool,
@@ -365,7 +365,7 @@ module {
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
   ///
-  /// Expected Space: O(size), Worst Case Space: O(size * size)
+  /// Expected Space: O(size), Worst Case Space: O(size)
   public func fromIter<K, V>(
     iter : Iter.Iter<(K, V)>,
     initCapacity : Nat,
@@ -394,7 +394,7 @@ module {
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
   ///
-  /// Expected Space: O(size), Worst Case Space: O(size * size)
+  /// Expected Space: O(size), Worst Case Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func map<K, V1, V2>(
@@ -433,7 +433,7 @@ module {
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
   ///
-  /// Expected Space: O(size), Worst Case Space: O(size * size)
+  /// Expected Space: O(size), Worst Case Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapFilter<K, V1, V2>(
