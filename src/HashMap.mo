@@ -65,7 +65,7 @@ module {
     ///
     /// Example:
     /// ```motoko include=initialize
-    /// map.size() // 0
+    /// map.size() // => 0
     /// ```
     ///
     /// Runtime: O(1)
@@ -78,7 +78,7 @@ module {
     /// Example:
     /// ```motoko include=initialize
     /// map.put("key", 3);
-    /// map.get("key") // ?3
+    /// map.get("key") // => ?3
     /// ```
     ///
     /// Expected Runtime: O(1), Worst Case Runtime: O(size)
@@ -99,7 +99,7 @@ module {
     /// Example:
     /// ```motoko include=initialize
     /// map.put("key", 3);
-    /// map.get("key") // ?3
+    /// map.get("key") // => ?3
     /// ```
     ///
     /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(size)
@@ -116,8 +116,8 @@ module {
     /// Example:
     /// ```motoko include=initialize
     /// map.put("key", 3);
-    /// ignore map.replace("key", 2); // ?3
-    /// map.get("key") // ?2
+    /// ignore map.replace("key", 2); // => ?3
+    /// map.get("key") // => ?2
     /// ```
     ///
     /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(size)
@@ -171,7 +171,7 @@ module {
     /// ```motoko include=initialize
     /// map.put("key", 3);
     /// map.delete("key");
-    /// map.get("key"); // null
+    /// map.get("key"); // => null
     /// ```
     ///
     /// Expected Runtime: O(1), Worst Case Runtime: O(size)
@@ -191,7 +191,7 @@ module {
     /// Example:
     /// ```motoko include=initialize
     /// map.put("key", 3);
-    /// map.remove("key"); // ?3
+    /// map.remove("key"); // => ?3
     /// ```
     ///
     /// Expected Runtime: O(1), Worst Case Runtime: O(size)
@@ -229,7 +229,7 @@ module {
     /// for (key in map.keys()) {
     ///   keys := key # " " # keys
     /// };
-    /// keys // "key3 key2 key1 "
+    /// keys // => "key3 key2 key1 "
     /// ```
     ///
     /// Cost of iteration over all keys:
@@ -256,7 +256,7 @@ module {
     /// for (value in map.vals()) {
     ///   sum += value;
     /// };
-    /// sum // 6
+    /// sum // => 6
     /// ```
     ///
     /// Cost of iteration over all values:
@@ -284,7 +284,7 @@ module {
     /// for ((key, value) in map.entries()) {
     ///   pairs := "(" # key # ", " # Nat.toText(value) # ") " # pairs
     /// };
-    /// pairs // "(key3, 3) (key2, 2) (key1, 1)"
+    /// pairs // => "(key3, 3) (key2, 2) (key1, 1)"
     /// ```
     ///
     /// Cost of iteration over all pairs:
@@ -332,7 +332,7 @@ module {
   /// map.put("key3", 3);
   ///
   /// let map2 = HashMap.clone(map, Text.equal, Text.hash);
-  /// map2.get("key1") // ?1
+  /// map2.get("key1") // => ?1
   /// ```
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
@@ -360,7 +360,7 @@ module {
   /// let iter = entries.vals();
   ///
   /// let map2 = HashMap.fromIter<Text, Nat>(iter, entries.size(), Text.equal, Text.hash);
-  /// map2.get("key1") // ?1
+  /// map2.get("key1") // => ?1
   /// ```
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
@@ -389,7 +389,7 @@ module {
   /// map.put("key3", 3);
   ///
   /// let map2 = HashMap.map<Text, Nat, Nat>(map, Text.equal, Text.hash, func (k, v) = v * 2);
-  /// map2.get("key2") // ?4
+  /// map2.get("key2") // => ?4
   /// ```
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
@@ -428,7 +428,7 @@ module {
   ///     Text.hash,
   ///     func (k, v) = if (v == 2) { null } else { ?(v * 2)}
   /// );
-  /// map2.get("key3") // ?6
+  /// map2.get("key3") // => ?6
   /// ```
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
