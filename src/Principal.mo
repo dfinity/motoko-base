@@ -1,4 +1,27 @@
-/// IC principals (user and canister smart contract IDs)
+/// Module for interacting with Principals (users and canisters).
+///
+/// Principals are used to identify entities that can interact with the Internet
+/// Computer. These entities are either users or canisters.
+///
+/// Example textual representation of Prinicpals:
+/// nfxu4-cn7qt-x7r3c-5dhnk-dcrct-gmgoz-67gcg-5glvc-2krhv-gcmsr-qqe
+///
+/// In Motoko, there is a primitive Principal type called `Principal`. As an example
+/// of where you might see Prinicpals, you can access the Principal of the
+/// caller of your shared function.
+///
+/// ```motoko no-repl
+/// shared(msg) func foo() {
+///   let caller : Principal = msg.caller;
+/// };
+/// ```
+///
+/// Then, you can use this module to work with the Principal.
+///
+/// Import from the base library to use this module.
+/// ```motoko name=import
+/// import Principal "mo:base/Principal";
+/// ```
 
 import Prim "mo:⛔";
 import Blob "Blob";
