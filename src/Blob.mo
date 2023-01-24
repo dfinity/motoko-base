@@ -186,7 +186,7 @@ module {
   /// ```motoko include=import
   /// let blob1 = "\BB\AA\AA" : Blob;
   /// let blob2 = "\00\00\00" : Blob;
-  /// ignore Blob.greater(blob1, blob2);
+  /// ignore Blob.greaterOrEqual(blob1, blob2);
   /// blob1 >= blob2 // => true
   /// ```
   ///
