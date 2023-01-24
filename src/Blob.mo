@@ -24,52 +24,176 @@
 /// ```
 import Prim "mo:⛔";
 module {
-
-  /// An immutable, possibly empty sequence of bytes.
-  /// Given `b : Blob`:
-  ///
-  /// * `b.size() : Nat` returns the number of bytes in the blob;
-  /// * `b.vals() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob.
-  ///
-  /// (Direct indexing of Blobs is not yet supported.)
   public type Blob = Prim.Types.Blob;
+  /// Creates a `Blob` from an array of bytes (`[Nat8]`), by copying each element.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let bytes : [Nat8] = [0, 255, 0];
+  /// let blob = Blob.fromArray(bytes); // => "\00\FF\00"
+  /// ```
+  public func fromArray(bytes : [Nat8]) : Blob = Prim.arrayToBlob bytes;
 
-  /// Returns a (non-cryptographic) hash of 'b'
-  public let hash : (b : Blob) -> Nat32 = Prim.hashBlob;
+  /// Creates a `Blob` from a mutable array of bytes (`[Nat8]`), by copying each element.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let bytes : [var Nat8] = [var 0, 255, 0];
+  /// let blob = Blob.fromArrayMut(bytes); // => "\00\FF\00"
+  /// ```
+  public func fromArrayMut(bytes : [var Nat8]) : Blob = Prim.arrayMutToBlob bytes;
 
-  /// Returns `x == y`.
-  public func equal(x : Blob, y : Blob) : Bool { x == y };
+  /// Converts a `Blob` to an array of bytes (`[Nat8]`), by copying each element.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob = "\00\FF\00" : Blob;
+  /// let bytes = Blob.toArray(blob);
+  /// ```
+  public func toArray(blob : Blob) : [Nat8] = Prim.blobToArray blob;
 
-  /// Returns `x != y`.
-  public func notEqual(x : Blob, y : Blob) : Bool { x != y };
+  /// Converts a `Blob` to a mutable array of bytes (`[Nat8]`), by copying each element.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob = "\00\FF\00" : Blob;
+  /// let bytes = Blob.toArrayMut(blob);
+  /// ```
+  public func toArrayMut(blob : Blob) : [var Nat8] = Prim.blobToArrayMut blob;
 
-  /// Returns `x < y`.
-  public func less(x : Blob, y : Blob) : Bool { x < y };
+  /// Returns the (non-cryptographic) hash of `blob`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob = "\00\FF\00" : Blob;
+  /// Blob.hash(blob) // => 1_818_567_776
+  /// ```
+  public func hash(blob : Blob) : Nat32 = Prim.hashBlob blob;
 
-  /// Returns `x <= y`.
-  public func lessOrEqual(x : Blob, y : Blob) : Bool { x <= y };
-
-  /// Returns `x > y`.
-  public func greater(x : Blob, y : Blob) : Bool { x > y };
-
-  /// Returns `x >= y`.
-  public func greaterOrEqual(x : Blob, y : Blob) : Bool { x >= y };
-
-  /// Returns the order of `x` and `y`.
-  public func compare(x : Blob, y : Blob) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
+  /// General purpose comparison function for `Blob` by comparing the value of
+  /// the bytes. Returns the `Order` (either `#less`, `#equal`, or `#greater`)
+  /// by comparing `blob1` with `blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\00\00\00" : Blob;
+  /// let blob2 = "\00\FF\00" : Blob;
+  /// Blob.compare(blob1, blob2) // => #less
+  /// ```
+  public func compare(blob1 : Blob, blob2 : Blob) : { #less; #equal; #greater } {
+    if (blob1 < blob2) {
+      #less
+    } else if (blob1 == blob2) {
+      #equal
+    } else {
+      #greater
+    }
   };
 
-  /// Creates a blob from an array of bytes, by copying each element.
-  public let fromArray : [Nat8] -> Blob = Prim.arrayToBlob;
+  /// Equality function for `Blob` types.
+  /// This is equivalent to `blob1 == blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\00\FF\00" : Blob;
+  /// let blob2 = "\00\FF\00" : Blob;
+  /// ignore Blob.equal(blob1, blob2);
+  /// blob1 == blob2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `==` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `==` as a higher order function at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Buffer "mo:base/Buffer";
+  ///
+  /// let buffer1 = Buffer.Buffer<Blob>(3);
+  /// let buffer2 = Buffer.Buffer<Blob>(3);
+  /// Buffer.equal(buffer1, buffer2, Blob.equal) // => true
+  /// ```
+  public func equal(blob1 : Blob, blob2 : Blob) : Bool { blob1 == blob2 };
 
-  /// Creates a blob from a mutable array of bytes, by copying each element.
-  public let fromArrayMut : [var Nat8] -> Blob = Prim.arrayMutToBlob;
+  /// Inequality function for `Blob` types.
+  /// This is equivalent to `blob1 != blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\00\AA\AA" : Blob;
+  /// let blob2 = "\00\FF\00" : Blob;
+  /// ignore Blob.notEqual(blob1, blob2);
+  /// blob1 != blob2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `<` as a higher order function at the moment.
+  public func notEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 != blob2 };
 
-  /// Creates an array of bytes from a blob, by copying each element.
-  public let toArray : Blob -> [Nat8] = Prim.blobToArray;
+  /// 'Less than' function for `Blob` types.
+  /// This is equivalent to `blob1 < blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\00\AA\AA" : Blob;
+  /// let blob2 = "\00\FF\00" : Blob;
+  /// ignore Blob.less(blob1, blob2);
+  /// blob1 < blob2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `<` as a higher order function at the moment.
+  public func less(blob1 : Blob, blob2 : Blob) : Bool { blob1 < blob2 };
 
-  /// Creates a mutable array of bytes from a blob, by copying each element.
-  public let toArrayMut : Blob -> [var Nat8] = Prim.blobToArrayMut;
+  /// 'Less than or equal to' function for `Blob` types.
+  /// This is equivalent to `blob1 <= blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\00\AA\AA" : Blob;
+  /// let blob2 = "\00\FF\00" : Blob;
+  /// ignore Blob.lessOrEqual(blob1, blob2);
+  /// blob1 <= blob2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<=` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `<=` as a higher order function at the moment.
+  public func lessOrEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 <= blob2 };
 
+  /// 'Greater than' function for `Blob` types.
+  /// This is equivalent to `blob1 > blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\BB\AA\AA" : Blob;
+  /// let blob2 = "\00\00\00" : Blob;
+  /// ignore Blob.greater(blob1, blob2);
+  /// blob1 > blob2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `>` as a higher order function at the moment.
+  public func greater(blob1 : Blob, blob2 : Blob) : Bool { blob1 > blob2 };
+
+  /// 'Greater than or equal to' function for `Blob` types.
+  /// This is equivalent to `blob1 >= blob2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob1 = "\BB\AA\AA" : Blob;
+  /// let blob2 = "\00\00\00" : Blob;
+  /// ignore Blob.greater(blob1, blob2);
+  /// blob1 >= blob2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>=` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `>=` as a higher order function at the moment.
+  public func greaterOrEqual(blob1 : Blob, blob2 : Blob) : Bool {
+    blob1 >= blob2
+  }
 }
