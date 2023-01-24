@@ -48,7 +48,7 @@ module {
   /// Example:
   /// ```motoko include=import
   /// let blob = "\00\FF\00" : Blob;
-  /// let bytes = Blob.toArray(blob);
+  /// let bytes = Blob.toArray(blob); // => [0, 255, 0]
   /// ```
   public func toArray(blob : Blob) : [Nat8] = Prim.blobToArray blob;
 
@@ -57,7 +57,7 @@ module {
   /// Example:
   /// ```motoko include=import
   /// let blob = "\00\FF\00" : Blob;
-  /// let bytes = Blob.toArrayMut(blob);
+  /// let bytes = Blob.toArrayMut(blob); // => [0, 255, 0]
   /// ```
   public func toArrayMut(blob : Blob) : [var Nat8] = Prim.blobToArrayMut blob;
 
