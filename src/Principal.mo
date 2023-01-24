@@ -99,7 +99,7 @@ module {
   public func hash(principal : Principal) : Hash.Hash = Blob.hash(Prim.blobOfPrincipal(principal));
 
   /// General purpose comparison function for `Principal`. Returns the `Order` (
-  /// either `#less`, `#equal`, or `#greater`) of comparing the `principal1` with
+  /// either `#less`, `#equal`, or `#greater`) of comparing `principal1` with
   /// `principal2`.
   ///
   /// Example:
