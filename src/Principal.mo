@@ -41,7 +41,7 @@ module {
   /// ```
   public let fromActor : (a : actor {}) -> Principal = Prim.principalOfActor;
 
-  /// Get the `Blob` (bytes) representation of a `Principal`.
+  /// Convert a `Principal` to its `Blob` (bytes) represenstation.
   ///
   /// Example:
   /// ```motoko include=import
@@ -50,7 +50,7 @@ module {
   /// ```
   public let toBlob : (p : Principal) -> Blob = Prim.blobOfPrincipal;
 
-  /// Converts a `Blob` to a `Prinicpal` value.
+  /// Converts a `Blob` (bytes) representation of a `Principal` to a `Principal` value.
   ///
   /// Example:
   /// ```motoko include=import
@@ -80,7 +80,13 @@ module {
 
   private let anonymousPrincipal : Blob = "\04";
 
-  /// FIXME what is this?
+  /// Checks if the given principal represents an annonymous user.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.isAnonymous(principal) // => false
+  /// ```
   public func isAnonymous(p : Principal) : Bool = Prim.blobOfPrincipal p == anonymousPrincipal;
 
   /// Hashes the given principal by hashing its `Blob` representation.
