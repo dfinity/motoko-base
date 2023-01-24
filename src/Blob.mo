@@ -127,8 +127,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `<` as a higher order function at the moment.
+  /// to the existing `!=` operator) is so that you can use it as a higher order
+  /// function. It is not possible to use `!=` as a higher order function at the moment.
   public func notEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 != blob2 };
 
   /// 'Less than' function for `Blob` types.
