@@ -1,5 +1,27 @@
-/// Binary blobs
-
+/// Module for working with Blobs: immutable sequence of bytes.
+///
+/// Blobs represent bytes. They are immutable, iterable, but not indexable.
+///
+/// Blobs are also often represented as `[Nat8]`, i.e. an array of bytes.
+/// If you would like to manipulate Blobs, it is recommended that you convert
+/// Blobs to `[var Nat8]` or `Buffer<Nat8>`, do the manipulation, then convert back.
+///
+/// Import from the base library to use this module.
+/// ```motoko name=import
+/// import Blob "mo:base/Blob";
+/// ```
+///
+/// Some built in features not listed in this module:
+/// ```motoko include=import
+/// import Debug "mo:base/Debug";
+/// import Nat8 "mo:base/Nat8";
+///
+/// let blob = "\00\00\00\ff" : Blob; // blob literals, where each byte is delimited by a back-slash and represented in hex
+/// let numBytes = blob.size(); // => 4 (returns the number of bytes in the Blob)
+/// for (byte : Nat8 in blob.vals()) { // iterator over the Blob
+///   Debug.print(Nat8.toText(byte))
+/// }
+/// ```
 import Prim "mo:⛔";
 module {
 
