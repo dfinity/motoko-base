@@ -134,8 +134,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `==` as a higher order function at the moment.
+  /// to the existing `==` operator) is so that you can use it as a function
+  /// value. It is not possible to use `==` as a function value at the moment.
   ///
   /// Example:
   /// ```motoko include=import
@@ -161,8 +161,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `!=` as a higher order function at the moment.
+  /// to the existing `!=` operator) is so that you can use it as a function value.
+  /// It is not possible to use `!=` as a function value at the moment.
   public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 != principal2
   };
@@ -179,8 +179,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `<` as a higher order function at the moment.
+  /// to the existing `<` operator) is so that you can use it as a function value
+  /// It is not possible to use `<` as a function value at the moment.
   public func less(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 < principal2
   };
@@ -192,13 +192,13 @@ module {
   /// ```motoko include=import
   /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
   /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.less(principal1, principal2);
+  /// ignore Principal.lessOrEqual(principal1, principal2);
   /// principal1 <= principal2 // => true
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `<=` as a higher order function at the moment.
+  /// to the existing `<=` operator) is so that you can use it as a function value.
+  /// It is not possible to use `<=` as a function value at the moment.
   public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 <= principal2
   };
@@ -215,8 +215,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `>` as a higher order function at the moment.
+  /// to the existing `>` operator) is so that you can use it as a function value.
+  /// It is not possible to use `>` as a function value at the moment.
   public func greater(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 > principal2
   };
@@ -228,13 +228,13 @@ module {
   /// ```motoko include=import
   /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
   /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.less(principal1, principal2);
+  /// ignore Principal.greaterOrEqual(principal1, principal2);
   /// principal1 >= principal2 // => true
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `>=` as a higher order function at the moment.
+  /// to the existing `>=` operator) is so that you can use it as a function value.
+  /// It is not possible to use `>=` as a function value at the moment.
   public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 >= principal2
   }
