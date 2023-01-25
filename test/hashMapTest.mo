@@ -2,6 +2,7 @@ import Prim "mo:⛔";
 import HashMap "mo:base/HashMap";
 import Hash "mo:base/Hash";
 import Text "mo:base/Text";
+import Iter "mo:base/Iter";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -71,6 +72,198 @@ let suite = Suite.suite(
         tempMap.get("key2")
       },
       M.equals(T.optional(T.textTestable, ?"new value2" : ?Text))
+    ),
+    Suite.test(
+      "put new key return val",
+      newMap().replace("key1", "value1"),
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "put new key insertion",
+      do {
+        let tempMap = newMap();
+        ignore tempMap.replace("key1", "value1");
+        tempMap.get("key1")
+      },
+      M.equals(T.optional(T.textTestable, ?"value1" : ?Text))
+    ),
+    Suite.test(
+      "put overwrite return val",
+      do {
+        let tempMap = newMap();
+        ignore tempMap.replace("key1", "value1");
+        ignore tempMap.replace("key2", "value2");
+        ignore tempMap.replace("key3", "value3");
+        ignore tempMap.replace("key4", "value4");
+        ignore tempMap.replace("key5", "value5");
+
+        tempMap.replace("key2", "new value2")
+      },
+      M.equals(T.optional(T.textTestable, ?"value2" : ?Text))
+    ),
+    Suite.test(
+      "put overwrite insertion",
+      do {
+        let tempMap = newMap();
+        ignore tempMap.replace("key1", "value1");
+        ignore tempMap.replace("key2", "value2");
+        ignore tempMap.replace("key3", "value3");
+        ignore tempMap.replace("key4", "value4");
+        ignore tempMap.replace("key5", "value5");
+
+        ignore tempMap.replace("key2", "new value2");
+        tempMap.get("key2")
+      },
+      M.equals(T.optional(T.textTestable, ?"new value2" : ?Text))
+    ),
+    Suite.test(
+      "delete empty",
+      do {
+        let tempMap = newMap();
+        tempMap.delete("key");
+        tempMap.get("key")
+      },
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "delete",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        tempMap.delete("key2");
+        tempMap.get("key2")
+      },
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "delete preserve structure",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        tempMap.delete("key2");
+        tempMap.get("key4")
+      },
+      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+    ),
+    Suite.test(
+      "delete not exist",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        tempMap.delete("key5");
+        tempMap.size()
+      },
+      M.equals(T.nat(4))
+    ),
+    Suite.test(
+      "remove empty return val",
+      newMap().remove("key"),
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "remove empty size",
+      do {
+        let tempMap = newMap();
+        ignore tempMap.remove("key");
+        tempMap.size()
+      },
+      M.equals(T.nat(0))
+    ),
+    Suite.test(
+      "remove return val",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        tempMap.remove("key2")
+      },
+      M.equals(T.optional(T.textTestable, ?"value2" : ?Text))
+    ),
+    Suite.test(
+      "remove deletion",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        ignore tempMap.remove("key2");
+        tempMap.get("key2")
+      },
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "remove preserve structure",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        ignore tempMap.remove("key2");
+        tempMap.get("key4")
+      },
+      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+    ),
+    Suite.test(
+      "remove not exist",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        tempMap.remove("key5")
+      },
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "keys empty",
+      emptyMap.keys().next(),
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "keys",
+      Iter.toArray(map.keys()),
+      M.equals(T.array(T.textTestable, ["key1", "key2"]))
+    ),
+    Suite.test(
+      "vals empty",
+      emptyMap.vals().next(),
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "vals",
+      Iter.toArray(map.vals()),
+      M.equals(T.array(T.textTestable, ["value1", "value2"]))
+    ),
+    Suite.test(
+      "entries empty",
+      emptyMap.entries().next(),
+      M.equals(
+        T.optional(T.tuple2Testable(T.textTestable, T.textTestable), null : ?(Text, Text))
+      )
+    ),
+    Suite.test(
+      "entries",
+      Iter.toArray(map.entries()),
+      M.equals(
+        T.array(
+          T.tuple2Testable(T.textTestable, T.textTestable),
+          [("key1", "value1"), ("key2", "value2")]
+        )
+      )
     )
   ]
 );
