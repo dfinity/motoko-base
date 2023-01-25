@@ -264,6 +264,48 @@ let suite = Suite.suite(
           [("key1", "value1"), ("key2", "value2")]
         )
       )
+    ),
+    Suite.test(
+      "clone empty",
+      HashMap.clone(emptyMap, Text.equal, Text.hash).size(),
+      M.equals(T.nat(0))
+    ),
+    Suite.test(
+      "clone",
+      do {
+        let mapClone = HashMap.clone(map, Text.equal, Text.hash);
+        Iter.toArray(mapClone.entries())
+      },
+      M.equals(
+        T.array(
+          T.tuple2Testable(T.textTestable, T.textTestable),
+          [("key2", "value2"), ("key1", "value1")]
+        )
+      )
+    ),
+    Suite.test(
+      "fromIter empty",
+      HashMap.fromIter<Text, Text>([].vals(), 3, Text.equal, Text.hash).size(),
+      M.equals(T.nat(0))
+    ),
+    Suite.test(
+      "fromIter",
+      do {
+        let iter = [("key1", "value1"), ("key2", "value2")].vals();
+        let tempMap = HashMap.fromIter<Text, Text>(
+          iter,
+          3,
+          Text.equal,
+          Text.hash
+        );
+        Iter.toArray(tempMap.entries())
+      },
+      M.equals(
+        T.array(
+          T.tuple2Testable(T.textTestable, T.textTestable),
+          [("key1", "value1"), ("key2", "value2")]
+        )
+      )
     )
   ]
 );
