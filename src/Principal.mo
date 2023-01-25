@@ -36,10 +36,12 @@ module {
   /// Example:
   /// ```motoko include=import no-repl
   /// actor MyCanister {
-  ///   let principal = Principal.fromActor(MyCanister);
+  ///   func getPrincipal() : Principal {
+  ///     let principal = Principal.fromActor(MyCanister);
+  ///   }
   /// }
   /// ```
-  public let fromActor : (a : actor {}) -> Principal = Prim.principalOfActor;
+  public func fromActor(a : actor {}) : Principal = Prim.principalOfActor a;
 
   /// Convert a `Principal` to its `Blob` (bytes) representation.
   ///
@@ -48,7 +50,7 @@ module {
   /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
   /// let blob = Principal.toBlob(principal); // => \00\00\00\00\00\30\00\D3\01\01
   /// ```
-  public let toBlob : (p : Principal) -> Blob = Prim.blobOfPrincipal;
+  public func toBlob(p : Principal) : Blob = Prim.blobOfPrincipal p;
 
   /// Converts a `Blob` (bytes) representation of a `Principal` to a `Principal` value.
   ///
@@ -58,7 +60,7 @@ module {
   /// let principal = Principal.fromBlob(blob);
   /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
   /// ```
-  public let fromBlob : (b : Blob) -> Principal = Prim.principalOfBlob;
+  public func fromBlob(b : Blob) : Principal = Prim.principalOfBlob b;
 
   /// Converts a `Principal` to its `Text` representation.
   ///
