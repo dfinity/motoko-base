@@ -23,6 +23,7 @@
 /// import Nat8 "mo:base/Nat8";
 ///
 /// let blob = "\00\00\00\ff" : Blob; // blob literals, where each byte is delimited by a back-slash and represented in hex
+/// let blob2 = "charsもあり" : Blob; // you can also use characters in the literals
 /// let numBytes = blob.size(); // => 4 (returns the number of bytes in the Blob)
 /// for (byte : Nat8 in blob.vals()) { // iterator over the Blob
 ///   Debug.print(Nat8.toText(byte))
