@@ -135,7 +135,8 @@ module {
   ///
   /// Note: The reason why this function is defined in this library (in addition
   /// to the existing `==` operator) is so that you can use it as a function
-  /// value. It is not possible to use `==` as a function value at the moment.
+  /// value to pass to a higher order function. It is not possible to use `==`
+  /// as a function value at the moment.
   ///
   /// Example:
   /// ```motoko include=import
@@ -161,8 +162,9 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function value.
-  /// It is not possible to use `!=` as a function value at the moment.
+  /// to the existing `!=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `!=`
+  /// as a function value at the moment.
   public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 != principal2
   };
@@ -179,8 +181,9 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function value
-  /// It is not possible to use `<` as a function value at the moment.
+  /// to the existing `<` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<`
+  /// as a function value at the moment.
   public func less(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 < principal2
   };
@@ -197,8 +200,9 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function value.
-  /// It is not possible to use `<=` as a function value at the moment.
+  /// to the existing `<=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<=`
+  /// as a function value at the moment.
   public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 <= principal2
   };
@@ -215,8 +219,9 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function value.
-  /// It is not possible to use `>` as a function value at the moment.
+  /// to the existing `>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>`
+  /// as a function value at the moment.
   public func greater(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 > principal2
   };
@@ -233,8 +238,9 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function value.
-  /// It is not possible to use `>=` as a function value at the moment.
+  /// to the existing `>=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>=`
+  /// as a function value at the moment.
   public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 >= principal2
   }
