@@ -519,6 +519,17 @@ let suite = Suite.suite(
         tempMap.remove("test")
       },
       M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "A bunch of operations",
+      do {
+        map.put("key3", "value3");
+        ignore do ? {
+          map.put("key2", map.get("key1")!)
+        };
+        map.get("key2")
+      },
+      M.equals(T.optional(T.textTestable, ?"value1" : ?Text))
     )
   ]
 );
