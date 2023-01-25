@@ -7,25 +7,75 @@ import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
-let map = HashMap.HashMap<Text, Text>(3, Text.equal, Text.hash);
+func newMap() : HashMap.HashMap<Text, Text> {
+  HashMap.HashMap<Text, Text>(3, Text.equal, Text.hash)
+};
+
+let map = newMap();
 map.put("key1", "value1");
 map.put("key2", "value2");
+
+let emptyMap = newMap();
 
 let suite = Suite.suite(
   "HashMap",
   [
     Suite.test(
       "init size",
-      HashMap.HashMap<Text, Text>(3, Text.equal, Text.hash).size(),
+      emptyMap.size(),
       M.equals(T.nat(0))
     ),
     Suite.test(
       "size",
       map.size(),
       M.equals(T.nat(2))
+    ),
+    Suite.test(
+      "empty get",
+      emptyMap.get("key"),
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "get",
+      map.get("key1"),
+      M.equals(T.optional(T.textTestable, ?"value1"))
+    ),
+    Suite.test(
+      "get not found",
+      map.get("not a key"),
+      M.equals(T.optional(T.textTestable, null : ?Text))
+    ),
+    Suite.test(
+      "put",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+        tempMap.put("key5", "value5");
+        tempMap.get("key4")
+      },
+      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+    ),
+    Suite.test(
+      "put override",
+      do {
+        let tempMap = newMap();
+        tempMap.put("key1", "value1");
+        tempMap.put("key2", "value2");
+        tempMap.put("key3", "value3");
+        tempMap.put("key4", "value4");
+
+        tempMap.put("key2", "new value2");
+        tempMap.get("key2")
+      },
+      M.equals(T.optional(T.textTestable, ?"new value2" : ?Text))
     )
   ]
 );
+
+// FIXME test for collided and non collided maps
 
 Suite.run(suite);
 
