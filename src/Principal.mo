@@ -216,7 +216,7 @@ module {
   /// ```motoko include=import
   /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
   /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.less(principal1, principal2);
+  /// ignore Principal.greater(principal1, principal2);
   /// principal1 > principal2 // => false
   /// ```
   ///
