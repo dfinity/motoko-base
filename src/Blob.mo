@@ -108,8 +108,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `==` as a higher order function at the moment.
+  /// to the existing `==` operator) is so that you can use it as a function value.
+  /// It is not possible to use `==` as a function value at the moment.
   ///
   /// Example:
   /// ```motoko include=import
@@ -149,8 +149,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `<` as a higher order function at the moment.
+  /// to the existing `<` operator) is so that you can use it as a function value.
+  /// It is not possible to use `<` as a function value at the moment.
   public func less(blob1 : Blob, blob2 : Blob) : Bool { blob1 < blob2 };
 
   /// 'Less than or equal to' function for `Blob` types.
@@ -165,8 +165,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `<=` as a higher order function at the moment.
+  /// to the existing `<=` operator) is so that you can use it as a function value.
+  /// It is not possible to use `<=` as a function value at the moment.
   public func lessOrEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 <= blob2 };
 
   /// 'Greater than' function for `Blob` types.
@@ -181,8 +181,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `>` as a higher order function at the moment.
+  /// to the existing `>` operator) is so that you can use it as a function value.
+  /// It is not possible to use `>` as a function value at the moment.
   public func greater(blob1 : Blob, blob2 : Blob) : Bool { blob1 > blob2 };
 
   /// 'Greater than or equal to' function for `Blob` types.
@@ -197,8 +197,8 @@ module {
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a higher order
-  /// function. It is not possible to use `>=` as a higher order function at the moment.
+  /// to the existing `>=` operator) is so that you can use it as a  function value.
+  /// It is not possible to use `>=` as a function value at the moment.
   public func greaterOrEqual(blob1 : Blob, blob2 : Blob) : Bool {
     blob1 >= blob2
   }
