@@ -140,7 +140,7 @@ module {
   /// function value at the moment.
   public func notEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 != blob2 };
 
-  /// 'Less than' function for `Blob` types.
+  /// "Less than" function for `Blob` types.
   /// This is equivalent to `blob1 < blob2`.
   ///
   /// Example:
@@ -157,7 +157,7 @@ module {
   /// function value at the moment.
   public func less(blob1 : Blob, blob2 : Blob) : Bool { blob1 < blob2 };
 
-  /// 'Less than or equal to' function for `Blob` types.
+  /// "Less than or equal to" function for `Blob` types.
   /// This is equivalent to `blob1 <= blob2`.
   ///
   /// Example:
@@ -174,7 +174,7 @@ module {
   /// function value at the moment.
   public func lessOrEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 <= blob2 };
 
-  /// 'Greater than' function for `Blob` types.
+  /// "Greater than" function for `Blob` types.
   /// This is equivalent to `blob1 > blob2`.
   ///
   /// Example:
@@ -191,7 +191,7 @@ module {
   /// function value at the moment.
   public func greater(blob1 : Blob, blob2 : Blob) : Bool { blob1 > blob2 };
 
-  /// 'Greater than or equal to' function for `Blob` types.
+  /// "Greater than or equal to" function for `Blob` types.
   /// This is equivalent to `blob1 >= blob2`.
   ///
   /// Example:
