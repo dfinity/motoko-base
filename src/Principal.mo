@@ -3,12 +3,12 @@
 /// Principals are used to identify entities that can interact with the Internet
 /// Computer. These entities are either users or canisters.
 ///
-/// Example textual representation of Prinicpals:
+/// Example textual representation of Principals:
 ///
 /// `un4fu-tqaaa-aaaab-qadjq-cai`
 ///
 /// In Motoko, there is a primitive Principal type called `Principal`. As an example
-/// of where you might see Prinicpals, you can access the Principal of the
+/// of where you might see Principals, you can access the Principal of the
 /// caller of your shared function.
 ///
 /// ```motoko no-repl
@@ -41,7 +41,7 @@ module {
   /// ```
   public let fromActor : (a : actor {}) -> Principal = Prim.principalOfActor;
 
-  /// Convert a `Principal` to its `Blob` (bytes) represenstation.
+  /// Convert a `Principal` to its `Blob` (bytes) representation.
   ///
   /// Example:
   /// ```motoko include=import
@@ -80,7 +80,7 @@ module {
 
   private let anonymousPrincipal : Blob = "\04";
 
-  /// Checks if the given principal represents an annonymous user.
+  /// Checks if the given principal represents an anonymous user.
   ///
   /// Example:
   /// ```motoko include=import
