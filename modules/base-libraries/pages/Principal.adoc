@@ -1,7 +1,31 @@
 [[module.Principal]]
 = Principal
 
-IC principals (user and canister smart contract IDs)
+Module for interacting with Principals (users and canisters).
+
+Principals are used to identify entities that can interact with the Internet
+Computer. These entities are either users or canisters.
+
+Example textual representation of Principals:
+
+`un4fu-tqaaa-aaaab-qadjq-cai`
+
+In Motoko, there is a primitive Principal type called `Principal`. As an example
+of where you might see Principals, you can access the Principal of the
+caller of your shared function.
+
+```motoko no-repl
+shared(msg) func foo() {
+  let caller : Principal = msg.caller;
+};
+```
+
+Then, you can use this module to work with the `Principal`.
+
+Import from the base library to use this module.
+```motoko name=import
+import Principal "mo:base/Principal";
+```
 
 [[type.Principal]]
 == Principal
@@ -11,38 +35,59 @@ IC principals (user and canister smart contract IDs)
 type Principal = Prim.Types.Principal
 ----
 
-Internet Computer principal identifiers.
-Convert to `Blob` for access to bytes.
+
 
 [[fromActor]]
 == fromActor
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromActor : (a : actor {  }) -> xref:#type.Principal[Principal]
+func fromActor(a : actor {  }) : xref:#type.Principal[Principal]
 ----
 
-Conversion.
+Get the `Principal` identifier of an actor.
+
+Example:
+```motoko include=import no-repl
+actor MyCanister {
+  func getPrincipal() : Principal {
+    let principal = Principal.fromActor(MyCanister);
+  }
+}
+```
 
 [[toBlob]]
 == toBlob
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toBlob : (p : xref:#type.Principal[Principal]) -> Blob
+func toBlob(p : xref:#type.Principal[Principal]) : Blob
 ----
 
-Conversion.
+Convert a `Principal` to its `Blob` (bytes) representation.
+
+Example:
+```motoko include=import
+let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let blob = Principal.toBlob(principal); // => \00\00\00\00\00\30\00\D3\01\01
+```
 
 [[fromBlob]]
 == fromBlob
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromBlob : (b : Blob) -> xref:#type.Principal[Principal]
+func fromBlob(b : Blob) : xref:#type.Principal[Principal]
 ----
 
-Conversion.
+Converts a `Blob` (bytes) representation of a `Principal` to a `Principal` value.
+
+Example:
+```motoko include=import
+let blob = "\00\00\00\00\00\30\00\D3\01\01" : Blob;
+let principal = Principal.fromBlob(blob);
+Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
+```
 
 [[toText]]
 == toText
@@ -52,27 +97,13 @@ Conversion.
 func toText(p : xref:#type.Principal[Principal]) : Text
 ----
 
-Conversion.
+Converts a `Principal` to its `Text` representation.
 
-[[isAnonymous]]
-== isAnonymous
-
-[source.no-repl,motoko,subs=+macros]
-----
-func isAnonymous(p : xref:#type.Principal[Principal]) : Bool
-----
-
-
-
-[[hash]]
-== hash
-
-[source.no-repl,motoko,subs=+macros]
-----
-func hash(principal : xref:#type.Principal[Principal]) : xref:Hash.adoc#type.Hash[Hash.Hash]
-----
-
-
+Example:
+```motoko include=import
+let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
+```
 
 [[fromText]]
 == fromText
@@ -82,75 +113,215 @@ func hash(principal : xref:#type.Principal[Principal]) : xref:Hash.adoc#type.Has
 func fromText(t : Text) : xref:#type.Principal[Principal]
 ----
 
+Converts a `Text` representation of a `Principal` to a `Principal` value.
 
+Example:
+```motoko include=import
+let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
+```
 
-[[equal]]
-== equal
-
-[source.no-repl,motoko,subs=+macros]
-----
-func equal(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
-----
-
-Returns `x == y`.
-
-[[notEqual]]
-== notEqual
+[[isAnonymous]]
+== isAnonymous
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func notEqual(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
+func isAnonymous(p : xref:#type.Principal[Principal]) : Bool
 ----
 
-Returns `x != y`.
+Checks if the given principal represents an anonymous user.
 
-[[less]]
-== less
+Example:
+```motoko include=import
+let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+Principal.isAnonymous(principal) // => false
+```
+
+[[hash]]
+== hash
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func less(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
+func hash(principal : xref:#type.Principal[Principal]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
-Returns `x < y`.
+Hashes the given principal by hashing its `Blob` representation.
 
-[[lessOrEqual]]
-== lessOrEqual
-
-[source.no-repl,motoko,subs=+macros]
-----
-func lessOrEqual(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
-----
-
-Returns `x <= y`.
-
-[[greater]]
-== greater
-
-[source.no-repl,motoko,subs=+macros]
-----
-func greater(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
-----
-
-Returns `x > y`.
-
-[[greaterOrEqual]]
-== greaterOrEqual
-
-[source.no-repl,motoko,subs=+macros]
-----
-func greaterOrEqual(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : Bool
-----
-
-Returns `x >= y`.
+Example:
+```motoko include=import
+let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+Principal.hash(principal) // => 2_742_573_646
+```
 
 [[compare]]
 == compare
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(x : xref:#type.Principal[Principal], y : xref:#type.Principal[Principal]) : {#less; #equal; #greater}
+func compare(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : {#less; #equal; #greater}
 ----
 
-Returns the order of `x` and `y`.
+General purpose comparison function for `Principal`. Returns the `Order` (
+either `#less`, `#equal`, or `#greater`) of comparing `principal1` with
+`principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+Principal.compare(principal1, principal2) // => #equal
+```
+
+[[equal]]
+== equal
+
+[source.no-repl,motoko,subs=+macros]
+----
+func equal(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : Bool
+----
+
+Equality function for Principal types.
+This is equivalent to `principal1 == principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+ignore Principal.equal(principal1, principal2);
+principal1 == principal2 // => true
+```
+
+Note: The reason why this function is defined in this library (in addition
+to the existing `==` operator) is so that you can use it as a function
+value to pass to a higher order function. It is not possible to use `==`
+as a function value at the moment.
+
+Example:
+```motoko include=import
+import Buffer "mo:base/Buffer";
+
+let buffer1 = Buffer.Buffer<Principal>(3);
+let buffer2 = Buffer.Buffer<Principal>(3);
+Buffer.equal(buffer1, buffer2, Principal.equal) // => true
+```
+
+[[notEqual]]
+== notEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func notEqual(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : Bool
+----
+
+Inequality function for Principal types.
+This is equivalent to `principal1 != principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+ignore Principal.notEqual(principal1, principal2);
+principal1 != principal2 // => false
+```
+
+Note: The reason why this function is defined in this library (in addition
+to the existing `!=` operator) is so that you can use it as a function
+value to pass to a higher order function. It is not possible to use `!=`
+as a function value at the moment.
+
+[[less]]
+== less
+
+[source.no-repl,motoko,subs=+macros]
+----
+func less(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : Bool
+----
+
+"Less than" function for Principal types.
+This is equivalent to `principal1 < principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+ignore Principal.less(principal1, principal2);
+principal1 < principal2 // => false
+```
+
+Note: The reason why this function is defined in this library (in addition
+to the existing `<` operator) is so that you can use it as a function
+value to pass to a higher order function. It is not possible to use `<`
+as a function value at the moment.
+
+[[lessOrEqual]]
+== lessOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func lessOrEqual(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : Bool
+----
+
+"Less than or equal to" function for Principal types.
+This is equivalent to `principal1 <= principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+ignore Principal.lessOrEqual(principal1, principal2);
+principal1 <= principal2 // => true
+```
+
+Note: The reason why this function is defined in this library (in addition
+to the existing `<=` operator) is so that you can use it as a function
+value to pass to a higher order function. It is not possible to use `<=`
+as a function value at the moment.
+
+[[greater]]
+== greater
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greater(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : Bool
+----
+
+"Greater than" function for Principal types.
+This is equivalent to `principal1 > principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+ignore Principal.greater(principal1, principal2);
+principal1 > principal2 // => false
+```
+
+Note: The reason why this function is defined in this library (in addition
+to the existing `>` operator) is so that you can use it as a function
+value to pass to a higher order function. It is not possible to use `>`
+as a function value at the moment.
+
+[[greaterOrEqual]]
+== greaterOrEqual
+
+[source.no-repl,motoko,subs=+macros]
+----
+func greaterOrEqual(principal1 : xref:#type.Principal[Principal], principal2 : xref:#type.Principal[Principal]) : Bool
+----
+
+"Greater than or equal to" function for Principal types.
+This is equivalent to `principal1 >= principal2`.
+
+Example:
+```motoko include=import
+let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+ignore Principal.greaterOrEqual(principal1, principal2);
+principal1 >= principal2 // => true
+```
+
+Note: The reason why this function is defined in this library (in addition
+to the existing `>=` operator) is so that you can use it as a function
+value to pass to a higher order function. It is not possible to use `>=`
+as a function value at the moment.
 
