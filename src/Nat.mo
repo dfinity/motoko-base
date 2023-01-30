@@ -6,6 +6,7 @@
 import Int "Int";
 import Order "Order";
 import Prim "mo:⛔";
+import Hash "Hash";
 
 module {
 
@@ -47,6 +48,9 @@ module {
   public func compare(x : Nat, y : Nat) : { #less; #equal; #greater } {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
+
+  /// Returns the hash of `number`.
+  public func hash(number : Nat) : Hash.Hash { Hash.hash(number) };
 
   /// Returns the sum of `x` and `y`, `x + y`.
   public func add(x : Nat, y : Nat) : Nat { x + y };
