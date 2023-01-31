@@ -706,6 +706,18 @@ module {
   ///
   /// If the given lists have different lengths, then the created list will have a
   /// length equal to the length of the smaller list.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.zip<Nat, Text>(
+  ///   ?(0, ?(1, ?(2, null))),
+  ///   ?("0", ?("1", null)),
+  /// ) // => ?((0, "0"), ?((1, "1"), null))
+  /// ```
+  ///
+  /// Runtime: O(min(size(xs), size(ys)))
+  ///
+  /// Space: O(min(size(xs), size(ys)))
   public func zip<X, Y>(xs : List<X>, ys : List<Y>) : List<(X, Y)> = zipWith<X, Y, (X, Y)>(xs, ys, func(x, y) { (x, y) });
 
   /// Create a list in which elements are calculated from the function `f` and
@@ -713,6 +725,24 @@ module {
   ///
   /// If the given lists have different lengths, then the created list will have a
   /// length equal to the length of the smaller list.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat = "mo:base/Nat";
+  /// import Char = "mo:base/Char";
+  ///
+  /// List.zipWith<Nat, Char, Text>(
+  ///   ?(0, ?(1, ?(2, null))),
+  ///   ?('a', ?('b', null)),
+  ///   func (n, c) { Nat.toText(n) # Char.toText(c) }
+  /// ) // => ?("0a", ?("1b", null))
+  /// ```
+  ///
+  /// Runtime: O(min(size(xs), size(ys)))
+  ///
+  /// Space: O(min(size(xs), size(ys)))
+  ///
+  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
   public func zipWith<X, Y, Z>(
     xs : List<X>,
     ys : List<Y>,
@@ -732,6 +762,20 @@ module {
   };
 
   /// Split the given list at the given zero-based index.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.split<Nat>(
+  ///   2,
+  ///   ?(0, ?(1, ?(2, null)))
+  /// ) // => (?(0, ?(1, null)), ?(2, null))
+  /// ```
+  ///
+  /// Runtime: O(n)
+  ///
+  /// Space: O(n)
+  ///
+  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
   public func split<X>(n : Nat, xs : List<X>) : (List<X>, List<X>) {
     if (n == 0) { (null, xs) } else {
       func rec(n : Nat, xs : List<X>) : (List<X>, List<X>) {
@@ -752,6 +796,25 @@ module {
   /// Split the given list into chunks of length `n`.
   /// The last chunk will be shorter if the length of the given list
   /// does not divide by `n` evenly.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.chunks<Nat>(
+  ///   2,
+  ///   ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
+  /// )
+  /// /* => ?(?(0, ?(1, null)),
+  ///         ?(?(2, ?(3, null)),
+  ///           ?(?(4, null),
+  ///             null)))
+  /// */
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
   public func chunks<X>(n : Nat, xs : List<X>) : List<List<X>> {
     let (l, r) = split<X>(n, xs);
     if (isNil<X>(l)) {
@@ -762,6 +825,16 @@ module {
   };
 
   /// Convert an array into a list.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.fromArray<Nat>([ 0, 1, 2, 3, 4])
+  /// // =>  ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
   public func fromArray<A>(xs : [A]) : List<A> {
     Array.foldRight<A, List<A>>(
       xs,
@@ -773,9 +846,28 @@ module {
   };
 
   /// Convert a mutable array into a list.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.fromVarArray<Nat>([var 0, 1, 2, 3, 4])
+  /// // =>  ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
   public func fromVarArray<A>(xs : [var A]) : List<A> = fromArray<A>(Array.freeze<A>(xs));
 
   /// Create an array from a list.
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.toArray<Nat>(?(0, ?(1, ?(2, ?(3, ?(4, null))))))
+  /// // => [0, 1, 2, 3, 4]
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
   public func toArray<A>(xs : List<A>) : [A] {
     let length = size<A>(xs);
     var list = xs;
@@ -793,9 +885,32 @@ module {
   };
 
   /// Create a mutable array from a list.
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.toVarArray<Nat>(?(0, ?(1, ?(2, ?(3, ?(4, null))))))
+  /// // => [var 0, 1, 2, 3, 4]
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(size)
   public func toVarArray<A>(xs : List<A>) : [var A] = Array.thaw<A>(toArray<A>(xs));
 
   /// Create an iterator from a list.
+  /// Create a mutable array from a list.
+  /// Example:
+  /// ```motoko include=initialize
+  /// var sum = 0;
+  /// for (n in List.toIter<Nat>(?(0, ?(1, ?(2, ?(3, ?(4, null))))))) {
+  ///   sum += n;
+  /// };
+  /// sum
+  /// // => 11
+  /// ```
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
   public func toIter<A>(xs : List<A>) : Iter.Iter<A> {
     var state = xs;
     object {
