@@ -65,7 +65,7 @@ module {
   /// Return the last element of the list, if present.
   /// Example:
   /// ```motoko include=initialize
-  /// List.last<Nat>(?(0,?(1, null))) // => ?1
+  /// List.last<Nat>(?(0, ?(1, null))) // => ?1
   /// ```
   ///
   /// Runtime: O(1)
@@ -84,7 +84,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.pop<Nat>(?(0,?(1, null))) // => (?0, ?(1, null))
+  /// List.pop<Nat>(?(0, ?(1, null))) // => (?0, ?(1, null))
   /// ```
   ///
   /// Runtime: O(1)
@@ -101,7 +101,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.size<Nat>(?(0,?(1, null))) // => 2
+  /// List.size<Nat>(?(0, ?(1, null))) // => 2
   /// ```
   ///
   /// Runtime: O(size)
@@ -124,7 +124,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.get<Nat>(?(0,?(1, null)), 1) // => 1
+  /// List.get<Nat>(?(0, ?(1, null)), 1) // => ?1
   /// ```
   ///
   /// Runtime: O(size)
@@ -142,7 +142,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.reverse<Nat>(?(0, ?(1, null))) // => ?(1, ?(0, null))
+  /// List.reverse<Nat>(?(0, ?(1, ?(2, null)))) // => ?(2, ?(1, ?(0, null)))
   /// ```
   ///
   /// Runtime: O(size)
@@ -182,7 +182,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.map<Nat>(?(0, ?(1, ?(2, null))), func n { n += 1 }) // => ?(1, ?(2, ?(3, null))
+  /// import Nat = "mo:base/Nat"
+  /// List.map<Nat, Text>(?(0, ?(1, ?(2, null))), Nat.toText) // => ?("0", ?("1", ?("2", null))
   /// ```
   ///
   /// Runtime: O(size)
@@ -647,7 +648,7 @@ module {
   /// List.tabulate<Nat>(
   ///   3,
   ///   func n { n * 2 }
-  /// ) // => ?(0, ?(2, (?6, null)))
+  /// ) // => ?(0, ?(2, (?4, null)))
   /// ```
   ///
   /// Runtime: O(n)
@@ -905,7 +906,7 @@ module {
   ///   sum += n;
   /// };
   /// sum
-  /// // => 11
+  /// // => 10
   /// ```
   ///
   /// Runtime: O(1)
