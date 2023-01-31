@@ -182,7 +182,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.map<Nat>(?(0, ?(1, ?(2, null))), func n { n += 1 }); // => ?(1, ?(2, ?(3, null))
+  /// List.map<Nat>(?(0, ?(1, ?(2, null))), func n { n += 1 }) // => ?(1, ?(2, ?(3, null))
   /// ```
   ///
   /// Runtime: O(size)
@@ -201,7 +201,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.filter<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }); // => ?(0, ?(2, null))
+  /// List.filter<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }) // => ?(0, ?(2, null))
   /// ```
   ///
   /// Runtime: O(size)
@@ -227,7 +227,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=initialize
-  /// List.partition<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }); // => (?(0, ?(2, null)), ?(1, null))
+  /// List.partition<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }) // => (?(0, ?(2, null)), ?(1, null))
   /// ```
   ///
   /// Runtime: O(size)
@@ -263,7 +263,7 @@ module {
   ///       null
   ///     }
   ///   }
-  /// ); // => ?(4, ?(6, null))
+  /// ) // => ?(4, ?(6, null))
   /// ```
   ///
   /// Runtime: O(size)
@@ -345,7 +345,7 @@ module {
   /// List.append<Nat>(
   ///   ?(0, ?(1, ?(2, null))),
   ///   ?(3, ?(4, ?(5, null)))
-  /// ); // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
+  /// ) // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
   ///
   /// Runtime: O(size(l))
@@ -430,7 +430,7 @@ module {
   ///   ?(1, ?(2, ?(3, null))),
   ///   "",
   ///   func (acc, x) { acc # Nat.toText(x)}
-  /// ); // => "123"
+  /// ) // => "123"
   /// ```
   ///
   /// Runtime: O(size(list))
@@ -457,10 +457,10 @@ module {
   ///   ?(1, ?(2, ?(3, null))),
   ///   "",
   ///   func (x, acc) { Nat.toText(x) # acc}
-  /// ); // => "123"
+  /// ) // => "123"
   /// ```
   ///
-  /// Runtime: O(size(list))
+  /// Runtime: O(size)
   ///
   /// Space: O(1)
   ///
@@ -484,7 +484,7 @@ module {
   /// ); // => ?2
   /// ```
   ///
-  /// Runtime: O(size(list))
+  /// Runtime: O(size)
   ///
   /// Space: O(1)
   ///
@@ -498,8 +498,21 @@ module {
 
   /// Return true if there exists a list element for which
   /// the given predicate `f` is true.
-
-
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// List.some<Nat>(
+  ///   ?(1, ?(2, ?(3, null))),
+  ///   func n { n > 1 }
+  /// ) // => true
+  /// ```
+  ///
+  /// Runtime: O(size(list))
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func some<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null { false };
@@ -509,6 +522,21 @@ module {
 
   /// Return true if the given predicate `f` is true for all list
   /// elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// List.all<Nat>(
+  ///   ?(1, ?(2, ?(3, null))),
+  ///   func n { n > 1 }
+  /// ); // => false
+  /// ```
+  ///
+  /// Runtime: O(size)
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func all<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null { true };
@@ -518,31 +546,65 @@ module {
 
   /// Merge two ordered lists into a single ordered list.
   /// This function requires both list to be ordered as specified
-  /// by the given relation `lte`.
-  public func merge<T>(l1 : List<T>, l2 : List<T>, lte : (T, T) -> Bool) : List<T> {
+  /// by the given relation `lessThanOrEqual`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  ///
+  /// List.merge<Nat>(
+  ///   ?(1, ?(2, ?(4, null))),
+  ///   ?(2, ?(4, ?(6, null))),
+  ///   func (n1, n2) { n1 <= n2 }
+  /// ); // => ?(1, ?(2, ?(2, ?(4, ?(4, ?(6, null))))))),
+  /// ```
+  ///
+  /// Runtime: O(size(l1) + size(l2))
+  ///
+  /// Space: O(size(l1) + size(l2))
+  ///
+  /// *Runtime and space assumes that `lessThanOrEqual` runs in O(1) time and space.
+  // TODO: replace by merge taking a compare : (T, T) -> Order.Order function?
+  public func merge<T>(l1 : List<T>, l2 : List<T>, lessThanOrEqual : (T, T) -> Bool) : List<T> {
     switch (l1, l2) {
       case (null, _) { l2 };
       case (_, null) { l1 };
       case (?(h1, t1), ?(h2, t2)) {
-        if (lte(h1, h2)) {
-          ?(h1, merge<T>(t1, l2, lte))
+        if (lessThanOrEqual(h1, h2)) {
+          ?(h1, merge<T>(t1, l2, lessThanOrEqual))
         } else {
-          ?(h2, merge<T>(l1, t2, lte))
+          ?(h2, merge<T>(l1, t2, lessThanOrEqual))
         }
       }
     }
   };
 
-  /// Compare two lists using lexicographic ordering specified by the given relation `lte`.
-  public func compare<T>(l1 : List<T>, l2 : List<T>, compElm : (T, T) -> Order.Order) : Order.Order {
+  /// Compare two lists using lexicographic ordering specified by the given relation `compareElem`.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// List.compare<Nat>(
+  ///   ?(1, ?(2, null)),
+  ///   ?(3, ?(4, null)),
+  ///   Nat.compare
+  /// ) // => #less
+  /// ```
+  ///
+  /// Runtime: O(size(l1))
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compareElem` runs in O(1) time and space.
+  public func compare<T>(l1 : List<T>, l2 : List<T>, compareElem : (T, T) -> Order.Order) : Order.Order {
     switch (l1, l2) {
       case (null, null) { #equal };
       case (null, _) { #less };
       case (_, null) { #greater };
       case (?(h1, t1), ?(h2, t2)) {
-        let hOrder = compElm(h1, h2);
+        let hOrder = compareElem(h1, h2);
         if (Order.isEqual(hOrder)) {
-          compare<T>(t1, t2, compElm)
+          compare<T>(t1, t2, compareElem)
         } else {
           hOrder
         }
@@ -550,18 +612,49 @@ module {
     }
   };
 
-  /// Compare two lists for equality as specified by the given relation `eq` on the elements.
-  public func equal<T>(l1 : List<T>, l2 : List<T>, eq : (T, T) -> Bool) : Bool {
+  /// Compare two lists for equality as specified by the given relation `equalElem` on the elements.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// import Nat "mo:base/Nat";
+  ///
+  /// List.equal<Nat>(
+  ///   ?(1, ?(2, null)),
+  ///   ?(3, ?(4, null)),
+  ///   Nat.equal
+  /// ); // => false
+  /// ```
+  ///
+  /// Runtime: O(size(l1))
+  ///
+  /// Space: O(1)
+  ///
+  /// *Runtime and space assumes that `compareElem` runs in O(1) time and space.
+  public func equal<T>(l1 : List<T>, l2 : List<T>, equalElem : (T, T) -> Bool) : Bool {
     switch (l1, l2) {
       case (null, null) { true };
       case (null, _) { false };
       case (_, null) { false };
-      case (?(h1, t1), ?(h2, t2)) { eq(h1, h2) and equal<T>(t1, t2, eq) }
+      case (?(h1, t1), ?(h2, t2)) { equalElem(h1, h2) and equal<T>(t1, t2, equalElem) }
     }
   };
 
   /// Generate a list based on a length and a function that maps from
   /// a list index to a list element.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.tabulate<Nat>(
+  ///   3,
+  ///   func n { n * 2 }
+  /// ) // => ?(0, ?(2, (?6, null)))
+  /// ```
+  ///
+  /// Runtime: O(n)
+  ///
+  /// Space: O(n)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func tabulate<T>(n : Nat, f : Nat -> T) : List<T> {
     var i = 0;
     var l : List<T> = null;
@@ -573,9 +666,32 @@ module {
   };
 
   /// Create a list with exactly one element.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.make<Nat>(
+  ///   0
+  /// ) // => ?(0, null)
+  /// ```
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
   public func make<X>(x : X) : List<X> = ?(x, null);
 
   /// Create a list of the given length with the same value in each position.
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// List.replicate<Nat>(
+  ///   3,
+  ///   0
+  /// ) // => ?(0, ?(0, ?(0, null)))
+  /// ```
+  ///
+  /// Runtime: O(1)
+  ///
+  /// Space: O(1)
   public func replicate<X>(n : Nat, x : X) : List<X> {
     var i = 0;
     var l : List<X> = null;
