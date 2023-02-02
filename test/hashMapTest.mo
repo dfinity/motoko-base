@@ -5,6 +5,9 @@ import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
+import Debug "mo:base/Debug";
+import Order "mo:base/Order";
+import Char "mo:base/Char";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -53,6 +56,65 @@ func newCollidedMap() : HashMap.HashMap<Text, Text> {
 
 func newEmptyMap() : HashMap.HashMap<Text, Text> {
   HashMap.HashMap<Text, Text>(1, Text.equal, Text.hash)
+};
+
+//FIXME move into Nat module in next PR
+func fromText(text : Text) : ?Nat {
+  var n = 0;
+  for (c in text.chars()) {
+    if (Char.isDigit(c)) {
+      let charAsNat = Prim.nat32ToNat(Prim.charToNat32(c) -% Prim.charToNat32('0'));
+      n := n * 10 + charAsNat
+    } else {
+      return null
+    }
+  };
+  ?n
+};
+
+// Need to sort the entries because the order is not guaranteed for equality tests
+func sortedEntries<V>(map : HashMap.HashMap<Text, V>) : [(Text, V)] {
+  Array.sort<(Text, V)>(
+    Iter.toArray(map.entries()),
+    func(p1, p2) {
+      ignore do ? {
+        let key1Index = Text.stripStart(p1.0, #text "key");
+        let key2Index = Text.stripStart(p2.0, #text "key");
+        return Nat.compare(fromText(key1Index!)!, fromText(key2Index!)!)
+      };
+      Debug.print("key1Index: " # p1.0);
+      Debug.print("key2Index: " # p2.0);
+      Debug.trap "unreachable in sortedEntries"
+    }
+  )
+};
+
+func sortedKeys<V>(map : HashMap.HashMap<Text, V>) : [Text] {
+  Array.sort<Text>(
+    Iter.toArray(map.keys()),
+    func(key1, key2) {
+      ignore do ? {
+        let key1Index = Text.stripStart(key1, #text "key");
+        let key2Index = Text.stripStart(key2, #text "key");
+        return Nat.compare(fromText(key1Index!)!, fromText(key2Index!)!)
+      };
+      Debug.trap "unreachable in sortedKeys"
+    }
+  )
+};
+
+func sortedValues(map : HashMap.HashMap<Text, Text>) : [Text] {
+  Array.sort<Text>(
+    Iter.toArray(map.vals()),
+    func(value1, value2) {
+      ignore do ? {
+        let value1Index = Text.stripStart(value1, #text "value");
+        let value2Index = Text.stripStart(value2, #text "value");
+        return Nat.compare(fromText(value1Index!)!, fromText(value2Index!)!)
+      };
+      Debug.trap "unreachable in sortedValues"
+    }
+  )
 };
 
 let suite = Suite.suite(
@@ -196,7 +258,7 @@ let suite = Suite.suite(
       "delete not exist with collisions",
       do {
         let tempMap = newCollidedMap();
-        tempMap.delete("key0");
+        tempMap.delete("fake key");
         tempMap.size()
       },
       M.equals(T.nat(largeSize))
@@ -205,7 +267,7 @@ let suite = Suite.suite(
       "delete not exist",
       do {
         let tempMap = newMap();
-        tempMap.delete("key0");
+        tempMap.delete("fake key");
         tempMap.size()
       },
       M.equals(T.nat(smallSize))
@@ -251,7 +313,7 @@ let suite = Suite.suite(
       "remove not exist",
       do {
         let tempMap = newMap();
-        tempMap.remove("key0")
+        tempMap.remove("fake key")
       },
       M.equals(T.optional(T.textTestable, null : ?Text))
     ),
@@ -262,12 +324,12 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "keys with collisions",
-      Iter.toArray(newCollidedMap().keys()),
+      sortedKeys(newCollidedMap()),
       M.equals(T.array(T.textTestable, largeKeys))
     ),
     Suite.test(
       "keys",
-      Iter.toArray(newMap().keys()),
+      sortedKeys(newMap()),
       M.equals(T.array(T.textTestable, smallKeys))
     ),
     Suite.test(
@@ -277,12 +339,12 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "vals with collisions",
-      Iter.toArray(newCollidedMap().vals()),
+      sortedValues(newCollidedMap()),
       M.equals(T.array(T.textTestable, largeValues))
     ),
     Suite.test(
       "vals",
-      Iter.toArray(newMap().vals()),
+      sortedValues(newMap()),
       M.equals(T.array(T.textTestable, smallValues))
     ),
     Suite.test(
@@ -292,12 +354,12 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "entries with collisions",
-      Iter.toArray(newCollidedMap().entries()),
+      sortedEntries(newCollidedMap()),
       M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), largeEntries))
     ),
     Suite.test(
       "entries",
-      Iter.toArray(newMap().entries()),
+      sortedEntries(newMap()),
       M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), smallEntries))
     ),
     Suite.test(
@@ -309,7 +371,7 @@ let suite = Suite.suite(
       "clone with collisions",
       do {
         let mapClone = HashMap.clone(newCollidedMap(), Text.equal, Text.hash);
-        Iter.toArray(mapClone.entries())
+        sortedEntries(mapClone)
       },
       M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), largeEntries))
     ),
@@ -317,7 +379,7 @@ let suite = Suite.suite(
       "clone",
       do {
         let mapClone = HashMap.clone(newMap(), Text.equal, Text.hash);
-        Iter.toArray(mapClone.entries())
+        sortedEntries(mapClone)
       },
       M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), smallEntries))
     ),
@@ -331,7 +393,7 @@ let suite = Suite.suite(
       do {
         let iter = largeEntries.vals();
         let tempMap = HashMap.fromIter<Text, Text>(iter, 3, Text.equal, collideHash);
-        Iter.toArray(tempMap.entries())
+        sortedEntries(tempMap)
       },
       M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), largeEntries))
     ),
@@ -340,7 +402,7 @@ let suite = Suite.suite(
       do {
         let iter = smallEntries.vals();
         let tempMap = HashMap.fromIter<Text, Text>(iter, 7, Text.equal, Text.hash);
-        Iter.toArray(tempMap.entries())
+        sortedEntries(tempMap)
       },
       M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), smallEntries))
     ),
@@ -358,7 +420,7 @@ let suite = Suite.suite(
           collideHash,
           func p = p.1.size()
         );
-        Iter.toArray(tempMap.entries())
+        sortedEntries(tempMap)
       },
       M.equals(
         T.array(
@@ -376,7 +438,7 @@ let suite = Suite.suite(
           Text.hash,
           func p = p.1.size()
         );
-        Iter.toArray(tempMap.entries())
+        sortedEntries(tempMap)
       },
       M.equals(
         T.array(
@@ -398,14 +460,14 @@ let suite = Suite.suite(
           Text.equal,
           collideHash,
           // drop the first 10 keys
-          func(key, value) = if (key.size() >= 4) { ?value } else { null }
+          func(key, value) = if (key.size() > 4) { ?value } else { null }
         );
-        Iter.toArray(tempMap.entries())
+        sortedEntries(tempMap)
       },
       M.equals(
         T.array(
           T.tuple2Testable(T.textTestable, T.textTestable),
-          Array.filter<(Text, Text)>(largeEntries, func p = p.0.size() >= 4)
+          Array.filter<(Text, Text)>(largeEntries, func p = p.0.size() > 4)
         )
       )
     ),
@@ -418,11 +480,7 @@ let suite = Suite.suite(
           Text.hash,
           func(key, value) = if (key != "key1") { ?value } else { null }
         );
-        // FIXME clean this up
-        Array.sort<(Text, Text)>(
-          Iter.toArray(tempMap.entries()),
-          func(p1, p2) = Text.compare(p1.0, p2.0)
-        )
+        sortedEntries(tempMap)
       },
       M.equals(
         T.array(
