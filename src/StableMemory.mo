@@ -8,14 +8,17 @@
 /// ## Multple memories
 ///
 /// This module provides a generalization over its predecessor (`ExperimentalStableMemory`),
-/// in that it offers a class with _multiple instances_, rather than a module with a single
+/// in that it offers a new _memory instance_ primitive type, 
+/// and the ability to have _multiple, dynamically-created instances_, rather than a 
+/// module with a single
 /// _monolitic_ (_shared, global_) instance, as before.
 ///
 /// The number of these instances may be limited by its implementation, but will provide
 /// up to 256 independent instances, initially 
 /// (matching and reusing a recent Rust library-version of the same feature).
 ///
-/// The API of the `class` provides the same low-level API as before, but where each instance
+/// The API for the memory instance primitive provides 
+/// the same low-level API as before, but where each instance
 /// can be used independently of the others.
 ///
 /// Reclaiming space from one to use in another is
@@ -60,9 +63,7 @@ import Prim "mo:⛔";
 
 module {
 
-  public class StableMemory () {
 
-  var id = Prim.multStableMemoryNew();
 
   /// Current size of the stable memory, in pages.
   /// Each page is 64KiB (65536 bytes).
@@ -77,7 +78,22 @@ module {
   /// let afterSize = StableMemory.size();
   /// afterSize - beforeSize // => 10
   /// ```
-  public let size : () -> (pages : Nat64) = Prim.multStableMemorySize id;
+  public new : () -> Memory = Prim.multStableMemoryNew();
+
+  /// Current size of the stable memory, in pages.
+  /// Each page is 64KiB (65536 bytes).
+  /// Initially `0`.
+  /// Preserved across upgrades, together with contents of allocated
+  /// stable memory.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// let beforeSize = StableMemory.size();
+  /// ignore StableMemory.grow(10);
+  /// let afterSize = StableMemory.size();
+  /// afterSize - beforeSize // => 10
+  /// ```
+  public let size : (m : Memory) -> (pages : Nat64) = Prim.multStableMemorySize m;
 
   /// Grow current `size` of stable memory by the given number of pages.
   /// Each page is 64KiB (65536 bytes).
@@ -98,7 +114,7 @@ module {
   /// let afterSize = StableMemory.size();
   /// afterSize - beforeSize // => 10
   /// ```
-  public let grow : (newPages : Nat64) -> (oldPages : Nat64) = Prim.multStableMemoryGrow(id, newPages);
+  public let grow : (m : Memory, newPages : Nat64) -> (oldPages : Nat64) = Prim.multStableMemoryGrow(m, newPages);
 
   /// Returns a query that, when called, returns the number of bytes of (real) IC stable memory that would be
   /// occupied by persisting its current stable variables before an upgrade.
@@ -132,7 +148,7 @@ module {
   /// StableMemory.storeNat32(offset, value);
   /// StableMemory.loadNat32(offset) // => 123
   /// ```
-  public let loadNat32 : (offset : Nat64) -> Nat32 = Prim.multStableMemoryLoadNat32(id, offset);
+  public let loadNat32 : (m : Memory, offset : Nat64) -> Nat32 = Prim.multStableMemoryLoadNat32(m, offset);
 
   /// Stores a `Nat32` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -144,7 +160,7 @@ module {
   /// StableMemory.storeNat32(offset, value);
   /// StableMemory.loadNat32(offset) // => 123
   /// ```
-  public let storeNat32 : (offset : Nat64, value : Nat32) -> () = Prim.multStableMemoryStoreNat32(id, offset, value);
+  public let storeNat32 : (m : Memory, offset : Nat64, value : Nat32) -> () = Prim.multStableMemoryStoreNat32(m, offset, value);
 
   /// Loads a `Nat8` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -156,7 +172,7 @@ module {
   /// StableMemory.storeNat8(offset, value);
   /// StableMemory.loadNat8(offset) // => 123
   /// ```
-  public let loadNat8 : (offset : Nat64) -> Nat8 = Prim.multStableMemoryLoadNat8(id, offset);
+  public let loadNat8 : (m : Memory, offset : Nat64) -> Nat8 = Prim.multStableMemoryLoadNat8(m, offset);
 
   /// Stores a `Nat8` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -168,7 +184,7 @@ module {
   /// StableMemory.storeNat8(offset, value);
   /// StableMemory.loadNat8(offset) // => 123
   /// ```
-  public let storeNat8 : (offset : Nat64, value : Nat8) -> () = Prim.multStableMemoryStoreNat8(id, offset, value);
+  public let storeNat8 : (m : Memory, offset : Nat64, value : Nat8) -> () = Prim.multStableMemoryStoreNat8(m, offset, value);
 
   /// Loads a `Nat16` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -180,7 +196,7 @@ module {
   /// StableMemory.storeNat16(offset, value);
   /// StableMemory.loadNat16(offset) // => 123
   /// ```
-  public let loadNat16 : (offset : Nat64) -> Nat16 = Prim.multStableMemoryLoadNat16(id, offset);
+  public let loadNat16 : (m : Memory, offset : Nat64) -> Nat16 = Prim.multStableMemoryLoadNat16(m, offset);
 
   /// Stores a `Nat16` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -192,7 +208,7 @@ module {
   /// StableMemory.storeNat16(offset, value);
   /// StableMemory.loadNat16(offset) // => 123
   /// ```
-  public let storeNat16 : (offset : Nat64, value : Nat16) -> () = Prim.multStableMemoryStoreNat16(id, offset, value);
+  public let storeNat16 : (m : Memory, offset : Nat64, value : Nat16) -> () = Prim.multStableMemoryStoreNat16(m, offset, value);
 
   /// Loads a `Nat64` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -204,7 +220,7 @@ module {
   /// StableMemory.storeNat64(offset, value);
   /// StableMemory.loadNat64(offset) // => 123
   /// ```
-  public let loadNat64 : (offset : Nat64) -> Nat64 = Prim.multStableMemoryLoadNat64(id, offset);
+  public let loadNat64 : (m : Memory, offset : Nat64) -> Nat64 = Prim.multStableMemoryLoadNat64(m, offset);
 
   /// Stores a `Nat64` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -216,7 +232,7 @@ module {
   /// StableMemory.storeNat64(offset, value);
   /// StableMemory.loadNat64(offset) // => 123
   /// ```
-  public let storeNat64 : (offset : Nat64, value : Nat64) -> () = Prim.multStableMemoryStoreNat64(id, offset, value);
+  public let storeNat64 : (m : Memory, offset : Nat64, value : Nat64) -> () = Prim.multStableMemoryStoreNat64(m, offset, value);
 
   /// Loads an `Int32` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -228,7 +244,7 @@ module {
   /// StableMemory.storeInt32(offset, value);
   /// StableMemory.loadInt32(offset) // => 123
   /// ```
-  public let loadInt32 : (offset : Nat64) -> Int32 = Prim.multStableMemoryLoadInt32(id, offset);
+  public let loadInt32 : (m : Memory, offset : Nat64) -> Int32 = Prim.multStableMemoryLoadInt32(m, offset);
 
   /// Stores an `Int32` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -240,7 +256,7 @@ module {
   /// StableMemory.storeInt32(offset, value);
   /// StableMemory.loadInt32(offset) // => 123
   /// ```
-  public let storeInt32 : (offset : Nat64, value : Int32) -> () = Prim.multStableMemoryStoreInt32(id, offset, value);
+  public let storeInt32 : (m : Memory, offset : Nat64, value : Int32) -> () = Prim.multStableMemoryStoreInt32(m, offset, value);
 
   /// Loads an `Int8` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -252,7 +268,7 @@ module {
   /// StableMemory.storeInt8(offset, value);
   /// StableMemory.loadInt8(offset) // => 123
   /// ```
-  public let loadInt8 : (offset : Nat64) -> Int8 = Prim.multStableMemoryLoadInt8(id, offset);
+  public let loadInt8 : (m : Memory, offset : Nat64) -> Int8 = Prim.multStableMemoryLoadInt8(m, offset);
 
   /// Stores an `Int8` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -264,7 +280,7 @@ module {
   /// StableMemory.storeInt8(offset, value);
   /// StableMemory.loadInt8(offset) // => 123
   /// ```
-  public let storeInt8 : (offset : Nat64, value : Int8) -> () = Prim.multStableMemoryStoreInt8(id, offset, value);
+  public let storeInt8 : (m : Memory, offset : Nat64, value : Int8) -> () = Prim.multStableMemoryStoreInt8(m, offset, value);
 
   /// Loads an `Int16` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -276,7 +292,7 @@ module {
   /// StableMemory.storeInt16(offset, value);
   /// StableMemory.loadInt16(offset) // => 123
   /// ```
-  public let loadInt16 : (offset : Nat64) -> Int16 = Prim.multStableMemoryLoadInt16(id, offset);
+  public let loadInt16 : (m : Memory, offset : Nat64) -> Int16 = Prim.multStableMemoryLoadInt16(m, offset);
 
   /// Stores an `Int16` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -288,7 +304,7 @@ module {
   /// StableMemory.storeInt16(offset, value);
   /// StableMemory.loadInt16(offset) // => 123
   /// ```
-  public let storeInt16 : (offset : Nat64, value : Int16) -> () = Prim.multStableMemoryStoreInt16(id, offset, value);
+  public let storeInt16 : (m : Memory, offset : Nat64, value : Int16) -> () = Prim.multStableMemoryStoreInt16(m, offset, value);
 
   /// Loads an `Int64` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -300,7 +316,7 @@ module {
   /// StableMemory.storeInt64(offset, value);
   /// StableMemory.loadInt64(offset) // => 123
   /// ```
-  public let loadInt64 : (offset : Nat64) -> Int64 = Prim.multStableMemoryLoadInt64(id, offset);
+  public let loadInt64 : (m : Memory, offset : Nat64) -> Int64 = Prim.multStableMemoryLoadInt64(m, offset);
 
   /// Stores an `Int64` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -312,7 +328,7 @@ module {
   /// StableMemory.storeInt64(offset, value);
   /// StableMemory.loadInt64(offset) // => 123
   /// ```
-  public let storeInt64 : (offset : Nat64, value : Int64) -> () = Prim.multStableMemoryStoreInt64(id, offset, value);
+  public let storeInt64 : (m : Memory, offset : Nat64, value : Int64) -> () = Prim.multStableMemoryStoreInt64(m, offset, value);
 
   /// Loads a `Float` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -324,7 +340,7 @@ module {
   /// StableMemory.storeFloat(offset, value);
   /// StableMemory.loadFloat(offset) // => 1.25
   /// ```
-  public let loadFloat : (offset : Nat64) -> Float = Prim.multStableMemoryLoadFloat(id, offset);
+  public let loadFloat : (m : Memory, offset : Nat64) -> Float = Prim.multStableMemoryLoadFloat(m, offset);
 
   /// Stores a `Float` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -336,7 +352,7 @@ module {
   /// StableMemory.storeFloat(offset, value);
   /// StableMemory.loadFloat(offset) // => 1.25
   /// ```
-  public let storeFloat : (offset : Nat64, value : Float) -> () = Prim.multStableMemoryStoreFloat(id, offset, value);
+  public let storeFloat : (m : Memory, offset : Nat64, value : Float) -> () = Prim.multStableMemoryStoreFloat(m, offset, value);
 
   /// Load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on an out-of-bounds access.
@@ -351,7 +367,7 @@ module {
   /// StableMemory.storeBlob(offset, value);
   /// Blob.toArray(StableMemory.loadBlob(offset, size)) // => [1, 2, 3]
   /// ```
-  public let loadBlob : (offset : Nat64, size : Nat) -> Blob = Prim.multStableMemoryLoadBlob(id, offset, size);
+  public let loadBlob : (m : Memory, offset : Nat64, size : Nat) -> Blob = Prim.multStableMemoryLoadBlob(m, offset, size);
 
   /// Write bytes of `blob` beginning at `offset`.
   /// Traps on an out-of-bounds access.
@@ -366,8 +382,6 @@ module {
   /// StableMemory.storeBlob(offset, value);
   /// Blob.toArray(StableMemory.loadBlob(offset, size)) // => [1, 2, 3]
   /// ```
-  public let storeBlob : (offset : Nat64, value : Blob) -> () = Prim.multStableMemoryStoreBlob(id, offset, value);
-
-}
+  public let storeBlob : (m : Memory, offset : Nat64, value : Blob) -> () = Prim.multStableMemoryStoreBlob(m, offset, value);
 
 }
