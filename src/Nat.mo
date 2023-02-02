@@ -6,6 +6,7 @@
 import Int "Int";
 import Order "Order";
 import Prim "mo:⛔";
+import Char "Char";
 
 module {
 
@@ -13,7 +14,20 @@ module {
   public type Nat = Prim.Types.Nat;
 
   /// Conversion.
-  public let toText : Nat -> Text = Int.toText;
+  public func toText(n : Nat) : Text = Int.toText n;
+
+  public func fromText(text : Text) : ?Nat {
+    var n = 0;
+    for (c in text.chars()) {
+      if (Char.isDigit(c)) {
+        let charAsNat = Prim.nat32ToNat(Prim.charToNat32(c) -% Prim.charToNat32('0'));
+        n := n * 10 + charAsNat
+      } else {
+        return null
+      }
+    };
+    ?n
+  };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Nat, y : Nat) : Nat {
