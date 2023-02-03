@@ -727,8 +727,8 @@ module {
   /// Space: O(min(size(xs), size(ys)))
   public func zip<T, U>(xs : List<T>, ys : List<U>) : List<(T, U)> = zipWith<T, U, (T, U)>(xs, ys, func(x, y) { (x, y) });
 
-  /// Create a list in which elements are calculated from the function `f` and
-  /// include elements occuring at the same position in the given lists.
+  /// Create a list in which elements are created by applying function `f` to each pair `(x, y)` of elements
+  /// occuring at the same position in list `xs` and list `ys`.
   ///
   /// If the given lists have different lengths, then the created list will have a
   /// length equal to the length of the smaller list.
