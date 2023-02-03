@@ -898,7 +898,6 @@ module {
   public func toVarArray<A>(xs : List<A>) : [var A] = Array.thaw<A>(toArray<A>(xs));
 
   /// Create an iterator from a list.
-  /// Create a mutable array from a list.
   /// Example:
   /// ```motoko include=initialize
   /// var sum = 0;
