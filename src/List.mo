@@ -725,7 +725,7 @@ module {
   /// Runtime: O(min(size(xs), size(ys)))
   ///
   /// Space: O(min(size(xs), size(ys)))
-  public func zip<X, Y>(xs : List<X>, ys : List<Y>) : List<(X, Y)> = zipWith<X, Y, (X, Y)>(xs, ys, func(x, y) { (x, y) });
+  public func zip<T, U>(xs : List<T>, ys : List<U>) : List<(T, U)> = zipWith<T, U, (T, U)>(xs, ys, func(x, y) { (x, y) });
 
   /// Create a list in which elements are calculated from the function `f` and
   /// include elements occuring at the same position in the given lists.
@@ -750,18 +750,18 @@ module {
   /// Space: O(min(size(xs), size(ys)))
   ///
   /// *Runtime and space assumes that `zip` runs in O(1) time and space.
-  public func zipWith<X, Y, Z>(
-    xs : List<X>,
-    ys : List<Y>,
-    f : (X, Y) -> Z
-  ) : List<Z> {
-    switch (pop<X>(xs)) {
+  public func zipWith<T, U, V>(
+    xs : List<T>,
+    ys : List<U>,
+    f : (T, U) -> V
+  ) : List<V> {
+    switch (pop<T>(xs)) {
       case (null, _) { null };
       case (?x, xt) {
-        switch (pop<Y>(ys)) {
+        switch (pop<U>(ys)) {
           case (null, _) { null };
           case (?y, yt) {
-            push<Z>(f(x, y), zipWith<X, Y, Z>(xt, yt, f))
+            push<V>(f(x, y), zipWith<T, U, V>(xt, yt, f))
           }
         }
       }
@@ -783,15 +783,15 @@ module {
   /// Space: O(n)
   ///
   /// *Runtime and space assumes that `zip` runs in O(1) time and space.
-  public func split<X>(n : Nat, xs : List<X>) : (List<X>, List<X>) {
+  public func split<T>(n : Nat, xs : List<T>) : (List<T>, List<T>) {
     if (n == 0) { (null, xs) } else {
-      func rec(n : Nat, xs : List<X>) : (List<X>, List<X>) {
-        switch (pop<X>(xs)) {
+      func rec(n : Nat, xs : List<T>) : (List<T>, List<T>) {
+        switch (pop<T>(xs)) {
           case (null, _) { (null, null) };
           case (?h, t) {
-            if (n == 1) { (make<X>(h), t) } else {
+            if (n == 1) { (make<T>(h), t) } else {
               let (l, r) = rec(n - 1, t);
-              (push<X>(h, l), r)
+              (push<T>(h, l), r)
             }
           }
         }
