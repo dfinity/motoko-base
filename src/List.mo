@@ -138,7 +138,7 @@ module {
     }
   };
 
-  /// Reverses the list
+  /// Reverses the list.
   ///
   /// Example:
   /// ```motoko include=initialize
