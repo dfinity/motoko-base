@@ -1,4 +1,4 @@
-/// Utility functions for working with natural numbers.
+/// Natural numbers with infinite precision.
 ///
 /// Most operations on natural numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
 /// This module provides equivalent functions and `Text` conversion.
@@ -18,7 +18,8 @@ module {
   /// Infinite precision natural numbers.
   public type Nat = Prim.Types.Nat;
 
-  /// Converts a natural number to its textual representation.
+  /// Converts a natural number to its textual representation. Textual
+  /// representation _do not_ contain underscores to represent commas.
   ///
   /// Example:
   /// ```motoko include=import
@@ -28,6 +29,8 @@ module {
 
   /// Creates a natural number from its textual representation. Returns `null`
   /// if the input is not a valid natural number.
+  ///
+  /// Note: The textual representation _must not_ contain underscores.
   ///
   /// Example:
   /// ```motoko include=import
@@ -190,7 +193,8 @@ module {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
-  /// Returns the sum of `x` and `y`, `x + y`.
+  /// Returns the sum of `x` and `y`, `x + y`. This operator will never overflow
+  /// because `Nat` is infinite precision.
   ///
   /// Example:
   /// ```motoko include=import
@@ -232,7 +236,8 @@ module {
   /// ```
   public func sub(x : Nat, y : Nat) : Nat { x - y };
 
-  /// Returns the product of `x` and `y`, `x * y`.
+  /// Returns the product of `x` and `y`, `x * y`. This operator will never
+  /// overflow because `Nat` is infinite precision.
   ///
   /// Example:
   /// ```motoko include=import
@@ -252,8 +257,11 @@ module {
   /// ```
   public func mul(x : Nat, y : Nat) : Nat { x * y };
 
-  /// Returns the division of `x` by `y`, `x / y`.
+  /// Returns the unsigned integer division of `x` by `y`,  `x / y`.
   /// Traps when `y` is zero.
+  ///
+  /// The quotient is rounded down, which is equivalent to truncating the
+  /// decimal places of the quotient.
   ///
   /// Example:
   /// ```motoko include=import
@@ -267,7 +275,7 @@ module {
   /// as a function value at the moment.
   public func div(x : Nat, y : Nat) : Nat { x / y };
 
-  /// Returns the remainder of `x` divided by `y`, `x % y`.
+  /// Returns the remainder of unsigned integer division of `x` by `y`,  `x % y`.
   /// Traps when `y` is zero.
   ///
   /// Example:
@@ -282,7 +290,8 @@ module {
   /// as a function value at the moment.
   public func rem(x : Nat, y : Nat) : Nat { x % y };
 
-  /// Returns `x` to the power of `y`, `x ** y`.
+  /// Returns `x` to the power of `y`, `x ** y`. Traps when `y > 32`. This operator
+  /// will never overflow because `Nat` is infinite precision.
   ///
   /// Example:
   /// ```motoko include=import
