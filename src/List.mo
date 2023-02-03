@@ -50,7 +50,7 @@ module {
     }
   };
 
-  /// Construct a list by pre-pending a value.
+  /// Add `x` to the head of `list`, and return the new list.
   ///
   /// Example:
   /// ```motoko include=initialize
