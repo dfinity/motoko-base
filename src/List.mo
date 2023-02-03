@@ -79,8 +79,8 @@ module {
     }
   };
 
-  /// Treat the list as a stack.
-  /// This function combines the `head` and (non-failing) `tail` operations into one operation.
+  /// Remove the head of the list, returning the optioned head and the tail of the list in a pair. 
+  /// Returns `(null, null)` if the list is empty.
   ///
   /// Example:
   /// ```motoko include=initialize
