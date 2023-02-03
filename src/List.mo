@@ -190,10 +190,10 @@ module {
   ///
   /// Space: O(size)
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func map<T, S>(l : List<T>, f : T -> S) : List<S> {
+  public func map<T, U>(l : List<T>, f : T -> U) : List<U> {
     switch l {
       case null { null };
-      case (?(h, t)) { ?(f(h), map<T, S>(t, f)) }
+      case (?(h, t)) { ?(f(h), map<T, U>(t, f)) }
     }
   };
 
@@ -270,13 +270,13 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
-  public func mapFilter<T, S>(l : List<T>, f : T -> ?S) : List<S> {
+  public func mapFilter<T, U>(l : List<T>, f : T -> ?U) : List<U> {
     switch l {
       case null { null };
       case (?(h, t)) {
         switch (f(h)) {
-          case null { mapFilter<T, S>(t, f) };
-          case (?h_) { ?(h_, mapFilter<T, S>(t, f)) }
+          case null { mapFilter<T, U>(t, f) };
+          case (?h_) { ?(h_, mapFilter<T, U>(t, f)) }
         }
       }
     }
@@ -304,8 +304,8 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
-  public func mapResult<A, R, E>(xs : List<A>, f : A -> Result.Result<R, E>) : Result.Result<List<R>, E> {
-    func go(xs : List<A>, acc : List<R>) : Result.Result<List<R>, E> {
+  public func mapResult<T, R, E>(xs : List<T>, f : T -> Result.Result<R, E>) : Result.Result<List<R>, E> {
+    func go(xs : List<T>, acc : List<R>) : Result.Result<List<R>, E> {
       switch xs {
         case null { #ok(acc) };
         case (?(head, tail)) {
@@ -684,7 +684,7 @@ module {
   /// Runtime: O(1)
   ///
   /// Space: O(1)
-  public func make<X>(x : X) : List<X> = ?(x, null);
+  public func make<T>(x : T) : List<T> = ?(x, null);
 
   /// Create a list of the given length with the same value in each position.
   ///
@@ -699,9 +699,9 @@ module {
   /// Runtime: O(1)
   ///
   /// Space: O(1)
-  public func replicate<X>(n : Nat, x : X) : List<X> {
+  public func replicate<T>(n : Nat, x : T) : List<T> {
     var i = 0;
-    var l : List<X> = null;
+    var l : List<T> = null;
     while (i < n) {
       l := ?(x, l);
       i += 1
@@ -822,12 +822,12 @@ module {
   /// Space: O(size)
   ///
   /// *Runtime and space assumes that `zip` runs in O(1) time and space.
-  public func chunks<X>(n : Nat, xs : List<X>) : List<List<X>> {
-    let (l, r) = split<X>(n, xs);
-    if (isNil<X>(l)) {
+  public func chunks<T>(n : Nat, xs : List<T>) : List<List<T>> {
+    let (l, r) = split<T>(n, xs);
+    if (isNil<T>(l)) {
       null
     } else {
-      push<List<X>>(l, chunks<X>(n, r))
+      push<List<T>>(l, chunks<T>(n, r))
     }
   };
 
@@ -842,12 +842,12 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
-  public func fromArray<A>(xs : [A]) : List<A> {
-    Array.foldRight<A, List<A>>(
+  public func fromArray<T>(xs : [T]) : List<T> {
+    Array.foldRight<T, List<T>>(
       xs,
-      nil<A>(),
-      func(x : A, ys : List<A>) : List<A> {
-        push<A>(x, ys)
+      null,
+      func(x : T, ys : List<T>) : List<T> {
+        push<T>(x, ys)
       }
     )
   };
@@ -863,7 +863,7 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
-  public func fromVarArray<A>(xs : [var A]) : List<A> = fromArray<A>(Array.freeze<A>(xs));
+  public func fromVarArray<T>(xs : [var T]) : List<T> = fromArray<T>(Array.freeze<T>(xs));
 
   /// Create an array from a list.
   /// Example:
@@ -875,13 +875,13 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
-  public func toArray<A>(xs : List<A>) : [A] {
-    let length = size<A>(xs);
+  public func toArray<T>(xs : List<T>) : [T] {
+    let length = size<T>(xs);
     var list = xs;
-    Array.tabulate<A>(
+    Array.tabulate<T>(
       length,
       func(i) {
-        let popped = pop<A>(list);
+        let popped = pop<T>(list);
         list := popped.1;
         switch (popped.0) {
           case null { loop { assert false } };
@@ -901,7 +901,7 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
-  public func toVarArray<A>(xs : List<A>) : [var A] = Array.thaw<A>(toArray<A>(xs));
+  public func toVarArray<T>(xs : List<T>) : [var T] = Array.thaw<T>(toArray<T>(xs));
 
   /// Create an iterator from a list.
   /// Example:
@@ -917,10 +917,10 @@ module {
   /// Runtime: O(1)
   ///
   /// Space: O(1)
-  public func toIter<A>(xs : List<A>) : Iter.Iter<A> {
+  public func toIter<T>(xs : List<T>) : Iter.Iter<T> {
     var state = xs;
     object {
-      public func next() : ?A = switch state {
+      public func next() : ?T = switch state {
         case (?(hd, tl)) { state := tl; ?hd };
         case _ null
       }
