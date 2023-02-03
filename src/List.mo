@@ -579,7 +579,21 @@ module {
     }
   };
 
-  /// Compare two lists using lexicographic ordering specified by the given relation `compareElem`.
+  private func compareAux<T>(l1 : List<T>, l2 : List<T>, compare : (T, T) -> Order.Order) : Order.Order {
+    switch (l1, l2) {
+      case (null, null) { #equal };
+      case (null, _) { #less };
+      case (_, null) { #greater };
+      case (?(h1, t1), ?(h2, t2)) {
+        switch (compare(h1, h2)) {
+          case (#equal) { compareAux<T>(t1, t2, compare) };
+          case other { other }
+        }
+      }
+    }
+  };
+
+  /// Compare two lists using lexicographic ordering specified by argument function `compare`.
   ///
   /// Example:
   /// ```motoko include=initialize
@@ -596,24 +610,21 @@ module {
   ///
   /// Space: O(1)
   ///
-  /// *Runtime and space assumes that `compareElem` runs in O(1) time and space.
-  public func compare<T>(l1 : List<T>, l2 : List<T>, compareElem : (T, T) -> Order.Order) : Order.Order {
-    switch (l1, l2) {
-      case (null, null) { #equal };
-      case (null, _) { #less };
-      case (_, null) { #greater };
-      case (?(h1, t1), ?(h2, t2)) {
-        let hOrder = compareElem(h1, h2);
-        if (Order.isEqual(hOrder)) {
-          compare<T>(t1, t2, compareElem)
-        } else {
-          hOrder
-        }
-      }
-    }
+  /// *Runtime and space assumes that argument `compare` runs in O(1) time and space.
+  public func compare<T>(l1 : List<T>, l2 : List<T>, compare : (T, T) -> Order.Order) : Order.Order {
+     compareAux<T>(l1, l2, compare);
   };
 
-  /// Compare two lists for equality as specified by the given relation `equalElem` on the elements.
+  private func equalAux<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
+    switch (l1, l2) {
+      case (?(h1, t1), ?(h2, t2)) {
+        equal(h1, h2) and equalAux<T>(t1, t2, equal)
+      };
+      case (null, null) { true };
+      case _ { false };
+    }
+  };
+  /// Compare two lists for equality using the argument function `equal` to determine equality of their elements.
   ///
   /// Example:
   /// ```motoko include=initialize
@@ -630,14 +641,9 @@ module {
   ///
   /// Space: O(1)
   ///
-  /// *Runtime and space assumes that `compareElem` runs in O(1) time and space.
-  public func equal<T>(l1 : List<T>, l2 : List<T>, equalElem : (T, T) -> Bool) : Bool {
-    switch (l1, l2) {
-      case (null, null) { true };
-      case (null, _) { false };
-      case (_, null) { false };
-      case (?(h1, t1), ?(h2, t2)) { equalElem(h1, h2) and equal<T>(t1, t2, equalElem) }
-    }
+  /// *Runtime and space assumes that argument `equal` runs in O(1) time and space.
+  public func equal<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
+    equalAux<T>(l1, l2, equal);
   };
 
   /// Generate a list based on a length and a function that maps from
