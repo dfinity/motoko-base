@@ -20,18 +20,17 @@ import M "mo:matchers/Matchers";
 * and has gone through multiple resizes, with some forced collisions. newEmptyMap
 * returns an empty map.
 *
-* The keys and values are of the form "keyN" and "valueN" where N is a number.
 * There are functions that sort the keys and values by the number N, and returns
 * the entries as an array.
 */
 
 // Small map that has not resized
 let smallSize = 6;
-let smallKeys = Array.tabulate<Text>(smallSize, func i = "key" # Nat.toText(i));
-let smallValues = Array.tabulate<Text>(smallSize, func i = "value" # Nat.toText(i));
-let smallEntries = Array.tabulate<(Text, Text)>(smallSize, func i = (smallKeys[i], smallValues[i]));
-func newMap() : HashMap.HashMap<Text, Text> {
-  let map = HashMap.HashMap<Text, Text>(7, Text.equal, Text.hash);
+let smallKeys = Array.tabulate<Nat>(smallSize, func i = i);
+let smallValues = Array.tabulate<Nat>(smallSize, func i = i);
+let smallEntries = Array.tabulate<(Nat, Nat)>(smallSize, func i = (smallKeys[i], smallValues[i]));
+func newMap() : HashMap.HashMap<Nat, Nat> {
+  let map = HashMap.HashMap<Nat, Nat>(7, Nat.equal, Hash.hash);
   var i = 0;
   while (i < smallSize) {
     map.put(smallKeys[i], smallValues[i]);
@@ -42,22 +41,22 @@ func newMap() : HashMap.HashMap<Text, Text> {
 
 // Map that is large enough to have gone through multiple resizes
 let largeSize = 100;
-let largeKeys = Array.tabulate<Text>(largeSize, func i = "key" # Nat.toText(i));
-let largeValues = Array.tabulate<Text>(largeSize, func i = "value" # Nat.toText(i));
-let largeEntries = Array.tabulate<(Text, Text)>(largeSize, func i = (largeKeys[i], largeValues[i]));
+let largeKeys = Array.tabulate<Nat>(largeSize, func i = i);
+let largeValues = Array.tabulate<Nat>(largeSize, func i = i);
+let largeEntries = Array.tabulate<(Nat, Nat)>(largeSize, func i = (largeKeys[i], largeValues[i]));
 // mix in some forced collisions
-let collideHash : Text -> Hash.Hash = func key {
-  if (key < "key10") {
+let collideHash : Nat -> Hash.Hash = func key {
+  if (key < 10) {
     0
-  } else if (key < "key20") {
+  } else if (key < 20) {
     1
   } else {
-    Text.hash(key)
+    Hash.hash(key)
   }
 };
 
-func newCollidedMap() : HashMap.HashMap<Text, Text> {
-  let collidedMap = HashMap.HashMap<Text, Text>(3, Text.equal, collideHash);
+func newCollidedMap() : HashMap.HashMap<Nat, Nat> {
+  let collidedMap = HashMap.HashMap<Nat, Nat>(3, Nat.equal, collideHash);
   var i = 0;
   while (i < largeSize) {
     collidedMap.put(largeKeys[i], largeValues[i]);
@@ -66,67 +65,26 @@ func newCollidedMap() : HashMap.HashMap<Text, Text> {
   collidedMap
 };
 
-func newEmptyMap() : HashMap.HashMap<Text, Text> {
-  HashMap.HashMap<Text, Text>(1, Text.equal, Text.hash)
-};
-
-//FIXME move into Nat module in next PR
-func fromText(text : Text) : ?Nat {
-  var n = 0;
-  for (c in text.chars()) {
-    if (Char.isDigit(c)) {
-      let charAsNat = Prim.nat32ToNat(Prim.charToNat32(c) -% Prim.charToNat32('0'));
-      n := n * 10 + charAsNat
-    } else {
-      return null
-    }
-  };
-  ?n
+func newEmptyMap() : HashMap.HashMap<Nat, Nat> {
+  HashMap.HashMap<Nat, Nat>(1, Nat.equal, Hash.hash)
 };
 
 // Need to sort the entries because the order is not guaranteed for equality tests
-func sortedEntries<V>(map : HashMap.HashMap<Text, V>) : [(Text, V)] {
-  Array.sort<(Text, V)>(
+func sortedEntries<V>(map : HashMap.HashMap<Nat, V>) : [(Nat, V)] {
+  Array.sort<(Nat, V)>(
     Iter.toArray(map.entries()),
     func(p1, p2) {
-      ignore do ? {
-        let key1Index = Text.stripStart(p1.0, #text "key");
-        let key2Index = Text.stripStart(p2.0, #text "key");
-        return Nat.compare(fromText(key1Index!)!, fromText(key2Index!)!)
-      };
-      Debug.print("key1Index: " # p1.0);
-      Debug.print("key2Index: " # p2.0);
-      Debug.trap "unreachable in sortedEntries"
+      Nat.compare(p1.0, p2.0)
     }
   )
 };
 
-func sortedKeys<V>(map : HashMap.HashMap<Text, V>) : [Text] {
-  Array.sort<Text>(
-    Iter.toArray(map.keys()),
-    func(key1, key2) {
-      ignore do ? {
-        let key1Index = Text.stripStart(key1, #text "key");
-        let key2Index = Text.stripStart(key2, #text "key");
-        return Nat.compare(fromText(key1Index!)!, fromText(key2Index!)!)
-      };
-      Debug.trap "unreachable in sortedKeys"
-    }
-  )
+func sortedKeys<V>(map : HashMap.HashMap<Nat, V>) : [Nat] {
+  Array.sort<Nat>(Iter.toArray(map.keys()), Nat.compare)
 };
 
-func sortedValues(map : HashMap.HashMap<Text, Text>) : [Text] {
-  Array.sort<Text>(
-    Iter.toArray(map.vals()),
-    func(value1, value2) {
-      ignore do ? {
-        let value1Index = Text.stripStart(value1, #text "value");
-        let value2Index = Text.stripStart(value2, #text "value");
-        return Nat.compare(fromText(value1Index!)!, fromText(value2Index!)!)
-      };
-      Debug.trap "unreachable in sortedValues"
-    }
-  )
+func sortedValues(map : HashMap.HashMap<Nat, Nat>) : [Nat] {
+  Array.sort<Nat>(Iter.toArray(map.vals()), Nat.compare)
 };
 
 let suite = Suite.suite(
@@ -149,128 +107,128 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "empty get",
-      newEmptyMap().get("key"),
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      newEmptyMap().get(101),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "get with collisions",
-      newCollidedMap().get("key1"),
-      M.equals(T.optional(T.textTestable, ?"value1"))
+      newCollidedMap().get(1),
+      M.equals(T.optional(T.natTestable, ?1))
     ),
     Suite.test(
       "get",
-      newMap().get("key1"),
-      M.equals(T.optional(T.textTestable, ?"value1"))
+      newMap().get(1),
+      M.equals(T.optional(T.natTestable, ?1))
     ),
     Suite.test(
       "get not found",
-      newMap().get("not a key"),
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      newMap().get(101),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "put",
       do {
         let tempMap = newMap();
-        tempMap.get("key4")
+        tempMap.get(4)
       },
-      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+      M.equals(T.optional(T.natTestable, ?4 : ?Nat))
     ),
     Suite.test(
       "put override",
       do {
         let tempMap = newMap();
-        tempMap.put("key2", "new value2");
-        tempMap.get("key2")
+        tempMap.put(2, 102);
+        tempMap.get(2)
       },
-      M.equals(T.optional(T.textTestable, ?"new value2" : ?Text))
+      M.equals(T.optional(T.natTestable, ?102 : ?Nat))
     ),
     Suite.test(
       "put override with collisions",
       do {
         let tempMap = newCollidedMap();
-        tempMap.put("key2", "new value2");
-        tempMap.get("key2")
+        tempMap.put(2, 102);
+        tempMap.get(2)
       },
-      M.equals(T.optional(T.textTestable, ?"new value2" : ?Text))
+      M.equals(T.optional(T.natTestable, ?102 : ?Nat))
     ),
     Suite.test(
       "replace new key return val",
-      newEmptyMap().replace("key1", "value1"),
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      newEmptyMap().replace(1, 1),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "replace new key insertion",
       do {
         let tempMap = newEmptyMap();
-        ignore tempMap.replace("key1", "value1");
-        tempMap.get("key1")
+        ignore tempMap.replace(1, 1);
+        tempMap.get(1)
       },
-      M.equals(T.optional(T.textTestable, ?"value1" : ?Text))
+      M.equals(T.optional(T.natTestable, ?1 : ?Nat))
     ),
     Suite.test(
       "replace overwrite return val",
-      newMap().replace("key2", "new value2"),
-      M.equals(T.optional(T.textTestable, ?"value2" : ?Text))
+      newMap().replace(2, 102),
+      M.equals(T.optional(T.natTestable, ?2 : ?Nat))
     ),
     Suite.test(
       "replace overwrite insertion",
       do {
         let tempMap = newMap();
-        ignore tempMap.replace("key2", "new value2");
-        tempMap.get("key2")
+        ignore tempMap.replace(2, 102);
+        tempMap.get(2)
       },
-      M.equals(T.optional(T.textTestable, ?"new value2" : ?Text))
+      M.equals(T.optional(T.natTestable, ?102 : ?Nat))
     ),
     Suite.test(
       "delete empty",
       do {
         let tempMap = newEmptyMap();
-        tempMap.delete("key");
-        tempMap.get("key")
+        tempMap.delete(101);
+        tempMap.get(101)
       },
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "delete with collisions",
       do {
         let tempMap = newCollidedMap();
-        tempMap.delete("key2");
-        tempMap.get("key2")
+        tempMap.delete(2);
+        tempMap.get(2)
       },
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "delete",
       do {
         let tempMap = newMap();
-        tempMap.delete("key2");
-        tempMap.get("key2")
+        tempMap.delete(2);
+        tempMap.get(2)
       },
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "delete preserve structure with collision",
       do {
         let tempMap = newCollidedMap();
-        tempMap.delete("key2");
-        tempMap.get("key4")
+        tempMap.delete(2);
+        tempMap.get(4)
       },
-      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+      M.equals(T.optional(T.natTestable, ?4 : ?Nat))
     ),
     Suite.test(
       "delete preserve structure",
       do {
         let tempMap = newMap();
-        tempMap.delete("key2");
-        tempMap.get("key4")
+        tempMap.delete(2);
+        tempMap.get(4)
       },
-      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+      M.equals(T.optional(T.natTestable, ?4 : ?Nat))
     ),
     Suite.test(
       "delete not exist with collisions",
       do {
         let tempMap = newCollidedMap();
-        tempMap.delete("fake key");
+        tempMap.delete(101);
         tempMap.size()
       },
       M.equals(T.nat(largeSize))
@@ -279,227 +237,227 @@ let suite = Suite.suite(
       "delete not exist",
       do {
         let tempMap = newMap();
-        tempMap.delete("fake key");
+        tempMap.delete(101);
         tempMap.size()
       },
       M.equals(T.nat(smallSize))
     ),
     Suite.test(
       "remove empty return val",
-      newEmptyMap().remove("key"),
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      newEmptyMap().remove(101),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "remove empty size",
       do {
         let tempMap = newEmptyMap();
-        ignore tempMap.remove("key");
+        ignore tempMap.remove(101);
         tempMap.size()
       },
       M.equals(T.nat(0))
     ),
     Suite.test(
       "remove return val",
-      newMap().remove("key2"),
-      M.equals(T.optional(T.textTestable, ?"value2" : ?Text))
+      newMap().remove(2),
+      M.equals(T.optional(T.natTestable, ?2 : ?Nat))
     ),
     Suite.test(
       "remove deletion",
       do {
         let tempMap = newMap();
-        ignore tempMap.remove("key2");
-        tempMap.get("key2")
+        ignore tempMap.remove(2);
+        tempMap.get(2)
       },
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "remove preserve structure",
       do {
         let tempMap = newMap();
-        ignore tempMap.remove("key2");
-        tempMap.get("key4")
+        ignore tempMap.remove(2);
+        tempMap.get(4)
       },
-      M.equals(T.optional(T.textTestable, ?"value4" : ?Text))
+      M.equals(T.optional(T.natTestable, ?4 : ?Nat))
     ),
     Suite.test(
       "remove not exist",
       do {
         let tempMap = newMap();
-        tempMap.remove("fake key")
+        tempMap.remove(101)
       },
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "keys empty",
       newEmptyMap().keys().next(),
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "keys with collisions",
       sortedKeys(newCollidedMap()),
-      M.equals(T.array(T.textTestable, largeKeys))
+      M.equals(T.array(T.natTestable, largeKeys))
     ),
     Suite.test(
       "keys",
       sortedKeys(newMap()),
-      M.equals(T.array(T.textTestable, smallKeys))
+      M.equals(T.array(T.natTestable, smallKeys))
     ),
     Suite.test(
       "vals empty",
       newEmptyMap().vals().next(),
-      M.equals(T.optional(T.textTestable, null : ?Text))
+      M.equals(T.optional(T.natTestable, null : ?Nat))
     ),
     Suite.test(
       "vals with collisions",
       sortedValues(newCollidedMap()),
-      M.equals(T.array(T.textTestable, largeValues))
+      M.equals(T.array(T.natTestable, largeValues))
     ),
     Suite.test(
       "vals",
       sortedValues(newMap()),
-      M.equals(T.array(T.textTestable, smallValues))
+      M.equals(T.array(T.natTestable, smallValues))
     ),
     Suite.test(
       "entries empty",
       newEmptyMap().entries().next(),
-      M.equals(T.optional(T.tuple2Testable(T.textTestable, T.textTestable), null : ?(Text, Text)))
+      M.equals(T.optional(T.tuple2Testable(T.natTestable, T.natTestable), null : ?(Nat, Nat)))
     ),
     Suite.test(
       "entries with collisions",
       sortedEntries(newCollidedMap()),
-      M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), largeEntries))
+      M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), largeEntries))
     ),
     Suite.test(
       "entries",
       sortedEntries(newMap()),
-      M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), smallEntries))
+      M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), smallEntries))
     ),
     Suite.test(
       "clone empty",
-      HashMap.clone(newEmptyMap(), Text.equal, Text.hash).size(),
+      HashMap.clone(newEmptyMap(), Nat.equal, Hash.hash).size(),
       M.equals(T.nat(0))
     ),
     Suite.test(
       "clone with collisions",
       do {
-        let mapClone = HashMap.clone(newCollidedMap(), Text.equal, Text.hash);
+        let mapClone = HashMap.clone(newCollidedMap(), Nat.equal, Hash.hash);
         sortedEntries(mapClone)
       },
-      M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), largeEntries))
+      M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), largeEntries))
     ),
     Suite.test(
       "clone",
       do {
-        let mapClone = HashMap.clone(newMap(), Text.equal, Text.hash);
+        let mapClone = HashMap.clone(newMap(), Nat.equal, Hash.hash);
         sortedEntries(mapClone)
       },
-      M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), smallEntries))
+      M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), smallEntries))
     ),
     Suite.test(
       "fromIter empty",
-      HashMap.fromIter<Text, Text>([].vals(), 3, Text.equal, Text.hash).size(),
+      HashMap.fromIter<Nat, Nat>([].vals(), 3, Nat.equal, Hash.hash).size(),
       M.equals(T.nat(0))
     ),
     Suite.test(
       "fromIter with collisions",
       do {
         let iter = largeEntries.vals();
-        let tempMap = HashMap.fromIter<Text, Text>(iter, 3, Text.equal, collideHash);
+        let tempMap = HashMap.fromIter<Nat, Nat>(iter, 3, Nat.equal, collideHash);
         sortedEntries(tempMap)
       },
-      M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), largeEntries))
+      M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), largeEntries))
     ),
     Suite.test(
       "fromIter",
       do {
         let iter = smallEntries.vals();
-        let tempMap = HashMap.fromIter<Text, Text>(iter, 7, Text.equal, Text.hash);
+        let tempMap = HashMap.fromIter<Nat, Nat>(iter, 7, Nat.equal, Hash.hash);
         sortedEntries(tempMap)
       },
-      M.equals(T.array(T.tuple2Testable(T.textTestable, T.textTestable), smallEntries))
+      M.equals(T.array(T.tuple2Testable(T.natTestable, T.natTestable), smallEntries))
     ),
     Suite.test(
       "map empty",
-      HashMap.map<Text, Text, Nat>(newEmptyMap(), Text.equal, Text.hash, func _ = 0).size(),
+      HashMap.map<Nat, Nat, Nat>(newEmptyMap(), Nat.equal, Hash.hash, func _ = 0).size(),
       M.equals(T.nat(0))
     ),
     Suite.test(
       "map with collisions",
       do {
-        let tempMap = HashMap.map<Text, Text, Nat>(
+        let tempMap = HashMap.map<Nat, Nat, Nat>(
           newCollidedMap(),
-          Text.equal,
+          Nat.equal,
           collideHash,
-          func p = p.1.size()
+          func p = p.1 * 2
         );
         sortedEntries(tempMap)
       },
       M.equals(
         T.array(
-          T.tuple2Testable(T.textTestable, T.natTestable),
-          Array.map<(Text, Text), (Text, Nat)>(largeEntries, func p = (p.0, p.1.size()))
+          T.tuple2Testable(T.natTestable, T.natTestable),
+          Array.map<(Nat, Nat), (Nat, Nat)>(largeEntries, func p = (p.0, p.1 * 2))
         )
       )
     ),
     Suite.test(
       "map",
       do {
-        let tempMap = HashMap.map<Text, Text, Nat>(
+        let tempMap = HashMap.map<Nat, Nat, Nat>(
           newMap(),
-          Text.equal,
-          Text.hash,
-          func p = p.1.size()
+          Nat.equal,
+          Hash.hash,
+          func p = p.1 * 2
         );
         sortedEntries(tempMap)
       },
       M.equals(
         T.array(
-          T.tuple2Testable(T.textTestable, T.natTestable),
-          Array.map<(Text, Text), (Text, Nat)>(smallEntries, func p = (p.0, p.1.size()))
+          T.tuple2Testable(T.natTestable, T.natTestable),
+          Array.map<(Nat, Nat), (Nat, Nat)>(smallEntries, func p = (p.0, p.1 * 2))
         )
       )
     ),
     Suite.test(
       "mapFilter empty",
-      HashMap.mapFilter<Text, Text, Nat>(newEmptyMap(), Text.equal, Text.hash, func _ = ?0).size(),
+      HashMap.mapFilter<Nat, Nat, Nat>(newEmptyMap(), Nat.equal, Hash.hash, func _ = ?0).size(),
       M.equals(T.nat(0))
     ),
     Suite.test(
       "mapFilter with collisions",
       do {
-        let tempMap = HashMap.mapFilter<Text, Text, Text>(
+        let tempMap = HashMap.mapFilter<Nat, Nat, Nat>(
           newCollidedMap(),
-          Text.equal,
+          Nat.equal,
           collideHash,
           // drop the first 10 keys
-          func(key, value) = if (key.size() > 4) { ?value } else { null }
+          func(key, value) = if (key < 10) { ?value } else { null }
         );
         sortedEntries(tempMap)
       },
       M.equals(
         T.array(
-          T.tuple2Testable(T.textTestable, T.textTestable),
-          Array.filter<(Text, Text)>(largeEntries, func p = p.0.size() > 4)
+          T.tuple2Testable(T.natTestable, T.natTestable),
+          Array.filter<(Nat, Nat)>(largeEntries, func p = p.0 < 10)
         )
       )
     ),
     Suite.test(
       "mapFilter",
       do {
-        let tempMap = HashMap.mapFilter<Text, Text, Text>(
+        let tempMap = HashMap.mapFilter<Nat, Nat, Nat>(
           newMap(),
-          Text.equal,
-          Text.hash,
-          func(key, value) = if (key != "key1") { ?value } else { null }
+          Nat.equal,
+          Hash.hash,
+          func(key, value) = if (key != 1) { ?value } else { null }
         );
         sortedEntries(tempMap)
       },
       M.equals(
         T.array(
-          T.tuple2Testable(T.textTestable, T.textTestable),
-          Array.sort<(Text, Text)>(
-            Array.filter<(Text, Text)>(smallEntries, func p = p.0 != "key1"),
-            func(p1, p2) = Text.compare(p1.0, p2.0)
+          T.tuple2Testable(T.natTestable, T.natTestable),
+          Array.sort<(Nat, Nat)>(
+            Array.filter<(Nat, Nat)>(smallEntries, func p = p.0 != 1),
+            func(p1, p2) = Nat.compare(p1.0, p2.0)
           )
         )
       )
@@ -507,8 +465,8 @@ let suite = Suite.suite(
     Suite.test(
       "Issue #228",
       do {
-        let tempMap = HashMap.HashMap<Text, Nat>(50, Text.equal, Text.hash);
-        tempMap.remove("test")
+        let tempMap = HashMap.HashMap<Nat, Nat>(50, Nat.equal, Hash.hash);
+        tempMap.remove(0)
       },
       M.equals(T.optional(T.natTestable, null : ?Nat))
     )
