@@ -290,7 +290,7 @@ module {
   /// as a function value at the moment.
   public func rem(x : Nat, y : Nat) : Nat { x % y };
 
-  /// Returns `x` to the power of `y`, `x ** y`. Traps when `y > 32`. This operator
+  /// Returns `x` to the power of `y`, `x ** y`. Traps when `y > 2^32`. This operator
   /// will never overflow because `Nat` is infinite precision.
   ///
   /// Example:
