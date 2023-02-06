@@ -1923,7 +1923,7 @@ module {
   ///   if (k > 0) {
   ///     #ok(k);
   ///   } else {
-  ///     #err("One or more elements are negative.");
+  ///     #err("One or more elements are zero.");
   ///   }
   /// });
   ///
