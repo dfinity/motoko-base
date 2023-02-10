@@ -179,6 +179,8 @@ module {
   /// Nat.compare(2, 3) // => #less
   /// ```
   ///
+  /// This function can be used as value for a high order function, such as a sort function.
+  ///
   /// Example:
   /// ```motoko include=import
   /// import Array "mo:base/Array";
