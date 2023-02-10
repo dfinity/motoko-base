@@ -162,8 +162,8 @@ module {
   };
 
   /// Create a new array by appending the values of `array1` and `array2`.
-  /// @deprecated `Array.append` copies its arguments and has linear complexity;
-  /// when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
+  /// This function is ineffecient when used in a loop. If you need to repeatedly
+  /// grow the array, consider using a `Buffer` and `Buffer.append`, instead.
   ///
   /// ```motoko include=import
   /// let array1 = [1, 2, 3];
