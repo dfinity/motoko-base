@@ -199,7 +199,10 @@ module {
   /// 1 + 2 // => 3
   /// ```
   ///
-  /// This function can be used as value for a high order function, such as a sort function.
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `+` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `+`
+  /// as a function value at the moment.
   ///
   /// Example:
   /// ```motoko include=import
