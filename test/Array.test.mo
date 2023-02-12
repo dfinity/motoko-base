@@ -1,6 +1,6 @@
 import Array "mo:base/Array";
 import Int "mo:base/Int";
-import Nat "../src/Nat";
+import Nat "mo:base/Nat";
 import Text "mo:base/Text";
 import Result "mo:base/Result";
 import Suite "mo:matchers/Suite";
