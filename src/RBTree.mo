@@ -450,4 +450,62 @@ module {
     }
   };
 
+  func red<X, Y>(t : Tree<X, Y>) : Tree<X, Y> {
+    switch t {
+      case (#node (#B, l, xy, r)) {
+        (#node (#R, l, xy, r))
+      };
+      case _ {
+        Debug.trap "RBTree.red"
+      }
+    }
+  };
+
+  func balLeft<X,Y>(left : Tree<X,Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    loop {};
+  };
+
+  func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
+    switch (left, right) {
+      case (#leaf,  _) { right };
+      case (_,  #leaf) { left };
+      case (#node (#R, l1, xy1, r1),
+            #node (#R, l2, xy2, r2)) {
+        switch (append (r1, l1)) {
+          case (#node (#R, l3, xy3, r3)) {
+            #node(
+              #R,
+              #node(#R, l1, xy1, l3),
+              xy3,
+              #node(#R, l2, xy2, r2))
+          };
+          case r1l1 {
+            #node(#R, l1, xy1, #node(#R, r1l1, xy2, r2))
+          }
+        }
+      };
+      case (t1, #node(#R, l2, xy2, r2)) {
+        #node(#R, append(t1,l2), xy2, r2)
+      };
+      case (#node(#R, l1, xy1, r1), t2) {
+        #node(#R, l1, xy1, append(r1, t2))
+      };
+      case (#node(#B, l1, xy1, r1),
+            #node (#B, l2, xy2, r2)) {
+        switch (append (r1, r2)) {
+          case (#node (#R, l3, xy3, r3)) {
+            #node(#R,
+              #node(#R, l1, xy1, l3),
+              xy3,
+              #node(#R, r3, xy2, r2))
+          };
+          case r2l1 {
+            balLeft (l1, xy1,
+              #node(#B, r2l1, xy2, r2))
+          }
+        }
+      }
+    }
+  }
+
 }
