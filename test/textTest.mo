@@ -370,21 +370,6 @@ run(
         M.equals(T.text "c")
       ),
       test(
-        "should handle negative start",
-        Text.substring("abc", -1, 1),
-        M.equals(T.text "c")
-      ),
-      test(
-        "should handle negative length",
-        Text.substring("abc", 0, -1),
-        M.equals(T.text "")
-      ),
-      test(
-        "should handle negative start and length",
-        Text.substring("abc", -1, -1),
-        M.equals(T.text "")
-      ),
-      test(
         "should handle start past end",
         Text.substring("abc", 3, 1),
         M.equals(T.text "")

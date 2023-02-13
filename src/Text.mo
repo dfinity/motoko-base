@@ -25,6 +25,7 @@ import Iter "Iter";
 import Hash "Hash";
 import Stack "Stack";
 import Prim "mo:⛔";
+import Debug "Debug";
 
 module {
 
@@ -427,48 +428,27 @@ module {
 
   /// Returns a substring of the input `Text` delimited by the specified `Pattern`, provided with a starting position and a length.
   /// If no length is passed, returns empty string.
+  /// If a starting position is passed that is greater than the length of the input `Text`, returns empty string.
+  /// If a length is passed that is greater than the length of the input `Text`, returns the substring from the starting position to the end of the input `Text`.
   ///
   /// ```motoko include=import
   /// Text.substring("This is a sentence.", 0, 4) // "This"
   /// Text.substring("This is a sentence.", 5, 4) // "is a"
   /// Text.substring("This is a sentence.", 0, 0) // ""
   /// ```
-  public func substring(t : Text, start : Int, len : Int) : Text {
+  public func substring(t : Text, start : Nat, len : Nat) : Text {
     var output = "";
-    var count = 0;
-    //handle negative length
-    if (len < 0) {
-      for (char in t.chars()) {
-        // handle negative start
-        if (start < 0) {
-          if (count >= t.size() + start) {
-            output := output # fromChar(char)
-          };
-          count := count + 1
-        };
-        // handle positive start
-        if (count >= start) {
-          output := output # fromChar(char);
-          count := count + 1
-        }
-      };
+
+    if (start >= t.size()) {
       return output
     };
 
-    // handle positive length
+    var count = 0;
     for (char in t.chars()) {
-      // handle negative start
-      if (start < 0) {
-        if (count >= t.size() + start and count < t.size() + start + len) {
-          output := output # fromChar(char)
-        };
-        count := count + 1
-      };
-      // handle positive start
       if (count >= start and count < start + len) {
-        output := output # fromChar(char);
-        count := count + 1
-      }
+        output := output # fromChar(char)
+      };
+      count := count + 1
     };
     output
   };
