@@ -252,7 +252,6 @@ module {
   /// ```
   public func empty<K, V>() : Trie<K, V> { #empty };
 
-
   /// Get the size in O(1) time.
   ///
   /// For a more detailed overview of how to use a `Trie`,
@@ -577,7 +576,7 @@ module {
                 switch (x, y) {
                   case (null, ?v) { v };
                   case (?v, null) { v };
-                  case (_, _) { Debug.trap "Trie.mergeDisjoint"}
+                  case (_, _) { Debug.trap "Trie.mergeDisjoint" }
                 }
               }
             ),
@@ -1508,7 +1507,12 @@ module {
     updated_outer
   };
 
-  /// Remove the given key's value in the trie; return the new trie
+  /// Remove the entry for the given key from the trie, by returning the reduced trie.
+  /// Also returns the removed value if the key existed and `null` otherwise.
+  /// Compares keys using the provided function `equal`.
+  ///
+  /// Note: The removal of an existing key actually shrinks the trie.
+  /// Thereby, the trie is reorganized by possibly recursively collapsing sibling nodes.
   ///
   /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
@@ -1517,12 +1521,57 @@ module {
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0;
-  /// // remove the value associated with "hello"
+  /// // remove the entry associated with "hello"
   /// trie := Trie.remove(trie, key "hello", Text.equal).0;
   /// assert (Trie.get(trie, key "hello", Text.equal) == null);
   /// ```
-  public func remove<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : (Trie<K, V>, ?V) {
-    replace(t, k, k_eq, null)
+  public func remove<K, V>(trie : Trie<K, V>, key : Key<K>, equal : (K, K) -> Bool) : (Trie<K, V>, ?V) {
+    func combine(left : Trie<K, V>, right : Trie<K, V>) : Trie<K, V> {
+      switch ((left, right)) {
+        case (#leaf(leftLeaf), #empty) {
+          #leaf(leftLeaf)
+        };
+        case (#empty, #leaf(rightLeaf)) {
+          #leaf(rightLeaf)
+        };
+        case ((#leaf(leftLeaf), #leaf(rightLeaf))) {
+          let size = leftLeaf.size + rightLeaf.size;
+          if (size <= MAX_LEAF_SIZE) {
+            let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
+            #leaf({ size = size; keyvals = union })
+          } else {
+            branch((#leaf(leftLeaf), #leaf(rightLeaf)))
+          }
+        };
+        case ((left, right)) {
+          branch(left, right)
+        }
+      }
+    };
+
+    func rec(trie : Trie<K, V>, bitPosition : Nat) : (Trie<K, V>, ?V) {
+      switch trie {
+        case (#empty) { (#empty, null) };
+        case (#leaf(oldLeaf)) {
+          let (newList, value) = AssocList.remove(oldLeaf.keyvals, key, equalKey(equal));
+          (leaf(newList, bitPosition), value)
+        };
+        case (#branch(oldBranch)) {
+          let bit = Hash.bit(key.hash, bitPosition);
+          if (not bit) {
+            let (newLeft, value) = rec(oldBranch.left, bitPosition + 1);
+            (combine(newLeft, oldBranch.right), value)
+          } else {
+            let (newRight, value) = rec(oldBranch.right, bitPosition + 1);
+            (combine(oldBranch.left, newRight), value)
+          }
+        }
+      }
+    };
+
+    let (newTrie, value) = rec(trie, 0);
+    //assert (isValid(newTrie, false));
+    (newTrie, value)
   };
 
   /// Remove the given key's value in the trie,
