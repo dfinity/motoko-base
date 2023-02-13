@@ -1,7 +1,12 @@
 /// Signed integer numbers with infinite precision (also called big integers).
 ///
-/// Common integer functions.
-/// Most operations on integers (e.g. addition) are also available as built-in operators (e.g. `1 + 1`).
+/// Most operations on integer numbers (e.g. addition) are available as built-in operators (e.g. `-1 + 1`).
+/// This module provides equivalent functions and `Text` conversion.
+///
+/// Import from the base library to use this module.
+/// ```motoko name=import
+/// import Int "mo:base/Int";
+/// ```
 
 import Prim "mo:⛔";
 import Prelude "Prelude";
@@ -15,23 +20,21 @@ module {
   /// Returns the absolute value of `x`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
+  /// ```motoko include=import
   /// Int.abs(-12) // => 12
   /// ```
-  public let abs : (x : Int) -> Nat = Prim.abs;
+  public func abs(x : Int) : Nat {
+    Prim.abs(x)
+  };
 
-  /// Conversion to Text.
-  /// Formats the integer in decimal representation without underscore separators for blocks of thousands.
+  /// Converts an integer number to its textual representation. Textual
+  /// representation _do not_ contain underscores to represent commas.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
+  /// ```motoko include=import
   /// Int.toText(-1234) // => "-1234"
   /// ```
-  public let toText : Int -> Text = func(x) {
+  public func toText(x : Int) : Text {
     if (x == 0) {
       return "0"
     };
@@ -68,10 +71,8 @@ module {
   /// Returns the minimum of `x` and `y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.min(+2, -3) // => -3
+  /// ```motoko include=import
+  /// Int.min(2, -3) // => -3
   /// ```
   public func min(x : Int, y : Int) : Int {
     if (x < y) { x } else { y }
@@ -80,10 +81,8 @@ module {
   /// Returns the maximum of `x` and `y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.max(+2, -3) // => 2
+  /// ```motoko include=import
+  /// Int.max(2, -3) // => 2
   /// ```
   public func max(x : Int, y : Int) : Int {
     if (x < y) { y } else { x }
@@ -130,73 +129,115 @@ module {
     ])
   };
 
-  /// Returns `x == y`.
+  /// Equality function for Int types.
+  /// This is equivalent to `x == y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
+  /// ```motoko include=import
+  /// Int.equal(-1, -1); // => true
+  /// ```
   ///
-  /// Int.equal(123, 123) // => true
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `==` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `==`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Buffer "mo:base/Buffer";
+  ///
+  /// let buffer1 = Buffer.Buffer<Int>(1);
+  /// buffer1.add(-3);
+  /// let buffer2 = Buffer.Buffer<Int>(1);
+  /// buffer2.add(-3);
+  /// Buffer.equal(buffer1, buffer2, Int.equal) // => true
   /// ```
   public func equal(x : Int, y : Int) : Bool { x == y };
 
-  /// Returns `x != y`.
+  /// Inequality function for Int types.
+  /// This is equivalent to `x != y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.notEqual(123, 123) // => false
+  /// ```motoko include=import
+  /// Int.notEqual(-1, -2); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `!=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `!=`
+  /// as a function value at the moment.
   public func notEqual(x : Int, y : Int) : Bool { x != y };
 
-  /// Returns `x < y`.
+  /// "Less than" function for Int types.
+  /// This is equivalent to `x < y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.less(123, 1234) // => true
+  /// ```motoko include=import
+  /// Int.less(-2, 1); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<`
+  /// as a function value at the moment.
   public func less(x : Int, y : Int) : Bool { x < y };
 
-  /// Returns `x <= y`.
+  /// "Less than or equal" function for Int types.
+  /// This is equivalent to `x <= y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.lessOrEqual(123, 1234) // => true
+  /// ```motoko include=import
+  /// Int.lessOrEqual(-2, 1); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<=`
+  /// as a function value at the moment.
   public func lessOrEqual(x : Int, y : Int) : Bool { x <= y };
 
-  /// Returns `x > y`.
+  /// "Greater than" function for Int types.
+  /// This is equivalent to `x > y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.greater(1234, 123) // => true
+  /// ```motoko include=import
+  /// Int.greater(1, -2); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>`
+  /// as a function value at the moment.
   public func greater(x : Int, y : Int) : Bool { x > y };
 
-  /// Returns `x >= y`.
+  /// "Greater than or equal" function for Int types.
+  /// This is equivalent to `x >= y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.greaterOrEqual(1234, 123) // => true
+  /// ```motoko include=import
+  /// Int.greaterOrEqual(1, -2); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>=`
+  /// as a function value at the moment.
   public func greaterOrEqual(x : Int, y : Int) : Bool { x >= y };
 
-  /// Returns the order of `x` and `y`.
+  /// General-purpose comparison function for `Int`. Returns the `Order` (
+  /// either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
+  /// ```motoko include=import
+  /// Int.compare(-3, 2) // => #less
+  /// ```
   ///
-  /// Int.compare(123, 1234) // => #less
+  /// This function can be used as value for a high order function, such as a sort function.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.sort([1, -2, -3], Int.compare) // => [-3, -2, 1]
   /// ```
   public func compare(x : Int, y : Int) : { #less; #equal; #greater } {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater }
@@ -205,9 +246,7 @@ module {
   /// Returns the negation of `x`, `-x` .
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
+  /// ```motoko include=import
   /// Int.neg(123) // => -123
   /// ```
   public func neg(x : Int) : Int { -x };
@@ -217,10 +256,19 @@ module {
   /// No overflow since `Int` has infinite precision.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
+  /// ```motoko include=import
+  /// Int.add(1, -2); // => -1
+  /// ```
   ///
-  /// Int.add(1234, 123) // => 1_357
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `+` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `+`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.foldLeft([1, -2, -3], 0, Int.add) // => -4
   /// ```
   public func add(x : Int, y : Int) : Int { x + y };
 
@@ -229,10 +277,19 @@ module {
   /// No overflow since `Int` has infinite precision.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
+  /// ```motoko include=import
+  /// Int.sub(1, 2); // => -1
+  /// ```
   ///
-  /// Int.sub(1234, 123) // => 1_111
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `-` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `-`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.foldLeft([1, -2, -3], 0, Int.sub) // => 4
   /// ```
   public func sub(x : Int, y : Int) : Int { x - y };
 
@@ -241,10 +298,19 @@ module {
   /// No overflow since `Int` has infinite precision.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
+  /// ```motoko include=import
+  /// Int.mul(-2, 3); // => -6
+  /// ```
   ///
-  /// Int.mul(123, 100) // => 12_300
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `*` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `*`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.foldLeft([1, -2, -3], 1, Int.mul) // => 6
   /// ```
   public func mul(x : Int, y : Int) : Int { x * y };
 
@@ -254,11 +320,14 @@ module {
   /// Traps when `y` is zero.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.div(123, 10) // => 12
+  /// ```motoko include=import
+  /// Int.div(6, -2); // => -3
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `/` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `/`
+  /// as a function value at the moment.
   public func div(x : Int, y : Int) : Int { x / y };
 
   /// Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
@@ -267,11 +336,14 @@ module {
   /// Traps when `y` is zero.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.rem(123, 10) // => 3
+  /// ```motoko include=import
+  /// Int.rem(6, -4); // => 2
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `%`
+  /// as a function value at the moment.
   public func rem(x : Int, y : Int) : Int { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
@@ -280,11 +352,14 @@ module {
   /// No overflow since `Int` has infinite precision.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int "mo:base/Int";
-  ///
-  /// Int.pow(2, 10) // => 1_024
+  /// ```motoko include=import
+  /// Int.pow(-2, 3); // => -8
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `**` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `**`
+  /// as a function value at the moment.
   public func pow(x : Int, y : Int) : Int { x ** y };
 
 }
