@@ -325,6 +325,25 @@ run(
   )
 );
 
+run(
+  suite(
+    "substring",
+    [
+      test("zero length", Text.substring("abc", 0, 0), M.equals(T.text "")),
+      test("length of 1 from start", Text.substring("abc", 0, 1), M.equals(T.text "a")),
+      test("length of 2 from start", Text.substring("abc", 0, 2), M.equals(T.text "ab")) test("length of 3 from start", Text.substring("abc", 0, 3), M.equals(T.text "abc")),
+      test("length of 1 from middle", Text.substring("abc", 1, 1), M.equals(T.text "b")),
+      test("length of 2 from middle", Text.substring("abc", 1, 2), M.equals(T.text "bc")),
+      test("length of 1 from end", Text.substring("abc", 2, 1), M.equals(T.text "c")),
+      test("length of 2 from end", Text.substring("abc", 2, 2), M.equals(T.text "c")),
+      test("should handle negative start", Text.substring("abc", -1, 1), M.equals(T.text "c")),
+      test("should handle negative length", Text.substring("abc", 0, -1), M.equals(T.text "")),
+      test("should handle negative start and length", Text.substring("abc", -1, -1), M.equals(T.text "")),
+      test("should handle start past end", Text.substring("abc", 3, 1), M.equals(T.text ""))
+    ]
+  )
+);
+
 do {
   let pat : Text.Pattern = #predicate(func(c : Char) : Bool { c == ';' or c == '!' });
   run(

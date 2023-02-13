@@ -363,7 +363,7 @@ module {
   };
 
   /// Splits the input `Text` with the specified `Pattern`.
-  /// 
+  ///
   /// Two fields are separated by exactly one match.
   ///
   /// ```motoko include=import
@@ -423,6 +423,26 @@ module {
         }
       }
     }
+  };
+
+  /// Returns a substring of the input `Text` delimited by the specified `Pattern`, provided with a starting position and a length.
+  /// If no length is passed, returns empty string.
+  ///
+  /// ```motoko include=import
+  /// Text.substring("This is a sentence.", 0, 4) // "This"
+  /// Text.substring("This is a sentence.", 5, 4) // "is a"
+  /// Text.substring("This is a sentence.", 0, 0) // ""
+  /// ```
+  public func substring(t : Text, start : Int, len : Int) : Text {
+    var output = "";
+    var count = 0;
+    for (char in t.chars()) {
+      if (count >= start and count < start + len) {
+        output := output # fromChar(char)
+      };
+      count := count + 1
+    };
+    output
   };
 
   /// Returns a sequence of tokens from the input `Text` delimited by the specified `Pattern`, derived from start to end.
