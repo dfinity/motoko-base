@@ -23,7 +23,9 @@ module {
   /// ```motoko include=import
   /// Int.abs(-12) // => 12
   /// ```
-  public let abs : (x : Int) -> Nat = Prim.abs;
+  public func abs(x : Int) : Nat {
+    Prim.abs(x)
+  };
 
   /// Converts an integer number to its textual representation. Textual
   /// representation _do not_ contain underscores to represent commas.
@@ -32,7 +34,7 @@ module {
   /// ```motoko include=import
   /// Int.toText(-1234) // => "-1234"
   /// ```
-  public let toText : Int -> Text = func(x) {
+  public func toText(x : Int) : Text {
     if (x == 0) {
       return "0"
     };
