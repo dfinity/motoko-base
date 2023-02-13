@@ -436,11 +436,39 @@ module {
   public func substring(t : Text, start : Int, len : Int) : Text {
     var output = "";
     var count = 0;
-    for (char in t.chars()) {
-      if (count >= start and count < start + len) {
-        output := output # fromChar(char)
+    //handle negative length
+    if (len < 0) {
+      for (char in t.chars()) {
+        // handle negative start
+        if (start < 0) {
+          if (count >= t.size() + start) {
+            output := output # fromChar(char)
+          };
+          count := count + 1
+        };
+        // handle positive start
+        if (count >= start) {
+          output := output # fromChar(char);
+          count := count + 1
+        }
       };
-      count := count + 1
+      return output
+    };
+
+    // handle positive length
+    for (char in t.chars()) {
+      // handle negative start
+      if (start < 0) {
+        if (count >= t.size() + start and count < t.size() + start + len) {
+          output := output # fromChar(char)
+        };
+        count := count + 1
+      };
+      // handle positive start
+      if (count >= start and count < start + len) {
+        output := output # fromChar(char);
+        count := count + 1
+      }
     };
     output
   };
