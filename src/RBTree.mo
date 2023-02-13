@@ -461,8 +461,17 @@ module {
     }
   };
 
-  func balLeft<X,Y>(left : Tree<X,Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
-    loop {};
+  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    switch (left, right) {
+      case (#node(#R, l1, xy1, r1), r) {
+        #node(
+          #R,
+          #node(#B, l1, xy1, r1),
+          xy,
+          r)
+      };
+      //TBC
+    }
   };
 
   func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
