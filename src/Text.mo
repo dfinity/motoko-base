@@ -448,8 +448,13 @@ module {
       if (count >= start and count < start + len) {
         output := output # fromChar(char)
       };
-      count := count + 1
+      count := count + 1;
+      // If we've reached the end of the substring, return the output
+      if (count >= start + len) {
+        return output
+      }
     };
+    // If we've reached the end of the string, return the output
     output
   };
 
