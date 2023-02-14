@@ -1522,7 +1522,7 @@ module {
           let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
           #leaf({ size = size; keyvals = union })
         } else {
-          branch((#leaf(leftLeaf), #leaf(rightLeaf)))
+          branch((left, right))
         }
       };
       case ((left, right)) {
