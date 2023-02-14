@@ -120,41 +120,6 @@ module {
     rec(map)
   };
 
-  /// Remove the entry with `key` in `map`, by returning the reduced list.
-  /// Also returns the value of the removed entry if it existed and `null` otherwise.
-  /// Compares keys using the provided function `equal`.
-  ///
-  /// Example:
-  /// ```motoko include=import,initialize
-  /// // Add three entries to the map
-  /// // map = [(0, 10), (1, 11), (2, 12)]
-  /// map := AssocList.remove(map, 1, Nat.equal).0;
-  /// List.toArray(map)
-  /// ```
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `equal` runs in O(1) time and space.
-  public func remove<K, V>(
-    map : AssocList<K, V>,
-    key : K,
-    equal : (K, K) -> Bool
-  ) : (AssocList<K, V>, ?V) {
-    func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
-      switch (al) {
-        case (null) { (null, null) };
-        case (?((hd_k, hd_v), tl)) {
-          if (equal(key, hd_k)) { (tl, ?hd_v) } else {
-            let (tl2, value) = rec(tl);
-            (?((hd_k, hd_v), tl2), value)
-          }
-        }
-      }
-    };
-    rec(map)
-  };
-
   /// Produces a new map containing all entries from `map1` whose keys are not
   /// contained in `map2`. The "extra" entries in `map2` are ignored. Compares
   /// keys using the provided function `equal`.

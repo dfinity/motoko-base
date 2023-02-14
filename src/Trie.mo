@@ -1554,7 +1554,7 @@ module {
       switch trie {
         case (#empty) { (#empty, null) };
         case (#leaf(oldLeaf)) {
-          let (newList, value) = AssocList.remove(oldLeaf.keyvals, key, equalKey(equal));
+          let (newList, value) = AssocList.replace(oldLeaf.keyvals, key, equalKey(equal), null);
           (leaf(newList, bitPosition), value)
         };
         case (#branch(oldBranch)) {
