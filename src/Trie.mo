@@ -1507,6 +1507,30 @@ module {
     updated_outer
   };
 
+  /// Combine two nodes that may have a reduced size after an entry deletion.
+  func combineReducedNodes<K, V>(left : Trie<K, V>, right : Trie<K, V>) : Trie<K, V> {
+    switch ((left, right)) {
+      case (#leaf(leftLeaf), #empty) {
+        #leaf(leftLeaf)
+      };
+      case (#empty, #leaf(rightLeaf)) {
+        #leaf(rightLeaf)
+      };
+      case ((#leaf(leftLeaf), #leaf(rightLeaf))) {
+        let size = leftLeaf.size + rightLeaf.size;
+        if (size <= MAX_LEAF_SIZE) {
+          let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
+          #leaf({ size = size; keyvals = union })
+        } else {
+          branch((#leaf(leftLeaf), #leaf(rightLeaf)))
+        }
+      };
+      case ((left, right)) {
+        branch(left, right)
+      }
+    }
+  };
+
   /// Remove the entry for the given key from the trie, by returning the reduced trie.
   /// Also returns the removed value if the key existed and `null` otherwise.
   /// Compares keys using the provided function `equal`.
@@ -1526,29 +1550,6 @@ module {
   /// assert (Trie.get(trie, key "hello", Text.equal) == null);
   /// ```
   public func remove<K, V>(trie : Trie<K, V>, key : Key<K>, equal : (K, K) -> Bool) : (Trie<K, V>, ?V) {
-    func combine(left : Trie<K, V>, right : Trie<K, V>) : Trie<K, V> {
-      switch ((left, right)) {
-        case (#leaf(leftLeaf), #empty) {
-          #leaf(leftLeaf)
-        };
-        case (#empty, #leaf(rightLeaf)) {
-          #leaf(rightLeaf)
-        };
-        case ((#leaf(leftLeaf), #leaf(rightLeaf))) {
-          let size = leftLeaf.size + rightLeaf.size;
-          if (size <= MAX_LEAF_SIZE) {
-            let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
-            #leaf({ size = size; keyvals = union })
-          } else {
-            branch((#leaf(leftLeaf), #leaf(rightLeaf)))
-          }
-        };
-        case ((left, right)) {
-          branch(left, right)
-        }
-      }
-    };
-
     func rec(trie : Trie<K, V>, bitPosition : Nat) : (Trie<K, V>, ?V) {
       switch trie {
         case (#empty) { (#empty, null) };
@@ -1560,10 +1561,10 @@ module {
           let bit = Hash.bit(key.hash, bitPosition);
           if (not bit) {
             let (newLeft, value) = rec(oldBranch.left, bitPosition + 1);
-            (combine(newLeft, oldBranch.right), value)
+            (combineReducedNodes(newLeft, oldBranch.right), value)
           } else {
             let (newRight, value) = rec(oldBranch.right, bitPosition + 1);
-            (combine(oldBranch.left, newRight), value)
+            (combineReducedNodes(oldBranch.left, newRight), value)
           }
         }
       }
