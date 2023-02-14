@@ -1,3 +1,5 @@
+// @testmode interpreter
+
 import Prim "mo:prim";
 import Deque "mo:base/Deque";
 import Array "mo:base/Array";
