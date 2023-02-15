@@ -450,7 +450,7 @@ module {
     }
   };
 
-  func red<X, Y>(t : Tree<X, Y>) : Tree<X, Y> {
+  func redden<X, Y>(t : Tree<X, Y>) : Tree<X, Y> {
     switch t {
       case (#node (#B, l, xy, r)) {
         (#node (#R, l, xy, r))
@@ -461,7 +461,15 @@ module {
     }
   };
 
-  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+ func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  loop {}; // TODO
+ };
+
+ func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  loop {}; // TODO
+ };
+
+ func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
     switch (left, right) {
       case (#node(#R, l1, xy1, r1), r) {
         #node(
@@ -470,9 +478,41 @@ module {
           xy,
           r)
       };
-      //TBC
+      case (_, #node(#B, l2, xy2, r2)) {
+         rbalance(left, xy, #node(#R, l2, xy2, r2))
+      };
+      case (_, #node(#R, #node(#B, l2, xy2, r2), xy3, r3)) {
+         #node(#R,
+           #node(#B, left, xy, l2),
+           xy2,
+           rbalance(r2, xy3, redden r3))
+      };
+      case _ { Debug.trap "balLeft" };
     }
   };
+
+ func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    switch (left, right) {
+      case (l, #node(#R, l1, xy1, r1)) {
+        #node(
+          #R,
+          l,
+          xy,
+          #node(#B, l1, xy1, r1))
+      };
+      case (#node(#B, l1, xy1, r1), r) {
+         lbalance(#node(#R, l1, xy1, r1), xy, r);
+      };
+      case (#node(#R, l1 , xy1, #node(#B, l2, xy2, r2)), r3) {
+         #node(#R,
+           lbalance(l2, xy1, redden l1),
+           xy2,
+           #node(#B, r2, xy, r3))
+      };
+      case _ { Debug.trap "balRight" };
+    }
+  };
+
 
   func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
