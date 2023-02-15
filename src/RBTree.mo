@@ -30,6 +30,12 @@
 ///
 /// Note:
 /// * Tree operations, such as retrieval, insertion, and removal create `O(log(n))` temporary objects that become garbage.
+///
+/// Credits:
+///
+/// The core of this implementation is derived from Ken Friis Larsen's (RedBlackMap.sml)[https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml],
+/// which itself borrows heavily from Stefan Kahrs's published "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), (web appendix).
+
 
 import Debug "Debug";
 import I "Iter";
