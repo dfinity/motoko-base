@@ -465,7 +465,7 @@ module {
     }
   };
 
- func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
     switch (left, right) {
       case (#node(#R, #node(#R, l1, xy1, r1), xy2, r2), r) {
         #node(
@@ -485,9 +485,9 @@ module {
          #node(#B, left, xy, right)
       };
     }
- };
+  };
 
- func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, #node(#R, l2, xy2, r2))) {
         #node(
@@ -507,9 +507,9 @@ module {
          #node(#B, left, xy, right)
       };
     }
- };
+  };
 
- func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
     switch (left, right) {
       case (#node(#R, l1, xy1, r1), r) {
         #node(
@@ -531,7 +531,7 @@ module {
     }
   };
 
- func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, r1)) {
         #node(
