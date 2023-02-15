@@ -344,6 +344,9 @@ module {
 
   /// Remove the value associated with a given key.
   func removeRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
+  let (newT, r) = remove(t, compare, x);
+  (r,newT);
+/*    
     switch t {
       case (#leaf) { (null, #leaf) };
       case (#node(c, l, xy, r)) {
@@ -360,6 +363,7 @@ module {
         }
       }
     }
+ */
   };
 
   func bal<X, Y>(color : Color, lt : Tree<X, Y>, kv : (X, ?Y), rt : Tree<X, Y>) : Tree<X, Y> {
@@ -591,6 +595,56 @@ module {
         }
       }
     }
+  };
+
+  func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X,Y>, ?Y) {
+    func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : (Tree<X,Y>, ?Y) {
+      switch (compare (x, xy.0)) {
+        case (#equal) {
+          (append(left, right), xy.1)
+        };
+        case (#less) {
+          let (newLeft, r) = del left;
+          (switch left {
+            case (#node(#B, _, _, _)) {
+              balLeft(newLeft, xy, right)
+            };
+            case _ {
+              #node(#R, newLeft, xy, right)
+            }
+           },
+          r)
+        };
+        case (#greater) {
+          let (newRight, r) = del right;
+          (switch right {
+            case (#node(#B, _, _, _)) {
+              balRight(left, xy, newRight)
+            };
+            case _ {
+              #node(#R, left, xy, newRight)
+            }
+          },
+          r)
+        }
+      }
+    };
+    func del(tree : Tree<X,Y>) : (Tree<X,Y>, ?Y) {
+      switch tree {
+        case (#leaf) {
+          (tree, null)
+        };
+        case (#node(_, left, xy, right)) {
+          delNode(left, xy, right)
+        }
+      };
+    };
+    switch (del(tree)) {
+      case (#node(#R, left, xy, right), r) {
+        (#node(#B, left, xy, right), r);
+      };
+      case other { other };
+    };
   }
 
 }
