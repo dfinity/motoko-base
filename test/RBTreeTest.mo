@@ -514,7 +514,6 @@ run(
       test(
         "remove randomized",
         do {
-          Debug.print("remove");
           let tree = buildTestTree();
           var count = 0;
           for (key in testKeys.vals()) {

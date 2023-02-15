@@ -553,7 +553,6 @@ module {
     }
   };
 
-
   func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (#leaf,  _) { right };
