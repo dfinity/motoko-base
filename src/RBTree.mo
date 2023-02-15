@@ -452,7 +452,7 @@ module {
     y : Y
   )
   : (Tree<X,Y>, ?Y) {
-    var old : ?Y = null;
+    var y0 : ?Y = null;
     func ins(tree : Tree<X,Y>) : Tree<X,Y> {
       switch tree {
         case (#leaf) {
@@ -467,7 +467,7 @@ module {
               rbalance(left, xy, ins right)
             };
             case (#equal) {
-              old := xy.1;
+              y0 := xy.1;
               #node(#B, left, (x,?y), right)
             }
           }
@@ -481,7 +481,7 @@ module {
               #node(#R, left, xy, ins right)
             };
             case (#equal) {
-              old := xy.1;
+              y0 := xy.1;
               #node(#R, left, (x,?y), right)
             }
           }
@@ -490,9 +490,9 @@ module {
     };
     switch (ins tree) {
       case (#node(#R, left, xy, right)) {
-        (#node(#B, left, xy, right), old);
+        (#node(#B, left, xy, right), y0);
       };
-      case other { (other, old) };
+      case other { (other, y0) };
     };
   };
 
@@ -586,7 +586,7 @@ module {
   };
 
   func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X,Y>, ?Y) {
-    var old : ?Y = null;
+    var y0 : ?Y = null;
     func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : Tree<X,Y> {
       switch (compare (x, xy.0)) {
         case (#less) {
@@ -612,7 +612,7 @@ module {
           }
         };
         case (#equal) {
-          old := xy.1;
+          y0 := xy.1;
           append(left, right)
         };
       }
@@ -629,9 +629,9 @@ module {
     };
     switch (del(tree)) {
       case (#node(#R, left, xy, right)) {
-        (#node(#B, left, xy, right), old);
+        (#node(#B, left, xy, right), y0);
       };
-      case other { (other, old) };
+      case other { (other, y0) };
     };
   }
 
