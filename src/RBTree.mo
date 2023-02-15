@@ -279,7 +279,7 @@ module {
     /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
     public func entriesRev() : I.Iter<(K, V)> { iter(tree, #bwd) };
 
-  };
+  }; // end class
 
   type IterRep<X, Y> = List.List<{ #tr : Tree<X, Y>; #xy : (X, ?Y) }>;
 
@@ -462,11 +462,47 @@ module {
   };
 
  func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
-  loop {}; // TODO
+    switch (left, right) {
+      case (#node(#R, #node(#R, l1, xy1, r1), xy2, r2), r) {
+        #node(
+          #R,
+          #node(#B, l1, xy1, r1),
+          xy2,
+          #node(#B, r2, xy, r))
+      };
+      case (#node(#R, l1, xy1, #node(#R, l2, xy2, r2)), r) {
+        #node(
+          #R,
+          #node(#B, l1, xy1, l2),
+          xy2,
+          #node(#B, r2, xy, r))
+      };
+      case _ {
+         #node(#B, left, xy, right)
+      };
+    }
  };
 
  func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
-  loop {}; // TODO
+    switch (left, right) {
+      case (l, #node(#R, l1, xy1, #node(#R, l2, xy2, r2))) {
+        #node(
+          #R,
+          #node(#B, l, xy, l1),
+          xy1,
+          #node(#B, l2, xy2, r2))
+      };
+      case (l, #node(#R, #node(#R, l1, xy1, r1), xy2, r2)) {
+        #node(
+          #R,
+          #node(#B, l, xy, l1),
+          xy1,
+          #node(#B, r1, xy2, r2))
+      };
+      case _ {
+         #node(#B, left, xy, right)
+      };
+    }
  };
 
  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
