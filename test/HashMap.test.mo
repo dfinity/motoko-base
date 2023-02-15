@@ -1,5 +1,3 @@
-// @testmode interpreter
-
 import Prim "mo:⛔";
 import HashMap "mo:base/HashMap";
 import Hash "mo:base/Hash";

@@ -1,3 +1,5 @@
+// @testmode wasmer
+
 import List "mo:base/List";
 import Nat "mo:base/Nat";
 import Order "mo:base/Order";

@@ -1,3 +1,5 @@
+// @testmode wasmer
+
 import Nat "mo:base/Nat";
 import TrieSet "mo:base/TrieSet";
 import Nat32 "mo:base/Nat32";

@@ -1,3 +1,5 @@
+// @testmode wasmer
+
 import Int64 "mo:base/Int64";
 import Order "mo:base/Order";
 import Iter "mo:base/Iter";

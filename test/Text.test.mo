@@ -1,3 +1,5 @@
+// @testmode wasmer
+
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 import Blob "mo:base/Blob";

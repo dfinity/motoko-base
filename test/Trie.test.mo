@@ -1,3 +1,5 @@
+// @testmode wasmer
+
 import Trie "mo:base/Trie";
 import List "mo:base/List";
 import Nat "mo:base/Nat";
