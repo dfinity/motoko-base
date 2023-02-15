@@ -45,7 +45,7 @@ import List "List";
 import Nat "Nat";
 import O "Order";
 
-// TODO: RBTree is missing an `unshare` function to reconsitute the object from its `share`ed data
+// TODO: RBTree is missing an `unshare` function to reconstitute the object from its `share`ed data
 
 // TODO: a faster, more compact and less indirect representation would be:
 // type Tree<K, V> = {
@@ -54,6 +54,7 @@ import O "Order";
 //  #leaf
 //};
 // (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant optin, for considerable heap savings.
+
 // FUTURE: deprecate RBTree.mo and replace by RedBlackMap.mo, using this new representation
 
 module {
