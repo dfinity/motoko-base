@@ -1,0 +1,183 @@
+import RBTree "mo:base/RBTree";
+import Nat "mo:base/Nat";
+import Iter "mo:base/Iter";
+import Debug "mo:base/Debug";
+import Array "mo:base/Array";
+
+import Suite "mo:matchers/Suite";
+import T "mo:matchers/Testable";
+import M "mo:matchers/Matchers";
+
+let { run; test; suite } = Suite;
+
+let entryTestable = T.tuple2Testable(T.natTestable, T.natTestable);
+
+class TreeMatcher(expected : [(Nat, Nat)]) : M.Matcher<RBTree.RBTree<Nat, Nat>> {
+  public func describeMismatch(actual : RBTree.RBTree<Nat, Nat>, description : M.Description) {
+    Debug.print(debug_show (Iter.toArray(actual.entries())) # " should be " # debug_show (expected))
+  };
+
+  public func matches(actual : RBTree.RBTree<Nat, Nat>) : Bool {
+    Iter.toArray(actual.entries()) == expected
+  }
+};
+
+func checkTree(tree : RBTree.RBTree<Nat, Nat>) {
+  ignore blackDepth(tree.share())
+};
+
+func blackDepth(node : RBTree.Tree<Nat, Nat>) : Nat {
+  switch node {
+    case (#leaf) 0;
+    case (#node(color, left, (key, _), right)) {
+      checkKey(left, func(x) { x < key });
+      checkKey(right, func(x) { x > key });
+      let leftBlacks = blackDepth(left);
+      let rightBlacks = blackDepth(right);
+      assert (leftBlacks == rightBlacks);
+      switch color {
+        case (#R) {
+          assert (not isRed(left));
+          assert (not isRed(right));
+          leftBlacks
+        };
+        case (#B) {
+          leftBlacks + 1
+        }
+      }
+    }
+  }
+};
+
+func isRed(node : RBTree.Tree<Nat, Nat>) : Bool {
+  switch node {
+    case (#leaf) false;
+    case (#node(color, _, _, _)) color == #R
+  }
+};
+
+func checkKey(node : RBTree.Tree<Nat, Nat>, isValid : Nat -> Bool) {
+  switch node {
+    case (#leaf) {};
+    case (#node(_, _, (key, _), _)) {
+      assert (isValid(key))
+    }
+  }
+};
+
+func insert(tree : RBTree.RBTree<Nat, Nat>, key : Nat) {
+  tree.put(key, key);
+  checkTree(tree)
+};
+
+func remove(tree : RBTree.RBTree<Nat, Nat>, key : Nat) {
+  let value = tree.remove(key);
+  assert (value == ?key);
+  checkTree(tree)
+};
+
+func getAll(tree : RBTree.RBTree<Nat, Nat>, keys : [Nat]) {
+  for (key in keys.vals()) {
+    let value = tree.get(key);
+    assert (value == ?key)
+  }
+};
+
+func clear(tree : RBTree.RBTree<Nat, Nat>) {
+  for ((key, value) in tree.entries()) {
+    // stable iteration
+    assert (value == key);
+    let result = tree.remove(key);
+    assert (result == ?key);
+    checkTree(tree)
+  }
+};
+
+func expectedEntries(keys : [Nat]) : [(Nat, Nat)] {
+  Array.tabulate<(Nat, Nat)>(keys.size(), func(index) { (keys[index], keys[index]) })
+};
+
+/* --------------------------------------- */
+
+var buildTestTree = func() : RBTree.RBTree<Nat, Nat> {
+  RBTree.RBTree<Nat, Nat>(Nat.compare)
+};
+
+/* --------------------------------------- */
+
+object Random {
+  var number = 4711;
+  public func next() : Nat {
+    number := (123138118391 * number + 133489131) % 9999;
+    number
+  }
+};
+
+func shuffle(array : [Nat]) : [Nat] {
+  let extended = Array.map<Nat, (Nat, Nat)>(array, func(value) { (value, Random.next()) });
+  let sorted = Array.sort<(Nat, Nat)>(
+    extended,
+    func(first, second) {
+      Nat.compare(first.1, second.1)
+    }
+  );
+  Array.map<(Nat, Nat), Nat>(
+    sorted,
+    func(value) {
+      value.0
+    }
+  )
+};
+
+let testSize = 6000;
+
+let testKeys = shuffle(Array.tabulate<Nat>(testSize, func(index) { index }));
+
+buildTestTree := func() : RBTree.RBTree<Nat, Nat> {
+  let tree = RBTree.RBTree<Nat, Nat>(Nat.compare);
+  for (key in testKeys.vals()) {
+    insert(tree, key)
+  };
+  tree
+};
+
+var expected = expectedEntries(Array.sort(testKeys, Nat.compare));
+
+run(
+  suite(
+    "random tree",
+    [
+      test(
+        "size",
+        RBTree.size(buildTestTree().share()),
+        M.equals(T.nat(testSize))
+      ),
+      test(
+        "remove randomized",
+        do {
+          let tree = buildTestTree();
+          var count = 0;
+          for (key in testKeys.vals()) {
+            if (Random.next() % 2 == 0) {
+              let result = tree.remove(key);
+              assert (result == ?key);
+              checkTree(tree);
+              count += 1
+            }
+          };
+          RBTree.size(tree.share()) == +testKeys.size() - count
+        },
+        M.equals(T.bool(true))
+      ),
+      test(
+        "clear",
+        do {
+          let tree = buildTestTree();
+          clear(tree);
+          tree
+        },
+        TreeMatcher([])
+      )
+    ]
+  )
+)
