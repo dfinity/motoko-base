@@ -504,7 +504,7 @@ module {
           #node(#B, r1, xy2, r2))
       };////
       case _ {
-         #node(#B, left, xy, right)
+        #node(#B, left, xy, right)
       };///
     }
   };
@@ -519,13 +519,13 @@ module {
           r)
       };////
       case (_, #node(#B, l2, xy2, r2)) {
-         rbalance(left, xy, #node(#R, l2, xy2, r2))
+        rbalance(left, xy, #node(#R, l2, xy2, r2))
       };////
       case (_, #node(#R, #node(#B, l2, xy2, r2), xy3, r3)) {
-         #node(#R,
-           #node(#B, left, xy, l2),
-           xy2,
-           rbalance(r2, xy3, redden r3))
+        #node(#R,
+          #node(#B, left, xy, l2),
+          xy2,
+          rbalance(r2, xy3, redden r3))
       };////
       case _ { Debug.trap "balLeft" };
     }
@@ -534,20 +534,19 @@ module {
   func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, r1)) {
-        #node(
-          #R,
+        #node(#R,
           l,
           xy,
           #node(#B, l1, xy1, r1))
       };////
       case (#node(#B, l1, xy1, r1), r) {
-         lbalance(#node(#R, l1, xy1, r1), xy, r);
+        lbalance(#node(#R, l1, xy1, r1), xy, r);
       };////
       case (#node(#R, l1, xy1, #node(#B, l2, xy2, r2)), r3) {
-         #node(#R,
-           lbalance(redden l1, xy1, l2), //// was buggy
-           xy2,
-           #node(#B, r2, xy, r3))
+        #node(#R,
+          lbalance(redden l1, xy1, l2), //// was buggy
+          xy2,
+          #node(#B, r2, xy, r3))
       };////
       case _ { Debug.trap "balRight" };
     }
@@ -578,8 +577,7 @@ module {
       case (#node(#R, l1, xy1, r1), t2) {
         #node(#R, l1, xy1, append(r1, t2))
       };////
-      case (#node(#B, l1, xy1, r1),
-            #node (#B, l2, xy2, r2)) {
+      case (#node(#B, l1, xy1, r1), #node (#B, l2, xy2, r2)) {
         switch (append (r1, l2)) { //// was buggy
           case (#node (#R, l3, xy3, r3)) {
             #node(#R,
