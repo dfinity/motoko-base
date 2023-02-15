@@ -344,26 +344,8 @@ module {
 
   /// Remove the value associated with a given key.
   func removeRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
-  let (newT, r) = remove(t, compare, x);
-  (r,newT);
-/*    
-    switch t {
-      case (#leaf) { (null, #leaf) };
-      case (#node(c, l, xy, r)) {
-        switch (compare(x, xy.0)) {
-          case (#less) {
-            let (yo, l2) = removeRec(x, compare, l);
-            (yo, #node(c, l2, xy, r))
-          };
-          case (#equal) { (xy.1, #node(c, l, (x, null), r)) };
-          case (#greater) {
-            let (yo, r2) = removeRec(x, compare, r);
-            (yo, #node(c, l, xy, r2))
-          }
-        }
-      }
-    }
- */
+    let (t1, r) = remove(t, compare, x);
+    (r, t1);
   };
 
   func bal<X, Y>(color : Color, lt : Tree<X, Y>, kv : (X, ?Y), rt : Tree<X, Y>) : Tree<X, Y> {
