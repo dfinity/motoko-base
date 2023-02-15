@@ -586,42 +586,41 @@ module {
   };
 
   func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X,Y>, ?Y) {
-    // TODO optimize using var old,like insert
-    func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : (Tree<X,Y>, ?Y) {
+    var old : ?Y = null;
+    func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : Tree<X,Y> {
       switch (compare (x, xy.0)) {
-        case (#equal) {
-          (append(left, right), xy.1)
-        };
         case (#less) {
-          let (newLeft, r) = del left;
-          (switch left {
+          let newLeft = del left;
+          switch left {
             case (#node(#B, _, _, _)) {
               balLeft(newLeft, xy, right)
             };
             case _ {
               #node(#R, newLeft, xy, right)
             }
-           },
-          r)
+          }
         };
         case (#greater) {
-          let (newRight, r) = del right;
-          (switch right {
+          let newRight = del right;
+          switch right {
             case (#node(#B, _, _, _)) {
               balRight(left, xy, newRight)
             };
             case _ {
               #node(#R, left, xy, newRight)
             }
-          },
-          r)
-        }
+          }
+        };
+        case (#equal) {
+          old := xy.1;
+          append(left, right)
+        };
       }
     };
-    func del(tree : Tree<X,Y>) : (Tree<X,Y>, ?Y) {
+    func del(tree : Tree<X,Y>) : Tree<X,Y> {
       switch tree {
         case (#leaf) {
-          (tree, null)
+          tree
         };
         case (#node(_, left, xy, right)) {
           delNode(left, xy, right)
@@ -629,10 +628,10 @@ module {
       };
     };
     switch (del(tree)) {
-      case (#node(#R, left, xy, right), r) {
-        (#node(#B, left, xy, right), r);
+      case (#node(#R, left, xy, right)) {
+        (#node(#B, left, xy, right), old);
       };
-      case other { other };
+      case other { (other, old) };
     };
   }
 
