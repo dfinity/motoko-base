@@ -1510,6 +1510,9 @@ module {
   /// Combine two nodes that may have a reduced size after an entry deletion.
   func combineReducedNodes<K, V>(left : Trie<K, V>, right : Trie<K, V>) : Trie<K, V> {
     switch ((left, right)) {
+      case (#empty, #empty) {
+        #empty
+      };
       case (#leaf(leftLeaf), #empty) {
         #leaf(leftLeaf)
       };
