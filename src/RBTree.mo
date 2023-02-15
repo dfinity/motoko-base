@@ -33,8 +33,10 @@
 ///
 /// Credits:
 ///
-/// The core of this implementation is derived from Ken Friis Larsen's (RedBlackMap.sml)[https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml],
-/// which itself borrows heavily from Stefan Kahrs's published "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), (web appendix).
+/// The core of this implementation is derived from Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml)
+/// which itself follows:
+///
+/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), (version 1 in web appendix).
 
 
 import Debug "Debug";
@@ -42,6 +44,17 @@ import I "Iter";
 import List "List";
 import Nat "Nat";
 import O "Order";
+
+// TODO: RBTree is missing an `unshare` function to reconsitute the object from its `share`ed data
+
+// TODO: a faster, more compact and less indirect representation would be:
+// type Tree<K, V> = {
+//  #red : (Tree<K, V>, K, V, Tree<K, V>);
+//  #black : (Tree<K, V>, K, V, Tree<K, V>);
+//  #leaf
+//};
+// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant optin, for considerable heap savings.
+// FUTURE: deprecate RBTree.mo and replace by RedBlackMap.mo, using this new representation
 
 module {
 
@@ -55,6 +68,8 @@ module {
     #node : (Color, Tree<K, V>, (K, ?V), Tree<K, V>);
     #leaf
   };
+
+
 
   /// A map from keys of type `K` to values of type `V` implemented as a red-black tree.
   /// The entries of key-value pairs are ordered by `compare` function applied to the keys.
