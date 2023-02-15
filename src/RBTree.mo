@@ -36,7 +36,7 @@
 /// The core of this implementation is derived from Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml)
 /// which itself follows:
 ///
-/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), (version 1 in web appendix).
+/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), (version 1 in web appendix)[http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html].
 
 
 import Debug "Debug";
