@@ -33,10 +33,10 @@
 ///
 /// Credits:
 ///
-/// The core of this implementation is derived from Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml)
-/// which itself follows:
+/// The core of this implementation is derived from:
 ///
-/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), (version 1 in web appendix)[http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html].
+/// * Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
+/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
 
 
 import Debug "Debug";
@@ -53,7 +53,8 @@ import O "Order";
 //  #black : (Tree<K, V>, K, V, Tree<K, V>);
 //  #leaf
 //};
-// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant optin, for considerable heap savings.
+// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant optin, for considerable heap savings.)
+// It would also make sense to maintain the size in a separate root for 0(1) access.
 
 // FUTURE: deprecate RBTree.mo and replace by RedBlackMap.mo, using this new representation
 
