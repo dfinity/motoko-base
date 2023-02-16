@@ -30,12 +30,33 @@
 ///
 /// Note:
 /// * Tree operations, such as retrieval, insertion, and removal create `O(log(n))` temporary objects that become garbage.
+///
+/// Credits:
+///
+/// The core of this implementation is derived from:
+///
+/// * Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
+/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
+
 
 import Debug "Debug";
 import I "Iter";
 import List "List";
 import Nat "Nat";
 import O "Order";
+
+// TODO: RBTree is missing an `unshare` function to reconstitute the object from its `share`ed data
+
+// TODO: a faster, more compact and less indirect representation would be:
+// type Tree<K, V> = {
+//  #red : (Tree<K, V>, K, V, Tree<K, V>);
+//  #black : (Tree<K, V>, K, V, Tree<K, V>);
+//  #leaf
+//};
+// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant optin, for considerable heap savings.)
+// It would also make sense to maintain the size in a separate root for 0(1) access.
+
+// FUTURE: deprecate RBTree.mo and replace by RedBlackMap.mo, using this new representation
 
 module {
 
@@ -49,6 +70,8 @@ module {
     #node : (Color, Tree<K, V>, (K, ?V), Tree<K, V>);
     #leaf
   };
+
+
 
   /// A map from keys of type `K` to values of type `V` implemented as a red-black tree.
   /// The entries of key-value pairs are ordered by `compare` function applied to the keys.
@@ -142,7 +165,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func replace(key : K, value : V) : ?V {
-      let (res, t) = insertRoot(key, compare, value, tree);
+      let (t, res) = insert(tree, compare, key, value);
       tree := t;
       res
     };
@@ -166,7 +189,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func put(key : K, value : V) {
-      let (res, t) = insertRoot(key, compare, value, tree);
+      let (t, res) = insert(tree, compare, key, value);
       tree := t
     };
 
@@ -279,7 +302,7 @@ module {
     /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
     public func entriesRev() : I.Iter<(K, V)> { iter(tree, #bwd) };
 
-  };
+  }; // end class
 
   type IterRep<X, Y> = List.List<{ #tr : Tree<X, Y>; #xy : (X, ?Y) }>;
 
@@ -344,68 +367,8 @@ module {
 
   /// Remove the value associated with a given key.
   func removeRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
-    switch t {
-      case (#leaf) { (null, #leaf) };
-      case (#node(c, l, xy, r)) {
-        switch (compare(x, xy.0)) {
-          case (#less) {
-            let (yo, l2) = removeRec(x, compare, l);
-            (yo, #node(c, l2, xy, r))
-          };
-          case (#equal) { (xy.1, #node(c, l, (x, null), r)) };
-          case (#greater) {
-            let (yo, r2) = removeRec(x, compare, r);
-            (yo, #node(c, l, xy, r2))
-          }
-        }
-      }
-    }
-  };
-
-  func bal<X, Y>(color : Color, lt : Tree<X, Y>, kv : (X, ?Y), rt : Tree<X, Y>) : Tree<X, Y> {
-    // thank you, algebraic pattern matching!
-    // following notes from [Ravi Chugh](https://www.classes.cs.uchicago.edu/archive/2019/spring/22300-1/lectures/RedBlackTrees/index.html)
-    switch (color, lt, kv, rt) {
-      case (#B, #node(#R, #node(#R, a, x, b), y, c), z, d) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
-      };
-      case (#B, #node(#R, a, x, #node(#R, b, y, c)), z, d) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
-      };
-      case (#B, a, x, #node(#R, #node(#R, b, y, c), z, d)) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
-      };
-      case (#B, a, x, #node(#R, b, y, #node(#R, c, z, d))) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
-      };
-      case _ { #node(color, lt, kv, rt) }
-    }
-  };
-
-  func insertRoot<X, Y>(x : X, compare : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
-    switch (insertRec(x, compare, y, t)) {
-      case (_, #leaf) { assert false; loop {} };
-      case (yo, #node(_, l, xy, r)) { (yo, #node(#B, l, xy, r)) }
-    }
-  };
-
-  func insertRec<X, Y>(x : X, compare : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
-    switch t {
-      case (#leaf) { (null, #node(#R, #leaf, (x, ?y), #leaf)) };
-      case (#node(c, l, xy, r)) {
-        switch (compare(x, xy.0)) {
-          case (#less) {
-            let (yo, l2) = insertRec(x, compare, y, l);
-            (yo, bal(c, l2, xy, r))
-          };
-          case (#equal) { (xy.1, #node(c, l, (x, ?y), r)) };
-          case (#greater) {
-            let (yo, r2) = insertRec(x, compare, y, r);
-            (yo, bal(c, l, xy, r2))
-          }
-        }
-      }
-    }
+    let (t1, r) = remove(t, compare, x);
+    (r, t1);
   };
 
   func getRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : ?Y {
@@ -449,5 +412,250 @@ module {
       }
     }
   };
+
+  func redden<X, Y>(t : Tree<X, Y>) : Tree<X, Y> {
+    switch t {
+      case (#node (#B, l, xy, r)) {
+        (#node (#R, l, xy, r))
+      };
+      case _ {
+        Debug.trap "RBTree.red"
+      }
+    }
+  };
+
+  func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    switch (left, right) {
+      case (#node(#R, #node(#R, l1, xy1, r1), xy2, r2), r) {
+        #node(
+          #R,
+          #node(#B, l1, xy1, r1),
+          xy2,
+          #node(#B, r2, xy, r))
+      };
+      case (#node(#R, l1, xy1, #node(#R, l2, xy2, r2)), r) {
+        #node(
+          #R,
+          #node(#B, l1, xy1, l2),
+          xy2,
+          #node(#B, r2, xy, r))
+      };
+      case _ {
+         #node(#B, left, xy, right)
+      }
+    }
+  };
+
+  func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    switch (left, right) {
+      case (l, #node(#R, l1, xy1, #node(#R, l2, xy2, r2))) {
+        #node(
+          #R,
+          #node(#B, l, xy, l1),
+          xy1,
+          #node(#B, l2, xy2, r2))
+      };
+      case (l, #node(#R, #node(#R, l1, xy1, r1), xy2, r2)) {
+        #node(
+          #R,
+          #node(#B, l, xy, l1),
+          xy1,
+          #node(#B, r1, xy2, r2))
+      };
+      case _ {
+        #node(#B, left, xy, right)
+      };
+    }
+  };
+
+  func insert<X, Y>(
+    tree : Tree<X, Y>,
+    compare : (X, X) -> O.Order,
+    x : X,
+    y : Y
+  )
+  : (Tree<X,Y>, ?Y) {
+    var y0 : ?Y = null;
+    func ins(tree : Tree<X,Y>) : Tree<X,Y> {
+      switch tree {
+        case (#leaf) {
+          #node(#R, #leaf, (x,?y), #leaf)
+        };
+        case (#node(#B, left, xy, right)) {
+          switch (compare (x, xy.0)) {
+            case (#less) {
+              lbalance(ins left, xy, right)
+            };
+            case (#greater) {
+              rbalance(left, xy, ins right)
+            };
+            case (#equal) {
+              y0 := xy.1;
+              #node(#B, left, (x,?y), right)
+            }
+          }
+        };
+        case (#node(#R, left, xy, right)) {
+          switch (compare (x, xy.0)) {
+            case (#less) {
+              #node(#R, ins left, xy, right)
+            };
+            case (#greater) {
+              #node(#R, left, xy, ins right)
+            };
+            case (#equal) {
+              y0 := xy.1;
+              #node(#R, left, (x,?y), right)
+            }
+          }
+        }
+      };
+    };
+    switch (ins tree) {
+      case (#node(#R, left, xy, right)) {
+        (#node(#B, left, xy, right), y0);
+      };
+      case other { (other, y0) };
+    };
+  };
+
+
+  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    switch (left, right) {
+      case (#node(#R, l1, xy1, r1), r) {
+        #node(
+          #R,
+          #node(#B, l1, xy1, r1),
+          xy,
+          r)
+      };
+      case (_, #node(#B, l2, xy2, r2)) {
+        rbalance(left, xy, #node(#R, l2, xy2, r2))
+      };
+      case (_, #node(#R, #node(#B, l2, xy2, r2), xy3, r3)) {
+        #node(#R,
+          #node(#B, left, xy, l2),
+          xy2,
+          rbalance(r2, xy3, redden r3))
+      };
+      case _ { Debug.trap "balLeft" };
+    }
+  };
+
+  func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+    switch (left, right) {
+      case (l, #node(#R, l1, xy1, r1)) {
+        #node(#R,
+          l,
+          xy,
+          #node(#B, l1, xy1, r1))
+      };
+      case (#node(#B, l1, xy1, r1), r) {
+        lbalance(#node(#R, l1, xy1, r1), xy, r);
+      };
+      case (#node(#R, l1, xy1, #node(#B, l2, xy2, r2)), r3) {
+        #node(#R,
+          lbalance(redden l1, xy1, l2),
+          xy2,
+          #node(#B, r2, xy, r3))
+      };
+      case _ { Debug.trap "balRight" };
+    }
+  };
+
+  func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
+    switch (left, right) {
+      case (#leaf,  _) { right };
+      case (_,  #leaf) { left };
+      case (#node (#R, l1, xy1, r1),
+            #node (#R, l2, xy2, r2)) {
+        switch (append (r1, l2)) {
+          case (#node (#R, l3, xy3, r3)) {
+            #node(
+              #R,
+              #node(#R, l1, xy1, l3),
+              xy3,
+              #node(#R, r3, xy2, r2))
+          };
+          case r1l2 {
+            #node(#R, l1, xy1, #node(#R, r1l2, xy2, r2))
+          }
+        }
+      };
+      case (t1, #node(#R, l2, xy2, r2)) {
+        #node(#R, append(t1, l2), xy2, r2)
+      };
+      case (#node(#R, l1, xy1, r1), t2) {
+        #node(#R, l1, xy1, append(r1, t2))
+      };
+      case (#node(#B, l1, xy1, r1), #node (#B, l2, xy2, r2)) {
+        switch (append (r1, l2)) {
+          case (#node (#R, l3, xy3, r3)) {
+            #node(#R,
+              #node(#B, l1, xy1, l3),
+              xy3,
+              #node(#B, r3, xy2, r2))
+          };
+          case r1l2 {
+            balLeft (
+              l1,
+              xy1,
+              #node(#B, r1l2, xy2, r2)
+            )
+          }
+        }
+      }
+    }
+  };
+
+  func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X,Y>, ?Y) {
+    var y0 : ?Y = null;
+    func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : Tree<X,Y> {
+      switch (compare (x, xy.0)) {
+        case (#less) {
+          let newLeft = del left;
+          switch left {
+            case (#node(#B, _, _, _)) {
+              balLeft(newLeft, xy, right)
+            };
+            case _ {
+              #node(#R, newLeft, xy, right)
+            }
+          }
+        };
+        case (#greater) {
+          let newRight = del right;
+          switch right {
+            case (#node(#B, _, _, _)) {
+              balRight(left, xy, newRight)
+            };
+            case _ {
+              #node(#R, left, xy, newRight)
+            }
+          }
+        };
+        case (#equal) {
+          y0 := xy.1;
+          append(left, right)
+        };
+      }
+    };
+    func del(tree : Tree<X,Y>) : Tree<X,Y> {
+      switch tree {
+        case (#leaf) {
+          tree
+        };
+        case (#node(_, left, xy, right)) {
+          delNode(left, xy, right)
+        }
+      };
+    };
+    switch (del(tree)) {
+      case (#node(#R, left, xy, right)) {
+        (#node(#B, left, xy, right), y0);
+      };
+      case other { (other, y0) };
+    };
+  }
 
 }
