@@ -4,6 +4,10 @@ import Iter "mo:base/Iter";
 import Debug "mo:base/Debug";
 import Array "mo:base/Array";
 
+import Deque "mo:base/Deque";
+import Buffer "mo:base/Buffer";
+
+
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
@@ -153,7 +157,7 @@ run(
         M.equals(T.nat(testSize))
       ),
       test(
-        "remove randomized",
+        "remove randomized (larger tree)",
         do {
           let tree = buildTestTree();
           var count = 0;
@@ -177,6 +181,46 @@ run(
           tree
         },
         TreeMatcher([])
+      ),
+      test(
+        "random insert and delete",
+        do {
+          var available = Deque.empty<Nat>();
+          for (key in testKeys.vals()) {
+            available := Deque.pushBack(available, key);
+          };
+          let capacity = 1000;
+          let expected = Buffer.Buffer<Nat>(capacity);
+          let tree = RBTree.RBTree<Nat, Nat>(Nat.compare);
+          let randomSteps = 1000;
+          for (step in Iter.range(0, randomSteps)) {
+            if (expected.size() < 10 or Random.next() % 3 != 0) {
+              let result = Deque.popFront(available);
+              switch (result) {
+                case null assert(false);
+                case (?(key, reduced)) {
+                  available := reduced;
+                  tree.put(key, key);
+                  expected.add(key);
+                }
+              }
+            } else {
+              let index = Random.next() % expected.size();
+              let key = expected.remove(index);
+              available := Deque.pushBack(available, key);
+              let result = tree.remove(key);
+              switch result {
+                case null assert(false);
+                case (?value) {
+                  assert(key == value);
+                }
+              }
+            };
+            checkTree(tree);
+          };
+          Iter.toArray(tree.entries()) == expectedEntries(Array.sort(Buffer.toArray(expected), Nat.compare))
+        },
+        M.equals(T.bool(true))
       )
     ]
   )
