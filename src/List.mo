@@ -68,7 +68,7 @@ module {
   /// List.last<Nat>(?(0, ?(1, null))) // => ?1
   /// ```
   ///
-  /// Runtime: O(1)
+  /// Runtime: O(size)
   ///
   /// Space: O(1)
   public func last<T>(l : List<T>) : ?T {
@@ -79,7 +79,7 @@ module {
     }
   };
 
-  /// Remove the head of the list, returning the optioned head and the tail of the list in a pair. 
+  /// Remove the head of the list, returning the optioned head and the tail of the list in a pair.
   /// Returns `(null, null)` if the list is empty.
   ///
   /// Example:
@@ -436,7 +436,7 @@ module {
   ///
   /// Runtime: O(size(list))
   ///
-  /// Space: O(1)
+  /// Space: O(1) heap, O(1) stack
   ///
   /// *Runtime and space assumes that `combine` runs in O(1) time and space.
   public func foldLeft<T, S>(list : List<T>, base : S, combine : (S, T) -> S) : S {
@@ -461,9 +461,9 @@ module {
   /// ) // => "123"
   /// ```
   ///
-  /// Runtime: O(size)
+  /// Runtime: O(size(list))
   ///
-  /// Space: O(1)
+  /// Space: O(1) heap, O(size(list)) stack
   ///
   /// *Runtime and space assumes that `combine` runs in O(1) time and space.
   public func foldRight<T, S>(list : List<T>, base : S, combine : (T, S) -> S) : S {
@@ -696,9 +696,9 @@ module {
   /// ) // => ?(0, ?(0, ?(0, null)))
   /// ```
   ///
-  /// Runtime: O(1)
+  /// Runtime: O(n)
   ///
-  /// Space: O(1)
+  /// Space: O(n)
   public func replicate<T>(n : Nat, x : T) : List<T> {
     var i = 0;
     var l : List<T> = null;
