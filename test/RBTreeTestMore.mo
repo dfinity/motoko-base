@@ -7,6 +7,7 @@ import Array "mo:base/Array";
 import Deque "mo:base/Deque";
 import Buffer "mo:base/Buffer";
 
+
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
@@ -186,7 +187,7 @@ run(
         do {
           var available = Deque.empty<Nat>();
           for (key in testKeys.vals()) {
-            available := Deque.pushBack(available, key)
+            available := Deque.pushBack(available, key);
           };
           let capacity = 1000;
           let expected = Buffer.Buffer<Nat>(capacity);
@@ -196,11 +197,11 @@ run(
             if (expected.size() < 10 or Random.next() % 3 != 0) {
               let result = Deque.popFront(available);
               switch (result) {
-                case null assert (false);
+                case null assert(false);
                 case (?(key, reduced)) {
                   available := reduced;
                   tree.put(key, key);
-                  expected.add(key)
+                  expected.add(key);
                 }
               }
             } else {
@@ -209,13 +210,13 @@ run(
               available := Deque.pushBack(available, key);
               let result = tree.remove(key);
               switch result {
-                case null assert (false);
+                case null assert(false);
                 case (?value) {
-                  assert (key == value)
+                  assert(key == value);
                 }
               }
             };
-            checkTree(tree)
+            checkTree(tree);
           };
           Iter.toArray(tree.entries()) == expectedEntries(Array.sort(Buffer.toArray(expected), Nat.compare))
         },
