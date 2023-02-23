@@ -117,21 +117,20 @@ module {
       tree
     };
 
-    /// Reset the current state of the tree object to a snapshot of the internal, functional tree representation.
+    /// Reset the current state of the tree object from a functional tree representation.
     ///
     /// Example:
     /// ```motoko include=initialize
+    /// import Iter "mo:base/Iter";
     ///
     /// tree.put(1, "one");
-    /// let snapshot = tree.share();
-    /// tree.put(2, "second");
-    /// tree.size() // => 2
-    /// tree.unshare(snapshot); // reset the tree object from the snapshot
-    /// tree.size() // => 1 (Only the first insertion was part of the snapshot.)
+    /// let snapshot = tree.share(); // save the current state of the tree object in a snapshot
+    /// tree.put(2, "two");
+    /// tree.unshare(snapshot); // restore the tree object from the snapshot
+    /// Iter.toArray(tree.entries()) // => [(1, "one")]
     /// ```
     ///
-    /// Useful for storing the state of a tree object as a stable variable, determining its size, pretty-printing, and sharing it across async function calls,
-    /// i.e. passing it in async arguments or async results.
+    /// Useful for restoring the state of a tree object from stable data, saved, for example, in a stable variable.
     ///
     /// Runtime: `O(1)`.
     /// Space: `O(1)`.
