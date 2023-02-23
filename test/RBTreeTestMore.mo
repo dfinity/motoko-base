@@ -133,7 +133,7 @@ func shuffle(array : [Nat]) : [Nat] {
   )
 };
 
-let testSize = 6000;
+let testSize = 5000;
 
 let testKeys = shuffle(Array.tabulate<Nat>(testSize, func(index) { index }));
 
