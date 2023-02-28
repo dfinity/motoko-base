@@ -45,8 +45,6 @@ import List "List";
 import Nat "Nat";
 import O "Order";
 
-// TODO: RBTree is missing an `unshare` function to reconstitute the object from its `share`ed data
-
 // TODO: a faster, more compact and less indirect representation would be:
 // type Tree<K, V> = {
 //  #red : (Tree<K, V>, K, V, Tree<K, V>);
@@ -110,7 +108,7 @@ module {
     /// RBTree.size(treeSnapshot) // => 1 (Only the first insertion is part of the snapshot.)
     /// ```
     ///
-    /// Useful for storing the tree as a stable variable, determining its size, pretty-printing, and sharing it across async function calls,
+    /// Useful for storing the state of a tree object as a stable variable, determining its size, pretty-printing, and sharing it across async function calls,
     /// i.e. passing it in async arguments or async results.
     ///
     /// Runtime: `O(1)`.
@@ -118,6 +116,28 @@ module {
     public func share() : Tree<K, V> {
       tree
     };
+
+    /// Reset the current state of the tree object from a functional tree representation.
+    ///
+    /// Example:
+    /// ```motoko include=initialize
+    /// import Iter "mo:base/Iter";
+    ///
+    /// tree.put(1, "one");
+    /// let snapshot = tree.share(); // save the current state of the tree object in a snapshot
+    /// tree.put(2, "two");
+    /// tree.unshare(snapshot); // restore the tree object from the snapshot
+    /// Iter.toArray(tree.entries()) // => [(1, "one")]
+    /// ```
+    ///
+    /// Useful for restoring the state of a tree object from stable data, saved, for example, in a stable variable.
+    ///
+    /// Runtime: `O(1)`.
+    /// Space: `O(1)`.
+    public func unshare(t : Tree<K, V>) : () {
+      tree := t
+    };
+
 
     /// Retrieve the value associated with a given key, if present. Returns `null`, if the key is absent.
     /// The key is searched according to the `compare` function defined on the class instantiation.
