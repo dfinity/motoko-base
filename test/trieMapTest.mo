@@ -4,6 +4,8 @@ import Iter "mo:base/Iter";
 import Hash "mo:base/Hash";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
+import Array "mo:base/Array";
+import Order "mo:base/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -355,6 +357,156 @@ let suite = Suite.suite(
 );
 
 Suite.run(suite);
+
+/* --------------------------------------- */
+
+object Random {
+  var number = 4711;
+  public func next() : Nat {
+    number := (123138118391 * number + 133489131) % 9999;
+    number
+  }
+};
+
+func shuffle(array : [Nat]) : [Nat] {
+  let extended = Array.map<Nat, (Nat, Nat)>(array, func(value) { (value, Random.next()) });
+  let sorted = Array.sort<(Nat, Nat)>(
+    extended,
+    func(first, second) {
+      Nat.compare(first.1, second.1)
+    }
+  );
+  Array.map<(Nat, Nat), Nat>(
+    sorted,
+    func(value) {
+      value.0
+    }
+  )
+};
+
+let testSize = 1_000;
+
+let testKeys = shuffle(Array.tabulate<Nat>(testSize, func(index) { index }));
+
+func buildTestTrie() : TrieMap.TrieMap<Nat, Text> {
+  let trie = TrieMap.TrieMap<Nat, Text>(Nat.equal, Hash.hash);
+  for (key in testKeys.vals()) {
+    trie.put(key, debug_show (key))
+  };
+  trie
+};
+
+func expectedKeyValuePairs(keys : [Nat]) : [(Nat, Text)] {
+  Array.tabulate<(Nat, Text)>(keys.size(), func(index) { (keys[index], debug_show (keys[index])) })
+};
+
+let expectedEntries = expectedKeyValuePairs(Array.sort(testKeys, Nat.compare));
+let expectedKeys = Array.sort(testKeys, Nat.compare);
+let expectedValues = Array.sort(Array.map<Nat, Text>(expectedKeys, func(key) { debug_show (key) }), Text.compare);
+
+let entryTestable = T.tuple2Testable(T.natTestable, T.textTestable);
+
+func compareByKey(first : (Nat, Text), second : (Nat, Text)) : Order.Order {
+  Nat.compare(first.0, second.0)
+};
+
+func sortedEntries(trie : TrieMap.TrieMap<Nat, Text>) : [(Nat, Text)] {
+  Array.sort(Iter.toArray(trie.entries()), compareByKey)
+};
+
+class TrieMatcher(expected : [(Nat, Text)]) : M.Matcher<TrieMap.TrieMap<Nat, Text>> {
+  public func describeMismatch(actual : TrieMap.TrieMap<Nat, Text>, description : M.Description) {
+    Prim.debugPrint(debug_show (sortedEntries(actual)) # " should be " # debug_show (expected))
+  };
+
+  public func matches(actual : TrieMap.TrieMap<Nat, Text>) : Bool {
+    sortedEntries(actual) == expected
+  }
+};
+
+let randomTestSuite = Suite.suite(
+  "random trie",
+  [
+    Suite.test(
+      "size",
+      buildTestTrie().size(),
+      M.equals(T.nat(testSize))
+    ),
+    Suite.test(
+      "iterate entries",
+      sortedEntries(buildTestTrie()),
+      M.equals(T.array<(Nat, Text)>(entryTestable, expectedEntries))
+    ),
+    Suite.test(
+      "iterate keys",
+      Array.sort(Iter.toArray(buildTestTrie().keys()), Nat.compare),
+      M.equals(T.array<Nat>(T.natTestable, expectedKeys))
+    ),
+    Suite.test(
+      "iterate values",
+      Array.sort(Iter.toArray(buildTestTrie().vals()), Text.compare),
+      M.equals(T.array<Text>(T.textTestable, expectedValues))
+    ),
+    Suite.test(
+      "get all",
+      do {
+        let trie = buildTestTrie();
+        for (key in testKeys.vals()) {
+          let value = trie.get(key);
+          assert (value == ?debug_show (key))
+        };
+        trie
+      },
+      TrieMatcher(expectedEntries)
+    ),
+    Suite.test(
+      "replace all",
+      do {
+        let trie = buildTestTrie();
+        for (key in testKeys.vals()) {
+          let value = trie.replace(key, "TEST-" # debug_show (key));
+          assert (value == ?debug_show (key))
+        };
+        trie
+      },
+      TrieMatcher(Array.map<Nat, (Nat, Text)>(expectedKeys, func(key) { (key, "TEST-" # debug_show (key)) }))
+    ),
+    Suite.test(
+      "remove randomized",
+      do {
+        let trie = buildTestTrie();
+        var count = 0;
+        for (key in testKeys.vals()) {
+          if (Random.next() % 2 == 0) {
+            let result = trie.remove(key);
+            assert (result == ?debug_show (key));
+            count += 1
+          }
+        };
+        trie.size() == +testKeys.size() - count
+      },
+      M.equals(T.bool(true))
+    ),
+    Suite.test(
+      "clear",
+      do {
+        let trie = buildTestTrie();
+        for ((key, value) in trie.entries()) {
+          // stable iteration
+          assert (debug_show (key) == value);
+          let result = trie.remove(key);
+          assert (result == ?debug_show (key))
+        };
+        trie
+      },
+      TrieMatcher([])
+    )
+  ]
+);
+
+Suite.run(randomTestSuite);
+
+/* --------------------------------------- */
 
 debug {
   let a = TrieMap.TrieMap<Text, Nat>(Text.equal, Text.hash);
