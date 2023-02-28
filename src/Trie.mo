@@ -397,33 +397,36 @@ module {
   /// ```
   public func replace<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : ?V) : (Trie<K, V>, ?V) {
     let key_eq = equalKey(k_eq);
+    var replacedValue: ?V = null;
 
-    func rec(t : Trie<K, V>, bitpos : Nat) : (Trie<K, V>, ?V) {
+    func recursiveReplace(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {
         case (#empty) {
           let (kvs, _) = AssocList.replace(null, k, key_eq, v);
-          (leaf(kvs, bitpos), null)
+          replacedValue := null;
+          leaf(kvs, bitpos)
         };
         case (#branch(b)) {
           let bit = Hash.bit(k.hash, bitpos);
           // rebuild either the left or right path with the (k, v) pair
           if (not bit) {
-            let (l, v_) = rec(b.left, bitpos + 1);
-            (combineReducedNodes(l, b.right), v_)
+            let l = recursiveReplace(b.left, bitpos + 1);
+            combineReducedNodes(l, b.right)
           } else {
-            let (r, v_) = rec(b.right, bitpos + 1);
-            (combineReducedNodes(b.left, r), v_)
+            let r = recursiveReplace(b.right, bitpos + 1);
+            combineReducedNodes(b.left, r)
           }
         };
         case (#leaf(l)) {
-          let (kvs2, old_val) = AssocList.replace(l.keyvals, k, key_eq, v);
-          (leaf(kvs2, bitpos), old_val)
+          let (kvs2, oldValue) = AssocList.replace(l.keyvals, k, key_eq, v);
+          replacedValue := oldValue;
+          leaf(kvs2, bitpos)
         }
       }
     };
-    let (to, vo) = rec(t, 0);
-    //assert(isValid<K, V>(to, false));
-    (to, vo)
+    let newTrie = recursiveReplace(t, 0);
+    //assert(isValid<K, V>(newTrie, false));
+    (newTrie, replacedValue)
   };
 
   /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any.
