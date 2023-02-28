@@ -94,30 +94,31 @@ module {
     equal : (K, K) -> Bool,
     value : ?V
   ) : (AssocList<K, V>, ?V) {
-    func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
+    var prev : ?V = null;
+    func rec(al : AssocList<K, V>) : AssocList<K, V> {
       switch (al) {
-        case (null) {
-          switch value {
-            case (null) { (null, null) };
-            case (?value) { (?((key, value), null), null) }
-          }
-        };
         case (?((hd_k, hd_v), tl)) {
           if (equal(key, hd_k)) {
             // if value is null, remove the key; otherwise, replace key's old value
             // return old value
+            prev := ?hd_v;
             switch value {
-              case (null) { (tl, ?hd_v) };
-              case (?value) { (?((hd_k, value), tl), ?hd_v) }
+              case (null) { tl };
+              case (?value) { ?((hd_k, value), tl) }
             }
           } else {
-            let (tl2, old_v) = rec(tl);
-            (?((hd_k, hd_v), tl2), old_v)
+            ?((hd_k, hd_v), rec(tl))
+          }
+        };
+        case (null) {
+          switch value {
+            case (null) { null };
+            case (?value) { ?((key, value), null) }
           }
         }
       }
     };
-    rec(map)
+    (rec(map), prev)
   };
 
   /// Produces a new map containing all entries from `map1` whose keys are not
