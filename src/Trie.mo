@@ -403,7 +403,6 @@ module {
       switch t {
         case (#empty) {
           let (kvs, _) = AssocList.replace(null, k, key_eq, v);
-          replacedValue := null;
           leaf(kvs, bitpos)
         };
         case (#branch(b)) {
