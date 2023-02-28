@@ -47,22 +47,15 @@ module {
     key : K,
     equal : (K, K) -> Bool
   ) : ?V {
-    func rec(al : AssocList<K, V>) : ?V {
-      label profile_assocList_find_rec : (?V) switch (al) {
-        case (null) { label profile_assocList_find_end_fail : (?V) { null } };
-        case (?((hd_k, hd_v), tl)) {
-          if (equal(key, hd_k)) {
-            label profile_assocList_find_end_success : (?V) {
-              ?hd_v
-            }
-          } else {
-            rec(tl)
-          }
+    switch (map) {
+      case (?((hd_k, hd_v), tl)) {
+        if (equal(key, hd_k)) {
+          ?hd_v
+        } else {
+          find(tl, key, equal)
         }
-      }
-    };
-    label profile_assocList_find_begin : (?V) {
-      rec(map)
+      };
+      case (null) { null }
     }
   };
 
@@ -94,30 +87,31 @@ module {
     equal : (K, K) -> Bool,
     value : ?V
   ) : (AssocList<K, V>, ?V) {
-    func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
+    var prev : ?V = null;
+    func rec(al : AssocList<K, V>) : AssocList<K, V> {
       switch (al) {
-        case (null) {
-          switch value {
-            case (null) { (null, null) };
-            case (?value) { (?((key, value), null), null) }
-          }
-        };
         case (?((hd_k, hd_v), tl)) {
           if (equal(key, hd_k)) {
             // if value is null, remove the key; otherwise, replace key's old value
             // return old value
+            prev := ?hd_v;
             switch value {
-              case (null) { (tl, ?hd_v) };
-              case (?value) { (?((hd_k, value), tl), ?hd_v) }
+              case (null) { tl };
+              case (?value) { ?((hd_k, value), tl) }
             }
           } else {
-            let (tl2, old_v) = rec(tl);
-            (?((hd_k, hd_v), tl2), old_v)
+            ?((hd_k, hd_v), rec(tl))
+          }
+        };
+        case (null) {
+          switch value {
+            case (null) { null };
+            case (?value) { ?((key, value), null) }
           }
         }
       }
     };
-    rec(map)
+    (rec(map), prev)
   };
 
   /// Produces a new map containing all entries from `map1` whose keys are not
@@ -170,8 +164,8 @@ module {
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
     f : (?V, ?W) -> X
-  ) : AssocList<K, X> = label profile_assocList_mapAppend : AssocList<K, X> {
-    func rec(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> = label profile_assocList_mapAppend_rec : AssocList<K, X> {
+  ) : AssocList<K, X> {
+    func rec(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> {
       switch (al1, al2) {
         case (null, null) { null };
         case (?((k, v), al1_), _) { ?((k, f(?v, null)), rec(al1_, al2)) };
@@ -231,7 +225,7 @@ module {
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
     f : (?V, ?W) -> X
-  ) : AssocList<K, X> = label profile_assocList_disjDisjoint : AssocList<K, X> {
+  ) : AssocList<K, X> {
     mapAppend<K, V, W, X>(map1, map2, f)
   };
 
