@@ -359,19 +359,19 @@ module {
       case (#empty, #empty) {
         #empty
       };
-      case (#leaf leftLeaf, #empty) {
+      case (#leaf(leftLeaf), #empty) {
         #leaf(leftLeaf)
       };
-      case (#empty, #leaf rightLeaf) {
+      case (#empty, #leaf(rightLeaf)) {
         #leaf(rightLeaf)
       };
-      case (#leaf leftLeaf, #leaf rightLeaf) {
+      case (#leaf(leftLeaf), #leaf(rightLeaf)) {
         let size = leftLeaf.size + rightLeaf.size;
         if (size <= MAX_LEAF_SIZE) {
           let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
           #leaf({ size = size; keyvals = union })
         } else {
-          branch((left, right))
+          branch(left, right)
         }
       };
       case (left, right) {
