@@ -355,17 +355,17 @@ module {
 
   /// Combine two nodes that may have a reduced size after an entry deletion.
   func combineReducedNodes<K, V>(left : Trie<K, V>, right : Trie<K, V>) : Trie<K, V> {
-    switch ((left, right)) {
+    switch (left, right) {
       case (#empty, #empty) {
         #empty
       };
-      case (#leaf(leftLeaf), #empty) {
+      case (#leaf leftLeaf, #empty) {
         #leaf(leftLeaf)
       };
-      case (#empty, #leaf(rightLeaf)) {
+      case (#empty, #leaf rightLeaf) {
         #leaf(rightLeaf)
       };
-      case ((#leaf(leftLeaf), #leaf(rightLeaf))) {
+      case (#leaf leftLeaf, #leaf rightLeaf) {
         let size = leftLeaf.size + rightLeaf.size;
         if (size <= MAX_LEAF_SIZE) {
           let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
@@ -374,7 +374,7 @@ module {
           branch((left, right))
         }
       };
-      case ((left, right)) {
+      case (left, right) {
         branch(left, right)
       }
     }
