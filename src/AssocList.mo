@@ -52,7 +52,7 @@ module {
         if (equal(key, hd_k)) {
           ?hd_v
         } else {
-          find(map, key, equal)
+          find(tl, key, equal)
         }
       };
       case (null) { null }
