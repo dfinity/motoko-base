@@ -252,7 +252,6 @@ module {
   /// ```
   public func empty<K, V>() : Trie<K, V> { #empty };
 
-
   /// Get the size in O(1) time.
   ///
   /// For a more detailed overview of how to use a `Trie`,
@@ -354,36 +353,79 @@ module {
   /// Purely-functional representation permits _O(1)_ copy, via persistent sharing.
   public func clone<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
 
-  /// Replace the given key's value option with the given one, returning the previous one
+  /// Combine two nodes that may have a reduced size after an entry deletion.
+  func combineReducedNodes<K, V>(left : Trie<K, V>, right : Trie<K, V>) : Trie<K, V> {
+    switch (left, right) {
+      case (#empty, #empty) {
+        #empty
+      };
+      case (#leaf(leftLeaf), #empty) {
+        #leaf(leftLeaf)
+      };
+      case (#empty, #leaf(rightLeaf)) {
+        #leaf(rightLeaf)
+      };
+      case (#leaf(leftLeaf), #leaf(rightLeaf)) {
+        let size = leftLeaf.size + rightLeaf.size;
+        if (size <= MAX_LEAF_SIZE) {
+          let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
+          #leaf({ size = size; keyvals = union })
+        } else {
+          branch(left, right)
+        }
+      };
+      case (left, right) {
+        branch(left, right)
+      }
+    }
+  };
+
+  /// Replace the given key's value option with the given value, returning the modified trie.
+  /// Also returns the replaced value if the key existed and `null` otherwise.
+  /// Compares keys using the provided function `k_eq`.
+  ///
+  /// Note: Replacing a key's value by `null` removes the key and also shrinks the trie.
+  ///
+  /// For a more detailed overview of how to use a `Trie`,
+  /// see the [User's Overview](#overview).
+  ///
+  /// Example:
+  /// ```motoko include=initialize
+  /// trie := Trie.put(trie, key "test", Text.equal, 1).0;
+  /// trie := Trie.replace(trie, key "test", Text.equal, 42).0;
+  /// assert (Trie.get(trie, key "hello", Text.equal) == ?42);
+  /// ```
   public func replace<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : ?V) : (Trie<K, V>, ?V) {
     let key_eq = equalKey(k_eq);
+    var replacedValue: ?V = null;
 
-    func rec(t : Trie<K, V>, bitpos : Nat) : (Trie<K, V>, ?V) {
+    func recursiveReplace(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {
         case (#empty) {
           let (kvs, _) = AssocList.replace(null, k, key_eq, v);
-          (leaf(kvs, bitpos), null)
+          leaf(kvs, bitpos)
         };
         case (#branch(b)) {
           let bit = Hash.bit(k.hash, bitpos);
           // rebuild either the left or right path with the (k, v) pair
           if (not bit) {
-            let (l, v_) = rec(b.left, bitpos + 1);
-            (branch(l, b.right), v_)
+            let l = recursiveReplace(b.left, bitpos + 1);
+            combineReducedNodes(l, b.right)
           } else {
-            let (r, v_) = rec(b.right, bitpos + 1);
-            (branch(b.left, r), v_)
+            let r = recursiveReplace(b.right, bitpos + 1);
+            combineReducedNodes(b.left, r)
           }
         };
         case (#leaf(l)) {
-          let (kvs2, old_val) = AssocList.replace(l.keyvals, k, key_eq, v);
-          (leaf(kvs2, bitpos), old_val)
+          let (kvs2, oldValue) = AssocList.replace(l.keyvals, k, key_eq, v);
+          replacedValue := oldValue;
+          leaf(kvs2, bitpos)
         }
       }
     };
-    let (to, vo) = rec(t, 0);
-    //assert(isValid<K, V>(to, false));
-    (to, vo)
+    let newTrie = recursiveReplace(t, 0);
+    //assert(isValid<K, V>(newTrie, false));
+    (newTrie, replacedValue)
   };
 
   /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any.
@@ -577,7 +619,7 @@ module {
                 switch (x, y) {
                   case (null, ?v) { v };
                   case (?v, null) { v };
-                  case (_, _) { Debug.trap "Trie.mergeDisjoint"}
+                  case (_, _) { Debug.trap "Trie.mergeDisjoint" }
                 }
               }
             ),
@@ -1287,11 +1329,7 @@ module {
         case (#branch(b)) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
-          if (isEmpty(fl) and isEmpty(fr)) {
-            #empty
-          } else {
-            branch(fl, fr)
-          }
+          combineReducedNodes(fl, fr)
         }
       }
     };
@@ -1339,11 +1377,7 @@ module {
         case (#branch(b)) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
-          if (isEmpty(fl) and isEmpty(fr)) {
-            #empty
-          } else {
-            branch(fl, fr)
-          }
+          combineReducedNodes(fl, fr)
         }
       }
     };
@@ -1508,7 +1542,11 @@ module {
     updated_outer
   };
 
-  /// Remove the given key's value in the trie; return the new trie
+  /// Remove the entry for the given key from the trie, by returning the reduced trie.
+  /// Also returns the removed value if the key existed and `null` otherwise.
+  /// Compares keys using the provided function `k_eq`.
+  ///
+  /// Note: The removal of an existing key shrinks the trie.
   ///
   /// For a more detailed overview of how to use a `Trie`,
   /// see the [User's Overview](#overview).
@@ -1517,7 +1555,7 @@ module {
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
   /// trie := Trie.put(trie, key "bye", Text.equal, 32).0;
-  /// // remove the value associated with "hello"
+  /// // remove the entry associated with "hello"
   /// trie := Trie.remove(trie, key "hello", Text.equal).0;
   /// assert (Trie.get(trie, key "hello", Text.equal) == null);
   /// ```
