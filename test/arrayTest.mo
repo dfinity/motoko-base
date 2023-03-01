@@ -405,4 +405,4 @@ let suite = Suite.suite(
   ]
 );
 
-Suite.run(suite);
+Suite.run(suite)

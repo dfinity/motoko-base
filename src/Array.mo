@@ -726,7 +726,7 @@ module {
   /// Runtime: O(length);
   /// Space: O(length);
   public func subArray<X>(arr: [X], start: Nat, length: Nat): [X] {
-    if (start + length > arr.size()) { Prim.trap("Array.subArray: start index + subArray length out of bounds") };
+    if (start + length > arr.size()) { Prim.trap("Array.subArray") };
     tabulate<X>(length, func(i) {
       arr[start + i]
     });
