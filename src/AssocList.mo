@@ -82,38 +82,63 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func replace<K, V>(
-    map : AssocList<K, V>,
-    key : K,
-    equal : (K, K) -> Bool,
-    value : ?V
-  ) : (AssocList<K, V>, ?V) {
-    var prev : ?V = null;
-    func rec(al : AssocList<K, V>) : AssocList<K, V> {
-      switch (al) {
-        case (?((hd_k, hd_v), tl)) {
-          if (equal(key, hd_k)) {
-            // if value is null, remove the key; otherwise, replace key's old value
-            // return old value
-            prev := ?hd_v;
-            switch value {
-              case (null) { tl };
-              case (?value) { ?((hd_k, value), tl) }
+      map : AssocList<K, V>,
+      key : K,
+      equal : (K, K) -> Bool,
+      value : ?V
+    ) : (AssocList<K, V>, ?V) {
+      var prev : ?V = null;
+      switch value {
+        case null {
+          func del(al : AssocList<K, V>) : AssocList<K, V> {
+            switch (al) {
+              case (?((hd_k, hd_v), tl)) {
+                if (equal(key, hd_k)) {
+                  prev := ?hd_v;
+                  tl
+                } else {
+                  let tl1 = del(tl);
+                  switch (prev) {
+                    case (?_)  { ?((hd_k, hd_v), tl1) };
+                    case (null) { al }
+                  }
+                }
+              };
+              case (null) {
+                null
+              }
             }
-          } else {
-            ?((hd_k, hd_v), rec(tl))
+          };
+          (del(map), prev)
+      };
+      case (?value) {
+        func ins(al : AssocList<K, V>) : AssocList<K, V> {
+          switch (al) {
+            case (?((hd_k, hd_v), tl)) {
+              if (equal(key, hd_k)) {
+                prev := ?hd_v;
+                tl
+              } else {
+                let tl0 = ins(tl);
+                switch prev {
+                  case (null) { al };
+                  case (?_) { ?((hd_k, hd_v), tl0)}
+                }
+              }
+            };
+            case (null) {
+              null
+            }
           }
         };
-        case (null) {
-          switch value {
-            case (null) { null };
-            case (?value) { ?((key, value), null) }
-          }
+        let map1 = ins(map);
+        switch (prev) {
+          case (null) { (?((key,value), map), prev) };
+          case (?_) { (?((key,value), map1), prev) }
         }
-      }
+      };
     };
-    (rec(map), prev)
   };
-
   /// Produces a new map containing all entries from `map1` whose keys are not
   /// contained in `map2`. The "extra" entries in `map2` are ignored. Compares
   /// keys using the provided function `equal`.
