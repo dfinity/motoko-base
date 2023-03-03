@@ -7,6 +7,7 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Debug "mo:base/Debug";
 import Array "mo:base/Array";
+import Order "mo:base/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -14,12 +15,40 @@ import M "mo:matchers/Matchers";
 
 let test = Suite;
 
-// Utilities to massage types between Trie and Matchers
-func prettyArray(trie : Trie.Trie<Nat, Nat>) : [(Nat, Nat)] {
-  Trie.toArray<Nat, Nat, (Nat, Nat)>(trie, func kv = kv)
+func compare (kv1 : (Nat, Nat), kv2 : (Nat, Nat)) : Order.Order {
+  Nat.compare(kv1.0, kv2.0)
 };
 
+
+func compare2D (kv1 : ((Nat, Nat), Nat), kv2: ((Nat, Nat), Nat)) : Order.Order {
+   switch (Nat.compare(kv1.0.0, kv2.0.0)) {
+     case (#equal) { Nat.compare(kv1.0.1, kv2.0.1) };
+     case (other) { other };
+   };
+};
+
+func compare3D (kv1 : ((Nat, Nat, Nat), Nat), kv2: ((Nat, Nat, Nat), Nat)) : Order.Order {
+   switch (Nat.compare(kv1.0.0, kv2.0.0)) {
+     case (#equal) {
+       switch (Nat.compare(kv1.0.1, kv2.0.1)) {
+         case (#equal) { Nat.compare(kv1.0.2, kv2.0.2); };
+         case (other) { other };
+       }
+     };
+     case (other) { other };
+   };
+};
+
+// Utilities to massage types between Trie and Matchers
+func prettyArray(trie : Trie.Trie<Nat, Nat>) : [(Nat, Nat)] {
+  Array.sort(
+    Trie.toArray<Nat, Nat, (Nat, Nat)>(trie, func kv = kv),
+    compare)
+};
+
+
 func prettyArray2D(trie2D1 : Trie.Trie2D<Nat, Nat, Nat>) : [((Nat, Nat), Nat)] {
+  Array.sort(
   Array.flatten(
     Trie.toArray<Nat, Trie.Trie<Nat, Nat>, [((Nat, Nat), Nat)]>(
       trie2D1,
@@ -28,10 +57,12 @@ func prettyArray2D(trie2D1 : Trie.Trie2D<Nat, Nat, Nat>) : [((Nat, Nat), Nat)] {
         Array.map<(Nat, Nat), ((Nat, Nat), Nat)>(innerArray, func(k2, v) = ((k1, k2), v))
       }
     )
-  )
+  ),
+  compare2D)
 };
 
 func prettyArray3D(trie3D : Trie.Trie3D<Nat, Nat, Nat, Nat>) : [((Nat, Nat, Nat), Nat)] {
+  Array.sort(
   Array.flatten(
     Trie.toArray<Nat, Trie.Trie<Nat, Trie.Trie<Nat, Nat>>, [((Nat, Nat, Nat), Nat)]>(
       trie3D,
@@ -40,26 +71,32 @@ func prettyArray3D(trie3D : Trie.Trie3D<Nat, Nat, Nat, Nat>) : [((Nat, Nat, Nat)
         Array.map<((Nat, Nat), Nat), ((Nat, Nat, Nat), Nat)>(innerArray, func((k2, k3), v) = ((k1, k2, k3), v))
       }
     )
-  )
+  ),
+  compare3D)
 };
 
+
 func arrayTest(array : [(Nat, Nat)]) : M.Matcher<[(Nat, Nat)]> {
-  M.equals<[(Nat, Nat)]>(T.array<(Nat, Nat)>(T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable), array))
+  let array1 = Array.sort(array, compare);
+  M.equals<[(Nat, Nat)]>(T.array<(Nat, Nat)>(T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable), array1))
 };
 
 func arrayTest2D(array : [((Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat), Nat)]> {
+  let array1 = Array.sort(array, compare2D);
   M.equals<[((Nat, Nat), Nat)]>(
     T.array<((Nat, Nat), Nat)>(
       T.tuple2Testable<(Nat, Nat), Nat>(
         T.tuple2Testable<Nat, Nat>(T.natTestable, T.natTestable),
         T.natTestable
       ),
-      array
+      array1
     )
   )
 };
 
+
 func arrayTest3D(array : [((Nat, Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat, Nat), Nat)]> {
+  let array1 = Array.sort(array, compare3D);
   let tuple3Testable : T.Testable<(Nat, Nat, Nat)> = {
     display = func t { debug_show t };
     equals = func(t1, t2) { t1 == t2 }
@@ -71,7 +108,7 @@ func arrayTest3D(array : [((Nat, Nat, Nat), Nat)]) : M.Matcher<[((Nat, Nat, Nat)
         tuple3Testable,
         T.natTestable
       ),
-      array
+      array1
     )
   )
 };
@@ -332,7 +369,7 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "iter",
-      Iter.toArray(Trie.iter(trie1)),
+      Array.sort(Iter.toArray(Trie.iter(trie1)), compare),
       arrayTest([(0, 10), (2, 12), (4, 14)])
     ),
     Suite.test(
