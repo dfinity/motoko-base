@@ -97,8 +97,8 @@ module {
           } else {
             let tl1 = del(tl);
             switch (prev) {
-              case (?_)  { ?(kv, tl1) };
-              case null { al }
+              case null { al };
+              case (?_) { ?(kv, tl1) }
             }
           }
         };
