@@ -87,36 +87,33 @@ module {
       equal : (K, K) -> Bool,
       value : ?V
     ) : (AssocList<K, V>, ?V) {
-      var prev : ?V = null;
-      func del(al : AssocList<K, V>) : AssocList<K, V> {
-        switch (al) {
-          case (?(kv, tl)) {
-            if (equal(key, kv.0)) {
-              prev := ?kv.1;
-              tl
-            } else {
-              let tl1 = del(tl);
-              switch (prev) {
-                case (?_)  { ?(kv, tl1) };
-                case null { al }
-              }
+    var prev : ?V = null;
+    func del(al : AssocList<K, V>) : AssocList<K, V> {
+      switch (al) {
+        case (?(kv, tl)) {
+          if (equal(key, kv.0)) {
+            prev := ?kv.1;
+            tl
+          } else {
+            let tl1 = del(tl);
+            switch (prev) {
+              case (?_)  { ?(kv, tl1) };
+              case null { al }
             }
-          };
-          case null {
-            null
           }
-        }
-      };
-      switch value {
-        case (?value) {
-          let map1 = del(map);
-          switch (prev) {
-            case (null) { (?((key, value), map), prev) };
-            case (?_) { (?((key, value), map1), prev) }
-        }
-        case null {
-          (del(map), prev)
         };
+        case null {
+          null
+        }
+      }
+    };
+    let map1 = del(map);
+    switch value {
+      case (?value) {
+        (?((key, value), map1), prev)
+      };
+      case null {
+        (map1, prev)
       };
     };
   };
