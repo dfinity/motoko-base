@@ -367,7 +367,7 @@ module {
   /// ```motoko include=import
   ///
   /// let array = [10, 10, 10, 10];
-  /// Array.mapEntries<Nat, Nat>(array, func (i, x) = i * x)
+  /// Array.mapEntries<Nat, Nat>(array, func (x, i) = i * x)
   /// ```
   ///
   /// Runtime: O(size)
