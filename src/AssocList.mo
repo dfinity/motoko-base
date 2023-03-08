@@ -90,17 +90,17 @@ module {
     var prev : ?V = null;
     func rec(al : AssocList<K, V>) : AssocList<K, V> {
       switch (al) {
-        case (?((hd_k, hd_v), tl)) {
-          if (equal(key, hd_k)) {
+        case (?(hd, tl)) {
+          if (equal(key, hd.0)) {
             // if value is null, remove the key; otherwise, replace key's old value
             // return old value
-            prev := ?hd_v;
+            prev := ?hd.1;
             switch value {
               case (null) { tl };
-              case (?value) { ?((hd_k, value), tl) }
+              case (?value) { ?((hd.0, value), tl) }
             }
           } else {
-            ?((hd_k, hd_v), rec(tl))
+            ?(hd, rec(tl))
           }
         };
         case (null) {
