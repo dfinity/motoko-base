@@ -8,7 +8,7 @@ TESTS = $(wildcard *.mo)
 
 TEST_TARGETS = $(patsubst %.mo,_out/%.checked,$(TESTS))
 
-all: $(OUTDIR)/import_all.checked $(TEST_TARGETS) 
+all: $(OUTDIR)/import_all.checked $(TEST_TARGETS)
 
 STDLIB_FILES= $(wildcard $(STDLIB)/*.mo)
 

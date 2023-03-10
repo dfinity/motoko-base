@@ -82,36 +82,40 @@ module {
   ///
   /// *Runtime and space assumes that `equal` runs in O(1) time and space.
   public func replace<K, V>(
-    map : AssocList<K, V>,
-    key : K,
-    equal : (K, K) -> Bool,
-    value : ?V
-  ) : (AssocList<K, V>, ?V) {
+      map : AssocList<K, V>,
+      key : K,
+      equal : (K, K) -> Bool,
+      value : ?V
+    ) : (AssocList<K, V>, ?V) {
     var prev : ?V = null;
-    func rec(al : AssocList<K, V>) : AssocList<K, V> {
+    func del(al : AssocList<K, V>) : AssocList<K, V> {
       switch (al) {
-        case (?((hd_k, hd_v), tl)) {
-          if (equal(key, hd_k)) {
-            // if value is null, remove the key; otherwise, replace key's old value
-            // return old value
-            prev := ?hd_v;
-            switch value {
-              case (null) { tl };
-              case (?value) { ?((hd_k, value), tl) }
-            }
+        case (?(kv, tl)) {
+          if (equal(key, kv.0)) {
+            prev := ?kv.1;
+            tl
           } else {
-            ?((hd_k, hd_v), rec(tl))
+            let tl1 = del(tl);
+            switch (prev) {
+              case null { al };
+              case (?_) { ?(kv, tl1) }
+            }
           }
         };
-        case (null) {
-          switch value {
-            case (null) { null };
-            case (?value) { ?((key, value), null) }
-          }
+        case null {
+          null
         }
       }
     };
-    (rec(map), prev)
+    let map1 = del(map);
+    switch value {
+      case (?value) {
+        (?((key, value), map1), prev)
+      };
+      case null {
+        (map1, prev)
+      };
+    };
   };
 
   /// Produces a new map containing all entries from `map1` whose keys are not
