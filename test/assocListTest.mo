@@ -52,7 +52,7 @@ let suite = Suite.suite(
         Suite.test(
             "replace",
             AssocList.replace(map1, 4, Nat.equal, ?24).0,
-            assocListTest([(0, 10), (2, 12), (4, 24)])
+            assocListTest([(4, 24), (0, 10), (2, 12) ])
         ),
         Suite.test(
             "replace empty",
@@ -62,7 +62,7 @@ let suite = Suite.suite(
         Suite.test(
             "replace new entry",
             AssocList.replace(map1, 1, Nat.equal, ?11).0,
-            assocListTest([(0, 10), (2, 12), (4, 14), (1, 11)])
+            assocListTest([(1, 11), (0, 10), (2, 12), (4, 14)])
         ),
         Suite.test(
             "diff no overlap",
