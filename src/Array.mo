@@ -367,7 +367,7 @@ module {
   /// ```motoko include=import
   ///
   /// let array = [10, 10, 10, 10];
-  /// Array.mapEntries<Nat, Nat>(array, func (i, x) = i * x)
+  /// Array.mapEntries<Nat, Nat>(array, func (x, i) = i * x)
   /// ```
   ///
   /// Runtime: O(size)
@@ -713,5 +713,22 @@ module {
   /// Runtime: O(1)
   ///
   /// Space: O(1)
-  public func size<X>(array : [X]) : Nat = array.size()
-}
+  public func size<X>(array : [X]) : Nat = array.size();
+
+  /// Returns a new subarray from the given array provided the start index and length of elements in the subarray
+  ///
+  /// Limitations: Traps if the start index + length is greater than the size of the array
+  ///
+  /// ```motoko include=import
+  ///
+  /// let array = [1,2,3,4,5];
+  /// let subArray = Array.subArray<Nat>(array, 2, 3);
+  /// Runtime: O(length);
+  /// Space: O(length);
+  public func subArray<X>(arr: [X], start: Nat, length: Nat): [X] {
+    if (start + length > arr.size()) { Prim.trap("Array.subArray") };
+    tabulate<X>(length, func(i) {
+      arr[start + i]
+    });
+  };
+};

@@ -133,7 +133,20 @@ run(
         "remove absent",
         buildTestTree().remove(0),
         M.equals(T.optional(T.textTestable, null : ?Text))
-      )
+      ),
+      test(
+        "unshare",
+        do {
+          let o = buildTestTree();
+          let saved = o.share();
+          o.unshare(#leaf);
+          let empty = o.share();
+          o.unshare(saved);
+          let restored = o.share();
+          empty == #leaf and restored == saved;
+        },
+        M.equals(T.bool(true))
+      ),
     ]
   )
 );
@@ -199,7 +212,20 @@ run(
           tree
         },
         TreeMatcher([])
-      )
+      ),
+      test(
+        "unshare",
+        do {
+          let o = buildTestTree();
+          let saved = o.share();
+          o.unshare(#leaf);
+          let empty = o.share();
+          o.unshare(saved);
+          let restored = o.share();
+          empty == #leaf and restored == saved;
+        },
+        M.equals(T.bool(true))
+      ),
     ]
   )
 );
@@ -242,7 +268,20 @@ run(
           tree
         },
         TreeMatcher([])
-      )
+      ),
+      test(
+        "unshare",
+        do {
+          let o = buildTestTree();
+          let saved = o.share();
+          o.unshare(#leaf);
+          let empty = o.share();
+          o.unshare(saved);
+          let restored = o.share();
+          empty == #leaf and restored == saved;
+        },
+        M.equals(T.bool(true))
+      ),
     ]
   )
 );
@@ -538,6 +577,19 @@ run(
           tree
         },
         TreeMatcher([])
+      ),
+      test(
+        "unshare",
+        do {
+          let o = buildTestTree();
+          let saved = o.share();
+          o.unshare(#leaf);
+          let empty = o.share();
+          o.unshare(saved);
+          let restored = o.share();
+          empty == #leaf and restored == saved;
+        },
+        M.equals(T.bool(true))
       )
     ]
   )
