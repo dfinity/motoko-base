@@ -10,3 +10,6 @@ _out
 
 # Node
 node_modules
+
+# Unit testing
+*.test.wasm

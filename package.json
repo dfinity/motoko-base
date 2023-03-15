@@ -6,7 +6,8 @@
   "scripts": {
     "prettier:check": "npx -p prettier -p pretty-quick pretty-quick --check",
     "prettier:format": "npx -p prettier -p pretty-quick pretty-quick",
-    "test": "node test/js"
+    "test": "mo-test -C test --testmode wasi",
+    "verify": "node test/js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "fast-glob": "^3.2.12",
     "husky": "^8.0.2",
+    "mo-dev": "^0.5.0",
     "prettier": "^2.8.1",
     "prettier-plugin-motoko": "^0.2.3",
     "pretty-quick": "^3.1.3"
