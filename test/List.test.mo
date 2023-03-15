@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import List "mo:base/List";
 import Nat "mo:base/Nat";

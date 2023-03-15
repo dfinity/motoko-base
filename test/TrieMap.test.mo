@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import Prim "mo:⛔";
 import TrieMap "mo:base/TrieMap";

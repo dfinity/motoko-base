@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import Int32 "mo:base/Int32";
 import Order "mo:base/Order";

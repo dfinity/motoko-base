@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import RBTree "mo:base/RBTree";
 import Nat "mo:base/Nat";

@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";

@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import Trie "mo:base/Trie";
 import List "mo:base/List";

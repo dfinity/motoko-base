@@ -1,4 +1,4 @@
-// @testmode wasmer
+// @testmode wasi
 
 import Nat "mo:base/Nat";
 import TrieSet "mo:base/TrieSet";
