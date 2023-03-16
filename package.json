@@ -23,7 +23,7 @@
   "devDependencies": {
     "fast-glob": "^3.2.12",
     "husky": "^8.0.2",
-    "mo-dev": "^0.5.0",
+    "mo-dev": "^0.5.1",
     "prettier": "^2.8.1",
     "prettier-plugin-motoko": "^0.2.3",
     "pretty-quick": "^3.1.3"
