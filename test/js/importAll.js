@@ -1,5 +1,7 @@
 "use strict";
 
+// Generate a test file named `ImportAll.test.mo`
+
 const { resolve } = require("path");
 const { existsSync, writeFileSync, mkdirSync } = require("fs");
 const glob = require("fast-glob");
