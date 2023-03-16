@@ -6,7 +6,7 @@
   "scripts": {
     "prettier:check": "npx -p prettier -p pretty-quick pretty-quick --check",
     "prettier:format": "npx -p prettier -p pretty-quick pretty-quick",
-    "test": "mo-test -C test --testmode wasi",
+    "test": "mo-test -C test --testmode wasi --testmode interpreter",
     "validate": "node test/js"
   },
   "repository": {
