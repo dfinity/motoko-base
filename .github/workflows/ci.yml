@@ -43,7 +43,7 @@ jobs:
        wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/${{ env.vessel_version }}/vessel-linux64
        chmod +x /home/runner/bin/vessel
     - name: "test"
-      run: nix-shell --command "npm test"
+      run: npm test
     - name: "graph dependencies"
       run: python3 doc/module_graph.py | dot -Tsvg > doc/module_graph.svg && file doc/module_graph.svg
     - name: "docs"
