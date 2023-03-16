@@ -7,7 +7,7 @@
     "prettier:check": "npx -p prettier -p pretty-quick pretty-quick --check",
     "prettier:format": "npx -p prettier -p pretty-quick pretty-quick",
     "test": "mo-test -C test --testmode wasi",
-    "verify": "node test/js"
+    "validate": "node test/js"
   },
   "repository": {
     "type": "git",

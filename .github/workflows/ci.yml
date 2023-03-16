@@ -22,7 +22,7 @@ jobs:
         node-version: 16
     - run: npm ci
     - name: "initial checks"
-      run: npm test
+      run: npm run validate
     - name: Check if Git tag exists
       run: echo "name=HEAD_TAG::$(git tag --points-at HEAD)" >> $GITHUB_ENV
     - uses: cachix/install-nix-action@v20
