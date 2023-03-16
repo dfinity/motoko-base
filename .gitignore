@@ -12,4 +12,5 @@ _out
 node_modules
 
 # Unit testing
+/test/generated
 *.test.wasm
