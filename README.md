@@ -25,9 +25,9 @@ The package _name_ `"base"` appears when importing its modules in Motoko (e.g., 
 [Vessel package manager]: https://github.com/dfinity/vessel
 
 Building & Testing
-----------------
+------------------
 
-Run the following commands to configure your local development repository:
+Run the following commands to configure your local development branch:
 
 ```sh
 # First-time setup
@@ -51,7 +51,9 @@ Documentation
 
 The documentation can be generated in `doc/` by running
 
-    ./make_docs.sh
+```sh
+./make_docs.sh
+```
 
 which creates `_out/html/index.html`.
 
