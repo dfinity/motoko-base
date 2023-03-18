@@ -9,43 +9,51 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
-If you build your project using the [vessel package manager] your package-set most likely already includes base, but if it doesn't or you want to override its version add an entry like so to your `package-set.dhall`:
+If you build your project using the [Vessel package manager] your package-set most likely already includes base, but if it doesn't or you want to override its version, add an entry like so to your `package-set.dhall`:
 
 ```
   {
     name = "base",
     repo = "https://github.com/dfinity/motoko-base",
-    version = "dfx-0.9.2",
+    version = "master",
     dependencies = [] : List Text
   }
 ```
 
-The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch name (among other things).  There are no dependencies.  See [vessel package manager] docs for more details.
+The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch or tag name (such as `version = "moc-0.8.4"`).  There are no dependencies.  See the [Vessel package manager] docs for more details.
 
-[vessel package manager]: https://github.com/kritzcreek/vessel
+[Vessel package manager]: https://github.com/dfinity/vessel
 
-Building/testing
-----------------
+Building & Testing
+------------------
 
-In `test/`, run
+Run the following commands to configure your local development branch:
 
-    make
+```sh
+# First-time setup
+git clone https://github.com/dfinity/motoko-base
+cd motoko-base
+npm install
 
-This will expect `moc` to be installed and in your `$PATH`.
+# Run tests
+npm test
 
-Running the tests also requires `wasmtime` and `vessel` to be installed.
+# Run formatter
+npm run prettier:format
+```
 
-If you installed `moc` some other way, you can instruct the `Makefile` to use
-that compiler:
+The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation. 
 
-    make MOC=moc
+Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
 
 Documentation
 -------------
 
 The documentation can be generated in `doc/` by running
 
-    ./make_docs.sh
+```sh
+./make_docs.sh
+```
 
 which creates `_out/html/index.html`.
 
