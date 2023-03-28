@@ -86,6 +86,32 @@ module {
     len
   };
 
+  /// Takes an iterator and returns a new iterator that produces the same elements with corresponding indices.
+  /// ```motoko
+  /// import Iter "mo:base/Iter"; 
+  /// let letters = [ "a", "b", "c" ];
+  /// let enumeratedIter = Iter.enumerate(letters.vals());
+  /// assert(?(0, "a") == enumeratedIter.next());
+  /// assert(?(1, "b") == enumeratedIter.next());
+  /// assert(?(2, "c") == enumeratedIter.next());
+  /// assert(null == enumeratedIter.next());
+  /// ```
+  public func enumerate<A>(xs : Iter<A>) : Iter<(Nat, A)> = object {
+    var i = 0;
+    public func next() : ?(Nat, A) {
+      switch (xs.next()) {
+        case (?next) {
+          let res = (i, next);
+          i += 1;
+          ?res
+        };
+        case (null) {
+          null
+        }
+      }
+    }
+  };
+
   /// Takes a function and an iterator and returns a new iterator that lazily applies
   /// the function to every element produced by the argument iterator.
   /// ```motoko
