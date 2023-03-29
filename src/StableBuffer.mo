@@ -9,9 +9,65 @@ module {
         addClone : (Index) -> Index;
         get : (Index) -> Blob;
         size : () -> Nat;
+        getRep : () -> BufferRep; // for upgrades.
     };
 
-    // - - - Implementation details follow.
+    public class Empty() : Buffer {
+        var rep : BufferRep = {
+            bytes = Region.new();
+            var bytes_count = 0;
+            elems = Region.new();
+            var elems_count = 0;
+        };
+        public func add(blob : Blob) : Index {
+            bufferAdd(rep, #blob blob)
+        };
+        public func addClone(index : Index) : Index {
+            bufferAdd(rep, #index index)
+        };
+        public func size() : Nat {
+            Prim.nat64ToNat(rep.elems_count)
+        };
+        public func get(index : Index) : Blob {
+            let elem = bufferGetElem(rep, index);
+            Region.loadBlob(rep.bytes, elem.pos, Prim.nat64ToNat(elem.size))
+        };
+        public func getRep() : BufferRep = rep;
+    };
+
+    // ## Public representation
+    //
+    // Exposing representation details permit re-creating the object
+    // wrapper after an upgrade.
+
+    public type BufferRep = {
+        bytes: Region;
+        var bytes_count: Nat64; // more fine-grained than "pages"
+
+        elems: Region;
+        var elems_count: Nat64; // more fine-grained than "pages"
+    };
+
+    public class FromRep(rep : BufferRep) {
+        public func add(blob : Blob) : Index {
+            bufferAdd(rep, #blob blob)
+        };
+        public func addClone(index : Index) : Index {
+            bufferAdd(rep, #index index)
+        };
+        public func size() : Nat {
+            Prim.nat64ToNat(rep.elems_count)
+        };
+        public func get(index : Index) : Blob {
+            let elem = bufferGetElem(rep, index);
+            Region.loadBlob(rep.bytes, elem.pos, Prim.nat64ToNat(elem.size))
+        };
+        public func getRep() : BufferRep = rep;
+    };
+
+    //
+    // ## Implementation details
+    //
 
     type Elem = {
         pos : Nat64;
@@ -20,13 +76,6 @@ module {
 
     let elem_size = 16 : Nat64; /* two Nat64s, for pos and size. */
 
-    type BufferRep = {
-        bytes: Region;
-        var bytes_count: Nat64; // more fine-grained than "pages"
-
-        elems: Region;
-        var elems_count: Nat64; // more fine-grained than "pages"
-    };
 
     func regionEnsureSizeBytes(r : Region, new_byte_count : Nat64) {
         let pages = Region.size(r);
@@ -70,28 +119,6 @@ module {
                 Region.storeNat64(self.elems, elem_i * elem.size + 8, elem.size);
                 elem_i
             };
-        }
-    };
-
-    public class Empty() : Buffer {
-        var rep : BufferRep = {
-            bytes = Region.new();
-            var bytes_count = 0;
-            elems = Region.new();
-            var elems_count = 0;
-        };
-        public func add(blob : Blob) : Index {
-            bufferAdd(rep, #blob blob)
-        };
-        public func addClone(index : Index) : Index {
-            bufferAdd(rep, #index index)
-        };
-        public func size() : Nat {
-            Prim.nat64ToNat(rep.elems_count)
-        };
-        public func get(index : Index) : Blob {
-            let elem = bufferGetElem(rep, index);
-            Region.loadBlob(rep.bytes, elem.pos, Prim.nat64ToNat(elem.size))
         }
     };
 
