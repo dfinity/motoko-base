@@ -98,7 +98,7 @@ module {
   /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
   /// Principal.isController(principal) // => false
   /// ```
-  public func isController(p : Principal) : Bool = Prim.is_controller p;
+  public func isController(p : Principal) : Bool = Prim.isController p;
 
   /// Hashes the given principal by hashing its `Blob` representation.
   ///
