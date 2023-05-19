@@ -902,7 +902,7 @@ module {
                 next()
               };
               case (#leaf { size = c; keyvals = ?((k, v), kvs) }) {
-                stack := ?(#leaf { size = c -1; keyvals = kvs }, stack2);
+                stack := ?(#leaf { size = c - 1; keyvals = kvs }, stack2);
                 ?(k.key, v)
               };
               case (#branch br) {
