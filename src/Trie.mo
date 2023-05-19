@@ -967,18 +967,16 @@ module {
       k3_eq : (K3, K3) -> Bool
     ) : Build<K3, V3> {
 
-      func outer_bin(a : Build<K3, V3>, b : Build<K3, V3>) : Build<K3, V3> = seq(a, b);
-
-      func inner_bin(a : Build<K3, V3>, b : Build<K3, V3>) : Build<K3, V3> = seq(a, b);
+      func bin(a : Build<K3, V3>, b : Build<K3, V3>) : Build<K3, V3> = seq(a, b);
 
       /// double-nested folds
       foldUp(
         tl,
-        outer_bin,
+        bin,
         func(k1 : K1, v1 : V1) : Build<K3, V3> =
           foldUp(
             tr,
-            inner_bin,
+            bin,
             func(k2 : K2, v2 : V2) : Build<K3, V3> =
               switch (op(k1, v1, k2, v2)) {
                 case null { #skip };
