@@ -201,14 +201,14 @@ module {
         case (#empty) {
           true
         };
-        case (#leaf(l)) {
+        case (#leaf l) {
           let len = List.size(l.keyvals);
           len <= MAX_LEAF_SIZE and len == l.size and List.all(
             l.keyvals,
             func((k : Key<K>, v : V)) : Bool { ((k.hash & mask) == bits) }
           )
         };
-        case (#branch(b)) {
+        case (#branch b) {
           let bitpos1 = switch bitpos {
             case null { Prim.natToNat32(0) };
             case (?bp) { Prim.natToNat32(Prim.nat32ToNat(bp) + 1) }
@@ -269,16 +269,15 @@ module {
   public func size<K, V>(t : Trie<K, V>) : Nat {
     switch t {
       case (#empty) { 0 };
-      case (#leaf(l)) { l.size };
-      case (#branch(b)) { b.size }
+      case (#leaf l) { l.size };
+      case (#branch b) { b.size }
     }
   };
 
   /// Construct a branch node, computing the size stored there.
   public func branch<K, V>(l : Trie<K, V>, r : Trie<K, V>) : Trie<K, V> {
-    let sum = size(l) + size(r);
     #branch {
-      size = sum;
+      size = size l + size r;
       left = l;
       right = r
     }
@@ -319,7 +318,7 @@ module {
           switch (ListUtil.lenClamp(kvs, MAX_LEAF_SIZE)) {
             case null {} /* fall through to branch case. */;
             case (?len) {
-              return #leaf({ size = len; keyvals = kvs })
+              return #leaf { size = len; keyvals = kvs }
             }
           }
         };
@@ -327,7 +326,7 @@ module {
           if (c == 0) {
             return #empty
           } else if (c <= MAX_LEAF_SIZE) {
-            return #leaf({ size = c; keyvals = kvs })
+            return #leaf { size = c; keyvals = kvs }
           } else {
 
             //fall through to branch case
@@ -338,9 +337,9 @@ module {
       if (ls == 0 and rs == 0) {
         #empty
       } else if (rs == 0 and ls <= MAX_LEAF_SIZE) {
-        #leaf({ size = ls; keyvals = l })
+        #leaf { size = ls; keyvals = l }
       } else if (ls == 0 and rs <= MAX_LEAF_SIZE) {
-        #leaf({ size = rs; keyvals = r })
+        #leaf { size = rs; keyvals = r }
       } else {
         branch(rec(?ls, l, bitpos + 1), rec(?rs, r, bitpos + 1))
       }
@@ -359,17 +358,17 @@ module {
       case (#empty, #empty) {
         #empty
       };
-      case (#leaf(leftLeaf), #empty) {
-        #leaf(leftLeaf)
+      case (#leaf leftLeaf, #empty) {
+        #leaf leftLeaf
       };
-      case (#empty, #leaf(rightLeaf)) {
-        #leaf(rightLeaf)
+      case (#empty, #leaf rightLeaf) {
+        #leaf rightLeaf
       };
-      case (#leaf(leftLeaf), #leaf(rightLeaf)) {
+      case (#leaf leftLeaf, #leaf rightLeaf) {
         let size = leftLeaf.size + rightLeaf.size;
         if (size <= MAX_LEAF_SIZE) {
           let union = List.append(leftLeaf.keyvals, rightLeaf.keyvals);
-          #leaf({ size = size; keyvals = union })
+          #leaf { size; keyvals = union }
         } else {
           branch(left, right)
         }
@@ -405,7 +404,7 @@ module {
           let (kvs, _) = AssocList.replace(null, k, key_eq, v);
           leaf(kvs, bitpos)
         };
-        case (#branch(b)) {
+        case (#branch b) {
           let bit = Hash.bit(k.hash, bitpos);
           // rebuild either the left or right path with the (k, v) pair
           if (not bit) {
@@ -416,7 +415,7 @@ module {
             combineReducedNodes(b.left, r)
           }
         };
-        case (#leaf(l)) {
+        case (#leaf l) {
           let (kvs2, oldValue) = AssocList.replace(l.keyvals, k, key_eq, v);
           replacedValue := oldValue;
           leaf(kvs2, bitpos)
@@ -476,10 +475,10 @@ module {
     func rec(t : Trie<K, V>, bitpos : Nat) : ?V {
       switch t {
         case (#empty) { null };
-        case (#leaf(l)) {
+        case (#leaf l) {
           AssocList.find(l.keyvals, k, key_eq)
         };
-        case (#branch(b)) {
+        case (#branch b) {
           let bit = Hash.bit(k.hash, bitpos);
           if (not bit) {
             rec(b.left, bitpos + 1)
@@ -546,7 +545,7 @@ module {
       switch (tl, tr) {
         case (#empty, _) { return tr };
         case (_, #empty) { return tl };
-        case (#leaf(l1), #leaf(l2)) {
+        case (#leaf l1, #leaf l2) {
           leaf(
             AssocList.disj(
               l1.keyvals,
@@ -563,15 +562,15 @@ module {
             bitpos
           )
         };
-        case (#leaf(l), _) {
+        case (#leaf l, _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
-        case (_, #leaf(l)) {
+        case (_, #leaf l) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
-        case (#branch(b1), #branch(b2)) {
+        case (#branch b1, #branch b2) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
             rec(bitpos + 1, b1.right, b2.right)
@@ -609,7 +608,7 @@ module {
       switch (tl, tr) {
         case (#empty, _) { return tr };
         case (_, #empty) { return tl };
-        case (#leaf(l1), #leaf(l2)) {
+        case (#leaf l1, #leaf l2) {
           leaf(
             AssocList.disj(
               l1.keyvals,
@@ -626,15 +625,15 @@ module {
             bitpos
           )
         };
-        case (#leaf(l), _) {
+        case (#leaf l, _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
-        case (_, #leaf(l)) {
+        case (_, #leaf l) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
-        case (#branch(b1), #branch(b2)) {
+        case (#branch b1, #branch b2) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
             rec(bitpos + 1, b1.right, b2.right)
@@ -672,7 +671,7 @@ module {
       switch (tl, tr) {
         case (#empty, _) { return #empty };
         case (_, #empty) { return tl };
-        case (#leaf(l1), #leaf(l2)) {
+        case (#leaf l1, #leaf l2) {
           leaf(
             AssocList.diff(
               l1.keyvals,
@@ -682,15 +681,15 @@ module {
             bitpos
           )
         };
-        case (#leaf(l), _) {
+        case (#leaf l, _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
-        case (_, #leaf(l)) {
+        case (_, #leaf l) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
-        case (#branch(b1), #branch(b2)) {
+        case (#branch b1, #branch b2) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
             rec(bitpos + 1, b1.right, b2.right)
@@ -727,10 +726,10 @@ module {
     func recL(t : Trie<K, V>, bitpos : Nat) : Trie<K, X> {
       switch t {
         case (#empty) { #empty };
-        case (#leaf(l)) {
+        case (#leaf l) {
           leaf(AssocList.disj(l.keyvals, null, key_eq, vbin), bitpos)
         };
-        case (#branch(b)) {
+        case (#branch b) {
           branch(
             recL(b.left, bitpos + 1),
             recL(b.right, bitpos + 1)
@@ -743,10 +742,10 @@ module {
     func recR(t : Trie<K, W>, bitpos : Nat) : Trie<K, X> {
       switch t {
         case (#empty) { #empty };
-        case (#leaf(l)) {
+        case (#leaf l) {
           leaf(AssocList.disj(null, l.keyvals, key_eq, vbin), bitpos)
         };
-        case (#branch(b)) {
+        case (#branch b) {
           branch(
             recR(b.left, bitpos + 1),
             recR(b.right, bitpos + 1)
@@ -761,18 +760,18 @@ module {
         case (#empty, #empty) { #empty };
         case (#empty, _) { recR(tr, bitpos) };
         case (_, #empty) { recL(tl, bitpos) };
-        case (#leaf(l1), #leaf(l2)) {
+        case (#leaf l1, #leaf l2) {
           leaf(AssocList.disj(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
         };
-        case (#leaf(l), _) {
+        case (#leaf l, _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
-        case (_, #leaf(l)) {
+        case (_, #leaf l) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
-        case (#branch(b1), #branch(b2)) {
+        case (#branch b1, #branch b2) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
             rec(bitpos + 1, b1.right, b2.right)
@@ -804,18 +803,18 @@ module {
       switch (tl, tr) {
         case (#empty, _) { #empty };
         case (_, #empty) { #empty };
-        case (#leaf(l1), #leaf(l2)) {
+        case (#leaf l1, #leaf l2) {
           leaf(AssocList.join(l1.keyvals, l2.keyvals, key_eq, vbin), bitpos)
         };
-        case (#leaf(l), _) {
+        case (#leaf l, _) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, branch(leaf(ll, bitpos), leaf(lr, bitpos)), tr)
         };
-        case (_, #leaf(l)) {
+        case (_, #leaf l) {
           let (ll, lr) = splitAssocList(l.keyvals, bitpos);
           rec(bitpos, tl, branch(leaf(ll, bitpos), leaf(lr, bitpos)))
         };
-        case (#branch(b1), #branch(b2)) {
+        case (#branch b1, #branch b2) {
           branch(
             rec(bitpos + 1, b1.left, b2.left),
             rec(bitpos + 1, b1.right, b2.right)
@@ -835,14 +834,14 @@ module {
     func rec(t : Trie<K, V>) : X {
       switch t {
         case (#empty) { empty };
-        case (#leaf(l)) {
+        case (#leaf l) {
           AssocList.fold(
             l.keyvals,
             empty,
             func(k : Key<K>, v : V, x : X) : X { bin(leaf(k.key, v), x) }
           )
         };
-        case (#branch(b)) { bin(rec(b.left), rec(b.right)) }
+        case (#branch b) { bin(rec(b.left), rec(b.right)) }
       }
     };
     rec(t)
@@ -925,15 +924,15 @@ module {
                 stack := stack2;
                 next()
               };
-              case (#leaf({ keyvals = null })) {
+              case (#leaf { keyvals = null }) {
                 stack := stack2;
                 next()
               };
-              case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
-                stack := ?(#leaf({ size = c -1; keyvals = kvs }), stack2);
+              case (#leaf { size = c; keyvals = ?((k, v), kvs) }) {
+                stack := ?(#leaf { size = c -1; keyvals = kvs }, stack2);
                 ?(k.key, v)
               };
-              case (#branch(br)) {
+              case (#branch br) {
                 stack := ?(br.left, ?(br.right, stack2));
                 next()
               }
@@ -985,7 +984,7 @@ module {
     /// Build sequence of two sub-builds
     public func seq<K, V>(l : Build<K, V>, r : Build<K, V>) : Build<K, V> {
       let sum = size(l) + size(r);
-      #seq({ size = sum; left = l; right = r })
+      #seq { size = sum; left = l; right = r }
     };
 
     /// Like [`prod`](#prod), except do not actually do the put calls, just
@@ -1115,14 +1114,14 @@ module {
     func rec(t : Trie<K, V>, x : X) : X {
       switch t {
         case (#empty) { x };
-        case (#leaf(l)) {
+        case (#leaf l) {
           AssocList.fold(
             l.keyvals,
             x,
             func(k : Key<K>, v : V, x : X) : X = f(k.key, v, x)
           )
         };
-        case (#branch(b)) { rec(b.left, rec(b.right, x)) }
+        case (#branch b) { rec(b.left, rec(b.right, x)) }
       }
     };
     rec(t, x)
@@ -1155,13 +1154,13 @@ module {
     func rec(t : Trie<K, V>) : Bool {
       switch t {
         case (#empty) { false };
-        case (#leaf(l)) {
+        case (#leaf l) {
           List.some(
             l.keyvals,
             func((k : Key<K>, v : V)) : Bool = f(k.key, v)
           )
         };
-        case (#branch(b)) { rec(b.left) or rec(b.right) }
+        case (#branch b) { rec(b.left) or rec(b.right) }
       }
     };
     rec(t)
@@ -1196,13 +1195,13 @@ module {
     func rec(t : Trie<K, V>) : Bool {
       switch t {
         case (#empty) { true };
-        case (#leaf(l)) {
+        case (#leaf l) {
           List.all(
             l.keyvals,
             func((k : Key<K>, v : V)) : Bool = f(k.key, v)
           )
         };
-        case (#branch(b)) { rec(b.left) and rec(b.right) }
+        case (#branch b) { rec(b.left) and rec(b.right) }
       }
     };
     rec(t)
@@ -1239,8 +1238,8 @@ module {
     func rec(t : Trie<K, V>, i : Nat) : ?(Key<K>, V) {
       switch t {
         case (#empty) { P.unreachable() };
-        case (#leaf(l)) { List.get(l.keyvals, i) };
-        case (#branch(b)) {
+        case (#leaf l) { List.get(l.keyvals, i) };
+        case (#branch b) {
           let size_left = size(b.left);
           if (i < size_left) { rec(b.left, i) } else {
             rec(b.right, i - size_left)
@@ -1317,7 +1316,7 @@ module {
     func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, V> {
       switch t {
         case (#empty) { #empty };
-        case (#leaf(l)) {
+        case (#leaf l) {
           leaf(
             List.filter(
               l.keyvals,
@@ -1326,7 +1325,7 @@ module {
             bitpos
           )
         };
-        case (#branch(b)) {
+        case (#branch b) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
           combineReducedNodes(fl, fr)
@@ -1359,7 +1358,7 @@ module {
     func rec(t : Trie<K, V>, bitpos : Nat) : Trie<K, W> {
       switch t {
         case (#empty) { #empty };
-        case (#leaf(l)) {
+        case (#leaf l) {
           leaf(
             List.mapFilter(
               l.keyvals,
@@ -1374,7 +1373,7 @@ module {
             bitpos
           )
         };
-        case (#branch(b)) {
+        case (#branch b) {
           let fl = rec(b.left, bitpos + 1);
           let fr = rec(b.right, bitpos + 1);
           combineReducedNodes(fl, fr)
@@ -1401,14 +1400,14 @@ module {
     func rec(tl : Trie<K, V>, tr : Trie<K, V>) : Bool {
       switch (tl, tr) {
         case (#empty, #empty) { true };
-        case (#leaf(l1), #leaf(l2)) {
+        case (#leaf l1, #leaf l2) {
           List.equal(
             l1.keyvals,
             l2.keyvals,
             func((k1 : Key<K>, v1 : V), (k2 : Key<K>, v2 : V)) : Bool = keq(k1.key, k2.key) and veq(v1, v2)
           )
         };
-        case (#branch(b1), #branch(b2)) {
+        case (#branch b1, #branch b2) {
           rec(b1.left, b2.left) and rec(b2.right, b2.right)
         };
         case _ { false }
