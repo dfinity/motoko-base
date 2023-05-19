@@ -351,11 +351,11 @@ module {
       case (#empty, #empty) {
         #empty
       };
-      case (#leaf leftLeaf, #empty) {
-        #leaf leftLeaf
+      case (#leaf _, #empty) {
+        left
       };
-      case (#empty, #leaf rightLeaf) {
-        #leaf rightLeaf
+      case (#empty, #leaf _) {
+        right
       };
       case (#leaf leftLeaf, #leaf rightLeaf) {
         let size = leftLeaf.size + rightLeaf.size;
