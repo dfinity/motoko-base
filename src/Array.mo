@@ -840,7 +840,7 @@ module {
       };
       let result = arr[i];
       i += 1;
-      return result
+      return ?result
     }
   }
 }
