@@ -723,12 +723,124 @@ module {
   ///
   /// let array = [1,2,3,4,5];
   /// let subArray = Array.subArray<Nat>(array, 2, 3);
+  /// ```
   /// Runtime: O(length);
   /// Space: O(length);
-  public func subArray<X>(arr: [X], start: Nat, length: Nat): [X] {
+  public func subArray<X>(arr : [X], start : Nat, length : Nat) : [X] {
     if (start + length > arr.size()) { Prim.trap("Array.subArray") };
-    tabulate<X>(length, func(i) {
-      arr[start + i]
-    });
+    tabulate<X>(
+      length,
+      func(i) {
+        arr[start + i]
+      }
+    )
   };
-};
+
+  /// Returns the index of the first `needle` element in the `haystack` array.
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.indexOf<Char>(array, 'c', Char.equal) == ?0;
+  /// assert Array.indexOf<Char>(array, 'f', Char.equal) == ?2;
+  /// assert Array.indexOf<Char>(array, 'g', Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(haystack.size());
+  /// Space: O(1);
+  public func indexOf<X>(haystack : [X], needle : X, eq : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(haystack, needle, 0, eq);
+
+  /// Returns the index of the next occurance of `needle` element in the `haystack` array starting from the `from` index (inclusive).
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.nextIndexOf<Char>(array, 'c', 0, Char.equal) == ?0;
+  /// assert Array.nextIndexOf<Char>(array, 'f', 0, Char.equal) == ?2;
+  /// assert Array.nextIndexOf<Char>(array, 'f', 2, Char.equal) == ?2;
+  /// assert Array.nextIndexOf<Char>(array, 'f', 3, Char.equal) == ?3;
+  /// assert Array.nextIndexOf<Char>(array, 'f', 4, Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(haystack.size());
+  /// Space: O(1);
+  public func nextIndexOf<X>(haystack : [X], needle : X, fromInclusive : Nat, eq : (X, X) -> Bool) : ?Nat {
+    var i = fromInclusive;
+    let n = haystack.size();
+    while (i < n) {
+      if (eq(haystack[i], needle)) {
+        return ?i
+      } else {
+        i += 1
+      }
+    };
+    null
+  };
+
+  /// Returns the index of the last `needle` element in the `haystack` array.
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.lastIndexOf<Char>(array, 'c', Char.equal) == ?0;
+  /// assert Array.lastIndexOf<Char>(array, 'f', Char.equal) == ?3;
+  /// assert Array.lastIndexOf<Char>(array, 'e', Char.equal) == ?5;
+  /// assert Array.lastIndexOf<Char>(array, 'g', Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(haystack.size());
+  /// Space: O(1);
+  public func lastIndexOf<X>(haystack : [X], needle : X, eq : (X, X) -> Bool) : ?Nat = prevIndexOf<X>(haystack, needle, haystack.size(), eq);
+
+  /// Returns the index of the previous occurance of `needle` element in the `haystack` array starting from the `from` index (exclusive).
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.prevIndexOf<Char>(array, 'c', array.size(), Char.equal) == ?0;
+  /// assert Array.prevIndexOf<Char>(array, 'e', array.size(), Char.equal) == ?5;
+  /// assert Array.prevIndexOf<Char>(array, 'e', 5, Char.equal) == ?4;
+  /// assert Array.prevIndexOf<Char>(array, 'e', 4, Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(haystack.size());
+  /// Space: O(1);
+  public func prevIndexOf<T>(haystack : [T], needle : T, fromExclusive : Nat, eq : (T, T) -> Bool) : ?Nat {
+    var i = fromExclusive;
+    while (i > 0) {
+      i -= 1;
+      if (eq(haystack[i], needle)) {
+        return ?i
+      }
+    };
+    null
+  };
+
+  /// Returns an iterator over a slice of the given array.
+  ///
+  /// ```motoko include=import
+  /// let array = [1, 2, 3, 4, 5];
+  /// let s = Array.slice<Nat>(array, 3, array.size());
+  /// assert s.next() == ?4;
+  /// assert s.next() == ?5;
+  /// assert s.next() == null;
+  ///
+  /// let s = Array.slice<Nat>(array, 0, 0);
+  /// assert s.next() == null;
+  /// ```
+  ///
+  /// Runtime: O(1)
+  /// Space: O(1)
+  public func slice<X>(arr : [X], fromInclusive : Nat, toExclusive : Nat) : I.Iter<X> = object {
+    var i = fromInclusive;
+
+    public func next() : ?X {
+      if (i >= toExclusive) {
+        return null
+      };
+      let result = arr[i];
+      i += 1;
+      return result
+    }
+  }
+}
