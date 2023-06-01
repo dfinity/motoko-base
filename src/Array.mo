@@ -736,7 +736,7 @@ module {
     )
   };
 
-  /// Returns the index of the first `needle` element in the `haystack` array.
+  /// Returns the index of the first `element` in the `array`.
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
@@ -746,11 +746,11 @@ module {
   /// assert Array.indexOf<Char>(array, 'g', Char.equal) == null;
   /// ```
   ///
-  /// Runtime: O(haystack.size());
+  /// Runtime: O(array.size());
   /// Space: O(1);
-  public func indexOf<X>(haystack : [X], needle : X, eq : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(haystack, needle, 0, eq);
+  public func indexOf<X>(array : [X], element : X, equal : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(array, element, 0, equal);
 
-  /// Returns the index of the next occurence of `needle` element in the `haystack` array starting from the `from` index (inclusive).
+  /// Returns the index of the next occurence of `element` in the `array` starting from the `from` index (inclusive).
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
@@ -762,13 +762,13 @@ module {
   /// assert Array.nextIndexOf<Char>(array, 'f', 4, Char.equal) == null;
   /// ```
   ///
-  /// Runtime: O(haystack.size());
+  /// Runtime: O(array.size());
   /// Space: O(1);
-  public func nextIndexOf<X>(haystack : [X], needle : X, fromInclusive : Nat, eq : (X, X) -> Bool) : ?Nat {
+  public func nextIndexOf<X>(array : [X], element : X, fromInclusive : Nat, equal : (X, X) -> Bool) : ?Nat {
     var i = fromInclusive;
-    let n = haystack.size();
+    let n = array.size();
     while (i < n) {
-      if (eq(haystack[i], needle)) {
+      if (equal(array[i], element)) {
         return ?i
       } else {
         i += 1
@@ -777,7 +777,7 @@ module {
     null
   };
 
-  /// Returns the index of the last `needle` element in the `haystack` array.
+  /// Returns the index of the last `element` in the `array`.
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
@@ -788,11 +788,11 @@ module {
   /// assert Array.lastIndexOf<Char>(array, 'g', Char.equal) == null;
   /// ```
   ///
-  /// Runtime: O(haystack.size());
+  /// Runtime: O(array.size());
   /// Space: O(1);
-  public func lastIndexOf<X>(haystack : [X], needle : X, eq : (X, X) -> Bool) : ?Nat = prevIndexOf<X>(haystack, needle, haystack.size(), eq);
+  public func lastIndexOf<X>(array : [X], element : X, equal : (X, X) -> Bool) : ?Nat = prevIndexOf<X>(array, element, array.size(), equal);
 
-  /// Returns the index of the previous occurance of `needle` element in the `haystack` array starting from the `from` index (exclusive).
+  /// Returns the index of the previous occurance of `element` in the `array` starting from the `from` index (exclusive).
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
@@ -803,13 +803,13 @@ module {
   /// assert Array.prevIndexOf<Char>(array, 'e', 4, Char.equal) == null;
   /// ```
   ///
-  /// Runtime: O(haystack.size());
+  /// Runtime: O(array.size());
   /// Space: O(1);
-  public func prevIndexOf<T>(haystack : [T], needle : T, fromExclusive : Nat, eq : (T, T) -> Bool) : ?Nat {
+  public func prevIndexOf<T>(array : [T], element : T, fromExclusive : Nat, equal : (T, T) -> Bool) : ?Nat {
     var i = fromExclusive;
     while (i > 0) {
       i -= 1;
-      if (eq(haystack[i], needle)) {
+      if (equal(array[i], element)) {
         return ?i
       }
     };
@@ -831,14 +831,14 @@ module {
   ///
   /// Runtime: O(1)
   /// Space: O(1)
-  public func slice<X>(arr : [X], fromInclusive : Nat, toExclusive : Nat) : I.Iter<X> = object {
+  public func slice<X>(array : [X], fromInclusive : Nat, toExclusive : Nat) : I.Iter<X> = object {
     var i = fromInclusive;
 
     public func next() : ?X {
       if (i >= toExclusive) {
         return null
       };
-      let result = arr[i];
+      let result = array[i];
       i += 1;
       return ?result
     }
