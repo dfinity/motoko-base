@@ -1030,4 +1030,22 @@ run(
       )
     ]
   )
+);
+
+run(
+  suite(
+    "array-conversions",
+    [
+      test(
+        "toArray-example",
+        Text.toArray("Café"),
+        M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
+      ),
+      test(
+        "toArray-example",
+        Array.freeze(Text.toVarArray("Café")),
+        M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
+      )
+    ]
+  )
 )

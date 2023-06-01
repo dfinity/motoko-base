@@ -87,12 +87,12 @@ module {
   /// Equivalent to `Iter.toArrayMut(t.chars())`.
   ///
   /// ```motoko include=import
-  /// assert Text.toArrayMut("Café") == [var 'C', 'a', 'f', 'é'];
+  /// assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
   /// ```
   ///
   /// Runtime: O(t.size())
   /// Space: O(t.size())
-  public func toArrayMut(t : Text) : [var Char] {
+  public func toVarArray(t : Text) : [var Char] {
     let n = t.size();
     if (n == 0) {
       return [var];
