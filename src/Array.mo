@@ -750,7 +750,7 @@ module {
   /// Space: O(1);
   public func indexOf<X>(haystack : [X], needle : X, eq : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(haystack, needle, 0, eq);
 
-  /// Returns the index of the next occurance of `needle` element in the `haystack` array starting from the `from` index (inclusive).
+  /// Returns the index of the next occurence of `needle` element in the `haystack` array starting from the `from` index (inclusive).
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
