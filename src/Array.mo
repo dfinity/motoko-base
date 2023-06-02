@@ -741,30 +741,30 @@ module {
   /// ```motoko include=import
   /// import Char "mo:base/Char";
   /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
-  /// assert Array.indexOf<Char>(array, 'c', Char.equal) == ?0;
-  /// assert Array.indexOf<Char>(array, 'f', Char.equal) == ?2;
-  /// assert Array.indexOf<Char>(array, 'g', Char.equal) == null;
+  /// assert Array.indexOf<Char>('c', array, Char.equal) == ?0;
+  /// assert Array.indexOf<Char>('f', array, Char.equal) == ?2;
+  /// assert Array.indexOf<Char>('g', array, Char.equal) == null;
   /// ```
   ///
   /// Runtime: O(array.size());
   /// Space: O(1);
-  public func indexOf<X>(array : [X], element : X, equal : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(array, element, 0, equal);
+  public func indexOf<X>(element : X, array : [X], equal : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(element, array, 0, equal);
 
   /// Returns the index of the next occurence of `element` in the `array` starting from the `from` index (inclusive).
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
   /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
-  /// assert Array.nextIndexOf<Char>(array, 'c', 0, Char.equal) == ?0;
-  /// assert Array.nextIndexOf<Char>(array, 'f', 0, Char.equal) == ?2;
-  /// assert Array.nextIndexOf<Char>(array, 'f', 2, Char.equal) == ?2;
-  /// assert Array.nextIndexOf<Char>(array, 'f', 3, Char.equal) == ?3;
-  /// assert Array.nextIndexOf<Char>(array, 'f', 4, Char.equal) == null;
+  /// assert Array.nextIndexOf<Char>('c', array, 0, Char.equal) == ?0;
+  /// assert Array.nextIndexOf<Char>('f', array, 0, Char.equal) == ?2;
+  /// assert Array.nextIndexOf<Char>('f', array, 2, Char.equal) == ?2;
+  /// assert Array.nextIndexOf<Char>('f', array, 3, Char.equal) == ?3;
+  /// assert Array.nextIndexOf<Char>('f', array, 4, Char.equal) == null;
   /// ```
   ///
   /// Runtime: O(array.size());
   /// Space: O(1);
-  public func nextIndexOf<X>(array : [X], element : X, fromInclusive : Nat, equal : (X, X) -> Bool) : ?Nat {
+  public func nextIndexOf<X>(element : X, array : [X], fromInclusive : Nat, equal : (X, X) -> Bool) : ?Nat {
     var i = fromInclusive;
     let n = array.size();
     while (i < n) {
@@ -782,30 +782,30 @@ module {
   /// ```motoko include=import
   /// import Char "mo:base/Char";
   /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
-  /// assert Array.lastIndexOf<Char>(array, 'c', Char.equal) == ?0;
-  /// assert Array.lastIndexOf<Char>(array, 'f', Char.equal) == ?3;
-  /// assert Array.lastIndexOf<Char>(array, 'e', Char.equal) == ?5;
-  /// assert Array.lastIndexOf<Char>(array, 'g', Char.equal) == null;
+  /// assert Array.lastIndexOf<Char>('c', array, Char.equal) == ?0;
+  /// assert Array.lastIndexOf<Char>('f', array, Char.equal) == ?3;
+  /// assert Array.lastIndexOf<Char>('e', array, Char.equal) == ?5;
+  /// assert Array.lastIndexOf<Char>('g', array, Char.equal) == null;
   /// ```
   ///
   /// Runtime: O(array.size());
   /// Space: O(1);
-  public func lastIndexOf<X>(array : [X], element : X, equal : (X, X) -> Bool) : ?Nat = prevIndexOf<X>(array, element, array.size(), equal);
+  public func lastIndexOf<X>(element : X, array : [X], equal : (X, X) -> Bool) : ?Nat = prevIndexOf<X>(element, array, array.size(), equal);
 
   /// Returns the index of the previous occurance of `element` in the `array` starting from the `from` index (exclusive).
   ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
   /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
-  /// assert Array.prevIndexOf<Char>(array, 'c', array.size(), Char.equal) == ?0;
-  /// assert Array.prevIndexOf<Char>(array, 'e', array.size(), Char.equal) == ?5;
-  /// assert Array.prevIndexOf<Char>(array, 'e', 5, Char.equal) == ?4;
-  /// assert Array.prevIndexOf<Char>(array, 'e', 4, Char.equal) == null;
+  /// assert Array.prevIndexOf<Char>('c', array, array.size(), Char.equal) == ?0;
+  /// assert Array.prevIndexOf<Char>('e', array, array.size(), Char.equal) == ?5;
+  /// assert Array.prevIndexOf<Char>('e', array, 5, Char.equal) == ?4;
+  /// assert Array.prevIndexOf<Char>('e', array, 4, Char.equal) == null;
   /// ```
   ///
   /// Runtime: O(array.size());
   /// Space: O(1);
-  public func prevIndexOf<T>(array : [T], element : T, fromExclusive : Nat, equal : (T, T) -> Bool) : ?Nat {
+  public func prevIndexOf<T>(element : T, array : [T], fromExclusive : Nat, equal : (T, T) -> Bool) : ?Nat {
     var i = fromExclusive;
     while (i > 0) {
       i -= 1;
