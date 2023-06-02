@@ -726,12 +726,12 @@ module {
   /// ```
   /// Runtime: O(length);
   /// Space: O(length);
-  public func subArray<X>(arr : [X], start : Nat, length : Nat) : [X] {
-    if (start + length > arr.size()) { Prim.trap("Array.subArray") };
+  public func subArray<X>(array : [X], start : Nat, length : Nat) : [X] {
+    if (start + length > array.size()) { Prim.trap("Array.subArray") };
     tabulate<X>(
       length,
       func(i) {
-        arr[start + i]
+        array[start + i]
       }
     )
   };
