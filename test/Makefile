@@ -6,7 +6,7 @@ WASMTIME_OPTIONS = --disable-cache
 
 OUTDIR=_out
 
-TESTS = $(wildcard *.mo)
+TESTS = $(wildcard *.mo) # FIXME somehow add StableBTreeTest into suite
 
 TEST_TARGETS = $(patsubst %.mo,_out/%.checked,$(TESTS))
 
