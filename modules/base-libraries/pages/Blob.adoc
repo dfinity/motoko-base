@@ -128,7 +128,7 @@ Blob.hash(blob) // => 1_818_567_776
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func compare(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : {#less; #equal; #greater}
+func compare(b1 : xref:#type.Blob[Blob], b2 : xref:#type.Blob[Blob]) : {#less; #equal; #greater}
 ----
 
 General purpose comparison function for `Blob` by comparing the value of
