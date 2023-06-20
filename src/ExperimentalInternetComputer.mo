@@ -57,4 +57,51 @@ module {
     post - pre - overhead
   }
 
+  type Change_origin = {
+    #from_user : {
+      user_id : Principal;
+    };
+    #from_canister : {
+      canister_id : Principal;
+      canister_version : ?Nat64;
+    };
+  };
+
+  type Change_details = {
+    #creation : { controllers : [Principal] };
+    #code_uninstall;
+    #code_deployment : {
+      mode : { #install; #reinstall; #upgrade};
+      module_hash : Blob;
+    };
+    #controllers_change : {
+      controllers : [Principal];
+    };
+  };
+
+  type Change = {
+    timestamp_nanos : Nat64;
+    canister_version : Nat64;
+    origin : Change_origin;
+    details : Change_details;
+  };
+
+  public func canisterInfo(c : Principal, requested : ?Nat64) : (total_num_changes : Nat64,
+                                                                 recent_changes : [Change],
+                                                                 module_hash : ?Blob,
+                                                                 controllers : [Principal]) {
+    let ic00 = actor "aaaaa-aa" : actor {
+        canister_info : {
+          canister_id : Principal;
+          num_requested_changes : ?Nat64;
+        } -> async {
+          total_num_changes : Nat64;
+          recent_changes : [Change];
+          module_hash : ?Blob;
+          controllers : [Principal];
+        };
+    };
+
+    await ic00.canister_info { canister_id = c; num_requested_changes = requested }
+  }
 }
