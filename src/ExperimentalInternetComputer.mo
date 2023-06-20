@@ -55,7 +55,7 @@ module {
     // performance_counter costs around 200 extra instructions, we perform an empty measurement to decide the overhead
     let overhead = pre - init;
     post - pre - overhead
-  }
+  };
 
   type Change_origin = {
     #from_user : {
@@ -86,22 +86,28 @@ module {
     details : Change_details;
   };
 
-  public func canisterInfo(c : Principal, requested : ?Nat64) : (total_num_changes : Nat64,
-                                                                 recent_changes : [Change],
-                                                                 module_hash : ?Blob,
-                                                                 controllers : [Principal]) {
+  public func canisterInfo(c : Principal, requested : ?Nat64) : async
+    (total_num_changes : Nat64,
+     recent_changes : [Change],
+     module_hash : ?Blob,
+     controllers : [Principal]) {
     let ic00 = actor "aaaaa-aa" : actor {
-        canister_info : {
-          canister_id : Principal;
-          num_requested_changes : ?Nat64;
-        } -> async {
-          total_num_changes : Nat64;
-          recent_changes : [Change];
-          module_hash : ?Blob;
-          controllers : [Principal];
-        };
+      canister_info : {
+        canister_id : Principal;
+        num_requested_changes : ?Nat64;
+      } -> async {
+        total_num_changes : Nat64;
+        recent_changes : [Change];
+        module_hash : ?Blob;
+        controllers : [Principal];
+      };
     };
 
-    await ic00.canister_info { canister_id = c; num_requested_changes = requested }
+    let { total_num_changes : Nat64;
+          recent_changes : [Change];
+          module_hash : ?Blob;
+          controllers : [Principal] }
+      = await ic00.canister_info { canister_id = c; num_requested_changes = requested };
+    (total_num_changes, recent_changes, module_hash, controllers)
   }
 }
