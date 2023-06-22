@@ -87,10 +87,12 @@ module {
   };
 
   public func canisterInfo(c : Principal, requested : ?Nat64) : async
-    (total_num_changes : Nat64,
-     recent_changes : [Change],
-     module_hash : ?Blob,
-     controllers : [Principal]) {
+    {
+      total_num_changes : Nat64;
+      recent_changes : [Change];
+      module_hash : ?Blob;
+      controllers : [Principal];
+    } {
     let ic00 = actor "aaaaa-aa" : actor {
       canister_info : {
         canister_id : Principal;
@@ -103,11 +105,6 @@ module {
       };
     };
 
-    let { total_num_changes : Nat64;
-          recent_changes : [Change];
-          module_hash : ?Blob;
-          controllers : [Principal] }
-      = await ic00.canister_info { canister_id = c; num_requested_changes = requested };
-    (total_num_changes, recent_changes, module_hash, controllers)
+    await ic00.canister_info { canister_id = c; num_requested_changes = requested }
   }
 }
