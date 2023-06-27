@@ -1,3 +1,5 @@
+# Deprecated in favor of running `npm test` in the root directory
+
 STDLIB ?= ../src
 MOC ?= moc
 WASMTIME_OPTIONS = --disable-cache

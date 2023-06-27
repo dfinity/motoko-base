@@ -1,3 +1,5 @@
+// @testmode wasi
+
 import Prim "mo:⛔";
 import TrieMap "mo:base/TrieMap";
 import Iter "mo:base/Iter";

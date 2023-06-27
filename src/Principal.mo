@@ -91,6 +91,15 @@ module {
   /// ```
   public func isAnonymous(p : Principal) : Bool = Prim.blobOfPrincipal p == anonymousPrincipal;
 
+  /// Checks if the given principal can control this canister.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.isController(principal) // => false
+  /// ```
+  public func isController(p : Principal) : Bool = Prim.isController p;
+
   /// Hashes the given principal by hashing its `Blob` representation.
   ///
   /// Example:
