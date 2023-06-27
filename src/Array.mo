@@ -723,12 +723,124 @@ module {
   ///
   /// let array = [1,2,3,4,5];
   /// let subArray = Array.subArray<Nat>(array, 2, 3);
+  /// ```
   /// Runtime: O(length);
   /// Space: O(length);
-  public func subArray<X>(arr: [X], start: Nat, length: Nat): [X] {
-    if (start + length > arr.size()) { Prim.trap("Array.subArray") };
-    tabulate<X>(length, func(i) {
-      arr[start + i]
-    });
+  public func subArray<X>(array : [X], start : Nat, length : Nat) : [X] {
+    if (start + length > array.size()) { Prim.trap("Array.subArray") };
+    tabulate<X>(
+      length,
+      func(i) {
+        array[start + i]
+      }
+    )
   };
-};
+
+  /// Returns the index of the first `element` in the `array`.
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.indexOf<Char>('c', array, Char.equal) == ?0;
+  /// assert Array.indexOf<Char>('f', array, Char.equal) == ?2;
+  /// assert Array.indexOf<Char>('g', array, Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(array.size());
+  /// Space: O(1);
+  public func indexOf<X>(element : X, array : [X], equal : (X, X) -> Bool) : ?Nat = nextIndexOf<X>(element, array, 0, equal);
+
+  /// Returns the index of the next occurence of `element` in the `array` starting from the `from` index (inclusive).
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.nextIndexOf<Char>('c', array, 0, Char.equal) == ?0;
+  /// assert Array.nextIndexOf<Char>('f', array, 0, Char.equal) == ?2;
+  /// assert Array.nextIndexOf<Char>('f', array, 2, Char.equal) == ?2;
+  /// assert Array.nextIndexOf<Char>('f', array, 3, Char.equal) == ?3;
+  /// assert Array.nextIndexOf<Char>('f', array, 4, Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(array.size());
+  /// Space: O(1);
+  public func nextIndexOf<X>(element : X, array : [X], fromInclusive : Nat, equal : (X, X) -> Bool) : ?Nat {
+    var i = fromInclusive;
+    let n = array.size();
+    while (i < n) {
+      if (equal(array[i], element)) {
+        return ?i
+      } else {
+        i += 1
+      }
+    };
+    null
+  };
+
+  /// Returns the index of the last `element` in the `array`.
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.lastIndexOf<Char>('c', array, Char.equal) == ?0;
+  /// assert Array.lastIndexOf<Char>('f', array, Char.equal) == ?3;
+  /// assert Array.lastIndexOf<Char>('e', array, Char.equal) == ?5;
+  /// assert Array.lastIndexOf<Char>('g', array, Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(array.size());
+  /// Space: O(1);
+  public func lastIndexOf<X>(element : X, array : [X], equal : (X, X) -> Bool) : ?Nat = prevIndexOf<X>(element, array, array.size(), equal);
+
+  /// Returns the index of the previous occurance of `element` in the `array` starting from the `from` index (exclusive).
+  ///
+  /// ```motoko include=import
+  /// import Char "mo:base/Char";
+  /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];
+  /// assert Array.prevIndexOf<Char>('c', array, array.size(), Char.equal) == ?0;
+  /// assert Array.prevIndexOf<Char>('e', array, array.size(), Char.equal) == ?5;
+  /// assert Array.prevIndexOf<Char>('e', array, 5, Char.equal) == ?4;
+  /// assert Array.prevIndexOf<Char>('e', array, 4, Char.equal) == null;
+  /// ```
+  ///
+  /// Runtime: O(array.size());
+  /// Space: O(1);
+  public func prevIndexOf<T>(element : T, array : [T], fromExclusive : Nat, equal : (T, T) -> Bool) : ?Nat {
+    var i = fromExclusive;
+    while (i > 0) {
+      i -= 1;
+      if (equal(array[i], element)) {
+        return ?i
+      }
+    };
+    null
+  };
+
+  /// Returns an iterator over a slice of the given array.
+  ///
+  /// ```motoko include=import
+  /// let array = [1, 2, 3, 4, 5];
+  /// let s = Array.slice<Nat>(array, 3, array.size());
+  /// assert s.next() == ?4;
+  /// assert s.next() == ?5;
+  /// assert s.next() == null;
+  ///
+  /// let s = Array.slice<Nat>(array, 0, 0);
+  /// assert s.next() == null;
+  /// ```
+  ///
+  /// Runtime: O(1)
+  /// Space: O(1)
+  public func slice<X>(array : [X], fromInclusive : Nat, toExclusive : Nat) : I.Iter<X> = object {
+    var i = fromInclusive;
+
+    public func next() : ?X {
+      if (i >= toExclusive) {
+        return null
+      };
+      let result = array[i];
+      i += 1;
+      return ?result
+    }
+  }
+}
