@@ -73,6 +73,44 @@ for (c in Text.toIter("abc")) {
 }
 ```
 
+[[toArray]]
+== toArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toArray(t : xref:#type.Text[Text]) : pass:[[]Charpass:[]]
+----
+
+Creates a new `Array` containing characters of the given `Text`.
+
+Equivalent to `Iter.toArray(t.chars())`.
+
+```motoko include=import
+assert Text.toArray("Café") == ['C', 'a', 'f', 'é'];
+```
+
+Runtime: O(t.size())
+Space: O(t.size())
+
+[[toVarArray]]
+== toVarArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toVarArray(t : xref:#type.Text[Text]) : pass:[[]var Charpass:[]]
+----
+
+Creates a new mutable `Array` containing characters of the given `Text`.
+
+Equivalent to `Iter.toArrayMut(t.chars())`.
+
+```motoko include=import
+assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
+```
+
+Runtime: O(t.size())
+Space: O(t.size())
+
 [[fromIter]]
 == fromIter
 
