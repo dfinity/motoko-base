@@ -15,11 +15,47 @@
 import Trie "Trie";
 import Hash "Hash";
 import List "List";
+import Iter "Iter";
 
 module {
 
   public type Hash = Hash.Hash;
   public type Set<T> = Trie.Trie<T, ()>;
+  type Key<K> = Trie.Key<K>;
+  type Trie<K, V> = Trie.Trie<K, V>;
+
+  // helper for defining equal and sub, avoiding Trie.diff.
+  // TODO: add to Trie.mo?
+  private func keys<K>(t : Trie<K, Any>) : Iter.Iter<Key<K>> {
+    object {
+      var stack = ?(t, null) : List.List<Trie<K, Any>>;
+      public func next() : ?Key<K> {
+        switch stack {
+          case null { null };
+          case (?(trie, stack2)) {
+            switch trie {
+              case (#empty) {
+                stack := stack2;
+                next()
+              };
+              case (#leaf({ keyvals = null })) {
+                stack := stack2;
+                next()
+              };
+              case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
+                stack := ?(#leaf({ size = c - 1; keyvals = kvs }), stack2);
+                ?k
+              };
+              case (#branch(br)) {
+                stack := ?(br.left, ?(br.right, stack2));
+                next()
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 
   /// Empty set.
   public func empty<T>() : Set<T> { Trie.empty<T, ()>() };
@@ -27,71 +63,86 @@ module {
   /// Put an element into the set.
   public func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
     let (s2, _) = Trie.put<T, ()>(s, { key = x; hash = xh }, eq, ());
-    s2;
+    s2
   };
 
   /// Delete an element from the set.
   public func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
     let (s2, _) = Trie.remove<T, ()>(s, { key = x; hash = xh }, eq);
-    s2;
+    s2
   };
 
   /// Test if two sets are equal.
   public func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
-    // XXX: Todo: use a smarter check
-    func unitEqual(_ : (), _ : ()) : Bool { true };
-    Trie.equalStructure<T, ()>(s1, s2, eq, unitEqual);
+    if (Trie.size(s1) != Trie.size(s2)) return false;
+    for (k in keys(s1)) {
+      if (Trie.find<T,()>(s2, k, eq) == null) {
+        return false;
+      }
+    };
+    return true;
   };
 
   /// The number of set elements, set's cardinality.
   public func size<T>(s : Set<T>) : Nat {
-    Trie.foldUp<T, (), Nat>(
-      s,
-      func(n : Nat, m : Nat) : Nat { n + m },
-      func(_ : T, _ : ()) : Nat { 1 },
-      0,
-    );
+    Trie.size(s);
+  };
+
+  /// Test if `s` is the empty set.
+  public func isEmpty<T>(s : Set<T>) : Bool {
+    Trie.size(s) == 0;
+  };
+
+  /// Test if `s1` is a subset of `s2`.
+  public func isSubset<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
+    if (Trie.size(s1) > Trie.size(s2)) return false;
+    for (k in keys(s1)) {
+      if (Trie.find<T,()>(s2, k, eq) == null) {
+        return false;
+      }
+    };
+    return true;
   };
 
   /// Test if a set contains a given element.
   public func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
     switch (Trie.find<T, ()>(s, { key = x; hash = xh }, eq)) {
       case null { false };
-      case (?_) { true };
-    };
+      case (?_) { true }
+    }
   };
 
   /// [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
   public func union<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let s3 = Trie.merge<T, ()>(s1, s2, eq);
-    s3;
+    s3
   };
 
   /// [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
   public func diff<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let s3 = Trie.diff<T, (), ()>(s1, s2, eq);
-    s3;
+    s3
   };
 
   /// [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
   public func intersect<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let noop : ((), ()) -> (()) = func(_ : (), _ : ()) : (()) = ();
     let s3 = Trie.join<T, (), (), ()>(s1, s2, eq, noop);
-    s3;
+    s3
   };
 
   //// Construct a set from an array.
   public func fromArray<T>(arr : [T], elemHash : T -> Hash, eq : (T, T) -> Bool) : Set<T> {
     var s = empty<T>();
     for (elem in arr.vals()) {
-      s := put<T>(s, elem, elemHash(elem), eq);
+      s := put<T>(s, elem, elemHash(elem), eq)
     };
-    s;
+    s
   };
 
   //// Returns the set as an array.
   public func toArray<T>(s : Set<T>) : [T] {
-    Trie.toArray(s, func(t : T, _ : ()) : T { t });
+    Trie.toArray(s, func(t : T, _ : ()) : T { t })
   }
 
-};
+}

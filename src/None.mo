@@ -14,6 +14,6 @@ module {
 
   /// Turns an absurd value into an arbitrary type.
   public let impossible : <A> None -> A = func<A>(x : None) : A {
-    switch (x) {};
-  };
-};
+    switch (x) {}
+  }
+}

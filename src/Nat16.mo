@@ -20,17 +20,17 @@ module {
 
   /// Returns the Text representation of `x`.
   public func toText(x : Nat16) : Text {
-    Nat.toText(toNat(x));
+    Nat.toText(toNat(x))
   };
 
   /// Returns the minimum of `x` and `y`.
   public func min(x : Nat16, y : Nat16) : Nat16 {
-    if (x < y) { x } else { y };
+    if (x < y) { x } else { y }
   };
 
   /// Returns the maximum of `x` and `y`.
   public func max(x : Nat16, y : Nat16) : Nat16 {
-    if (x < y) { y } else { x };
+    if (x < y) { y } else { x }
   };
 
   /// Returns `x == y`.
@@ -53,7 +53,7 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Nat16, y : Nat16) : { #less; #equal; #greater } {
-    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater }
   };
 
   /// Returns the sum of `x` and `y`, `x + y`. Traps on overflow.
@@ -77,7 +77,7 @@ module {
   public func pow(x : Nat16, y : Nat16) : Nat16 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
-  public func bitnot(x : Nat16, y : Nat16) : Nat16 { ^x };
+  public func bitnot(x : Nat16) : Nat16 { ^x };
 
   /// Returns the bitwise and of `x` and `y`, `x & y`.
   public func bitand(x : Nat16, y : Nat16) : Nat16 { x & y };
@@ -102,22 +102,22 @@ module {
 
   /// Returns the value of bit `p mod 16` in `x`, `(x & 2^(p mod 16)) == 2^(p mod 16)`.
   public func bittest(x : Nat16, p : Nat) : Bool {
-    Prim.btstNat16(x, Prim.natToNat16(p));
+    Prim.btstNat16(x, Prim.natToNat16(p))
   };
 
   /// Returns the value of setting bit `p mod 16` in `x` to `1`.
   public func bitset(x : Nat16, p : Nat) : Nat16 {
-    x | (1 << Prim.natToNat16(p));
+    x | (1 << Prim.natToNat16(p))
   };
 
   /// Returns the value of clearing bit `p mod 16` in `x` to `0`.
   public func bitclear(x : Nat16, p : Nat) : Nat16 {
-    x & ^(1 << Prim.natToNat16(p));
+    x & ^(1 << Prim.natToNat16(p))
   };
 
   /// Returns the value of flipping bit `p mod 16` in `x`.
   public func bitflip(x : Nat16, p : Nat) : Nat16 {
-    x ^ (1 << Prim.natToNat16(p));
+    x ^ (1 << Prim.natToNat16(p))
   };
 
   /// Returns the count of non-zero bits in `x`.
@@ -141,4 +141,4 @@ module {
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
   public func powWrap(x : Nat16, y : Nat16) : Nat16 { x **% y };
 
-};
+}

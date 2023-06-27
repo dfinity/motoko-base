@@ -1,0 +1,11 @@
+{
+  "overrides": [
+    {
+      "files": "*.mo",
+      "options": {
+        "semi": false,
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

@@ -7,10 +7,10 @@ import Prim "mo:⛔";
 
 module {
 
-  /// Error values resulting from  `async` computations
+  /// Error value resulting from  `async` computations
   public type Error = Prim.Types.Error;
 
-  /// Error codes (user and system), where module `Prim` defines:
+  /// Error code to classify different kinds of user and system errors:
   /// ```motoko
   /// type ErrorCode = {
   ///   // Fatal error.
@@ -23,19 +23,46 @@ module {
   ///   #canister_reject;
   ///   // Canister trapped.
   ///   #canister_error;
-  ///   // Future error code (with unrecognized numeric code)
+  ///   // Future error code (with unrecognized numeric code).
   ///   #future : Nat32;
+  ///   // Error issuing inter-canister call
+  ///   // (indicating destination queue full or freezing threshold crossed).
+  ///   #call_error : { err_code :  Nat32 }
   /// };
   /// ```
   public type ErrorCode = Prim.ErrorCode;
 
-  /// Create an error from message `m` with code #canister_reject.
-  public let reject : (m : Text) -> Error = Prim.error;
+  /// Create an error from the message with the code `#canister_reject`.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Error "mo:base/Error";
+  ///
+  /// Error.reject("Example error") // can be used as throw argument
+  /// ```
+  public let reject : (message : Text) -> Error = Prim.error;
 
-  /// Returns the code of an error `e`.
-  public let code : (e : Error) -> ErrorCode = Prim.errorCode;
+  /// Returns the code of an error.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Error "mo:base/Error";
+  ///
+  /// let error = Error.reject("Example error");
+  /// Error.code(error) // #canister_reject
+  /// ```
+  public let code : (error : Error) -> ErrorCode = Prim.errorCode;
 
-  /// Returns the message of an error `e`.
-  public let message : (e : Error) -> Text = Prim.errorMessage;
+  /// Returns the message of an error.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Error "mo:base/Error";
+  /// import Debug "mo:base/Debug";
+  ///
+  /// let error = Error.reject("Example error");
+  /// Error.message(error) // "Example error"
+  /// ```
+  public let message : (error : Error) -> Text = Prim.errorMessage;
 
-};
+}
