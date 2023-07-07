@@ -9,7 +9,7 @@ on:
 # Remember to update me in package-set.yml as well
 env:
   vessel_version: "v0.6.5"
-  moc_version: "0.9.5"
+  moc_version: "0.9.6"
 
 jobs:
   tests:
