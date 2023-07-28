@@ -46,6 +46,21 @@ The test runner will automatically detect the `moc` compiler from your system pa
 
 Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) to be installed on your system.
 
+Run only specific test files:
+```sh
+npm test <filter>
+```
+
+For example `npm test int` will run `List.test.mo` and `AssocList.test.mo` test files.
+
+Run tests in watch mode:
+```sh
+npm test -- --watch
+
+# useful to combine with filter when writing tests
+npm test array -- --watch
+```
+
 Documentation
 -------------
 
