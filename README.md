@@ -51,7 +51,7 @@ Run only specific test files:
 npm test <filter>
 ```
 
-For example `npm test int` will run `List.test.mo` and `AssocList.test.mo` test files.
+For example `npm test list` will run `List.test.mo` and `AssocList.test.mo` test files.
 
 Run tests in watch mode:
 ```sh
