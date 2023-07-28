@@ -1,7 +1,0 @@
-{
-  "defaults": {
-    "build": {
-      "packtool": "echo \"--package base ../src\" && vessel sources"
-    }
-  }
-}
