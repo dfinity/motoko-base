@@ -38,11 +38,14 @@ npm install
 # Run tests
 npm test
 
+# Run all tests in wasi mode
+npm test -- --mode wasi
+
 # Run formatter
 npm run prettier:format
 ```
 
-The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation. 
+The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
 
 Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
 

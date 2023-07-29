@@ -24,7 +24,7 @@
   "devDependencies": {
     "fast-glob": "^3.2.12",
     "husky": "^8.0.2",
-    "ic-mops": "^0.21.1",
+    "ic-mops": "^0.22.0",
     "mo-dev": "^0.9.0",
     "prettier": "^2.8.1",
     "prettier-plugin-motoko": "^0.2.3",
