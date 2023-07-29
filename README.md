@@ -42,9 +42,9 @@ npm test
 npm run prettier:format
 ```
 
-The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
+The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation. 
 
-Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) to be installed on your system.
+Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
 
 Run only specific test files:
 ```sh
