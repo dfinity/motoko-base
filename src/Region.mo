@@ -1,27 +1,27 @@
 /// Isolated, byte-level access to (virtual) _stable memory_ regions.
 ///
-/// This is a lightweight abstraction over IC _stable memory_ and supports persisting
-/// raw binary data across Motoko upgrades.
+/// This is a moderately lightweight abstraction over IC _stable memory_ and supports persisting
+/// regions of binary data across Motoko upgrades.
 /// Use of this module is fully compatible with Motoko's use of
 /// _stable variables_, whose persistence mechanism also uses (real) IC stable memory internally, but does not interfere with this API.
 /// It is also fully compatible with existing uses of the `ExperimentalStableMemory` library, which has a similar interface, but,
-/// only supported a single memory region.
+/// only supported a single memory region, without isolation between different applications.
 ///
-/// Memory is allocated, using `grow(pages)`, sequentially and on demand, in units of 64KiB logical pages, starting with 0 allocated pages.
+/// Memory is allocated, using `grow(region, pages)`, sequentially and on demand, in units of 64KiB logical pages, starting with 0 allocated pages.
 /// New pages are zero initialized.
 /// Growth is capped by a soft limit on physical page count controlled by compile-time flag
 /// `--max-stable-pages <n>` (the default is 65536, or 4GiB).
 ///
-/// Each `load` operation loads from byte address `offset` in little-endian
+/// Each `load` operation loads from region relative byte address `offset` in little-endian
 /// format using the natural bit-width of the type in question.
-/// The operation traps if attempting to read beyond the current stable memory size.
+/// The operation traps if attempting to read beyond the current region size.
 ///
-/// Each `store` operation stores to byte address `offset` in little-endian format using the natural bit-width of the type in question.
-/// The operation traps if attempting to write beyond the current stable memory size.
+/// Each `store` operation stores to region relative byte address `offset` in little-endian format using the natural bit-width of the type in question.
+/// The operation traps if attempting to write beyond the current region size.
 ///
 /// Text values can be handled by using `Text.decodeUtf8` and `Text.encodeUtf8`, in conjunction with `loadBlob` and `storeBlob`.
 ///
-/// The current page allocation and page contents is preserved across upgrades.
+/// The current region allocation and region contents are preserved across upgrades.
 ///
 /// NB: The IC's actual stable memory size (`ic0.stable_size`) may exceed the
 /// total page size reported by summing all regions sizes.
@@ -39,14 +39,18 @@ import Prim "mo:⛔";
 
 module {
 
-  // A stateful handle to an isolated region of IC stable memory.
-  // Region is a stable type and regions can be stored in stable variables.
+  /// A stateful handle to an isolated region of IC stable memory.
+  /// `Region` is a stable type and regions can be stored in stable variables.
   public type Region = Prim.Types.Region;
 
-  // Allocate a new, isolated Region of size 0.
-  public let new = Prim.regionNew;
+  /// Allocate a new, isolated Region of size 0.
+  public let new : () -> Region = Prim.regionNew;
 
-  public let id = Prim.regionId;
+  /// Return a Nat identifying the given region.
+  /// Maybe be used for equality, comparison and hashing.
+  /// NB: Regions returned by `new()` are numbered from 16
+  /// (regions 0..15 are currently reserved for internal use).
+  public let id : Region -> Nat = Prim.regionId;
 
   /// Current size of `region`, in pages.
   /// Each page is 64KiB (65536 bytes).
