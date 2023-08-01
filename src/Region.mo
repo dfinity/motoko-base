@@ -1,4 +1,4 @@
-/// Isolated, Byte-level access to (virtual) _stable memory_.
+/// Isolated, byte-level access to (virtual) _stable memory_ regions.
 ///
 /// This is a lightweight abstraction over IC _stable memory_ and supports persisting
 /// raw binary data across Motoko upgrades.
@@ -48,7 +48,7 @@ module {
 
   public let id = Prim.regionId;
 
-  /// Current size of a the give region, in pages.
+  /// Current size of `region`, in pages.
   /// Each page is 64KiB (65536 bytes).
   /// Initially `0`.
   /// Preserved across upgrades, together with contents of allocated
@@ -56,15 +56,15 @@ module {
   ///
   /// Example:
   /// ```motoko no-repl
-  /// let r = Region.new();
-  /// let beforeSize = Region.size(r);
-  /// ignore StableMemory.grow(r, 10);
-  /// let afterSize = Region.size();
+  /// let region = Region.new();
+  /// let beforeSize = Region.size(region);
+  /// ignore Region.grow(region, 10);
+  /// let afterSize = Region.size(region);
   /// afterSize - beforeSize // => 10
   /// ```
-  public let size : Region -> (pages : Nat64) = Prim.regionSize;
+  public let size : (region : Region) -> (pages : Nat64) = Prim.regionSize;
 
-  /// Grow current `size` of a region by the given number of pages.
+  /// Grow current `size` of `region` by the given number of pages.
   /// Each page is 64KiB (65536 bytes).
   /// Returns the previous `size` when able to grow.
   /// Returns `0xFFFF_FFFF_FFFF_FFFF` if remaining pages insufficient.
@@ -76,15 +76,15 @@ module {
   /// ```motoko no-repl
   /// import Error "mo:base/Error";
   ///
-  /// let r = Region.new();
-  /// let beforeSize = Region.grow(r, 10);
+  /// let region = Region.new();
+  /// let beforeSize = Region.grow(region, 10);
   /// if (beforeSize == 0xFFFF_FFFF_FFFF_FFFF) {
   ///   throw Error.reject("Out of memory");
   /// };
-  /// let afterSize = Region.size(r);
+  /// let afterSize = Region.size(region);
   /// afterSize - beforeSize // => 10
   /// ```
-  public let grow : (newPages : Nat64) -> (pages : Nat64) = Prim.regionGrow;
+  public let grow : (region : Region, newPages : Nat64) -> (pages : Nat64) = Prim.regionGrow;
 
 
   /// Within `region`, load a `Nat8` value from `offset`.
@@ -108,10 +108,10 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeNat8(region, offset, value);
-  /// StableMemory.loadNat8(region, offset) // => 123
+  /// Region.storeNat8(region, offset, value);
+  /// Region.loadNat8(region, offset) // => 123
   /// ```
-  public let storeNat8 (region : Region, offset : Nat64, value : Nat8) -> () = Prim.regionStoreNat8;
+  public let storeNat8 : (region : Region, offset : Nat64, value : Nat8) -> () = Prim.regionStoreNat8;
 
   /// Within `region`, load a `Nat16` value from `offset`.
   /// Traps on an out-of-bounds access.
@@ -134,10 +134,10 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeNat16(region, offset, value);
-  /// StableMemory.loadNat16(region, offset) // => 123
+  /// Region.storeNat16(region, offset, value);
+  /// Region.loadNat16(region, offset) // => 123
   /// ```
-  public let storeNat16 (region : Region, offset : Nat64, value : Nat16) -> () = Prim.regionStoreNat16;
+  public let storeNat16 : (region : Region, offset : Nat64, value : Nat16) -> () = Prim.regionStoreNat16;
 
   /// Within `region`, load a `Nat32` value from `offset`.
   /// Traps on an out-of-bounds access.
@@ -148,7 +148,7 @@ module {
   /// let offset = 0;
   /// let value = 123;
   /// Region.storeNat32(region, offset, value);
-  /// Region.loadNat32(offset) // => 123
+  /// Region.loadNat32(region, offset) // => 123
   /// ```
   public let loadNat32 : (region : Region, offset : Nat64) -> Nat32 = Prim.regionLoadNat32;
 
@@ -160,8 +160,8 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeNat32(region, offset, value);
-  /// StableMemory.loadNat32(region, offset) // => 123
+  /// Region.storeNat32(region, offset, value);
+  /// Region.loadNat32(region, offset) // => 123
   /// ```
   public let storeNat32 : (region : Region, offset : Nat64, value : Nat32) -> () = Prim.regionStoreNat32;
 
@@ -186,10 +186,10 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeNat64(region, offset, value);
-  /// StableMemory.loadNat64(region, offset) // => 123
+  /// Region.storeNat64(region, offset, value);
+  /// Region.loadNat64(region, offset) // => 123
   /// ```
-  public let storeNat64 (region : Region, offset : Nat64, value : Nat64) -> () = Prim.regionStoreNat64;
+  public let storeNat64 : (region : Region, offset : Nat64, value : Nat64) -> () = Prim.regionStoreNat64;
 
   /// Within `region`, load a `Int8` value from `offset`.
   /// Traps on an out-of-bounds access.
@@ -212,10 +212,10 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeInt8(region, offset, value);
-  /// StableMemory.loadInt8(region, offset) // => 123
+  /// Region.storeInt8(region, offset, value);
+  /// Region.loadInt8(region, offset) // => 123
   /// ```
-  public let storeInt8 (region : Region, offset : Nat64, value : Int8) -> () = Prim.regionStoreInt8;
+  public let storeInt8 : (region : Region, offset : Nat64, value : Int8) -> () = Prim.regionStoreInt8;
 
   /// Within `region`, load a `Int16` value from `offset`.
   /// Traps on an out-of-bounds access.
@@ -238,10 +238,10 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeInt16(region, offset, value);
-  /// StableMemory.loadInt16(region, offset) // => 123
+  /// Region.storeInt16(region, offset, value);
+  /// Region.loadInt16(region, offset) // => 123
   /// ```
-  public let storeInt16 (region : Region, offset : Nat64, value : Int16) -> () = Prim.regionStoreInt16;
+  public let storeInt16 : (region : Region, offset : Nat64, value : Int16) -> () = Prim.regionStoreInt16;
 
   /// Within `region`, load a `Int32` value from `offset`.
   /// Traps on an out-of-bounds access.
@@ -252,7 +252,7 @@ module {
   /// let offset = 0;
   /// let value = 123;
   /// Region.storeInt32(region, offset, value);
-  /// Region.loadInt32(offset) // => 123
+  /// Region.loadInt32(region, offset) // => 123
   /// ```
   public let loadInt32 : (region : Region, offset : Nat64) -> Int32 = Prim.regionLoadInt32;
 
@@ -264,8 +264,8 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeInt32(region, offset, value);
-  /// StableMemory.loadInt32(region, offset) // => 123
+  /// Region.storeInt32(region, offset, value);
+  /// Region.loadInt32(region, offset) // => 123
   /// ```
   public let storeInt32 : (region : Region, offset : Nat64, value : Int32) -> () = Prim.regionStoreInt32;
 
@@ -290,10 +290,10 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 123;
-  /// StableMemory.storeInt64(region, offset, value);
-  /// StableMemory.loadInt64(region, offset) // => 123
+  /// Region.storeInt64(region, offset, value);
+  /// Region.loadInt64(region, offset) // => 123
   /// ```
-  public let storeInt64 (region : Region, offset : Nat64, value : Int64) -> () = Prim.regionStoreInt64;
+  public let storeInt64 : (region : Region, offset : Nat64, value : Int64) -> () = Prim.regionStoreInt64;
 
 
   /// Within `region`, loads a `Float` value from the given `offset`.
@@ -304,8 +304,8 @@ module {
   /// let region = Region.new();
   /// let offset = 0;
   /// let value = 1.25;
-  /// StableMemory.storeFloat(offset, value);
-  /// StableMemory.loadFloat(offset) // => 1.25
+  /// Region.storeFloat(region, offset, value);
+  /// Region.loadFloat(region, offset) // => 1.25
   /// ```
   public let loadFloat : (region : Region, offset : Nat64) -> Float = Prim.regionLoadFloat;
 
@@ -336,7 +336,7 @@ module {
   /// Region.storeBlob(region, offset, value);
   /// Blob.toArray(Region.loadBlob(region, offset, size)) // => [1, 2, 3]
   /// ```
-  public let loadBlob : (offset : Nat64, size : Nat) -> Blob = Prim.regionLoadBlob;
+  public let loadBlob : (region : Region, offset : Nat64, size : Nat) -> Blob = Prim.regionLoadBlob;
 
   /// Within `region, write `blob.size()` bytes of `blob` beginning at `offset`.
   /// Traps on an out-of-bounds access.
@@ -349,9 +349,9 @@ module {
   /// let offset = 0;
   /// let value = Blob.fromArray([1, 2, 3]);
   /// let size = value.size();
-  /// Region.storeBlob(offset, value);
+  /// Region.storeBlob(region, offset, value);
   /// Blob.toArray(Region.loadBlob(region, offset, size)) // => [1, 2, 3]
   /// ```
-  public let storeBlob : (offset : Nat64, value : Blob) -> () = Prim.regionStoreBlob;
+  public let storeBlob : (region : Region, offset : Nat64, value : Blob) -> () = Prim.regionStoreBlob;
 
 }
