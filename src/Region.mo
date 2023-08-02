@@ -1,5 +1,8 @@
 /// Isolated, byte-level access to (virtual) _stable memory_ regions.
 ///
+/// *NOTE*: Since it adds some overhead to your actor (960MiB of IC stable memory, even if unused),
+/// use of this library currently requires compiler flag `--stable-regions`.
+///
 /// This is a moderately lightweight abstraction over IC _stable memory_ and supports persisting
 /// regions of binary data across Motoko upgrades.
 /// Use of this module is fully compatible with Motoko's use of
@@ -27,7 +30,7 @@
 /// total page size reported by summing all regions sizes.
 /// This (and the cap on growth) are to accommodate Motoko's stable variables and bookkeeping for regions.
 /// Applications that plan to use Motoko stable variables sparingly or not at all can
-/// increase `--max-stable-pages` as desired, approaching the IC maximum (initially 8GiB, then 32Gib, currently 48Gib).
+/// increase `--max-stable-pages` as desired, approaching the IC maximum (initially 8GiB, then 32Gib, currently 64Gib).
 /// All applications should reserve at least one page for stable variable data, even when no stable variables are used.
 ///
 /// Usage:
@@ -44,12 +47,27 @@ module {
   public type Region = Prim.Types.Region;
 
   /// Allocate a new, isolated Region of size 0.
+  ///
+  /// Example:
+  ///
+  /// ```motoko no-repl
+  /// let region = Region.new();
+  /// assert Region.size(region) == 0;
+  /// ```
   public let new : () -> Region = Prim.regionNew;
 
   /// Return a Nat identifying the given region.
   /// Maybe be used for equality, comparison and hashing.
   /// NB: Regions returned by `new()` are numbered from 16
   /// (regions 0..15 are currently reserved for internal use).
+  /// Allocate a new, isolated Region of size 0.
+  ///
+  /// Example:
+  ///
+  /// ```motoko no-repl
+  /// let region = Region.new();
+  /// assert Region.id(region) == 16;
+  /// ```
   public let id : Region -> Nat = Prim.regionId;
 
   /// Current size of `region`, in pages.
