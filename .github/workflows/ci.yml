@@ -42,8 +42,10 @@ jobs:
       run: |
        wget --output-document /home/runner/bin/vessel https://github.com/kritzcreek/vessel/releases/download/${{ env.vessel_version }}/vessel-linux64
        chmod +x /home/runner/bin/vessel
-    - name: "test"
-      run: MOC_BINARY=moc npm test
+    - name: "test (interpreter mode)"
+      run: DFX_MOC_PATH=moc npm test
+    - name: "test (wasi mode)"
+      run: DFX_MOC_PATH=moc npm test -- --mode wasi
     - name: "graph dependencies"
       run: python3 doc/module_graph.py | dot -Tsvg > doc/module_graph.svg && file doc/module_graph.svg
     - name: "docs"
