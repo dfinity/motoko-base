@@ -1,0 +1,3 @@
+[dev-dependencies]
+base = "./"
+matchers = "https://github.com/kritzcreek/motoko-matchers#v1.3.0"

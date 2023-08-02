@@ -1,5 +1,3 @@
-// @testmode wasi
-
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
 
