@@ -1,4 +1,4 @@
-/// Isolated, byte-level access to (virtual) _stable memory_ regions.
+/// Byte-level access to isolated, (virtual) _stable memory_ regions.
 ///
 /// *NOTE*: Since it adds some overhead to your actor (960MiB of IC stable memory, even if unused),
 /// use of this library currently requires compiler flag `--stable-regions`.
