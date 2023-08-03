@@ -1,3 +1,5 @@
+# Deprecated in favor of running `npm test` in the root directory
+
 STDLIB ?= ../src
 MOC ?= moc
 WASMTIME_OPTIONS = --disable-cache
@@ -8,7 +10,7 @@ TESTS = $(wildcard *.mo)
 
 TEST_TARGETS = $(patsubst %.mo,_out/%.checked,$(TESTS))
 
-all: $(OUTDIR)/import_all.checked $(TEST_TARGETS) 
+all: $(OUTDIR)/import_all.checked $(TEST_TARGETS)
 
 STDLIB_FILES= $(wildcard $(STDLIB)/*.mo)
 

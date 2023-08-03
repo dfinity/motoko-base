@@ -1,4 +1,6 @@
-import Int32 "mo:base/Int32";
+// @testmode wasi
+
+import Int64 "mo:base/Int64";
 import Order "mo:base/Order";
 import Iter "mo:base/Iter";
 
@@ -8,29 +10,29 @@ import M "mo:matchers/Matchers";
 
 let { run; test; suite } = Suite;
 
-let maximumInt32asInt = +2 ** 31 - 1 : Int;
-let maximumInt32asNat32 = 2 ** 31 - 1 : Nat32;
+let maximumInt64asInt = +2 ** 63 - 1 : Int;
+let maximumInt64asNat64 = 2 ** 63 - 1 : Nat64;
 
-let minimumInt32asInt = -2 ** 31 : Int;
+let minimumInt64asInt = -2 ** 63 : Int;
 
-let maximumNat32 = 4_294_967_295 : Nat32;
+let maximumNat64 = 18_446_744_073_709_551_615 : Nat64;
 
-class Int32Testable(number : Int32) : T.TestableItem<Int32> {
+class Int64Testable(number : Int64) : T.TestableItem<Int64> {
     public let item = number;
-    public func display(number : Int32) : Text {
+    public func display(number : Int64) : Text {
         debug_show (number)
     };
-    public let equals = func(x : Int32, y : Int32) : Bool {
+    public let equals = func(x : Int64, y : Int64) : Bool {
         x == y
     }
 };
 
-class Nat32Testable(number : Nat32) : T.TestableItem<Nat32> {
+class Nat64Testable(number : Nat64) : T.TestableItem<Nat64> {
     public let item = number;
-    public func display(number : Nat32) : Text {
+    public func display(number : Nat64) : Text {
         debug_show (number)
     };
-    public let equals = func(x : Nat32, y : Nat32) : Bool {
+    public let equals = func(x : Nat64, y : Nat64) : Bool {
         x == y
     }
 };
@@ -55,13 +57,13 @@ run(
         [
             test(
                 "minimum value",
-                Int32.minimumValue,
-                M.equals(Int32Testable(Int32.fromInt(-2 ** 31)))
+                Int64.minimumValue,
+                M.equals(Int64Testable(Int64.fromInt(-2 ** 63)))
             ),
             test(
                 "maximum value",
-                Int32.maximumValue,
-                M.equals(Int32Testable(Int32.fromInt(+2 ** 31 - 1)))
+                Int64.maximumValue,
+                M.equals(Int64Testable(Int64.fromInt(+2 ** 63 - 1)))
             ),
         ]
     )
@@ -75,27 +77,27 @@ run(
         [
             test(
                 "maximum number",
-                Int32.toInt(Int32.maximumValue),
-                M.equals(T.int(maximumInt32asInt))
+                Int64.toInt(Int64.maximumValue),
+                M.equals(T.int(maximumInt64asInt))
             ),
             test(
                 "minimum number",
-                Int32.toInt(Int32.minimumValue),
-                M.equals(T.int(minimumInt32asInt))
+                Int64.toInt(Int64.minimumValue),
+                M.equals(T.int(minimumInt64asInt))
             ),
             test(
                 "one",
-                Int32.toInt(1),
+                Int64.toInt(1),
                 M.equals(T.int(1))
             ),
             test(
                 "minus one",
-                Int32.toInt(-1),
+                Int64.toInt(-1),
                 M.equals(T.int(-1))
             ),
             test(
                 "zero",
-                Int32.toInt(0),
+                Int64.toInt(0),
                 M.equals(T.int(0))
             )
         ]
@@ -110,28 +112,28 @@ run(
         [
             test(
                 "maximum number",
-                Int32.fromInt(maximumInt32asInt),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.fromInt(maximumInt64asInt),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum number",
-                Int32.fromInt(minimumInt32asInt),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.fromInt(minimumInt64asInt),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "one",
-                Int32.fromInt(1),
-                M.equals(Int32Testable(1))
+                Int64.fromInt(1),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minus one",
-                Int32.fromInt(-1),
-                M.equals(Int32Testable(-1))
+                Int64.fromInt(-1),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "zero",
-                Int32.fromInt(0),
-                M.equals(Int32Testable(0))
+                Int64.fromInt(0),
+                M.equals(Int64Testable(0))
             )
         ]
     )
@@ -145,38 +147,38 @@ run(
         [
             test(
                 "maximum number",
-                Int32.fromIntWrap(maximumInt32asInt),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.fromIntWrap(maximumInt64asInt),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum number",
-                Int32.fromIntWrap(minimumInt32asInt),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.fromIntWrap(minimumInt64asInt),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "one",
-                Int32.fromIntWrap(1),
-                M.equals(Int32Testable(1))
+                Int64.fromIntWrap(1),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minus one",
-                Int32.fromIntWrap(-1),
-                M.equals(Int32Testable(-1))
+                Int64.fromIntWrap(-1),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "zero",
-                Int32.fromIntWrap(0),
-                M.equals(Int32Testable(0))
+                Int64.fromIntWrap(0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "overflow",
-                Int32.fromIntWrap(maximumInt32asInt + 1),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.fromIntWrap(maximumInt64asInt + 1),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "underflow",
-                Int32.fromIntWrap(minimumInt32asInt - 1),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.fromIntWrap(minimumInt64asInt - 1),
+                M.equals(Int64Testable(Int64.maximumValue))
             )
         ]
     )
@@ -186,27 +188,27 @@ run(
 
 run(
     suite(
-        "fromNat32",
+        "fromNat64",
         [
             test(
                 "maximum number",
-                Int32.fromNat32(maximumInt32asNat32),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.fromNat64(maximumInt64asNat64),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "one",
-                Int32.fromNat32(1),
-                M.equals(Int32Testable(1))
+                Int64.fromNat64(1),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "zero",
-                Int32.fromNat32(0),
-                M.equals(Int32Testable(0))
+                Int64.fromNat64(0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "overflow",
-                Int32.fromNat32(maximumInt32asNat32 + 1),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.fromNat64(maximumInt64asNat64 + 1),
+                M.equals(Int64Testable(Int64.minimumValue))
             )
         ]
     )
@@ -216,27 +218,27 @@ run(
 
 run(
     suite(
-        "toNat32",
+        "toNat64",
         [
             test(
                 "maximum number",
-                Int32.toNat32(Int32.maximumValue),
-                M.equals(Nat32Testable(maximumInt32asNat32))
+                Int64.toNat64(Int64.maximumValue),
+                M.equals(Nat64Testable(maximumInt64asNat64))
             ),
             test(
                 "one",
-                Int32.toNat32(1),
-                M.equals(Nat32Testable(1))
+                Int64.toNat64(1),
+                M.equals(Nat64Testable(1))
             ),
             test(
                 "zero",
-                Int32.toNat32(0),
-                M.equals(Nat32Testable(0))
+                Int64.toNat64(0),
+                M.equals(Nat64Testable(0))
             ),
             test(
                 "underflow",
-                Int32.toNat32(-1),
-                M.equals(Nat32Testable(maximumNat32))
+                Int64.toNat64(-1),
+                M.equals(Nat64Testable(maximumNat64))
             )
         ]
     )
@@ -250,33 +252,32 @@ run(
         [
             test(
                 "positive",
-                Int32.toText(123456),
+                Int64.toText(123456),
                 M.equals(T.text("123456"))
             ),
             test(
                 "negative",
-                Int32.toText(-123456),
+                Int64.toText(-123456),
                 M.equals(T.text("-123456"))
             ),
             test(
                 "zero",
-                Int32.toText(0),
+                Int64.toText(0),
                 M.equals(T.text("0"))
             ),
             test(
                 "maximum number",
-                Int32.toText(Int32.maximumValue),
-                M.equals(T.text("2147483647"))
+                Int64.toText(Int64.maximumValue),
+                M.equals(T.text("9223372036854775807"))
             ),
             test(
                 "minimum number",
-                Int32.toText(Int32.minimumValue),
-                M.equals(T.text("-2147483648"))
+                Int64.toText(Int64.minimumValue),
+                M.equals(T.text("-9223372036854775808"))
             )
         ]
     )
 );
-
 
 /* --------------------------------------- */
 
@@ -286,28 +287,28 @@ run(
         [
             test(
                 "positive number",
-                Int32.abs(123),
-                M.equals(Int32Testable(123))
+                Int64.abs(123),
+                M.equals(Int64Testable(123))
             ),
             test(
                 "negative number",
-                Int32.abs(-123),
-                M.equals(Int32Testable(123))
+                Int64.abs(-123),
+                M.equals(Int64Testable(123))
             ),
             test(
                 "zero",
-                Int32.abs(0),
-                M.equals(Int32Testable(0))
+                Int64.abs(0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum number",
-                Int32.abs(Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.abs(Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "smallest possible",
-                Int32.abs(-Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.abs(-Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             )
         ]
     )
@@ -321,33 +322,33 @@ run(
         [
             test(
                 "both positive",
-                Int32.min(2, 3),
-                M.equals(Int32Testable(2))
+                Int64.min(2, 3),
+                M.equals(Int64Testable(2))
             ),
             test(
                 "positive, negative",
-                Int32.min(2, -3),
-                M.equals(Int32Testable(-3))
+                Int64.min(2, -3),
+                M.equals(Int64Testable(-3))
             ),
             test(
                 "both negative",
-                Int32.min(-2, -3),
-                M.equals(Int32Testable(-3))
+                Int64.min(-2, -3),
+                M.equals(Int64Testable(-3))
             ),
             test(
                 "negative, positive",
-                Int32.min(-2, 3),
-                M.equals(Int32Testable(-2))
+                Int64.min(-2, 3),
+                M.equals(Int64Testable(-2))
             ),
             test(
                 "equal values",
-                Int32.min(123, 123),
-                M.equals(Int32Testable(123))
+                Int64.min(123, 123),
+                M.equals(Int64Testable(123))
             ),
             test(
                 "maximum and minimum number",
-                Int32.min(Int32.maximumValue, Int32.minimumValue),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.min(Int64.maximumValue, Int64.minimumValue),
+                M.equals(Int64Testable(Int64.minimumValue))
             )
         ]
     )
@@ -361,33 +362,33 @@ run(
         [
             test(
                 "both positive",
-                Int32.max(2, 3),
-                M.equals(Int32Testable(3))
+                Int64.max(2, 3),
+                M.equals(Int64Testable(3))
             ),
             test(
                 "positive, negative",
-                Int32.max(2, -3),
-                M.equals(Int32Testable(2))
+                Int64.max(2, -3),
+                M.equals(Int64Testable(2))
             ),
             test(
                 "both negative",
-                Int32.max(-2, -3),
-                M.equals(Int32Testable(-2))
+                Int64.max(-2, -3),
+                M.equals(Int64Testable(-2))
             ),
             test(
                 "negative, positive",
-                Int32.max(-2, 3),
-                M.equals(Int32Testable(3))
+                Int64.max(-2, 3),
+                M.equals(Int64Testable(3))
             ),
             test(
                 "equal values",
-                Int32.max(123, 123),
-                M.equals(Int32Testable(123))
+                Int64.max(123, 123),
+                M.equals(Int64Testable(123))
             ),
             test(
                 "maximum and minimum number",
-                Int32.max(Int32.maximumValue, Int32.minimumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.max(Int64.maximumValue, Int64.minimumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             )
         ]
     )
@@ -401,47 +402,47 @@ run(
         [
             test(
                 "positive equal",
-                Int32.equal(123, 123),
+                Int64.equal(123, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative equal",
-                Int32.equal(-123, -123),
+                Int64.equal(-123, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "zero",
-                Int32.equal(0, 0),
+                Int64.equal(0, 0),
                 M.equals(T.bool(true))
             ),
             test(
                 "positive not equal",
-                Int32.equal(123, 124),
+                Int64.equal(123, 124),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative not equal",
-                Int32.equal(-123, -124),
+                Int64.equal(-123, -124),
                 M.equals(T.bool(false))
             ),
             test(
                 "mixed signs",
-                Int32.equal(123, -123),
+                Int64.equal(123, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "maxmimum equal",
-                Int32.equal(Int32.maximumValue, Int32.maximumValue),
+                Int64.equal(Int64.maximumValue, Int64.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum equal",
-                Int32.equal(Int32.minimumValue, Int32.minimumValue),
+                Int64.equal(Int64.minimumValue, Int64.minimumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and maximum",
-                Int32.equal(Int32.minimumValue, Int32.maximumValue),
+                Int64.equal(Int64.minimumValue, Int64.maximumValue),
                 M.equals(T.bool(false))
             )
         ]
@@ -456,47 +457,47 @@ run(
         [
             test(
                 "positive equal",
-                Int32.notEqual(123, 123),
+                Int64.notEqual(123, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative equal",
-                Int32.notEqual(-123, -123),
+                Int64.notEqual(-123, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "zero",
-                Int32.notEqual(0, 0),
+                Int64.notEqual(0, 0),
                 M.equals(T.bool(false))
             ),
             test(
                 "positive not equal",
-                Int32.notEqual(123, 124),
+                Int64.notEqual(123, 124),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative not equal",
-                Int32.notEqual(-123, -124),
+                Int64.notEqual(-123, -124),
                 M.equals(T.bool(true))
             ),
             test(
                 "mixed signs",
-                Int32.notEqual(123, -123),
+                Int64.notEqual(123, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "maxmimum equal",
-                Int32.notEqual(Int32.maximumValue, Int32.maximumValue),
+                Int64.notEqual(Int64.maximumValue, Int64.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum equal",
-                Int32.notEqual(Int32.minimumValue, Int32.minimumValue),
+                Int64.notEqual(Int64.minimumValue, Int64.minimumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and maximum",
-                Int32.notEqual(Int32.minimumValue, Int32.maximumValue),
+                Int64.notEqual(Int64.minimumValue, Int64.maximumValue),
                 M.equals(T.bool(true))
             )
         ]
@@ -511,67 +512,67 @@ run(
         [
             test(
                 "positive equal",
-                Int32.less(123, 123),
+                Int64.less(123, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "positive less",
-                Int32.less(123, 245),
+                Int64.less(123, 245),
                 M.equals(T.bool(true))
             ),
             test(
                 "positive greater",
-                Int32.less(245, 123),
+                Int64.less(245, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative equal",
-                Int32.less(-123, -123),
+                Int64.less(-123, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative less",
-                Int32.less(-245, -123),
+                Int64.less(-245, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative greater",
-                Int32.less(-123, -245),
+                Int64.less(-123, -245),
                 M.equals(T.bool(false))
             ),
             test(
                 "zero",
-                Int32.less(0, 0),
+                Int64.less(0, 0),
                 M.equals(T.bool(false))
             ),
             test(
                 "mixed signs less",
-                Int32.less(-123, 123),
+                Int64.less(-123, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "mixed signs greater",
-                Int32.less(123, -123),
+                Int64.less(123, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and maximum",
-                Int32.less(Int32.minimumValue, Int32.maximumValue),
+                Int64.less(Int64.minimumValue, Int64.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and minimum",
-                Int32.less(Int32.maximumValue, Int32.minimumValue),
+                Int64.less(Int64.maximumValue, Int64.minimumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and maximum",
-                Int32.less(Int32.maximumValue, Int32.maximumValue),
+                Int64.less(Int64.maximumValue, Int64.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and minimum",
-                Int32.less(Int32.minimumValue, Int32.minimumValue),
+                Int64.less(Int64.minimumValue, Int64.minimumValue),
                 M.equals(T.bool(false))
             )
         ]
@@ -586,67 +587,67 @@ run(
         [
             test(
                 "positive equal",
-                Int32.lessOrEqual(123, 123),
+                Int64.lessOrEqual(123, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "positive less",
-                Int32.lessOrEqual(123, 245),
+                Int64.lessOrEqual(123, 245),
                 M.equals(T.bool(true))
             ),
             test(
                 "positive greater",
-                Int32.lessOrEqual(245, 123),
+                Int64.lessOrEqual(245, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative equal",
-                Int32.lessOrEqual(-123, -123),
+                Int64.lessOrEqual(-123, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative less",
-                Int32.lessOrEqual(-245, -123),
+                Int64.lessOrEqual(-245, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative greater",
-                Int32.lessOrEqual(-123, -245),
+                Int64.lessOrEqual(-123, -245),
                 M.equals(T.bool(false))
             ),
             test(
                 "zero",
-                Int32.lessOrEqual(0, 0),
+                Int64.lessOrEqual(0, 0),
                 M.equals(T.bool(true))
             ),
             test(
                 "mixed signs less",
-                Int32.lessOrEqual(-123, 123),
+                Int64.lessOrEqual(-123, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "mixed signs greater",
-                Int32.lessOrEqual(123, -123),
+                Int64.lessOrEqual(123, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and maximum",
-                Int32.lessOrEqual(Int32.minimumValue, Int32.maximumValue),
+                Int64.lessOrEqual(Int64.minimumValue, Int64.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and minimum",
-                Int32.lessOrEqual(Int32.maximumValue, Int32.minimumValue),
+                Int64.lessOrEqual(Int64.maximumValue, Int64.minimumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and maximum",
-                Int32.lessOrEqual(Int32.maximumValue, Int32.maximumValue),
+                Int64.lessOrEqual(Int64.maximumValue, Int64.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and minimum",
-                Int32.lessOrEqual(Int32.minimumValue, Int32.minimumValue),
+                Int64.lessOrEqual(Int64.minimumValue, Int64.minimumValue),
                 M.equals(T.bool(true))
             )
         ]
@@ -661,67 +662,67 @@ run(
         [
             test(
                 "positive equal",
-                Int32.greater(123, 123),
+                Int64.greater(123, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "positive less",
-                Int32.greater(123, 245),
+                Int64.greater(123, 245),
                 M.equals(T.bool(false))
             ),
             test(
                 "positive greater",
-                Int32.greater(245, 123),
+                Int64.greater(245, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative equal",
-                Int32.greater(-123, -123),
+                Int64.greater(-123, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative less",
-                Int32.greater(-245, -123),
+                Int64.greater(-245, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative greater",
-                Int32.greater(-123, -245),
+                Int64.greater(-123, -245),
                 M.equals(T.bool(true))
             ),
             test(
                 "zero",
-                Int32.greater(0, 0),
+                Int64.greater(0, 0),
                 M.equals(T.bool(false))
             ),
             test(
                 "mixed signs less",
-                Int32.greater(-123, 123),
+                Int64.greater(-123, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "mixed signs greater",
-                Int32.greater(123, -123),
+                Int64.greater(123, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and maximum",
-                Int32.greater(Int32.minimumValue, Int32.maximumValue),
+                Int64.greater(Int64.minimumValue, Int64.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and minimum",
-                Int32.greater(Int32.maximumValue, Int32.minimumValue),
+                Int64.greater(Int64.maximumValue, Int64.minimumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and maximum",
-                Int32.greater(Int32.maximumValue, Int32.maximumValue),
+                Int64.greater(Int64.maximumValue, Int64.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "minimum and minimum",
-                Int32.greater(Int32.minimumValue, Int32.minimumValue),
+                Int64.greater(Int64.minimumValue, Int64.minimumValue),
                 M.equals(T.bool(false))
             )
         ]
@@ -736,67 +737,67 @@ run(
         [
             test(
                 "positive equal",
-                Int32.greaterOrEqual(123, 123),
+                Int64.greaterOrEqual(123, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "positive less",
-                Int32.greaterOrEqual(123, 245),
+                Int64.greaterOrEqual(123, 245),
                 M.equals(T.bool(false))
             ),
             test(
                 "positive greater",
-                Int32.greaterOrEqual(245, 123),
+                Int64.greaterOrEqual(245, 123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative equal",
-                Int32.greaterOrEqual(-123, -123),
+                Int64.greaterOrEqual(-123, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "negative less",
-                Int32.greaterOrEqual(-245, -123),
+                Int64.greaterOrEqual(-245, -123),
                 M.equals(T.bool(false))
             ),
             test(
                 "negative greater",
-                Int32.greaterOrEqual(-123, -245),
+                Int64.greaterOrEqual(-123, -245),
                 M.equals(T.bool(true))
             ),
             test(
                 "zero",
-                Int32.greaterOrEqual(0, 0),
+                Int64.greaterOrEqual(0, 0),
                 M.equals(T.bool(true))
             ),
             test(
                 "mixed signs less",
-                Int32.greaterOrEqual(-123, 123),
+                Int64.greaterOrEqual(-123, 123),
                 M.equals(T.bool(false))
             ),
             test(
                 "mixed signs greater",
-                Int32.greaterOrEqual(123, -123),
+                Int64.greaterOrEqual(123, -123),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and maximum",
-                Int32.greaterOrEqual(Int32.minimumValue, Int32.maximumValue),
+                Int64.greaterOrEqual(Int64.minimumValue, Int64.maximumValue),
                 M.equals(T.bool(false))
             ),
             test(
                 "maximum and minimum",
-                Int32.greaterOrEqual(Int32.maximumValue, Int32.minimumValue),
+                Int64.greaterOrEqual(Int64.maximumValue, Int64.minimumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "maximum and maximum",
-                Int32.greaterOrEqual(Int32.maximumValue, Int32.maximumValue),
+                Int64.greaterOrEqual(Int64.maximumValue, Int64.maximumValue),
                 M.equals(T.bool(true))
             ),
             test(
                 "minimum and minimum",
-                Int32.greaterOrEqual(Int32.minimumValue, Int32.minimumValue),
+                Int64.greaterOrEqual(Int64.minimumValue, Int64.minimumValue),
                 M.equals(T.bool(true))
             )
         ]
@@ -811,67 +812,67 @@ run(
         [
             test(
                 "positive equal",
-                Int32.compare(123, 123),
+                Int64.compare(123, 123),
                 M.equals(OrderTestable(#equal))
             ),
             test(
                 "positive less",
-                Int32.compare(123, 245),
+                Int64.compare(123, 245),
                 M.equals(OrderTestable(#less))
             ),
             test(
                 "positive greater",
-                Int32.compare(245, 123),
+                Int64.compare(245, 123),
                 M.equals(OrderTestable(#greater))
             ),
             test(
                 "negative equal",
-                Int32.compare(-123, -123),
+                Int64.compare(-123, -123),
                 M.equals(OrderTestable(#equal))
             ),
             test(
                 "negative less",
-                Int32.compare(-245, -123),
+                Int64.compare(-245, -123),
                 M.equals(OrderTestable(#less))
             ),
             test(
                 "negative greater",
-                Int32.compare(-123, -245),
+                Int64.compare(-123, -245),
                 M.equals(OrderTestable(#greater))
             ),
             test(
                 "zero",
-                Int32.compare(0, 0),
+                Int64.compare(0, 0),
                 M.equals(OrderTestable(#equal))
             ),
             test(
                 "mixed signs less",
-                Int32.compare(-123, 123),
+                Int64.compare(-123, 123),
                 M.equals(OrderTestable(#less))
             ),
             test(
                 "mixed signs greater",
-                Int32.compare(123, -123),
+                Int64.compare(123, -123),
                 M.equals(OrderTestable(#greater))
             ),
             test(
                 "minimum and maximum",
-                Int32.compare(Int32.minimumValue, Int32.maximumValue),
+                Int64.compare(Int64.minimumValue, Int64.maximumValue),
                 M.equals(OrderTestable(#less))
             ),
             test(
                 "maximum and minimum",
-                Int32.compare(Int32.maximumValue, Int32.minimumValue),
+                Int64.compare(Int64.maximumValue, Int64.minimumValue),
                 M.equals(OrderTestable(#greater))
             ),
             test(
                 "maximum and maximum",
-                Int32.compare(Int32.maximumValue, Int32.maximumValue),
+                Int64.compare(Int64.maximumValue, Int64.maximumValue),
                 M.equals(OrderTestable(#equal))
             ),
             test(
                 "minimum and minimum",
-                Int32.compare(Int32.minimumValue, Int32.minimumValue),
+                Int64.compare(Int64.minimumValue, Int64.minimumValue),
                 M.equals(OrderTestable(#equal))
             )
         ]
@@ -886,28 +887,28 @@ run(
         [
             test(
                 "positive number",
-                Int32.neg(123),
-                M.equals(Int32Testable(-123))
+                Int64.neg(123),
+                M.equals(Int64Testable(-123))
             ),
             test(
                 "negative number",
-                Int32.neg(-123),
-                M.equals(Int32Testable(123))
+                Int64.neg(-123),
+                M.equals(Int64Testable(123))
             ),
             test(
                 "zero",
-                Int32.neg(0),
-                M.equals(Int32Testable(0))
+                Int64.neg(0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum number",
-                Int32.neg(Int32.maximumValue),
-                M.equals(Int32Testable(-Int32.maximumValue))
+                Int64.neg(Int64.maximumValue),
+                M.equals(Int64Testable(-Int64.maximumValue))
             ),
             test(
                 "smallest possible",
-                Int32.neg(-Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.neg(-Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             )
         ]
     )
@@ -921,28 +922,28 @@ run(
         [
             test(
                 "positive",
-                Int32.add(123, 123),
-                M.equals(Int32Testable(246))
+                Int64.add(123, 123),
+                M.equals(Int64Testable(246))
             ),
             test(
                 "negative",
-                Int32.add(-123, -123),
-                M.equals(Int32Testable(-246))
+                Int64.add(-123, -123),
+                M.equals(Int64Testable(-246))
             ),
             test(
                 "mixed signs",
-                Int32.add(-123, 223),
-                M.equals(Int32Testable(100))
+                Int64.add(-123, 223),
+                M.equals(Int64Testable(100))
             ),
             test(
                 "zero",
-                Int32.add(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.add(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and maximum",
-                Int32.add(Int32.minimumValue, Int32.maximumValue),
-                M.equals(Int32Testable(-1))
+                Int64.add(Int64.minimumValue, Int64.maximumValue),
+                M.equals(Int64Testable(-1))
             )
         ]
     )
@@ -956,28 +957,28 @@ run(
         [
             test(
                 "positive",
-                Int32.sub(123, 123),
-                M.equals(Int32Testable(0))
+                Int64.sub(123, 123),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "negative",
-                Int32.sub(-123, -123),
-                M.equals(Int32Testable(0))
+                Int64.sub(-123, -123),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "mixed signs",
-                Int32.sub(-123, 223),
-                M.equals(Int32Testable(-346))
+                Int64.sub(-123, 223),
+                M.equals(Int64Testable(-346))
             ),
             test(
                 "zero",
-                Int32.sub(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.sub(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum and maximum",
-                Int32.sub(Int32.maximumValue, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.sub(Int64.maximumValue, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             )
         ]
     )
@@ -991,43 +992,43 @@ run(
         [
             test(
                 "positive",
-                Int32.mul(123, 234),
-                M.equals(Int32Testable(28782))
+                Int64.mul(123, 234),
+                M.equals(Int64Testable(28782))
             ),
             test(
                 "negative",
-                Int32.mul(-123, -234),
-                M.equals(Int32Testable(28782))
+                Int64.mul(-123, -234),
+                M.equals(Int64Testable(28782))
             ),
             test(
                 "mixed signs",
-                Int32.mul(-123, 234),
-                M.equals(Int32Testable(-28782))
+                Int64.mul(-123, 234),
+                M.equals(Int64Testable(-28782))
             ),
             test(
                 "zeros",
-                Int32.mul(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.mul(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and maximum",
-                Int32.mul(0, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.mul(0, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and zero",
-                Int32.mul(Int32.minimumValue, 0),
-                M.equals(Int32Testable(0))
+                Int64.mul(Int64.minimumValue, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "one and maximum",
-                Int32.mul(1, Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.mul(1, Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum and one",
-                Int32.mul(Int32.minimumValue, 1),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.mul(Int64.minimumValue, 1),
+                M.equals(Int64Testable(Int64.minimumValue))
             )
         ]
     )
@@ -1041,53 +1042,53 @@ run(
         [
             test(
                 "positive multiple",
-                Int32.div(156, 13),
-                M.equals(Int32Testable(12))
+                Int64.div(156, 13),
+                M.equals(Int64Testable(12))
             ),
             test(
                 "positive remainder",
-                Int32.div(1234, 100),
-                M.equals(Int32Testable(12))
+                Int64.div(1234, 100),
+                M.equals(Int64Testable(12))
             ),
             test(
                 "negative multiple",
-                Int32.div(-156, -13),
-                M.equals(Int32Testable(12))
+                Int64.div(-156, -13),
+                M.equals(Int64Testable(12))
             ),
             test(
                 "negative remainder",
-                Int32.div(-1234, -100),
-                M.equals(Int32Testable(12))
+                Int64.div(-1234, -100),
+                M.equals(Int64Testable(12))
             ),
             test(
                 "mixed signs",
-                Int32.div(-123, 23),
-                M.equals(Int32Testable(-5))
+                Int64.div(-123, 23),
+                M.equals(Int64Testable(-5))
             ),
             test(
                 "zero and number",
-                Int32.div(0, -123),
-                M.equals(Int32Testable(0))
+                Int64.div(0, -123),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and maximum",
-                Int32.div(0, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.div(0, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and minimum",
-                Int32.div(0, Int32.minimumValue),
-                M.equals(Int32Testable(0))
+                Int64.div(0, Int64.minimumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum and maximum",
-                Int32.div(Int32.maximumValue, Int32.maximumValue),
-                M.equals(Int32Testable(1))
+                Int64.div(Int64.maximumValue, Int64.maximumValue),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minimum and minimum",
-                Int32.div(Int32.minimumValue, Int32.minimumValue),
-                M.equals(Int32Testable(1))
+                Int64.div(Int64.minimumValue, Int64.minimumValue),
+                M.equals(Int64Testable(1))
             )
         ]
     )
@@ -1101,53 +1102,53 @@ run(
         [
             test(
                 "positive multiple",
-                Int32.rem(156, 13),
-                M.equals(Int32Testable(0))
+                Int64.rem(156, 13),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "positive/positive remainder",
-                Int32.rem(1234, 100),
-                M.equals(Int32Testable(34))
+                Int64.rem(1234, 100),
+                M.equals(Int64Testable(34))
             ),
             test(
                 "positive/negative remainder",
-                Int32.rem(1234, -100),
-                M.equals(Int32Testable(34))
+                Int64.rem(1234, -100),
+                M.equals(Int64Testable(34))
             ),
             test(
                 "negative multiple",
-                Int32.rem(-156, -13),
-                M.equals(Int32Testable(0))
+                Int64.rem(-156, -13),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "negative/positive remainder",
-                Int32.rem(-1234, 100),
-                M.equals(Int32Testable(-34))
+                Int64.rem(-1234, 100),
+                M.equals(Int64Testable(-34))
             ),
             test(
                 "negative/negative remainder",
-                Int32.rem(-1234, -100),
-                M.equals(Int32Testable(-34))
+                Int64.rem(-1234, -100),
+                M.equals(Int64Testable(-34))
             ),
             test(
                 "zero and maximum",
-                Int32.rem(0, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.rem(0, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and minimum",
-                Int32.rem(0, Int32.minimumValue),
-                M.equals(Int32Testable(0))
+                Int64.rem(0, Int64.minimumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum and maximum",
-                Int32.rem(Int32.maximumValue, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.rem(Int64.maximumValue, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and minimum",
-                Int32.rem(Int32.minimumValue, Int32.minimumValue),
-                M.equals(Int32Testable(0))
+                Int64.rem(Int64.minimumValue, Int64.minimumValue),
+                M.equals(Int64Testable(0))
             )
         ]
     )
@@ -1161,48 +1162,48 @@ run(
         [
             test(
                 "positive base, positive exponent",
-                Int32.pow(72, 3),
-                M.equals(Int32Testable(373248))
+                Int64.pow(72, 3),
+                M.equals(Int64Testable(373248))
             ),
             test(
                 "positive base, zero exponent",
-                Int32.pow(72, 0),
-                M.equals(Int32Testable(1))
+                Int64.pow(72, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "negative base, odd exponent",
-                Int32.pow(-72, 3),
-                M.equals(Int32Testable(-373248))
+                Int64.pow(-72, 3),
+                M.equals(Int64Testable(-373248))
             ),
             test(
                 "negative base, even exponent",
-                Int32.pow(-72, 2),
-                M.equals(Int32Testable(5184))
+                Int64.pow(-72, 4),
+                M.equals(Int64Testable(26_873_856))
             ),
             test(
                 "negative base, zero exponent",
-                Int32.pow(-72, 0),
-                M.equals(Int32Testable(1))
+                Int64.pow(-72, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "maximum and zero",
-                Int32.pow(Int32.maximumValue, 0),
-                M.equals(Int32Testable(1))
+                Int64.pow(Int64.maximumValue, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minimum and zero",
-                Int32.pow(Int32.minimumValue, 0),
-                M.equals(Int32Testable(1))
+                Int64.pow(Int64.minimumValue, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "plus one and maximum",
-                Int32.pow(1, Int32.maximumValue),
-                M.equals(Int32Testable(1))
+                Int64.pow(1, Int64.maximumValue),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minus one and maximum",
-                Int32.pow(-1, Int32.maximumValue),
-                M.equals(Int32Testable(-1))
+                Int64.pow(-1, Int64.maximumValue),
+                M.equals(Int64Testable(-1))
             )
         ]
     )
@@ -1216,28 +1217,28 @@ run(
         [
             test(
                 "zero",
-                Int32.bitnot(0),
-                M.equals(Int32Testable(-1))
+                Int64.bitnot(0),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "minus 1",
-                Int32.bitnot(-1),
-                M.equals(Int32Testable(0))
+                Int64.bitnot(-1),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum",
-                Int32.bitnot(Int32.maximumValue),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.bitnot(Int64.maximumValue),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "minimum",
-                Int32.bitnot(Int32.minimumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.bitnot(Int64.minimumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "arbitrary",
-                Int32.bitnot(1234),
-                M.equals(Int32Testable(-1235))
+                Int64.bitnot(1234),
+                M.equals(Int64Testable(-1235))
             )
         ]
     )
@@ -1251,48 +1252,48 @@ run(
         [
             test(
                 "inverted",
-                Int32.bitand(0xf0f0, 0x0f0f),
-                M.equals(Int32Testable(0))
+                Int64.bitand(0xf0f0, 0x0f0f),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "overlap",
-                Int32.bitand(0x0ff0, 0xffff),
-                M.equals(Int32Testable(0xff0))
+                Int64.bitand(0x0ff0, 0xffff),
+                M.equals(Int64Testable(0xff0))
             ),
             test(
                 "arbitrary",
-                Int32.bitand(0x1234_5678, 0x7654_3210),
-                M.equals(Int32Testable(0x1214_1210))
+                Int64.bitand(0x1234_5678_90ab_cdef, 0x7654_3210_fedc_ba98),
+                M.equals(Int64Testable(0x1214_1210_9088_8888))
             ),
             test(
                 "negative",
-                Int32.bitand(-123, -123),
-                M.equals(Int32Testable(-123))
+                Int64.bitand(-123, -123),
+                M.equals(Int64Testable(-123))
             ),
             test(
                 "mixed signs",
-                Int32.bitand(-256, 255),
-                M.equals(Int32Testable(0))
+                Int64.bitand(-256, 255),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero",
-                Int32.bitand(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.bitand(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and maximum",
-                Int32.bitand(0, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.bitand(0, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and zero",
-                Int32.bitand(Int32.minimumValue, 0),
-                M.equals(Int32Testable(0))
+                Int64.bitand(Int64.minimumValue, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and maximum",
-                Int32.bitand(Int32.minimumValue, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.bitand(Int64.minimumValue, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             )
         ]
     )
@@ -1306,48 +1307,48 @@ run(
         [
             test(
                 "inverted",
-                Int32.bitor(0xf0f0, 0x0f0f),
-                M.equals(Int32Testable(0xffff))
+                Int64.bitor(0xf0f0, 0x0f0f),
+                M.equals(Int64Testable(0xffff))
             ),
             test(
                 "overlap",
-                Int32.bitor(0x0ff0, 0xffff),
-                M.equals(Int32Testable(0xffff))
+                Int64.bitor(0x0ff0, 0xffff),
+                M.equals(Int64Testable(0xffff))
             ),
             test(
                 "arbitrary",
-                Int32.bitor(0x1234_5678, 0x7654_3210),
-                M.equals(Int32Testable(0x7674_7678))
+                Int64.bitor(0x1234_5678_90ab_cdef, 0x7654_3210_fedc_ba98),
+                M.equals(Int64Testable(0x7674_7678_feff_ffff))
             ),
             test(
                 "negative",
-                Int32.bitor(-123, -123),
-                M.equals(Int32Testable(-123))
+                Int64.bitor(-123, -123),
+                M.equals(Int64Testable(-123))
             ),
             test(
                 "mixed signs",
-                Int32.bitor(-256, 255),
-                M.equals(Int32Testable(-1))
+                Int64.bitor(-256, 255),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "zero",
-                Int32.bitor(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.bitor(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and maximum",
-                Int32.bitor(0, Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.bitor(0, Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum and zero",
-                Int32.bitor(Int32.minimumValue, 0),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.bitor(Int64.minimumValue, 0),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "minimum and maximum",
-                Int32.bitor(Int32.minimumValue, Int32.maximumValue),
-                M.equals(Int32Testable(-1))
+                Int64.bitor(Int64.minimumValue, Int64.maximumValue),
+                M.equals(Int64Testable(-1))
             )
         ]
     )
@@ -1361,48 +1362,48 @@ run(
         [
             test(
                 "inverted",
-                Int32.bitxor(0xf0f0, 0x0f0f),
-                M.equals(Int32Testable(0xffff))
+                Int64.bitxor(0xf0f0, 0x0f0f),
+                M.equals(Int64Testable(0xffff))
             ),
             test(
                 "overlap",
-                Int32.bitxor(0x0ff0, 0xffff),
-                M.equals(Int32Testable(0xf00f))
+                Int64.bitxor(0x0ff0, 0xffff),
+                M.equals(Int64Testable(0xf00f))
             ),
             test(
                 "arbitrary",
-                Int32.bitxor(0x1234_5678, 0x7654_3210),
-                M.equals(Int32Testable(0x6460_6468))
+                Int64.bitxor(0x1234_5678_90ab_cdef, 0x7654_3210_fedc_ba98),
+                M.equals(Int64Testable(0x6460_6468_6e77_7777))
             ),
             test(
                 "negative",
-                Int32.bitxor(-123, -123),
-                M.equals(Int32Testable(0))
+                Int64.bitxor(-123, -123),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "mixed signs",
-                Int32.bitxor(-256, 255),
-                M.equals(Int32Testable(-1))
+                Int64.bitxor(-256, 255),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "zero",
-                Int32.bitxor(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.bitxor(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and maximum",
-                Int32.bitxor(0, Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.bitxor(0, Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum and zero",
-                Int32.bitxor(Int32.minimumValue, 0),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.bitxor(Int64.minimumValue, 0),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "minimum and maximum",
-                Int32.bitxor(Int32.minimumValue, Int32.maximumValue),
-                M.equals(Int32Testable(-1))
+                Int64.bitxor(Int64.minimumValue, Int64.maximumValue),
+                M.equals(Int64Testable(-1))
             )
         ]
     )
@@ -1416,53 +1417,53 @@ run(
         [
             test(
                 "positive number",
-                Int32.bitshiftLeft(0xf0f0, 4),
-                M.equals(Int32Testable(0xf_0f00))
+                Int64.bitshiftLeft(0xf0f0, 4),
+                M.equals(Int64Testable(0xf_0f00))
             ),
             test(
                 "negative number",
-                Int32.bitshiftLeft(-256, 4),
-                M.equals(Int32Testable(-4096))
+                Int64.bitshiftLeft(-256, 4),
+                M.equals(Int64Testable(-4096))
             ),
             test(
                 "arbitrary",
-                Int32.bitshiftLeft(1234_5678, 7),
-                M.equals(Int32Testable(1_580_246_784))
+                Int64.bitshiftLeft(1234_5678, 7),
+                M.equals(Int64Testable(1_580_246_784))
             ),
             test(
                 "zero shift",
-                Int32.bitshiftLeft(1234, 0),
-                M.equals(Int32Testable(1234))
+                Int64.bitshiftLeft(1234, 0),
+                M.equals(Int64Testable(1234))
             ),
             test(
                 "one maximum shift",
-                Int32.bitshiftLeft(1, 31),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.bitshiftLeft(1, 63),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "minimum number",
-                Int32.bitshiftLeft(-1, 31),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.bitshiftLeft(-1, 63),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "discard overflow",
-                Int32.bitshiftLeft(0x7fff_0000, 16),
-                M.equals(Int32Testable(0))
+                Int64.bitshiftLeft(0x7fff_ffff_0000_0000, 32),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "beyond bit length positive",
-                Int32.bitshiftLeft(0x1234_5678, 64 + 7),
-                M.equals(Int32Testable(Int32.bitshiftLeft(0x1234_5678, 7)))
+                Int64.bitshiftLeft(0x1234_5678_90ab_cdef, 128 + 7),
+                M.equals(Int64Testable(Int64.bitshiftLeft(0x1234_5678_90ab_cdef, 7)))
             ),
             test(
                 "beyond bit length negative",
-                Int32.bitshiftLeft(-0x1234_5678, 32 + 7),
-                M.equals(Int32Testable(Int32.bitshiftLeft(-0x1234_5678, 7)))
+                Int64.bitshiftLeft(-0x1234_5678_90ab_cdef, 64 + 7),
+                M.equals(Int64Testable(Int64.bitshiftLeft(-0x1234_5678_90ab_cdef, 7)))
             ),
             test(
                 "negative shift argument",
-                Int32.bitshiftLeft(0x1234_5678, -7),
-                M.equals(Int32Testable(Int32.bitshiftLeft(0x1234_5678, 32 - 7)))
+                Int64.bitshiftLeft(0x1234_5678_90ab_cdef, -7),
+                M.equals(Int64Testable(Int64.bitshiftLeft(0x1234_5678_90ab_cdef, 64 - 7)))
             )
         ]
     )
@@ -1476,53 +1477,53 @@ run(
         [
             test(
                 "positive number",
-                Int32.bitshiftRight(0xf0f0, 4),
-                M.equals(Int32Testable(0x0f0f))
+                Int64.bitshiftRight(0xf0f0, 4),
+                M.equals(Int64Testable(0x0f0f))
             ),
             test(
                 "negative number",
-                Int32.bitshiftRight(-256, 4),
-                M.equals(Int32Testable(-16))
+                Int64.bitshiftRight(-256, 4),
+                M.equals(Int64Testable(-16))
             ),
             test(
                 "arbitrary",
-                Int32.bitshiftRight(1234_5678, 7),
-                M.equals(Int32Testable(96_450))
+                Int64.bitshiftRight(1234_5678, 7),
+                M.equals(Int64Testable(96_450))
             ),
             test(
                 "zero shift",
-                Int32.bitshiftRight(1234, 0),
-                M.equals(Int32Testable(1234))
+                Int64.bitshiftRight(1234, 0),
+                M.equals(Int64Testable(1234))
             ),
             test(
                 "minus one maximum shift",
-                Int32.bitshiftRight(-1, 31),
-                M.equals(Int32Testable(-1))
+                Int64.bitshiftRight(-1, 63),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "minimum number",
-                Int32.bitshiftRight(Int32.minimumValue, 31),
-                M.equals(Int32Testable(-1))
+                Int64.bitshiftRight(Int64.minimumValue, 63),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "discard underflow",
-                Int32.bitshiftRight(0x0000_ffff, 16),
-                M.equals(Int32Testable(0))
+                Int64.bitshiftRight(0x0000_0000_ffff_ffff, 32),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "beyond bit length positive",
-                Int32.bitshiftRight(0x1234_5678, 64 + 7),
-                M.equals(Int32Testable(Int32.bitshiftRight(0x1234_5678, 7)))
+                Int64.bitshiftRight(0x1234_5678_90ab_cdef, 128 + 7),
+                M.equals(Int64Testable(Int64.bitshiftRight(0x1234_5678_90ab_cdef, 7)))
             ),
             test(
                 "beyond bit length negative",
-                Int32.bitshiftRight(-0x1234_5678, 32 + 7),
-                M.equals(Int32Testable(Int32.bitshiftRight(-0x1234_5678, 7)))
+                Int64.bitshiftRight(-0x1234_5678_90ab_cdef, 64 + 7),
+                M.equals(Int64Testable(Int64.bitshiftRight(-0x1234_5678_90ab_cdef, 7)))
             ),
             test(
                 "negative shift argument",
-                Int32.bitshiftRight(0x1234_5678, -7),
-                M.equals(Int32Testable(Int32.bitshiftRight(0x1234_5678, 32 - 7)))
+                Int64.bitshiftRight(0x1234_5678_90ab_cdef, -7),
+                M.equals(Int64Testable(Int64.bitshiftRight(0x1234_5678_90ab_cdef, 64 - 7)))
             )
         ]
     )
@@ -1536,53 +1537,53 @@ run(
         [
             test(
                 "positive number non-overflow",
-                Int32.bitrotLeft(0xf0f0, 4),
-                M.equals(Int32Testable(0xf_0f00))
+                Int64.bitrotLeft(0xf0f0, 4),
+                M.equals(Int64Testable(0xf_0f00))
             ),
             test(
                 "positive number overflow",
-                Int32.bitrotLeft(0x5600_1234, 8),
-                M.equals(Int32Testable(0x12_3456))
+                Int64.bitrotLeft(0x5600_0000_0000_1234, 8),
+                M.equals(Int64Testable(0x12_3456))
             ),
             test(
                 "negative number",
-                Int32.bitrotLeft(-256, 4),
-                M.equals(Int32Testable(-4081))
+                Int64.bitrotLeft(-256, 4),
+                M.equals(Int64Testable(-4081))
             ),
             test(
                 "arbitrary",
-                Int32.bitrotLeft(1_234_567_890, 7),
-                M.equals(Int32Testable(-889_099_996))
+                Int64.bitrotLeft(123_4567_8901_2345_6789, 7),
+                M.equals(Int64Testable(-799_6006_7275_8349_5544))
             ),
             test(
                 "zero shift",
-                Int32.bitrotLeft(1234, 0),
-                M.equals(Int32Testable(1234))
+                Int64.bitrotLeft(1234, 0),
+                M.equals(Int64Testable(1234))
             ),
             test(
                 "minus one maximum rotate",
-                Int32.bitrotLeft(-1, 31),
-                M.equals(Int32Testable(-1))
+                Int64.bitrotLeft(-1, 63),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "maximum number",
-                Int32.bitrotLeft(Int32.maximumValue, 1),
-                M.equals(Int32Testable(-2))
+                Int64.bitrotLeft(Int64.maximumValue, 1),
+                M.equals(Int64Testable(-2))
             ),
             test(
                 "minimum number",
-                Int32.bitrotLeft(1, 31),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.bitrotLeft(1, 63),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "opposite rotation",
-                Int32.bitrotLeft(256, -2),
-                M.equals(Int32Testable(64))
+                Int64.bitrotLeft(256, -2),
+                M.equals(Int64Testable(64))
             ),
             test(
                 "rotate beyond bit length",
-                Int32.bitrotLeft(128, 34),
-                M.equals(Int32Testable(512))
+                Int64.bitrotLeft(128, 66),
+                M.equals(Int64Testable(512))
             )
         ]
     )
@@ -1596,53 +1597,53 @@ run(
         [
             test(
                 "positive number non-underflow",
-                Int32.bitrotRight(0xf0f0, 4),
-                M.equals(Int32Testable(0x0f0f))
+                Int64.bitrotRight(0xf0f0, 4),
+                M.equals(Int64Testable(0x0f0f))
             ),
             test(
                 "positive number underflow",
-                Int32.bitrotRight(0x5600_1234, 8),
-                M.equals(Int32Testable(0x3456_0012))
+                Int64.bitrotRight(0x5600_0000_0000_1234, 8),
+                M.equals(Int64Testable(0x3456_0000_0000_0012))
             ),
             test(
                 "negative number",
-                Int32.bitrotRight(-256, 8),
-                M.equals(Int32Testable(0x00ff_ffff))
+                Int64.bitrotRight(-256, 8),
+                M.equals(Int64Testable(0x00ff_ffff_ffff_ffff))
             ),
             test(
                 "arbitrary",
-                Int32.bitrotRight(1_234_567_890, 7),
-                M.equals(Int32Testable(-1_533_858_811))
+                Int64.bitrotRight(123_4567_8901_2345_6789, 7),
+                M.equals(Int64Testable(303_6064_0112_3456_2818))
             ),
             test(
                 "zero shift",
-                Int32.bitrotRight(1234, 0),
-                M.equals(Int32Testable(1234))
+                Int64.bitrotRight(1234, 0),
+                M.equals(Int64Testable(1234))
             ),
             test(
                 "minus one maximum rotate",
-                Int32.bitrotRight(-1, 31),
-                M.equals(Int32Testable(-1))
+                Int64.bitrotRight(-1, 63),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "maximum number",
-                Int32.bitrotRight(-2, 1),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.bitrotRight(-2, 1),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum number",
-                Int32.bitrotRight(Int32.minimumValue, 31),
-                M.equals(Int32Testable(1))
+                Int64.bitrotRight(Int64.minimumValue, 63),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "opposite rotation",
-                Int32.bitrotRight(256, -2),
-                M.equals(Int32Testable(1024))
+                Int64.bitrotRight(256, -2),
+                M.equals(Int64Testable(1024))
             ),
             test(
                 "rotate beyond bit length",
-                Int32.bitrotRight(128, 34),
-                M.equals(Int32Testable(32))
+                Int64.bitrotRight(128, 66),
+                M.equals(Int64Testable(32))
             )
         ]
     )
@@ -1656,21 +1657,21 @@ run(
         [
             test(
                 "set bit",
-                Int32.bittest(128, 7),
+                Int64.bittest(128, 7),
                 M.equals(T.bool(true))
             ),
             test(
                 "cleared bit",
-                Int32.bittest(-129, 7),
+                Int64.bittest(-129, 7),
                 M.equals(T.bool(false))
             ),
             test(
                 "all zero",
                 do {
-                    let number = 0 : Int32;
+                    let number = 0 : Int64;
                     var count = 0;
-                    for (index in Iter.range(0, 31)) {
-                        if (Int32.bittest(number, index)) {
+                    for (index in Iter.range(0, 63)) {
+                        if (Int64.bittest(number, index)) {
                             count += 1
                         }
                     };
@@ -1681,25 +1682,25 @@ run(
             test(
                 "all one",
                 do {
-                    let number = -1 : Int32;
+                    let number = -1 : Int64;
                     var count = 0;
-                    for (index in Iter.range(0, 31)) {
-                        if (Int32.bittest(number, index)) {
+                    for (index in Iter.range(0, 63)) {
+                        if (Int64.bittest(number, index)) {
                             count += 1
                         }
                     };
                     count
                 },
-                M.equals(T.int(32))
+                M.equals(T.int(64))
             ),
             test(
                 "set bit beyond bit length",
-                Int32.bittest(128, 32 + 7),
+                Int64.bittest(128, 64 + 7),
                 M.equals(T.bool(true))
             ),
             test(
                 "cleared bit beyond bit length",
-                Int32.bittest(-129, 64 + 7),
+                Int64.bittest(-129, 128 + 7),
                 M.equals(T.bool(false))
             )
         ]
@@ -1714,50 +1715,50 @@ run(
         [
             test(
                 "set bit",
-                Int32.bitset(0, 7),
-                M.equals(Int32Testable(128))
+                Int64.bitset(0, 7),
+                M.equals(Int64Testable(128))
             ),
             test(
                 "minus one",
-                Int32.bitset(-129, 7),
-                M.equals(Int32Testable(-1))
+                Int64.bitset(-129, 7),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "no effect",
-                Int32.bitset(128, 7),
-                M.equals(Int32Testable(128))
+                Int64.bitset(128, 7),
+                M.equals(Int64Testable(128))
             ),
             test(
                 "set all",
                 do {
-                    var number = 0 : Int32;
-                    for (index in Iter.range(0, 31)) {
-                        number := Int32.bitset(number, index)
+                    var number = 0 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitset(number, index)
                     };
                     number
                 },
-                M.equals(Int32Testable(-1))
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "all no effect",
                 do {
-                    var number = -1 : Int32;
-                    for (index in Iter.range(0, 31)) {
-                        number := Int32.bitset(number, index)
+                    var number = -1 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitset(number, index)
                     };
                     number
                 },
-                M.equals(Int32Testable(-1))
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "set bit beyond bit length",
-                Int32.bitset(0, 32 + 7),
-                M.equals(Int32Testable(128))
+                Int64.bitset(0, 64 + 7),
+                M.equals(Int64Testable(128))
             ),
             test(
                 "minus one beyond bit length",
-                Int32.bitset(-129, 64 + 7),
-                M.equals(Int32Testable(-1))
+                Int64.bitset(-129, 128 + 7),
+                M.equals(Int64Testable(-1))
             )
         ]
     )
@@ -1771,50 +1772,50 @@ run(
         [
             test(
                 "clear bit",
-                Int32.bitclear(128, 7),
-                M.equals(Int32Testable(0))
+                Int64.bitclear(128, 7),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minus one",
-                Int32.bitclear(-1, 7),
-                M.equals(Int32Testable(-129))
+                Int64.bitclear(-1, 7),
+                M.equals(Int64Testable(-129))
             ),
             test(
                 "no effect",
-                Int32.bitclear(0, 7),
-                M.equals(Int32Testable(0))
+                Int64.bitclear(0, 7),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "clear all",
                 do {
-                    var number = -1 : Int32;
-                    for (index in Iter.range(0, 31)) {
-                        number := Int32.bitclear(number, index)
+                    var number = -1 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitclear(number, index)
                     };
                     number
                 },
-                M.equals(Int32Testable(0))
+                M.equals(Int64Testable(0))
             ),
             test(
                 "all no effect",
                 do {
-                    var number = 0 : Int32;
-                    for (index in Iter.range(0, 31)) {
-                        number := Int32.bitclear(number, index)
+                    var number = 0 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitclear(number, index)
                     };
                     number
                 },
-                M.equals(Int32Testable(0))
+                M.equals(Int64Testable(0))
             ),
             test(
                 "clear bit beyond bit length",
-                Int32.bitclear(128, 32 + 7),
-                M.equals(Int32Testable(0))
+                Int64.bitclear(128, 64 + 7),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minus one beyond bit length",
-                Int32.bitclear(-1, 64 + 7),
-                M.equals(Int32Testable(-129))
+                Int64.bitclear(-1, 128 + 7),
+                M.equals(Int64Testable(-129))
             )
         ]
     )
@@ -1828,50 +1829,50 @@ run(
         [
             test(
                 "clear bit",
-                Int32.bitflip(255, 7),
-                M.equals(Int32Testable(127))
+                Int64.bitflip(255, 7),
+                M.equals(Int64Testable(127))
             ),
             test(
                 "set bit",
-                Int32.bitflip(127, 7),
-                M.equals(Int32Testable(255))
+                Int64.bitflip(127, 7),
+                M.equals(Int64Testable(255))
             ),
             test(
                 "double flip",
-                Int32.bitflip(Int32.bitflip(0x1234_5678, 13), 13),
-                M.equals(Int32Testable(0x1234_5678))
+                Int64.bitflip(Int64.bitflip(0x1234_5678_90ab_cdef, 13), 13),
+                M.equals(Int64Testable(0x1234_5678_90ab_cdef))
             ),
             test(
                 "clear all",
                 do {
-                    var number = -1 : Int32;
-                    for (index in Iter.range(0, 31)) {
-                        number := Int32.bitflip(number, index)
+                    var number = -1 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitflip(number, index)
                     };
                     number
                 },
-                M.equals(Int32Testable(0))
+                M.equals(Int64Testable(0))
             ),
             test(
                 "set all",
                 do {
-                    var number = 0 : Int32;
-                    for (index in Iter.range(0, 31)) {
-                        number := Int32.bitflip(number, index)
+                    var number = 0 : Int64;
+                    for (index in Iter.range(0, 63)) {
+                        number := Int64.bitflip(number, index)
                     };
                     number
                 },
-                M.equals(Int32Testable(-1))
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "clear bit beyond bit length",
-                Int32.bitflip(255, 32 + 7),
-                M.equals(Int32Testable(127))
+                Int64.bitflip(255, 64 + 7),
+                M.equals(Int64Testable(127))
             ),
             test(
                 "set bit beyond bit length",
-                Int32.bitflip(127, 64 + 7),
-                M.equals(Int32Testable(255))
+                Int64.bitflip(127, 128 + 7),
+                M.equals(Int64Testable(255))
             )
         ]
     )
@@ -1885,43 +1886,43 @@ run(
         [
             test(
                 "zero",
-                Int32.bitcountNonZero(0),
-                M.equals(Int32Testable(0))
+                Int64.bitcountNonZero(0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minus one",
-                Int32.bitcountNonZero(-1),
-                M.equals(Int32Testable(32))
+                Int64.bitcountNonZero(-1),
+                M.equals(Int64Testable(64))
             ),
             test(
                 "minus two",
-                Int32.bitcountNonZero(-2),
-                M.equals(Int32Testable(31))
+                Int64.bitcountNonZero(-2),
+                M.equals(Int64Testable(63))
             ),
             test(
                 "one",
-                Int32.bitcountNonZero(1),
-                M.equals(Int32Testable(1))
+                Int64.bitcountNonZero(1),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minimum value",
-                Int32.bitcountNonZero(Int32.minimumValue),
-                M.equals(Int32Testable(1))
+                Int64.bitcountNonZero(Int64.minimumValue),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "maximum value",
-                Int32.bitcountNonZero(Int32.maximumValue),
-                M.equals(Int32Testable(31))
+                Int64.bitcountNonZero(Int64.maximumValue),
+                M.equals(Int64Testable(63))
             ),
             test(
                 "alternating bits positive",
-                Int32.bitcountNonZero(0x5555_5555),
-                M.equals(Int32Testable(16))
+                Int64.bitcountNonZero(0x5555_5555_5555_5555),
+                M.equals(Int64Testable(32))
             ),
             test(
                 "alternating bits negative",
-                Int32.bitcountNonZero(-0x5555_5556),
-                M.equals(Int32Testable(16))
+                Int64.bitcountNonZero(-0x5555_5555_5555_5556),
+                M.equals(Int64Testable(32))
             )
         ]
     )
@@ -1935,53 +1936,53 @@ run(
         [
             test(
                 "zero",
-                Int32.bitcountLeadingZero(0),
-                M.equals(Int32Testable(32))
+                Int64.bitcountLeadingZero(0),
+                M.equals(Int64Testable(64))
             ),
             test(
                 "minus one",
-                Int32.bitcountLeadingZero(-1),
-                M.equals(Int32Testable(0))
+                Int64.bitcountLeadingZero(-1),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minus two",
-                Int32.bitcountLeadingZero(-2),
-                M.equals(Int32Testable(0))
+                Int64.bitcountLeadingZero(-2),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "one",
-                Int32.bitcountLeadingZero(1),
-                M.equals(Int32Testable(31))
+                Int64.bitcountLeadingZero(1),
+                M.equals(Int64Testable(63))
             ),
             test(
                 "two",
-                Int32.bitcountLeadingZero(2),
-                M.equals(Int32Testable(30))
+                Int64.bitcountLeadingZero(2),
+                M.equals(Int64Testable(62))
             ),
             test(
                 "arbitrary",
-                Int32.bitcountLeadingZero(0x0000_1020),
-                M.equals(Int32Testable(19))
+                Int64.bitcountLeadingZero(0x0000_1020_3040_5060),
+                M.equals(Int64Testable(19))
             ),
             test(
                 "minimum value",
-                Int32.bitcountLeadingZero(Int32.minimumValue),
-                M.equals(Int32Testable(0))
+                Int64.bitcountLeadingZero(Int64.minimumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum value",
-                Int32.bitcountLeadingZero(Int32.maximumValue),
-                M.equals(Int32Testable(1))
+                Int64.bitcountLeadingZero(Int64.maximumValue),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "alternating bits positive",
-                Int32.bitcountLeadingZero(0x5555_5555),
-                M.equals(Int32Testable(1))
+                Int64.bitcountLeadingZero(0x5555_5555_5555_5555),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "alternating bits negative",
-                Int32.bitcountLeadingZero(-0x5555_5556),
-                M.equals(Int32Testable(0))
+                Int64.bitcountLeadingZero(-0x5555_5555_5555_5556),
+                M.equals(Int64Testable(0))
             )
         ]
     )
@@ -1995,53 +1996,53 @@ run(
         [
             test(
                 "zero",
-                Int32.bitcountTrailingZero(0),
-                M.equals(Int32Testable(32))
+                Int64.bitcountTrailingZero(0),
+                M.equals(Int64Testable(64))
             ),
             test(
                 "minus one",
-                Int32.bitcountTrailingZero(-1),
-                M.equals(Int32Testable(0))
+                Int64.bitcountTrailingZero(-1),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minus two",
-                Int32.bitcountTrailingZero(-2),
-                M.equals(Int32Testable(1))
+                Int64.bitcountTrailingZero(-2),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "one",
-                Int32.bitcountTrailingZero(1),
-                M.equals(Int32Testable(0))
+                Int64.bitcountTrailingZero(1),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "two",
-                Int32.bitcountTrailingZero(2),
-                M.equals(Int32Testable(1))
+                Int64.bitcountTrailingZero(2),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "arbitrary",
-                Int32.bitcountTrailingZero(0x5060_0000),
-                M.equals(Int32Testable(21))
+                Int64.bitcountTrailingZero(0x1020_3040_5060_0000),
+                M.equals(Int64Testable(21))
             ),
             test(
                 "minimum value",
-                Int32.bitcountTrailingZero(Int32.minimumValue),
-                M.equals(Int32Testable(31))
+                Int64.bitcountTrailingZero(Int64.minimumValue),
+                M.equals(Int64Testable(63))
             ),
             test(
                 "maximum value",
-                Int32.bitcountTrailingZero(Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.bitcountTrailingZero(Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "alternating bits positive",
-                Int32.bitcountTrailingZero(0x5555_5555),
-                M.equals(Int32Testable(0))
+                Int64.bitcountTrailingZero(0x5555_5555_5555_5555),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "alternating bits negative",
-                Int32.bitcountTrailingZero(-0x5555_5556),
-                M.equals(Int32Testable(1))
+                Int64.bitcountTrailingZero(-0x5555_5555_5555_5556),
+                M.equals(Int64Testable(1))
             )
         ]
     )
@@ -2055,48 +2056,48 @@ run(
         [
             test(
                 "positive",
-                Int32.addWrap(123, 123),
-                M.equals(Int32Testable(246))
+                Int64.addWrap(123, 123),
+                M.equals(Int64Testable(246))
             ),
             test(
                 "negative",
-                Int32.addWrap(-123, -123),
-                M.equals(Int32Testable(-246))
+                Int64.addWrap(-123, -123),
+                M.equals(Int64Testable(-246))
             ),
             test(
                 "mixed signs",
-                Int32.addWrap(-123, 223),
-                M.equals(Int32Testable(100))
+                Int64.addWrap(-123, 223),
+                M.equals(Int64Testable(100))
             ),
             test(
                 "zero",
-                Int32.addWrap(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.addWrap(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and maximum",
-                Int32.addWrap(Int32.minimumValue, Int32.maximumValue),
-                M.equals(Int32Testable(-1))
+                Int64.addWrap(Int64.minimumValue, Int64.maximumValue),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "small overflow",
-                Int32.addWrap(Int32.maximumValue, 1),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.addWrap(Int64.maximumValue, 1),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "large overflow",
-                Int32.addWrap(Int32.maximumValue, Int32.maximumValue),
-                M.equals(Int32Testable(-2))
+                Int64.addWrap(Int64.maximumValue, Int64.maximumValue),
+                M.equals(Int64Testable(-2))
             ),
             test(
                 "small underflow",
-                Int32.addWrap(Int32.minimumValue, -1),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.addWrap(Int64.minimumValue, -1),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "large underflow",
-                Int32.addWrap(Int32.minimumValue, Int32.minimumValue),
-                M.equals(Int32Testable(0))
+                Int64.addWrap(Int64.minimumValue, Int64.minimumValue),
+                M.equals(Int64Testable(0))
             ),
         ]
     )
@@ -2110,48 +2111,48 @@ run(
         [
             test(
                 "positive",
-                Int32.subWrap(123, 123),
-                M.equals(Int32Testable(0))
+                Int64.subWrap(123, 123),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "negative",
-                Int32.subWrap(-123, -123),
-                M.equals(Int32Testable(0))
+                Int64.subWrap(-123, -123),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "mixed signs",
-                Int32.subWrap(-123, 223),
-                M.equals(Int32Testable(-346))
+                Int64.subWrap(-123, 223),
+                M.equals(Int64Testable(-346))
             ),
             test(
                 "zero",
-                Int32.subWrap(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.subWrap(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "maximum and maximum",
-                Int32.subWrap(Int32.maximumValue, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.subWrap(Int64.maximumValue, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "small overflow",
-                Int32.subWrap(Int32.maximumValue, -1),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.subWrap(Int64.maximumValue, -1),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "large overflow",
-                Int32.subWrap(Int32.maximumValue, Int32.minimumValue),
-                M.equals(Int32Testable(-1))
+                Int64.subWrap(Int64.maximumValue, Int64.minimumValue),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "small underflow",
-                Int32.subWrap(Int32.minimumValue, 1),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.subWrap(Int64.minimumValue, 1),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "large underflow",
-                Int32.subWrap(Int32.minimumValue, Int32.maximumValue),
-                M.equals(Int32Testable(1))
+                Int64.subWrap(Int64.minimumValue, Int64.maximumValue),
+                M.equals(Int64Testable(1))
             ),
         ]
     )
@@ -2165,63 +2166,63 @@ run(
         [
             test(
                 "positive",
-                Int32.mulWrap(123, 234),
-                M.equals(Int32Testable(28782))
+                Int64.mulWrap(123, 234),
+                M.equals(Int64Testable(28782))
             ),
             test(
                 "negative",
-                Int32.mulWrap(-123, -234),
-                M.equals(Int32Testable(28782))
+                Int64.mulWrap(-123, -234),
+                M.equals(Int64Testable(28782))
             ),
             test(
                 "mixed signs",
-                Int32.mulWrap(-123, 234),
-                M.equals(Int32Testable(-28782))
+                Int64.mulWrap(-123, 234),
+                M.equals(Int64Testable(-28782))
             ),
             test(
                 "zeros",
-                Int32.mulWrap(0, 0),
-                M.equals(Int32Testable(0))
+                Int64.mulWrap(0, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "zero and maximum",
-                Int32.mulWrap(0, Int32.maximumValue),
-                M.equals(Int32Testable(0))
+                Int64.mulWrap(0, Int64.maximumValue),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "minimum and zero",
-                Int32.mulWrap(Int32.minimumValue, 0),
-                M.equals(Int32Testable(0))
+                Int64.mulWrap(Int64.minimumValue, 0),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "one and maximum",
-                Int32.mulWrap(1, Int32.maximumValue),
-                M.equals(Int32Testable(Int32.maximumValue))
+                Int64.mulWrap(1, Int64.maximumValue),
+                M.equals(Int64Testable(Int64.maximumValue))
             ),
             test(
                 "minimum and one",
-                Int32.mulWrap(Int32.minimumValue, 1),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.mulWrap(Int64.minimumValue, 1),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "small overflow",
-                Int32.mulWrap(2, Int32.maximumValue),
-                M.equals(Int32Testable(-2))
+                Int64.mulWrap(2, Int64.maximumValue),
+                M.equals(Int64Testable(-2))
             ),
             test(
                 "large overflow",
-                Int32.mulWrap(Int32.maximumValue, Int32.maximumValue),
-                M.equals(Int32Testable(1))
+                Int64.mulWrap(Int64.maximumValue, Int64.maximumValue),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "small underflow",
-                Int32.mulWrap(Int32.minimumValue, 2),
-                M.equals(Int32Testable(0))
+                Int64.mulWrap(Int64.minimumValue, 2),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "large underflow",
-                Int32.mulWrap(Int32.minimumValue, Int32.minimumValue),
-                M.equals(Int32Testable(0))
+                Int64.mulWrap(Int64.minimumValue, Int64.minimumValue),
+                M.equals(Int64Testable(0))
             ),
         ]
     )
@@ -2235,68 +2236,68 @@ run(
         [
             test(
                 "positive base, positive exponent",
-                Int32.powWrap(72, 3),
-                M.equals(Int32Testable(373248))
+                Int64.powWrap(72, 3),
+                M.equals(Int64Testable(373248))
             ),
             test(
                 "positive base, zero exponent",
-                Int32.powWrap(72, 0),
-                M.equals(Int32Testable(1))
+                Int64.powWrap(72, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "negative base, positive exponent",
-                Int32.powWrap(-72, 3),
-                M.equals(Int32Testable(-373248))
+                Int64.powWrap(-72, 3),
+                M.equals(Int64Testable(-373248))
             ),
             test(
                 "negative base, zero exponent",
-                Int32.powWrap(-72, 0),
-                M.equals(Int32Testable(1))
+                Int64.powWrap(-72, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "maximum and zero",
-                Int32.powWrap(Int32.maximumValue, 0),
-                M.equals(Int32Testable(1))
+                Int64.powWrap(Int64.maximumValue, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minimum and zero",
-                Int32.powWrap(Int32.minimumValue, 0),
-                M.equals(Int32Testable(1))
+                Int64.powWrap(Int64.minimumValue, 0),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "plus one and maximum",
-                Int32.powWrap(1, Int32.maximumValue),
-                M.equals(Int32Testable(1))
+                Int64.powWrap(1, Int64.maximumValue),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "minus one and maximum",
-                Int32.powWrap(-1, Int32.maximumValue),
-                M.equals(Int32Testable(-1))
+                Int64.powWrap(-1, Int64.maximumValue),
+                M.equals(Int64Testable(-1))
             ),
             test(
                 "minimum value",
-                Int32.powWrap(-2, 31),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.powWrap(-2, 63),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "small overflow",
-                Int32.powWrap(2, 31),
-                M.equals(Int32Testable(Int32.minimumValue))
+                Int64.powWrap(2, 63),
+                M.equals(Int64Testable(Int64.minimumValue))
             ),
             test(
                 "large overflow",
-                Int32.powWrap(Int32.maximumValue, 10),
-                M.equals(Int32Testable(1))
+                Int64.powWrap(Int64.maximumValue, 10),
+                M.equals(Int64Testable(1))
             ),
             test(
                 "small underflow",
-                Int32.powWrap(-2, 33),
-                M.equals(Int32Testable(0))
+                Int64.powWrap(-2, 65),
+                M.equals(Int64Testable(0))
             ),
             test(
                 "large underflow",
-                Int32.powWrap(Int32.minimumValue, 10),
-                M.equals(Int32Testable(0))
+                Int64.powWrap(Int64.minimumValue, 10),
+                M.equals(Int64Testable(0))
             ),
         ]
     )

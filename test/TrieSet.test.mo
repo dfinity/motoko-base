@@ -1,3 +1,5 @@
+// @testmode wasi
+
 import Nat "mo:base/Nat";
 import TrieSet "mo:base/TrieSet";
 import Nat32 "mo:base/Nat32";
@@ -25,7 +27,7 @@ let simpleTests = do {
       ),
       Suite.test(
         "toArray",
-        TrieSet.toArray<Nat>(set1),
+        Array.sort(TrieSet.toArray<Nat>(set1), Nat.compare),
         M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
       )
     ]
@@ -42,7 +44,7 @@ let binopTests = do {
     [
       Suite.test(
         "union",
-        TrieSet.toArray(TrieSet.union(a, b, Nat.equal)),
+        Array.sort(TrieSet.toArray(TrieSet.union(a, b, Nat.equal)), Nat.compare),
         M.equals(T.array<Nat>(T.natTestable, [1, 2, 3]))
       ),
       Suite.test(
