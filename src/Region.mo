@@ -1,4 +1,4 @@
-/// Byte-level access to isolated, (virtual) _stable memory_ regions.
+/// Byte-level access to isolated, (virtual) stable memory _regions_.
 ///
 /// *NOTE*: Since it adds some overhead to your actor (960MiB of IC stable memory, even if unused),
 /// use of this library currently requires compiler flag `--stable-regions`.
@@ -106,7 +106,7 @@ module {
   /// let afterSize = Region.size(region);
   /// afterSize - beforeSize // => 10
   /// ```
-  public let grow : (region : Region, newPages : Nat64) -> (pages : Nat64) = Prim.regionGrow;
+  public let grow : (region : Region, newPages : Nat64) -> (oldPages : Nat64) = Prim.regionGrow;
 
 
   /// Within `region`, load a `Nat8` value from `offset`.
