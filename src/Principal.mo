@@ -27,6 +27,12 @@
 import Prim "mo:⛔";
 import Blob "Blob";
 import Hash "Hash";
+import Cryptography "Cryptography";
+import Array "Array";
+import Nat8 "Nat8";
+import Nat32 "Nat32";
+import Text "Text";
+
 module {
 
   public type Principal = Prim.Types.Principal;
@@ -42,6 +48,40 @@ module {
   /// }
   /// ```
   public func fromActor(a : actor {}) : Principal = Prim.principalOfActor a;
+
+  /// Compute the account identifier of a principal. Optionally specify a sub-account.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let account = Principal.toAccount(principal, null); // => \00\00\00\00\00\30\00\D3\01\01 FIXME check ChatGPT's math
+  /// ```
+  public func toAccount(principal : Principal, subAccount : ?Blob) : Blob {
+    func beBytes(n : Nat32) : [Nat8] {
+      func byte(n : Nat32) : Nat8 {
+        Nat8.fromNat(Nat32.toNat(n & 0xff))
+      };
+      [byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)]
+    };
+
+    let sha224 = Cryptography.SHA224();
+    sha224.write([0x0A]);
+    sha224.write(Blob.toArray(Text.encodeUtf8("account-id")));
+    sha224.write(Blob.toArray(toBlob(principal)));
+    switch subAccount {
+      case (?subAccount) {
+        sha224.write(Blob.toArray(subAccount))
+      };
+      case (null) {
+        let defaultSubAccount = Array.tabulate<Nat8>(32, func _ = 0);
+        sha224.write(defaultSubAccount)
+      }
+    };
+
+    let hashSum = sha224.sum();
+    let crc32Bytes = beBytes(Cryptography.crc32OfArray(hashSum));
+    Blob.fromArray(Array.append(crc32Bytes, hashSum))
+  };
 
   /// Convert a `Principal` to its `Blob` (bytes) representation.
   ///
