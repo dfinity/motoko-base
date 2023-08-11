@@ -1,7 +1,7 @@
 /// Provides utility functions on 64-bit signed integers.
 ///
 /// Note that most operations are available as built-in operators (e.g. `1 + 1`).
-
+///
 /// Import from the base library to use this module.
 /// ```motoko name=import
 /// import Int64 "mo:base/Int64";
