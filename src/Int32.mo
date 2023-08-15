@@ -76,6 +76,24 @@ module {
   /// ```
   public let toInt16 : Int32 -> Int16 = Prim.int32ToInt16;
 
+  /// Converts a 64-bit signed integer to a 32-bit signed integer.
+  ///
+  /// Traps on overflow/underflow.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int32.fromInt64(-123_456) // => -123_456 : Int32
+  /// ```
+  public let fromInt64 : Int64 -> Int32 = Prim.int64ToInt32;
+
+  /// Converts a 32-bit signed integer to a 64-bit signed integer.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int32.toInt64(-123_456) // => -123_456 : Int64
+  /// ```
+  public let toInt64 : Int32 -> Int64 = Prim.int32ToInt64;
+
   /// Converts an unsigned 32-bit integer to a signed 32-bit integer.
   ///
   /// Wraps on overflow/underflow.
