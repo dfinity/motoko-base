@@ -1,7 +1,11 @@
-/// 8-bit signed integers with checked arithmetic.
+/// Provides utility functions on 8-bit signed integers.
 ///
-/// Common 8-bit integer functions.
-/// Most operations are available as built-in operators (e.g. `1 + 1`).
+/// Note that most operations are available as built-in operators (e.g. `1 + 1`).
+///
+/// Import from the base library to use this module.
+/// ```motoko name=import
+/// import Int8 "mo:base/Int8";
+/// ```
 import Int "Int";
 import Prim "mo:⛔";
 
@@ -19,9 +23,7 @@ module {
   /// Converts a 8-bit signed integer to a signed integer with infinite precision.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.toInt(123) // => 123 : Int
   /// ```
   public let toInt : Int8 -> Int = Prim.int8ToInt;
@@ -31,9 +33,7 @@ module {
   /// Traps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.fromInt(123) // => +123 : Int8
   /// ```
   public let fromInt : Int -> Int8 = Prim.intToInt8;
@@ -43,21 +43,35 @@ module {
   /// Wraps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.fromIntWrap(-123) // => -123 : Int
   /// ```
   public let fromIntWrap : Int -> Int8 = Prim.intToInt8Wrap;
+
+  /// Converts a 16-bit signed integer to a 8-bit signed integer.
+  ///
+  /// Traps on overflow/underflow.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int8.fromInt16(123) // => +123 : Int8
+  /// ```
+  public let fromInt16 : Int16 -> Int8 = Prim.int16ToInt8;
+
+  /// Converts a 8-bit signed integer to a 16-bit signed integer.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int8.toInt16(123) // => +123 : Int16
+  /// ```
+  public let toInt16 : Int8 -> Int16 = Prim.int8ToInt16;
 
   /// Converts an unsigned 8-bit integer to a signed 8-bit integer.
   ///
   /// Wraps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.fromNat8(123) // => +123 : Int8
   /// ```
   public let fromNat8 : Nat8 -> Int8 = Prim.nat8ToInt8;
@@ -67,9 +81,7 @@ module {
   /// Wraps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.toNat8(-1) // => 255 : Nat8 // underflow
   /// ```
   public let toNat8 : Int8 -> Nat8 = Prim.int8ToNat8;
@@ -78,9 +90,7 @@ module {
   /// Formats the integer in decimal representation.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.toText(-123) // => "-123"
   /// ```
   public func toText(x : Int8) : Text {
@@ -92,9 +102,7 @@ module {
   /// Traps when `x == -2 ** 7` (the minimum `Int8` value).
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.abs(-123) // => +123
   /// ```
   public func abs(x : Int8) : Int8 {
@@ -104,9 +112,7 @@ module {
   /// Returns the minimum of `x` and `y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.min(+2, -3) // => -3
   /// ```
   public func min(x : Int8, y : Int8) : Int8 {
@@ -116,9 +122,7 @@ module {
   /// Returns the maximum of `x` and `y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.max(+2, -3) // => +2
   /// ```
   public func max(x : Int8, y : Int8) : Int8 {
@@ -128,9 +132,7 @@ module {
   /// Returns `x == y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.equal(123, 123) // => true
   /// ```
   public func equal(x : Int8, y : Int8) : Bool { x == y };
@@ -138,9 +140,7 @@ module {
   /// Returns `x != y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.notEqual(123, 123) // => false
   /// ```
   public func notEqual(x : Int8, y : Int8) : Bool { x != y };
@@ -148,9 +148,7 @@ module {
   /// Returns `x < y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.less(123, 124) // => true
   /// ```
   public func less(x : Int8, y : Int8) : Bool { x < y };
@@ -158,9 +156,7 @@ module {
   /// Returns `x <= y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.lessOrEqual(123, 124) // => true
   /// ```
   public func lessOrEqual(x : Int8, y : Int8) : Bool { x <= y };
@@ -168,9 +164,7 @@ module {
   /// Returns `x > y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.greater(124, 123) // => true
   /// ```
   public func greater(x : Int8, y : Int8) : Bool { x > y };
@@ -178,9 +172,7 @@ module {
   /// Returns `x >= y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.greaterOrEqual(124, 123) // => true
   /// ```
   public func greaterOrEqual(x : Int8, y : Int8) : Bool { x >= y };
@@ -188,9 +180,7 @@ module {
   /// Returns the order of `x` and `y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.compare(123, 124) // => #less
   /// ```
   public func compare(x : Int8, y : Int8) : { #less; #equal; #greater } {
@@ -203,9 +193,7 @@ module {
   ///
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.neg(123) // => -123
   /// ```
   public func neg(x : Int8) : Int8 { -x };
@@ -215,9 +203,7 @@ module {
   /// Traps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.add(100, 23) // => +123
   /// ```
   public func add(x : Int8, y : Int8) : Int8 { x + y };
@@ -227,9 +213,7 @@ module {
   /// Traps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.sub(123, 23) // => +100
   /// ```
   public func sub(x : Int8, y : Int8) : Int8 { x - y };
@@ -239,9 +223,7 @@ module {
   /// Traps on overflow/underflow.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.mul(12, 10) // => +120
   /// ```
   public func mul(x : Int8, y : Int8) : Int8 { x * y };
@@ -252,9 +234,7 @@ module {
   /// Traps when `y` is zero.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.div(123, 10) // => +12
   /// ```
   public func div(x : Int8, y : Int8) : Int8 { x / y };
@@ -265,9 +245,7 @@ module {
   /// Traps when `y` is zero.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.rem(123, 10) // => +3
   /// ```
   public func rem(x : Int8, y : Int8) : Int8 { x % y };
@@ -277,9 +255,7 @@ module {
   /// Traps on overflow/underflow and when `y < 0 or y >= 8`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.pow(2, 6) // => +64
   /// ```
   public func pow(x : Int8, y : Int8) : Int8 { x ** y };
@@ -287,9 +263,7 @@ module {
   /// Returns the bitwise negation of `x`, `^x`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitnot(-16 /* 0xf0 */) // => +15 // 0x0f
   /// ```
   public func bitnot(x : Int8) : Int8 { ^x };
@@ -297,9 +271,7 @@ module {
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitand(0x1f, 0x70) // => +16 // 0x10
   /// ```
   public func bitand(x : Int8, y : Int8) : Int8 { x & y };
@@ -307,9 +279,7 @@ module {
   /// Returns the bitwise "or" of `x` and `y`, `x | y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitor(0x0f, 0x70) // => +127 // 0x7f
   /// ```
   public func bitor(x : Int8, y : Int8) : Int8 { x | y };
@@ -317,9 +287,7 @@ module {
   /// Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitxor(0x70, 0x7f) // => +15 // 0x0f
   /// ```
   public func bitxor(x : Int8, y : Int8) : Int8 { x ^ y };
@@ -332,9 +300,7 @@ module {
   /// For `y < 0`,  the semantics is the same as for `bitshiftLeft(x, y + y % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitshiftLeft(1, 4) // => +16 // 0x10 equivalent to `2 ** 4`.
   /// ```
   public func bitshiftLeft(x : Int8, y : Int8) : Int8 { x << y };
@@ -347,9 +313,7 @@ module {
   /// For `y < 0`,  the semantics is the same as for `bitshiftRight (x, y + y % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitshiftRight(64, 4) // => +4 // equivalent to `64 / (2 ** 4)`
   /// ```
   public func bitshiftRight(x : Int8, y : Int8) : Int8 { x >> y };
@@ -362,9 +326,7 @@ module {
   /// For `y >= 8`, the semantics is the same as for `bitrotLeft(x, y % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitrotLeft(0x11 /* 0b0001_0001 */, 2) // => +68 // 0b0100_0100 == 0x44.
   /// ```
   public func bitrotLeft(x : Int8, y : Int8) : Int8 { x <<> y };
@@ -377,9 +339,7 @@ module {
   /// For `y >= 8`, the semantics is the same as for `bitrotRight(x, y % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitrotRight(0x11 /* 0b0001_0001 */, 1) // => -120 // 0b1000_1000 == 0x88.
   /// ```
   public func bitrotRight(x : Int8, y : Int8) : Int8 { x <>> y };
@@ -388,9 +348,7 @@ module {
   /// If `p >= 8`, the semantics is the same as for `bittest(x, p % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bittest(64, 6) // => true
   /// ```
   public func bittest(x : Int8, p : Nat) : Bool {
@@ -401,9 +359,7 @@ module {
   /// If `p >= 8`, the semantics is the same as for `bitset(x, p % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitset(0, 6) // => +64
   /// ```
   public func bitset(x : Int8, p : Nat) : Int8 {
@@ -414,9 +370,7 @@ module {
   /// If `p >= 8`, the semantics is the same as for `bitclear(x, p % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitclear(-1, 6) // => -65
   /// ```
   public func bitclear(x : Int8, p : Nat) : Int8 {
@@ -427,9 +381,7 @@ module {
   /// If `p >= 8`, the semantics is the same as for `bitclear(x, p % 8)`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitflip(127, 6) // => +63
   /// ```
   public func bitflip(x : Int8, p : Nat) : Int8 {
@@ -439,9 +391,7 @@ module {
   /// Returns the count of non-zero bits in `x`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitcountNonZero(0x0f) // => +4
   /// ```
   public let bitcountNonZero : (x : Int8) -> Int8 = Prim.popcntInt8;
@@ -449,9 +399,7 @@ module {
   /// Returns the count of leading zero bits in `x`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitcountLeadingZero(0x08) // => +4
   /// ```
   public let bitcountLeadingZero : (x : Int8) -> Int8 = Prim.clzInt8;
@@ -459,9 +407,7 @@ module {
   /// Returns the count of trailing zero bits in `x`.
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.bitcountTrailingZero(0x10) // => +4
   /// ```
   public let bitcountTrailingZero : (x : Int8) -> Int8 = Prim.ctzInt8;
@@ -472,9 +418,7 @@ module {
   ///
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.addWrap(2 ** 6, 2 ** 6) // => -128 // overflow
   /// ```
   public func addWrap(x : Int8, y : Int8) : Int8 { x +% y };
@@ -485,9 +429,7 @@ module {
   ///
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.subWrap(-2 ** 7, 1) // => +127 // underflow
   /// ```
   public func subWrap(x : Int8, y : Int8) : Int8 { x -% y };
@@ -498,9 +440,7 @@ module {
   ///
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.mulWrap(2 ** 4, 2 ** 4) // => 0 // overflow
   /// ```
   public func mulWrap(x : Int8, y : Int8) : Int8 { x *% y };
@@ -512,9 +452,7 @@ module {
   ///
   ///
   /// Example:
-  /// ```motoko
-  /// import Int8 "mo:base/Int8";
-  ///
+  /// ```motoko include=import
   /// Int8.powWrap(2, 7) // => -128 // overflow
   /// ```
   public func powWrap(x : Int8, y : Int8) : Int8 { x **% y };
