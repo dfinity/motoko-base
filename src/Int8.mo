@@ -15,9 +15,19 @@ module {
   public type Int8 = Prim.Types.Int8;
 
   /// Minimum 8-bit integer value, `-2 ** 7`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int8.minimumValue // => -128
+  /// ```
   public let minimumValue = -128 : Int8;
 
   /// Maximum 8-bit integer value, `+2 ** 7 - 1`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int8.maximumValue // => +127
+  /// ```
   public let maximumValue = 127 : Int8;
 
   /// Converts a 8-bit signed integer to a signed integer with infinite precision.
