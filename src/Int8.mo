@@ -30,7 +30,7 @@ module {
   /// ```
   public let maximumValue = 127 : Int8;
 
-  /// Converts a 8-bit signed integer to a signed integer with infinite precision.
+  /// Converts an 8-bit signed integer to a signed integer with infinite precision.
   ///
   /// Example:
   /// ```motoko include=import
@@ -38,7 +38,7 @@ module {
   /// ```
   public let toInt : Int8 -> Int = Prim.int8ToInt;
 
-  /// Converts a signed integer with infinite precision to a 8-bit signed integer.
+  /// Converts a signed integer with infinite precision to an 8-bit signed integer.
   ///
   /// Traps on overflow/underflow.
   ///
@@ -48,7 +48,7 @@ module {
   /// ```
   public let fromInt : Int -> Int8 = Prim.intToInt8;
 
-  /// Converts a signed integer with infinite precision to a 8-bit signed integer.
+  /// Converts a signed integer with infinite precision to an 8-bit signed integer.
   ///
   /// Wraps on overflow/underflow.
   ///
@@ -58,7 +58,7 @@ module {
   /// ```
   public let fromIntWrap : Int -> Int8 = Prim.intToInt8Wrap;
 
-  /// Converts a 16-bit signed integer to a 8-bit signed integer.
+  /// Converts a 16-bit signed integer to an 8-bit signed integer.
   ///
   /// Traps on overflow/underflow.
   ///
@@ -68,7 +68,7 @@ module {
   /// ```
   public let fromInt16 : Int16 -> Int8 = Prim.int16ToInt8;
 
-  /// Converts a 8-bit signed integer to a 16-bit signed integer.
+  /// Converts an 8-bit signed integer to a 16-bit signed integer.
   ///
   /// Example:
   /// ```motoko include=import
