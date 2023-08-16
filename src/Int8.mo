@@ -96,8 +96,9 @@ module {
   /// ```
   public let toNat8 : Int8 -> Nat8 = Prim.int8ToNat8;
 
-  /// Returns the Text representation of `x`.
-  /// Formats the integer in decimal representation.
+  /// Converts an integer number to its textual representation. Textual
+  /// representation _do not_ contain underscores to represent commas.
+  ///
   ///
   /// Example:
   /// ```motoko include=import
@@ -139,59 +140,115 @@ module {
     if (x < y) { y } else { x }
   };
 
-  /// Returns `x == y`.
+  /// Equality function for Int8 types.
+  /// This is equivalent to `x == y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.equal(123, 123) // => true
+  /// Int8.equal(-1, -1); // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `==` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `==`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Buffer "mo:base/Buffer";
+  ///
+  /// let buffer1 = Buffer.Buffer<Int8>(1);
+  /// buffer1.add(-3);
+  /// let buffer2 = Buffer.Buffer<Int8>(1);
+  /// buffer2.add(-3);
+  /// Buffer.equal(buffer1, buffer2, Int8.equal) // => true
   /// ```
   public func equal(x : Int8, y : Int8) : Bool { x == y };
 
-  /// Returns `x != y`.
+  /// Inequality function for Int8 types.
+  /// This is equivalent to `x != y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.notEqual(123, 123) // => false
+  /// Int8.notEqual(-1, -2); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `!=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `!=`
+  /// as a function value at the moment.
   public func notEqual(x : Int8, y : Int8) : Bool { x != y };
 
-  /// Returns `x < y`.
+  /// "Less than" function for Int8 types.
+  /// This is equivalent to `x < y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.less(123, 124) // => true
+  /// Int8.less(-2, 1); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<`
+  /// as a function value at the moment.
   public func less(x : Int8, y : Int8) : Bool { x < y };
 
-  /// Returns `x <= y`.
+  /// "Less than or equal" function for Int8 types.
+  /// This is equivalent to `x <= y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.lessOrEqual(123, 124) // => true
+  /// Int8.lessOrEqual(-2, -2); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<=`
+  /// as a function value at the moment.
   public func lessOrEqual(x : Int8, y : Int8) : Bool { x <= y };
 
-  /// Returns `x > y`.
+  /// "Greater than" function for Int8 types.
+  /// This is equivalent to `x > y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.greater(124, 123) // => true
+  /// Int8.greater(-2, -3); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>`
+  /// as a function value at the moment.
   public func greater(x : Int8, y : Int8) : Bool { x > y };
 
-  /// Returns `x >= y`.
+  /// "Greater than or equal" function for Int8 types.
+  /// This is equivalent to `x >= y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.greaterOrEqual(124, 123) // => true
+  /// Int8.greaterOrEqual(-2, -2); // => true
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>=`
+  /// as a function value at the moment.
   public func greaterOrEqual(x : Int8, y : Int8) : Bool { x >= y };
 
-  /// Returns the order of `x` and `y`.
+  /// General-purpose comparison function for `Int8`. Returns the `Order` (
+  /// either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
   ///
   /// Example:
   /// ```motoko include=import
-  /// Int8.compare(123, 124) // => #less
+  /// Int8.compare(-3, 2) // => #less
+  /// ```
+  ///
+  /// This function can be used as value for a high order function, such as a sort function.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.sort([1, -2, -3] : [Int8], Int8.compare) // => [-3, -2, 1]
   /// ```
   public func compare(x : Int8, y : Int8) : { #less; #equal; #greater } {
     if (x < y) { #less } else if (x == y) { #equal } else { #greater }
@@ -201,11 +258,15 @@ module {
   ///
   /// Traps on overflow, i.e. for `neg(-2 ** 7)`.
   ///
-  ///
   /// Example:
   /// ```motoko include=import
   /// Int8.neg(123) // => -123
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `-` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `-`
+  /// as a function value at the moment.
   public func neg(x : Int8) : Int8 { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -215,6 +276,17 @@ module {
   /// Example:
   /// ```motoko include=import
   /// Int8.add(100, 23) // => +123
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `+` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `+`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.foldLeft<Int8, Int8>([1, -2, -3], 0, Int8.add) // => -4
   /// ```
   public func add(x : Int8, y : Int8) : Int8 { x + y };
 
@@ -226,6 +298,17 @@ module {
   /// ```motoko include=import
   /// Int8.sub(123, 23) // => +100
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `-` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `-`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.foldLeft<Int8, Int8>([1, -2, -3], 0, Int8.sub) // => 4
+  /// ```
   public func sub(x : Int8, y : Int8) : Int8 { x - y };
 
   /// Returns the product of `x` and `y`, `x * y`.
@@ -235,6 +318,17 @@ module {
   /// Example:
   /// ```motoko include=import
   /// Int8.mul(12, 10) // => +120
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `*` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `*`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Array "mo:base/Array";
+  /// Array.foldLeft<Int8, Int8>([1, -2, -3], 1, Int8.mul) // => 6
   /// ```
   public func mul(x : Int8, y : Int8) : Int8 { x * y };
 
@@ -247,6 +341,11 @@ module {
   /// ```motoko include=import
   /// Int8.div(123, 10) // => +12
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `/` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `/`
+  /// as a function value at the moment.
   public func div(x : Int8, y : Int8) : Int8 { x / y };
 
   /// Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
@@ -258,6 +357,11 @@ module {
   /// ```motoko include=import
   /// Int8.rem(123, 10) // => +3
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `%`
+  /// as a function value at the moment.
   public func rem(x : Int8, y : Int8) : Int8 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
@@ -268,6 +372,11 @@ module {
   /// ```motoko include=import
   /// Int8.pow(2, 6) // => +64
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `**` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `**`
+  /// as a function value at the moment.
   public func pow(x : Int8, y : Int8) : Int8 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
@@ -276,6 +385,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitnot(-16 /* 0xf0 */) // => +15 // 0x0f
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `^` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `^`
+  /// as a function value at the moment.
   public func bitnot(x : Int8) : Int8 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
@@ -284,6 +398,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitand(0x1f, 0x70) // => +16 // 0x10
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `&` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `&`
+  /// as a function value at the moment.
   public func bitand(x : Int8, y : Int8) : Int8 { x & y };
 
   /// Returns the bitwise "or" of `x` and `y`, `x | y`.
@@ -292,6 +411,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitor(0x0f, 0x70) // => +127 // 0x7f
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `|` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `|`
+  /// as a function value at the moment.
   public func bitor(x : Int8, y : Int8) : Int8 { x | y };
 
   /// Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
@@ -300,6 +424,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitxor(0x70, 0x7f) // => +15 // 0x0f
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `^` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `^`
+  /// as a function value at the moment.
   public func bitxor(x : Int8, y : Int8) : Int8 { x ^ y };
 
   /// Returns the bitwise left shift of `x` by `y`, `x << y`.
@@ -313,6 +442,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitshiftLeft(1, 4) // => +16 // 0x10 equivalent to `2 ** 4`.
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<<` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<<`
+  /// as a function value at the moment.
   public func bitshiftLeft(x : Int8, y : Int8) : Int8 { x << y };
 
   /// Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
@@ -326,6 +460,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitshiftRight(64, 4) // => +4 // equivalent to `64 / (2 ** 4)`
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>>`
+  /// as a function value at the moment.
   public func bitshiftRight(x : Int8, y : Int8) : Int8 { x >> y };
 
   /// Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
@@ -339,6 +478,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitrotLeft(0x11 /* 0b0001_0001 */, 2) // => +68 // 0b0100_0100 == 0x44.
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<<>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<<>`
+  /// as a function value at the moment.
   public func bitrotLeft(x : Int8, y : Int8) : Int8 { x <<> y };
 
   /// Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
@@ -352,6 +496,11 @@ module {
   /// ```motoko include=import
   /// Int8.bitrotRight(0x11 /* 0b0001_0001 */, 1) // => -120 // 0b1000_1000 == 0x88.
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<>>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<>>`
+  /// as a function value at the moment.
   public func bitrotRight(x : Int8, y : Int8) : Int8 { x <>> y };
 
   /// Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
@@ -426,33 +575,45 @@ module {
   ///
   /// Wraps on overflow/underflow.
   ///
-  ///
   /// Example:
   /// ```motoko include=import
   /// Int8.addWrap(2 ** 6, 2 ** 6) // => -128 // overflow
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `+%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `+%`
+  /// as a function value at the moment.
   public func addWrap(x : Int8, y : Int8) : Int8 { x +% y };
 
   /// Returns the difference of `x` and `y`, `x -% y`.
   ///
   /// Wraps on overflow/underflow.
   ///
-  ///
   /// Example:
   /// ```motoko include=import
   /// Int8.subWrap(-2 ** 7, 1) // => +127 // underflow
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `-%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `-%`
+  /// as a function value at the moment.
   public func subWrap(x : Int8, y : Int8) : Int8 { x -% y };
 
   /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
   ///
   /// Wraps on overflow/underflow.
   ///
-  ///
   /// Example:
   /// ```motoko include=import
   /// Int8.mulWrap(2 ** 4, 2 ** 4) // => 0 // overflow
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `*%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `*%`
+  /// as a function value at the moment.
   public func mulWrap(x : Int8, y : Int8) : Int8 { x *% y };
 
   /// Returns `x` to the power of `y`, `x **% y`.
@@ -460,11 +621,15 @@ module {
   /// Wraps on overflow/underflow.
   /// Traps if `y < 0 or y >= 8`.
   ///
-  ///
   /// Example:
   /// ```motoko include=import
   /// Int8.powWrap(2, 7) // => -128 // overflow
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `**%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `**%`
+  /// as a function value at the moment.
   public func powWrap(x : Int8, y : Int8) : Int8 { x **% y };
 
 }
