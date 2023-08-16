@@ -96,9 +96,7 @@ module {
   /// ```
   public let toNat8 : Int8 -> Nat8 = Prim.int8ToNat8;
 
-  /// Converts an integer number to its textual representation. Textual
-  /// representation _do not_ contain underscores to represent commas.
-  ///
+  /// Converts an integer number to its textual representation.
   ///
   /// Example:
   /// ```motoko include=import

@@ -68,8 +68,7 @@ module {
   /// ```
   public let fromIntWrap : Int -> Nat8 = Prim.intToNat8Wrap;
 
-  /// Converts `x` to its textual representation. Textual
-  /// representation _do not_ contain underscores to represent commas.
+  /// Converts `x` to its textual representation.
   ///
   /// Example:
   /// ```motoko include=import
