@@ -114,8 +114,8 @@ module {
   /// ```
   public let toNat16 : Int16 -> Nat16 = Prim.int16ToNat16;
 
-  /// Returns the Text representation of `x`.
-  /// Formats the integer in decimal representation without underscore separators for thousand figures.
+  /// Returns the Text representation of `x`. Textual representation _do not_
+  /// contain underscores to represent commas.
   ///
   /// Example:
   /// ```motoko include=import
