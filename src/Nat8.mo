@@ -448,6 +448,11 @@ module {
   /// ignore Nat8.bitrotRight(1, 1); // => 128
   /// (1 : Nat8) <>> (1 : Nat8) // => 128
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<>>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<>>`
+  /// as a function value at the moment.
   public func bitrotRight(x : Nat8, y : Nat8) : Nat8 { x <>> y };
 
   /// Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
@@ -522,6 +527,11 @@ module {
   /// ignore Nat8.addWrap(230, 26); // => 0
   /// (230 : Nat8) +% (26 : Nat8) // => 0
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `+%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `+%`
+  /// as a function value at the moment.
   public func addWrap(x : Nat8, y : Nat8) : Nat8 { x +% y };
 
   /// Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
@@ -531,6 +541,10 @@ module {
   /// ignore Nat8.subWrap(0, 1); // => 255
   /// (0 : Nat8) -% (1 : Nat8) // => 255
   /// ```
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `-%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `-%`
+  /// as a function value at the moment.
   public func subWrap(x : Nat8, y : Nat8) : Nat8 { x -% y };
 
   /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -540,6 +554,11 @@ module {
   /// ignore Nat8.mulWrap(230, 26); // => 92
   /// (230 : Nat8) *% (26 : Nat8) // => 92
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `*%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `*%`
+  /// as a function value at the moment.
   public func mulWrap(x : Nat8, y : Nat8) : Nat8 { x *% y };
 
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
@@ -549,6 +568,11 @@ module {
   /// ignore Nat8.powWrap(2, 8); // => 0
   /// (2 : Nat8) **% (8 : Nat8) // => 0
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `**%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `**%`
+  /// as a function value at the moment.
   public func powWrap(x : Nat8, y : Nat8) : Nat8 { x **% y };
 
 }
