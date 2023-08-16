@@ -503,6 +503,7 @@ module {
 
   /// Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
   /// If `p >= 8`, the semantics is the same as for `bittest(x, p % 8)`.
+  /// This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
   ///
   /// Example:
   /// ```motoko include=import
