@@ -292,12 +292,6 @@ module {
   /// to the existing `/` operator) is so that you can use it as a function
   /// value to pass to a higher order function. It is not possible to use `/`
   /// as a function value at the moment.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// import Array "mo:base/Array";
-  /// Array.foldLeft<Nat8, Nat8>([2, 2], 30, Nat8.div) // => 7
-  /// ```
   public func div(x : Nat8, y : Nat8) : Nat8 { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
@@ -313,12 +307,6 @@ module {
   /// to the existing `%` operator) is so that you can use it as a function
   /// value to pass to a higher order function. It is not possible to use `%`
   /// as a function value at the moment.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// import Array "mo:base/Array";
-  /// Array.foldLeft<Nat8, Nat8>([2, 2], 31, Nat8.rem) // => 1
-  /// ```
   public func rem(x : Nat8, y : Nat8) : Nat8 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
@@ -334,12 +322,6 @@ module {
   /// to the existing `**` operator) is so that you can use it as a function
   /// value to pass to a higher order function. It is not possible to use `**`
   /// as a function value at the moment.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// import Array "mo:base/Array";
-  /// Array.foldLeft<Nat8, Nat8>([2, 3], 2, Nat8.pow) // => 64
-  /// ```
   public func pow(x : Nat8, y : Nat8) : Nat8 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
