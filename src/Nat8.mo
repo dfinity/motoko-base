@@ -64,7 +64,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// Nat8.fromInt(123); // => 123 : Nat8
+  /// Nat8.fromIntWrap(123); // => 123 : Nat8
   /// ```
   public let fromIntWrap : Int -> Nat8 = Prim.intToNat8Wrap;
 

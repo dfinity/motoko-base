@@ -90,7 +90,7 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// Nat32.fromInt(123); // => 123 : Nat32
+  /// Nat32.fromIntWrap(123); // => 123 : Nat32
   /// ```
   public let fromIntWrap : Int -> Nat32 = Prim.intToNat32Wrap;
 
