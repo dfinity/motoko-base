@@ -1,3 +1,5 @@
+// @testmode wasi
+
 import Int8 "mo:base/Int8";
 import Order "mo:base/Order";
 import Iter "mo:base/Iter";

@@ -1,3 +1,5 @@
+// @testmode wasi
+
 import Debug "mo:base/Debug";
 import Text "mo:base/Text";
 import Blob "mo:base/Blob";
@@ -1025,6 +1027,24 @@ run(
         "decode-literal-bad2",
         Text.decodeUtf8("\D8\00t d"),
         M.equals(optTextT(null))
+      )
+    ]
+  )
+);
+
+run(
+  suite(
+    "array-conversions",
+    [
+      test(
+        "toArray-example",
+        Text.toArray("Café"),
+        M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
+      ),
+      test(
+        "toArray-example",
+        Array.freeze(Text.toVarArray("Café")),
+        M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
       )
     ]
   )

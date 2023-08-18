@@ -1,3 +1,5 @@
+// @testmode wasi
+
 import Int "mo:base/Int";
 import Order "mo:base/Order";
 
