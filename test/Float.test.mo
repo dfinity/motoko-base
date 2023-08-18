@@ -36,8 +36,12 @@ class Int64Testable(number : Int64) : T.TestableItem<Int64> {
 let positiveInfinity = 1.0 / 0.0;
 let negativeInfinity = -1.0 / 0.0;
 
-let negativeNaN = 0.0 / 0.0;
-let positiveNaN = Float.copySign(negativeNaN, 1.0); // Compiler issue, NaN are represented negative by default. https://github.com/dfinity/motoko/issues/3647
+// Wasm specification: NaN signs are non-deterministic unless resulting from `copySign`, `abs`, or `neg`.
+// With the NaN canonicalization mode, we get deterministic results for the NaN sign bit although it may 
+// be different to the expected result for floating point operations other than the ones mentioned before, 
+// e.g. `-0.0/0.0` results in a positive NaN with that canonicalization mode in wasmtime.
+let positiveNaN = Float.copySign(0.0/0.0, 1.0); 
+let negativeNaN = Float.copySign(0.0/0.0, -1.0);
 
 func isPositiveNaN(number : Float) : Bool {
   debug_show (number) == "nan"
@@ -232,12 +236,12 @@ run(
       test(
         "positive NaN",
         Float.abs(positiveNaN),
-        NaNMatcher()
+        PositiveNaNMatcher()
       ),
       test(
         "negative NaN",
         Float.abs(negativeNaN),
-        NaNMatcher()
+        PositiveNaNMatcher()
       )
     ]
   )
@@ -3056,12 +3060,11 @@ run(
         Float.neg(0.0),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
-      // fails due to issue, probably related to https://github.com/dfinity/motoko/issues/3646
-      // test(
-      //   "positive zero",
-      //   Float.neg(positiveZero),
-      //   NegativeZeroMatcher(),
-      // ),
+      test(
+        "positive zero",
+        Float.neg(positiveZero),
+        NegativeZeroMatcher(),
+      ),
       test(
         "negative zero",
         Float.neg(negativeZero),
@@ -3087,17 +3090,16 @@ run(
         Float.neg(negativeNaN),
         NaNMatcher()
       ),
-      // Not working correctly, probably related to https://github.com/dfinity/motoko/issues/3646
-      // test(
-      //   "positive NaN",
-      //   Float.neg(positiveNaN),
-      //   NegativeNaNMatcher(),
-      // ),
-      // test(
-      //   "negative NaN",
-      //   Float.neg(negativeNaN),
-      //   PositiveNaNMatcher(),
-      // ),
+      test(
+        "positive NaN",
+        Float.neg(positiveNaN),
+        NegativeNaNMatcher(),
+      ),
+      test(
+        "negative NaN",
+        Float.neg(negativeNaN),
+        PositiveNaNMatcher(),
+      ),
     ]
   )
 );
@@ -3761,12 +3763,12 @@ run(
       test(
         "positive and negative zero",
         Float.rem(positiveZero, negativeZero),
-        NegativeNaNMatcher()
+        NaNMatcher()
       ),
       test(
         "negative and positive zero",
         Float.rem(negativeZero, positiveZero),
-        NegativeNaNMatcher()
+        NaNMatcher()
       ),
       test(
         "positive number and positive infinity",
