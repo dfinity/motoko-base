@@ -199,8 +199,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat16.greater(1, 2); // => true
-  /// (1 : Nat16) > (2 : Nat16) // => true
+  /// ignore Nat16.greater(2, 1); // => true
+  /// (2 : Nat16) > (1 : Nat16) // => true
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -214,8 +214,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat16.greaterOrEqual(1, 2); // => true
-  /// (1 : Nat16) >= (2 : Nat16) // => true
+  /// ignore Nat16.greaterOrEqual(2, 1); // => true
+  /// (2 : Nat16) >= (1 : Nat16) // => true
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
