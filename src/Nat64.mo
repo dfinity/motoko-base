@@ -510,8 +510,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat64.addWrap(1, 2); // => 3
-  /// (1 : Nat64) +% (2 : Nat64) // => 3
+  /// ignore Nat64.addWrap(Nat64.maximumValue, 1); // => 0
+  /// Nat64.maximumValue +% (1 : Nat64) // => 0
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -524,8 +524,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat64.subWrap(3, 1); // => 2
-  /// (3 : Nat64) -% (1 : Nat64) // => 2
+  /// ignore Nat64.subWrap(0, 1); // => 18446744073709551615
+  /// (0 : Nat64) -% (1 : Nat64) // => 18446744073709551615
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -538,8 +538,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat64.mulWrap(2, 3); // => 6
-  /// (2 : Nat64) *% (3 : Nat64) // => 6
+  /// ignore Nat64.mulWrap(4294967296, 4294967296); // => 0
+  /// (4294967296 : Nat64) *% (4294967296 : Nat64) // => 0
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -552,8 +552,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat64.powWrap(2, 3); // => 8
-  /// (2 : Nat64) **% (3 : Nat64) // => 8
+  /// ignore Nat64.powWrap(2, 64); // => 0
+  /// (2 : Nat64) **% (64 : Nat64) // => 0
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition

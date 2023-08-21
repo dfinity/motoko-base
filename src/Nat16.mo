@@ -522,8 +522,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat16.addWrap(1, 2); // => 3
-  /// (1 : Nat16) +% (2 : Nat16) // => 3
+  /// ignore Nat16.addWrap(65532, 5); // => 1
+  /// (65532 : Nat16) +% (5 : Nat16) // => 1
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -536,8 +536,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat16.subWrap(2, 1); // => 1
-  /// (2 : Nat16) -% (1 : Nat16) // => 1
+  /// ignore Nat16.subWrap(1, 2); // => 65535
+  /// (1 : Nat16) -% (2 : Nat16) // => 65535
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -550,8 +550,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat16.mulWrap(2, 3); // => 6
-  /// (2 : Nat16) *% (3 : Nat16) // => 6
+  /// ignore Nat16.mulWrap(655, 101); // => 619
+  /// (655 : Nat16) *% (101 : Nat16) // => 619
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
@@ -564,8 +564,8 @@ module {
   ///
   /// Example:
   /// ```motoko include=import
-  /// ignore Nat16.powWrap(2, 3); // => 8
-  /// (2 : Nat16) **% (3 : Nat16) // => 8
+  /// ignore Nat16.powWrap(2, 16); // => 0
+  /// (2 : Nat16) **% (16 : Nat16) // => 0
   /// ```
   ///
   /// Note: The reason why this function is defined in this library (in addition
