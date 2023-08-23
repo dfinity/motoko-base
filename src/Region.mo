@@ -1,8 +1,5 @@
 /// Byte-level access to isolated, (virtual) stable memory _regions_.
 ///
-/// *NOTE*: Since it adds some overhead to your actor (960MiB of IC stable memory, even if unused),
-/// use of this library currently requires compiler flag `--stable-regions`.
-///
 /// This is a moderately lightweight abstraction over IC _stable memory_ and supports persisting
 /// regions of binary data across Motoko upgrades.
 /// Use of this module is fully compatible with Motoko's use of
