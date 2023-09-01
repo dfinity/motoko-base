@@ -49,8 +49,254 @@ module {
   /// ```
   public func fromActor(a : actor {}) : Principal = Prim.principalOfActor a;
 
-  //// PRIVATE SHA 224 UTILITIES ////
-  //// Taken from https://github.com/research-ag/sha2 ////
+  /// Compute the account identifier of a principal. Optionally specify a sub-account.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let account = Principal.toAccount(principal, null); // => \00\00\00\00\00\30\00\D3\01\01 FIXME check ChatGPT's math
+  /// ```
+  public func toAccount(principal : Principal, subAccount : ?Blob) : Blob {
+    let sha224 = SHA224();
+    sha224.writeArray([0x0A]);
+    sha224.writeBlob(Text.encodeUtf8("account-id"));
+    sha224.writeBlob(toBlob(principal));
+    switch subAccount {
+      case (?subAccount) {
+        sha224.writeBlob(subAccount)
+      };
+      case (null) {
+        let defaultSubAccount = Array.tabulate<Nat8>(32, func _ = 0);
+        sha224.writeArray(defaultSubAccount)
+      }
+    };
+
+    let hashSum = sha224.sum();
+
+    // hashBlob is a CRC32 implementation
+    let crc32Bytes = nat32ToByteArray(Prim.hashBlob hashSum);
+
+    Blob.fromArray(Array.append(crc32Bytes, Blob.toArray(hashSum)))
+  };
+
+  /// Convert a `Principal` to its `Blob` (bytes) representation.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let blob = Principal.toBlob(principal); // => \00\00\00\00\00\30\00\D3\01\01
+  /// ```
+  public func toBlob(p : Principal) : Blob = Prim.blobOfPrincipal p;
+
+  /// Converts a `Blob` (bytes) representation of a `Principal` to a `Principal` value.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let blob = "\00\00\00\00\00\30\00\D3\01\01" : Blob;
+  /// let principal = Principal.fromBlob(blob);
+  /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
+  /// ```
+  public func fromBlob(b : Blob) : Principal = Prim.principalOfBlob b;
+
+  /// Converts a `Principal` to its `Text` representation.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
+  /// ```
+  public func toText(p : Principal) : Text = debug_show (p);
+
+  /// Converts a `Text` representation of a `Principal` to a `Principal` value.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
+  /// ```
+  public func fromText(t : Text) : Principal = fromActor(actor (t));
+
+  private let anonymousPrincipal : Blob = "\04";
+
+  /// Checks if the given principal represents an anonymous user.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.isAnonymous(principal) // => false
+  /// ```
+  public func isAnonymous(p : Principal) : Bool = Prim.blobOfPrincipal p == anonymousPrincipal;
+
+  /// Checks if the given principal can control this canister.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.isController(principal) // => false
+  /// ```
+  public func isController(p : Principal) : Bool = Prim.isController p;
+
+  /// Hashes the given principal by hashing its `Blob` representation.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.hash(principal) // => 2_742_573_646
+  /// ```
+  public func hash(principal : Principal) : Hash.Hash = Blob.hash(Prim.blobOfPrincipal(principal));
+
+  /// General purpose comparison function for `Principal`. Returns the `Order` (
+  /// either `#less`, `#equal`, or `#greater`) of comparing `principal1` with
+  /// `principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// Principal.compare(principal1, principal2) // => #equal
+  /// ```
+  public func compare(principal1 : Principal, principal2 : Principal) : {
+    #less;
+    #equal;
+    #greater
+  } {
+    if (principal1 < principal2) {
+      #less
+    } else if (principal1 == principal2) {
+      #equal
+    } else {
+      #greater
+    }
+  };
+
+  /// Equality function for Principal types.
+  /// This is equivalent to `principal1 == principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// ignore Principal.equal(principal1, principal2);
+  /// principal1 == principal2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `==` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `==`
+  /// as a function value at the moment.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// import Buffer "mo:base/Buffer";
+  ///
+  /// let buffer1 = Buffer.Buffer<Principal>(3);
+  /// let buffer2 = Buffer.Buffer<Principal>(3);
+  /// Buffer.equal(buffer1, buffer2, Principal.equal) // => true
+  /// ```
+  public func equal(principal1 : Principal, principal2 : Principal) : Bool {
+    principal1 == principal2
+  };
+
+  /// Inequality function for Principal types.
+  /// This is equivalent to `principal1 != principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// ignore Principal.notEqual(principal1, principal2);
+  /// principal1 != principal2 // => false
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `!=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `!=`
+  /// as a function value at the moment.
+  public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
+    principal1 != principal2
+  };
+
+  /// "Less than" function for Principal types.
+  /// This is equivalent to `principal1 < principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// ignore Principal.less(principal1, principal2);
+  /// principal1 < principal2 // => false
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<`
+  /// as a function value at the moment.
+  public func less(principal1 : Principal, principal2 : Principal) : Bool {
+    principal1 < principal2
+  };
+
+  /// "Less than or equal to" function for Principal types.
+  /// This is equivalent to `principal1 <= principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// ignore Principal.lessOrEqual(principal1, principal2);
+  /// principal1 <= principal2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `<=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `<=`
+  /// as a function value at the moment.
+  public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
+    principal1 <= principal2
+  };
+
+  /// "Greater than" function for Principal types.
+  /// This is equivalent to `principal1 > principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// ignore Principal.greater(principal1, principal2);
+  /// principal1 > principal2 // => false
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>`
+  /// as a function value at the moment.
+  public func greater(principal1 : Principal, principal2 : Principal) : Bool {
+    principal1 > principal2
+  };
+
+  /// "Greater than or equal to" function for Principal types.
+  /// This is equivalent to `principal1 >= principal2`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
+  /// ignore Principal.greaterOrEqual(principal1, principal2);
+  /// principal1 >= principal2 // => true
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `>=` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `>=`
+  /// as a function value at the moment.
+  public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
+    principal1 >= principal2
+  };
+
+  /**
+  * SHA224 Utilities used in toAccount().
+  * Utilities are not exposed as public functions.
+  * Taken from https://github.com/research-ag/sha2
+  **/
   let K00 : Nat32 = 0x428a2f98;
   let K01 : Nat32 = 0x71374491;
   let K02 : Nat32 = 0xb5c0fbcf;
@@ -269,7 +515,7 @@ module {
         let s1 = rot(v1, 17) ^ rot(v1, 19) ^ (v1 >> 10);
         msg[m] := msg[i] +% s0 +% msg[k] +% s1;
       };
-*/
+      */
       // compress
       var a = s0;
       var b = s1;
@@ -874,7 +1120,7 @@ module {
         b := a;
         a := t +% maj +% sigma0;
       };
-*/
+      */
       // final addition
       s0 +%= a;
       s1 +%= b;
@@ -964,255 +1210,12 @@ module {
 
       return Blob.fromArrayMut(digest)
     }
-  }; // class Digest
+  }; // class SHA224
 
-  /// Compute the account identifier of a principal. Optionally specify a sub-account.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let account = Principal.toAccount(principal, null); // => \00\00\00\00\00\30\00\D3\01\01 FIXME check ChatGPT's math
-  /// ```
-  public func toAccount(principal : Principal, subAccount : ?Blob) : Blob {
-    func beBytes(n : Nat32) : [Nat8] {
-      func byte(n : Nat32) : Nat8 {
-        Nat8.fromNat(Nat32.toNat(n & 0xff))
-      };
-      [byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)]
+  func nat32ToByteArray(n : Nat32) : [Nat8] {
+    func byte(n : Nat32) : Nat8 {
+      Nat8.fromNat(Nat32.toNat(n & 0xff))
     };
-
-    let sha224 = SHA224();
-    sha224.writeArray([0x0A]);
-    sha224.writeBlob(Text.encodeUtf8("account-id"));
-    sha224.writeBlob(toBlob(principal));
-    switch subAccount {
-      case (?subAccount) {
-        sha224.writeBlob(subAccount)
-      };
-      case (null) {
-        let defaultSubAccount = Array.tabulate<Nat8>(32, func _ = 0);
-        sha224.writeArray(defaultSubAccount)
-      }
-    };
-
-    let hashSum = sha224.sum();
-
-    // hashBlob is a CRC32 implementation
-    let crc32Bytes = beBytes(Prim.hashBlob hashSum);
-
-    Blob.fromArray(Array.append(crc32Bytes, Blob.toArray(hashSum)))
-  };
-
-  /// Convert a `Principal` to its `Blob` (bytes) representation.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let blob = Principal.toBlob(principal); // => \00\00\00\00\00\30\00\D3\01\01
-  /// ```
-  public func toBlob(p : Principal) : Blob = Prim.blobOfPrincipal p;
-
-  /// Converts a `Blob` (bytes) representation of a `Principal` to a `Principal` value.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let blob = "\00\00\00\00\00\30\00\D3\01\01" : Blob;
-  /// let principal = Principal.fromBlob(blob);
-  /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
-  /// ```
-  public func fromBlob(b : Blob) : Principal = Prim.principalOfBlob b;
-
-  /// Converts a `Principal` to its `Text` representation.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
-  /// ```
-  public func toText(p : Principal) : Text = debug_show (p);
-
-  /// Converts a `Text` representation of a `Principal` to a `Principal` value.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// Principal.toText(principal) // => "un4fu-tqaaa-aaaab-qadjq-cai"
-  /// ```
-  public func fromText(t : Text) : Principal = fromActor(actor (t));
-
-  private let anonymousPrincipal : Blob = "\04";
-
-  /// Checks if the given principal represents an anonymous user.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// Principal.isAnonymous(principal) // => false
-  /// ```
-  public func isAnonymous(p : Principal) : Bool = Prim.blobOfPrincipal p == anonymousPrincipal;
-
-  /// Checks if the given principal can control this canister.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// Principal.isController(principal) // => false
-  /// ```
-  public func isController(p : Principal) : Bool = Prim.isController p;
-
-  /// Hashes the given principal by hashing its `Blob` representation.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// Principal.hash(principal) // => 2_742_573_646
-  /// ```
-  public func hash(principal : Principal) : Hash.Hash = Blob.hash(Prim.blobOfPrincipal(principal));
-
-  /// General purpose comparison function for `Principal`. Returns the `Order` (
-  /// either `#less`, `#equal`, or `#greater`) of comparing `principal1` with
-  /// `principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// Principal.compare(principal1, principal2) // => #equal
-  /// ```
-  public func compare(principal1 : Principal, principal2 : Principal) : {
-    #less;
-    #equal;
-    #greater
-  } {
-    if (principal1 < principal2) {
-      #less
-    } else if (principal1 == principal2) {
-      #equal
-    } else {
-      #greater
-    }
-  };
-
-  /// Equality function for Principal types.
-  /// This is equivalent to `principal1 == principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.equal(principal1, principal2);
-  /// principal1 == principal2 // => true
-  /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `==`
-  /// as a function value at the moment.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// import Buffer "mo:base/Buffer";
-  ///
-  /// let buffer1 = Buffer.Buffer<Principal>(3);
-  /// let buffer2 = Buffer.Buffer<Principal>(3);
-  /// Buffer.equal(buffer1, buffer2, Principal.equal) // => true
-  /// ```
-  public func equal(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 == principal2
-  };
-
-  /// Inequality function for Principal types.
-  /// This is equivalent to `principal1 != principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.notEqual(principal1, principal2);
-  /// principal1 != principal2 // => false
-  /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `!=`
-  /// as a function value at the moment.
-  public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 != principal2
-  };
-
-  /// "Less than" function for Principal types.
-  /// This is equivalent to `principal1 < principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.less(principal1, principal2);
-  /// principal1 < principal2 // => false
-  /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<`
-  /// as a function value at the moment.
-  public func less(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 < principal2
-  };
-
-  /// "Less than or equal to" function for Principal types.
-  /// This is equivalent to `principal1 <= principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.lessOrEqual(principal1, principal2);
-  /// principal1 <= principal2 // => true
-  /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<=`
-  /// as a function value at the moment.
-  public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 <= principal2
-  };
-
-  /// "Greater than" function for Principal types.
-  /// This is equivalent to `principal1 > principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.greater(principal1, principal2);
-  /// principal1 > principal2 // => false
-  /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>`
-  /// as a function value at the moment.
-  public func greater(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 > principal2
-  };
-
-  /// "Greater than or equal to" function for Principal types.
-  /// This is equivalent to `principal1 >= principal2`.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// let principal1 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let principal2 = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// ignore Principal.greaterOrEqual(principal1, principal2);
-  /// principal1 >= principal2 // => true
-  /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>=`
-  /// as a function value at the moment.
-  public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
-    principal1 >= principal2
+    [byte(n >> 24), byte(n >> 16), byte(n >> 8), byte(n)]
   }
 }
