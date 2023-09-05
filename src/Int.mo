@@ -249,6 +249,11 @@ module {
   /// ```motoko include=import
   /// Int.neg(123) // => -123
   /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in addition
+  /// to the existing `-` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `-`
+  /// as a function value at the moment.
   public func neg(x : Int) : Int { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
