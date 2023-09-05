@@ -469,7 +469,47 @@ let suite = Suite.suite(
       "prevIndexOf not found",
       Array.prevIndexOf<Char>('g', ['c', 'o', 'f', 'f', 'e', 'e'], 6, Char.equal),
       M.equals(T.optional(T.natTestable, null : ?Nat))
-    )
+    ),
+    Suite.test(
+      "take empty",
+      Array.take([], 3),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take empty negative",
+      Array.take([], -5),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take 0 elements",
+      Array.take([1, 2, 3], 0),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take -0 elements",
+      Array.take([1, 2, 3], -0),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take first 3 elements",
+      Array.take([1, 2, 3, 4, 5], 3),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
+    Suite.test(
+      "take last 3 elements",
+      Array.take([1, 2, 3, 4, 5], -3),
+      M.equals(T.array<Int>(T.intTestable, [3, 4, 5]))
+    ),
+    Suite.test(
+      "take first 5 elements of array of size 3",
+      Array.take([1, 2, 3], 5),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
+    Suite.test(
+      "take last 5 elements of array of size 3",
+      Array.take([1, 2, 3], -5),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
   ]
 );
 
