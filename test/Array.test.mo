@@ -509,7 +509,7 @@ let suite = Suite.suite(
       "take last 5 elements of array of size 3",
       Array.take([1, 2, 3], -5),
       M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
-    ),
+    )
   ]
 );
 
