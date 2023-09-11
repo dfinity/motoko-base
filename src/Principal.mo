@@ -54,7 +54,7 @@ module {
   /// Example:
   /// ```motoko include=import
   /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let account = Principal.toAccount(principal, null); // => \00\00\00\00\00\30\00\D3\01\01 FIXME check ChatGPT's math
+  /// let account = Principal.toAccount(principal, null); // => \57\4E\66\E1\B5\DD\EF\EA\78\73\6B\E4\6C\4F\61\21\31\98\88\90\08\2E\E8\0F\97\F6\B6\DB\ED\72\84\1E
   /// ```
   public func toAccount(principal : Principal, subAccount : ?Blob) : Blob {
     let sha224 = SHA224();
