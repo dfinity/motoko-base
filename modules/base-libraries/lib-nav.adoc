@@ -37,6 +37,7 @@
 ** xref:./Principal.adoc[Principal]
 ** xref:./RBTree.adoc[RBTree]
 ** xref:./Random.adoc[Random]
+** xref:./Region.adoc[Region]
 ** xref:./Result.adoc[Result]
 ** xref:./Stack.adoc[Stack]
 ** xref:./Text.adoc[Text]
