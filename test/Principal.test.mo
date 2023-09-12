@@ -24,12 +24,12 @@ let suite = Suite.suite(
   [
     Suite.test(
       "toAccount, default sub-account",
-      Principal.toAccount(principal, null),
+      Principal.toLedgerAccount(principal, null),
       M.equals({ BlobTestable and { item = defaultAccount } })
     ),
     Suite.test(
       "toAccount, with sub-account",
-      Principal.toAccount(principal, ?subAccount),
+      Principal.toLedgerAccount(principal, ?subAccount),
       M.equals({ BlobTestable and { item = accountWithSubAccount } })
     )
   ]

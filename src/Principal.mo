@@ -49,14 +49,15 @@ module {
   /// ```
   public func fromActor(a : actor {}) : Principal = Prim.principalOfActor a;
 
-  /// Compute the account identifier of a principal. Optionally specify a sub-account.
+  /// Compute the Ledger account identifier of a principal. Optionally specify a sub-account.
   ///
   /// Example:
   /// ```motoko include=import
   /// let principal = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
-  /// let account = Principal.toAccount(principal, null); // => \57\4E\66\E1\B5\DD\EF\EA\78\73\6B\E4\6C\4F\61\21\31\98\88\90\08\2E\E8\0F\97\F6\B6\DB\ED\72\84\1E
+  /// let subAccount : Blob = "\4A\8D\3F\2B\6E\01\C8\7D\9E\03\B4\56\7C\F8\9A\01\D2\34\56\78\9A\BC\DE\F0\12\34\56\78\9A\BC\DE\F0";
+  /// let account = Principal.toLedgerAccount(principal, ?subAccount); // => \8C\5C\20\C6\15\3F\7F\51\E2\0D\0F\0F\B5\08\51\5B\47\65\63\A9\62\B4\A9\91\5F\4F\02\70\8A\ED\4F\82
   /// ```
-  public func toAccount(principal : Principal, subAccount : ?Blob) : Blob {
+  public func toLedgerAccount(principal : Principal, subAccount : ?Blob) : Blob {
     let sha224 = SHA224();
     sha224.writeArray([0x0A]);
     sha224.writeBlob(Text.encodeUtf8("account-id"));
