@@ -296,7 +296,7 @@ module {
   /**
   * SHA224 Utilities used in toAccount().
   * Utilities are not exposed as public functions.
-  * Taken from https://github.com/research-ag/sha2
+  * Taken with permission from https://github.com/research-ag/sha2
   **/
   let K00 : Nat32 = 0x428a2f98;
   let K01 : Nat32 = 0x71374491;
