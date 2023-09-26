@@ -59,8 +59,8 @@ module {
   /// ```
   public func toLedgerAccount(principal : Principal, subAccount : ?Blob) : Blob {
     let sha224 = SHA224();
-    sha224.writeArray([0x0A]);
-    sha224.writeBlob(Text.encodeUtf8("account-id"));
+    let accountSeparator : Blob = "\0Aaccount-id";
+    sha224.writeBlob(accountSeparator);
     sha224.writeBlob(toBlob(principal));
     switch subAccount {
       case (?subAccount) {
