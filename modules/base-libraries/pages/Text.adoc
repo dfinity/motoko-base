@@ -540,3 +540,33 @@ Returns `null` if the blob is not valid UTF-8.
 let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
 ```
 
+[[toLowercase]]
+== toLowercase
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toLowercase : xref:#type.Text[Text] -> xref:#type.Text[Text]
+----
+
+Returns the text argument in lowercase.
+WARNING: Unicode compliant only when compiled, not interpreted.
+
+```motoko include=import
+let text = Text.toLowercase("Good Day"); // ?"good day"
+```
+
+[[toUppercase]]
+== toUppercase
+
+[source.no-repl,motoko,subs=+macros]
+----
+let toUppercase : xref:#type.Text[Text] -> xref:#type.Text[Text]
+----
+
+Returns the text argument in uppercase. Unicode compliant.
+WARNING: Unicode compliant only when compiled, not interpreted.
+
+```motoko include=import
+let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
+```
+
