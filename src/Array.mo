@@ -58,7 +58,7 @@ module {
     // FIXME add this as a primitive in the RTS
     if (size == 0) { return [var] };
     let array = Prim.Array_init<X>(size, generator 0);
-    var i = 0;
+    var i = 1;
     while (i < size) {
       array[i] := generator i;
       i += 1
