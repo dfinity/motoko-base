@@ -520,7 +520,7 @@ module {
   /// *Runtime and space assumes that `k` runs in O(1) time and space.
   public func chain<X, Y>(array : [X], k : X -> [Y]) : [Y] {
     var flatSize = 0;
-    let subArrays = Prim.Array_tabulate<[Y]>(
+    let arrays = Prim.Array_tabulate<[Y]>(
       array.size(),
       func i {
         let subArray = k(array[i]);
@@ -528,6 +528,7 @@ module {
         subArray
       }
     );
+
     // could replace with a call to flatten,
     // but it would require an extra pass (to compute `flatSize`)
     var outer = 0;
@@ -535,13 +536,12 @@ module {
     Prim.Array_tabulate<Y>(
       flatSize,
       func _ {
-        let subArray = subArrays[outer];
-        let element = subArray[inner];
-        inner += 1;
-        if (inner == subArray.size()) {
+        while (inner == arrays[outer].size()) {
           inner := 0;
           outer += 1
         };
+        let element = arrays[outer][inner];
+        inner += 1;
         element
       }
     )
