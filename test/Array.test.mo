@@ -321,6 +321,18 @@ let suite = Suite.suite(
       M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
     ),
     Suite.test(
+      "chain mix empties",
+      Array.chain<Nat, Nat>([0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
+      "chain mix empty",
+      Array.chain<Nat, Nat>([],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
       "foldLeft",
       Array.foldLeft<Text, Text>(["a", "b", "c"], "", Text.concat),
       M.equals(T.text("abc"))
