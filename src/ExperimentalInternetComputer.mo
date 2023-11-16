@@ -55,6 +55,26 @@ module {
     // performance_counter costs around 200 extra instructions, we perform an empty measurement to decide the overhead
     let overhead = pre - init;
     post - pre - overhead
-  }
+  };
+
+  /// The same as `countInstructions`, but accepts async* functions
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// import IC "mo:base/ExperimentalInternetComputer";
+  ///
+  /// let count = await* IC.countInstructionsAsync(func(): async* () {
+  ///   // ...
+  /// });
+  /// ```
+  public func countInstructionsAsync(comp : () -> async* ()) : async* Nat64 {
+    let init = Prim.performanceCounter(0);
+    let pre = Prim.performanceCounter(0);
+    await* comp();
+    let post = Prim.performanceCounter(0);
+    // performance_counter costs around 200 extra instructions, we perform an empty measurement to decide the overhead
+    let overhead = pre - init;
+    post - pre - overhead
+  };
 
 }
