@@ -68,7 +68,7 @@ module {
   ///   For non-replicated messages, such as composite queries, it includes the cost of nested calls.
   ///   The current value of this counter is preserved across `awaits` (unlike counter `0`).
   ///
-  /// * The function (currently) traps if 'counter' >= 2.
+  /// * The function (currently) traps if `counter` >= 2.
   ///
   /// Consult [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter) for details.
   ///
