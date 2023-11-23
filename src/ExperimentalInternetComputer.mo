@@ -70,7 +70,7 @@ module {
   ///
   /// * The function (currently) traps if 'counter' >= 2.
   ///
-  /// Consult [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)) for details.
+  /// Consult [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter) for details.
   ///
   /// Example:
   /// ```motoko no-repl
