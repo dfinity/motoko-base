@@ -63,7 +63,7 @@ module {
   ///   This counter is reset to value `0` on shared function entry and every `await`.
   ///   It is therefore only suitable for measuring the cost of synchronous code.
   ///
-  /// * Counter '1' is the call context instruction counter for the current call context.
+  /// * Counter `1` is the _call context instruction counter_  for the current shared function call.
   ///   For replicated message executing, this excludes the cost of nested IC calls (even to the current canister).
   ///   For non-replicated messages, such as composite queries, it includes the cost of nested calls.
   ///   The current value of this counter is preserved across `awaits` (unlike counter `0`).
