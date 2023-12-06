@@ -285,6 +285,54 @@ let suite = Suite.suite(
       M.equals(T.array<Int>(T.intTestable, []))
     ),
     Suite.test(
+      "chain mix",
+      Array.chain<Nat, Nat>([1, 2, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empty right",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties right",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3, 0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empty left",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties left",
+      Array.chain<Nat, Nat>([0, 0, 0, 1, 2, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties middle",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 0, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties",
+      Array.chain<Nat, Nat>([0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
+      "chain mix empty",
+      Array.chain<Nat, Nat>([],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
       "foldLeft",
       Array.foldLeft<Text, Text>(["a", "b", "c"], "", Text.concat),
       M.equals(T.text("abc"))
@@ -325,7 +373,7 @@ let suite = Suite.suite(
       M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
     ),
     Suite.test(
-      "flatten empty",
+      "flatten singleton empty",
       Array.flatten<Int>([[]]),
       M.equals(T.array<Int>(T.intTestable, []))
     ),
