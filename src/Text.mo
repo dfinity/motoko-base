@@ -806,5 +806,21 @@ module {
   /// ```motoko include=import
   /// let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
   /// ```
-  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8
+  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
+
+  /// Returns the text argument in lowercase.
+  /// WARNING: Unicode compliant only when compiled, not interpreted.
+  ///
+  /// ```motoko include=import
+  /// let text = Text.toLowercase("Good Day"); // ?"good day"
+  /// ```
+  public let toLowercase : Text -> Text = Prim.textLowercase;
+
+  /// Returns the text argument in uppercase. Unicode compliant.
+  /// WARNING: Unicode compliant only when compiled, not interpreted.
+  ///
+  /// ```motoko include=import
+  /// let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
+  /// ```
+  public let toUppercase : Text -> Text = Prim.textUppercase;
 }

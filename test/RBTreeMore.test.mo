@@ -1,3 +1,5 @@
+// @testmode wasi
+
 import RBTree "mo:base/RBTree";
 import Nat "mo:base/Nat";
 import Iter "mo:base/Iter";

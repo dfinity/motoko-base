@@ -1048,4 +1048,68 @@ run(
       )
     ]
   )
+);
+
+run(
+  suite(
+    "text-toLowercase",
+    [
+      test(
+        "empty",
+        Text.toLowercase(""),
+        M.equals(T.text "")
+      ),
+      test(
+        "printable ascii",
+        Text.toLowercase(
+          "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        ),
+        M.equals(T.text
+          "!\"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        ),
+      ),
+      test(
+        "ὈDYSSEUS",
+        Text.toLowercase("ὈΔΥΣΣΕΎΣ"),
+        M.equals(T.text "ὀδυσσεύς")
+      ),
+      test(
+        "new year",
+        Text.toLowercase("农历新年"),
+        M.equals(T.text "农历新年")
+      )
+    ]
+  )
+);
+
+run(
+  suite(
+    "text-toUppercase",
+    [
+      test(
+        "empty",
+        Text.toUppercase(""),
+        M.equals(T.text "")
+      ),
+      test(
+        "printable ascii",
+        Text.toUppercase(
+          "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        ),
+        M.equals(T.text
+          "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~"
+        ),
+      ),
+      test(
+        "odysseus",
+        Text.toUppercase("ὀδυσσεύς"),
+        M.equals(T.text "ὈΔΥΣΣΕΎΣ")
+      ),
+      test(
+        "new year",
+        Text.toUppercase("农历新年"),
+        M.equals(T.text "农历新年")
+      )
+    ]
+  )
 )
