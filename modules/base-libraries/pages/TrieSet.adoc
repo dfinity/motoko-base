@@ -104,6 +104,18 @@ Test if `s1` is a subset of `s2`.
 func mem<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
 ----
 
+@deprecated: use `TrieSet.contains()`
+
+Test if a set contains a given element.
+
+[[contains]]
+== contains
+
+[source.no-repl,motoko,subs=+macros]
+----
+func contains<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
+----
+
 Test if a set contains a given element.
 
 [[union]]
