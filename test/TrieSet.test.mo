@@ -21,6 +21,11 @@ let simpleTests = do {
         M.equals(T.bool true)
       ),
       Suite.test(
+        "contains",
+        TrieSet.contains<Nat>(set1, 1, 1, Nat.equal),
+        M.equals(T.bool true)
+      ),
+      Suite.test(
         "size",
         TrieSet.size(set1),
         M.equals(T.nat 3)
