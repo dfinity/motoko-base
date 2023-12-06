@@ -16,8 +16,13 @@ let simpleTests = do {
     "TrieSet fromArray",
     [
       Suite.test(
-        "has",
-        TrieSet.has<Nat>(set1, 1, 1, Nat.equal),
+        "mem",
+        TrieSet.mem<Nat>(set1, 1, 1, Nat.equal),
+        M.equals(T.bool true)
+      ),
+      Suite.test(
+        "contains",
+        TrieSet.contains<Nat>(set1, 1, 1, Nat.equal),
         M.equals(T.bool true)
       ),
       Suite.test(

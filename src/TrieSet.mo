@@ -104,15 +104,15 @@ module {
     return true;
   };
 
-  /// @deprecated: use `TrieSet.has()`
+  /// @deprecated: use `TrieSet.contains()`
   ///
   /// Test if a set contains a given element.
   public func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
-    has(s, x, xh, eq)
+    contains(s, x, xh, eq)
   };
 
   /// Test if a set contains a given element.
-  public func has<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
+  public func contains<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
     switch (Trie.find<T, ()>(s, { key = x; hash = xh }, eq)) {
       case null { false };
       case (?_) { true }
