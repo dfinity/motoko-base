@@ -96,7 +96,7 @@
 
   - `put`: write to container (overwrites if entry already exists)
 
-    Note: Choosing this instead of `set` since it works better for containers like sets and is visually easier to distinghuish from `get`.
+    Note: Choosing this instead of `set` since it works better for containers like sets and is visually easier to distinguish from `get`.
 
   - `delete`: remove from collection (does nothing if not present)
 
@@ -116,7 +116,7 @@
 
   - `keys`: iterator over keys of collection (same as `vals` for sets)
 
-  - `vals`: iterator over valus of collection
+  - `vals`: iterator over values of collection
 
   - `entries`: iterator over (key, value) pairs
 
@@ -160,7 +160,7 @@
 
 ## Classes
 
-* Abstract data types need to be provided as classes, since that currently is the only means for encapsultion.
+* Abstract data types need to be provided as classes, since that currently is the only means for encapsulation.
   In particular, use classes for any type where it is desirable to maintain the liberty to change its representation in the future --
   a library type that is transparent and happens to be sharable by accident can never again be changed, since clients might already use it in a shared context.
 
