@@ -58,7 +58,7 @@ module {
     // FIXME add this as a primitive in the RTS
     if (size == 0) { return [var] };
     let array = Prim.Array_init<X>(size, generator 0);
-    var i = 0;
+    var i = 1;
     while (i < size) {
       array[i] := generator i;
       i += 1
@@ -520,7 +520,7 @@ module {
   /// *Runtime and space assumes that `k` runs in O(1) time and space.
   public func chain<X, Y>(array : [X], k : X -> [Y]) : [Y] {
     var flatSize = 0;
-    let subArrays = Prim.Array_tabulate<[Y]>(
+    let arrays = Prim.Array_tabulate<[Y]>(
       array.size(),
       func i {
         let subArray = k(array[i]);
@@ -528,6 +528,7 @@ module {
         subArray
       }
     );
+
     // could replace with a call to flatten,
     // but it would require an extra pass (to compute `flatSize`)
     var outer = 0;
@@ -535,13 +536,12 @@ module {
     Prim.Array_tabulate<Y>(
       flatSize,
       func _ {
-        let subArray = subArrays[outer];
-        let element = subArray[inner];
-        inner += 1;
-        if (inner == subArray.size()) {
+        while (inner == arrays[outer].size()) {
           inner := 0;
           outer += 1
         };
+        let element = arrays[outer][inner];
+        inner += 1;
         element
       }
     )
@@ -842,5 +842,26 @@ module {
       i += 1;
       return ?result
     }
+  };
+
+  /// Returns a new subarray of given length from the beginning or end of the given array
+  ///
+  /// Returns the entire array if the length is greater than the size of the array
+  ///
+  /// ```motoko include=import
+  /// let array = [1, 2, 3, 4, 5];
+  /// assert Array.take(array, 2) == [1, 2];
+  /// assert Array.take(array, -2) == [4, 5];
+  /// assert Array.take(array, 10) == [1, 2, 3, 4, 5];
+  /// assert Array.take(array, -99) == [1, 2, 3, 4, 5];
+  /// ```
+  /// Runtime: O(length);
+  /// Space: O(length);
+  public func take<T>(array : [T], length : Int) : [T] {
+    let len = Prim.abs(length);
+    let size = array.size();
+    let resSize = if (len < size) { len } else { size };
+    let start = if (length > 0) 0 else size - resSize;
+    subArray(array, start, resSize)
   }
 }
