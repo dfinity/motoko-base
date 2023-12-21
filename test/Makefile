@@ -2,7 +2,7 @@
 
 STDLIB ?= ../src
 MOC ?= moc
-WASMTIME_OPTIONS = --disable-cache --enable-cranelift-nan-canonicalization --wasm-features=memory64
+WASMTIME_OPTIONS = --disable-cache --enable-cranelift-nan-canonicalization --wasm-features memory64,multi-memory,bulk-memory
 
 OUTDIR=_out
 

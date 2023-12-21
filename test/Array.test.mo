@@ -285,6 +285,54 @@ let suite = Suite.suite(
       M.equals(T.array<Int>(T.intTestable, []))
     ),
     Suite.test(
+      "chain mix",
+      Array.chain<Nat, Nat>([1, 2, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empty right",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties right",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3, 0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empty left",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties left",
+      Array.chain<Nat, Nat>([0, 0, 0, 1, 2, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties middle",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 0, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties",
+      Array.chain<Nat, Nat>([0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
+      "chain mix empty",
+      Array.chain<Nat, Nat>([],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
       "foldLeft",
       Array.foldLeft<Text, Text>(["a", "b", "c"], "", Text.concat),
       M.equals(T.text("abc"))
@@ -325,7 +373,7 @@ let suite = Suite.suite(
       M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
     ),
     Suite.test(
-      "flatten empty",
+      "flatten singleton empty",
       Array.flatten<Int>([[]]),
       M.equals(T.array<Int>(T.intTestable, []))
     ),
@@ -469,6 +517,46 @@ let suite = Suite.suite(
       "prevIndexOf not found",
       Array.prevIndexOf<Char>('g', ['c', 'o', 'f', 'f', 'e', 'e'], 6, Char.equal),
       M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "take empty",
+      Array.take([], 3),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take empty negative",
+      Array.take([], -5),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take 0 elements",
+      Array.take([1, 2, 3], 0),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take -0 elements",
+      Array.take([1, 2, 3], -0),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take first 3 elements",
+      Array.take([1, 2, 3, 4, 5], 3),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
+    Suite.test(
+      "take last 3 elements",
+      Array.take([1, 2, 3, 4, 5], -3),
+      M.equals(T.array<Int>(T.intTestable, [3, 4, 5]))
+    ),
+    Suite.test(
+      "take first 5 elements of array of size 3",
+      Array.take([1, 2, 3], 5),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
+    Suite.test(
+      "take last 5 elements of array of size 3",
+      Array.take([1, 2, 3], -5),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
     )
   ]
 );
