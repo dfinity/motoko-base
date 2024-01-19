@@ -861,9 +861,7 @@ module {
     let len = Prim.abs(length);
     let size = array.size();
     let resSize = if (len < size) { len } else { size };
-    let start = if (length > 0) 0 else {
-      Prim.nat64ToNat(Prim.intToNat64Wrap(size : Int - resSize))
-    };
+    let start : Nat = if (length > 0) 0 else size - resSize;
     subArray(array, start, resSize)
   }
 }
