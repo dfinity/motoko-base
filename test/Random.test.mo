@@ -1,4 +1,3 @@
-import Prim "mo:prim";
 import Random "mo:base/Random";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";

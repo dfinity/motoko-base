@@ -428,7 +428,7 @@ func sortedEntries(trie : TrieMap.TrieMap<Nat, Text>) : [(Nat, Text)] {
 };
 
 class TrieMatcher(expected : [(Nat, Text)]) : M.Matcher<TrieMap.TrieMap<Nat, Text>> {
-  public func describeMismatch(actual : TrieMap.TrieMap<Nat, Text>, description : M.Description) {
+  public func describeMismatch(actual : TrieMap.TrieMap<Nat, Text>, _description : M.Description) {
     Prim.debugPrint(debug_show (sortedEntries(actual)) # " should be " # debug_show (expected))
   };
 

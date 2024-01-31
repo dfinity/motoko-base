@@ -38,12 +38,14 @@ func opnatEq(a : ?Nat, b : ?Nat) : Bool {
     case (_, _) { false }
   }
 };
-func opnat_isnull(a : ?Nat) : Bool {
-  switch a {
-    case (null) { true };
-    case (?aaa) { false }
-  }
-};
+
+// Temporarily unused because of the comment-disabled test cases below.
+// func opnat_isnull(a : ?Nat) : Bool {
+//   switch a {
+//     case (null) { true };
+//     case (?aaa) { false }
+//   }
+// };
 
 // ## Construction
 let l1 = List.nil<X>();
@@ -69,9 +71,9 @@ assert (opnatEq(List.get<X>(l3, 2), null));
    */
 
 // ## Deconstruction
-let (a1, t1) = List.pop<X>(l3);
+let (a1, _t1) = List.pop<X>(l3);
 assert (opnatEq(a1, ?3));
-let (a2, t2) = List.pop<X>(l2);
+let (a2, _t2) = List.pop<X>(l2);
 assert (opnatEq(a2, ?2));
 let (a3, t3) = List.pop<X>(l1);
 assert (opnatEq(a3, null));
