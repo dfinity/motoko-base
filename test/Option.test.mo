@@ -1,4 +1,5 @@
 import Option "mo:base/Option";
+import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 
 Debug.print("Option");
@@ -263,4 +264,15 @@ do {
       assert (false)
     }
   }
+};
+
+do {
+  Debug.print(" equal");
+
+  assert (Option.equal<Int>(null, null, Int.equal));
+  assert (Option.equal<Int>(?0, ?0, Int.equal));
+  assert (not Option.equal<Int>(?0, ?1, Int.equal));
+  assert (not Option.equal<Int>(?0, null, Int.equal));
+  assert (not Option.equal<Int>(null, ?0, Int.equal));
 }
+
