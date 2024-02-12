@@ -170,6 +170,7 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
+  ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
