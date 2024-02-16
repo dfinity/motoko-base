@@ -1,0 +1,17 @@
+name: publish on mops
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ZenVoich/setup-mops@v1
+        with:
+          # Make sure you set the MOPS_IDENTITY_PEM secret in your repository settings https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository
+          identity-pem: ${{ secrets.MOPS_IDENTITY_PEM }}
+      - run: mops publish
