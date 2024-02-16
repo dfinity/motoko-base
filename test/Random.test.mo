@@ -1,8 +1,8 @@
 import Prim "mo:prim";
-import Random "mo:base/Random";
-import Nat8 "mo:base/Nat8";
-import Nat16 "mo:base/Nat16";
-import Blob "mo:base/Blob";
+import Random "../src/Random";
+import Nat8 "../src/Nat8";
+import Nat16 "../src/Nat16";
+import Blob "../src/Blob";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

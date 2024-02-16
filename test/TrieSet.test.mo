@@ -1,10 +1,10 @@
 // @testmode wasi
 
-import Nat "mo:base/Nat";
-import TrieSet "mo:base/TrieSet";
-import Nat32 "mo:base/Nat32";
-import Hash "mo:base/Hash";
-import Array "mo:base/Array";
+import Nat "../src/Nat";
+import TrieSet "../src/TrieSet";
+import Nat32 "../src/Nat32";
+import Hash "../src/Hash";
+import Array "../src/Array";
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";

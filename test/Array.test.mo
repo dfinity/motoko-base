@@ -1,9 +1,9 @@
-import Array "mo:base/Array";
-import Int "mo:base/Int";
-import Char "mo:base/Char";
-import Nat "mo:base/Nat";
-import Text "mo:base/Text";
-import Result "mo:base/Result";
+import Array "../src/Array";
+import Int "../src/Int";
+import Char "../src/Char";
+import Nat "../src/Nat";
+import Text "../src/Text";
+import Result "../src/Result";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";

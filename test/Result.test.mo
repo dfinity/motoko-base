@@ -1,7 +1,7 @@
-import Result "mo:base/Result";
-import Int "mo:base/Int";
-import Array "mo:base/Array";
-import List "mo:base/List";
+import Result "../src/Result";
+import Int "../src/Int";
+import Array "../src/Array";
+import List "../src/List";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";

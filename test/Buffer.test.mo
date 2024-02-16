@@ -1,11 +1,11 @@
 import Prim "mo:⛔";
-import B "mo:base/Buffer";
-import Iter "mo:base/Iter";
-import Option "mo:base/Option";
-import Nat "mo:base/Nat";
-import Hash "mo:base/Hash";
-import Nat32 "mo:base/Nat32";
-import Order "mo:base/Order";
+import B "../src/Buffer";
+import Iter "../src/Iter";
+import Option "../src/Option";
+import Nat "../src/Nat";
+import Hash "../src/Hash";
+import Nat32 "../src/Nat32";
+import Order "../src/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

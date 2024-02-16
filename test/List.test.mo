@@ -1,10 +1,10 @@
-import List "mo:base/List";
-import Nat "mo:base/Nat";
-import Order "mo:base/Order";
-import Debug "mo:base/Debug";
-import Int "mo:base/Int";
-import Iter "mo:base/Iter";
-import Result "mo:base/Result";
+import List "../src/List";
+import Nat "../src/Nat";
+import Order "../src/Order";
+import Debug "../src/Debug";
+import Int "../src/Int";
+import Iter "../src/Iter";
+import Result "../src/Result";
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";

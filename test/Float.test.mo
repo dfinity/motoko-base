@@ -1,7 +1,7 @@
 // @testmode wasi
 
-import Debug "mo:base/Debug";
-import Float "mo:base/Float";
+import Debug "../src/Debug";
+import Float "../src/Float";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
