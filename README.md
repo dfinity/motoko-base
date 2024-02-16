@@ -9,6 +9,12 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
+If you build your project using the [Mops package manager] run the following command to add the base package to your project:
+
+```sh
+mops add base
+```
+
 If you build your project using the [Vessel package manager] your package-set most likely already includes base, but if it doesn't or you want to override its version, add an entry like so to your `package-set.dhall`:
 
 ```
@@ -21,6 +27,8 @@ If you build your project using the [Vessel package manager] your package-set mo
 ```
 
 The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch or tag name (such as `version = "moc-0.8.4"`).  There are no dependencies.  See the [Vessel package manager] docs for more details.
+
+[Mops package manager]: https://mops.one
 
 [Vessel package manager]: https://github.com/dfinity/vessel
 
