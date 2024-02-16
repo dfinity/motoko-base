@@ -14,4 +14,5 @@ jobs:
         with:
           # Make sure you set the MOPS_IDENTITY_PEM secret in your repository settings https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository
           identity-pem: ${{ secrets.MOPS_IDENTITY_PEM }}
+      - run: mops install
       - run: mops publish
