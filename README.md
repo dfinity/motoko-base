@@ -9,7 +9,7 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
-If you build your project using the [Mops package manager] run the following command to add the base package to your project:
+If you build your project using the [Mops package manager], run the following command to add the base package to your project:
 
 ```sh
 mops add base
@@ -53,9 +53,15 @@ npm test -- --mode wasi
 npm run prettier:format
 ```
 
-The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
+**Note**:
+- If you are using `npm test` to run the tests:
+  - You don't need to install any additional dependencies.
+  - The test runner will automatically download the `moc` and `wasmtime` versions specified in `mops.toml` in the `[toolchain]` section.
 
-Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
+- If you are using `Makefile` to run the tests:
+  - The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
+
+  - Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
 
 Run only specific test files:
 ```sh
