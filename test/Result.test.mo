@@ -1,7 +1,6 @@
 import Result "mo:base/Result";
 import Int "mo:base/Int";
 import Array "mo:base/Array";
-import List "mo:base/List";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
