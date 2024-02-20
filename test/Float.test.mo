@@ -63,7 +63,7 @@ func isNegativeZero(number : Float) : Bool {
 };
 
 class PositiveZeroMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be '0.0' (positive zero)")
   };
 
@@ -73,7 +73,7 @@ class PositiveZeroMatcher() : M.Matcher<Float> {
 };
 
 class NegativeZeroMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be '-0.0' (negative zero)")
   };
 
@@ -86,7 +86,7 @@ let noEpsilon = 0.0;
 let smallEpsilon = 1e-6;
 
 class NaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be 'nan' or '-nan'")
   };
 
@@ -96,7 +96,7 @@ class NaNMatcher() : M.Matcher<Float> {
 };
 
 class PositiveNaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be 'nan' (positive)")
   };
 
@@ -106,7 +106,7 @@ class PositiveNaNMatcher() : M.Matcher<Float> {
 };
 
 class NegativeNaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be '-nan' (negative)")
   };
 
