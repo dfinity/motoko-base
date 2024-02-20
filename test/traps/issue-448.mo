@@ -1,5 +1,5 @@
-import Trie "mo:base/Trie";
-import Text "mo:base/Text";
+import Trie "../../src/Trie";
+import Text "../../src/Text";
 
 func key(t : Text) : Trie.Key<Text> = {key = t; hash = Text.hash(t)};
 

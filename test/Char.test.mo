@@ -1,4 +1,4 @@
-import Char "mo:base/Char";
+import Char "../src/Char";
 import Prim "mo:⛔";
 
 /*

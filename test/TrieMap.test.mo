@@ -1,13 +1,13 @@
 // @testmode wasi
 
 import Prim "mo:⛔";
-import TrieMap "mo:base/TrieMap";
-import Iter "mo:base/Iter";
-import Hash "mo:base/Hash";
-import Text "mo:base/Text";
-import Nat "mo:base/Nat";
-import Array "mo:base/Array";
-import Order "mo:base/Order";
+import TrieMap "../src/TrieMap";
+import Iter "../src/Iter";
+import Hash "../src/Hash";
+import Text "../src/Text";
+import Nat "../src/Nat";
+import Array "../src/Array";
+import Order "../src/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
