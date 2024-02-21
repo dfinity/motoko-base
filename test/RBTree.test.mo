@@ -1,10 +1,10 @@
 // @testmode wasi
 
-import RBTree "mo:base/RBTree";
-import Nat "mo:base/Nat";
-import Iter "mo:base/Iter";
-import Debug "mo:base/Debug";
-import Array "mo:base/Array";
+import RBTree "../src/RBTree";
+import Nat "../src/Nat";
+import Iter "../src/Iter";
+import Debug "../src/Debug";
+import Array "../src/Array";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

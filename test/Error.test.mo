@@ -1,4 +1,4 @@
-import Error "mo:base/Error";
+import Error "../src/Error";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

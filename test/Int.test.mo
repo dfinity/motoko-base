@@ -1,7 +1,7 @@
 // @testmode wasi
 
-import Int "mo:base/Int";
-import Order "mo:base/Order";
+import Int "../src/Int";
+import Order "../src/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
