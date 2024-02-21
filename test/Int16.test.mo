@@ -1,8 +1,8 @@
 // @testmode wasi
 
-import Int16 "mo:base/Int16";
-import Order "mo:base/Order";
-import Iter "mo:base/Iter";
+import Int16 "../src/Int16";
+import Order "../src/Order";
+import Iter "../src/Iter";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

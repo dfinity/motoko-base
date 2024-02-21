@@ -1,13 +1,13 @@
 // @testmode wasi
 
 import Prim "mo:⛔";
-import TrieMap "mo:base/TrieMap";
-import Iter "mo:base/Iter";
-import Hash "mo:base/Hash";
-import Text "mo:base/Text";
-import Nat "mo:base/Nat";
-import Array "mo:base/Array";
-import Order "mo:base/Order";
+import TrieMap "../src/TrieMap";
+import Iter "../src/Iter";
+import Hash "../src/Hash";
+import Text "../src/Text";
+import Nat "../src/Nat";
+import Array "../src/Array";
+import Order "../src/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -428,7 +428,7 @@ func sortedEntries(trie : TrieMap.TrieMap<Nat, Text>) : [(Nat, Text)] {
 };
 
 class TrieMatcher(expected : [(Nat, Text)]) : M.Matcher<TrieMap.TrieMap<Nat, Text>> {
-  public func describeMismatch(actual : TrieMap.TrieMap<Nat, Text>, description : M.Description) {
+  public func describeMismatch(actual : TrieMap.TrieMap<Nat, Text>, _description : M.Description) {
     Prim.debugPrint(debug_show (sortedEntries(actual)) # " should be " # debug_show (expected))
   };
 

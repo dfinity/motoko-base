@@ -1,10 +1,10 @@
-import List "mo:base/List";
-import Nat "mo:base/Nat";
-import Order "mo:base/Order";
-import Debug "mo:base/Debug";
-import Int "mo:base/Int";
-import Iter "mo:base/Iter";
-import Result "mo:base/Result";
+import List "../src/List";
+import Nat "../src/Nat";
+import Order "../src/Order";
+import Debug "../src/Debug";
+import Int "../src/Int";
+import Iter "../src/Iter";
+import Result "../src/Result";
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
@@ -38,12 +38,14 @@ func opnatEq(a : ?Nat, b : ?Nat) : Bool {
     case (_, _) { false }
   }
 };
-func opnat_isnull(a : ?Nat) : Bool {
-  switch a {
-    case (null) { true };
-    case (?aaa) { false }
-  }
-};
+
+// Temporarily unused because of the comment-disabled test cases below.
+// func opnat_isnull(a : ?Nat) : Bool {
+//   switch a {
+//     case (null) { true };
+//     case (?aaa) { false }
+//   }
+// };
 
 // ## Construction
 let l1 = List.nil<X>();
@@ -69,9 +71,9 @@ assert (opnatEq(List.get<X>(l3, 2), null));
    */
 
 // ## Deconstruction
-let (a1, t1) = List.pop<X>(l3);
+let (a1, _t1) = List.pop<X>(l3);
 assert (opnatEq(a1, ?3));
-let (a2, t2) = List.pop<X>(l2);
+let (a2, _t2) = List.pop<X>(l2);
 assert (opnatEq(a2, ?2));
 let (a3, t3) = List.pop<X>(l1);
 assert (opnatEq(a3, null));

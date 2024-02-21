@@ -1,9 +1,9 @@
-import Iter "mo:base/Iter";
-import Array "mo:base/Array";
-import List "mo:base/List";
-import Nat "mo:base/Nat";
-import Int "mo:base/Int";
-import Debug "mo:base/Debug";
+import Iter "../src/Iter";
+import Array "../src/Array";
+import List "../src/List";
+import Nat "../src/Nat";
+import Int "../src/Int";
+import Debug "../src/Debug";
 
 Debug.print("Iter");
 

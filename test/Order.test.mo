@@ -1,5 +1,5 @@
-import Order "mo:base/Order";
-import Debug "mo:base/Debug";
+import Order "../src/Order";
+import Debug "../src/Debug";
 
 Debug.print("Order");
 

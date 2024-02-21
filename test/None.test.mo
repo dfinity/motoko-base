@@ -1,6 +1,5 @@
-import Array "mo:base/Array";
-import None "mo:base/None";
-import Debug "mo:base/Debug";
+import None "../src/None";
+import Debug "../src/Debug";
 
 Debug.print("None");
 
