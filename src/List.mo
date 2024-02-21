@@ -169,7 +169,9 @@ module {
   ///
   /// Runtime: O(size)
   ///
-  /// Space: O(1)
+  /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
       case null { () };
@@ -234,6 +236,8 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>) {
     switch l {
       case null { (null, null) };
@@ -270,6 +274,8 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
+  ///
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapFilter<T, U>(l : List<T>, f : T -> ?U) : List<U> {
     switch l {
       case null { null };
@@ -749,7 +755,7 @@ module {
   ///
   /// Space: O(min(size(xs), size(ys)))
   ///
-  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
+  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func zipWith<T, U, V>(
     xs : List<T>,
     ys : List<U>,
@@ -781,8 +787,6 @@ module {
   /// Runtime: O(n)
   ///
   /// Space: O(n)
-  ///
-  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
   public func split<T>(n : Nat, xs : List<T>) : (List<T>, List<T>) {
     if (n == 0) { (null, xs) } else {
       func rec(n : Nat, xs : List<T>) : (List<T>, List<T>) {
@@ -820,8 +824,6 @@ module {
   /// Runtime: O(size)
   ///
   /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `zip` runs in O(1) time and space.
   public func chunks<T>(n : Nat, xs : List<T>) : List<List<T>> {
     let (l, r) = split<T>(n, xs);
     if (isNil<T>(l)) {

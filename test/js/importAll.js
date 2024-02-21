@@ -20,7 +20,7 @@ if (moFiles.length === 0) {
 const source = moFiles
   .map((f) => {
     const name = f.replace(/\.mo$/, "");
-    return `import Import_${name} "mo:base/${name}";\n`;
+    return `import Import_${name} "../../src/${name}";\n`;
   })
   .join("");
 

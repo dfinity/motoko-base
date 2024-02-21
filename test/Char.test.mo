@@ -1,5 +1,4 @@
-import Debug "mo:base/Debug";
-import Char "mo:base/Char";
+import Char "../src/Char";
 import Prim "mo:⛔";
 
 /*

@@ -1,10 +1,10 @@
 // @testmode wasi
 
-import RBTree "mo:base/RBTree";
-import Nat "mo:base/Nat";
-import Iter "mo:base/Iter";
-import Debug "mo:base/Debug";
-import Array "mo:base/Array";
+import RBTree "../src/RBTree";
+import Nat "../src/Nat";
+import Iter "../src/Iter";
+import Debug "../src/Debug";
+import Array "../src/Array";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -15,7 +15,7 @@ let { run; test; suite } = Suite;
 let entryTestable = T.tuple2Testable(T.natTestable, T.textTestable);
 
 class TreeMatcher(expected : [(Nat, Text)]) : M.Matcher<RBTree.RBTree<Nat, Text>> {
-  public func describeMismatch(actual : RBTree.RBTree<Nat, Text>, description : M.Description) {
+  public func describeMismatch(actual : RBTree.RBTree<Nat, Text>, _description : M.Description) {
     Debug.print(debug_show (Iter.toArray(actual.entries())) # " should be " # debug_show (expected))
   };
 
@@ -69,12 +69,6 @@ func checkKey(node : RBTree.Tree<Nat, Text>, isValid : Nat -> Bool) {
 
 func insert(tree : RBTree.RBTree<Nat, Text>, key : Nat) {
   tree.put(key, debug_show (key));
-  checkTree(tree)
-};
-
-func remove(tree : RBTree.RBTree<Nat, Text>, key : Nat) {
-  let value = tree.remove(key);
-  assert (value == ?debug_show (key));
   checkTree(tree)
 };
 
@@ -209,6 +203,7 @@ run(
         do {
           let tree = buildTestTree();
           ignore tree.remove(0);
+          checkTree(tree);
           tree
         },
         TreeMatcher([])
@@ -443,6 +438,7 @@ run(
           let tree = buildTestTree();
           let result = tree.remove(1);
           assert (result == ?"1");
+          checkTree(tree);
           tree.remove(1)
         },
         M.equals(T.optional(T.textTestable, null : ?Text))
