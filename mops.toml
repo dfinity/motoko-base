@@ -7,7 +7,7 @@ keywords = [ "base" ]
 license = "Apache-2.0"
 
 [dev-dependencies]
-matchers = "https://github.com/kritzcreek/motoko-matchers#v1.3.0"
+matchers = "https://github.com/kritzcreek/motoko-matchers#v1.3.0@3dac8a071b69e4e651b25a7d9683fe831eb7cffd"
 
 [toolchain]
 moc = "0.10.4"
