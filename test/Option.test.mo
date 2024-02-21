@@ -1,6 +1,6 @@
-import Option "mo:base/Option";
-import Int "mo:base/Int";
-import Debug "mo:base/Debug";
+import Option "../src/Option";
+import Int "../src/Int";
+import Debug "../src/Debug";
 
 Debug.print("Option");
 

@@ -1,8 +1,8 @@
-import HashMap "mo:base/HashMap";
-import Hash "mo:base/Hash";
-import Nat "mo:base/Nat";
-import Array "mo:base/Array";
-import Iter "mo:base/Iter";
+import HashMap "../src/HashMap";
+import Hash "../src/Hash";
+import Nat "../src/Nat";
+import Array "../src/Array";
+import Iter "../src/Iter";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

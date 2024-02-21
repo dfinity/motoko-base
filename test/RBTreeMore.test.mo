@@ -1,13 +1,13 @@
 // @testmode wasi
 
-import RBTree "mo:base/RBTree";
-import Nat "mo:base/Nat";
-import Iter "mo:base/Iter";
-import Debug "mo:base/Debug";
-import Array "mo:base/Array";
+import RBTree "../src/RBTree";
+import Nat "../src/Nat";
+import Iter "../src/Iter";
+import Debug "../src/Debug";
+import Array "../src/Array";
 
-import Deque "mo:base/Deque";
-import Buffer "mo:base/Buffer";
+import Deque "../src/Deque";
+import Buffer "../src/Buffer";
 
 
 import Suite "mo:matchers/Suite";
