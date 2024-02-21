@@ -1,7 +1,6 @@
 import Result "../src/Result";
 import Int "../src/Int";
 import Array "../src/Array";
-import List "../src/List";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";

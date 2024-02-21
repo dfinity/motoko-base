@@ -1,4 +1,3 @@
-import Debug "../src/Debug";
 import Char "../src/Char";
 import Prim "mo:⛔";
 

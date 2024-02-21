@@ -1,6 +1,5 @@
 // @testmode wasi
 
-import Debug "../src/Debug";
 import Text "../src/Text";
 import Blob "../src/Blob";
 import Iter "../src/Iter";
@@ -14,12 +13,6 @@ import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
 let { run; test; suite } = Suite;
-
-func charT(c : Char) : T.TestableItem<Char> = {
-  item = c;
-  display = Text.fromChar;
-  equals = Char.equal
-};
 
 func blobT(b : Blob) : T.TestableItem<Blob> = {
   item = b;

@@ -203,7 +203,7 @@ module {
           let len = List.size(l.keyvals);
           len <= MAX_LEAF_SIZE and len == l.size and List.all(
             l.keyvals,
-            func((k : Key<K>, v : V)) : Bool { ((k.hash & mask) == bits) }
+            func((k : Key<K>, _v : V)) : Bool { ((k.hash & mask) == bits) }
           )
         };
         case (#branch b) {
@@ -483,7 +483,7 @@ module {
   func splitAssocList<K, V>(al : AssocList<Key<K>, V>, bitpos : Nat) : (AssocList<Key<K>, V>, AssocList<Key<K>, V>) =
     List.partition(
       al,
-      func((k : Key<K>, v : V)) : Bool = not Hash.bit(k.hash, bitpos)
+      func((k : Key<K>, _v : V)) : Bool = not Hash.bit(k.hash, bitpos)
     );
 
   func splitList<K, V>(l : AssocList<Key<K>, V>, bitpos : Nat) : (Nat, AssocList<Key<K>, V>, Nat, AssocList<Key<K>, V>) {
@@ -585,8 +585,6 @@ module {
   /// var mergedTrie = Trie.mergeDisjoint(trie, trie2, Text.equal);
   /// ```
   public func mergeDisjoint<K, V>(tl : Trie<K, V>, tr : Trie<K, V>, k_eq : (K, K) -> Bool) : Trie<K, V> {
-    let key_eq = equalKey(k_eq);
-
     func rec(bitpos : Nat, tl : Trie<K, V>, tr : Trie<K, V>) : Trie<K, V> =
       switch (tl, tr) {
         case (#empty, _) { return tr };
@@ -964,7 +962,7 @@ module {
       tl : Trie<K1, V1>,
       tr : Trie<K2, V2>,
       op : (K1, V1, K2, V2) -> ?(K3, V3),
-      k3_eq : (K3, K3) -> Bool
+      _k3_eq : (K3, K3) -> Bool
     ) : Build<K3, V3> {
 
       func bin(a : Build<K3, V3>, b : Build<K3, V3>) : Build<K3, V3> = seq(a, b);
@@ -1565,7 +1563,7 @@ module {
   /// trie.
   public func mergeDisjoint2D<K1, K2, V>(
     t : Trie2D<K1, K2, V>,
-    k1_eq : (K1, K1) -> Bool,
+    _k1_eq : (K1, K1) -> Bool,
     k2_eq : (K2, K2) -> Bool
   ) : Trie<K2, V> =
     foldUp(

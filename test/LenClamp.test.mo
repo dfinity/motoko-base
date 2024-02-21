@@ -1,5 +1,4 @@
 import List "../src/List";
-import Trie "../src/Trie";
 import Debug "../src/Debug";
 
 type List<T> = List.List<T>;

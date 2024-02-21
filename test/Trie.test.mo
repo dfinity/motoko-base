@@ -1,5 +1,4 @@
 import Trie "../src/Trie";
-import List "../src/List";
 import Nat "../src/Nat";
 import Hash "../src/Hash";
 import Option "../src/Option";
@@ -12,8 +11,6 @@ import Order "../src/Order";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
-
-let test = Suite;
 
 func compare (kv1 : (Nat, Nat), kv2 : (Nat, Nat)) : Order.Order {
   Nat.compare(kv1.0, kv2.0)

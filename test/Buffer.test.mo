@@ -1,7 +1,5 @@
-import Prim "mo:⛔";
 import B "../src/Buffer";
 import Iter "../src/Iter";
-import Option "../src/Option";
 import Nat "../src/Nat";
 import Hash "../src/Hash";
 import Nat32 "../src/Nat32";

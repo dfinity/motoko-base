@@ -1,13 +1,8 @@
-import Prim "mo:⛔";
 import HashMap "../src/HashMap";
 import Hash "../src/Hash";
-import Text "../src/Text";
 import Nat "../src/Nat";
 import Array "../src/Array";
 import Iter "../src/Iter";
-import Debug "../src/Debug";
-import Order "../src/Order";
-import Char "../src/Char";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
