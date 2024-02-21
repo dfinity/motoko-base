@@ -1,8 +1,9 @@
 name: publish on mops
 
 on:
-  release:
-    types: [released]
+  push:
+    tags:
+      - moc-*
 
 jobs:
   publish:
@@ -16,4 +17,3 @@ jobs:
           identity-pem: ${{ secrets.MOPS_IDENTITY_PEM }}
       - run: mops install
       - run: mops publish
-      
