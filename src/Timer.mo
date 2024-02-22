@@ -29,7 +29,7 @@ module {
   /// };
   /// appt.reminder = setTimer(#nanoseconds (Int.abs(appt.when - now - thirtyMinutes)), alarmUser);
   /// ```
-  public func setTimer(d : Duration, job : () -> async ()) : TimerId {
+  public func setTimer<async>(d : Duration, job : () -> async ()) : TimerId {
     setTimerNano<async>(toNanos d, false, job)
   };
 
@@ -44,8 +44,8 @@ module {
   /// };
   /// let daily = recurringTimer(#seconds (24 * 60 * 60), checkAndWaterPlants);
   /// ```
-  public func recurringTimer(d : Duration, job : () -> async ()) : TimerId {
-    setTimerNano<async>(toNanos d, true, job)
+  public func recurringTimer<async>(d : Duration, job : () -> async ()) : TimerId {
+    setTimerNano(toNanos d, true, job)
   };
 
   /// Cancels a still active timer with `(id : TimerId)`. For expired timers
