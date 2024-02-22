@@ -45,7 +45,7 @@ module {
   /// let daily = recurringTimer(#seconds (24 * 60 * 60), checkAndWaterPlants);
   /// ```
   public func recurringTimer<async>(d : Duration, job : () -> async ()) : TimerId {
-    setTimerNano(toNanos d, true, job)
+    setTimerNano<async>(toNanos d, true, job)
   };
 
   /// Cancels a still active timer with `(id : TimerId)`. For expired timers
