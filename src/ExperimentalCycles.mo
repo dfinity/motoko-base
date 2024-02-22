@@ -93,7 +93,7 @@ module {
   ///   }
   /// }
   /// ```
-  public let accept : (amount : Nat) -> (accepted : Nat) = Prim.cyclesAccept;
+  public let accept : <async>(amount : Nat) -> (accepted : Nat) = Prim.cyclesAccept;
 
   /// Indicates additional `amount` of cycles to be transferred in
   /// the next call, that is, evaluation of a shared function call or
@@ -121,7 +121,7 @@ module {
   ///   }
   /// }
   /// ```
-  public let add : (amount : Nat) -> () = Prim.cyclesAdd;
+  public let add : <async>(amount : Nat) -> () = Prim.cyclesAdd;
 
   /// Reports `amount` of cycles refunded in the last `await` of the current
   /// context, or zero if no await has occurred yet.
