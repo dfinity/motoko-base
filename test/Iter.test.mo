@@ -1,9 +1,9 @@
-import Iter "mo:base/Iter";
-import Array "mo:base/Array";
-import List "mo:base/List";
-import Nat "mo:base/Nat";
-import Int "mo:base/Int";
-import Debug "mo:base/Debug";
+import Iter "../src/Iter";
+import Array "../src/Array";
+import List "../src/List";
+import Nat "../src/Nat";
+import Int "../src/Int";
+import Debug "../src/Debug";
 
 Debug.print("Iter");
 
@@ -175,4 +175,36 @@ do {
   let expected : [Nat] = [1, 2, 3, 4, 5];
   let actual = Iter.toArray(Iter.sort<Nat>(input.vals(), Nat.compare));
   assert Array.equal<Nat>(expected, actual, func(x1, x2) { x1 == x2 })
+};
+
+do {
+  Debug.print("  Array slice");
+
+  let input : [Nat] = [4, 3, 1, 2, 5];
+
+  let sEmpty = Array.slice(input, 0, 0);
+  assert sEmpty.next() == null;
+
+  let sPrefix = Array.slice(input, 0, 1);
+  assert sPrefix.next() == ?4;
+  assert sPrefix.next() == null;
+
+  let sSuffix = Array.slice(input, 4, 5);
+  assert sSuffix.next() == ?5;
+  assert sSuffix.next() == null;
+
+  let sInfix = Array.slice(input, 3, 4);
+  assert sInfix.next() == ?2;
+  assert sInfix.next() == null;
+
+  let sFull = Array.slice(input, 0, input.size());
+  assert sFull.next() == ?4;
+  assert sFull.next() == ?3;
+  assert sFull.next() == ?1;
+  assert sFull.next() == ?2;
+  assert sFull.next() == ?5;
+  assert sFull.next() == null;
+
+  let sEmptier = Array.slice(input, input.size(), input.size());
+  assert sEmptier.next() == null
 }

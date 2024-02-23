@@ -1,21 +1,16 @@
-// @testmode wasi
-
-import Trie "mo:base/Trie";
-import List "mo:base/List";
-import Nat "mo:base/Nat";
-import Hash "mo:base/Hash";
-import Option "mo:base/Option";
-import Iter "mo:base/Iter";
-import Text "mo:base/Text";
-import Debug "mo:base/Debug";
-import Array "mo:base/Array";
-import Order "mo:base/Order";
+import Trie "../src/Trie";
+import Nat "../src/Nat";
+import Hash "../src/Hash";
+import Option "../src/Option";
+import Iter "../src/Iter";
+import Text "../src/Text";
+import Debug "../src/Debug";
+import Array "../src/Array";
+import Order "../src/Order";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
-
-let test = Suite;
 
 func compare (kv1 : (Nat, Nat), kv2 : (Nat, Nat)) : Order.Order {
   Nat.compare(kv1.0, kv2.0)

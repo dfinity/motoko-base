@@ -1,8 +1,8 @@
-import Array "mo:base/Array";
-import Int "mo:base/Int";
-import Nat "mo:base/Nat";
-import Text "mo:base/Text";
-import Result "mo:base/Result";
+import Array "../src/Array";
+import Int "../src/Int";
+import Char "../src/Char";
+import Nat "../src/Nat";
+import Text "../src/Text";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
@@ -284,6 +284,54 @@ let suite = Suite.suite(
       M.equals(T.array<Int>(T.intTestable, []))
     ),
     Suite.test(
+      "chain mix",
+      Array.chain<Nat, Nat>([1, 2, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empty right",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties right",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3, 0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empty left",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties left",
+      Array.chain<Nat, Nat>([0, 0, 0, 1, 2, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties middle",
+      Array.chain<Nat, Nat>([0, 1, 2, 0, 0, 0, 1, 2, 3],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, [0,0,1,0,0,1,0,1,2]))
+    ),
+    Suite.test(
+      "chain mix empties",
+      Array.chain<Nat, Nat>([0, 0, 0],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
+      "chain mix empty",
+      Array.chain<Nat, Nat>([],
+        func n = Array.tabulate<Nat>(n, func i = i)),
+      M.equals(T.array<Nat>(T.natTestable, []))
+    ),
+    Suite.test(
       "foldLeft",
       Array.foldLeft<Text, Text>(["a", "b", "c"], "", Text.concat),
       M.equals(T.text("abc"))
@@ -324,7 +372,7 @@ let suite = Suite.suite(
       M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
     ),
     Suite.test(
-      "flatten empty",
+      "flatten singleton empty",
       Array.flatten<Int>([[]]),
       M.equals(T.array<Int>(T.intTestable, []))
     ),
@@ -384,24 +432,131 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "subarray if including entire array",
-      Array.subArray<Nat>([2,4,6,8,10], 0, 5),
-      M.equals(T.array(T.natTestable, [2,4,6,8,10]))
+      Array.subArray<Nat>([2, 4, 6, 8, 10], 0, 5),
+      M.equals(T.array(T.natTestable, [2, 4, 6, 8, 10]))
     ),
     Suite.test(
       "subarray if including middle of array",
-      Array.subArray<Nat>([2,4,6,8,10], 1, 3),
-      M.equals(T.array(T.natTestable, [4,6,8]))
+      Array.subArray<Nat>([2, 4, 6, 8, 10], 1, 3),
+      M.equals(T.array(T.natTestable, [4, 6, 8]))
     ),
     Suite.test(
       "subarray if including start, but not end of array",
-      Array.subArray<Nat>([2,4,6,8,10], 0, 3),
-      M.equals(T.array(T.natTestable, [2,4,6]))
+      Array.subArray<Nat>([2, 4, 6, 8, 10], 0, 3),
+      M.equals(T.array(T.natTestable, [2, 4, 6]))
     ),
     Suite.test(
       "subarray if including end, but not start of array",
-      Array.subArray<Nat>([2,4,6,8,10], 2, 3),
-      M.equals(T.array(T.natTestable, [6,8,10]))
+      Array.subArray<Nat>([2, 4, 6, 8, 10], 2, 3),
+      M.equals(T.array(T.natTestable, [6, 8, 10]))
     ),
+
+    Suite.test(
+      "nextIndexOf start",
+      Array.nextIndexOf<Char>('c', ['c', 'o', 'f', 'f', 'e', 'e'], 0, Char.equal),
+      M.equals(T.optional(T.natTestable, ?0))
+    ),
+    Suite.test(
+      "nextIndexOf not found from offset",
+      Array.nextIndexOf<Char>('c', ['c', 'o', 'f', 'f', 'e', 'e'], 1, Char.equal),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "nextIndexOf middle",
+      Array.nextIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 0, Char.equal),
+      M.equals(T.optional(T.natTestable, ?2))
+    ),
+    Suite.test(
+      "nextIndexOf repeat",
+      Array.nextIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 2, Char.equal),
+      M.equals(T.optional(T.natTestable, ?2))
+    ),
+    Suite.test(
+      "nextIndexOf start from the middle",
+      Array.nextIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 3, Char.equal),
+      M.equals(T.optional(T.natTestable, ?3))
+    ),
+    Suite.test(
+      "nextIndexOf not found",
+      Array.nextIndexOf<Char>('g', ['c', 'o', 'f', 'f', 'e', 'e'], 0, Char.equal),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "nextIndexOf index out of bounds",
+      Array.nextIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 100, Char.equal),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+
+    Suite.test(
+      "prevIndexOf first",
+      Array.prevIndexOf<Char>('c', ['c', 'o', 'f', 'f', 'e', 'e'], 6, Char.equal),
+      M.equals(T.optional(T.natTestable, ?0))
+    ),
+    Suite.test(
+      "prevIndexOf last",
+      Array.prevIndexOf<Char>('e', ['c', 'o', 'f', 'f', 'e', 'e'], 6, Char.equal),
+      M.equals(T.optional(T.natTestable, ?5))
+    ),
+    Suite.test(
+      "prevIndexOf middle",
+      Array.prevIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 6, Char.equal),
+      M.equals(T.optional(T.natTestable, ?3))
+    ),
+    Suite.test(
+      "prevIndexOf start from the middle",
+      Array.prevIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 3, Char.equal),
+      M.equals(T.optional(T.natTestable, ?2))
+    ),
+    Suite.test(
+      "prevIndexOf existing not found",
+      Array.prevIndexOf<Char>('f', ['c', 'o', 'f', 'f', 'e', 'e'], 2, Char.equal),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "prevIndexOf not found",
+      Array.prevIndexOf<Char>('g', ['c', 'o', 'f', 'f', 'e', 'e'], 6, Char.equal),
+      M.equals(T.optional(T.natTestable, null : ?Nat))
+    ),
+    Suite.test(
+      "take empty",
+      Array.take([], 3),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take empty negative",
+      Array.take([], -5),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take 0 elements",
+      Array.take([1, 2, 3], 0),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take -0 elements",
+      Array.take([1, 2, 3], -0),
+      M.equals(T.array<Int>(T.intTestable, []))
+    ),
+    Suite.test(
+      "take first 3 elements",
+      Array.take([1, 2, 3, 4, 5], 3),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
+    Suite.test(
+      "take last 3 elements",
+      Array.take([1, 2, 3, 4, 5], -3),
+      M.equals(T.array<Int>(T.intTestable, [3, 4, 5]))
+    ),
+    Suite.test(
+      "take first 5 elements of array of size 3",
+      Array.take([1, 2, 3], 5),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    ),
+    Suite.test(
+      "take last 5 elements of array of size 3",
+      Array.take([1, 2, 3], -5),
+      M.equals(T.array<Int>(T.intTestable, [1, 2, 3]))
+    )
   ]
 );
 

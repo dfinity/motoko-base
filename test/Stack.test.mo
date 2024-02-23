@@ -1,6 +1,4 @@
-import Stack "mo:base/Stack";
-import Iter "mo:base/Iter";
-import O "mo:base/Option";
+import Stack "../src/Stack";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

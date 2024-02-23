@@ -57,6 +57,55 @@ module {
   /// ```
   public func toIter(t : Text) : Iter.Iter<Char> = t.chars();
 
+  /// Creates a new `Array` containing characters of the given `Text`.
+  ///
+  /// Equivalent to `Iter.toArray(t.chars())`.
+  ///
+  /// ```motoko include=import
+  /// assert Text.toArray("Café") == ['C', 'a', 'f', 'é'];
+  /// ```
+  ///
+  /// Runtime: O(t.size())
+  /// Space: O(t.size())
+  public func toArray(t : Text) : [Char] {
+    let cs = t.chars();
+    // We rely on Array_tabulate's implementation details: it fills
+    // the array from left to right sequentially.
+    Prim.Array_tabulate<Char>(
+      t.size(),
+      func _ {
+        switch (cs.next()) {
+          case (?c) { c };
+          case (null) { Prim.trap("Text.toArray") };
+        };
+      }
+    )
+  };
+
+  /// Creates a new mutable `Array` containing characters of the given `Text`.
+  ///
+  /// Equivalent to `Iter.toArrayMut(t.chars())`.
+  ///
+  /// ```motoko include=import
+  /// assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
+  /// ```
+  ///
+  /// Runtime: O(t.size())
+  /// Space: O(t.size())
+  public func toVarArray(t : Text) : [var Char] {
+    let n = t.size();
+    if (n == 0) {
+      return [var];
+    };
+    let array = Prim.Array_init<Char>(n, ' ');
+    var i = 0;
+    for (c in t.chars()) {
+      array[i] := c;
+      i += 1;
+    };
+    array
+  };
+
   /// Creates a `Text` value from a `Char` iterator.
   ///
   /// ```motoko include=import
@@ -757,5 +806,21 @@ module {
   /// ```motoko include=import
   /// let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
   /// ```
-  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8
+  public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
+
+  /// Returns the text argument in lowercase.
+  /// WARNING: Unicode compliant only when compiled, not interpreted.
+  ///
+  /// ```motoko include=import
+  /// let text = Text.toLowercase("Good Day"); // ?"good day"
+  /// ```
+  public let toLowercase : Text -> Text = Prim.textLowercase;
+
+  /// Returns the text argument in uppercase. Unicode compliant.
+  /// WARNING: Unicode compliant only when compiled, not interpreted.
+  ///
+  /// ```motoko include=import
+  /// let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
+  /// ```
+  public let toUppercase : Text -> Text = Prim.textUppercase;
 }

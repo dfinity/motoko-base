@@ -1,25 +1,18 @@
 // @testmode wasi
 
-import Debug "mo:base/Debug";
-import Text "mo:base/Text";
-import Blob "mo:base/Blob";
-import Iter "mo:base/Iter";
-import Char "mo:base/Char";
-import Order "mo:base/Order";
-import Array "mo:base/Array";
-import Nat32 "mo:base/Nat32";
+import Text "../src/Text";
+import Blob "../src/Blob";
+import Iter "../src/Iter";
+import Char "../src/Char";
+import Order "../src/Order";
+import Array "../src/Array";
+import Nat32 "../src/Nat32";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
 let { run; test; suite } = Suite;
-
-func charT(c : Char) : T.TestableItem<Char> = {
-  item = c;
-  display = Text.fromChar;
-  equals = Char.equal
-};
 
 func blobT(b : Blob) : T.TestableItem<Blob> = {
   item = b;
@@ -1027,6 +1020,88 @@ run(
         "decode-literal-bad2",
         Text.decodeUtf8("\D8\00t d"),
         M.equals(optTextT(null))
+      )
+    ]
+  )
+);
+
+run(
+  suite(
+    "array-conversions",
+    [
+      test(
+        "toArray-example",
+        Text.toArray("Café"),
+        M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
+      ),
+      test(
+        "toArray-example",
+        Array.freeze(Text.toVarArray("Café")),
+        M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
+      )
+    ]
+  )
+);
+
+run(
+  suite(
+    "text-toLowercase",
+    [
+      test(
+        "empty",
+        Text.toLowercase(""),
+        M.equals(T.text "")
+      ),
+      test(
+        "printable ascii",
+        Text.toLowercase(
+          "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        ),
+        M.equals(T.text
+          "!\"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        ),
+      ),
+      test(
+        "ὈDYSSEUS",
+        Text.toLowercase("ὈΔΥΣΣΕΎΣ"),
+        M.equals(T.text "ὀδυσσεύς")
+      ),
+      test(
+        "new year",
+        Text.toLowercase("农历新年"),
+        M.equals(T.text "农历新年")
+      )
+    ]
+  )
+);
+
+run(
+  suite(
+    "text-toUppercase",
+    [
+      test(
+        "empty",
+        Text.toUppercase(""),
+        M.equals(T.text "")
+      ),
+      test(
+        "printable ascii",
+        Text.toUppercase(
+          "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+        ),
+        M.equals(T.text
+          "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ABCDEFGHIJKLMNOPQRSTUVWXYZ{|}~"
+        ),
+      ),
+      test(
+        "odysseus",
+        Text.toUppercase("ὀδυσσεύς"),
+        M.equals(T.text "ὈΔΥΣΣΕΎΣ")
+      ),
+      test(
+        "new year",
+        Text.toUppercase("农历新年"),
+        M.equals(T.text "农历新年")
       )
     ]
   )

@@ -1,7 +1,7 @@
-import H "mo:base/Heap";
-import I "mo:base/Iter";
-import O "mo:base/Option";
-import Int "mo:base/Int";
+import H "../src/Heap";
+import I "../src/Iter";
+import O "../src/Option";
+import Int "../src/Int";
 
 let order = Int.compare;
 

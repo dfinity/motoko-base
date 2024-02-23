@@ -1,7 +1,7 @@
 // @testmode wasi
 
-import Debug "mo:base/Debug";
-import Float "mo:base/Float";
+import Debug "../src/Debug";
+import Float "../src/Float";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -36,8 +36,12 @@ class Int64Testable(number : Int64) : T.TestableItem<Int64> {
 let positiveInfinity = 1.0 / 0.0;
 let negativeInfinity = -1.0 / 0.0;
 
-let negativeNaN = 0.0 / 0.0;
-let positiveNaN = Float.copySign(negativeNaN, 1.0); // Compiler issue, NaN are represented negative by default. https://github.com/dfinity/motoko/issues/3647
+// Wasm specification: NaN signs are non-deterministic unless resulting from `copySign`, `abs`, or `neg`.
+// With the NaN canonicalization mode, we get deterministic results for the NaN sign bit although it may
+// be different to the expected result for floating point operations other than the ones mentioned before,
+// e.g. `-0.0/0.0` results in a positive NaN with that canonicalization mode in wasmtime.
+let positiveNaN = Float.copySign(0.0 / 0.0, 1.0);
+let negativeNaN = Float.copySign(0.0 / 0.0, -1.0);
 
 func isPositiveNaN(number : Float) : Bool {
   debug_show (number) == "nan"
@@ -59,7 +63,7 @@ func isNegativeZero(number : Float) : Bool {
 };
 
 class PositiveZeroMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be '0.0' (positive zero)")
   };
 
@@ -69,7 +73,7 @@ class PositiveZeroMatcher() : M.Matcher<Float> {
 };
 
 class NegativeZeroMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be '-0.0' (negative zero)")
   };
 
@@ -82,7 +86,7 @@ let noEpsilon = 0.0;
 let smallEpsilon = 1e-6;
 
 class NaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be 'nan' or '-nan'")
   };
 
@@ -92,7 +96,7 @@ class NaNMatcher() : M.Matcher<Float> {
 };
 
 class PositiveNaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be 'nan' (positive)")
   };
 
@@ -102,7 +106,7 @@ class PositiveNaNMatcher() : M.Matcher<Float> {
 };
 
 class NegativeNaNMatcher() : M.Matcher<Float> {
-  public func describeMismatch(number : Float, description : M.Description) {
+  public func describeMismatch(number : Float, _description : M.Description) {
     Debug.print(debug_show (number) # " should be '-nan' (negative)")
   };
 
@@ -232,12 +236,12 @@ run(
       test(
         "positive NaN",
         Float.abs(positiveNaN),
-        NaNMatcher()
+        PositiveNaNMatcher()
       ),
       test(
         "negative NaN",
         Float.abs(negativeNaN),
-        NaNMatcher()
+        PositiveNaNMatcher()
       )
     ]
   )
@@ -2914,122 +2918,122 @@ run(
       test(
         "two positive NaNs",
         Float.compare(positiveNaN, positiveNaN),
-        M.equals(OrderTestable(#equal)),
+        M.equals(OrderTestable(#equal))
       ),
       test(
         "two negative NaNs",
         Float.compare(negativeNaN, negativeNaN),
-        M.equals(OrderTestable(#equal)),
+        M.equals(OrderTestable(#equal))
       ),
       test(
         "positive NaN, negative NaN",
         Float.compare(positiveNaN, negativeNaN),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "negative NaN, positive NaN",
         Float.compare(negativeNaN, positiveNaN),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "number and positive NaN",
         Float.compare(1.23, positiveNaN),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "number and negative NaN",
         Float.compare(1.23, negativeNaN),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "positive NaN and positive number",
         Float.compare(positiveNaN, -1.23),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "positive NaN and negative number",
         Float.compare(positiveNaN, -1.23),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "negative NaN and positive number",
         Float.compare(negativeNaN, -1.23),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "negative NaN and negative number",
         Float.compare(negativeNaN, -1.23),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "positive NaN and positive NaN",
         Float.compare(positiveNaN, positiveNaN),
-        M.equals(OrderTestable(#equal)),
+        M.equals(OrderTestable(#equal))
       ),
       test(
         "negative NaN and positive NaN",
         Float.compare(negativeNaN, positiveNaN),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "positive NaN and negative NaN",
         Float.compare(positiveNaN, negativeNaN),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "negative NaN and negative NaN",
         Float.compare(negativeNaN, negativeNaN),
-        M.equals(OrderTestable(#equal)),
+        M.equals(OrderTestable(#equal))
       ),
       test(
         "positive NaN and positive infinity",
         Float.compare(positiveNaN, positiveInfinity),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "positive NaN and negative infinity",
         Float.compare(positiveNaN, negativeInfinity),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "positive NaN and positive infinity",
         Float.compare(positiveNaN, positiveInfinity),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "negative NaN and negative infinity",
         Float.compare(negativeNaN, negativeInfinity),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "negative NaN and positive infinity",
         Float.compare(negativeNaN, positiveInfinity),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "positive infinity and positive NaN",
         Float.compare(positiveInfinity, positiveNaN),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "positive infinity and negative NaN",
         Float.compare(positiveInfinity, negativeNaN),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       ),
       test(
         "positive infinity and positive NaN",
         Float.compare(positiveInfinity, positiveNaN),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "negative infinity and positive NaN",
         Float.compare(negativeInfinity, positiveNaN),
-        M.equals(OrderTestable(#less)),
+        M.equals(OrderTestable(#less))
       ),
       test(
         "negative infinity and negative NaN",
         Float.compare(negativeInfinity, negativeNaN),
-        M.equals(OrderTestable(#greater)),
+        M.equals(OrderTestable(#greater))
       )
     ]
   )
@@ -3056,12 +3060,11 @@ run(
         Float.neg(0.0),
         M.equals(FloatTestable(0.0, noEpsilon))
       ),
-      // fails due to issue, probably related to https://github.com/dfinity/motoko/issues/3646
-      // test(
-      //   "positive zero",
-      //   Float.neg(positiveZero),
-      //   NegativeZeroMatcher(),
-      // ),
+      test(
+        "positive zero",
+        Float.neg(positiveZero),
+        NegativeZeroMatcher()
+      ),
       test(
         "negative zero",
         Float.neg(negativeZero),
@@ -3087,17 +3090,16 @@ run(
         Float.neg(negativeNaN),
         NaNMatcher()
       ),
-      // Not working correctly, probably related to https://github.com/dfinity/motoko/issues/3646
-      // test(
-      //   "positive NaN",
-      //   Float.neg(positiveNaN),
-      //   NegativeNaNMatcher(),
-      // ),
-      // test(
-      //   "negative NaN",
-      //   Float.neg(negativeNaN),
-      //   PositiveNaNMatcher(),
-      // ),
+      test(
+        "positive NaN",
+        Float.neg(positiveNaN),
+        NegativeNaNMatcher()
+      ),
+      test(
+        "negative NaN",
+        Float.neg(negativeNaN),
+        PositiveNaNMatcher()
+      )
     ]
   )
 );
@@ -3761,12 +3763,12 @@ run(
       test(
         "positive and negative zero",
         Float.rem(positiveZero, negativeZero),
-        NegativeNaNMatcher()
+        NaNMatcher()
       ),
       test(
         "negative and positive zero",
         Float.rem(negativeZero, positiveZero),
-        NegativeNaNMatcher()
+        NaNMatcher()
       ),
       test(
         "positive number and positive infinity",

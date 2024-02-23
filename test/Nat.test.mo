@@ -1,7 +1,5 @@
-// @testmode wasi
-
-import Debug "mo:base/Debug";
-import Nat "mo:base/Nat";
+import Debug "../src/Debug";
+import Nat "../src/Nat";
 
 Debug.print("Nat");
 

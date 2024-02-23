@@ -87,7 +87,7 @@ module {
     public func get(key : K) : (value : ?V) {
       let h = Prim.nat32ToNat(keyHash(key));
       let m = table.size();
-      let v = if (m > 0) {
+      if (m > 0) {
         AssocList.find<Key<K>, V>(table[h % m], keyHash_(key), keyHashEq)
       } else {
         null
