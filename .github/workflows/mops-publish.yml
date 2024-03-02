@@ -1,6 +1,7 @@
 name: publish on mops
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - moc-*
