@@ -8,19 +8,19 @@ on:
 
 env:
   vessel_version: "v0.7.0"
-  moc_version: "0.10.4"
+  moc_version: "0.11.0"
 
 jobs:
   verify:
     runs-on: ubuntu-22.04
     steps:
     - name: Checking out motoko-base
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         path: base-checkout
     - name: Checking out vessel-package-set
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: dfinity/vessel-package-set
         path: vessel-package-set
