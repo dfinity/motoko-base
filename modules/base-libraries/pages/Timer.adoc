@@ -33,7 +33,7 @@ type TimerId = Nat
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func setTimer(d : xref:#type.Duration[Duration], job : () -> async ()) : xref:#type.TimerId[TimerId]
+func setTimer<$>(d : xref:#type.Duration[Duration], job : () -> async ()) : xref:#type.TimerId[TimerId]
 ----
 
 Installs a one-off timer that upon expiration after given duration `d`
@@ -53,7 +53,7 @@ appt.reminder = setTimer(#nanoseconds (Int.abs(appt.when - now - thirtyMinutes))
 
 [source.no-repl,motoko,subs=+macros]
 ----
-func recurringTimer(d : xref:#type.Duration[Duration], job : () -> async ()) : xref:#type.TimerId[TimerId]
+func recurringTimer<$>(d : xref:#type.Duration[Duration], job : () -> async ()) : xref:#type.TimerId[TimerId]
 ----
 
 Installs a recurring timer that upon expiration after given duration `d`
