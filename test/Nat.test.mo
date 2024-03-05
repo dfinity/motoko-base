@@ -14,6 +14,13 @@ do {
 };
 
 do {
+  Debug.print("  shift");
+
+  assert (Nat.bitshiftLeft(1234567890, 3) == 1234567890 * 8);
+  assert (Nat.bitshiftRight(1234567892, 2) == 1234567892 / 4);
+};
+
+do {
   Debug.print("  toText");
 
   assert (Nat.toText(0) == "0");
