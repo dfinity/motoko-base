@@ -4,6 +4,9 @@
 
 * Invoking `setTimer`, `ExperimentalCycles.add`, etc. now requires `system` capability (#622)
 
+* Added `bitshiftLeft`/`bitshiftRight` to `Nat` (#613).
+  This was added as part of #622 by mistake.
+
 ## 0.10.4
 
 (nothing)
