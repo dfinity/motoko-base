@@ -1,6 +1,6 @@
-import Trie "mo:base/Trie";
-import Text "mo:base/Text";
-import Iter "mo:base/Iter";
+import Trie "../src/Trie";
+import Text "../src/Text";
+import Iter "../src/Iter";
 
 debug {
   type Trie<K, V> = Trie.Trie<K, V>;

@@ -209,7 +209,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func put(key : K, value : V) {
-      let (t, res) = insert(tree, compare, key, value);
+      let (t, _res) = insert(tree, compare, key, value);
       tree := t
     };
 
@@ -235,7 +235,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func delete(key : K) {
-      let (res, t) = removeRec(key, compare, tree);
+      let (_res, t) = removeRec(key, compare, tree);
       tree := t
     };
 

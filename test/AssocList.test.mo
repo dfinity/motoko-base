@@ -1,7 +1,7 @@
-import AssocList "mo:base/AssocList";
-import List "mo:base/List";
-import Nat "mo:base/Nat";
-import Debug "mo:base/Debug";
+import AssocList "../src/AssocList";
+import List "../src/List";
+import Nat "../src/Nat";
+import Debug "../src/Debug";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";

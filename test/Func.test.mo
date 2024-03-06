@@ -1,6 +1,6 @@
-import Function "mo:base/Func";
-import { print } = "mo:base/Debug";
-import Text "mo:base/Text";
+import Function "../src/Func";
+import { print } = "../src/Debug";
+import Text "../src/Text";
 
 import { run; test; suite } "mo:matchers/Suite";
 import T "mo:matchers/Testable";
