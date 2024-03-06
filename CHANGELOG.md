@@ -1,4 +1,15 @@
+## 0.11.0
+
+* Added `Option.equal` function (thanks to ByronBecker) (#615).
+
+* Invoking `setTimer`, `ExperimentalCycles.add`, etc. now requires `system` capability (#622)
+
+## 0.10.4
+
+(nothing)
+
 ## 0.10.3
+
 * Added `ExperimentalInternetComputer.performanceCounter` function to get the raw performance counters (#600).
 
 * Added `Array.take` function to get some prefix of an array (#587).
