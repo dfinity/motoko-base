@@ -2,7 +2,7 @@
 
 STDLIB ?= ../src
 MOC ?= moc
-WASMTIME_OPTIONS = --disable-cache --enable-cranelift-nan-canonicalization --wasm-features memory64,multi-memory,bulk-memory
+WASMTIME_OPTIONS = -C cache=n -W nan-canonicalization=y -W memory64 -W multi-memory -W bulk-memory
 
 OUTDIR=_out
 
@@ -22,7 +22,7 @@ $(OUTDIR):
 $(OUTDIR)/import_all.mo: $(STDLIB_FILES) | $(OUTDIR)
 	> $@
 	for f in $(patsubst $(STDLIB)/%.mo,%,$(STDLIB_FILES)); do \
-	  echo "import Import_$$f \"mo:base/$$f\";" >> $@; \
+	  echo "import _Import_$$f \"mo:base/$$f\";" >> $@; \
 	done
 
 $(OUTDIR)/%.wasm: %.mo | $(OUTDIR)

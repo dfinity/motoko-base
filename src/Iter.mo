@@ -196,7 +196,7 @@ module {
   /// ```
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buffer<A>(8);
-    iterate(xs, func(x : A, ix : Nat) { buffer.add(x) });
+    iterate(xs, func(x : A, _ix : Nat) { buffer.add(x) });
     return Buffer.toArray(buffer)
   };
 

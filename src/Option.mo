@@ -130,6 +130,13 @@ module {
     case _ { false }
   };
 
+  /// Returns true if the optional arguments are equal according to the equality function provided, otherwise returns false.
+  public func equal<A>(x : ?A, y : ?A, eq : (A, A) -> Bool) : Bool = switch (x, y) {
+    case (null, null) { true };
+    case (?x_, ?y_) { eq(x_, y_) };
+    case (_, _) { false }
+  };
+
   /// Asserts that the value is not `null`; fails otherwise.
   /// @deprecated Option.assertSome will be removed soon; use an assert expression instead
   public func assertSome(x : ?Any) = switch x {

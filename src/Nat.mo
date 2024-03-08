@@ -302,4 +302,34 @@ module {
   /// as a function value at the moment.
   public func pow(x : Nat, y : Nat) : Nat { x ** y };
 
+  /// Returns the (conceptual) bitwise shift left of `x` by `y`, `x * (2 ** y)`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Nat.bitshiftLeft(1, 3); // => 8
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in absence
+  /// of the `<<` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. While `Nat` is not defined in terms
+  /// of bit patterns, conceptually it can be regarded as such, and the operation
+  /// is provided as a high-performance version of the corresponding arithmetic
+  /// rule.
+  public func bitshiftLeft(x : Nat, y : Nat32) : Nat { Prim.shiftLeft(x, y) };
+
+  /// Returns the (conceptual) bitwise shift right of `x` by `y`, `x / (2 ** y)`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Nat.bitshiftRight(8, 3); // => 1
+  /// ```
+  ///
+  /// Note: The reason why this function is defined in this library (in absence
+  /// of the `>>` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. While `Nat` is not defined in terms
+  /// of bit patterns, conceptually it can be regarded as such, and the operation
+  /// is provided as a high-performance version of the corresponding arithmetic
+  /// rule.
+  public func bitshiftRight(x : Nat, y : Nat32) : Nat { Prim.shiftRight(x, y) };
+
 }

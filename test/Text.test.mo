@@ -1,25 +1,18 @@
 // @testmode wasi
 
-import Debug "mo:base/Debug";
-import Text "mo:base/Text";
-import Blob "mo:base/Blob";
-import Iter "mo:base/Iter";
-import Char "mo:base/Char";
-import Order "mo:base/Order";
-import Array "mo:base/Array";
-import Nat32 "mo:base/Nat32";
+import Text "../src/Text";
+import Blob "../src/Blob";
+import Iter "../src/Iter";
+import Char "../src/Char";
+import Order "../src/Order";
+import Array "../src/Array";
+import Nat32 "../src/Nat32";
 
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
 let { run; test; suite } = Suite;
-
-func charT(c : Char) : T.TestableItem<Char> = {
-  item = c;
-  display = Text.fromChar;
-  equals = Char.equal
-};
 
 func blobT(b : Blob) : T.TestableItem<Blob> = {
   item = b;

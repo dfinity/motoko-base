@@ -453,8 +453,6 @@ module {
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapResult<X, Y, E>(array : [X], f : X -> Result.Result<Y, E>) : Result.Result<[Y], E> {
     let size = array.size();
-    var target : [var Y] = [var];
-    var isInit = false;
 
     var error : ?Result.Result<[Y], E> = null;
     let results = Prim.Array_tabulate<?Y>(
@@ -861,7 +859,7 @@ module {
     let len = Prim.abs(length);
     let size = array.size();
     let resSize = if (len < size) { len } else { size };
-    let start = if (length > 0) 0 else size - resSize;
+    let start : Nat = if (length > 0) 0 else size - resSize;
     subArray(array, start, resSize)
   }
 }
