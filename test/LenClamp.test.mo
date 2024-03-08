@@ -1,6 +1,5 @@
-import List "mo:base/List";
-import Trie "mo:base/Trie";
-import Debug "mo:base/Debug";
+import List "../src/List";
+import Debug "../src/Debug";
 
 type List<T> = List.List<T>;
 

@@ -1,6 +1,6 @@
-import Principal "mo:base/Principal";
-import Text "mo:base/Text";
-import Blob "mo:base/Blob";
+import Principal "../src/Principal";
+import Text "../src/Text";
+import Blob "../src/Blob";
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";

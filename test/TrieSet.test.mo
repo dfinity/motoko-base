@@ -1,15 +1,15 @@
 // @testmode wasi
 
-import Nat "mo:base/Nat";
-import TrieSet "mo:base/TrieSet";
-import Nat32 "mo:base/Nat32";
-import Hash "mo:base/Hash";
-import Array "mo:base/Array";
+import Nat "../src/Nat";
+import TrieSet "../src/TrieSet";
+import Nat32 "../src/Nat32";
+import Hash "../src/Hash";
+import Array "../src/Array";
 import Suite "mo:matchers/Suite";
 import M "mo:matchers/Matchers";
 import T "mo:matchers/Testable";
 
-let simpleTests = do {
+let _simpleTests = do {
   let set1 = TrieSet.fromArray<Nat>([1, 2, 3, 1, 2, 3, 1], Nat32.fromNat, Nat.equal);
 
   let suite = Suite.suite(
@@ -40,7 +40,7 @@ let simpleTests = do {
   Suite.run(suite)
 };
 
-let binopTests = do {
+let _binopTests = do {
   let a = TrieSet.fromArray<Nat>([1, 3], Hash.hash, Nat.equal);
   let b = TrieSet.fromArray<Nat>([2, 3], Hash.hash, Nat.equal);
 
@@ -68,7 +68,7 @@ let binopTests = do {
 };
 
 
-let largeTests = do {
+let _largeTests = do {
   let e = TrieSet.empty<Nat>();
   let a = TrieSet.fromArray<Nat>(Array.tabulate<Nat>(1000, func i { 2 * i }), Hash.hash, Nat.equal);
   let b = TrieSet.fromArray<Nat>(Array.tabulate<Nat>(1000, func i { 1 + 2 * i }), Hash.hash, Nat.equal);

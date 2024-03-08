@@ -1,13 +1,13 @@
 // @testmode wasi
 
-import RBTree "mo:base/RBTree";
-import Nat "mo:base/Nat";
-import Iter "mo:base/Iter";
-import Debug "mo:base/Debug";
-import Array "mo:base/Array";
+import RBTree "../src/RBTree";
+import Nat "../src/Nat";
+import Iter "../src/Iter";
+import Debug "../src/Debug";
+import Array "../src/Array";
 
-import Deque "mo:base/Deque";
-import Buffer "mo:base/Buffer";
+import Deque "../src/Deque";
+import Buffer "../src/Buffer";
 
 
 import Suite "mo:matchers/Suite";
@@ -16,10 +16,8 @@ import M "mo:matchers/Matchers";
 
 let { run; test; suite } = Suite;
 
-let entryTestable = T.tuple2Testable(T.natTestable, T.natTestable);
-
 class TreeMatcher(expected : [(Nat, Nat)]) : M.Matcher<RBTree.RBTree<Nat, Nat>> {
-  public func describeMismatch(actual : RBTree.RBTree<Nat, Nat>, description : M.Description) {
+  public func describeMismatch(actual : RBTree.RBTree<Nat, Nat>, _description : M.Description) {
     Debug.print(debug_show (Iter.toArray(actual.entries())) # " should be " # debug_show (expected))
   };
 
@@ -74,19 +72,6 @@ func checkKey(node : RBTree.Tree<Nat, Nat>, isValid : Nat -> Bool) {
 func insert(tree : RBTree.RBTree<Nat, Nat>, key : Nat) {
   tree.put(key, key);
   checkTree(tree)
-};
-
-func remove(tree : RBTree.RBTree<Nat, Nat>, key : Nat) {
-  let value = tree.remove(key);
-  assert (value == ?key);
-  checkTree(tree)
-};
-
-func getAll(tree : RBTree.RBTree<Nat, Nat>, keys : [Nat]) {
-  for (key in keys.vals()) {
-    let value = tree.get(key);
-    assert (value == ?key)
-  }
 };
 
 func clear(tree : RBTree.RBTree<Nat, Nat>) {

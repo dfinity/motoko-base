@@ -9,6 +9,12 @@ Usage
 If you are installing Motoko through the DFINITY SDK releases, then this base
 library is already included.
 
+If you build your project using the [Mops package manager], run the following command to add the base package to your project:
+
+```sh
+mops add base
+```
+
 If you build your project using the [Vessel package manager] your package-set most likely already includes base, but if it doesn't or you want to override its version, add an entry like so to your `package-set.dhall`:
 
 ```
@@ -21,6 +27,8 @@ If you build your project using the [Vessel package manager] your package-set mo
 ```
 
 The package _name_ `"base"` appears when importing its modules in Motoko (e.g., `import "mo:base/Nat"`).  The _repo_ may either be your local clone path, or this public repository url, as above.  The _version_ can be any git branch or tag name (such as `version = "moc-0.8.4"`).  There are no dependencies.  See the [Vessel package manager] docs for more details.
+
+[Mops package manager]: https://mops.one
 
 [Vessel package manager]: https://github.com/dfinity/vessel
 
@@ -45,9 +53,15 @@ npm test -- --mode wasi
 npm run prettier:format
 ```
 
-The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
+**Note**:
+- If you are using `npm test` to run the tests:
+  - You don't need to install any additional dependencies.
+  - The test runner will automatically download the `moc` and `wasmtime` versions specified in `mops.toml` in the `[toolchain]` section.
 
-Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
+- If you are using `Makefile` to run the tests:
+  - The test runner will automatically detect the `moc` compiler from your system path or `dfx` installation.
+
+  - Running the tests locally also requires [Wasmtime](https://wasmtime.dev/) and [Vessel](https://github.com/dfinity/vessel) to be installed on your system.
 
 Run only specific test files:
 ```sh
