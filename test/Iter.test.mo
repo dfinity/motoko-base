@@ -46,6 +46,21 @@ do {
 };
 
 do {
+  Debug.print("  enumerate");
+
+  let xs = ["a", "b", "c", "d", "e", "f"];
+  for ((i, x) in Iter.enumerate(xs.vals())) {
+    assert (x == xs[i])
+  };
+
+  let enumeratedIter = Iter.enumerate(["a", "b", "c"].vals());
+  assert (?(0, "a") == enumeratedIter.next());
+  assert (?(1, "b") == enumeratedIter.next());
+  assert (?(2, "c") == enumeratedIter.next());
+  assert (null == enumeratedIter.next())
+};
+
+do {
   Debug.print("  map");
 
   let isEven = func(x : Int) : Bool {
