@@ -1,3 +1,7 @@
+## 0.11.1
+
+(nothing)
+
 ## 0.11.0
 
 * Added `Option.equal` function (thanks to ByronBecker) (#615).
