@@ -188,7 +188,17 @@ module {
     )
   };
 
-  // @deprecated Please use `Array.concat` or `Buffer.append` in place of `Array.append`.
+  /// Create a new array by appending the values of `array1` and `array2`.
+  /// @deprecated `Array.append` copies its arguments and has linear complexity. To silence this warning, consider using `Array.concat` instead.
+  /// 
+  /// ```motoko include=import
+  /// let array1 = [1, 2, 3];
+  /// let array2 = [4, 5, 6];
+  /// Array.append<Nat>(array1, array2)
+  /// ```
+  /// Runtime: O(size1 + size2)
+  ///
+  /// Space: O(size1 + size2)
   public func append<X>(array1 : [X], array2 : [X]) : [X] {
     concat(array1, array2)
   };
