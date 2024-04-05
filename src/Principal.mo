@@ -77,7 +77,7 @@ module {
     // hashBlob is a CRC32 implementation
     let crc32Bytes = nat32ToByteArray(Prim.hashBlob hashSum);
 
-    Blob.fromArray(Array.concat(crc32Bytes, Blob.toArray(hashSum)))
+    Blob.fromArray(Array.append(crc32Bytes, Blob.toArray(hashSum)))
   };
 
   /// Convert a `Principal` to its `Blob` (bytes) representation.

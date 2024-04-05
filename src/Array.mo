@@ -162,18 +162,18 @@ module {
   };
 
   /// Create a new array by appending the values of `array1` and `array2`.
-  /// Note that `Array.concat` copies its arguments and has linear complexity;
+  /// Note that `Array.append` copies its arguments and has linear complexity;
   /// when used in a loop, consider using a `Buffer`, and `Buffer.append`, instead.
   ///
   /// ```motoko include=import
   /// let array1 = [1, 2, 3];
   /// let array2 = [4, 5, 6];
-  /// Array.concat<Nat>(array1, array2)
+  /// Array.append<Nat>(array1, array2)
   /// ```
   /// Runtime: O(size1 + size2)
   ///
   /// Space: O(size1 + size2)
-  public func concat<X>(array1 : [X], array2 : [X]) : [X] {
+  public func append<X>(array1 : [X], array2 : [X]) : [X] {
     let size1 = array1.size();
     let size2 = array2.size();
     Prim.Array_tabulate<X>(
@@ -186,21 +186,6 @@ module {
         }
       }
     )
-  };
-
-  /// Create a new array by appending the values of `array1` and `array2`.
-  /// @deprecated `Array.append` copies its arguments and has linear complexity. To silence this warning, consider using `Array.concat` instead.
-  /// 
-  /// ```motoko include=import
-  /// let array1 = [1, 2, 3];
-  /// let array2 = [4, 5, 6];
-  /// Array.append<Nat>(array1, array2)
-  /// ```
-  /// Runtime: O(size1 + size2)
-  ///
-  /// Space: O(size1 + size2)
-  public func append<X>(array1 : [X], array2 : [X]) : [X] {
-    concat(array1, array2)
   };
 
   // FIXME this example stack overflows. Should test with new implementation of sortInPlace
