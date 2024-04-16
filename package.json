@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/dfinity/motoko-base#readme",
   "devDependencies": {
+    "execa": "^4.1.0",
     "fast-glob": "^3.2.12",
     "husky": "^8.0.2",
     "ic-mops": "^0.39.2",
