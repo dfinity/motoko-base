@@ -206,7 +206,7 @@ module {
     }
   };
 
-  /// Converts an upper cased #Ok, #Err result type into a lowercased #ok, #err result type.
+  /// Converts an upper cased `#Ok`, `#Err` result type into a lowercased `#ok`, `#err` result type.
   /// On the IC, a common convention is to use `#Ok` and `#Err` as the variants of a result type,
   /// but in Motoko, we use `#ok` and `#err` instead.
   public func fromUpper<Ok, Err>(
