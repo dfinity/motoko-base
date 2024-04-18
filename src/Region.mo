@@ -14,7 +14,7 @@
 /// Regions are stateful objects and can be distinguished by the numeric identifier returned by function `id(region)`.
 /// Every region owns an initially empty, but growable sequence of virtual IC stable memory pages. 
 /// The current size, in pages, of a region is returned by function `size(region)`.
-/// The size of a region determines the range, [0..2^(16*size(region))), of valid byte-offsets into the region; these offsets are used as the source and destination of `load`/`store` operations on the region.
+/// The size of a region determines the range, [0..2^(16*size(region)), of valid byte-offsets into the region; these offsets are used as the source and destination of `load`/`store` operations on the region.
 ///
 /// Memory is allocated to a region, using function `grow(region, pages)`, sequentially and on demand, in units of 64KiB logical pages, starting with 0 allocated pages.
 /// A call to `grow` may succeed, returning the previous size of the region, or fail, returning a sentinel value. New pages are zero initialized.
