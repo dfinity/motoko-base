@@ -22,7 +22,7 @@
 /// The `put`, `get` and `remove` operations work over `Key` records,
 /// which group the hash of the key with its non-hash key value.
 ///
-/// LIMITATIONS: this data structure allows at most MAX_LEAF_SIZE=8 hash collisions:
+/// LIMITATIONS: This data structure allows at most MAX_LEAF_SIZE=8 hash collisions:
 /// attempts to insert more than 8 keys (whether directly via `put` or indirectly via other operations) with the same hash value will trap.
 ///
 /// Example:
