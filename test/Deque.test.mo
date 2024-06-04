@@ -513,7 +513,7 @@ run(
     [
       test(
         "random insertion and deletion",
-        isSorted(randomInsertionDeletion(1000)),
+        isSorted(randomInsertionDeletion(10000)),
         M.equals(T.bool(true))
       )
     ]
