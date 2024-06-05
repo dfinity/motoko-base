@@ -507,7 +507,7 @@ module {
         case (#success) {
           return true
         };
-        case (#empty(cs1)) {
+        case (#empty(_cs1)) {
           return false
         };
         case (#fail(cs1, c)) {
@@ -745,7 +745,7 @@ module {
               case (#success) {
                 matchSize += size
               }; // continue
-              case (#empty(cs3)) {
+              case (#empty(_cs3)) {
                 switch (cs1.next()) {
                   case null break l;
                   case (?_) return t

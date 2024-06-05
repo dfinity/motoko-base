@@ -394,7 +394,7 @@ module {
   func getRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : ?Y {
     switch t {
       case (#leaf) { null };
-      case (#node(c, l, xy, r)) {
+      case (#node(_c, l, xy, r)) {
         switch (compare(x, xy.0)) {
           case (#less) { getRec(x, compare, l) };
           case (#equal) { xy.1 };

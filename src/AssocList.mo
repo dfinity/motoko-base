@@ -155,7 +155,7 @@ module {
         case (?((k, v1), tl)) {
           switch (find<K, W>(map2, k, equal)) {
             case (null) { ?((k, v1), rec(tl)) };
-            case (?v2) { rec(tl) }
+            case (?_v2) { rec(tl) }
           }
         }
       }
@@ -310,7 +310,7 @@ module {
         case (?((k, v1), tl)) {
           switch (find<K, W>(map2, k, equal)) {
             case (null) { ?((k, combine(?v1, null)), rec1(tl)) };
-            case (?v2) { /* handled above */ rec1(tl) }
+            case (?_v2) { /* handled above */ rec1(tl) }
           }
         }
       }

@@ -67,7 +67,7 @@ module {
     public func peek() : ?T {
       switch stack {
         case null { null };
-        case (?(h, t)) { ?h }
+        case (?(h, _)) { ?h }
       }
     };
 
