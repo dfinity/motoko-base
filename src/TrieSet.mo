@@ -46,7 +46,7 @@ module {
                 stack := stack2;
                 next()
               };
-              case (#leaf({ size = c; keyvals = ?((k, v), kvs) })) {
+              case (#leaf({ size = c; keyvals = ?((k, _v), kvs) })) {
                 stack := ?(#leaf({ size = c - 1; keyvals = kvs }), stack2);
                 ?k
               };

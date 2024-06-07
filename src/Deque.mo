@@ -115,8 +115,8 @@ module {
   ///
   public func peekFront<T>(deque : Deque<T>) : ?T {
     switch deque {
-      case (?(x, f), r) { ?x };
-      case (null, ?(x, r)) { ?x };
+      case (?(x, _f), _r) { ?x };
+      case (null, ?(x, _r)) { ?x };
       case _ { null }
     }
   };
@@ -196,8 +196,8 @@ module {
   ///
   public func peekBack<T>(deque : Deque<T>) : ?T {
     switch deque {
-      case (f, ?(x, r)) { ?x };
-      case (?(x, r), null) { ?x };
+      case (_f, ?(x, _r)) { ?x };
+      case (?(x, _r), null) { ?x };
       case _ { null }
     }
   };
