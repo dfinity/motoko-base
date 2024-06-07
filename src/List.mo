@@ -133,7 +133,7 @@ module {
   public func get<T>(l : List<T>, n : Nat) : ?T {
     switch (n, l) {
       case (_, null) { null };
-      case (0, (?(h, t))) { ?h };
+      case (0, (?(h, _))) { ?h };
       case (_, (?(_, t))) { get<T>(t, n - 1) }
     }
   };
@@ -421,7 +421,7 @@ module {
     switch (l, n) {
       case (l_, 0) { l_ };
       case (null, _) { null };
-      case ((?(h, t)), m) { drop<T>(t, m - 1) }
+      case ((?(_, t)), m) { drop<T>(t, m - 1) }
     }
   };
 
