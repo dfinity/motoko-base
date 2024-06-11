@@ -46,6 +46,9 @@ import Prim "mo:⛔";
 
 module {
 
+  let deprecationWarning = "ExperimentalStableMemory has been deprecated.
+    Please use the StableRegions library instead: https://internetcomputer.org/docs/current/motoko/main/stable-memory/stable-regions/#the-region-library.";
+
   /// Current size of the stable memory, in pages.
   /// Each page is 64KiB (65536 bytes).
   /// Initially `0`.
@@ -59,7 +62,10 @@ module {
   /// let afterSize = StableMemory.size();
   /// afterSize - beforeSize // => 10
   /// ```
-  public let size : () -> (pages : Nat64) = Prim.stableMemorySize;
+  public func size(): (pages : Nat64) {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemorySize();
+  };
 
   /// Grow current `size` of stable memory by the given number of pages.
   /// Each page is 64KiB (65536 bytes).
@@ -80,7 +86,10 @@ module {
   /// let afterSize = StableMemory.size();
   /// afterSize - beforeSize // => 10
   /// ```
-  public let grow : (newPages : Nat64) -> (oldPages : Nat64) = Prim.stableMemoryGrow;
+  public func grow(newPages: Nat64) : (oldPages : Nat64) {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryGrow(newPages);
+  };
 
   /// Returns a query that, when called, returns the number of bytes of (real) IC stable memory that would be
   /// occupied by persisting its current stable variables before an upgrade.
@@ -102,7 +111,10 @@ module {
   ///   };
   /// };
   /// ```
-  public let stableVarQuery : () -> (shared query () -> async { size : Nat64 }) = Prim.stableVarQuery;
+  public func stableVarQuery() : (shared query () -> async { size : Nat64 }) {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableVarQuery();
+  };
 
   /// Loads a `Nat32` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -114,7 +126,10 @@ module {
   /// StableMemory.storeNat32(offset, value);
   /// StableMemory.loadNat32(offset) // => 123
   /// ```
-  public let loadNat32 : (offset : Nat64) -> Nat32 = Prim.stableMemoryLoadNat32;
+  public func loadNat32(offset : Nat64) : Nat32 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadNat32(offset);
+  };
 
   /// Stores a `Nat32` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -126,7 +141,10 @@ module {
   /// StableMemory.storeNat32(offset, value);
   /// StableMemory.loadNat32(offset) // => 123
   /// ```
-  public let storeNat32 : (offset : Nat64, value : Nat32) -> () = Prim.stableMemoryStoreNat32;
+  public func storeNat32(offset : Nat64, value : Nat32) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreNat32(offset, value);
+  };
 
   /// Loads a `Nat8` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -138,7 +156,10 @@ module {
   /// StableMemory.storeNat8(offset, value);
   /// StableMemory.loadNat8(offset) // => 123
   /// ```
-  public let loadNat8 : (offset : Nat64) -> Nat8 = Prim.stableMemoryLoadNat8;
+  public func loadNat8(offset : Nat64) : Nat8 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadNat8(offset);
+  };
 
   /// Stores a `Nat8` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -150,7 +171,10 @@ module {
   /// StableMemory.storeNat8(offset, value);
   /// StableMemory.loadNat8(offset) // => 123
   /// ```
-  public let storeNat8 : (offset : Nat64, value : Nat8) -> () = Prim.stableMemoryStoreNat8;
+  public func storeNat8(offset : Nat64, value : Nat8) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreNat8(offset, value);
+  };
 
   /// Loads a `Nat16` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -162,7 +186,10 @@ module {
   /// StableMemory.storeNat16(offset, value);
   /// StableMemory.loadNat16(offset) // => 123
   /// ```
-  public let loadNat16 : (offset : Nat64) -> Nat16 = Prim.stableMemoryLoadNat16;
+  public func loadNat16(offset : Nat64) : Nat16 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadNat16(offset);
+  };
 
   /// Stores a `Nat16` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -174,7 +201,10 @@ module {
   /// StableMemory.storeNat16(offset, value);
   /// StableMemory.loadNat16(offset) // => 123
   /// ```
-  public let storeNat16 : (offset : Nat64, value : Nat16) -> () = Prim.stableMemoryStoreNat16;
+  public func storeNat16(offset : Nat64, value : Nat16) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreNat16(offset, value);
+  };
 
   /// Loads a `Nat64` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -186,7 +216,10 @@ module {
   /// StableMemory.storeNat64(offset, value);
   /// StableMemory.loadNat64(offset) // => 123
   /// ```
-  public let loadNat64 : (offset : Nat64) -> Nat64 = Prim.stableMemoryLoadNat64;
+  public func loadNat64(offset : Nat64) : Nat64 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadNat64(offset);
+  };
 
   /// Stores a `Nat64` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -198,7 +231,10 @@ module {
   /// StableMemory.storeNat64(offset, value);
   /// StableMemory.loadNat64(offset) // => 123
   /// ```
-  public let storeNat64 : (offset : Nat64, value : Nat64) -> () = Prim.stableMemoryStoreNat64;
+  public func storeNat64(offset : Nat64, value : Nat64) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreNat64(offset, value);
+  };
 
   /// Loads an `Int32` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -210,7 +246,10 @@ module {
   /// StableMemory.storeInt32(offset, value);
   /// StableMemory.loadInt32(offset) // => 123
   /// ```
-  public let loadInt32 : (offset : Nat64) -> Int32 = Prim.stableMemoryLoadInt32;
+  public func loadInt32(offset : Nat64) : Int32 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadInt32(offset);
+  };
 
   /// Stores an `Int32` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -222,7 +261,10 @@ module {
   /// StableMemory.storeInt32(offset, value);
   /// StableMemory.loadInt32(offset) // => 123
   /// ```
-  public let storeInt32 : (offset : Nat64, value : Int32) -> () = Prim.stableMemoryStoreInt32;
+  public func storeInt32(offset : Nat64, value : Int32) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreInt32(offset, value);
+  };
 
   /// Loads an `Int8` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -234,7 +276,10 @@ module {
   /// StableMemory.storeInt8(offset, value);
   /// StableMemory.loadInt8(offset) // => 123
   /// ```
-  public let loadInt8 : (offset : Nat64) -> Int8 = Prim.stableMemoryLoadInt8;
+  public func loadInt8(offset : Nat64) : Int8 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadInt8(offset);
+  };
 
   /// Stores an `Int8` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -246,7 +291,10 @@ module {
   /// StableMemory.storeInt8(offset, value);
   /// StableMemory.loadInt8(offset) // => 123
   /// ```
-  public let storeInt8 : (offset : Nat64, value : Int8) -> () = Prim.stableMemoryStoreInt8;
+  public func storeInt8(offset : Nat64, value : Int8) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreInt8(offset, value);
+  };
 
   /// Loads an `Int16` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -258,7 +306,10 @@ module {
   /// StableMemory.storeInt16(offset, value);
   /// StableMemory.loadInt16(offset) // => 123
   /// ```
-  public let loadInt16 : (offset : Nat64) -> Int16 = Prim.stableMemoryLoadInt16;
+  public func loadInt16(offset : Nat64) : Int16 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadInt16(offset)
+  };
 
   /// Stores an `Int16` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -270,7 +321,10 @@ module {
   /// StableMemory.storeInt16(offset, value);
   /// StableMemory.loadInt16(offset) // => 123
   /// ```
-  public let storeInt16 : (offset : Nat64, value : Int16) -> () = Prim.stableMemoryStoreInt16;
+  public func storeInt16(offset : Nat64, value : Int16) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreInt16(offset, value);
+  };
 
   /// Loads an `Int64` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -282,7 +336,10 @@ module {
   /// StableMemory.storeInt64(offset, value);
   /// StableMemory.loadInt64(offset) // => 123
   /// ```
-  public let loadInt64 : (offset : Nat64) -> Int64 = Prim.stableMemoryLoadInt64;
+  public func loadInt64(offset : Nat64) : Int64 {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadInt64(offset);
+  };
 
   /// Stores an `Int64` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -294,7 +351,10 @@ module {
   /// StableMemory.storeInt64(offset, value);
   /// StableMemory.loadInt64(offset) // => 123
   /// ```
-  public let storeInt64 : (offset : Nat64, value : Int64) -> () = Prim.stableMemoryStoreInt64;
+  public func storeInt64(offset : Nat64, value : Int64) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreInt64(offset, value);
+  };
 
   /// Loads a `Float` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -306,7 +366,10 @@ module {
   /// StableMemory.storeFloat(offset, value);
   /// StableMemory.loadFloat(offset) // => 1.25
   /// ```
-  public let loadFloat : (offset : Nat64) -> Float = Prim.stableMemoryLoadFloat;
+  public func loadFloat(offset : Nat64) : Float {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadFloat(offset);
+  };
 
   /// Stores a `Float` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
@@ -318,7 +381,10 @@ module {
   /// StableMemory.storeFloat(offset, value);
   /// StableMemory.loadFloat(offset) // => 1.25
   /// ```
-  public let storeFloat : (offset : Nat64, value : Float) -> () = Prim.stableMemoryStoreFloat;
+  public func storeFloat(offset : Nat64, value : Float) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreFloat(offset, value);
+  };
 
   /// Load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on an out-of-bounds access.
@@ -333,7 +399,10 @@ module {
   /// StableMemory.storeBlob(offset, value);
   /// Blob.toArray(StableMemory.loadBlob(offset, size)) // => [1, 2, 3]
   /// ```
-  public let loadBlob : (offset : Nat64, size : Nat) -> Blob = Prim.stableMemoryLoadBlob;
+  public func loadBlob(offset : Nat64, size : Nat) : Blob {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryLoadBlob(offset, size);
+  };
 
   /// Write bytes of `blob` beginning at `offset`.
   /// Traps on an out-of-bounds access.
@@ -348,6 +417,9 @@ module {
   /// StableMemory.storeBlob(offset, value);
   /// Blob.toArray(StableMemory.loadBlob(offset, size)) // => [1, 2, 3]
   /// ```
-  public let storeBlob : (offset : Nat64, value : Blob) -> () = Prim.stableMemoryStoreBlob;
+  public func storeBlob(offset : Nat64, value : Blob) : () {
+    Prim.debugPrint(deprecationWarning);
+    Prim.stableMemoryStoreBlob(offset, value)
+  };
 
 }
