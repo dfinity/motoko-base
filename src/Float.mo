@@ -149,7 +149,7 @@ module {
   public let floor : (x : Float) -> Float = Prim.floatFloor;
 
   /// Returns the nearest integral float not greater in magnitude than `x`.
-  /// This is equilvent to returning `x` with truncating its decimal places.
+  /// This is equivalent to returning `x` with truncating its decimal places.
   ///
   /// Special cases:
   /// ```
