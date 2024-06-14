@@ -2,7 +2,7 @@
 
 STDLIB ?= ../src
 MOC ?= moc
-WASMTIME_OPTIONS = -C cache=n -W nan-canonicalization=y -W multi-memory -W bulk-memory
+WASMTIME_OPTIONS = -C cache=n -W nan-canonicalization=y -W memory64 -W multi-memory -W bulk-memory
 
 OUTDIR=_out
 
