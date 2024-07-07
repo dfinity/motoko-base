@@ -33,7 +33,7 @@ writeFileSync(outFile, source, "utf8");
   const wasmFile = join(outDir, `${baseFilename}.wasm`);
   const { stdout, stderr } = await execa(
     mocPath,
-    [outFile, "-wasi-system-api", "-o", wasmFile],
+    [outFile, "-wasi-system-api", "--experimental-stable-memory", "1", "-o", wasmFile],
     {
       stdio: "pipe",
       encoding: "utf8",
