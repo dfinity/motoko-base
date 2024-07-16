@@ -1,3 +1,7 @@
+## 0.11.3
+
+(nothing)
+
 ## 0.11.2
 
 * Uppercase `Result` variants (#626).
