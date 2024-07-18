@@ -76,8 +76,20 @@ module {
 
     // hashBlob is a CRC32 implementation
     let crc32Bytes = nat32ToByteArray(Prim.hashBlob hashSum);
+    let crc32BytesSize = crc32Bytes.size();
+    let hashSumArray = Blob.toArray(hashSum);
+    let hashSumArraySize = hashSumArray.size();
 
-    Blob.fromArray(Array.append(crc32Bytes, Blob.toArray(hashSum)))
+    Blob.fromArray(Prim.Array_tabulate<Nat8>(
+      crc32BytesSize + hashSumArraySize,
+      func (i) {
+        if (i < crc32BytesSize) {
+          crc32Bytes[i]
+        } else {
+          hashSumArray[i - crc32BytesSize]
+        }
+      }
+    ));
   };
 
   /// Convert a `Principal` to its `Blob` (bytes) representation.
