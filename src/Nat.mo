@@ -26,10 +26,10 @@ module {
   /// ```motoko include=import
   /// Nat.toText 1234 // => "1234"
   /// ```
-  public func toText(n : Nat) : Text = Int.toText n;
+  let toText : Nat -> Text = Int.toText;
 
   /// Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
-  public func hash(n : Nat) : Hash.Hash = Int.hash n;
+  let hash : Nat -> Hash.Hash = Int.hash;
 
   /// Creates a natural number from its textual representation. Returns `null`
   /// if the input is not a valid natural number.
