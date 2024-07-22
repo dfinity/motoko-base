@@ -401,48 +401,6 @@ module {
     rec(map)
   };
 
-  /// Returns an Iterator (`Iter`) over the key-value pairs in the list.
-  /// Iterator provides a single method `next()`, which returns
-  /// pairs in no specific order, or `null` when out of pairs to iterate over.
-  ///
-  /// Example:
-  /// ```motoko include=import,initialize
-  /// // Create map = [(0, 10), (1, 11), (2, 12)]
-  /// var map : AssocList<Nat, Nat> = null;
-  /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
-  /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
-  /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
-  ///
-  /// var pairs = "";
-  /// for ((key, value) in map.entries()) {
-  ///   pairs := "(" # key # ", " # Nat.toText(value) # ") " # pairs
-  /// };
-  /// pairs // => "(0, 10) (1, 11) (2, 12)"
-  /// ```
-  ///
-  /// Cost of iteration over all pairs:
-  ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
-  public func entries<K, V>(
-    assocList : AssocList<K, V>,
-  ) : Iter.Iter<(K, V)> {
-    var currentList = assocList;
-
-    func next(): ?(K, V) {
-      switch (currentList) {
-        case (null) null;
-        case (?((k, v), kvsTail)) {
-          currentList := kvsTail;
-          return ?(k, v);
-        };
-      }
-    };
-
-    return { next };
-  };
-
   /// Returns an Iterator (`Iter`) over the keys of the list.
   /// Iterator provides a single method `next()`, which returns
   /// keys in no specific order, or `null` when out of keys to iterate over.
@@ -468,7 +426,7 @@ module {
   ///
   /// Space: O(1)
   public func keys<K, V>(assocList : AssocList<K, V>) : Iter.Iter<K> {
-    Iter.map(entries<K, V>(assocList), func(kv : (K, V)) : K { kv.0 })
+    Iter.map(List.toIter<(K, V)>(assocList), func(kv : (K, V)) : K { kv.0 })
   };
 
   /// Returns an Iterator (`Iter`) over the values of the list.
@@ -496,6 +454,6 @@ module {
   ///
   /// Space: O(1)
   public func vals<K, V>(assocList : AssocList<K, V>) : Iter.Iter<V> {
-    Iter.map(entries<K, V>(assocList), func(kv : (K, V)) : V { kv.1 })
+    Iter.map(List.toIter<(K, V)>(assocList), func(kv : (K, V)) : V { kv.1 })
   };
 }
