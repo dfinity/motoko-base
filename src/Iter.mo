@@ -113,7 +113,7 @@ module {
   /// Takes a function and an iterator and returns a new iterator that produces
   /// elements from the original iterator if and only if the predicate is true.
   /// ```motoko
-  /// import Iter "o:base/Iter";
+  /// import Iter "mo:base/Iter";
   /// let iter = Iter.range(1, 3);
   /// let mappedIter = Iter.filter(iter, func (x : Nat) : Bool { x % 2 == 1 });
   /// assert(?1 == mappedIter.next());
@@ -156,7 +156,7 @@ module {
   /// Takes two iterators and returns a new iterator that produces
   /// elements from the original iterators sequentally.
   /// ```motoko
-  /// import Iter "o:base/Iter";
+  /// import Iter "mo:base/Iter";
   /// let iter1 = Iter.range(1, 2);
   /// let iter2 = Iter.range(5, 6);
   /// let concatenatedIter = Iter.concat(iter1, iter2);
