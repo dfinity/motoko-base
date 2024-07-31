@@ -113,7 +113,7 @@ module {
   /// Takes a function and an iterator and returns a new iterator that produces
   /// elements from the original iterator if and only if the predicate is true.
   /// ```motoko
-  /// import Iter "o:base/Iter";
+  /// import Iter "mo:base/Iter";
   /// let iter = Iter.range(1, 3);
   /// let mappedIter = Iter.filter(iter, func (x : Nat) : Bool { x % 2 == 1 });
   /// assert(?1 == mappedIter.next());
@@ -151,6 +151,37 @@ module {
     public func next() : ?A {
       ?x
     }
+  };
+
+  /// Takes two iterators and returns a new iterator that produces
+  /// elements from the original iterators sequentally.
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter1 = Iter.range(1, 2);
+  /// let iter2 = Iter.range(5, 6);
+  /// let concatenatedIter = Iter.concat(iter1, iter2);
+  /// assert(?1 == concatenatedIter.next());
+  /// assert(?2 == concatenatedIter.next());
+  /// assert(?5 == concatenatedIter.next());
+  /// assert(?6 == concatenatedIter.next());
+  /// assert(null == concatenatedIter.next());
+  /// ```
+  public func concat<A>(a : Iter<A>, b : Iter<A>) : Iter<A> {
+    var aEnded : Bool = false;
+    object {
+      public func next() : ?A {
+        if (aEnded) {
+          return b.next();
+        };
+        switch (a.next()) {
+          case (?x) ?x;
+          case (null) {
+            aEnded := true;
+            b.next();
+          };
+        };
+      };
+    };
   };
 
   /// Creates an iterator that produces the elements of an Array in ascending index order.
@@ -196,7 +227,7 @@ module {
   /// ```
   public func toArray<A>(xs : Iter<A>) : [A] {
     let buffer = Buffer.Buffer<A>(8);
-    iterate(xs, func(x : A, _ix : Nat) { buffer.add(x) });
+    iterate(xs, func(x : A, _ : Nat) { buffer.add(x) });
     return Buffer.toArray(buffer)
   };
 
