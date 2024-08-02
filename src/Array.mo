@@ -205,11 +205,14 @@ module {
   ///
   /// Space: O(size)
   /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func sort<X>(array : [X], isLessThanOrEqual : (X, X) -> Bool) : [X] {
-    let compare = Order.lteToOrder(isLessThanOrEqual);
+  public func sort<X>(array : [X], compare : (X, X) -> Order.Order) : [X] {
     let temp : [var X] = thaw(array);
     sortInPlace(temp, compare);
     freeze(temp)
+  };
+  public func sortByLessThanOrEqual<X>(array : [X], isLessThanOrEqual : (X, X) -> Bool) : [X] {
+      let compare = Order.lteToOrder(isLessThanOrEqual);
+      sort(array, compare);
   };
 
   /// Sorts the elements in the array, __in place__, according to `compare`.
