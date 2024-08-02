@@ -12,6 +12,7 @@ import Int "Int";
 import Order "Order";
 import Prim "mo:⛔";
 import Char "Char";
+import Hash "Hash";
 
 module {
 
@@ -26,6 +27,9 @@ module {
   /// Nat.toText 1234 // => "1234"
   /// ```
   public func toText(n : Nat) : Text = Int.toText n;
+  public func hash(n : Nat) : Hash.Hash = Hash.hash(n);
+  public func abs(n : Int) : Nat = Int.abs n;
+  public func fromInt(n : Int) : Nat = Int.abs n;
 
   /// Creates a natural number from its textual representation. Returns `null`
   /// if the input is not a valid natural number.

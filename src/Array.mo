@@ -160,6 +160,9 @@ module {
     };
     return null
   };
+  public func exists<X>(array : [X], predicate : X -> Bool) : Bool {
+      Option.isSome(find(array, predicate))
+  };
 
   /// Create a new array by appending the values of `array1` and `array2`.
   /// Note that `Array.append` copies its arguments and has linear complexity;
@@ -202,7 +205,8 @@ module {
   ///
   /// Space: O(size)
   /// *Runtime and space assumes that `compare` runs in O(1) time and space.
-  public func sort<X>(array : [X], compare : (X, X) -> Order.Order) : [X] {
+  public func sort<X>(array : [X], isLessThanOrEqual : (X, X) -> Bool) : [X] {
+    let compare = Order.lteToOrder(isLessThanOrEqual);
     let temp : [var X] = thaw(array);
     sortInPlace(temp, compare);
     freeze(temp)
@@ -575,6 +579,7 @@ module {
 
     accumulation
   };
+  public let fold = foldLeft;
 
   // FIXME the type arguments are reverse order from Buffer
   /// Collapses the elements in `array` into a single value by starting with `base`

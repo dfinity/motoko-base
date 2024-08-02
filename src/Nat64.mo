@@ -8,6 +8,7 @@
 /// ```
 import Nat "Nat";
 import Prim "mo:⛔";
+import Hash "Hash";
 
 module {
 
@@ -40,6 +41,7 @@ module {
   /// Nat64.fromNat(123); // => 123 : Nat64
   /// ```
   public let fromNat : Nat -> Nat64 = Prim.natToNat64;
+  public func hash(n : Nat64) : Hash.Hash = Hash.hash(toNat n);
 
   /// Converts a 32-bit unsigned integer to a 64-bit unsigned integer.
   ///
