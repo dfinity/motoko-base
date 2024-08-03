@@ -163,6 +163,9 @@ module {
   public func exists<X>(array : [X], predicate : X -> Bool) : Bool {
       Option.isSome(find(array, predicate))
   };
+  public func forall<X>(array : [X], predicate : X -> Bool) : Bool {
+      not exists(array, func x = not (predicate x))
+  };
 
   /// Create a new array by appending the values of `array1` and `array2`.
   /// Note that `Array.append` copies its arguments and has linear complexity;
