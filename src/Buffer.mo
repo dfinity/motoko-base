@@ -1050,6 +1050,18 @@ module {
 
     null
   };
+  public func find<X>(buffer : Buffer<X>, equal : X -> Bool) : ?X {
+      let size = buffer.size();
+      var i = 0;
+      while (i < size) {
+          let x = buffer.get(i);
+          if (equal(x)) {
+            return ?x
+          };
+          i += 1
+      };
+      null
+  };
 
   /// Finds the last index of `element` in `buffer` using equality of elements defined
   /// by `equal`. Returns `null` if `element` is not found.
@@ -2367,6 +2379,20 @@ module {
     };
 
     (buffer1, buffer2)
+  };
+  /// Slice buffer from [start, end).
+  public func slice<X>(buffer : Buffer<X>, start : Nat, end : Nat) : Buffer<X> {
+    let size = buffer.size();
+    if (start < 0 or start > size or end < 0 or end > size or start > end) {
+      Prim.trap "Index out of bounds in slice"
+    };
+    let newBuffer = Buffer<X>(newCapacity(end - start));
+    var i = start;
+    while (i < end) {
+      newBuffer.add(buffer.get(i));
+      i += 1
+    };
+    newBuffer
   };
 
   /// Breaks up `buffer` into buffers of size `size`. The last chunk may
