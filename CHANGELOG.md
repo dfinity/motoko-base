@@ -1,3 +1,7 @@
+## 0.12.1
+
+* Add `Iter.concat` function (thanks to AndyGura) (#650).
+
 ## 0.12.0
 
 (nothing)
