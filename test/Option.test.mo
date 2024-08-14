@@ -14,7 +14,7 @@ do {
     let expected : ?Bool = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {
@@ -30,7 +30,7 @@ do {
     let expected : ?Bool = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {
@@ -50,7 +50,7 @@ do {
     let expected : ?Bool = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {
@@ -99,7 +99,7 @@ do {
     let expected : ?Int = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {
@@ -123,7 +123,7 @@ do {
     let expected : ?Int = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {
@@ -168,7 +168,7 @@ do {
     let expected : ?Int = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {
@@ -208,7 +208,7 @@ do {
     let expected : ?Bool = null;
 
     switch (actual, expected) {
-      case (?actual_, ?expected_) {
+      case (?_actual_, ?_expected_) {
         assert (false)
       };
       case (_, _) {

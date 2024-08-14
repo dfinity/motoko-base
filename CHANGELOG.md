@@ -1,3 +1,21 @@
+## 0.12.1
+
+* Add `Iter.concat` function (thanks to AndyGura) (#650).
+
+## 0.12.0
+
+(nothing)
+
+## 0.11.3
+
+(nothing)
+
+## 0.11.2
+
+* Uppercase `Result` variants (#626).
+
+* Un-deprecated `Array.append` (#630).
+
 ## 0.11.1
 
 (nothing)
@@ -6,7 +24,7 @@
 
 * Added `Option.equal` function (thanks to ByronBecker) (#615).
 
-* Invoking `setTimer`, `ExperimentalCycles.add`, etc. now requires `system` capability (#622)
+* Invoking `setTimer`, `ExperimentalCycles.add`, etc. now requires `system` capability (#622).
 
 * Added `bitshiftLeft`/`bitshiftRight` to `Nat` (#613).
   This was added as part of #622 by mistake.
