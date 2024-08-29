@@ -2,6 +2,7 @@
 
 import Debug "../src/Debug";
 import Float "../src/Float";
+import Text "../src/Text";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -112,6 +113,41 @@ class NegativeNaNMatcher() : M.Matcher<Float> {
 
   public func matches(number : Float) : Bool {
     isNegativeNaN(number)
+  }
+};
+
+// The Rust float formatter prints `NaN`.
+// The Musl float formatter prints `nan`.
+class PositiveNaNTextMatcher() : M.Matcher<Text> {
+  public func describeMismatch(text : Text, _description : M.Description) {
+    Debug.print("'" # text # "' should be 'NaN' or 'nan', depending on the Motoko version and runtime configuration")
+  };
+
+  public func matches(text : Text) : Bool {
+    text == "NaN" or text == "nan"
+  }
+};
+
+// The Rust float formatter ignores the sign of NaN and emits `NaN`.
+// The Musl float formatter prints `-nan`.
+class NegativeNaNTextMatcher() : M.Matcher<Text> {
+  public func describeMismatch(text : Text, _description : M.Description) {
+    Debug.print("'" # text # "' should be 'NaN' or '-nan', depending on the Motoko version and runtime configuration")
+  };
+
+  public func matches(text : Text) : Bool {
+    text == "NaN" or text == "-nan"
+  }
+};
+
+// Account for different numerical errors becoming visible in float formatting.
+class TextPrefixMatcher(prefix : Text) : M.Matcher<Text> {
+  public func describeMismatch(text : Text, _description : M.Description) {
+    Debug.print("'" # text # "' does not start with '" # prefix # "'")
+  };
+
+  public func matches(text : Text) : Bool {
+    Text.startsWith(text, #text prefix)
   }
 };
 
@@ -1431,22 +1467,22 @@ run(
       test(
         "exact positive",
         Float.format(#exact, 20.12345678901),
-        M.equals(T.text("20.12345678900999957"))
+        TextPrefixMatcher("20.1234567890")
       ),
       test(
         "exact negative",
         Float.format(#exact, -20.12345678901),
-        M.equals(T.text("-20.12345678900999957"))
+        TextPrefixMatcher("-20.1234567890")
       ),
       test(
         "exact positive zero",
         Float.format(#exact, positiveZero),
-        M.equals(T.text("0.00000000000000000"))
+        M.anyOf([M.equals(T.text("0")), M.equals(T.text("0.00000000000000000"))])
       ),
       test(
         "exact negative zero",
         Float.format(#exact, negativeZero),
-        M.equals(T.text("-0.00000000000000000"))
+        M.anyOf([M.equals(T.text("-0")), M.equals(T.text("-0.00000000000000000"))])
       ),
       test(
         "exact positive infinity",
@@ -1461,14 +1497,13 @@ run(
       test(
         "exact positive NaN",
         Float.format(#exact, positiveNaN),
-        M.equals(T.text("NaN"))
+        PositiveNaNTextMatcher()
       ),
-      // TODO: Support in 64-bit mode
-      // test(
-      //   "exact negative NaN",
-      //   Float.format(#exact, negativeNaN),
-      //   M.equals(T.text("-NaN"))
-      // ),
+      test(
+        "exact negative NaN",
+        Float.format(#exact, negativeNaN),
+        NegativeNaNTextMatcher()
+      ),
       test(
         "fix positive",
         Float.format(#fix 6, 20.12345678901),
@@ -1502,33 +1537,32 @@ run(
       test(
         "fix positive NaN",
         Float.format(#fix 6, positiveNaN),
-        M.equals(T.text("NaN"))
+        PositiveNaNTextMatcher()
       ),
-      // TODO: Support in 64-bit mode
-      // test(
-      //   "fix negative NaN",
-      //   Float.format(#fix 6, negativeNaN),
-      //   M.equals(T.text("-NaN"))
-      // ),
+      test(
+        "fix negative NaN",
+        Float.format(#fix 6, negativeNaN),
+        NegativeNaNTextMatcher()
+      ),
       test(
         "exp positive",
         Float.format(#exp 9, 20.12345678901),
-        M.equals(T.text("2.012345679e1"))
+        M.anyOf([M.equals(T.text("2.012345679e1")), M.equals(T.text("2.012345679e+01"))])
       ),
       test(
         "exp negative",
         Float.format(#exp 9, -20.12345678901),
-        M.equals(T.text("-2.012345679e1"))
+        M.anyOf([M.equals(T.text("-2.012345679e1")), M.equals(T.text("-2.012345679e+01"))])
       ),
       test(
         "exp positive zero",
         Float.format(#exp 9, positiveZero),
-        M.equals(T.text("0.000000000e0"))
+        M.anyOf([M.equals(T.text("0.000000000e0")), M.equals(T.text("0.000000000e+00"))])
       ),
       test(
         "exp negative zero",
         Float.format(#exp 9, negativeZero),
-        M.equals(T.text("-0.000000000e0"))
+        M.anyOf([M.equals(T.text("-0.000000000e0")), M.equals(T.text("-0.000000000e+00"))])
       ),
       test(
         "exp positive infinity",
@@ -1543,33 +1577,32 @@ run(
       test(
         "exp positive NaN",
         Float.format(#exp 9, positiveNaN),
-        M.equals(T.text("NaN"))
+        PositiveNaNTextMatcher()
       ),
-      // TODO: Support in 64-bit mode
-      // test(
-      //   "exp negative NaN",
-      //   Float.format(#exp 9, negativeNaN),
-      //   M.equals(T.text("-NaN"))
-      // ),
+      test(
+        "exp negative NaN",
+        Float.format(#exp 9, negativeNaN),
+        NegativeNaNTextMatcher()
+      ),
       test(
         "gen positive",
         Float.format(#gen 12, 20.12345678901),
-        M.equals(T.text("20.123456789010"))
+        TextPrefixMatcher("20.123456789")
       ),
       test(
         "gen negative",
         Float.format(#gen 12, -20.12345678901),
-        M.equals(T.text("-20.123456789010"))
+        TextPrefixMatcher("-20.123456789")
       ),
       test(
         "gen positive zero",
         Float.format(#gen 12, positiveZero),
-        M.equals(T.text("0.000000000000"))
+        M.anyOf([M.equals(T.text("0")), M.equals(T.text("0.000000000000"))])
       ),
       test(
         "gen negative zero",
         Float.format(#gen 12, negativeZero),
-        M.equals(T.text("-0.000000000000"))
+        M.anyOf([M.equals(T.text("-0")), M.equals(T.text("-0.000000000000"))])
       ),
       test(
         "gen positive infinity",
@@ -1584,55 +1617,15 @@ run(
       test(
         "gen positive NaN",
         Float.format(#gen 12, positiveNaN),
-        M.equals(T.text("NaN"))
+        PositiveNaNTextMatcher()
       ),
-      // TODO: Support in 64-bit mode
-      // test(
-      //   "gen negative NaN",
-      //   Float.format(#gen 12, negativeNaN),
-      //   M.equals(T.text("-NaN"))
-      // ),
-      // TODO: Not yet supported in 64-bit mode
-      // test(
-      //   "hex positive",
-      //   Float.format(#hex 10, 20.12345678901),
-      //   M.equals(T.text("0x1.41f9add374p+4"))
-      // ),
-      // test(
-      //   "hex negative",
-      //   Float.format(#hex 10, -20.12345678901),
-      //   M.equals(T.text("-0x1.41f9add374p+4"))
-      // ),
-      // test(
-      //   "hex positive zero",
-      //   Float.format(#hex 10, positiveZero),
-      //   M.equals(T.text("0x0.0000000000p+0"))
-      // ),
-      // test(
-      //   "hex negative zero",
-      //   Float.format(#hex 10, negativeZero),
-      //   M.equals(T.text("-0x0.0000000000p+0"))
-      // ),
-      // test(
-      //   "hex positive infinity",
-      //   Float.format(#hex 10, positiveInfinity),
-      //   M.equals(T.text("inf"))
-      // ),
-      // test(
-      //   "hex negative infinity",
-      //   Float.format(#hex 10, negativeInfinity),
-      //   M.equals(T.text("-inf"))
-      // ),
-      // test(
-      //   "hex positive NaN",
-      //   Float.format(#hex 10, positiveNaN),
-      //   M.equals(T.text("nan"))
-      // ),
-      // test(
-      //   "hex negative NaN",
-      //   Float.format(#hex 10, negativeNaN),
-      //   M.equals(T.text("-nan"))
-      // )
+      test(
+        "gen negative NaN",
+        Float.format(#gen 12, negativeNaN),
+        NegativeNaNTextMatcher()
+      ),
+      // hex float formatting was only supported with Musl
+      // and is no longer supported with Rust-implemented formatter.
     ]
   )
 );
@@ -1676,14 +1669,13 @@ run(
       test(
         "positive NaN",
         Float.toText(positiveNaN),
-        M.equals(T.text("NaN"))
+        PositiveNaNTextMatcher()
       ),
-      // TODO: Support in 64-bit mode
-      // test(
-      //   "negative NaN",
-      //   Float.toText(negativeNaN),
-      //   M.equals(T.text("-NaN"))
-      // )
+      test(
+        "negative NaN",
+        Float.toText(negativeNaN),
+        NegativeNaNTextMatcher()
+      )
     ]
   )
 );

@@ -1,3 +1,13 @@
+## Next release
+
+* Breaking change: `Float.format(#hex)` is no longer supported. 
+  This is because newer versions of Motoko (such as with enhanced orthogonal persistence)
+  rely on the Rust-native formatter that does not offer this functionality.
+  It is expected that this formatter is very rarely used in practice.
+
+* Formatter change: The text formatting of `NaN`, positive or negative, can be `NaN`, 
+  `nan`, or `-nan`, depending on the Motoko version and runtime configuration.
+
 ## 0.12.1
 
 * Add `Iter.concat` function (thanks to AndyGura) (#650).

@@ -8,13 +8,21 @@ OUTDIR=_out
 
 TESTS = $(wildcard *.mo)
 
-TEST_TARGETS = $(patsubst %.mo,_out/%.checked,$(TESTS))
+TEST_CLASSICAL_TARGETS = $(patsubst %.mo,_out/%.classical.checked,$(TESTS))
+TEST_ENHANCED_TARGETS = $(patsubst %.mo,_out/%.enhanced.checked,$(TESTS))
 
-all: $(OUTDIR)/import_all.checked $(TEST_TARGETS)
+all: $(OUTDIR)/import_all.classical.checked \
+	$(OUTDIR)/import_all.enhanced.checked \
+	$(TEST_CLASSICAL_TARGETS) \
+	$(TEST_ENHANCED_TARGETS)
 
 STDLIB_FILES= $(wildcard $(STDLIB)/*.mo)
 
 VESSEL_PKGS= $(shell vessel sources)
+
+MOC_COMMON_FLAGS=-c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api
+MOC_CLASSICAL=$(MOC) $(MOC_COMMON_FLAGS)
+MOC_ENHANCED=$(MOC) $(MOC_COMMON_FLAGS) --enhanced-orthogonal-persistence
 
 $(OUTDIR):
 	@mkdir $@
@@ -25,11 +33,17 @@ $(OUTDIR)/import_all.mo: $(STDLIB_FILES) | $(OUTDIR)
 	  echo "import _Import_$$f \"mo:base/$$f\";" >> $@; \
 	done
 
-$(OUTDIR)/%.wasm: %.mo | $(OUTDIR)
-	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
+$(OUTDIR)/%.classical.wasm: %.mo | $(OUTDIR)
+	$(MOC_CLASSICAL) -o $@ $<
 
-$(OUTDIR)/%.wasm: $(OUTDIR)/%.mo | $(OUTDIR)
-	$(MOC) -c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api -o $@ $<
+$(OUTDIR)/%.enhanced.wasm: %.mo | $(OUTDIR)
+	$(MOC_ENHANCED) -o $@ $<
+
+$(OUTDIR)/import_all.classical.wasm: $(OUTDIR)/import_all.mo | $(OUTDIR)
+	$(MOC_CLASSICAL) -o $@ $<
+
+$(OUTDIR)/import_all.enhanced.wasm: $(OUTDIR)/import_all.mo | $(OUTDIR)
+	$(MOC_ENHANCED) -o $@ $<
 
 $(OUTDIR)/%.checked: $(OUTDIR)/%.wasm
 	wasmtime run $(WASMTIME_OPTIONS) $<
