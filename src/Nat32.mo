@@ -7,6 +7,7 @@
 /// import Nat32 "mo:base/Nat32";
 /// ```
 import Nat "Nat";
+import Nat8 "Nat8";
 import Prim "mo:⛔";
 
 module {
@@ -582,5 +583,21 @@ module {
   /// value to pass to a higher order function. It is not possible to use `**%`
   /// as a function value at the moment.
   public func powWrap(x : Nat32, y : Nat32) : Nat32 { x **% y };
+
+  /// Returns [Nat8] of size 4 of the Nat32
+  public func toBytes(x : Nat32) : [Nat8] {
+    [ Prim.natToNat8(Prim.nat32ToNat((x >> 24) & (255))), 
+      Prim.natToNat8(Prim.nat32ToNat((x >> 16) & (255))), 
+      Prim.natToNat8(Prim.nat32ToNat((x >> 8) & (255))), 
+      Prim.natToNat8(Prim.nat32ToNat((x & 255))) ];
+  };
+
+  /// Returns  Nat32 for a four byte array
+  public func fromBytes(x : [Nat8] : Nat32] {
+    (Prim.natToNat32(Prim.nat8ToNat(x[0])) << 24) + 
+    (Prim.natToNat32(Prim.nat8ToNat(x[1])) << 16) +
+    (Prim.natToNat32(Prim.nat8ToNat(x[2])) << 8) +
+    (Prim.natToNat32(Prim.nat8ToNat(x[3])));
+  };
 
 }
