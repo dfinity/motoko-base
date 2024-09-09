@@ -1,12 +1,12 @@
 ## Next release
 
-* Breaking change: `Float.format(#hex)` is no longer supported. 
+* Breaking change (minor): `Float.format(#hex)` is no longer supported. 
   This is because newer versions of Motoko (such as with enhanced orthogonal persistence)
   rely on the Rust-native formatter that does not offer this functionality.
   It is expected that this formatter is very rarely used in practice.
 
-* Formatter change: The text formatting of `NaN`, positive or negative, can be `NaN`, 
-  `nan`, or `-nan`, depending on the Motoko version and runtime configuration.
+* Formatter change (minor): The text formatting of `NaN`, positive or negative, 
+  will be `NaN` in newer Motoko versions, while it was `nan` or `-nan` in older versions.
 
 ## 0.12.1
 
