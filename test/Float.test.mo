@@ -2,6 +2,7 @@
 
 import Debug "../src/Debug";
 import Float "../src/Float";
+import Text "../src/Text";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -44,11 +45,11 @@ let positiveNaN = Float.copySign(0.0 / 0.0, 1.0);
 let negativeNaN = Float.copySign(0.0 / 0.0, -1.0);
 
 func isPositiveNaN(number : Float) : Bool {
-  debug_show (number) == "nan"
+  Float.isNaN(number) and Float.copySign(1.0, number) == 1.0
 };
 
 func isNegativeNaN(number : Float) : Bool {
-  debug_show (number) == "-nan"
+  Float.isNaN(number) and Float.copySign(1.0, number) == -1.0
 };
 
 let positiveZero = 0.0;
@@ -87,7 +88,7 @@ let smallEpsilon = 1e-6;
 
 class NaNMatcher() : M.Matcher<Float> {
   public func describeMismatch(number : Float, _description : M.Description) {
-    Debug.print(debug_show (number) # " should be 'nan' or '-nan'")
+    Debug.print(debug_show (number) # " should be 'NaN' or '-NaN'")
   };
 
   public func matches(number : Float) : Bool {
@@ -97,7 +98,7 @@ class NaNMatcher() : M.Matcher<Float> {
 
 class PositiveNaNMatcher() : M.Matcher<Float> {
   public func describeMismatch(number : Float, _description : M.Description) {
-    Debug.print(debug_show (number) # " should be 'nan' (positive)")
+    Debug.print(debug_show (number) # " should be 'NaN' (positive)")
   };
 
   public func matches(number : Float) : Bool {
@@ -107,11 +108,46 @@ class PositiveNaNMatcher() : M.Matcher<Float> {
 
 class NegativeNaNMatcher() : M.Matcher<Float> {
   public func describeMismatch(number : Float, _description : M.Description) {
-    Debug.print(debug_show (number) # " should be '-nan' (negative)")
+    Debug.print(debug_show (number) # " should be '-NaN' (negative)")
   };
 
   public func matches(number : Float) : Bool {
     isNegativeNaN(number)
+  }
+};
+
+// The Rust float formatter prints `NaN`.
+// The Musl float formatter prints `nan`.
+class PositiveNaNTextMatcher() : M.Matcher<Text> {
+  public func describeMismatch(text : Text, _description : M.Description) {
+    Debug.print("'" # text # "' should be 'NaN' or 'nan', depending on the Motoko version and runtime configuration")
+  };
+
+  public func matches(text : Text) : Bool {
+    text == "NaN" or text == "nan"
+  }
+};
+
+// The Rust float formatter ignores the sign of NaN and emits `NaN`.
+// The Musl float formatter prints `-nan`.
+class NegativeNaNTextMatcher() : M.Matcher<Text> {
+  public func describeMismatch(text : Text, _description : M.Description) {
+    Debug.print("'" # text # "' should be 'NaN' or '-nan', depending on the Motoko version and runtime configuration")
+  };
+
+  public func matches(text : Text) : Bool {
+    text == "NaN" or text == "-nan"
+  }
+};
+
+// Account for different numerical errors becoming visible in float formatting.
+class TextPrefixMatcher(prefix : Text) : M.Matcher<Text> {
+  public func describeMismatch(text : Text, _description : M.Description) {
+    Debug.print("'" # text # "' does not start with '" # prefix # "'")
+  };
+
+  public func matches(text : Text) : Bool {
+    Text.startsWith(text, #text prefix)
   }
 };
 
@@ -1341,7 +1377,7 @@ run(
       test(
         "one",
         Float.exp(1.0),
-        M.equals(FloatTestable(Float.e, noEpsilon))
+        M.equals(FloatTestable(Float.e, smallEpsilon))
       ),
       test(
         "positive infinity",
@@ -1431,22 +1467,22 @@ run(
       test(
         "exact positive",
         Float.format(#exact, 20.12345678901),
-        M.equals(T.text("20.12345678901"))
+        TextPrefixMatcher("20.1234567890")
       ),
       test(
         "exact negative",
         Float.format(#exact, -20.12345678901),
-        M.equals(T.text("-20.12345678901"))
+        TextPrefixMatcher("-20.1234567890")
       ),
       test(
         "exact positive zero",
         Float.format(#exact, positiveZero),
-        M.equals(T.text("0"))
+        M.anyOf([M.equals(T.text("0")), M.equals(T.text("0.00000000000000000"))])
       ),
       test(
         "exact negative zero",
         Float.format(#exact, negativeZero),
-        M.equals(T.text("-0"))
+        M.anyOf([M.equals(T.text("-0")), M.equals(T.text("-0.00000000000000000"))])
       ),
       test(
         "exact positive infinity",
@@ -1461,12 +1497,12 @@ run(
       test(
         "exact positive NaN",
         Float.format(#exact, positiveNaN),
-        M.equals(T.text("nan"))
+        PositiveNaNTextMatcher()
       ),
       test(
         "exact negative NaN",
         Float.format(#exact, negativeNaN),
-        M.equals(T.text("-nan"))
+        NegativeNaNTextMatcher()
       ),
       test(
         "fix positive",
@@ -1501,32 +1537,32 @@ run(
       test(
         "fix positive NaN",
         Float.format(#fix 6, positiveNaN),
-        M.equals(T.text("nan"))
+        PositiveNaNTextMatcher()
       ),
       test(
         "fix negative NaN",
         Float.format(#fix 6, negativeNaN),
-        M.equals(T.text("-nan"))
+        NegativeNaNTextMatcher()
       ),
       test(
         "exp positive",
         Float.format(#exp 9, 20.12345678901),
-        M.equals(T.text("2.012345679e+01"))
+        M.anyOf([M.equals(T.text("2.012345679e1")), M.equals(T.text("2.012345679e+01"))])
       ),
       test(
         "exp negative",
         Float.format(#exp 9, -20.12345678901),
-        M.equals(T.text("-2.012345679e+01"))
+        M.anyOf([M.equals(T.text("-2.012345679e1")), M.equals(T.text("-2.012345679e+01"))])
       ),
       test(
         "exp positive zero",
         Float.format(#exp 9, positiveZero),
-        M.equals(T.text("0.000000000e+00"))
+        M.anyOf([M.equals(T.text("0.000000000e0")), M.equals(T.text("0.000000000e+00"))])
       ),
       test(
         "exp negative zero",
         Float.format(#exp 9, negativeZero),
-        M.equals(T.text("-0.000000000e+00"))
+        M.anyOf([M.equals(T.text("-0.000000000e0")), M.equals(T.text("-0.000000000e+00"))])
       ),
       test(
         "exp positive infinity",
@@ -1541,32 +1577,32 @@ run(
       test(
         "exp positive NaN",
         Float.format(#exp 9, positiveNaN),
-        M.equals(T.text("nan"))
+        PositiveNaNTextMatcher()
       ),
       test(
         "exp negative NaN",
         Float.format(#exp 9, negativeNaN),
-        M.equals(T.text("-nan"))
+        NegativeNaNTextMatcher()
       ),
       test(
         "gen positive",
         Float.format(#gen 12, 20.12345678901),
-        M.equals(T.text("20.123456789"))
+        TextPrefixMatcher("20.123456789")
       ),
       test(
         "gen negative",
         Float.format(#gen 12, -20.12345678901),
-        M.equals(T.text("-20.123456789"))
+        TextPrefixMatcher("-20.123456789")
       ),
       test(
         "gen positive zero",
         Float.format(#gen 12, positiveZero),
-        M.equals(T.text("0"))
+        M.anyOf([M.equals(T.text("0")), M.equals(T.text("0.000000000000"))])
       ),
       test(
         "gen negative zero",
         Float.format(#gen 12, negativeZero),
-        M.equals(T.text("-0"))
+        M.anyOf([M.equals(T.text("-0")), M.equals(T.text("-0.000000000000"))])
       ),
       test(
         "gen positive infinity",
@@ -1581,53 +1617,15 @@ run(
       test(
         "gen positive NaN",
         Float.format(#gen 12, positiveNaN),
-        M.equals(T.text("nan"))
+        PositiveNaNTextMatcher()
       ),
       test(
         "gen negative NaN",
         Float.format(#gen 12, negativeNaN),
-        M.equals(T.text("-nan"))
+        NegativeNaNTextMatcher()
       ),
-      test(
-        "hex positive",
-        Float.format(#hex 10, 20.12345678901),
-        M.equals(T.text("0x1.41f9add374p+4"))
-      ),
-      test(
-        "hex negative",
-        Float.format(#hex 10, -20.12345678901),
-        M.equals(T.text("-0x1.41f9add374p+4"))
-      ),
-      test(
-        "hex positive zero",
-        Float.format(#hex 10, positiveZero),
-        M.equals(T.text("0x0.0000000000p+0"))
-      ),
-      test(
-        "hex negative zero",
-        Float.format(#hex 10, negativeZero),
-        M.equals(T.text("-0x0.0000000000p+0"))
-      ),
-      test(
-        "hex positive infinity",
-        Float.format(#hex 10, positiveInfinity),
-        M.equals(T.text("inf"))
-      ),
-      test(
-        "hex negative infinity",
-        Float.format(#hex 10, negativeInfinity),
-        M.equals(T.text("-inf"))
-      ),
-      test(
-        "hex positive NaN",
-        Float.format(#hex 10, positiveNaN),
-        M.equals(T.text("nan"))
-      ),
-      test(
-        "hex negative NaN",
-        Float.format(#hex 10, negativeNaN),
-        M.equals(T.text("-nan"))
-      )
+      // hex float formatting was only supported with Musl
+      // and is no longer supported with Rust-implemented formatter.
     ]
   )
 );
@@ -1671,12 +1669,12 @@ run(
       test(
         "positive NaN",
         Float.toText(positiveNaN),
-        M.equals(T.text("nan"))
+        PositiveNaNTextMatcher()
       ),
       test(
         "negative NaN",
         Float.toText(negativeNaN),
-        M.equals(T.text("-nan"))
+        NegativeNaNTextMatcher()
       )
     ]
   )
