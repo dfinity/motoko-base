@@ -74,12 +74,12 @@ module {
     /// `(k, v)` in the old map, if `f` evaluates to `null`, the entry is discarded.
     /// Otherwise, the entry is transformed into a new entry `(k, v2)`, where
     /// the new value `v2` is the result of applying `f` to `(k, v)`.
-    public func mapFilter<V1, V2>(f : (K, V1) -> ?V2, rbMap : Map<K, V1>) : Map<K, V2>
-      = Internal.mapFilter(compare, f, rbMap);
+    public func mapFilter<V1, V2>(rbMap : Map<K, V1>, f : (K, V1) -> ?V2) : Map<K, V2>
+      = Internal.mapFilter(rbMap, compare, f);
 
     /// Get the value associated with key `key` in the given `rbMap` if present and `null` otherwise.
-    public func get<V>(key : K, rbMap : Map<K, V>) : ?V
-      = Internal.get(key, compare, rbMap);
+    public func get<V>(rbMap : Map<K, V>, key : K) : ?V
+      = Internal.get(rbMap, compare, key);
 
     /// Deletes the entry with the key `key` from the `rbMap`. Has no effect if `key` is not
     /// present in the map. Returns modified map.
@@ -158,7 +158,7 @@ module {
   /// Creates a new map by applying `f` to each entry in `rbMap`. Each entry
   /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
   /// the new value `v2` is created by applying `f` to `(k, v)`.
-  public func map<K, V1, V2>(f : (K, V1) -> V2, rbMap : Map<K, V1>) : Map<K, V2> {
+  public func map<K, V1, V2>(rbMap : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> {
     func mapRec(m : Map<K, V1>) : Map<K, V2> {
       switch m {
         case (#leaf) { #leaf };
@@ -195,9 +195,9 @@ module {
   /// and progessively combining keys and values into `base` with `combine`. Iteration runs
   /// left to right.
   public func foldLeft<Key, Value, Accum>(
-    combine : (Key, Value, Accum) -> Accum,
+    rbMap : Map<Key, Value>,
     base : Accum,
-    rbMap : Map<Key, Value>
+    combine : (Key, Value, Accum) -> Accum
   ) : Accum
   {
     var acc = base;
@@ -211,9 +211,9 @@ module {
   /// and progessively combining keys and values into `base` with `combine`. Iteration runs
   /// right to left.
   public func foldRight<Key, Value, Accum>(
-    combine : (Key, Value, Accum) -> Accum,
+    rbMap : Map<Key, Value>,
     base : Accum,
-    rbMap : Map<Key, Value>
+    combine : (Key, Value, Accum) -> Accum
   ) : Accum
   {
     var acc = base;
@@ -235,7 +235,7 @@ module {
       map
     };
 
-    public func mapFilter<K, V1, V2>(compare : (K, K) -> O.Order, f : (K, V1) -> ?V2, t : Map<K, V1>) : Map<K, V2>{
+    public func mapFilter<K, V1, V2>(t : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2>{
       var map = #leaf : Map<K, V2>;
       for(kv in iter(t, #fwd))
       {
@@ -251,14 +251,14 @@ module {
       map
     };
 
-    public func get<K, V>(x : K, compare : (K, K) -> O.Order, t : Map<K, V>) : ?V {
+    public func get<K, V>(t : Map<K, V>, compare : (K, K) -> O.Order, x : K) : ?V {
       switch t {
         case (#leaf) { null };
         case (#node(_c, l, xy, r)) {
           switch (compare(x, xy.0)) {
-            case (#less) { get(x, compare, l) };
+            case (#less) { get(l, compare, x) };
             case (#equal) { ?xy.1 };
-            case (#greater) { get(x, compare, r) }
+            case (#greater) { get(r, compare, x) }
           }
         }
       }
