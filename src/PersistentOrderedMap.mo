@@ -138,6 +138,9 @@ module {
     }
   };
 
+  /// Create a new empty map.
+  public func empty<K, V>() : Map<K, V> = #leaf;
+
   /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
   /// Iterator provides a single method `next()`, which returns
   /// pairs in no specific order, or `null` when out of pairs to iterate over.
@@ -146,14 +149,14 @@ module {
   /// Returns an Iterator (`Iter`) over the keys of the map.
   /// Iterator provides a single method `next()`, which returns
   /// keys in no specific order, or `null` when out of keys to iterate over.
-  public func keys<K, V>(m : Map<K, V>, direction : Direction) : I.Iter<K>
-    = I.map(iter(m, direction), func(kv : (K, V)) : K {kv.0});
+  public func keys<K, V>(m : Map<K, V>) : I.Iter<K>
+    = I.map(entries(m), func(kv : (K, V)) : K {kv.0});
 
   /// Returns an Iterator (`Iter`) over the values of the map.
   /// Iterator provides a single method `next()`, which returns
   /// values in no specific order, or `null` when out of values to iterate over.
-  public func vals<K, V>(m : Map<K, V>, direction : Direction) : I.Iter<V>
-    = I.map(iter(m, direction), func(kv : (K, V)) : V {kv.1});
+  public func vals<K, V>(m : Map<K, V>) : I.Iter<V>
+    = I.map(entries(m), func(kv : (K, V)) : V {kv.1});
 
   /// Creates a new map by applying `f` to each entry in `rbMap`. Each entry
   /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
