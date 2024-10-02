@@ -352,7 +352,7 @@ module {
 
   /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
   /// Iterator provides a single method `next()`, which returns
-  /// pairs in no specific order, or `null` when out of pairs to iterate over.
+  /// pairs in ascending order by keys, or `null` when out of pairs to iterate over.
   ///
   /// Example:
   /// ```motoko
@@ -378,7 +378,7 @@ module {
 
   /// Returns an Iterator (`Iter`) over the keys of the map.
   /// Iterator provides a single method `next()`, which returns
-  /// keys in no specific order, or `null` when out of keys to iterate over.
+  /// keys in ascending order, or `null` when out of keys to iterate over.
   ///
   /// Example:
   /// ```motoko
