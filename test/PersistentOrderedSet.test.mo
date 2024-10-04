@@ -95,6 +95,16 @@ func clear(initialRbSet : Set.Set<Nat>) : Set.Set<Nat> {
   rbSet
 };
 
+func add1(x : Nat) : Nat { x + 1 };
+
+func ifElemLessThan(threshold : Nat, f : Nat -> Nat) : Nat -> ?Nat
+  = func (x) {
+    if(x < threshold)
+      ?f(x)
+    else null
+  };
+
+
 /* --------------------------------------- */
 
 var buildTestSet = func() : Set.Set<Nat> {
@@ -134,6 +144,21 @@ run(
         "empty left fold",
         Set.foldLeft(buildTestSet(), "", concatenateKeys),
         M.equals(T.text(""))
+      ),
+      test(
+        "traverse empty set",
+        natSetOps.map(buildTestSet(), add1),
+        SetMatcher([])
+      ),
+      test(
+        "empty map filter",
+        natSetOps.mapFilter(buildTestSet(), ifElemLessThan(0, add1)),
+        SetMatcher([])
+      ),
+      test(
+        "is empty",
+        Set.isEmpty(buildTestSet()),
+        M.equals(T.bool(true))
       ),
     ]
   )
@@ -185,6 +210,26 @@ run(
         "left fold",
         Set.foldLeft(buildTestSet(), "", concatenateKeys),
         M.equals(T.text("0"))
+      ),
+      test(
+        "traverse set",
+        natSetOps.map(buildTestSet(), add1),
+        SetMatcher([1])
+      ),
+      test(
+        "map filter/filter all",
+        natSetOps.mapFilter(buildTestSet(), ifElemLessThan(0, add1)),
+        SetMatcher([])
+      ),
+      test(
+        "map filter/no filer",
+        natSetOps.mapFilter(buildTestSet(), ifElemLessThan(1, add1)),
+        SetMatcher([1])
+      ),
+      test(
+        "is empty",
+        Set.isEmpty(buildTestSet()),
+        M.equals(T.bool(false))
       ),
     ]
   )
@@ -239,6 +284,36 @@ func rebalanceTests(buildTestSet : () -> Set.Set<Nat>) : [Suite.Suite] =
       "left fold",
       Set.foldLeft(buildTestSet(), "", concatenateKeys),
       M.equals(T.text("012"))
+    ),
+    test(
+      "traverse set",
+      natSetOps.map(buildTestSet(), add1),
+      SetMatcher([1, 2, 3])
+    ),
+    test(
+      "traverse set/reshape",
+      natSetOps.map(buildTestSet(), func (x : Nat) : Nat {5}),
+      SetMatcher([5])
+    ),
+    test(
+      "map filter/filter all",
+      natSetOps.mapFilter(buildTestSet(), ifElemLessThan(0, add1)),
+      SetMatcher([])
+    ),
+    test(
+      "map filter/filter one",
+      natSetOps.mapFilter(buildTestSet(), ifElemLessThan(1, add1)),
+      SetMatcher([1])
+    ),
+    test(
+      "map filter/no filer",
+      natSetOps.mapFilter(buildTestSet(), ifElemLessThan(3, add1)),
+      SetMatcher([1, 2, 3])
+    ),
+    test(
+      "is empty",
+      Set.isEmpty(buildTestSet()),
+      M.equals(T.bool(false))
     ),
   ];
 
@@ -313,6 +388,177 @@ run(
         },
         SetMatcher([0, 2])
       )
+    ]
+  )
+);
+
+/* --------------------------------------- */
+
+let buildTestSet012 = func() : Set.Set<Nat> {
+  var rbSet = Set.empty<Nat>();
+  rbSet := insert(rbSet, 0);
+  rbSet := insert(rbSet, 1);
+  rbSet := insert(rbSet, 2);
+  rbSet
+};
+
+let buildTestSet01 = func() : Set.Set<Nat> {
+  var rbSet = Set.empty<Nat>();
+  rbSet := insert(rbSet, 0);
+  rbSet := insert(rbSet, 1);
+  rbSet
+};
+
+let buildTestSet234 = func() : Set.Set<Nat> {
+  var rbSet = Set.empty<Nat>();
+  rbSet := insert(rbSet, 2);
+  rbSet := insert(rbSet, 3);
+  rbSet := insert(rbSet, 4);
+  rbSet
+};
+
+let buildTestSet345 = func() : Set.Set<Nat> {
+  var rbSet = Set.empty<Nat>();
+  rbSet := insert(rbSet, 5);
+  rbSet := insert(rbSet, 3);
+  rbSet := insert(rbSet, 4);
+  rbSet
+};
+
+run(
+  suite(
+    "set operations",
+    [
+      test(
+        "subset/subset of itself",
+        natSetOps.isSubset(buildTestSet012(), buildTestSet012()),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "subset/empty set is subset of itself",
+        natSetOps.isSubset(Set.empty<Nat>(), Set.empty<Nat>()),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "subset/empty set is subset of another set",
+        natSetOps.isSubset(Set.empty<Nat>(), buildTestSet012()),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "subset/subset",
+        natSetOps.isSubset(buildTestSet01(), buildTestSet012()),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "subset/not subset",
+        natSetOps.isSubset(buildTestSet012(), buildTestSet01()),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "equals/empty set",
+        natSetOps.equals(Set.empty<Nat>(), Set.empty<Nat>()),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "equals/equals",
+        natSetOps.equals(buildTestSet012(), buildTestSet012()),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "equals/not equals",
+        natSetOps.equals(buildTestSet012(), buildTestSet01()),
+        M.equals(T.bool(false))
+      ),
+      test(
+        "union/empty set",
+        natSetOps.union(Set.empty<Nat>(), Set.empty<Nat>()),
+        SetMatcher([])
+      ),
+      test(
+        "union/union with empty set",
+        natSetOps.union(buildTestSet012(), Set.empty<Nat>()),
+        SetMatcher([0, 1, 2])
+      ),
+      test(
+        "union/union with itself",
+        natSetOps.union(buildTestSet012(), buildTestSet012()),
+        SetMatcher([0, 1, 2])
+      ),
+      test(
+        "union/union with subset",
+        natSetOps.union(buildTestSet012(), buildTestSet01()),
+        SetMatcher([0, 1, 2])
+      ),
+      test(
+        "union/union expand",
+        natSetOps.union(buildTestSet012(), buildTestSet234()),
+        SetMatcher([0, 1, 2, 3, 4])
+      ),
+      test(
+        "intersect/empty set",
+        natSetOps.intersect(Set.empty<Nat>(), Set.empty<Nat>()),
+        SetMatcher([])
+      ),
+      test(
+        "intersect/intersect with empty set",
+        natSetOps.intersect(buildTestSet012(), Set.empty<Nat>()),
+        SetMatcher([])
+      ),
+      test(
+        "intersect/intersect with itself",
+        natSetOps.intersect(buildTestSet012(), buildTestSet012()),
+        SetMatcher([0, 1, 2])
+      ),
+      test(
+        "intersect/intersect with subset",
+        natSetOps.intersect(buildTestSet012(), buildTestSet01()),
+        SetMatcher([0, 1])
+      ),
+      test(
+        "intersect/intersect",
+        natSetOps.intersect(buildTestSet012(), buildTestSet234()),
+        SetMatcher([2])
+      ),
+      test(
+        "intersect/no intersection",
+        natSetOps.intersect(buildTestSet012(), buildTestSet345()),
+        SetMatcher([])
+      ),
+      test(
+        "diff/empty set",
+        natSetOps.diff(Set.empty<Nat>(), Set.empty<Nat>()),
+        SetMatcher([])
+      ),
+      test(
+        "diff/diff with empty set",
+        natSetOps.diff(buildTestSet012(), Set.empty<Nat>()),
+        SetMatcher([0, 1, 2])
+      ),
+      test(
+        "diff/diff with empty set 2",
+        natSetOps.diff(Set.empty<Nat>(), buildTestSet012()),
+        SetMatcher([])
+      ),
+      test(
+        "diff/diff with subset",
+        natSetOps.diff(buildTestSet012(), buildTestSet01()),
+        SetMatcher([2])
+      ),
+      test(
+        "diff/diff with subset 2",
+        natSetOps.diff(buildTestSet01(), buildTestSet012()),
+        SetMatcher([])
+      ),
+      test(
+        "diff/diff",
+        natSetOps.diff(buildTestSet012(), buildTestSet234()),
+        SetMatcher([0, 1])
+      ),
+      test(
+        "diff/diff no intersection",
+        natSetOps.diff(buildTestSet012(), buildTestSet345()),
+        SetMatcher([0, 1, 2])
+      ),
     ]
   )
 );
