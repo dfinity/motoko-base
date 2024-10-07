@@ -33,7 +33,7 @@ import O "Order";
 //  #black : (Map<K, V>, K, V, Map<K, V>);
 //  #leaf
 //};
-// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant optin, for considerable heap savings.)
+// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant option, for considerable heap savings.)
 // It would also make sense to maintain the size in a separate root for 0(1) access.
 
 module {
@@ -49,10 +49,10 @@ module {
     #leaf
   };
 
-  /// Opertaions on `Map`, that require a comparator.
+  /// Operations on `Map`, that require a comparator.
   ///
   /// The object should be created once, then used for all the operations
-  /// with `Map` to maintain invariant that comparator did not changed.
+  /// with `Map` to ensure that the same comparator is used for every operation.
   ///
   /// `MapOps` contains methods that require `compare` internally:
   /// operations that may reshape a `Map` or should find something.
@@ -495,7 +495,7 @@ module {
   };
 
   /// Collapses the elements in `rbMap` into a single value by starting with `base`
-  /// and progessively combining keys and values into `base` with `combine`. Iteration runs
+  /// and progressively combining keys and values into `base` with `combine`. Iteration runs
   /// left to right.
   ///
   /// Example:
@@ -535,7 +535,7 @@ module {
   };
 
   /// Collapses the elements in `rbMap` into a single value by starting with `base`
-  /// and progessively combining keys and values into `base` with `combine`. Iteration runs
+  /// and progressively combining keys and values into `base` with `combine`. Iteration runs
   /// right to left.
   ///
   /// Example:
