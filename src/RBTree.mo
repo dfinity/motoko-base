@@ -25,11 +25,12 @@
 ///
 /// Performance:
 /// * Runtime: `O(log(n))` worst case cost per insertion, removal, and retrieval operation.
-/// * Space: `O(n)` for storing the entire tree.
+/// * Heap space: `O(n)` for storing the entire tree.
+/// * Stack space: `O(log(n)) for storing the entire tree.
 /// `n` denotes the number of key-value entries (i.e. nodes) stored in the tree.
 ///
 /// Note:
-/// * Tree operations, such as retrieval, insertion, and removal create `O(log(n))` temporary objects that become garbage.
+/// * Tree insertion, replacement, and removal produce `O(log(n))` garbage objects.
 ///
 /// Credits:
 ///
@@ -90,7 +91,8 @@ module {
   ///
   /// Costs of instantiation (only empty tree):
   /// Runtime: `O(1)`.
-  /// Space: `O(1)`.
+  /// Heap space: `O(1)`.
+  /// Stack space: `O(1)`.
   public class RBTree<K, V>(compare : (K, K) -> O.Order) {
 
     var tree : Tree<K, V> = (#leaf : Tree<K, V>);
@@ -112,7 +114,8 @@ module {
     /// i.e. passing it in async arguments or async results.
     ///
     /// Runtime: `O(1)`.
-    /// Space: `O(1)`.
+    /// Heap space: `O(1)`.
+    /// Stack space: `O(1)`.
     public func share() : Tree<K, V> {
       tree
     };
@@ -133,7 +136,8 @@ module {
     /// Useful for restoring the state of a tree object from stable data, saved, for example, in a stable variable.
     ///
     /// Runtime: `O(1)`.
-    /// Space: `O(1)`.
+    /// Heap space: `O(1)`.
+    /// Stack space: `O(1)`.
     public func unshare(t : Tree<K, V>) : () {
       tree := t
     };
@@ -152,11 +156,10 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Heap space: `O(1)`.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree and
     /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func get(key : K) : ?V {
       getRec(key, compare, tree)
     };
@@ -179,11 +182,12 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(log(n))` garbage objects.
     public func replace(key : K, value : V) : ?V {
       let (t, res) = insert(tree, compare, key, value);
       tree := t;
@@ -203,11 +207,12 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(log(n))` garbage objects.
     public func put(key : K, value : V) {
       let (t, _res) = insert(tree, compare, key, value);
       tree := t
@@ -229,7 +234,8 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
@@ -254,11 +260,12 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(log(n))` garbage objects.
     public func remove(key : K) : ?V {
       let (res, t) = removeRec(key, compare, tree);
       tree := t;
@@ -287,7 +294,8 @@ module {
     ///
     /// Cost of iteration over all elements:
     /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// Heap space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree.
     ///
     /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
@@ -316,7 +324,8 @@ module {
     ///
     /// Cost of iteration over all elements:
     /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// Heap space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// Stack space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the tree.
     ///
     /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
@@ -351,7 +360,8 @@ module {
   ///
   /// Cost of iteration over all elements:
   /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+  /// Heap space: `O(log(n))` retained memory plus garbage, see the note below.
+  /// Stack space: `O(log(n))`.
   /// where `n` denotes the number of key-value entries stored in the tree.
   ///
   /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
@@ -420,10 +430,9 @@ module {
   /// ```
   ///
   /// Runtime: `O(log(n))`.
-  /// Space: `O(1)` retained memory plus garbage, see the note below.
+  /// Heap space: `O(1)`.
+  /// Stack space: `O(log(n))`.
   /// where `n` denotes the number of key-value entries stored in the tree.
-  ///
-  /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
   public func size<X, Y>(t : Tree<X, Y>) : Nat {
     switch t {
       case (#leaf) { 0 };
