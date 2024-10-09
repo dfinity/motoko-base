@@ -618,19 +618,15 @@ module {
     };
 
     public func mapFilter<K, V1, V2>(t : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2>{
-      var map = #leaf : Map<K, V2>;
-      for(kv in iter(t, #fwd))
-      {
-        switch(f kv){
-          case null {};
-          case (?v1) {
-            // The keys still are monotonic, so we can
-            // merge trees using `append` and avoid compare here
-            map := put(map, compare, kv.0, v1);
+      func combine(key : K, value1 : V1, acc : Map<K, V2>) : Map<K, V2> {
+        switch (f(key, value1)){
+          case null { acc };
+          case (?value2) {
+            put(acc, compare, key, value2)
           }
         }
       };
-      map
+      foldLeft(t, #leaf, combine)
     };
 
     public func get<K, V>(t : Map<K, V>, compare : (K, K) -> O.Order, x : K) : ?V {
