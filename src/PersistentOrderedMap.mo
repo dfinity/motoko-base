@@ -624,7 +624,7 @@ module {
   };
 
 
-  module Internal {
+  public module Internal {
 
     public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V>
     {
