@@ -333,30 +333,39 @@ module {
   ///
   /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
   public func iter<K, V>(m : Map<K, V>, direction : Direction) : I.Iter<(K, V)> {
-    object {
-      var trees : IterRep<K, V> = ?(#tr(m), null);
-      public func next() : ?(K, V) {
-        switch (direction, trees) {
-          case (_, null) { null };
-          case (_, ?(#tr(#leaf), ts)) {
+    let turnLeftFirst : MapTraverser<K, V>
+     = func (l, xy, r, ts) { ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts))) };
+
+    let turnRightFirst : MapTraverser<K, V>
+     = func (l, xy, r, ts) { ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts))) };
+
+    switch direction {
+      case (#fwd) IterMap(m, turnLeftFirst);
+      case (#bwd) IterMap(m, turnRightFirst)
+    }
+  };
+
+  type MapTraverser<K, V> = (Map<K, V>, (K, V), Map<K, V>, IterRep<K, V>) -> IterRep<K, V>;
+
+  class IterMap<K, V>(m : Map<K, V>, mapTraverser : MapTraverser<K, V>) {
+    var trees : IterRep<K, V> = ?(#tr(m), null);
+    public func next() : ?(K, V) {
+        switch (trees) {
+          case (null) { null };
+          case (?(#tr(#leaf), ts)) {
             trees := ts;
             next()
           };
-          case (_, ?(#xy(xy), ts)) {
+          case (?(#xy(xy), ts)) {
             trees := ts;
             ?xy
-          }; // TODO: Let's float-out case on direction
-          case (#fwd, ?(#tr(#node(_, l, xy, r)), ts)) {
-            trees := ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts)));
-            next()
           };
-          case (#bwd, ?(#tr(#node(_, l, xy, r)), ts)) {
-            trees := ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts)));
+          case (?(#tr(#node(_, l, xy, r)), ts)) {
+            trees := mapTraverser(l, xy, r, ts);
             next()
           }
         }
       }
-    }
   };
 
   /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
