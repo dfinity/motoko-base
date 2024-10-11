@@ -31,24 +31,24 @@ func checkMap(rbMap : Map.Map<Nat, Text>) {
 };
 
 func blackDepth(node : Map.Map<Nat, Text>) : Nat {
+  func checkNode(left : Map.Map<Nat, Text>, key : Nat, right : Map.Map<Nat, Text>) : Nat {
+    checkKey(left, func(x) { x < key });
+    checkKey(right, func(x) { x > key });
+    let leftBlacks = blackDepth(left);
+    let rightBlacks = blackDepth(right);
+    assert (leftBlacks == rightBlacks);
+    leftBlacks
+  };
   switch node {
     case (#leaf) 0;
-    case (#node(color, left, (key, _), right)) {
-      checkKey(left, func(x) { x < key });
-      checkKey(right, func(x) { x > key });
-      let leftBlacks = blackDepth(left);
-      let rightBlacks = blackDepth(right);
-      assert (leftBlacks == rightBlacks);
-      switch color {
-        case (#R) {
-          assert (not isRed(left));
-          assert (not isRed(right));
-          leftBlacks
-        };
-        case (#B) {
-          leftBlacks + 1
-        }
-      }
+    case (#red(left, (key, _), right)) {
+      let leftBlacks = checkNode(left, key, right);
+      assert (not isRed(left));
+      assert (not isRed(right));
+      leftBlacks
+    };
+    case (#black(left, (key, _), right)) {
+      checkNode(left, key, right) + 1
     }
   }
 };
@@ -56,15 +56,18 @@ func blackDepth(node : Map.Map<Nat, Text>) : Nat {
 
 func isRed(node : Map.Map<Nat, Text>) : Bool {
   switch node {
-    case (#leaf) false;
-    case (#node(color, _, _, _)) color == #R
+    case (#red(_, _, _)) true;
+    case _ false
   }
 };
 
 func checkKey(node : Map.Map<Nat, Text>, isValid : Nat -> Bool) {
   switch node {
     case (#leaf) {};
-    case (#node(_, _, (key, _), _)) {
+    case (#red( _, (key, _), _)) {
+      assert (isValid(key))
+    };
+    case (#black( _, (key, _), _)) {
       assert (isValid(key))
     }
   }
