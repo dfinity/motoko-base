@@ -66,6 +66,7 @@ module {
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
     /// import Iter "mo:base/Iter"
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -92,6 +93,7 @@ module {
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
     /// import Iter "mo:base/Iter"
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// var rbMap = Map.empty<Nat, Text>();
@@ -122,6 +124,7 @@ module {
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
     /// import Iter "mo:base/Iter"
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let rbMap0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -160,6 +163,7 @@ module {
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
     /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -191,6 +195,7 @@ module {
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -218,6 +223,7 @@ module {
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -246,6 +252,7 @@ module {
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat"
     /// import Iter "mo:base/Iter"
+    /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let rbMap0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -281,6 +288,7 @@ module {
   /// Example:
   /// ```motoko
   /// import Map "mo:base/PersistentOrderedMap";
+  /// import Debug "mo:base/Debug";
   ///
   /// let rbMap = Map.empty<Nat, Text>();
   ///
@@ -306,6 +314,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -359,6 +368,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -385,6 +395,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -411,6 +422,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -437,6 +449,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -473,6 +486,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -503,6 +517,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
@@ -543,6 +558,7 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Nat "mo:base/Nat"
   /// import Iter "mo:base/Iter"
+  /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
   /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
