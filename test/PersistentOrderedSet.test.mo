@@ -32,9 +32,9 @@ func checkSet(rbSet : Set.Set<Nat>) {
 func blackDepth(node : Set.Set<Nat>) : Nat {
   switch node {
     case (#leaf) 0;
-    case (#node(color, left, (key, _), right)) {
-      checkKey(left, func(x) { x < key });
-      checkKey(right, func(x) { x > key });
+    case (#node(color, left, x1, right)) {
+      checkElem(left, func(x) { x < x1 });
+      checkElem(right, func(x) { x > x1 });
       let leftBlacks = blackDepth(left);
       let rightBlacks = blackDepth(right);
       assert (leftBlacks == rightBlacks);
@@ -60,11 +60,11 @@ func isRed(node : Set.Set<Nat>) : Bool {
   }
 };
 
-func checkKey(node : Set.Set<Nat>, isValid : Nat -> Bool) {
+func checkElem(node : Set.Set<Nat>, isValid : Nat -> Bool) {
   switch node {
     case (#leaf) {};
-    case (#node(_, _, (key, _), _)) {
-      assert (isValid(key))
+    case (#node(_, _, elem, _)) {
+      assert (isValid(elem))
     }
   }
 };
