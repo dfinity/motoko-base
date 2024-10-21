@@ -51,20 +51,20 @@ module {
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(rbSet))));
-    ///
+    /// Debug.print(debug_show(Iter.toArray(Set.elements(set))));
     /// // [0, 1, 2]
     /// ```
     ///
     /// Runtime: `O(n * log(n))`.
     /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the tree and
+    /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
@@ -76,88 +76,86 @@ module {
       set
     };
 
-    /// Insert the value `value` into set `rbSet`. Has no effect if `value` is already
+    /// Insert the value `value` into the set `s`. Has no effect if `value` is already
     /// present in the set. Returns a modified set.
     ///
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// var rbSet = Set.empty<Nat>();
+    /// var set = Set.empty<Nat>();
     ///
-    /// rbSet := setOps.put(rbSet, 0);
-    /// rbSet := setOps.put(rbSet, 2);
-    /// rbSet := setOps.put(rbSet, 1);
+    /// set := setOps.put(set, 0);
+    /// set := setOps.put(set, 2);
+    /// set := setOps.put(set, 1);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(rbSet))));
-    ///
+    /// Debug.print(debug_show(Iter.toArray(Set.elements(set))));
     /// // [0, 1, 2]
     /// ```
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func put(rbSet : Set<T>, value : T) : Set<T> 
-      = Internal.put(rbSet, compare, value);
+    public func put(s : Set<T>, value : T) : Set<T> 
+      = Internal.put(s, compare, value);
 
-    /// Deletes the value `value` from the `rbSet`. Has no effect if `value` is not
+    /// Deletes the value `value` from the set `s`. Has no effect if `value` is not
     /// present in the set. Returns modified set.
     ///
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
-    /// import Nat "mo:base/Nat"
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(setOps.delete(rbSet, 1)))));
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(setOps.delete(rbSet, 42)))));
-    ///
+    /// Debug.print(debug_show(Iter.toArray(Set.elements(setOps.delete(set, 1)))));
+    /// Debug.print(debug_show(Iter.toArray(Set.elements(setOps.delete(set, 42)))));
     /// // [0, 2]
     /// // [0, 1, 2]
     /// ```
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the tree and
+    /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func delete(rbSet : Set<T>, value : T) : Set<T> 
-      = Internal.delete(rbSet, compare, value);
+    public func delete(s : Set<T>, value : T) : Set<T> 
+      = Internal.delete(s, compare, value);
 
-    /// Test if a set contains a given element.
+    /// Test if the set 's' contains a given element.
     ///
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
-    /// import Nat "mo:base/Nat"
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show setOps.contains(rbSet, 1));
-    /// Debug.print(debug_show setOps.contains(rbSet, 42));
-    ///
-    /// // true
-    /// // false
+    /// Debug.print(debug_show setOps.contains(set, 1)); // => true
+    /// Debug.print(debug_show setOps.contains(set, 42)); // => false
     /// ```
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the tree and
+    /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func contains(rbSet : Set<T>, value : T) : Bool 
-      = Internal.contains(rbSet, compare, value);
+    public func contains(s : Set<T>, value : T) : Bool 
+      = Internal.contains(s, compare, value);
 
     /// [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)) operation.
     ///
@@ -165,14 +163,14 @@ module {
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
     /// import Nat "mo:base/Nat";
-    /// import Iter "mo:base/Iter"
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
-    /// let rbSet2 = setOps.fromIter(Iter.fromArray([2, 3, 4]));
+    /// let set1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
+    /// let set2 = setOps.fromIter(Iter.fromArray([2, 3, 4]));
     ///
-    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.union(rbSet1, rbSet2))));
-    ///
+    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.union(set1, set2))));
     /// // [0, 1, 2, 3, 4]
     /// ```
     ///
@@ -181,12 +179,12 @@ module {
     /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func union(rbSet1 : Set<T>, rbSet2 : Set<T>) : Set<T> {
-      if (size rbSet1 < size rbSet2) {
-        foldLeft(rbSet1, rbSet2, func (elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
+    public func union(s1 : Set<T>, s2 : Set<T>) : Set<T> {
+      if (size(s1) < size(s2)) {
+        foldLeft(s1, s2, func (elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
       }
       else {
-        foldLeft(rbSet2, rbSet1, func (elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
+        foldLeft(s2, s1, func (elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
       }
     };
 
@@ -197,13 +195,13 @@ module {
     /// import Set "mo:base/PersistentOrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
-    /// let rbSet2 = setOps.fromIter(Iter.fromArray([1, 2, 3]));
+    /// let set1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
+    /// let set2 = setOps.fromIter(Iter.fromArray([1, 2, 3]));
     ///
-    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.intersect(rbSet1, rbSet2))));
-    ///
+    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.intersect(set1, set2))));
     /// // [1, 2]
     /// ```
     ///
@@ -212,18 +210,18 @@ module {
     /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func intersect(rbSet1 : Set<T>, rbSet2 : Set<T>) : Set<T> {
-      if (size rbSet1 < size rbSet2) {
-        foldLeft(rbSet1, empty(),
+    public func intersect(s1 : Set<T>, s2 : Set<T>) : Set<T> {
+      if (size(s1) < size(s2)) {
+        foldLeft(s1, empty(),
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(rbSet2, compare, elem)) { Internal.put(acc, compare, elem) } else { acc }
+            if (Internal.contains(s2, compare, elem)) { Internal.put(acc, compare, elem) } else { acc }
           }
         )
       }
       else {
-        foldLeft(rbSet2, empty(),
+        foldLeft(s2, empty(),
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(rbSet1, compare, elem)) { Internal.put(acc, compare, elem) } else { acc }
+            if (Internal.contains(s1, compare, elem)) { Internal.put(acc, compare, elem) } else { acc }
           }
         )
       }
@@ -235,14 +233,14 @@ module {
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
     /// import Nat "mo:base/Nat";
-    /// import Iter "mo:base/Iter"
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
-    /// let rbSet2 = setOps.fromIter(Iter.fromArray([1, 2, 3]));
+    /// let set1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
+    /// let set2 = setOps.fromIter(Iter.fromArray([1, 2, 3]));
     ///
-    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.diff(rbSet1, rbSet2))));
-    ///
+    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.diff(set1, set2))));
     /// // [0]
     /// ```
     ///
@@ -251,16 +249,16 @@ module {
     /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func diff(rbSet1 : Set<T>, rbSet2 : Set<T>) : Set<T> {
-      if (size rbSet1 < size rbSet2) {
-        foldLeft(rbSet1, empty(),
+    public func diff(s1 : Set<T>, s2 : Set<T>) : Set<T> {
+      if (size(s1) < size(s2)) {
+        foldLeft(s1, empty(),
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(rbSet2, compare, elem)) { acc } else { Internal.put(acc, compare, elem) }
+            if (Internal.contains(s2, compare, elem)) { acc } else { Internal.put(acc, compare, elem) }
           }
         )
       }
       else {
-        foldLeft(rbSet2, rbSet1,
+        foldLeft(s2, s1,
           func (elem : T, acc : Set<T>) : Set<T> {
             if (Internal.contains(acc, compare, elem)) { Internal.delete(acc, compare, elem) } else { acc }
           }
@@ -268,7 +266,7 @@ module {
       }
     };
 
-    /// Creates a new Set by applying `f` to each entry in `rbSet`. Each element
+    /// Creates a new `Set` by applying `f` to each entry in the set `s`. Each element
     /// `x` in the old set is transformed into a new entry `x2`, where
     /// the new value `x2` is created by applying `f` to `x`.
     /// The result set may be smaller than the original set due to duplicate elements.
@@ -276,15 +274,16 @@ module {
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet = setOps.fromIter(Iter.fromArray([0, 1, 2, 3]));
+    /// let set = setOps.fromIter(Iter.fromArray([0, 1, 2, 3]));
     ///
     /// func f(x : Nat) : Nat = if (x < 2) { x } else { 0 };
     ///
-    /// let resSet = setOps.map(rbSet, f);
+    /// let resSet = setOps.map(set, f);
     ///
     /// Debug.print(debug_show(Iter.toArray(Set.elements(resSet))));
     /// // [0, 1]
@@ -294,10 +293,10 @@ module {
     /// Runtime: `O(n)`.
     /// Space: `O(n)` retained memory
     /// where `n` denotes the number of elements stored in the set.
-    public func map<T1>(rbSet : Set<T1>, f : T1 -> T) : Set<T> = // TODO: optimize via direct recursion
-      foldLeft(rbSet, empty(), func (elem : T1, acc : Set<T>) : Set<T> { put(acc, f elem) });
+    public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T> = // TODO: optimize via direct recursion
+      foldLeft(s, empty(), func (elem : T1, acc : Set<T>) : Set<T> { put(acc, f(elem)) });
 
-    /// Creates a new map by applying `f` to each element in `rbSet`. For each element
+    /// Creates a new map by applying `f` to each element in the set `s`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
     /// Otherwise, the entry is transformed into a new entry `x2`, where
     /// the new value `x2` is the result of applying `f` to `x`.
@@ -305,21 +304,21 @@ module {
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
-    /// import Nat "mo:base/Nat"
+    /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet = setOps.fromIter(Iter.fromArray([0, 1, 2, 3]));
+    /// let set = setOps.fromIter(Iter.fromArray([0, 1, 2, 3]));
     ///
     /// func f(x : Nat) : ?Nat {
     ///   if(x == 0) {null}
     ///   else { ?( x * 2 )}
     /// };
     ///
-    /// let newRbSet = setOps.mapFilter(rbSet, f);
+    /// let newRbSet = setOps.mapFilter(set, f);
     ///
     /// Debug.print(debug_show(Iter.toArray(Set.elements(newRbSet))));
-    ///
     /// // [2, 4, 6]
     /// ```
     ///
@@ -329,7 +328,7 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func mapFilter<T1>(rbSet: Set<T1>, f : T1 -> ?T) : Set<T> {
+    public func mapFilter<T1>(s: Set<T1>, f : T1 -> ?T) : Set<T> {
       func combine(elem : T1, acc : Set<T>) : Set<T> {
         switch (f(elem)){
           case null { acc };
@@ -338,35 +337,34 @@ module {
           }
         }
       };
-      foldLeft(rbSet, empty(), combine)
+      foldLeft(s, empty(), combine)
     };
 
-    /// Test if `rbSet1` is subset of `rbSet2`.
+    /// Test if `set1` is subset of `set2`.
     ///
     /// Example:
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
     /// import Nat "mo:base/Nat";
-    /// import Iter "mo:base/Iter"
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet1 = setOps.fromIter(Iter.fromArray([1, 2]));
-    /// let rbSet2 = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let set1 = setOps.fromIter(Iter.fromArray([1, 2]));
+    /// let set2 = setOps.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show setOps.isSubset(rbSet1, rbSet2));
-    ///
-    /// // true
+    /// Debug.print(debug_show setOps.isSubset(set1, set2)); // => true
     /// ```
     ///
     /// Runtime: `O(m * log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements stored in the sets rbSet1 and rbSet2, respectively,
+    /// where `m` and `n` denote the number of elements stored in the sets set1 and set2, respectively,
     /// and assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
-    public func isSubset(rbSet1 : Set<T>, rbSet2 : Set<T>) : Bool {
-      if (size(rbSet1) > size(rbSet2)) { return false; };
-      isSubsetHelper(rbSet1, rbSet2)
+    public func isSubset(s1 : Set<T>, s2 : Set<T>) : Bool {
+      if (size(s1) > size(s2)) { return false; };
+      isSubsetHelper(s1, s2)
     };
 
     /// Test if two sets are equal.
@@ -375,33 +373,31 @@ module {
     /// ```motoko
     /// import Set "mo:base/PersistentOrderedSet";
     /// import Nat "mo:base/Nat";
-    /// import Iter "mo:base/Iter"
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
     ///
     /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let rbSet1 = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-    /// let rbSet2 = setOps.fromIter(Iter.fromArray([1, 2]));
+    /// let set1 = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let set2 = setOps.fromIter(Iter.fromArray([1, 2]));
     ///
-    /// Debug.print(debug_show setOps.equals(rbSet1, rbSet1));
-    /// Debug.print(debug_show setOps.equals(rbSet1, rbSet2));
-    ///
-    /// // true
-    /// // false
+    /// Debug.print(debug_show setOps.equals(set1, set1)); // => true
+    /// Debug.print(debug_show setOps.equals(set1, set2)); // => false
     /// ```
     ///
     /// Runtime: `O(m * log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements stored in the sets rbSet1 and rbSet2, respectively,
+    /// where `m` and `n` denote the number of elements stored in the sets set1 and set2, respectively,
     /// and assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
-    public func equals (rbSet1 : Set<T>, rbSet2 : Set<T>) : Bool {
-      if (size(rbSet1) != size(rbSet2)) { return false; };
-      isSubsetHelper(rbSet1, rbSet2)
+    public func equals (s1 : Set<T>, s2 : Set<T>) : Bool {
+      if (size(s1) != size(s2)) { return false; };
+      isSubsetHelper(s1, s2)
     };
 
-    func isSubsetHelper(rbSet1 : Set<T>, rbSet2 : Set<T>) : Bool {
-      for (x in vals(rbSet1)) {
-        if (not (contains(rbSet2, x))) {
+    func isSubsetHelper(s1 : Set<T>, s2 : Set<T>) : Bool {
+      for (x in vals(s1)) {
+        if (not (contains(s2, x))) {
           return false;
         }
       };
@@ -418,12 +414,12 @@ module {
   /// import Set "mo:base/PersistentOrderedSet";
   /// import Nat "mo:base/Nat";
   /// import Iter "mo:base/Iter";
+  /// import Debug "mo:base/Debug";
   ///
   /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
   ///
-  /// Debug.print(debug_show(Iter.toArray(Set.vals(rbSet))));
-  ///
+  /// Debug.print(debug_show(Iter.toArray(Set.vals(set))));
   /// // [0, 1, 2]
   /// ```
   /// Cost of iteration over all elements:
@@ -465,11 +461,9 @@ module {
   /// ```motoko
   /// import Set "mo:base/PersistentOrderedSet";
   ///
-  /// let rbSet = Set.empty<Nat>();
+  /// let set = Set.empty<Nat>();
   ///
-  /// Debug.print(debug_show(Set.size(rbSet)));
-  ///
-  /// // 0
+  /// Debug.print(debug_show(Set.size(set))); // => 0
   /// ```
   ///
   /// Cost of empty set creation
@@ -478,20 +472,19 @@ module {
   public func empty<T>() : Set<T> 
     = { root = #leaf; size = 0};
 
-  /// Determine the size of the tree as the number of elements.
+  /// Returns the number of elements in the set.
   ///
   /// Example:
   /// ```motoko
   /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
+  /// import Debug "mo:base/Debug";
   ///
   /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
   ///
-  /// Debug.print(debug_show(Set.size(rbSet)));
-  ///
-  /// // 3
+  /// Debug.print(debug_show(Set.size(set))); // => 3
   /// ```
   ///
   /// Runtime: `O(1)`.
@@ -499,23 +492,23 @@ module {
   public func size<T>(s : Set<T>) : Nat
     = s.size;
 
-  /// Collapses the elements in `rbSet` into a single value by starting with `base`
+  /// Collapses the elements in `set` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// left to right.
   ///
   /// Example:
   /// ```motoko
   /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
+  /// import Debug "mo:base/Debug";
   ///
   /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
   ///
   /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
   ///
-  /// Debug.print(debug_show(Set.foldLeft(rbSet, 0, folder)));
-  ///
+  /// Debug.print(debug_show(Set.foldLeft(set, 0, folder)));
   /// // 3
   /// ```
   ///
@@ -532,23 +525,23 @@ module {
   ) : Accum
     = Internal.foldLeft(set.root, base, combine);
 
-  /// Collapses the elements in `rbSet` into a single value by starting with `base`
+  /// Collapses the elements in `set` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// right to left.
   ///
   /// Example:
   /// ```motoko
   /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
+  /// import Debug "mo:base/Debug";
   ///
   /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
   ///
   /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
   ///
-  /// Debug.print(debug_show(Set.foldRight(rbSet, 0, folder)));
-  ///
+  /// Debug.print(debug_show(Set.foldRight(set, 0, folder)));
   /// // 3
   /// ```
   ///
@@ -565,17 +558,16 @@ module {
   ) : Accum
     = Internal.foldRight(set.root, base, combine);
 
-  /// Test if set is empty.
+  /// Test if the given set `s` is empty.
   ///
   /// Example:
   /// ```motoko
   /// import Set "mo:base/PersistentOrderedSet";
+  /// import Debug "mo:base/Debug";
   ///
-  /// let rbSet = Set.empty<Nat>();
+  /// let set = Set.empty<Nat>();
   ///
-  /// Debug.print(debug_show(Set.isEmpty(rbSet)));
-  ///
-  /// // true
+  /// Debug.print(debug_show(Set.isEmpty(set))); // => true
   /// ```
   ///
   /// Runtime: `O(1)`.
