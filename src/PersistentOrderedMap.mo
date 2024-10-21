@@ -69,23 +69,23 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let m = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(m))));
     ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
     ///
     /// Runtime: `O(n * log(n))`.
     /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
     public func fromIter<V>(i : I.Iter<(K,V)>) : Map<K, V>
       = Internal.fromIter(i, compare);
 
-    /// Insert the value `value` with key `key` into map `rbMap`. Overwrites any existing entry with key `key`.
+    /// Insert the value `value` with key `key` into the map `m`. Overwrites any existing entry with key `key`.
     /// Returns a modified map.
     ///
     /// Example:
@@ -96,27 +96,27 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// var rbMap = Map.empty<Nat, Text>();
+    /// var map = Map.empty<Nat, Text>();
     ///
-    /// rbMap := mapOps.put(rbMap, 0, "Zero");
-    /// rbMap := mapOps.put(rbMap, 2, "Two");
-    /// rbMap := mapOps.put(rbMap, 1, "One");
+    /// map := mapOps.put(map, 0, "Zero");
+    /// map := mapOps.put(map, 2, "Two");
+    /// map := mapOps.put(map, 1, "One");
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(map))));
     ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func put<V>(rbMap : Map<K, V>, key : K, value : V) : Map<K, V>
-      = Internal.put(rbMap, compare, key, value);
+    public func put<V>(m : Map<K, V>, key : K, value : V) : Map<K, V>
+      = Internal.put(m, compare, key, value);
 
-    /// Insert the value `value` with key `key` into `rbMap`. Returns modified map and
+    /// Insert the value `value` with key `key` into the map `m`. Returns modified map and
     /// the previous value associated with key `key` or `null` if no such value exists.
     ///
     /// Example:
@@ -127,18 +127,18 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let rbMap0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let map0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// let (rbMap1, old1) = mapOps.replace(rbMap0, 0, "Nil");
+    /// let (map1, old1) = mapOps.replace(map0, 0, "Nil");
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap1))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(map1))));
     /// Debug.print(debug_show(old1));
     /// // [(0, "Nil"), (1, "One"), (2, "Two")]
     /// // ?"Zero"
     ///
-    /// let (rbMap2, old2) = mapOps.replace(rbMap0, 3, "Three");
+    /// let (map2, old2) = mapOps.replace(map0, 3, "Three");
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap2))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(map2))));
     /// Debug.print(debug_show(old2));
     /// // [(0, "Zero"), (1, "One"), (2, "Two"), (3, "Three")]
     /// // null
@@ -146,14 +146,14 @@ module {
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func replace<V>(rbMap : Map<K, V>, key : K, value : V) : (Map<K,V>, ?V)
-      = Internal.replace(rbMap, compare, key, value);
+    public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K,V>, ?V)
+      = Internal.replace(m, compare, key, value);
 
-    /// Creates a new map by applying `f` to each entry in `rbMap`. For each entry
+    /// Creates a new map by applying `f` to each entry in the map `m`. For each entry
     /// `(k, v)` in the old map, if `f` evaluates to `null`, the entry is discarded.
     /// Otherwise, the entry is transformed into a new entry `(k, v2)`, where
     /// the new value `v2` is the result of applying `f` to `(k, v)`.
@@ -166,30 +166,30 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// func f(key : Nat, val : Text) : ?Text {
     ///   if(key == 0) {null}
     ///   else { ?("Twenty " # val)}
     /// };
     ///
-    /// let newRbMap = mapOps.mapFilter(rbMap, f);
+    /// let newMap = mapOps.mapFilter(map, f);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(newRbMap))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(newMap))));
     ///
     /// // [(1, "Twenty One"), (2, "Twenty Two")]
     /// ```
     ///
     /// Runtime: `O(n)`.
     /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func mapFilter<V1, V2>(rbMap : Map<K, V1>, f : (K, V1) -> ?V2) : Map<K, V2>
-      = Internal.mapFilter(rbMap, compare, f);
+    public func mapFilter<V1, V2>(m : Map<K, V1>, f : (K, V1) -> ?V2) : Map<K, V2>
+      = Internal.mapFilter(m, compare, f);
 
-    /// Get the value associated with key `key` in the given `rbMap` if present and `null` otherwise.
+    /// Get the value associated with key `key` in the given map `m` if present and `null` otherwise.
     ///
     /// Example:
     /// ```motoko
@@ -198,10 +198,10 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show mapOps.get(rbMap, 1));
-    /// Debug.print(debug_show mapOps.get(rbMap, 42));
+    /// Debug.print(debug_show mapOps.get(map, 1));
+    /// Debug.print(debug_show mapOps.get(map, 42));
     ///
     /// // ?"One"
     /// // null
@@ -209,14 +209,14 @@ module {
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func get<V>(rbMap : Map<K, V>, key : K) : ?V
-      = Internal.get(rbMap, compare, key);
+    public func get<V>(m : Map<K, V>, key : K) : ?V
+      = Internal.get(m, compare, key);
 
-    /// Deletes the entry with the key `key` from the `rbMap`. Has no effect if `key` is not
+    /// Deletes the entry with the key `key` from the map `m`. Has no effect if `key` is not
     /// present in the map. Returns modified map.
     ///
     /// Example:
@@ -226,10 +226,10 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(mapOps.delete(rbMap, 1)))));
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(mapOps.delete(rbMap, 42)))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(mapOps.delete(map, 1)))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(mapOps.delete(map, 42)))));
     ///
     /// // [(0, "Zero"), (2, "Two")]
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
@@ -237,12 +237,12 @@ module {
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func delete<V>(rbMap : Map<K, V>, key : K) : Map<K, V>
-      = Internal.delete(rbMap, compare, key);
+    public func delete<V>(m : Map<K, V>, key : K) : Map<K, V>
+      = Internal.delete(m, compare, key);
 
     /// Deletes the entry with the key `key`. Returns modified map and the
     /// previous value associated with key `key` or `null` if no such value exists.
@@ -255,18 +255,18 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let rbMap0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let map0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// let (rbMap1, old1) = mapOps.remove(rbMap0, 0);
+    /// let (map1, old1) = mapOps.remove(map0, 0);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap1))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(map1))));
     /// Debug.print(debug_show(old1));
     /// // [(1, "One"), (2, "Two")]
     /// // ?"Zero"
     ///
-    /// let (rbMap2, old2) = mapOps.remove(rbMap0, 42);
+    /// let (map2, old2) = mapOps.remove(map0, 42);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap2))));
+    /// Debug.print(debug_show(Iter.toArray(Map.entries(map2))));
     /// Debug.print(debug_show(old2));
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// // null
@@ -274,12 +274,12 @@ module {
     ///
     /// Runtime: `O(log(n))`.
     /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the tree and
+    /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func remove<V>(rbMap : Map<K, V>, key : K) : (Map<K,V>, ?V)
-      = Internal.remove(rbMap, compare, key);
+    public func remove<V>(m : Map<K, V>, key : K) : (Map<K,V>, ?V)
+      = Internal.remove(m, compare, key);
 
   };
 
@@ -290,9 +290,9 @@ module {
   /// import Map "mo:base/PersistentOrderedMap";
   /// import Debug "mo:base/Debug";
   ///
-  /// let rbMap = Map.empty<Nat, Text>();
+  /// let map = Map.empty<Nat, Text>();
   ///
-  /// Debug.print(debug_show(Map.size(rbMap)));
+  /// Debug.print(debug_show(Map.size(map)));
   ///
   /// // 0
   /// ```
@@ -306,7 +306,7 @@ module {
 
   public type Direction = { #fwd; #bwd };
 
-  /// Get an iterator for the entries of the `rbMap`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
+  /// Get an iterator for the entries of the map `m`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
   /// The iterator takes a snapshot view of the map and is not affected by concurrent modifications.
   ///
   /// Example:
@@ -317,10 +317,10 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
-  /// Debug.print(debug_show(Iter.toArray(Map.iter(rbMap, #fwd))));
-  /// Debug.print(debug_show(Iter.toArray(Map.iter(rbMap, #bwd))));
+  /// Debug.print(debug_show(Iter.toArray(Map.iter(map, #fwd))));
+  /// Debug.print(debug_show(Iter.toArray(Map.iter(map, #bwd))));
   ///
   /// //  [(0, "Zero"), (1, "One"), (2, "Two")]
   /// //  [(2, "Two"), (1, "One"), (0, "Zero")]
@@ -332,9 +332,9 @@ module {
   /// where `n` denotes the number of key-value entries stored in the map.
   ///
   /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func iter<K, V>(rbMap : Map<K, V>, direction : Direction) : I.Iter<(K, V)> {
+  public func iter<K, V>(m : Map<K, V>, direction : Direction) : I.Iter<(K, V)> {
     object {
-      var trees : IterRep<K, V> = ?(#tr(rbMap), null);
+      var trees : IterRep<K, V> = ?(#tr(m), null);
       public func next() : ?(K, V) {
         switch (direction, trees) {
           case (_, null) { null };
@@ -371,9 +371,9 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
-  /// Debug.print(debug_show(Iter.toArray(Map.entries(rbMap))));
+  /// Debug.print(debug_show(Iter.toArray(Map.entries(map))));
   ///
   ///
   /// // [(0, "Zero"), (1, "One"), (2, "Two")]
@@ -398,9 +398,9 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
-  /// Debug.print(debug_show(Iter.toArray(Map.keys(rbMap))));
+  /// Debug.print(debug_show(Iter.toArray(Map.keys(map))));
   ///
   /// // [0, 1, 2]
   /// ```
@@ -425,9 +425,9 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
-  /// Debug.print(debug_show(Iter.toArray(Map.vals(rbMap))));
+  /// Debug.print(debug_show(Iter.toArray(Map.vals(map))));
   ///
   /// // ["Zero", "One", "Two"]
   /// ```
@@ -440,7 +440,7 @@ module {
   public func vals<K, V>(m : Map<K, V>) : I.Iter<V>
     = I.map(entries(m), func(kv : (K, V)) : V {kv.1});
 
-  /// Creates a new map by applying `f` to each entry in `rbMap`. Each entry
+  /// Creates a new map by applying `f` to each entry in the map `m`. Each entry
   /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
   /// the new value `v2` is created by applying `f` to `(k, v)`.
   ///
@@ -452,11 +452,11 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let m = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
   /// func f(key : Nat, _val : Text) : Nat = key * 2;
   ///
-  /// let resMap = Map.map(rbMap, f);
+  /// let resMap = Map.map(m, f);
   ///
   /// Debug.print(debug_show(Iter.toArray(Map.entries(resMap))));
   ///
@@ -467,7 +467,7 @@ module {
   /// Runtime: `O(n)`.
   /// Space: `O(n)` retained memory
   /// where `n` denotes the number of key-value entries stored in the map.
-  public func map<K, V1, V2>(rbMap : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> {
+  public func map<K, V1, V2>(m : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> {
     func mapRec(m : Map<K, V1>) : Map<K, V2> {
       switch m {
         case (#leaf) { #leaf };
@@ -476,10 +476,10 @@ module {
         };
       }
     };
-    mapRec(rbMap)
+    mapRec(m)
   };
 
-  /// Determine the size of the tree as the number of key-value entries.
+  /// Determine the size of the map as the number of key-value entries.
   ///
   /// Example:
   /// ```motoko
@@ -489,18 +489,18 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
-  /// Debug.print(debug_show(Map.size(rbMap)));
+  /// Debug.print(debug_show(Map.size(map)));
   ///
   /// // 3
   /// ```
   ///
   /// Runtime: `O(n)`.
   /// Space: `O(1)`.
-  /// where `n` denotes the number of key-value entries stored in the tree.
-  public func size<K, V>(t : Map<K, V>) : Nat {
-    switch t {
+  /// where `n` denotes the number of key-value entries stored in the map.
+  public func size<K, V>(m : Map<K, V>) : Nat {
+    switch m {
       case (#leaf) { 0 };
       case (#node(_, l, _, r)) {
         size(l) + size(r) + 1
@@ -508,7 +508,7 @@ module {
     }
   };
 
-  /// Collapses the elements in `rbMap` into a single value by starting with `base`
+  /// Collapses the elements in `map` into a single value by starting with `base`
   /// and progressively combining keys and values into `base` with `combine`. Iteration runs
   /// left to right.
   ///
@@ -520,12 +520,12 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
   /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
   ///   = (key + accum.0, accum.1 # val);
   ///
-  /// Debug.print(debug_show(Map.foldLeft(rbMap, (0, ""), folder)));
+  /// Debug.print(debug_show(Map.foldLeft(map, (0, ""), folder)));
   ///
   /// // (3, "ZeroOneTwo")
   /// ```
@@ -537,19 +537,19 @@ module {
   ///
   /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
   public func foldLeft<Key, Value, Accum>(
-    rbMap : Map<Key, Value>,
+    map : Map<Key, Value>,
     base : Accum,
     combine : (Key, Value, Accum) -> Accum
   ) : Accum
   {
     var acc = base;
-    for(val in iter(rbMap, #fwd)){
+    for(val in iter(map, #fwd)){
       acc := combine(val.0, val.1, acc);
     };
     acc
   };
 
-  /// Collapses the elements in `rbMap` into a single value by starting with `base`
+  /// Collapses the elements in `map` into a single value by starting with `base`
   /// and progressively combining keys and values into `base` with `combine`. Iteration runs
   /// right to left.
   ///
@@ -561,12 +561,12 @@ module {
   /// import Debug "mo:base/Debug";
   ///
   /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let rbMap = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
   ///
   /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
   ///   = (key + accum.0, accum.1 # val);
   ///
-  /// Debug.print(debug_show(Map.foldRight(rbMap, (0, ""), folder)));
+  /// Debug.print(debug_show(Map.foldRight(map, (0, ""), folder)));
   ///
   /// // (3, "TwoOneZero")
   /// ```
@@ -578,13 +578,13 @@ module {
   ///
   /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
   public func foldRight<Key, Value, Accum>(
-    rbMap : Map<Key, Value>,
+    map : Map<Key, Value>,
     base : Accum,
     combine : (Key, Value, Accum) -> Accum
   ) : Accum
   {
     var acc = base;
-    for(val in iter(rbMap, #bwd)){
+    for(val in iter(map, #bwd)){
       acc := combine(val.0, val.1, acc);
     };
     acc
