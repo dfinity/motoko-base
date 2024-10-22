@@ -25,12 +25,12 @@ class SetMatcher(expected : [Nat]) : M.Matcher<Set.Set<Nat>> {
 
 let natSetOps = Set.SetOps<Nat>(Nat.compare);
 
-func checkSet(rbSet : Set.Set<Nat>) {
-  ignore blackDepth(rbSet)
+func checkSet(s : Set.Set<Nat>) {
+  ignore blackDepth(s.root)
 };
 
-func blackDepth(node : Set.Set<Nat>) : Nat {
-  func checkNode(left : Set.Set<Nat>, elem : Nat, right : Set.Set<Nat>) : Nat {
+func blackDepth(node : Set.Tree<Nat>) : Nat {
+  func checkNode(left : Set.Tree<Nat>, elem : Nat, right : Set.Tree<Nat>) : Nat {
     checkElem(left, func(x) { x < elem });
     checkElem(right, func(x) { x > elem });
     let leftBlacks = blackDepth(left);
@@ -61,14 +61,14 @@ func blackDepth(node : Set.Set<Nat>) : Nat {
   };
 };
 
-func isRed(node : Set.Set<Nat>) : Bool {
+func isRed(node : Set.Tree<Nat>) : Bool {
   switch node {
     case (#red(_, _, _)) true;
     case _ false;
   }
 };
 
-func checkElem(node : Set.Set<Nat>, isValid : Nat -> Bool) {
+func checkElem(node : Set.Tree<Nat>, isValid : Nat -> Bool) {
   switch node {
     case (#leaf) {};
     case (#black(_, elem, _)) {
@@ -80,8 +80,8 @@ func checkElem(node : Set.Set<Nat>, isValid : Nat -> Bool) {
   }
 };
 
-func insert(rbTree : Set.Set<Nat>, key : Nat) : Set.Set<Nat>  {
-  let updatedTree = natSetOps.put(rbTree, key);
+func insert(s : Set.Set<Nat>, key : Nat) : Set.Set<Nat>  {
+  let updatedTree = natSetOps.put(s, key);
   checkSet(updatedTree);
   updatedTree
 };
