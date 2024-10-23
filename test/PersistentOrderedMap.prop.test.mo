@@ -17,11 +17,11 @@ let { run; test; suite } = Suite;
 
 class MapMatcher(expected : Map.Map<Nat, Text>) : M.Matcher<Map.Map<Nat, Text>> {
   public func describeMismatch(actual : Map.Map<Nat, Text>, _description : M.Description) {
-    Debug.print(debug_show (Iter.toArray(Map.entries(actual))) # " should be " # debug_show (Iter.toArray(Map.entries(expected))))
+    Debug.print(debug_show (Iter.toArray(natMap.entries(actual))) # " should be " # debug_show (Iter.toArray(natMap.entries(expected))))
   };
 
   public func matches(actual : Map.Map<Nat, Text>) : Bool {
-    Iter.toArray(Map.entries(actual)) == Iter.toArray(Map.entries(expected))
+    Iter.toArray(natMap.entries(actual)) == Iter.toArray(natMap.entries(expected))
   }
 };
 
@@ -39,7 +39,7 @@ object Random {
   };
 
   public func nextEntries(range: (Nat, Nat), size: Nat): [(Nat, Text)] {
-    Array.tabulate<(Nat, Text)>(size, func(_ix) { 
+    Array.tabulate<(Nat, Text)>(size, func(_ix) {
       let key = nextNat(range); (key, debug_show(key)) } )
   }
 };
@@ -51,8 +51,8 @@ func mapGen(samples_number: Nat, size: Nat, range: (Nat, Nat)): Iter.Iter<Map.Ma
     var n = 0;
     public func next(): ?Map.Map<Nat, Text>  {
       n += 1;
-      if (n > samples_number) { 
-        null 
+      if (n > samples_number) {
+        null
       } else {
         ?natMap.fromIter<Text>(Random.nextEntries(range, size).vals())
       }
@@ -66,10 +66,10 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
     var error_msg: Text = "";
     test(name, do {
         var error = true;
-        label stop for(map in mapGen(map_samples, size, range)) { 
+        label stop for(map in mapGen(map_samples, size, range)) {
           if (not f(map)) {
             error_msg := "Property \"" # name # "\" failed\n";
-            error_msg #= "\n m: " # debug_show(Iter.toArray(Map.entries(map)));
+            error_msg #= "\n m: " # debug_show(Iter.toArray(natMap.entries(map)));
             break stop;
           }
         };
@@ -84,7 +84,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
             let key = Random.nextNat(range);
             if (not f(map, key)) {
               error_msg #= "Property \"" # name # "\" failed";
-              error_msg #= "\n m: " # debug_show(Iter.toArray(Map.entries(map)));
+              error_msg #= "\n m: " # debug_show(Iter.toArray(natMap.entries(map)));
               error_msg #= "\n k: " # debug_show(key);
               break stop;
             }
@@ -95,12 +95,12 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
   };
   run(
     suite("Property tests",
-   [ 
+   [
       suite("empty", [
         test("get(empty(), k) == null", label res : Bool {
           for (_query_ix in Iter.range(0, query_samples-1)) {
             let k = Random.nextNat(range);
-            if(natMap.get(Map.empty<Nat, Text>(), k) != null)
+            if(natMap.get(natMap.empty<Text>(), k) != null)
               break res(false);
           };
           true;
@@ -116,7 +116,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
           natMap.get(natMap.put(natMap.put(m, k, v1), k, v2), k) == v2
         }),
       ]),
-      
+
       suite("replace", [
         prop_with_key("replace(m, k, v).0 == put(m, k, v)", func (m, k) {
           natMap.replace(m, k, "v").0 == natMap.put(m, k, "v")
@@ -156,7 +156,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
           MapMatcher(m2).matches(m1)
         }),
         prop_with_key("remove(put(m, k, v), k).1 == ?v", func (m, k) {
-          natMap.remove(natMap.put(m, k, "v"), k).1 == ?"v" 
+          natMap.remove(natMap.put(m, k, "v"), k).1 == ?"v"
         }),
         prop_with_key("remove(remove(m, k).0, k).1 == null", func (m, k) {
           natMap.remove(natMap.remove(m, k).0, k).1 == null
@@ -170,67 +170,67 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
 
       suite("size", [
         prop_with_key("size(put(m, k, v)) == size(m) + int(get(m, k) == null)", func (m, k) {
-          Map.size(natMap.put(m, k, "v")) == Map.size(m) + (if (natMap.get(m, k) == null) {1} else {0})
+          natMap.size(natMap.put(m, k, "v")) == natMap.size(m) + (if (natMap.get(m, k) == null) {1} else {0})
         }),
         prop_with_key("size(delete(m, k)) + int(get(m, k) != null) == size(m)", func (m, k) {
-          Map.size(natMap.delete(m, k)) + (if (natMap.get(m, k) != null) {1} else {0}) == Map.size(m)
+          natMap.size(natMap.delete(m, k)) + (if (natMap.get(m, k) != null) {1} else {0}) == natMap.size(m)
         })
       ]),
-      
+
       suite("iter,keys,vals,entries",  [
         prop("fromIter(iter(m, #fwd)) == m", func (m) {
-          MapMatcher(m).matches(natMap.fromIter(Map.iter(m, #fwd)))
+          MapMatcher(m).matches(natMap.fromIter(natMap.iter(m, #fwd)))
         }),
         prop("fromIter(iter(m, #bwd)) == m", func (m) {
-          MapMatcher(m).matches(natMap.fromIter(Map.iter(m, #bwd)))
+          MapMatcher(m).matches(natMap.fromIter(natMap.iter(m, #bwd)))
         }),
         prop("iter(m, #fwd) = zip(key(m), vals(m))", func (m) {
-          let k = Map.keys<Nat, Text>(m);
-          let v = Map.vals(m);
-          for (e in Map.iter(m, #fwd)) {
+          let k = natMap.keys<Text>(m);
+          let v = natMap.vals(m);
+          for (e in natMap.iter(m, #fwd)) {
             if (e.0 != k.next() or e.1 != v.next())
               return false;
           };
           return true;
         }),
         prop("entries(m) == iter(m, #fwd)", func (m) {
-          let it = Map.iter(m, #fwd);
-          for (e in Map.entries(m)) {
+          let it = natMap.iter(m, #fwd);
+          for (e in natMap.entries(m)) {
             if (it.next() != e)
               return false;
           };
           return true
         })
       ]),
-      
+
       suite("mapFilter", [
         prop_with_key("get(mapFilter(m, (!=k)), k) == null", func (m, k) {
-          natMap.get(natMap.mapFilter<Text, Text>(m, 
+          natMap.get(natMap.mapFilter<Text, Text>(m,
           func (ki, vi) { if (ki != k) {?vi} else {null}}), k) == null
         }),
         prop_with_key("get(mapFilter(put(m, k, v), (==k)), k) == ?v", func (m, k) {
-          natMap.get(natMap.mapFilter<Text, Text>(natMap.put(m, k, "v"), 
+          natMap.get(natMap.mapFilter<Text, Text>(natMap.put(m, k, "v"),
           func (ki, vi) { if (ki == k) {?vi} else {null}}), k) == ?"v"
         })
       ]),
-      
+
       suite("map", [
         prop("map(m, id) == m", func (m) {
-          MapMatcher(m).matches(Map.map<Nat, Text, Text>(m, func (k, v) {v}))
+          MapMatcher(m).matches(natMap.map<Text, Text>(m, func (k, v) {v}))
         })
       ]),
-      
+
       suite("folds", [
         prop("foldLeft as iter(#fwd)", func (m) {
-          let it = Map.iter(m, #fwd);
-          Map.foldLeft<Nat, Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
+          let it = natMap.iter(m, #fwd);
+          natMap.foldLeft<Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
         }),
         prop("foldRight as iter(#bwd)", func(m) {
-          let it = Map.iter(m, #bwd);
-          Map.foldRight<Nat, Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
+          let it = natMap.iter(m, #bwd);
+          natMap.foldRight<Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
         })
       ]),
-    ]))   
+    ]))
 };
 
 run_all_props((1, 3), 0, 1, 10);
