@@ -14,17 +14,17 @@ let { run; test; suite } = Suite;
 
 let entryTestable = T.tuple2Testable(T.natTestable, T.textTestable);
 
+let natMapOps = Map.MapOps<Nat>(Nat.compare);
+
 class MapMatcher(expected : [(Nat, Text)]) : M.Matcher<Map.Map<Nat, Text>> {
   public func describeMismatch(actual : Map.Map<Nat, Text>, _description : M.Description) {
-    Debug.print(debug_show (Iter.toArray(Map.entries(actual))) # " should be " # debug_show (expected))
+    Debug.print(debug_show (Iter.toArray(natMapOps.entries(actual))) # " should be " # debug_show (expected))
   };
 
   public func matches(actual : Map.Map<Nat, Text>) : Bool {
-    Iter.toArray(Map.entries(actual)) == expected
+    Iter.toArray(natMapOps.entries(actual)) == expected
   }
 };
-
-let natMapOps = Map.MapOps<Nat>(Nat.compare);
 
 func checkMap(rbMap : Map.Map<Nat, Text>) {
   ignore blackDepth(rbMap)
@@ -88,7 +88,7 @@ func getAll(rbTree : Map.Map<Nat, Text>, keys : [Nat]) {
 
 func clear(initialRbMap : Map.Map<Nat, Text>) : Map.Map<Nat, Text> {
   var rbMap = initialRbMap;
-  for ((key, value) in Map.entries(initialRbMap)) {
+  for ((key, value) in natMapOps.entries(initialRbMap)) {
     // stable iteration
     assert (value == debug_show (key));
     let (newMap, result) = natMapOps.remove(rbMap, key);
@@ -125,7 +125,7 @@ func ifKeyLessThan(threshold : Nat, f : (Nat, Text) -> Text) : (Nat, Text) -> ?T
 /* --------------------------------------- */
 
 var buildTestMap = func() : Map.Map<Nat, Text> {
-  Map.empty()
+  natMapOps.empty()
 };
 
 run(
@@ -134,32 +134,32 @@ run(
     [
       test(
         "size",
-        Map.size(buildTestMap()),
+        natMapOps.size(buildTestMap()),
         M.equals(T.nat(0))
       ),
       test(
         "iterate forward",
-        Iter.toArray(Map.iter(buildTestMap(), #fwd)),
+        Iter.toArray(natMapOps.iter(buildTestMap(), #fwd)),
         M.equals(T.array<(Nat, Text)>(entryTestable, []))
       ),
       test(
         "iterate backward",
-        Iter.toArray(Map.iter(buildTestMap(), #bwd)),
+        Iter.toArray(natMapOps.iter(buildTestMap(), #bwd)),
         M.equals(T.array<(Nat, Text)>(entryTestable, []))
       ),
       test(
         "entries",
-        Iter.toArray(Map.entries(buildTestMap())),
+        Iter.toArray(natMapOps.entries(buildTestMap())),
         M.equals(T.array<(Nat, Text)>(entryTestable, []))
       ),
       test(
         "keys",
-        Iter.toArray(Map.keys(buildTestMap())),
+        Iter.toArray(natMapOps.keys(buildTestMap())),
         M.equals(T.array<Nat>(T.natTestable, []))
       ),
       test(
         "vals",
-        Iter.toArray(Map.vals(buildTestMap())),
+        Iter.toArray(natMapOps.vals(buildTestMap())),
         M.equals(T.array<Text>(T.textTestable, []))
       ),
       test(
@@ -189,27 +189,27 @@ run(
       ),
       test(
         "empty right fold keys",
-        Map.foldRight(buildTestMap(), "", concatenateKeys),
+        natMapOps.foldRight(buildTestMap(), "", concatenateKeys),
         M.equals(T.text(""))
       ),
       test(
         "empty left fold keys",
-        Map.foldLeft(buildTestMap(), "", concatenateKeys),
+        natMapOps.foldLeft(buildTestMap(), "", concatenateKeys),
         M.equals(T.text(""))
       ),
       test(
         "empty right fold values",
-        Map.foldRight(buildTestMap(), "", concatenateValues),
+        natMapOps.foldRight(buildTestMap(), "", concatenateValues),
         M.equals(T.text(""))
       ),
       test(
         "empty left fold values",
-        Map.foldLeft(buildTestMap(), "", concatenateValues),
+        natMapOps.foldLeft(buildTestMap(), "", concatenateValues),
         M.equals(T.text(""))
       ),
       test(
         "traverse empty map",
-        Map.map(buildTestMap(), multiplyKeyAndConcat),
+        natMapOps.map(buildTestMap(), multiplyKeyAndConcat),
         MapMatcher([])
       ),
       test(
@@ -224,7 +224,7 @@ run(
 /* --------------------------------------- */
 
 buildTestMap := func() : Map.Map<Nat, Text> {
-  insert(Map.empty(), 0);
+  insert(natMapOps.empty(), 0);
 };
 
 var expected = expectedEntries([0]);
@@ -235,32 +235,32 @@ run(
     [
       test(
         "size",
-        Map.size(buildTestMap()),
+        natMapOps.size(buildTestMap()),
         M.equals(T.nat(1))
       ),
       test(
         "iterate forward",
-        Iter.toArray(Map.iter(buildTestMap(), #fwd)),
+        Iter.toArray(natMapOps.iter(buildTestMap(), #fwd)),
         M.equals(T.array<(Nat, Text)>(entryTestable, expected))
       ),
       test(
         "iterate backward",
-        Iter.toArray(Map.iter(buildTestMap(), #bwd)),
+        Iter.toArray(natMapOps.iter(buildTestMap(), #bwd)),
         M.equals(T.array<(Nat, Text)>(entryTestable, expected))
       ),
       test(
         "entries",
-        Iter.toArray(Map.entries(buildTestMap())),
+        Iter.toArray(natMapOps.entries(buildTestMap())),
         M.equals(T.array<(Nat, Text)>(entryTestable, expected))
       ),
       test(
         "keys",
-        Iter.toArray(Map.keys(buildTestMap())),
+        Iter.toArray(natMapOps.keys(buildTestMap())),
         M.equals(T.array<Nat>(T.natTestable, [0]))
       ),
       test(
         "vals",
-        Iter.toArray(Map.vals(buildTestMap())),
+        Iter.toArray(natMapOps.vals(buildTestMap())),
         M.equals(T.array<Text>(T.textTestable, ["0"]))
       ),
       test(
@@ -303,27 +303,27 @@ run(
       ),
       test(
         "right fold keys",
-        Map.foldRight(buildTestMap(), "", concatenateKeys),
+        natMapOps.foldRight(buildTestMap(), "", concatenateKeys),
         M.equals(T.text("0"))
       ),
       test(
         "left fold keys",
-        Map.foldLeft(buildTestMap(), "", concatenateKeys),
+        natMapOps.foldLeft(buildTestMap(), "", concatenateKeys),
         M.equals(T.text("0"))
       ),
       test(
         "right fold values",
-        Map.foldRight(buildTestMap(), "", concatenateValues),
+        natMapOps.foldRight(buildTestMap(), "", concatenateValues),
         M.equals(T.text("0"))
       ),
       test(
         "left fold values",
-        Map.foldLeft(buildTestMap(), "", concatenateValues),
+        natMapOps.foldLeft(buildTestMap(), "", concatenateValues),
         M.equals(T.text("0"))
       ),
       test(
         "traverse map",
-        Map.map(buildTestMap(), multiplyKeyAndConcat),
+        natMapOps.map(buildTestMap(), multiplyKeyAndConcat),
         MapMatcher([(0, "00")])
       ),
       test(
@@ -348,7 +348,7 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
   [
     test(
       "size",
-      Map.size(buildTestMap()),
+      natMapOps.size(buildTestMap()),
       M.equals(T.nat(3))
     ),
     test(
@@ -358,27 +358,27 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
     ),
     test(
       "iterate forward",
-      Iter.toArray(Map.iter(buildTestMap(), #fwd)),
+      Iter.toArray(natMapOps.iter(buildTestMap(), #fwd)),
       M.equals(T.array<(Nat, Text)>(entryTestable, expected))
     ),
     test(
       "iterate backward",
-      Iter.toArray(Map.iter(buildTestMap(), #bwd)),
+      Iter.toArray(natMapOps.iter(buildTestMap(), #bwd)),
       M.equals(T.array<(Nat, Text)>(entryTestable, Array.reverse(expected)))
     ),
     test(
       "entries",
-      Iter.toArray(Map.entries(buildTestMap())),
+      Iter.toArray(natMapOps.entries(buildTestMap())),
       M.equals(T.array<(Nat, Text)>(entryTestable, expected))
     ),
     test(
       "keys",
-      Iter.toArray(Map.keys(buildTestMap())),
+      Iter.toArray(natMapOps.keys(buildTestMap())),
       M.equals(T.array<Nat>(T.natTestable, [0, 1, 2]))
     ),
     test(
       "vals",
-      Iter.toArray(Map.vals(buildTestMap())),
+      Iter.toArray(natMapOps.vals(buildTestMap())),
       M.equals(T.array<Text>(T.textTestable, ["0", "1", "2"]))
     ),
     test(
@@ -402,27 +402,27 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
     ),
     test(
       "right fold keys",
-      Map.foldRight(buildTestMap(), "", concatenateKeys),
+      natMapOps.foldRight(buildTestMap(), "", concatenateKeys),
       M.equals(T.text("210"))
     ),
     test(
       "left fold keys",
-      Map.foldLeft(buildTestMap(), "", concatenateKeys),
+      natMapOps.foldLeft(buildTestMap(), "", concatenateKeys),
       M.equals(T.text("012"))
     ),
     test(
       "right fold values",
-      Map.foldRight(buildTestMap(), "", concatenateValues),
+      natMapOps.foldRight(buildTestMap(), "", concatenateValues),
       M.equals(T.text("210"))
     ),
     test(
       "left fold values",
-      Map.foldLeft(buildTestMap(), "", concatenateValues),
+      natMapOps.foldLeft(buildTestMap(), "", concatenateValues),
       M.equals(T.text("012"))
     ),
     test(
       "traverse map",
-      Map.map(buildTestMap(), multiplyKeyAndConcat),
+      natMapOps.map(buildTestMap(), multiplyKeyAndConcat),
       MapMatcher([(0, "00"), (1, "21"), (2, "42")])
     ),
     test(
@@ -443,7 +443,7 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
   ];
 
 buildTestMap := func() : Map.Map<Nat, Text> {
-  var rbMap = Map.empty() : Map.Map<Nat, Text>;
+  var rbMap = natMapOps.empty() : Map.Map<Nat, Text>;
   rbMap := insert(rbMap, 2);
   rbMap := insert(rbMap, 1);
   rbMap := insert(rbMap, 0);
@@ -455,7 +455,7 @@ run(suite("rebalance left, left", rebalanceTests(buildTestMap)));
 /* --------------------------------------- */
 
 buildTestMap := func() : Map.Map<Nat, Text> {
-  var rbMap = Map.empty() : Map.Map<Nat, Text>;
+  var rbMap = natMapOps.empty() : Map.Map<Nat, Text>;
   rbMap := insert(rbMap, 2);
   rbMap := insert(rbMap, 0);
   rbMap := insert(rbMap, 1);
@@ -467,7 +467,7 @@ run(suite("rebalance left, right", rebalanceTests(buildTestMap)));
 /* --------------------------------------- */
 
 buildTestMap := func() : Map.Map<Nat, Text> {
-  var rbMap = Map.empty() : Map.Map<Nat, Text>;
+  var rbMap = natMapOps.empty() : Map.Map<Nat, Text>;
   rbMap := insert(rbMap, 0);
   rbMap := insert(rbMap, 2);
   rbMap := insert(rbMap, 1);
@@ -479,7 +479,7 @@ run(suite("rebalance right, left", rebalanceTests(buildTestMap)));
 /* --------------------------------------- */
 
 buildTestMap := func() : Map.Map<Nat, Text> {
-  var rbMap = Map.empty() : Map.Map<Nat, Text>;
+  var rbMap = natMapOps.empty() : Map.Map<Nat, Text>;
   rbMap := insert(rbMap, 0);
   rbMap := insert(rbMap, 1);
   rbMap := insert(rbMap, 2);

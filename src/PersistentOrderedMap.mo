@@ -62,14 +62,14 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let m = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(m))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(m))));
     ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
@@ -89,8 +89,8 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
@@ -100,7 +100,7 @@ module {
     /// map := mapOps.put(map, 2, "Two");
     /// map := mapOps.put(map, 1, "One");
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(map))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map))));
     ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
@@ -120,8 +120,8 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
@@ -129,14 +129,14 @@ module {
     ///
     /// let (map1, old1) = mapOps.replace(map0, 0, "Nil");
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(map1))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map1))));
     /// Debug.print(debug_show(old1));
     /// // [(0, "Nil"), (1, "One"), (2, "Two")]
     /// // ?"Zero"
     ///
     /// let (map2, old2) = mapOps.replace(map0, 3, "Three");
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(map2))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map2))));
     /// Debug.print(debug_show(old2));
     /// // [(0, "Zero"), (1, "One"), (2, "Two"), (3, "Three")]
     /// // null
@@ -159,7 +159,7 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
+    /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
@@ -173,7 +173,7 @@ module {
     ///
     /// let newMap = mapOps.mapFilter(map, f);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(newMap))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(newMap))));
     ///
     /// // [(1, "Twenty One"), (2, "Twenty Two")]
     /// ```
@@ -192,7 +192,7 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
+    /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
@@ -220,14 +220,14 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
+    /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(mapOps.delete(map, 1)))));
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(mapOps.delete(map, 42)))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(mapOps.delete(map, 1)))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(mapOps.delete(map, 42)))));
     ///
     /// // [(0, "Zero"), (2, "Two")]
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
@@ -248,8 +248,8 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat"
-    /// import Iter "mo:base/Iter"
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
@@ -257,14 +257,14 @@ module {
     ///
     /// let (map1, old1) = mapOps.remove(map0, 0);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(map1))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map1))));
     /// Debug.print(debug_show(old1));
     /// // [(1, "One"), (2, "Two")]
     /// // ?"Zero"
     ///
     /// let (map2, old2) = mapOps.remove(map0, 42);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Map.entries(map2))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map2))));
     /// Debug.print(debug_show(old2));
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// // null
@@ -279,75 +279,296 @@ module {
     public func remove<V>(m : Map<K, V>, key : K) : (Map<K,V>, ?V)
       = Internal.remove(m, compare, key);
 
+    /// Create a new empty map.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    ///
+    /// let map = mapOps.empty<Text>();
+    ///
+    /// Debug.print(debug_show(mapOps.size(map)));
+    ///
+    /// // 0
+    /// ```
+    ///
+    /// Cost of empty map creation
+    /// Runtime: `O(1)`.
+    /// Space: `O(1)`
+    public func empty<V>() : Map<K, V> = #leaf;
+
+    /// Get an iterator for the entries of the map `m`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
+    /// The iterator takes a snapshot view of the map and is not affected by concurrent modifications.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(Iter.toArray(mapOps.iter(map, #fwd))));
+    /// Debug.print(debug_show(Iter.toArray(mapOps.iter(map, #bwd))));
+    ///
+    /// //  [(0, "Zero"), (1, "One"), (2, "Two")]
+    /// //  [(2, "Two"), (1, "One"), (0, "Zero")]
+    /// ```
+    ///
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    ///
+    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func iter<V>(m : Map<K, V>, direction : Direction) : I.Iter<(K, V)>
+      = Internal.iter(m, direction);
+
+    /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
+    /// Iterator provides a single method `next()`, which returns
+    /// pairs in ascending order by keys, or `null` when out of pairs to iterate over.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map))));
+    ///
+    ///
+    /// // [(0, "Zero"), (1, "One"), (2, "Two")]
+    /// ```
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    ///
+    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func entries<V>(m : Map<K, V>) : I.Iter<(K, V)> = iter(m, #fwd);
+
+    /// Returns an Iterator (`Iter`) over the keys of the map.
+    /// Iterator provides a single method `next()`, which returns
+    /// keys in ascending order, or `null` when out of keys to iterate over.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(Iter.toArray(mapOps.keys(map))));
+    ///
+    /// // [0, 1, 2]
+    /// ```
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    ///
+    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func keys<V>(m : Map<K, V>) : I.Iter<K>
+      = I.map(entries(m), func(kv : (K, V)) : K {kv.0});
+
+
+    /// Returns an Iterator (`Iter`) over the values of the map.
+    /// Iterator provides a single method `next()`, which returns
+    /// values in no specific order, or `null` when out of values to iterate over.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(Iter.toArray(mapOps.vals(map))));
+    ///
+    /// // ["Zero", "One", "Two"]
+    /// ```
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    ///
+    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func vals<V>(m : Map<K, V>) : I.Iter<V>
+      = I.map(entries(m), func(kv : (K, V)) : V {kv.1});
+
+    /// Creates a new map by applying `f` to each entry in the map `m`. Each entry
+    /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
+    /// the new value `v2` is created by applying `f` to `(k, v)`.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// func f(key : Nat, _val : Text) : Nat = key * 2;
+    ///
+    /// let resMap = mapOps.map(map, f);
+    ///
+    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(resMap))));
+    ///
+    /// // [(0, 0), (1, 2), (2, 4)]
+    /// ```
+    ///
+    /// Cost of mapping all the elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(n)` retained memory
+    /// where `n` denotes the number of key-value entries stored in the map.
+    public func map<V1, V2>(m : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2>
+      = Internal.map(m, f);
+
+    /// Determine the size of the map as the number of key-value entries.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(mapOps.size(map)));
+    ///
+    /// // 3
+    /// ```
+    ///
+    /// Runtime: `O(n)`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of key-value entries stored in the tree.
+    public func size<V>(m : Map<K, V>) : Nat
+      = Internal.size(m);
+
+    /// Collapses the elements in the `map` into a single value by starting with `base`
+    /// and progressively combining keys and values into `base` with `combine`. Iteration runs
+    /// left to right.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
+    ///   = (key + accum.0, accum.1 # val);
+    ///
+    /// Debug.print(debug_show(mapOps.foldLeft(map, (0, ""), folder)));
+    ///
+    /// // (3, "ZeroOneTwo")
+    /// ```
+    ///
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: depends on `combine` function plus garbage, see the note below.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    ///
+    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func foldLeft<Value, Accum>(
+      map : Map<K, Value>,
+      base : Accum,
+      combine : (K, Value, Accum) -> Accum
+    ) : Accum
+    = Internal.foldLeft(map, base, combine);
+
+    /// Collapses the elements in the `map` into a single value by starting with `base`
+    /// and progressively combining keys and values into `base` with `combine`. Iteration runs
+    /// right to left.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
+    ///   = (key + accum.0, accum.1 # val);
+    ///
+    /// Debug.print(debug_show(mapOps.foldRight(map, (0, ""), folder)));
+    ///
+    /// // (3, "TwoOneZero")
+    /// ```
+    ///
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: depends on `combine` function plus garbage, see the note below.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    ///
+    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func foldRight<Value, Accum>(
+      map : Map<K, Value>,
+      base : Accum,
+      combine : (K, Value, Accum) -> Accum
+    ) : Accum
+    = Internal.foldRight(map, base, combine);
   };
-
-  /// Create a new empty map.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let map = Map.empty<Nat, Text>();
-  ///
-  /// Debug.print(debug_show(Map.size(map)));
-  ///
-  /// // 0
-  /// ```
-  ///
-  /// Cost of empty map creation
-  /// Runtime: `O(1)`.
-  /// Space: `O(1)`
-  public func empty<K, V>() : Map<K, V> = #leaf;
-
-  type IterRep<K, V> = List.List<{ #tr : Map<K, V>; #xy : (K, V) }>;
 
   public type Direction = { #fwd; #bwd };
 
-  /// Get an iterator for the entries of the map `m`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
-  /// The iterator takes a snapshot view of the map and is not affected by concurrent modifications.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Map.iter(map, #fwd))));
-  /// Debug.print(debug_show(Iter.toArray(Map.iter(map, #bwd))));
-  ///
-  /// //  [(0, "Zero"), (1, "One"), (2, "Two")]
-  /// //  [(2, "Two"), (1, "One"), (0, "Zero")]
-  /// ```
-  ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func iter<K, V>(m : Map<K, V>, direction : Direction) : I.Iter<(K, V)> {
-    let turnLeftFirst : MapTraverser<K, V>
-     = func (l, xy, r, ts) { ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts))) };
+  module Internal {
 
-    let turnRightFirst : MapTraverser<K, V>
-     = func (l, xy, r, ts) { ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts))) };
+    public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V>
+    {
+      var map = #leaf : Map<K,V>;
+      for(val in i) {
+        map := put(map, compare, val.0, val.1);
+      };
+      map
+    };
 
-    switch direction {
-      case (#fwd) IterMap(m, turnLeftFirst);
-      case (#bwd) IterMap(m, turnRightFirst)
-    }
-  };
+    type IterRep<K, V> = List.List<{ #tr : Map<K, V>; #xy : (K, V) }>;
 
-  type MapTraverser<K, V> = (Map<K, V>, (K, V), Map<K, V>, IterRep<K, V>) -> IterRep<K, V>;
+    public func iter<K, V>(map : Map<K, V>, direction : Direction) : I.Iter<(K, V)> {
+      let turnLeftFirst : MapTraverser<K, V>
+      = func (l, xy, r, ts) { ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts))) };
 
-  class IterMap<K, V>(m : Map<K, V>, mapTraverser : MapTraverser<K, V>) {
-    var trees : IterRep<K, V> = ?(#tr(m), null);
-    public func next() : ?(K, V) {
+      let turnRightFirst : MapTraverser<K, V>
+      = func (l, xy, r, ts) { ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts))) };
+
+      switch direction {
+        case (#fwd) IterMap(map, turnLeftFirst);
+        case (#bwd) IterMap(map, turnRightFirst)
+      }
+    };
+
+    type MapTraverser<K, V> = (Map<K, V>, (K, V), Map<K, V>, IterRep<K, V>) -> IterRep<K, V>;
+
+    class IterMap<K, V>(map : Map<K, V>, mapTraverser : MapTraverser<K, V>) {
+      var trees : IterRep<K, V> = ?(#tr(map), null);
+      public func next() : ?(K, V) {
         switch (trees) {
           case (null) { null };
           case (?(#tr(#leaf), ts)) {
@@ -368,274 +589,66 @@ module {
           }
         }
       }
-  };
-
-  /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
-  /// Iterator provides a single method `next()`, which returns
-  /// pairs in ascending order by keys, or `null` when out of pairs to iterate over.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Map.entries(map))));
-  ///
-  ///
-  /// // [(0, "Zero"), (1, "One"), (2, "Two")]
-  /// ```
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func entries<K, V>(m : Map<K, V>) : I.Iter<(K, V)> = iter(m, #fwd);
-
-  /// Returns an Iterator (`Iter`) over the keys of the map.
-  /// Iterator provides a single method `next()`, which returns
-  /// keys in ascending order, or `null` when out of keys to iterate over.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Map.keys(map))));
-  ///
-  /// // [0, 1, 2]
-  /// ```
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func keys<K, V>(m : Map<K, V>) : I.Iter<K>
-    = I.map(entries(m), func(kv : (K, V)) : K {kv.0});
-
-  /// Returns an Iterator (`Iter`) over the values of the map.
-  /// Iterator provides a single method `next()`, which returns
-  /// values in no specific order, or `null` when out of values to iterate over.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Map.vals(map))));
-  ///
-  /// // ["Zero", "One", "Two"]
-  /// ```
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func vals<K, V>(m : Map<K, V>) : I.Iter<V>
-    = I.map(entries(m), func(kv : (K, V)) : V {kv.1});
-
-  /// Creates a new map by applying `f` to each entry in the map `m`. Each entry
-  /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
-  /// the new value `v2` is created by applying `f` to `(k, v)`.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let m = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// func f(key : Nat, _val : Text) : Nat = key * 2;
-  ///
-  /// let resMap = Map.map(m, f);
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Map.entries(resMap))));
-  ///
-  /// // [(0, 0), (1, 2), (2, 4)]
-  /// ```
-  ///
-  /// Cost of mapping all the elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(n)` retained memory
-  /// where `n` denotes the number of key-value entries stored in the map.
-  public func map<K, V1, V2>(m : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> {
-    func mapRec(m : Map<K, V1>) : Map<K, V2> {
-      switch m {
-        case (#leaf) { #leaf };
-        case (#red(l, xy, r)) {
-          #red(mapRec l, (xy.0, f xy), mapRec r)
-        };
-        case (#black(l, xy, r)) {
-          #black(mapRec l, (xy.0, f xy), mapRec r)
-        };
-      }
     };
-    mapRec(m)
-  };
 
-  /// Determine the size of the map as the number of key-value entries.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// Debug.print(debug_show(Map.size(map)));
-  ///
-  /// // 3
-  /// ```
-  ///
-  /// Runtime: `O(n)`.
-  /// Space: `O(1)`.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  public func size<K, V>(m : Map<K, V>) : Nat {
-    switch m {
-      case (#red(l, _, r)) {
-        size(l) + size(r) + 1
+    public func map<K, V1, V2>(map : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> {
+      func mapRec(m : Map<K, V1>) : Map<K, V2> {
+        switch m {
+          case (#leaf) { #leaf };
+          case (#red(l, xy, r)) {
+            #red(mapRec l, (xy.0, f xy), mapRec r)
+          };
+          case (#black(l, xy, r)) {
+            #black(mapRec l, (xy.0, f xy), mapRec r)
+          };
+        }
       };
-      case (#black(l, _, r)) {
-        size(l) + size(r) + 1
-      };
-      case (#leaf) { 0 }
-    }
-  };
+      mapRec(map)
+    };
 
-  /// Collapses the elements in `map` into a single value by starting with `base`
-  /// and progressively combining keys and values into `base` with `combine`. Iteration runs
-  /// left to right.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
-  ///   = (key + accum.0, accum.1 # val);
-  ///
-  /// Debug.print(debug_show(Map.foldLeft(map, (0, ""), folder)));
-  ///
-  /// // (3, "ZeroOneTwo")
-  /// ```
-  ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: depends on `combine` function plus garbage, see the note below.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func foldLeft<Key, Value, Accum>(
-    map : Map<Key, Value>,
-    base : Accum,
-    combine : (Key, Value, Accum) -> Accum
-  ) : Accum
-  {
-    switch (map) {
-      case (#leaf) { base };
-      case (#red(l, (k, v), r)) {
-        let left = foldLeft(l, base, combine);
-        let middle = combine(k, v, left);
-        foldLeft(r, middle, combine)
-      };
-      case (#black(l, (k, v), r)) {
-        let left = foldLeft(l, base, combine);
-        let middle = combine(k, v, left);
-        foldLeft(r, middle, combine)
-      }
-    }
-  };
-
-  /// Collapses the elements in `map` into a single value by starting with `base`
-  /// and progressively combining keys and values into `base` with `combine`. Iteration runs
-  /// right to left.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/PersistentOrderedMap";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-  /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-  ///
-  /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
-  ///   = (key + accum.0, accum.1 # val);
-  ///
-  /// Debug.print(debug_show(Map.foldRight(map, (0, ""), folder)));
-  ///
-  /// // (3, "TwoOneZero")
-  /// ```
-  ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: depends on `combine` function plus garbage, see the note below.
-  /// where `n` denotes the number of key-value entries stored in the map.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func foldRight<Key, Value, Accum>(
-    map : Map<Key, Value>,
-    base : Accum,
-    combine : (Key, Value, Accum) -> Accum
-  ) : Accum
-  {
-    switch (map) {
-      case (#leaf) { base };
-      case (#red(l, (k, v), r)) {
-        let right = foldRight(r, base, combine);
-        let middle = combine(k, v, right);
-        foldRight(l, middle, combine)
-      };
-      case (#black(l, (k, v), r)) {
-        let right = foldRight(r, base, combine);
-        let middle = combine(k, v, right);
-        foldRight(l, middle, combine)
-      }
-    }
-  };
-
-
-  public module Internal {
-
-    public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V>
+    public func foldLeft<Key, Value, Accum>(
+      map : Map<Key, Value>,
+      base : Accum,
+      combine : (Key, Value, Accum) -> Accum
+    ) : Accum
     {
-      var map = #leaf : Map<K,V>;
-      for(val in i) {
-        map := put(map, compare, val.0, val.1);
-      };
-      map
+      switch (map) {
+        case (#leaf) { base };
+        case (#red(l, (k, v), r)) {
+          let left = foldLeft(l, base, combine);
+          let middle = combine(k, v, left);
+          foldLeft(r, middle, combine)
+        };
+        case (#black(l, (k, v), r)) {
+          let left = foldLeft(l, base, combine);
+          let middle = combine(k, v, left);
+          foldLeft(r, middle, combine)
+        }
+      }
     };
 
-    public func mapFilter<K, V1, V2>(t : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2>{
+    public func foldRight<Key, Value, Accum>(
+      map : Map<Key, Value>,
+      base : Accum,
+      combine : (Key, Value, Accum) -> Accum
+    ) : Accum
+    {
+      switch (map) {
+        case (#leaf) { base };
+        case (#red(l, (k, v), r)) {
+          let right = foldRight(r, base, combine);
+          let middle = combine(k, v, right);
+          foldRight(l, middle, combine)
+        };
+        case (#black(l, (k, v), r)) {
+          let right = foldRight(r, base, combine);
+          let middle = combine(k, v, right);
+          foldRight(l, middle, combine)
+        }
+      }
+    };
+
+    public func mapFilter<K, V1, V2>(map : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2>{
       func combine(key : K, value1 : V1, acc : Map<K, V2>) : Map<K, V2> {
         switch (f(key, value1)){
           case null { acc };
@@ -644,7 +657,19 @@ module {
           }
         }
       };
-      foldLeft(t, #leaf, combine)
+      foldLeft(map, #leaf, combine)
+    };
+
+    public func size<K, V>(t : Map<K, V>) : Nat {
+      switch t {
+        case (#red(l, _, r)) {
+          size(l) + size(r) + 1
+        };
+        case (#black(l, _, r)) {
+          size(l) + size(r) + 1
+        };
+        case (#leaf) { 0 }
+      }
     };
 
     public func get<K, V>(t : Map<K, V>, compare : (K, K) -> O.Order, x : K) : ?V {
