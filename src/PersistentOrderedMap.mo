@@ -27,15 +27,6 @@ import List "List";
 import Nat "Nat";
 import O "Order";
 
-// TODO: a faster, more compact and less indirect representation would be:
-// type Map<K, V> = {
-//  #red : (Map<K, V>, K, V, Map<K, V>);
-//  #black : (Map<K, V>, K, V, Map<K, V>);
-//  #leaf
-//};
-// (this inlines the colors into the variant, flattens a tuple, and removes a (now) redundant option, for considerable heap savings.)
-// It would also make sense to maintain the size in a separate root for 0(1) access.
-
 module {
 
   /// Red-black tree of nodes with key-value entries, ordered by the keys.
@@ -47,6 +38,8 @@ module {
     #leaf
   };
 
+  public type Direction = { #fwd; #bwd };
+
   /// Operations on `Map`, that require a comparator.
   ///
   /// The object should be created once, then used for all the operations
@@ -54,7 +47,7 @@ module {
   ///
   /// `MapOps` contains methods that require `compare` internally:
   /// operations that may reshape a `Map` or should find something.
-  public class MapOps<K>(compare : (K,K) -> O.Order) {
+  public class MapOps<K>(compare : (K, K) -> O.Order) {
 
     /// Returns a new map, containing all entries given by the iterator `i`.
     /// If there are multiple entries with the same key the last one is taken.
@@ -80,7 +73,7 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
-    public func fromIter<V>(i : I.Iter<(K,V)>) : Map<K, V>
+    public func fromIter<V>(i : I.Iter<(K, V)>) : Map<K, V>
       = Internal.fromIter(i, compare);
 
     /// Insert the value `value` with key `key` into the map `m`. Overwrites any existing entry with key `key`.
@@ -148,7 +141,7 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K,V>, ?V)
+    public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K, V>, ?V)
       = Internal.replace(m, compare, key, value);
 
     /// Creates a new map by applying `f` to each entry in the map `m`. For each entry
@@ -276,7 +269,7 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func remove<V>(m : Map<K, V>, key : K) : (Map<K,V>, ?V)
+    public func remove<V>(m : Map<K, V>, key : K) : (Map<K, V>, ?V)
       = Internal.remove(m, compare, key);
 
     /// Create a new empty map.
@@ -536,13 +529,11 @@ module {
     = Internal.foldRight(map, base, combine);
   };
 
-  public type Direction = { #fwd; #bwd };
-
   module Internal {
 
     public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V>
     {
-      var map = #leaf : Map<K,V>;
+      var map = #leaf : Map<K, V>;
       for(val in i) {
         map := put(map, compare, val.0, val.1);
       };
@@ -698,12 +689,12 @@ module {
           (#red (l, x, y, r))
         };
         case _ {
-          Debug.trap "RBTree.red"
+          Debug.trap "PersistentOrderedMap.red"
         }
       }
     };
 
-    func lbalance<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K,V> {
+    func lbalance<K, V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
       switch (left, right) {
         case (#red(#red(l1, x1, y1, r1), x2, y2, r2), r) {
           #red(
@@ -723,7 +714,7 @@ module {
       }
     };
 
-    func rbalance<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K,V> {
+    func rbalance<K, V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
       switch (left, right) {
         case (l, #red(l1, x1, y1, #red(l2, x2, y2, r2))) {
           #red(
@@ -753,7 +744,7 @@ module {
       onClash : ClashResolver<V>
     )
     : Map<K, V>{
-      func ins(tree : Map<K,V>) : Map<K,V> {
+      func ins(tree : Map<K, V>) : Map<K, V> {
         switch tree {
           case (#black(left, x, y, right)) {
             switch (compare (key, x)) {
@@ -802,7 +793,7 @@ module {
       key : K,
       val : V
     )
-    : (Map<K,V>, ?V) {
+    : (Map<K, V>, ?V) {
       var oldVal : ?V = null;
       func onClash( clash : { old : V; new : V } ) : V
       {
@@ -821,7 +812,7 @@ module {
     ) : Map<K, V> = replace(m, compare, key, val).0;
 
 
-    func balLeft<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K,V> {
+    func balLeft<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
       switch (left, right) {
         case (#red(l1, x1, y1, r1), r) {
           #red(
@@ -842,7 +833,7 @@ module {
       }
     };
 
-    func balRight<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K,V> {
+    func balRight<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
       switch (left, right) {
         case (l, #red(l1, x1, y1, r1)) {
           #red(
@@ -910,9 +901,9 @@ module {
     public func delete<K, V>(m : Map<K, V>, compare : (K, K) -> O.Order, key : K) : Map<K, V>
       = remove(m, compare, key).0;
 
-    public func remove<K, V>(tree : Map<K, V>, compare : (K, K) -> O.Order, x : K) : (Map<K,V>, ?V) {
+    public func remove<K, V>(tree : Map<K, V>, compare : (K, K) -> O.Order, x : K) : (Map<K, V>, ?V) {
       var y0 : ?V = null;
-      func delNode(left : Map<K,V>, x1 : K, y1 : V, right : Map<K,V>) : Map<K,V> {
+      func delNode(left : Map<K, V>, x1 : K, y1 : V, right : Map<K, V>) : Map<K, V> {
         switch (compare (x, x1)) {
           case (#less) {
             let newLeft = del left;
@@ -942,7 +933,7 @@ module {
           };
         }
       };
-      func del(tree : Map<K,V>) : Map<K,V> {
+      func del(tree : Map<K, V>) : Map<K, V> {
         switch tree {
           case (#red(left, x, y, right)) {
             delNode(left, x, y, right)
