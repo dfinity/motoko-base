@@ -138,18 +138,13 @@ run(
         M.equals(T.nat(0))
       ),
       test(
-        "iterate forward",
-        Iter.toArray(natMapOps.iter(buildTestMap(), #fwd)),
-        M.equals(T.array<(Nat, Text)>(entryTestable, []))
-      ),
-      test(
-        "iterate backward",
-        Iter.toArray(natMapOps.iter(buildTestMap(), #bwd)),
-        M.equals(T.array<(Nat, Text)>(entryTestable, []))
-      ),
-      test(
         "entries",
         Iter.toArray(natMapOps.entries(buildTestMap())),
+        M.equals(T.array<(Nat, Text)>(entryTestable, []))
+      ),
+      test(
+        "entriesRev",
+        Iter.toArray(natMapOps.entriesRev(buildTestMap())),
         M.equals(T.array<(Nat, Text)>(entryTestable, []))
       ),
       test(
@@ -264,18 +259,13 @@ run(
         M.equals(T.nat(1))
       ),
       test(
-        "iterate forward",
-        Iter.toArray(natMapOps.iter(buildTestMap(), #fwd)),
-        M.equals(T.array<(Nat, Text)>(entryTestable, expected))
-      ),
-      test(
-        "iterate backward",
-        Iter.toArray(natMapOps.iter(buildTestMap(), #bwd)),
-        M.equals(T.array<(Nat, Text)>(entryTestable, expected))
-      ),
-      test(
         "entries",
         Iter.toArray(natMapOps.entries(buildTestMap())),
+        M.equals(T.array<(Nat, Text)>(entryTestable, expected))
+      ),
+      test(
+        "entriesRev",
+        Iter.toArray(natMapOps.entriesRev(buildTestMap())),
         M.equals(T.array<(Nat, Text)>(entryTestable, expected))
       ),
       test(
@@ -407,19 +397,14 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
       MapMatcher(expected)
     ),
     test(
-      "iterate forward",
-      Iter.toArray(natMapOps.iter(buildTestMap(), #fwd)),
-      M.equals(T.array<(Nat, Text)>(entryTestable, expected))
-    ),
-    test(
-      "iterate backward",
-      Iter.toArray(natMapOps.iter(buildTestMap(), #bwd)),
-      M.equals(T.array<(Nat, Text)>(entryTestable, Array.reverse(expected)))
-    ),
-    test(
       "entries",
       Iter.toArray(natMapOps.entries(buildTestMap())),
       M.equals(T.array<(Nat, Text)>(entryTestable, expected))
+    ),
+    test(
+      "entriesRev",
+      Iter.toArray(natMapOps.entriesRev(buildTestMap())),
+      M.equals(T.array<(Nat, Text)>(entryTestable, Array.reverse(expected)))
     ),
     test(
       "keys",

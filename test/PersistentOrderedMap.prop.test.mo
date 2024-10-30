@@ -179,30 +179,27 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
         })
       ]),
 
-      suite("iter,keys,vals,entries",  [
-        prop("fromIter(iter(m, #fwd)) == m", func (m) {
-          MapMatcher(m).matches(natMap.fromIter(natMap.iter(m, #fwd)))
+      suite("keys,vals,entries,entriesRe",  [
+        prop("fromIter(entries(m)) == m", func (m) {
+          MapMatcher(m).matches(natMap.fromIter(natMap.entries(m)))
         }),
-        prop("fromIter(iter(m, #bwd)) == m", func (m) {
-          MapMatcher(m).matches(natMap.fromIter(natMap.iter(m, #bwd)))
+        prop("fromIter(entriesRev(m)) == m", func (m) {
+          MapMatcher(m).matches(natMap.fromIter(natMap.entriesRev(m)))
         }),
-        prop("iter(m, #fwd) = zip(key(m), vals(m))", func (m) {
+        prop("entries(m) = zip(key(m), vals(m))", func (m) {
           let k = natMap.keys<Text>(m);
           let v = natMap.vals(m);
-          for (e in natMap.iter(m, #fwd)) {
+          for (e in natMap.entries(m)) {
             if (e.0 != k.next() or e.1 != v.next())
               return false;
           };
           return true;
         }),
-        prop("entries(m) == iter(m, #fwd)", func (m) {
-          let it = natMap.iter(m, #fwd);
-          for (e in natMap.entries(m)) {
-            if (it.next() != e)
-              return false;
-          };
-          return true
-        })
+        prop("Array.fromIter(entries(m)) == Array.fromIter(entriesRev(m)).reverse()", func (m) {
+          let a = Iter.toArray(natMap.entries(m));
+          let b = Array.reverse(Iter.toArray(natMap.entriesRev(m)));
+          M.equals(T.array<(Nat, Text)>(entryTestable, a)).matches(b)
+        }),
       ]),
 
       suite("mapFilter", [
@@ -223,12 +220,12 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
       ]),
 
       suite("folds", [
-        prop("foldLeft as iter(#fwd)", func (m) {
-          let it = natMap.iter(m, #fwd);
+        prop("foldLeft as entries()", func (m) {
+          let it = natMap.entries(m);
           natMap.foldLeft<Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
         }),
-        prop("foldRight as iter(#bwd)", func(m) {
-          let it = natMap.iter(m, #bwd);
+        prop("foldRight as entriesRev()", func(m) {
+          let it = natMap.entriesRev(m);
           natMap.foldRight<Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
         })
       ]),

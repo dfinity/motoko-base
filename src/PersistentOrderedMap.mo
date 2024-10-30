@@ -43,9 +43,6 @@ module {
     #leaf
   };
 
-
-  public type Direction = { #fwd; #bwd };
-
   /// Operations on `Map`, that require a comparator.
   ///
   /// The object should be created once, then used for all the operations
@@ -93,7 +90,7 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// var map = Map.empty<Nat, Text>();
+    /// var map = Map.empty<Text>();
     ///
     /// map := mapOps.put(map, 0, "Zero");
     /// map := mapOps.put(map, 2, "Two");
@@ -371,35 +368,6 @@ module {
     public func empty<V>() : Map<K, V> 
       = Internal.empty();
 
-    /// Get an iterator for the entries of the map `m`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
-    /// The iterator takes a snapshot view of the map and is not affected by concurrent modifications.
-    ///
-    /// Example:
-    /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
-    /// import Nat "mo:base/Nat";
-    /// import Iter "mo:base/Iter";
-    /// import Debug "mo:base/Debug";
-    ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
-    ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.iter(map, #fwd))));
-    /// Debug.print(debug_show(Iter.toArray(mapOps.iter(map, #bwd))));
-    ///
-    /// //  [(0, "Zero"), (1, "One"), (2, "Two")]
-    /// //  [(2, "Two"), (1, "One"), (0, "Zero")]
-    /// ```
-    ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    ///
-    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func iter<V>(m : Map<K, V>, direction : Direction) : I.Iter<(K, V)>
-      = Internal.iter(m.root, direction);
-
     /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
     /// Iterator provides a single method `next()`, which returns
     /// pairs in ascending order by keys, or `null` when out of pairs to iterate over.
@@ -415,9 +383,10 @@ module {
     /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map))));
-    ///
-    ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
+    /// var sum = 0;
+    /// for ((k, _) in map.entries()) { sum += k; }
+    /// Debug.print(debug_show(sum)); // => 3
     /// ```
     /// Cost of iteration over all elements:
     /// Runtime: `O(n)`.
@@ -425,7 +394,10 @@ module {
     /// where `n` denotes the number of key-value entries stored in the map.
     ///
     /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func entries<V>(m : Map<K, V>) : I.Iter<(K, V)> = iter(m, #fwd);
+    public func entries<V>(m : Map<K, V>) : I.Iter<(K, V)> = Internal.iter(m.root, #fwd);
+
+    /// Same as `entries` but iterates in the descending order.
+    public func entriesRev<V>(m : Map<K, V>) : I.Iter<(K, V)> = Internal.iter(m.root, #bwd);
 
     /// Returns an Iterator (`Iter`) over the keys of the map.
     /// Iterator provides a single method `next()`, which returns
@@ -669,7 +641,7 @@ module {
 
     type IterRep<K, V> = List.List<{ #tr : Tree<K, V>; #xy : (K, V) }>;
 
-    public func iter<K, V>(map : Tree<K, V>, direction : Direction) : I.Iter<(K, V)> {
+    public func iter<K, V>(map : Tree<K, V>, direction : { #fwd; #bwd }) : I.Iter<(K, V)> {
       let turnLeftFirst : MapTraverser<K, V>
       = func (l, x, y, r, ts) { ?(#tr(l), ?(#xy(x, y), ?(#tr(r), ts))) };
 
