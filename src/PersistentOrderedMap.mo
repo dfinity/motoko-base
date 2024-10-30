@@ -199,13 +199,33 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func get<V>(m : Map<K, V>, key : K) : ?V
       = Internal.get(m, compare, key);
+
+    /// Test whether the map `m` contains any binding for the given `key`.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show mapOps.contains(map, 1)); // => true
+    /// Debug.print(debug_show mapOps.contains(map, 42)); // => false
+    /// ```
+    ///
+    /// Runtime: `O(log(n))`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of key-value entries stored in the map and
+    /// assuming that the `compare` function implements an `O(1)` comparison.
+    public func contains<V>(m: Map<K, V>, key: K): Bool 
+      = Internal.contains(m, compare, key);
 
     /// Deletes the entry with the key `key` from the map `m`. Has no effect if `key` is not
     /// present in the map. Returns modified map.
@@ -725,6 +745,13 @@ module {
           }
         };
         case (#leaf) { null }
+      }
+    };
+
+    public func contains<K, V>(m: Map<K, V>, compare : (K, K) -> O.Order, key: K): Bool { 
+      switch (get(m, compare, key)) {
+        case(null) { false }; 
+        case(_)    { true } 
       }
     };
 

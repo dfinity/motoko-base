@@ -244,6 +244,12 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
         prop("forall k, v in map, v == show_debug(k)", func(m) {
           natMap.all(m, func (k: Nat, v: Text): Bool = (v == debug_show(k)))
         }),
+      ]),
+
+      suite("contains", [
+        prop_with_key("contains(m, k) == (get(m, k) != null)", func (m, k) {
+          natMap.contains(m, k) == (Option.isSome(natMap.get(m, k)))
+        }),
       ])
     ]))
 };

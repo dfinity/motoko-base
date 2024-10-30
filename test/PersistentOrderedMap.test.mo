@@ -173,6 +173,11 @@ run(
         M.equals(T.optional(T.textTestable, null : ?Text))
       ),
       test(
+        "contains absent",
+        natMapOps.contains(buildTestMap(), 0),
+        M.equals(T.bool(false))
+      ),
+      test(
         "remove absent",
         natMapOps.remove(buildTestMap(), 0).1,
         M.equals(T.optional(T.textTestable, null : ?Text))
@@ -282,6 +287,11 @@ run(
         "get",
         natMapOps.get(buildTestMap(), 0),
         M.equals(T.optional(T.textTestable, ?"0"))
+      ),
+      test(
+        "contains",
+        natMapOps.contains(buildTestMap(), 0),
+        M.equals(T.bool(true))
       ),
       test(
         "replace function result",
@@ -414,6 +424,11 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
         rbMap
       },
       MapMatcher(expected)
+    ),
+    test(
+      "contains",
+      Array.tabulate<Bool>(4, func (k: Nat) = (natMapOps.contains(buildTestMap(), k))),
+      M.equals(T.array<Bool>(T.boolTestable, [true, true, true, false]))
     ),
     test(
       "clear",
