@@ -217,6 +217,16 @@ run(
         natMapOps.mapFilter(buildTestMap(), ifKeyLessThan(0, multiplyKeyAndConcat)),
         MapMatcher([])
       ),
+      test(
+        "empty all",
+        natMapOps.all<Text>(buildTestMap(), func (k, v) = false),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "empty some",
+        natMapOps.some<Text>(buildTestMap(), func (k, v) = true),
+        M.equals(T.bool(false))
+      )
     ]
   )
 );
@@ -336,6 +346,16 @@ run(
         natMapOps.mapFilter(buildTestMap(), ifKeyLessThan(1, multiplyKeyAndConcat)),
         MapMatcher([(0, "00")])
       ),
+      test(
+        "all",
+        natMapOps.all<Text>(buildTestMap(), func (k, v) = (k == 0)),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "some",
+        natMapOps.some<Text>(buildTestMap(), func (k, v) = (k == 0)),
+        M.equals(T.bool(true))
+      )
     ]
   )
 );
@@ -440,6 +460,26 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
       natMapOps.mapFilter(buildTestMap(), ifKeyLessThan(3, multiplyKeyAndConcat)),
       MapMatcher([(0, "00"), (1, "21"), (2, "42")])
     ),
+    test(
+      "all true",
+      natMapOps.all<Text>(buildTestMap(), func (k, v) = (k >= 0)),
+      M.equals(T.bool(true))
+    ),
+    test(
+      "all false",
+      natMapOps.all<Text>(buildTestMap(), func (k, v) = (k > 0)),
+      M.equals(T.bool(false))
+    ),
+    test(
+      "some true",
+      natMapOps.some<Text>(buildTestMap(), func (k, v) = (k >= 2)),
+      M.equals(T.bool(true))
+    ),
+    test(
+      "some false",
+      natMapOps.some<Text>(buildTestMap(), func (k, v) = (k > 2)),
+      M.equals(T.bool(false))
+    )
   ];
 
 buildTestMap := func() : Map.Map<Nat, Text> {

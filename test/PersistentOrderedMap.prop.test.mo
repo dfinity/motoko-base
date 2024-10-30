@@ -230,6 +230,21 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
           natMap.foldRight<Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
         })
       ]),
+
+      suite("all/some", [
+        prop("all through fold", func(m) {
+          let pred = func(k: Nat, v: Text): Bool = (k <= range.1 - 2 and range.0 + 2 <= k);
+          natMap.all(m, pred) == natMap.foldLeft<Text, Bool>(m, true, func (k, v, acc) {acc and pred(k, v)})
+        }),
+        prop("some through fold", func(m) {
+          let pred = func(k: Nat, v: Text): Bool = (k >= range.1 - 1 or range.0 + 1 >= k);
+          natMap.some(m, pred) == natMap.foldLeft<Text, Bool>(m, false, func (k, v, acc) {acc or pred(k, v)})
+        }),
+
+        prop("forall k, v in map, v == show_debug(k)", func(m) {
+          natMap.all(m, func (k: Nat, v: Text): Bool = (v == debug_show(k)))
+        }),
+      ])
     ]))
 };
 

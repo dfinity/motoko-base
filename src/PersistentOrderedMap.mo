@@ -424,7 +424,6 @@ module {
     /// let resMap = mapOps.map(map, f);
     ///
     /// Debug.print(debug_show(Iter.toArray(mapOps.entries(resMap))));
-    ///
     /// // [(0, 0), (1, 2), (2, 4)]
     /// ```
     ///
@@ -527,6 +526,52 @@ module {
       combine : (K, Value, Accum) -> Accum
     ) : Accum
     = Internal.foldRight(map, base, combine);
+
+    /// Test whether all key-value pairs satisfy a given predicate `pred`.
+    ///
+    /// Example:
+    /// ```
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
+    ///
+    /// Debug.print(debug_show(mapOps.all(map, func (k, v) = (v == debug_show(k)))));
+    /// // true
+    /// Debug.print(debug_show(mapOps.all(map, func (k, v) = (k < 2))));
+    /// // false
+    /// ```
+    ///
+    /// Runtime: `O(n)`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of key-value entries stored in the tree.
+    public func all<V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool
+      = Internal.all(m, pred);
+
+    /// Test if there exists a key-value pair satisfying a given predicate `pred`.
+    ///
+    /// Example:
+    /// ```
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
+    ///
+    /// Debug.print(debug_show(mapOps.some(map, func (k, v) = (k >= 3))));
+    /// // false
+    /// Debug.print(debug_show(mapOps.some(map, func (k, v) = (k >= 0))));
+    /// // true
+    /// ```
+    ///
+    /// Runtime: `O(n)`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of key-value entries stored in the tree.
+    public func some<V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool
+      = Internal.some(m, pred);
   };
 
   module Internal {
@@ -680,6 +725,30 @@ module {
           }
         };
         case (#leaf) { null }
+      }
+    };
+
+    public func all<K, V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool {
+      switch m {
+        case (#red(l, k, v, r)) {
+          pred(k, v) and all(l, pred) and all(r, pred)
+        };
+        case (#black(l, k, v, r)) {
+          pred(k, v) and all(l, pred) and all(r, pred)
+        };
+        case (#leaf) { true }
+      }
+    };
+
+    public func some<K, V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool {
+      switch m {
+        case (#red(l, k, v, r)) {
+          pred(k, v) or some(l, pred) or some(r, pred)
+        };
+        case (#black(l, k, v, r)) {
+          pred(k, v) or some(l, pred) or some(r, pred)
+        };
+        case (#leaf) { false }
       }
     };
 
