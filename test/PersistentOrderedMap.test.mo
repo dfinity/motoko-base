@@ -178,6 +178,16 @@ run(
         M.equals(T.bool(false))
       ),
       test(
+        "maxEntry",
+        natMapOps.maxEntry(buildTestMap()),
+        M.equals(T.optional(entryTestable, null: ?(Nat, Text)))
+      ),
+      test(
+        "minEntry",
+        natMapOps.minEntry(buildTestMap()),
+        M.equals(T.optional(entryTestable, null: ?(Nat, Text)))
+      ),
+      test(
         "remove absent",
         natMapOps.remove(buildTestMap(), 0).1,
         M.equals(T.optional(T.textTestable, null : ?Text))
@@ -292,6 +302,16 @@ run(
         "contains",
         natMapOps.contains(buildTestMap(), 0),
         M.equals(T.bool(true))
+      ),
+      test(
+        "maxEntry",
+        natMapOps.maxEntry(buildTestMap()),
+        M.equals(T.optional(entryTestable, ?(0, "0")))
+      ),
+      test(
+        "minEntry",
+        natMapOps.minEntry(buildTestMap()),
+        M.equals(T.optional(entryTestable, ?(0, "0")))
       ),
       test(
         "replace function result",
@@ -429,6 +449,16 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
       "contains",
       Array.tabulate<Bool>(4, func (k: Nat) = (natMapOps.contains(buildTestMap(), k))),
       M.equals(T.array<Bool>(T.boolTestable, [true, true, true, false]))
+    ),
+    test(
+      "maxEntry",
+      natMapOps.maxEntry(buildTestMap()),
+      M.equals(T.optional(entryTestable, ?(2, "2")))
+    ),
+    test(
+      "minEntry",
+      natMapOps.minEntry(buildTestMap()),
+      M.equals(T.optional(entryTestable, ?(0, "0")))
     ),
     test(
       "clear",

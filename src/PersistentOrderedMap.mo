@@ -191,8 +191,8 @@ module {
     /// let mapOps = Map.MapOps<Nat>(Nat.compare);
     /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show mapOps.get(map, 1));
-    /// Debug.print(debug_show mapOps.get(map, 42));
+    /// Debug.print(debug_show(mapOps.get(map, 1)));
+    /// Debug.print(debug_show(mapOps.get(map, 42)));
     ///
     /// // ?"One"
     /// // null
@@ -226,6 +226,48 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     public func contains<V>(m: Map<K, V>, key: K): Bool 
       = Internal.contains(m, compare, key);
+
+    /// Retrieves a key-value pair from the map `m` with a maximal key. If the map is empty returns `null`.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(mapOps.maxEntry(map))); // => ?(2, "Two")
+    /// Debug.print(debug_show(mapOps.maxEntry(mapOps.empty()))); // => null
+    /// ```
+    ///
+    /// Runtime: `O(log(n))`
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    public func maxEntry<V>(m: Map<K, V>): ?(K, V)
+      = Internal.maxEntry(m);
+
+    /// Retrieves a key-value pair from the map `m` with a minimal key. If the map is empty returns `null`.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    ///
+    /// Debug.print(debug_show(mapOps.minEntry(map))); // => ?(0, "Zero")
+    /// Debug.print(debug_show(mapOps.minEntry(mapOps.empty()))); // => null
+    /// ```
+    ///
+    /// Runtime: `O(log(n))`
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of key-value entries stored in the map.
+    public func minEntry<V>(m: Map<K, V>): ?(K, V)
+      = Internal.minEntry(m);
 
     /// Deletes the entry with the key `key` from the map `m`. Has no effect if `key` is not
     /// present in the map. Returns modified map.
@@ -752,6 +794,36 @@ module {
       switch (get(m, compare, key)) {
         case(null) { false }; 
         case(_)    { true } 
+      }
+    };
+
+    public func maxEntry<K, V>(m: Map<K, V>): ?(K, V) {
+      func rightmost(m: Map<K, V>): ?(K, V) {
+        switch m {
+          case (#red(_, k, v, #leaf))   { ?(k, v) };
+          case (#red(_, _, _, r))       { rightmost(r) };
+          case (#black(_, k, v, #leaf)) { ?(k, v) };
+          case (#black(_, _, _, r))     { rightmost(r) }
+        }
+      };
+      switch m {
+        case (#leaf) { null };
+        case (_)     { rightmost(m) }
+      }
+    };
+
+    public func minEntry<K, V>(m: Map<K, V>): ?(K, V) {
+      func leftmost(m: Map<K, V>): ?(K, V) {
+        switch m {
+          case (#red(#leaf, k, v, _))   { ?(k, v) };
+          case (#red(l, _, _, _))       { leftmost(l) };
+          case (#black(#leaf, k, v, _)) { ?(k, v) };
+          case (#black(l, _, _, _))     { leftmost(l)}
+        }
+      };
+      switch m {
+        case (#leaf) { null };
+        case (_)     { leftmost(m) }
       }
     };
 

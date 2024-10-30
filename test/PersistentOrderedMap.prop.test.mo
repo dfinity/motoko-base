@@ -15,6 +15,8 @@ import Random2 "mo:base/Random";
 
 let { run; test; suite } = Suite;
 
+let entryTestable = T.tuple2Testable(T.natTestable, T.textTestable);
+
 class MapMatcher(expected : Map.Map<Nat, Text>) : M.Matcher<Map.Map<Nat, Text>> {
   public func describeMismatch(actual : Map.Map<Nat, Text>, _description : M.Description) {
     Debug.print(debug_show (Iter.toArray(natMap.entries(actual))) # " should be " # debug_show (Iter.toArray(natMap.entries(expected))))
@@ -250,7 +252,19 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
         prop_with_key("contains(m, k) == (get(m, k) != null)", func (m, k) {
           natMap.contains(m, k) == (Option.isSome(natMap.get(m, k)))
         }),
-      ])
+      ]),
+
+      suite("minEntry/maxEntry", [
+        prop("max through fold", func (m) {
+          let expected = natMap.foldLeft<Text, ?(Nat, Text)>(m, null: ?(Nat, Text), func (k, v, _) = ?(k, v) );
+          M.equals(T.optional(entryTestable, expected)).matches(natMap.maxEntry(m));
+        }),
+
+        prop("min through fold", func (m) {
+          let expected = natMap.foldRight<Text, ?(Nat, Text)>(m, null: ?(Nat, Text), func (k, v, _) = ?(k, v) );
+          M.equals(T.optional(entryTestable, expected)).matches(natMap.minEntry(m));
+        })
+      ]),
     ]))
 };
 
