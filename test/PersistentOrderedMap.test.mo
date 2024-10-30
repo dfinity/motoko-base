@@ -27,11 +27,11 @@ class MapMatcher(expected : [(Nat, Text)]) : M.Matcher<Map.Map<Nat, Text>> {
 };
 
 func checkMap(rbMap : Map.Map<Nat, Text>) {
-  ignore blackDepth(rbMap)
+  ignore blackDepth(rbMap.root)
 };
 
-func blackDepth(node : Map.Map<Nat, Text>) : Nat {
-  func checkNode(left : Map.Map<Nat, Text>, key : Nat, right : Map.Map<Nat, Text>) : Nat {
+func blackDepth(node : Map.Tree<Nat, Text>) : Nat {
+  func checkNode(left : Map.Tree<Nat, Text>, key : Nat, right : Map.Tree<Nat, Text>) : Nat {
     checkKey(left, func(x) { x < key });
     checkKey(right, func(x) { x > key });
     let leftBlacks = blackDepth(left);
@@ -54,14 +54,14 @@ func blackDepth(node : Map.Map<Nat, Text>) : Nat {
 };
 
 
-func isRed(node : Map.Map<Nat, Text>) : Bool {
+func isRed(node : Map.Tree<Nat, Text>) : Bool {
   switch node {
     case (#red(_, _, _, _)) true;
     case _ false
   }
 };
 
-func checkKey(node : Map.Map<Nat, Text>, isValid : Nat -> Bool) {
+func checkKey(node : Map.Tree<Nat, Text>, isValid : Nat -> Bool) {
   switch node {
     case (#leaf) {};
     case (#red( _, key, _, _)) {

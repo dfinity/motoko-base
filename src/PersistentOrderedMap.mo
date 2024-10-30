@@ -33,10 +33,16 @@ module {
   /// The keys have the generic type `K` and the values the generic type `V`.
   /// Leaves are considered implicitly black.
   public type Map<K, V> = {
-    #red : (Map<K, V>, K, V, Map<K, V>);
-    #black : (Map<K, V>, K, V, Map<K, V>);
+    size: Nat;
+    root: Tree<K, V>;
+  };
+
+  public type Tree<K, V> = {
+    #red : (Tree<K, V>, K, V, Tree<K, V>);
+    #black : (Tree<K, V>, K, V, Tree<K, V>);
     #leaf
   };
+
 
   public type Direction = { #fwd; #bwd };
 
@@ -105,7 +111,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func put<V>(m : Map<K, V>, key : K, value : V) : Map<K, V>
-      = Internal.put(m, compare, key, value);
+      = replace(m, key, value).0;
 
     /// Insert the value `value` with key `key` into the map `m`. Returns modified map and
     /// the previous value associated with key `key` or `null` if no such value exists.
@@ -141,8 +147,12 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K, V>, ?V)
-      = Internal.replace(m, compare, key, value);
+    public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K, V>, ?V) {
+      switch (Internal.replace(m.root, compare, key, value)) {
+        case (t, null) { ({root = t; size = m.size + 1}, null) };
+        case (t, v)    { ({root = t; size = m.size}, v)}
+      }
+    };
 
     /// Creates a new map by applying `f` to each entry in the map `m`. For each entry
     /// `(k, v)` in the old map, if `f` evaluates to `null`, the entry is discarded.
@@ -203,7 +213,7 @@ module {
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     public func get<V>(m : Map<K, V>, key : K) : ?V
-      = Internal.get(m, compare, key);
+      = Internal.get(m.root, compare, key);
 
     /// Test whether the map `m` contains any binding for the given `key`.
     ///
@@ -225,7 +235,7 @@ module {
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     public func contains<V>(m: Map<K, V>, key: K): Bool 
-      = Internal.contains(m, compare, key);
+      = Internal.contains(m.root, compare, key);
 
     /// Retrieves a key-value pair from the map `m` with a maximal key. If the map is empty returns `null`.
     ///
@@ -246,7 +256,7 @@ module {
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the map.
     public func maxEntry<V>(m: Map<K, V>): ?(K, V)
-      = Internal.maxEntry(m);
+      = Internal.maxEntry(m.root);
 
     /// Retrieves a key-value pair from the map `m` with a minimal key. If the map is empty returns `null`.
     ///
@@ -267,7 +277,7 @@ module {
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the map.
     public func minEntry<V>(m: Map<K, V>): ?(K, V)
-      = Internal.minEntry(m);
+      = Internal.minEntry(m.root);
 
     /// Deletes the entry with the key `key` from the map `m`. Has no effect if `key` is not
     /// present in the map. Returns modified map.
@@ -295,7 +305,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func delete<V>(m : Map<K, V>, key : K) : Map<K, V>
-      = Internal.delete(m, compare, key);
+      = remove(m, key).0;
 
     /// Deletes the entry with the key `key`. Returns modified map and the
     /// previous value associated with key `key` or `null` if no such value exists.
@@ -331,8 +341,12 @@ module {
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
-    public func remove<V>(m : Map<K, V>, key : K) : (Map<K, V>, ?V)
-      = Internal.remove(m, compare, key);
+    public func remove<V>(m : Map<K, V>, key : K) : (Map<K, V>, ?V) {
+      switch (Internal.remove(m.root, compare, key)) {
+        case (t, null) { ({root = t; size = m.size }, null) };
+        case (t, v)    { ({root = t; size = m.size - 1}, v) }
+      }
+    };
 
     /// Create a new empty map.
     ///
@@ -354,7 +368,8 @@ module {
     /// Cost of empty map creation
     /// Runtime: `O(1)`.
     /// Space: `O(1)`
-    public func empty<V>() : Map<K, V> = #leaf;
+    public func empty<V>() : Map<K, V> 
+      = Internal.empty();
 
     /// Get an iterator for the entries of the map `m`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
     /// The iterator takes a snapshot view of the map and is not affected by concurrent modifications.
@@ -383,7 +398,7 @@ module {
     ///
     /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
     public func iter<V>(m : Map<K, V>, direction : Direction) : I.Iter<(K, V)>
-      = Internal.iter(m, direction);
+      = Internal.iter(m.root, direction);
 
     /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
     /// Iterator provides a single method `next()`, which returns
@@ -517,7 +532,7 @@ module {
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the tree.
     public func size<V>(m : Map<K, V>) : Nat
-      = Internal.size(m);
+      = m.size;
 
     /// Collapses the elements in the `map` into a single value by starting with `base`
     /// and progressively combining keys and values into `base` with `combine`. Iteration runs
@@ -552,7 +567,7 @@ module {
       base : Accum,
       combine : (K, Value, Accum) -> Accum
     ) : Accum
-    = Internal.foldLeft(map, base, combine);
+    = Internal.foldLeft(map.root, base, combine);
 
     /// Collapses the elements in the `map` into a single value by starting with `base`
     /// and progressively combining keys and values into `base` with `combine`. Iteration runs
@@ -587,7 +602,7 @@ module {
       base : Accum,
       combine : (K, Value, Accum) -> Accum
     ) : Accum
-    = Internal.foldRight(map, base, combine);
+    = Internal.foldRight(map.root, base, combine);
 
     /// Test whether all key-value pairs satisfy a given predicate `pred`.
     ///
@@ -610,7 +625,7 @@ module {
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the tree.
     public func all<V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool
-      = Internal.all(m, pred);
+      = Internal.all(m.root, pred);
 
     /// Test if there exists a key-value pair satisfying a given predicate `pred`.
     ///
@@ -633,23 +648,28 @@ module {
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the tree.
     public func some<V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool
-      = Internal.some(m, pred);
+      = Internal.some(m.root, pred);
   };
 
   module Internal {
 
-    public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V>
-    {
-      var map = #leaf : Map<K, V>;
-      for(val in i) {
-        map := put(map, compare, val.0, val.1);
-      };
-      map
+    public func empty<K, V>(): Map<K, V> {
+      { size = 0; root = #leaf }
     };
 
-    type IterRep<K, V> = List.List<{ #tr : Map<K, V>; #xy : (K, V) }>;
+    public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V> {
+      var map = #leaf : Tree<K, V>;
+      var size = 0;
+      for(val in i) {
+        map := put(map, compare, val.0, val.1);
+        size += 1;
+      };
+      {root = map; size}
+    };
 
-    public func iter<K, V>(map : Map<K, V>, direction : Direction) : I.Iter<(K, V)> {
+    type IterRep<K, V> = List.List<{ #tr : Tree<K, V>; #xy : (K, V) }>;
+
+    public func iter<K, V>(map : Tree<K, V>, direction : Direction) : I.Iter<(K, V)> {
       let turnLeftFirst : MapTraverser<K, V>
       = func (l, x, y, r, ts) { ?(#tr(l), ?(#xy(x, y), ?(#tr(r), ts))) };
 
@@ -662,10 +682,10 @@ module {
       }
     };
 
-    type MapTraverser<K, V> = (Map<K, V>, K, V, Map<K, V>, IterRep<K, V>) -> IterRep<K, V>;
+    type MapTraverser<K, V> = (Tree<K, V>, K, V, Tree<K, V>, IterRep<K, V>) -> IterRep<K, V>;
 
-    class IterMap<K, V>(map : Map<K, V>, mapTraverser : MapTraverser<K, V>) {
-      var trees : IterRep<K, V> = ?(#tr(map), null);
+    class IterMap<K, V>(tree : Tree<K, V>, mapTraverser : MapTraverser<K, V>) {
+      var trees : IterRep<K, V> = ?(#tr(tree), null);
       public func next() : ?(K, V) {
         switch (trees) {
           case (null) { null };
@@ -690,7 +710,7 @@ module {
     };
 
     public func map<K, V1, V2>(map : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> {
-      func mapRec(m : Map<K, V1>) : Map<K, V2> {
+      func mapRec(m : Tree<K, V1>) : Tree<K, V2> {
         switch m {
           case (#leaf) { #leaf };
           case (#red(l, x, y, r)) {
@@ -701,11 +721,11 @@ module {
           };
         }
       };
-      mapRec(map)
+      {size = map.size; root = mapRec(map.root)}
     };
 
     public func foldLeft<Key, Value, Accum>(
-      map : Map<Key, Value>,
+      map : Tree<Key, Value>,
       base : Accum,
       combine : (Key, Value, Accum) -> Accum
     ) : Accum
@@ -726,7 +746,7 @@ module {
     };
 
     public func foldRight<Key, Value, Accum>(
-      map : Map<Key, Value>,
+      map : Tree<Key, Value>,
       base : Accum,
       combine : (Key, Value, Accum) -> Accum
     ) : Accum
@@ -746,31 +766,21 @@ module {
       }
     };
 
-    public func mapFilter<K, V1, V2>(map : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2>{
-      func combine(key : K, value1 : V1, acc : Map<K, V2>) : Map<K, V2> {
+    public func mapFilter<K, V1, V2>(map : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2> {
+      var size = 0;
+      func combine(key : K, value1 : V1, acc : Tree<K, V2>) : Tree<K, V2> {
         switch (f(key, value1)){
           case null { acc };
           case (?value2) {
+            size += 1;
             put(acc, compare, key, value2)
           }
         }
       };
-      foldLeft(map, #leaf, combine)
+      { root = foldLeft(map.root, #leaf, combine); size }
     };
 
-    public func size<K, V>(t : Map<K, V>) : Nat {
-      switch t {
-        case (#red(l, _, _, r)) {
-          size(l) + size(r) + 1
-        };
-        case (#black(l, _, _, r)) {
-          size(l) + size(r) + 1
-        };
-        case (#leaf) { 0 }
-      }
-    };
-
-    public func get<K, V>(t : Map<K, V>, compare : (K, K) -> O.Order, x : K) : ?V {
+    public func get<K, V>(t : Tree<K, V>, compare : (K, K) -> O.Order, x : K) : ?V {
       switch t {
         case (#red(l, x1, y1, r)) {
           switch (compare(x, x1)) {
@@ -790,20 +800,21 @@ module {
       }
     };
 
-    public func contains<K, V>(m: Map<K, V>, compare : (K, K) -> O.Order, key: K): Bool { 
+    public func contains<K, V>(m: Tree<K, V>, compare : (K, K) -> O.Order, key: K): Bool { 
       switch (get(m, compare, key)) {
         case(null) { false }; 
         case(_)    { true } 
       }
     };
 
-    public func maxEntry<K, V>(m: Map<K, V>): ?(K, V) {
-      func rightmost(m: Map<K, V>): ?(K, V) {
+    public func maxEntry<K, V>(m: Tree<K, V>): ?(K, V) {
+      func rightmost(m: Tree<K, V>): ?(K, V) {
         switch m {
           case (#red(_, k, v, #leaf))   { ?(k, v) };
           case (#red(_, _, _, r))       { rightmost(r) };
           case (#black(_, k, v, #leaf)) { ?(k, v) };
-          case (#black(_, _, _, r))     { rightmost(r) }
+          case (#black(_, _, _, r))     { rightmost(r) };
+          case (#leaf)                  { Debug.trap "PersistentOrderedMap.impossible" }
         }
       };
       switch m {
@@ -812,13 +823,14 @@ module {
       }
     };
 
-    public func minEntry<K, V>(m: Map<K, V>): ?(K, V) {
-      func leftmost(m: Map<K, V>): ?(K, V) {
+    public func minEntry<K, V>(m: Tree<K, V>): ?(K, V) {
+      func leftmost(m: Tree<K, V>): ?(K, V) {
         switch m {
           case (#red(#leaf, k, v, _))   { ?(k, v) };
           case (#red(l, _, _, _))       { leftmost(l) };
           case (#black(#leaf, k, v, _)) { ?(k, v) };
-          case (#black(l, _, _, _))     { leftmost(l)}
+          case (#black(l, _, _, _))     { leftmost(l)};
+          case (#leaf)                  { Debug.trap "PersistentOrderedMap.impossible" }
         }
       };
       switch m {
@@ -827,7 +839,7 @@ module {
       }
     };
 
-    public func all<K, V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool {
+    public func all<K, V>(m: Tree<K, V>, pred: (K, V) -> Bool): Bool {
       switch m {
         case (#red(l, k, v, r)) {
           pred(k, v) and all(l, pred) and all(r, pred)
@@ -839,7 +851,7 @@ module {
       }
     };
 
-    public func some<K, V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool {
+    public func some<K, V>(m: Tree<K, V>, pred: (K, V) -> Bool): Bool {
       switch m {
         case (#red(l, k, v, r)) {
           pred(k, v) or some(l, pred) or some(r, pred)
@@ -851,7 +863,7 @@ module {
       }
     };
 
-    func redden<K, V>(t : Map<K, V>) : Map<K, V> {
+    func redden<K, V>(t : Tree<K, V>) : Tree<K, V> {
       switch t {
         case (#black (l, x, y, r)) {
           (#red (l, x, y, r))
@@ -862,7 +874,7 @@ module {
       }
     };
 
-    func lbalance<K, V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
+    func lbalance<K, V>(left : Tree<K, V>, x : K, y : V, right : Tree<K, V>) : Tree<K, V> {
       switch (left, right) {
         case (#red(#red(l1, x1, y1, r1), x2, y2, r2), r) {
           #red(
@@ -882,7 +894,7 @@ module {
       }
     };
 
-    func rbalance<K, V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
+    func rbalance<K, V>(left : Tree<K, V>, x : K, y : V, right : Tree<K, V>) : Tree<K, V> {
       switch (left, right) {
         case (l, #red(l1, x1, y1, #red(l2, x2, y2, r2))) {
           #red(
@@ -905,14 +917,14 @@ module {
     type ClashResolver<A> = { old : A; new : A } -> A;
 
     func insertWith<K, V> (
-      m : Map<K, V>,
+      m : Tree<K, V>,
       compare : (K, K) -> O.Order,
       key : K,
       val : V,
       onClash : ClashResolver<V>
     )
-    : Map<K, V>{
-      func ins(tree : Map<K, V>) : Map<K, V> {
+    : Tree<K, V>{
+      func ins(tree : Tree<K, V>) : Tree<K, V> {
         switch tree {
           case (#black(left, x, y, right)) {
             switch (compare (key, x)) {
@@ -956,12 +968,12 @@ module {
     };
 
     public func replace<K, V>(
-      m : Map<K, V>,
+      m : Tree<K, V>,
       compare : (K, K) -> O.Order,
       key : K,
       val : V
     )
-    : (Map<K, V>, ?V) {
+    : (Tree<K, V>, ?V) {
       var oldVal : ?V = null;
       func onClash( clash : { old : V; new : V } ) : V
       {
@@ -973,14 +985,14 @@ module {
     };
 
     public func put<K, V> (
-      m : Map<K, V>,
+      m : Tree<K, V>,
       compare : (K, K) -> O.Order,
       key : K,
       val : V
-    ) : Map<K, V> = replace(m, compare, key, val).0;
+    ) : Tree<K, V> = replace(m, compare, key, val).0;
 
 
-    func balLeft<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
+    func balLeft<K,V>(left : Tree<K, V>, x : K, y : V, right : Tree<K, V>) : Tree<K, V> {
       switch (left, right) {
         case (#red(l1, x1, y1, r1), r) {
           #red(
@@ -1001,7 +1013,7 @@ module {
       }
     };
 
-    func balRight<K,V>(left : Map<K, V>, x : K, y : V, right : Map<K, V>) : Map<K, V> {
+    func balRight<K,V>(left : Tree<K, V>, x : K, y : V, right : Tree<K, V>) : Tree<K, V> {
       switch (left, right) {
         case (l, #red(l1, x1, y1, r1)) {
           #red(
@@ -1022,7 +1034,7 @@ module {
       }
     };
 
-    func append<K,V>(left : Map<K, V>, right: Map<K, V>) : Map<K, V> {
+    func append<K,V>(left : Tree<K, V>, right: Tree<K, V>) : Tree<K, V> {
       switch (left, right) {
         case (#leaf,  _) { right };
         case (_,  #leaf) { left };
@@ -1066,12 +1078,12 @@ module {
       }
     };
 
-    public func delete<K, V>(m : Map<K, V>, compare : (K, K) -> O.Order, key : K) : Map<K, V>
+    public func delete<K, V>(m : Tree<K, V>, compare : (K, K) -> O.Order, key : K) : Tree<K, V>
       = remove(m, compare, key).0;
 
-    public func remove<K, V>(tree : Map<K, V>, compare : (K, K) -> O.Order, x : K) : (Map<K, V>, ?V) {
+    public func remove<K, V>(tree : Tree<K, V>, compare : (K, K) -> O.Order, x : K) : (Tree<K, V>, ?V) {
       var y0 : ?V = null;
-      func delNode(left : Map<K, V>, x1 : K, y1 : V, right : Map<K, V>) : Map<K, V> {
+      func delNode(left : Tree<K, V>, x1 : K, y1 : V, right : Tree<K, V>) : Tree<K, V> {
         switch (compare (x, x1)) {
           case (#less) {
             let newLeft = del left;
@@ -1101,7 +1113,7 @@ module {
           };
         }
       };
-      func del(tree : Map<K, V>) : Map<K, V> {
+      func del(tree : Tree<K, V>) : Tree<K, V> {
         switch tree {
           case (#red(left, x, y, right)) {
             delNode(left, x, y, right)
