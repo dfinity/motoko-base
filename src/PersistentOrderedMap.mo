@@ -780,34 +780,34 @@ module {
     };
 
     public func maxEntry<K, V>(m: Tree<K, V>): ?(K, V) {
-      func rightmost(m: Tree<K, V>): ?(K, V) {
+      func rightmost(m: Tree<K, V>): (K, V) {
         switch m {
-          case (#red(_, k, v, #leaf))   { ?(k, v) };
+          case (#red(_, k, v, #leaf))   { (k, v) };
           case (#red(_, _, _, r))       { rightmost(r) };
-          case (#black(_, k, v, #leaf)) { ?(k, v) };
+          case (#black(_, k, v, #leaf)) { (k, v) };
           case (#black(_, _, _, r))     { rightmost(r) };
           case (#leaf)                  { Debug.trap "PersistentOrderedMap.impossible" }
         }
       };
       switch m {
         case (#leaf) { null };
-        case (_)     { rightmost(m) }
+        case (_)     { ?rightmost(m) }
       }
     };
 
     public func minEntry<K, V>(m: Tree<K, V>): ?(K, V) {
-      func leftmost(m: Tree<K, V>): ?(K, V) {
+      func leftmost(m: Tree<K, V>): (K, V) {
         switch m {
-          case (#red(#leaf, k, v, _))   { ?(k, v) };
+          case (#red(#leaf, k, v, _))   { (k, v) };
           case (#red(l, _, _, _))       { leftmost(l) };
-          case (#black(#leaf, k, v, _)) { ?(k, v) };
+          case (#black(#leaf, k, v, _)) { (k, v) };
           case (#black(l, _, _, _))     { leftmost(l)};
           case (#leaf)                  { Debug.trap "PersistentOrderedMap.impossible" }
         }
       };
       switch m {
         case (#leaf) { null };
-        case (_)     { leftmost(m) }
+        case (_)     { ?leftmost(m) }
       }
     };
 
