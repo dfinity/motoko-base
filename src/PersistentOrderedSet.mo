@@ -27,13 +27,11 @@ import Option "Option";
 import O "Order";
 
 module {
-  /// Node color: Either red (`#R`) or black (`#B`).
-  public type Color = { #R; #B };
-
   /// Red-black tree of nodes with ordered set elements.
   /// Leaves are considered implicitly black.
   public type Set<T> = {
-    #node : (Color, Set<T>, T, Set<T>);
+    #red : (Set<T>, T, Set<T>);
+    #black : (Set<T>, T, Set<T>);
     #leaf
   };
 
@@ -181,7 +179,11 @@ module {
       switch (rbSet1, rbSet2) {
         case (#leaf, rbSet) { rbSet };
         case (rbSet, #leaf) { rbSet };
-        case (#node (_, l1, x, r1), _) {
+        case (#black (l1, x, r1), _) {
+          let (l2, _, r2) = Internal.split(x, rbSet2, compare);
+          Internal.join(union(l1, l2), x, union(r1, r2))
+        };
+        case (#red (l1, x, r1), _) {
           let (l2, _, r2) = Internal.split(x, rbSet2, compare);
           Internal.join(union(l1, l2), x, union(r1, r2))
         };
@@ -212,7 +214,14 @@ module {
       switch (rbSet1, rbSet2) {
         case (#leaf, _) { #leaf };
         case (_, #leaf) { #leaf };
-        case (#node (_, l1, x, r1), _) {
+        case (#black (l1, x, r1), _) {
+          let (l2, b2, r2) = Internal.split(x, rbSet2, compare);
+          let l = intersect(l1, l2);
+          let r = intersect(r1, r2);
+          if b2 { Internal.join (l, x, r) }
+          else { Internal.join2(l, r) };
+        };
+        case (#red (l1, x, r1), _) {
           let (l2, b2, r2) = Internal.split(x, rbSet2, compare);
           let l = intersect(l1, l2);
           let r = intersect(r1, r2);
@@ -246,7 +255,11 @@ module {
       switch (rbSet1, rbSet2) {
         case (#leaf, _) { #leaf };
         case (rbSet, #leaf) { rbSet };
-        case (_, (#node(_, l2, x, r2))) {
+        case (_, (#black(l2, x, r2))) {
+          let (l1, _, r1) = Internal.split(x, rbSet1, compare);
+          Internal.join2(diff(l1, l2), diff(r1, r2));
+        };
+        case (_, (#red(l2, x, r2))) {
           let (l1, _, r1) = Internal.split(x, rbSet1, compare);
           Internal.join2(diff(l1, l2), diff(r1, r2));
         }
@@ -279,7 +292,8 @@ module {
     /// Runtime: `O(n)`.
     /// Space: `O(n)` retained memory
     /// where `n` denotes the number of elements stored in the set.
-    public func map<T1>(rbSet : Set<T1>, f : T1 -> T) : Set<T> = fromIter(I.map(elements(rbSet), f));
+    public func map<T1>(rbSet : Set<T1>, f : T1 -> T) : Set<T> =
+      foldLeft(rbSet, #leaf, func (elem : T1, acc : Set<T>) : Set<T> { put(acc, f elem) });
 
     /// Creates a new map by applying `f` to each element in `rbSet`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
@@ -314,16 +328,15 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func mapFilter<T1>(rbSet: Set<T1>, f : T1 -> ?T) : Set<T> {
-        var set = #leaf : Set<T>;
-        for(x in elements(rbSet)) {
-          switch(f x){
-            case null {};
-            case (?x2) {
-              set := put(set, x2);
-            }
+      func combine(elem : T1, acc : Set<T>) : Set<T> {
+        switch (f(elem)){
+          case null { acc };
+          case (?elem2) {
+            put(acc, elem2)
           }
-        };
-        set
+        }
+      };
+      foldLeft(rbSet, #leaf, combine)
     };
 
     /// Test if `rbSet1` is subset of `rbSet2`.
@@ -424,30 +437,43 @@ module {
   ///
   /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
   public func iter<T>(rbSet : Set<T>, direction : Direction) : I.Iter<T> {
-    object {
-      var trees : IterRep<T> = ?(#tr(rbSet), null);
-      public func next() : ?T {
-        switch (direction, trees) {
-          case (_, null) { null };
-          case (_, ?(#tr(#leaf), ts)) {
+    let turnLeftFirst : SetTraverser<T>
+     = func (l, x, r, ts) { ?(#tr(l), ?(#x(x), ?(#tr(r), ts))) };
+
+    let turnRightFirst : SetTraverser<T>
+     = func (l, x, r, ts) { ?(#tr(r), ?(#x(x), ?(#tr(l), ts))) };
+
+    switch direction {
+      case (#fwd) IterSet(rbSet, turnLeftFirst);
+      case (#bwd) IterSet(rbSet, turnRightFirst)
+    }
+  };
+
+  type SetTraverser<T> = (Set<T>, T, Set<T>, IterRep<T>) -> IterRep<T>;
+
+  class IterSet<T>(rbSet : Set<T>, setTraverser : SetTraverser<T>) {
+    var trees : IterRep<T> = ?(#tr(rbSet), null);
+    public func next() : ?T {
+        switch (trees) {
+          case (null) { null };
+          case (?(#tr(#leaf), ts)) {
             trees := ts;
             next()
           };
-          case (_, ?(#x(x), ts)) {
+          case (?(#x(x), ts)) {
             trees := ts;
             ?x
-          }; // TODO: Let's float-out case on direction
-          case (#fwd, ?(#tr(#node(_, l, x, r)), ts)) {
-            trees := ?(#tr(l), ?(#x(x), ?(#tr(r), ts)));
+          };
+          case (?(#tr(#black(l, x, r)), ts)) {
+            trees := setTraverser(l, x, r, ts);
             next()
           };
-          case (#bwd, ?(#tr(#node(_, l, x, r)), ts)) {
-            trees := ?(#tr(r), ?(#x(x), ?(#tr(l), ts)));
+          case (?(#tr(#red(l, x, r)), ts)) {
+            trees := setTraverser(l, x, r, ts);
             next()
           }
         }
       }
-    }
   };
 
   /// Returns an Iterator (`Iter`) over the elements of the set.
@@ -515,7 +541,10 @@ module {
   public func size<T>(t : Set<T>) : Nat {
     switch t {
       case (#leaf) { 0 };
-      case (#node(_, l, _, r)) {
+      case (#black(l, _, r)) {
+        size(l) + size(r) + 1
+      };
+      case (#red(l, _, r)) {
         size(l) + size(r) + 1
       }
     }
@@ -553,11 +582,19 @@ module {
     combine : (T, Accum) -> Accum
   ) : Accum
   {
-    var acc = base;
-    for(val in iter(rbSet, #fwd)){
-      acc := combine(val, acc);
-    };
-    acc
+    switch (rbSet) {
+      case (#leaf) { base };
+      case (#black(l, x, r)) {
+        let left = foldLeft(l, base, combine);
+        let middle = combine(x, left);
+        foldLeft(r, middle, combine)
+      };
+      case (#red(l, x, r)) {
+        let left = foldLeft(l, base, combine);
+        let middle = combine(x, left);
+        foldLeft(r, middle, combine)
+      }
+    }
   };
 
   /// Collapses the elements in `rbSet` into a single value by starting with `base`
@@ -592,11 +629,19 @@ module {
     combine : (T, Accum) -> Accum
   ) : Accum
   {
-    var acc = base;
-    for(val in iter(rbSet, #bwd)){
-      acc := combine(val, acc);
-    };
-    acc
+    switch (rbSet) {
+      case (#leaf) { base };
+      case (#black (l, x, r)) {
+        let right = foldRight(r, base, combine);
+        let middle = combine(x, right);
+        foldRight(l, middle, combine)
+      };
+      case (#red (l, x, r)) {
+        let right = foldRight(r, base, combine);
+        let middle = combine(x, right);
+        foldRight(l, middle, combine)
+      }
+    }
   };
 
   /// Test if set is empty.
@@ -621,11 +666,18 @@ module {
     };
   };
 
-  module Internal {
+  public module Internal {
     public func contains<T>(t : Set<T>, compare : (T, T) -> O.Order, x : T) : Bool {
       switch t {
         case (#leaf) { false };
-        case (#node(_c, l, x1, r)) {
+        case (#black(l, x1, r)) {
+          switch (compare(x, x1)) {
+            case (#less) { contains(l, compare, x) };
+            case (#equal) { true };
+            case (#greater) { contains(r, compare, x) }
+          }
+        };
+        case (#red(l, x1, r)) {
           switch (compare(x, x1)) {
             case (#less) { contains(l, compare, x) };
             case (#equal) { true };
@@ -637,8 +689,8 @@ module {
 
     func redden<T>(t : Set<T>) : Set<T> {
       switch t {
-        case (#node (#B, l, x, r)) {
-          (#node (#R, l, x, r))
+        case (#black (l, x, r)) {
+          (#red (l, x, r))
         };
         case _ {
           Debug.trap "RBTree.red"
@@ -646,46 +698,49 @@ module {
       }
     };
 
+    public func blacken<T>(rbSet : Set<T>) : Set<T> {
+      switch rbSet {
+        case (#red (l, x, r)) { (#black (l, x, r)) };
+        case (tree) { tree }
+      }
+    };
+
     func lbalance<T>(left : Set<T>, x : T, right : Set<T>) : Set<T> {
       switch (left, right) {
-        case (#node(#R, #node(#R, l1, x1, r1), x2, r2), r) {
-          #node(
-            #R,
-            #node(#B, l1, x1, r1),
+        case (#red(#red(l1, x1, r1), x2, r2), r) {
+          #red(
+            #black(l1, x1, r1),
             x2,
-            #node(#B, r2, x, r))
+            #black(r2, x, r))
         };
-        case (#node(#R, l1, x1, #node(#R, l2, x2, r2)), r) {
-          #node(
-            #R,
-            #node(#B, l1, x1, l2),
+        case (#red(l1, x1, #red(l2, x2, r2)), r) {
+          #red(
+            #black(l1, x1, l2),
             x2,
-            #node(#B, r2, x, r))
+            #black(r2, x, r))
         };
         case _ {
-          #node(#B, left, x, right)
+          #black(left, x, right)
         }
       }
     };
 
     func rbalance<T>(left : Set<T>, x : T, right : Set<T>) : Set<T> {
       switch (left, right) {
-        case (l, #node(#R, l1, x1, #node(#R, l2, x2, r2))) {
-          #node(
-            #R,
-            #node(#B, l, x, l1),
+        case (l, #red(l1, x1, #red(l2, x2, r2))) {
+          #red(
+            #black(l, x, l1),
             x1,
-            #node(#B, l2, x2, r2))
+            #black(l2, x2, r2))
         };
-        case (l, #node(#R, #node(#R, l1, x1, r1), x2, r2)) {
-          #node(
-            #R,
-            #node(#B, l, x, l1),
+        case (l, #red(#red(l1, x1, r1), x2, r2)) {
+          #red(
+            #black(l, x, l1),
             x1,
-            #node(#B, r1, x2, r2))
+            #black(r1, x2, r2))
         };
         case _ {
-          #node(#B, left, x, right)
+          #black(left, x, right)
         };
       }
     };
@@ -699,9 +754,9 @@ module {
       func ins(tree : Set<T>) : Set<T> {
         switch tree {
           case (#leaf) {
-            #node(#R, #leaf, elem, #leaf)
+            #red(#leaf, elem, #leaf)
           };
-          case (#node(#B, left, x, right)) {
+          case (#black(left, x, right)) {
             switch (compare (elem, x)) {
               case (#less) {
                 lbalance(ins left, x, right)
@@ -710,28 +765,28 @@ module {
                 rbalance(left, x, ins right)
               };
               case (#equal) {
-                #node(#B, left, x, right)
+                #black(left, x, right)
               }
             }
           };
-          case (#node(#R, left, x, right)) {
+          case (#red(left, x, right)) {
             switch (compare (elem, x)) {
               case (#less) {
-                #node(#R, ins left, x, right)
+                #red(ins left, x, right)
               };
               case (#greater) {
-                #node(#R, left, x, ins right)
+                #red(left, x, ins right)
               };
               case (#equal) {
-                #node(#R, left, x, right)
+                #red(left, x, right)
               }
             }
           }
         };
       };
       switch (ins s) {
-        case (#node(#R, left, x, right)) {
-          #node(#B, left, x, right);
+        case (#red(left, x, right)) {
+          #black(left, x, right);
         };
         case other { other };
       };
@@ -739,15 +794,15 @@ module {
 
     func balLeft<T>(left : Set<T>, x : T, right : Set<T>) : Set<T> {
       switch (left, right) {
-        case (#node(#R, l1, x1, r1), r) {
-          #node(#R, #node(#B, l1, x1, r1), x, r)
+        case (#red(l1, x1, r1), r) {
+          #red(#black(l1, x1, r1), x, r)
         };
-        case (_, #node(#B, l2, x2, r2)) {
-          rbalance(left, x, #node(#R, l2, x2, r2))
+        case (_, #black(l2, x2, r2)) {
+          rbalance(left, x, #red(l2, x2, r2))
         };
-        case (_, #node(#R, #node(#B, l2, x2, r2), x3, r3)) {
-          #node(#R,
-            #node(#B, left, x, l2),
+        case (_, #red(#black(l2, x2, r2), x3, r3)) {
+          #red(
+            #black(left, x, l2),
             x2,
             rbalance(r2, x3, redden r3))
         };
@@ -757,17 +812,17 @@ module {
 
     func balRight<T>(left : Set<T>, x : T, right : Set<T>) : Set<T> {
       switch (left, right) {
-        case (l, #node(#R, l1, x1, r1)) {
-          #node(#R, l, x, #node(#B, l1, x1, r1))
+        case (l, #red(l1, x1, r1)) {
+          #red(l, x, #black(l1, x1, r1))
         };
-        case (#node(#B, l1, x1, r1), r) {
-          lbalance(#node(#R, l1, x1, r1), x, r);
+        case (#black(l1, x1, r1), r) {
+          lbalance(#red(l1, x1, r1), x, r);
         };
-        case (#node(#R, l1, x1, #node(#B, l2, x2, r2)), r3) {
-          #node(#R,
+        case (#red(l1, x1, #black(l2, x2, r2)), r3) {
+          #red(
             lbalance(redden l1, x1, l2),
             x2,
-            #node(#B, r2, x, r3))
+            #black(r2, x, r3))
         };
         case _ { Debug.trap "balRight" };
       }
@@ -777,40 +832,39 @@ module {
       switch (left, right) {
         case (#leaf,  _) { right };
         case (_,  #leaf) { left };
-        case (#node (#R, l1, x1, r1),
-              #node (#R, l2, x2, r2)) {
-          switch (append (r1, l2)) {
-            case (#node (#R, l3, x3, r3)) {
-              #node(
-                #R,
-                #node(#R, l1, x1, l3),
+        case (#red (l1, x1, r1),
+              #red (l2, x2, r2)) {
+               switch (append (r1, l2)) {
+               case (#red (l3, x3, r3)) {
+              #red(
+                #red(l1, x1, l3),
                 x3,
-                #node(#R, r3, x2, r2))
+                #red(r3, x2, r2))
             };
             case r1l2 {
-              #node(#R, l1, x1, #node(#R, r1l2, x2, r2))
+              #red(l1, x1, #red(r1l2, x2, r2))
             }
           }
         };
-        case (t1, #node(#R, l2, x2, r2)) {
-          #node(#R, append(t1, l2), x2, r2)
+        case (t1, #red(l2, x2, r2)) {
+          #red(append(t1, l2), x2, r2)
         };
-        case (#node(#R, l1, x1, r1), t2) {
-          #node(#R, l1, x1, append(r1, t2))
+        case (#red(l1, x1, r1), t2) {
+          #red(l1, x1, append(r1, t2))
         };
-        case (#node(#B, l1, x1, r1), #node (#B, l2, x2, r2)) {
+        case (#black(l1, x1, r1), #black (l2, x2, r2)) {
           switch (append (r1, l2)) {
-            case (#node (#R, l3, x3, r3)) {
-              #node(#R,
-                #node(#B, l1, x1, l3),
+            case (#red (l3, x3, r3)) {
+              #red(
+                #black(l1, x1, l3),
                 x3,
-                #node(#B, r3, x2, r2))
+                #black(r3, x2, r2))
             };
             case r1l2 {
               balLeft (
                 l1,
                 x1,
-                #node(#B, r1l2, x2, r2)
+                #black(r1l2, x2, r2)
               )
             }
           }
@@ -824,22 +878,22 @@ module {
           case (#less) {
             let newLeft = del left;
             switch left {
-              case (#node(#B, _, _, _)) {
+              case (#black(_, _, _)) {
                 balLeft(newLeft, x1, right)
               };
               case _ {
-                #node(#R, newLeft, x1, right)
+                #red(newLeft, x1, right)
               }
             }
           };
           case (#greater) {
             let newRight = del right;
             switch right {
-              case (#node(#B, _, _, _)) {
+              case (#black(_, _, _)) {
                 balRight(left, x1, newRight)
               };
               case _ {
-                #node(#R, left, x1, newRight)
+                #red(left, x1, newRight)
               }
             }
           };
@@ -853,65 +907,66 @@ module {
           case (#leaf) {
             tree
           };
-          case (#node(_, left, x1, right)) {
+          case (#black(left, x1, right)) {
+            delNode(left, x1, right)
+          };
+          case (#red(left, x1, right)) {
             delNode(left, x1, right)
           }
         };
       };
       switch (del(tree)) {
-        case (#node(#R, left, x1, right)) {
-          #node(#B, left, x1, right);
+        case (#red(left, x1, right)) {
+          #black(left, x1, right);
         };
         case other { other };
       };
     };
 
     // TODO: Instead, consider storing the black height in the node constructor
-    public func blackHeight<T> (rbSet : Set<T>) : Nat {
+    public func blackHeight<T> (t : Set<T>) : Nat {
       func f (node : Set<T>, acc : Nat) : Nat {
         switch node {
           case (#leaf) { acc };
-          case (#node (#R, l1, _, _)) { f(l1, acc) };
-          case (#node (#B, l1, _, _)) { f(l1, acc + 1) }
+          case (#red (l1, _, _)) { f(l1, acc) };
+          case (#black (l1, _, _)) { f(l1, acc + 1) }
         }
       };
-      f (rbSet, 0)
+      f (t, 0)
     };
 
     public func joinL<T>(l : Set<T>, x : T, r : Set<T>) : Set<T> {
-      if (blackHeight r <= blackHeight l) { (#node (#R, l, x, r)) }
+      if (blackHeight r <= blackHeight l) { (#red (l, x, r)) }
       else {
         switch r {
-          case (#node (#R, rl, rx, rr)) { (#node (#R, joinL(l, x, rl) , rx, rr)) };
-          case (#node (#B, rl, rx, rr)) { balLeft (joinL(l, x, rl), rx, rr) };
+          case (#red (rl, rx, rr)) { (#red (joinL(l, x, rl) , rx, rr)) };
+          case (#black (rl, rx, rr)) { lbalance (joinL(l, x, rl), rx, rr) };
           case _ { Debug.trap "joinL" };
         }
       }
     };
 
     public func joinR<T>(l : Set<T>, x : T, r : Set<T>) : Set<T> {
-      if (blackHeight l <= blackHeight r) { (#node (#R, l, x, r)) }
+      if (blackHeight l <= blackHeight r) { (#red (l, x, r)) }
       else {
         switch l {
-          case (#node (#R, ll, lx, lr)) { (#node (#R, ll , lx, joinR (lr, x, r))) };
-          case (#node (#B, ll, lx, lr)) { balRight (ll, lx, joinR (lr, x, r)) };
+          case (#red (ll, lx, lr)) { (#red (ll , lx, joinR (lr, x, r))) };
+          case (#black (ll, lx, lr)) { rbalance (ll, lx, joinR (lr, x, r)) };
           case _ { Debug.trap "joinR" };
         }
-      }
-    };
-
-    public func paint<T>(color : Color, rbMap : Set<T>) : Set<T> {
-      switch rbMap {
-        case (#leaf) { #leaf };
-        case (#node (_, l, x, r)) { (#node (color, l, x, r)) };
       }
     };
 
     public func splitMin<T> (rbSet : Set<T>) : (T, Set<T>) {
       switch rbSet {
         case (#leaf) { Debug.trap "splitMin" };
-        case (#node(_, #leaf, x, r)) { (x, r) };
-        case (#node(_, l, x, r)) {
+        case (#black(#leaf, x, r)) { (x, r) };
+        case (#red(#leaf, x, r)) { (x, r) };
+        case (#black(l, x, r)) {
+          let (m, l2) = splitMin l;
+          (m, join(l2, x, r))
+        };
+        case (#red(l, x, r)) {
           let (m, l2) = splitMin l;
           (m, join(l2, x, r))
         };
@@ -921,13 +976,15 @@ module {
     // Joins an element and two trees.
     // See Tobias Nipkow's "Functional Data Structures and Algorithms", 117
     public func join<T>(l : Set<T>, x : T, r : Set<T>) : Set<T> {
-      if (Internal.blackHeight r < Internal.blackHeight l) {
-        return Internal.paint(#B, Internal.joinR(l, x, r))
+      let rbh = Internal.blackHeight r;
+      let lbh = Internal.blackHeight l;
+      if (rbh < lbh) {
+        return blacken(Internal.joinR(l, x, r))
       };
-      if (Internal.blackHeight l < Internal.blackHeight r) {
-        return Internal.paint(#B, Internal.joinL(l, x, r))
+      if (lbh < rbh) {
+        return blacken(Internal.joinL(l, x, r))
       };
-      return (#node (#B, l, x, r))
+      return (#black (l, x, r))
     };
 
     // Joins two trees.
@@ -949,7 +1006,20 @@ module {
     public func split<T>(x : T, rbSet : Set<T>, compare : (T, T) -> O.Order) : (Set<T>, Bool, Set<T>) {
       switch rbSet {
         case (#leaf) { (#leaf, false, #leaf)};
-        case (#node (_, l, x1, r)) {
+        case (#black (l, x1, r)) {
+          switch (compare(x, x1)) {
+            case (#less) {
+              let (l1, b, l2) = split(x, l, compare);
+              (l1, b, join(l2, x1, r))
+            };
+            case (#equal) { (l, true, r) };
+            case (#greater) {
+              let (r1, b, r2) = split(x, r, compare);
+              (join(l, x1, r1), b, r2)
+            };
+          };
+        };
+        case (#red (l, x1, r)) {
           switch (compare(x, x1)) {
             case (#less) {
               let (l1, b, l2) = split(x, l, compare);
