@@ -666,7 +666,7 @@ module {
     };
   };
 
-  public module Internal {
+  module Internal {
     public func contains<T>(t : Set<T>, compare : (T, T) -> O.Order, x : T) : Bool {
       switch t {
         case (#leaf) { false };
