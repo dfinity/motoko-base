@@ -71,7 +71,7 @@ module {
     public func fromIter(i : I.Iter<T>) : Set<T> {
       var set = empty() : Set<T>;
       for(val in i) {
-        set := put(set, val);
+        set := Internal.put(set, compare, val);
       };
       set
     };
@@ -293,8 +293,8 @@ module {
     /// Runtime: `O(n)`.
     /// Space: `O(n)` retained memory
     /// where `n` denotes the number of elements stored in the set.
-    public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T> = // TODO: optimize via direct recursion
-      Internal.foldLeft(s.root, empty(), func (elem : T1, acc : Set<T>) : Set<T> { put(acc, f(elem)) });
+    public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T>
+      = Internal.foldLeft(s.root, empty(), func (elem : T1, acc : Set<T>) : Set<T> { Internal.put(acc, compare, f(elem)) });
 
     /// Creates a new map by applying `f` to each element in the set `s`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
@@ -333,7 +333,7 @@ module {
         switch (f(elem)){
           case null { acc };
           case (?elem2) {
-            put(acc, elem2)
+            Internal.put(acc, compare, elem2)
           }
         }
       };
@@ -397,7 +397,7 @@ module {
 
     func isSubsetHelper(s1 : Set<T>, s2 : Set<T>) : Bool {
       for (x in vals(s1)) {
-        if (not (contains(s2, x))) {
+        if (not (Internal.contains(s2, compare, x))) {
           return false;
         }
       };
@@ -583,7 +583,6 @@ module {
     public func contains<T>(s : Set<T>, compare : (T, T) -> O.Order, elem : T) : Bool {
       func f (t: Tree<T>, x : T)  : Bool {
       switch t {
-        case (#leaf) { false };
         case (#black(l, x1, r)) {
           switch (compare(x, x1)) {
             case (#less) { f(l, x) };
@@ -597,7 +596,8 @@ module {
             case (#equal) { true };
             case (#greater) { f(r, x) }
           }
-        }
+        };
+        case (#leaf) { false };
       }
       };
       f (s.root, elem);
@@ -746,10 +746,6 @@ module {
       var newNodeIsCreated: Bool = false;
       func ins(tree : Tree<T>) : Tree<T> {
         switch tree {
-          case (#leaf) {
-            newNodeIsCreated := true;
-            #red(#leaf, elem, #leaf)
-          };
           case (#black(left, x, right)) {
             switch (compare (elem, x)) {
               case (#less) {
@@ -775,7 +771,11 @@ module {
                 #red(left, x, right)
               }
             }
-          }
+          };
+          case (#leaf) {
+            newNodeIsCreated := true;
+            #red(#leaf, elem, #leaf)
+          };
         };
       };
       let newRoot = switch (ins(s.root)) {
@@ -902,15 +902,15 @@ module {
       };
       func del(tree : Tree<T>) : Tree<T> {
         switch tree {
-          case (#leaf) {
-            tree
-          };
           case (#black(left, x1, right)) {
             delNode(left, x1, right)
           };
           case (#red(left, x1, right)) {
             delNode(left, x1, right)
-          }
+          };
+          case (#leaf) {
+            tree
+          };
         };
       };
       let newRoot = switch (del(s.root)) {
