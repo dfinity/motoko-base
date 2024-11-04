@@ -1,6 +1,7 @@
 // @testmode wasi
 
 import Set "../src/PersistentOrderedSet";
+import Array "../src/Array";
 import Nat "../src/Nat";
 import Iter "../src/Iter";
 import Debug "../src/Debug";
@@ -15,11 +16,11 @@ let entryTestable = T.natTestable;
 
 class SetMatcher(expected : [Nat]) : M.Matcher<Set.Set<Nat>> {
   public func describeMismatch(actual : Set.Set<Nat>, _description : M.Description) {
-    Debug.print(debug_show (Iter.toArray(Set.elements(actual))) # " should be " # debug_show (expected))
+    Debug.print(debug_show (Iter.toArray(Set.vals(actual))) # " should be " # debug_show (expected))
   };
 
   public func matches(actual : Set.Set<Nat>) : Bool {
-    Iter.toArray(Set.elements(actual)) == expected
+    Iter.toArray(Set.vals(actual)) == expected
   }
 };
 
@@ -98,7 +99,7 @@ func containsAll (rbSet : Set.Set<Nat>, elems : [Nat]) {
 
 func clear(initialRbSet : Set.Set<Nat>) : Set.Set<Nat> {
   var rbSet = initialRbSet;
-  for (elem in Set.elements(initialRbSet)) {
+  for (elem in Set.vals(initialRbSet)) {
     let newSet = natSetOps.delete(rbSet, elem);
     rbSet := newSet;
     checkSet(rbSet)
@@ -132,9 +133,14 @@ run(
         M.equals(T.nat(0))
       ),
       test(
-        "elements",
-        Iter.toArray(Set.elements(buildTestSet())),
+        "vals",
+        Iter.toArray(Set.vals(buildTestSet())),
         M.equals(T.array<Nat>(entryTestable, []))
+      ),
+      test(
+        "valsRev",
+        Iter.toArray(Set.vals(buildTestSet())),
+        M.equals  (T.array<Nat>(entryTestable, []))
       ),
       test(
         "empty from iter",
@@ -193,8 +199,13 @@ run(
         M.equals(T.nat(1))
       ),
       test(
-        "elements",
-        Iter.toArray(Set.elements(buildTestSet())),
+        "vals",
+        Iter.toArray(Set.vals(buildTestSet())),
+        M.equals(T.array<Nat>(entryTestable, expected))
+      ),
+      test(
+        "valsRev",
+        Iter.toArray(Set.valsRev(buildTestSet())),
         M.equals(T.array<Nat>(entryTestable, expected))
       ),
       test(
@@ -263,8 +274,13 @@ func rebalanceTests(buildTestSet : () -> Set.Set<Nat>) : [Suite.Suite] =
       SetMatcher(expected)
     ),
     test(
-      "elements",
-      Iter.toArray(Set.elements(buildTestSet())),
+      "vals",
+      Iter.toArray(Set.vals(buildTestSet())),
+      M.equals(T.array<Nat>(entryTestable, expected))
+    ),
+    test(
+      "valsRev",
+      Array.reverse(Iter.toArray(Set.valsRev(buildTestSet()))),
       M.equals(T.array<Nat>(entryTestable, expected))
     ),
     test(

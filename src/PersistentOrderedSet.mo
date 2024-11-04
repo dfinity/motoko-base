@@ -400,80 +400,13 @@ module {
     };
 
     func isSubsetHelper(rbSet1 : Set<T>, rbSet2 : Set<T>) : Bool {
-      for (x in elements(rbSet1)) {
+      for (x in vals(rbSet1)) {
         if (not (contains(rbSet2, x))) {
           return false;
         }
       };
       return true;
     };
-  };
-
-  type IterRep<T> = List.List<{ #tr : Tree<T>; #x : T }>;
-
-  /// Get an iterator for the elements of the `rbSet`, in ascending (`#fwd`) or descending (`#bwd`) order as specified by `direction`.
-  /// The iterator takes a snapshot view of the set and is not affected by concurrent modifications.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
-  ///
-  /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let rbSet = setOps.fromIter(Iter.fromArray([(0, 2, 1)]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Set.iter(rbSet, #fwd))));
-  /// Debug.print(debug_show(Iter.toArray(Map.iter(rbSet, #bwd))));
-  ///
-  /// //  [0, 1, 2]
-  /// //  [2, 1, 0]
-  /// ```
-  ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of elements stored in the set.
-  ///
-  /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func iter<T>(s : Tree<T>, direction : {#fwd; #bwd}) : I.Iter<T> { // TODO: Remove
-    let turnLeftFirst : SetTraverser<T>
-     = func (l, x, r, ts) { ?(#tr(l), ?(#x(x), ?(#tr(r), ts))) };
-
-    let turnRightFirst : SetTraverser<T>
-     = func (l, x, r, ts) { ?(#tr(r), ?(#x(x), ?(#tr(l), ts))) };
-
-    switch direction {
-      case (#fwd) IterSet(s, turnLeftFirst);
-      case (#bwd) IterSet(s, turnRightFirst)
-    }
-  };
-
-  type SetTraverser<T> = (Tree<T>, T, Tree<T>, IterRep<T>) -> IterRep<T>;
-
-  class IterSet<T>(tree : Tree<T>, setTraverser : SetTraverser<T>) {
-    var trees : IterRep<T> = ?(#tr(tree), null);
-    public func next() : ?T {
-        switch (trees) {
-          case (null) { null };
-          case (?(#tr(#leaf), ts)) {
-            trees := ts;
-            next()
-          };
-          case (?(#x(x), ts)) {
-            trees := ts;
-            ?x
-          };
-          case (?(#tr(#black(l, x, r)), ts)) {
-            trees := setTraverser(l, x, r, ts);
-            next()
-          };
-          case (?(#tr(#red(l, x, r)), ts)) {
-            trees := setTraverser(l, x, r, ts);
-            next()
-          }
-        }
-      }
   };
 
   /// Returns an Iterator (`Iter`) over the elements of the set.
@@ -483,13 +416,13 @@ module {
   /// Example:
   /// ```motoko
   /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat"
-  /// import Iter "mo:base/Iter"
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
   ///
   /// let setOps = Set.SetOps<Nat>(Nat.compare);
   /// let rbSet = setOps.fromIter(Iter.fromArray([0, 2, 1]));
   ///
-  /// Debug.print(debug_show(Iter.toArray(Set.elements(rbSet))));
+  /// Debug.print(debug_show(Iter.toArray(Set.vals(rbSet))));
   ///
   /// // [0, 1, 2]
   /// ```
@@ -499,8 +432,32 @@ module {
   /// where `n` denotes the number of elements stored in the set.
   ///
   /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func elements<T>(s : Set<T>) : I.Iter<T> 
-    = iter(s.root, #fwd);
+  public func vals<T>(s : Set<T>) : I.Iter<T> 
+    = Internal.iter(s.root, #fwd);
+
+  /// Same as `vals()` but iterates over elements of the set `s` in the descending order.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Set "mo:base/PersistentOrderedSet";
+  /// import Nat "mo:base/Nat";
+  /// import Iter "mo:base/Iter";
+  /// import Debug "mo:base/Debug";
+  ///
+  /// let setOps = Set.SetOps<Nat>(Nat.compare);
+  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+  ///
+  /// Debug.print(debug_show(Iter.toArray(Set.valsRev(set))));
+  /// // [2, 1, 0]
+  /// ```
+  /// Cost of iteration over all elements:
+  /// Runtime: `O(n)`.
+  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+  /// where `n` denotes the number of elements stored in the set.
+  ///
+  /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+  public func valsRev<T>(s : Set<T>) : I.Iter<T>
+    = Internal.iter(s.root, #bwd);
 
   /// Create a new empty Set.
   ///
@@ -652,6 +609,48 @@ module {
       }
       };
       f (s.root, elem);
+    };
+
+    type IterRep<T> = List.List<{ #tr : Tree<T>; #x : T }>;
+
+    type SetTraverser<T> = (Tree<T>, T, Tree<T>, IterRep<T>) -> IterRep<T>;
+
+    class IterSet<T>(tree : Tree<T>, setTraverser : SetTraverser<T>) {
+      var trees : IterRep<T> = ?(#tr(tree), null);
+      public func next() : ?T {
+          switch (trees) {
+            case (null) { null };
+            case (?(#tr(#leaf), ts)) {
+              trees := ts;
+              next()
+            };
+            case (?(#x(x), ts)) {
+              trees := ts;
+              ?x
+            };
+            case (?(#tr(#black(l, x, r)), ts)) {
+              trees := setTraverser(l, x, r, ts);
+              next()
+            };
+            case (?(#tr(#red(l, x, r)), ts)) {
+              trees := setTraverser(l, x, r, ts);
+              next()
+            }
+          }
+        }
+    };
+
+    public func iter<T>(s : Tree<T>, direction : {#fwd; #bwd}) : I.Iter<T> {
+      let turnLeftFirst : SetTraverser<T>
+      = func (l, x, r, ts) { ?(#tr(l), ?(#x(x), ?(#tr(r), ts))) };
+
+      let turnRightFirst : SetTraverser<T>
+      = func (l, x, r, ts) { ?(#tr(r), ?(#x(x), ?(#tr(l), ts))) };
+
+      switch direction {
+        case (#fwd) IterSet(s, turnLeftFirst);
+        case (#bwd) IterSet(s, turnRightFirst)
+      }
     };
 
     public func foldLeft<T, Accum>(

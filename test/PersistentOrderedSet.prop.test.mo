@@ -16,7 +16,7 @@ let natSet = Set.SetOps<Nat>(Nat.compare);
 
 class SetMatcher(expected : Set.Set<Nat>) : M.Matcher<Set.Set<Nat>> {
   public func describeMismatch(actual : Set.Set<Nat>, _description : M.Description) {
-    Debug.print(debug_show (Iter.toArray(Set.elements(actual))) # " should be " # debug_show (Iter.toArray(Set.elements(expected))))
+    Debug.print(debug_show (Iter.toArray(Set.vals(actual))) # " should be " # debug_show (Iter.toArray(Set.vals(expected))))
   };
 
   public func matches(actual : Set.Set<Nat>) : Bool {
@@ -65,7 +65,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       label stop for(sets in setGenN(set_samples, size, range, 1)) {
         if (not f(sets[0])) {
           error_msg := "Property \"" # name # "\" failed\n";
-          error_msg #= "\n s: " # debug_show(Iter.toArray(Set.elements(sets[0])));
+          error_msg #= "\n s: " # debug_show(Iter.toArray(Set.vals(sets[0])));
           break stop;
         }
       };
@@ -80,8 +80,8 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       label stop for(sets in setGenN(set_samples, size, range, 2)) {
         if (not f(sets[0], sets[1])) {
           error_msg := "Property \"" # name # "\" failed\n";
-          error_msg #= "\n s1: " # debug_show(Iter.toArray(Set.elements(sets[0])));
-          error_msg #= "\n s2: " # debug_show(Iter.toArray(Set.elements(sets[1])));
+          error_msg #= "\n s1: " # debug_show(Iter.toArray(Set.vals(sets[0])));
+          error_msg #= "\n s2: " # debug_show(Iter.toArray(Set.vals(sets[1])));
           break stop;
         }
       };
@@ -96,9 +96,9 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       label stop for(sets in setGenN(set_samples, size, range, 3)) {
         if (not f(sets[0], sets[1], sets[2])) {
           error_msg := "Property \"" # name # "\" failed\n";
-          error_msg #= "\n s1: " # debug_show(Iter.toArray(Set.elements(sets[0])));
-          error_msg #= "\n s2: " # debug_show(Iter.toArray(Set.elements(sets[1])));
-          error_msg #= "\n s3: " # debug_show(Iter.toArray(Set.elements(sets[2])));
+          error_msg #= "\n s1: " # debug_show(Iter.toArray(Set.vals(sets[0])));
+          error_msg #= "\n s2: " # debug_show(Iter.toArray(Set.vals(sets[1])));
+          error_msg #= "\n s3: " # debug_show(Iter.toArray(Set.vals(sets[2])));
           break stop;
         }
       };
@@ -114,7 +114,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
           let key = Random.nextNat(range);
           if (not f(sets[0], key)) {
             error_msg #= "Property \"" # name # "\" failed";
-            error_msg #= "\n s: " # debug_show(Iter.toArray(Set.elements(sets[0])));
+            error_msg #= "\n s: " # debug_show(Iter.toArray(Set.vals(sets[0])));
             error_msg #= "\n e: " # debug_show(key);
             break stop;
           }
@@ -176,10 +176,18 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
         })
       ]),
 
-      suite("iter", [
-        prop("fromIter(elements(s)) == s", func (s) {
-          SetMatcher(s).matches(natSet.fromIter(Set.elements(s)))
-        })
+      suite("vals/valsRev", [
+        prop("fromIter(vals(s)) == s", func (s) {
+          SetMatcher(s).matches(natSet.fromIter(Set.vals(s)))
+        }),
+        prop("fromIter(valsRev(s)) == s", func (s) {
+          SetMatcher(s).matches(natSet.fromIter(Set.valsRev(s)))
+        }),
+        prop("toArray(vals(s)).reverse() == toArray(valsRev(s))", func (s) {
+          let a = Array.reverse(Iter.toArray(Set.vals(s)));
+          let b = Iter.toArray(Set.valsRev(s));
+          M.equals(T.array<Nat>(T.natTestable, a)).matches(b)
+        }),
       ]),
 
       suite("mapFilter", [
