@@ -16,7 +16,7 @@ let natSet = Set.SetOps<Nat>(Nat.compare);
 
 class SetMatcher(expected : Set.Set<Nat>) : M.Matcher<Set.Set<Nat>> {
   public func describeMismatch(actual : Set.Set<Nat>, _description : M.Description) {
-    Debug.print(debug_show (Iter.toArray(Set.vals(actual))) # " should be " # debug_show (Iter.toArray(Set.vals(expected))))
+    Debug.print(debug_show (Iter.toArray(natSet.vals(actual))) # " should be " # debug_show (Iter.toArray(natSet.vals(expected))))
   };
 
   public func matches(actual : Set.Set<Nat>) : Bool {
@@ -65,7 +65,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       label stop for(sets in setGenN(set_samples, size, range, 1)) {
         if (not f(sets[0])) {
           error_msg := "Property \"" # name # "\" failed\n";
-          error_msg #= "\n s: " # debug_show(Iter.toArray(Set.vals(sets[0])));
+          error_msg #= "\n s: " # debug_show(Iter.toArray(natSet.vals(sets[0])));
           break stop;
         }
       };
@@ -80,8 +80,8 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       label stop for(sets in setGenN(set_samples, size, range, 2)) {
         if (not f(sets[0], sets[1])) {
           error_msg := "Property \"" # name # "\" failed\n";
-          error_msg #= "\n s1: " # debug_show(Iter.toArray(Set.vals(sets[0])));
-          error_msg #= "\n s2: " # debug_show(Iter.toArray(Set.vals(sets[1])));
+          error_msg #= "\n s1: " # debug_show(Iter.toArray(natSet.vals(sets[0])));
+          error_msg #= "\n s2: " # debug_show(Iter.toArray(natSet.vals(sets[1])));
           break stop;
         }
       };
@@ -96,9 +96,9 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       label stop for(sets in setGenN(set_samples, size, range, 3)) {
         if (not f(sets[0], sets[1], sets[2])) {
           error_msg := "Property \"" # name # "\" failed\n";
-          error_msg #= "\n s1: " # debug_show(Iter.toArray(Set.vals(sets[0])));
-          error_msg #= "\n s2: " # debug_show(Iter.toArray(Set.vals(sets[1])));
-          error_msg #= "\n s3: " # debug_show(Iter.toArray(Set.vals(sets[2])));
+          error_msg #= "\n s1: " # debug_show(Iter.toArray(natSet.vals(sets[0])));
+          error_msg #= "\n s2: " # debug_show(Iter.toArray(natSet.vals(sets[1])));
+          error_msg #= "\n s3: " # debug_show(Iter.toArray(natSet.vals(sets[2])));
           break stop;
         }
       };
@@ -114,7 +114,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
           let key = Random.nextNat(range);
           if (not f(sets[0], key)) {
             error_msg #= "Property \"" # name # "\" failed";
-            error_msg #= "\n s: " # debug_show(Iter.toArray(Set.vals(sets[0])));
+            error_msg #= "\n s: " # debug_show(Iter.toArray(natSet.vals(sets[0])));
             error_msg #= "\n e: " # debug_show(key);
             break stop;
           }
@@ -131,7 +131,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
         test("not contains(empty(), e)", label res : Bool {
           for (_query_ix in Iter.range(0, query_samples-1)) {
             let elem = Random.nextNat(range);
-            if(natSet.contains(Set.empty<Nat>(), elem))
+            if(natSet.contains(natSet.empty(), elem))
               break res(false);
           };
           true;
@@ -169,23 +169,23 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
 
       suite("size", [
         prop_with_elem("size(put(s, e)) == size(s) + int(not contains(s, e))", func (s, e) {
-          Set.size(natSet.put(s, e)) == Set.size(s) + (if (not natSet.contains(s, e)) {1} else {0})
+          natSet.size(natSet.put(s, e)) == natSet.size(s) + (if (not natSet.contains(s, e)) {1} else {0})
         }),
         prop_with_elem("size(delete(s, e)) + int(contains(s, e)) == size(s)", func (s, e) {
-          Set.size(natSet.delete(s, e)) + (if (natSet.contains(s, e)) {1} else {0}) == Set.size(s)
+          natSet.size(natSet.delete(s, e)) + (if (natSet.contains(s, e)) {1} else {0}) == natSet.size(s)
         })
       ]),
 
       suite("vals/valsRev", [
         prop("fromIter(vals(s)) == s", func (s) {
-          SetMatcher(s).matches(natSet.fromIter(Set.vals(s)))
+          SetMatcher(s).matches(natSet.fromIter(natSet.vals(s)))
         }),
         prop("fromIter(valsRev(s)) == s", func (s) {
-          SetMatcher(s).matches(natSet.fromIter(Set.valsRev(s)))
+          SetMatcher(s).matches(natSet.fromIter(natSet.valsRev(s)))
         }),
         prop("toArray(vals(s)).reverse() == toArray(valsRev(s))", func (s) {
-          let a = Array.reverse(Iter.toArray(Set.vals(s)));
-          let b = Iter.toArray(Set.valsRev(s));
+          let a = Array.reverse(Iter.toArray(natSet.vals(s)));
+          let b = Iter.toArray(natSet.valsRev(s));
           M.equals(T.array<Nat>(T.natTestable, a)).matches(b)
         }),
       ]),
@@ -212,7 +212,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
           natSet.isSubset(s, s)
         }),
         prop("isSubset(empty(), s)", func (s) {
-          natSet.isSubset(Set.empty(), s)
+          natSet.isSubset(natSet.empty(), s)
         }),
         prop_with_elem("isSubset(delete(s, e), s)", func (s, e) {
           natSet.isSubset(natSet.delete(s, e), s)
@@ -231,22 +231,22 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
           } else { true }
         }),
         prop("intersect(empty(), s) == empty()", func (s) {
-          SetMatcher(Set.empty()).matches(natSet.intersect(Set.empty(), s))
+          SetMatcher(natSet.empty()).matches(natSet.intersect(natSet.empty(), s))
         }),
         prop("intersect(s, empty()) == empty()", func (s) {
-          SetMatcher(Set.empty()).matches(natSet.intersect(s, Set.empty()))
+          SetMatcher(natSet.empty()).matches(natSet.intersect(s, natSet.empty()))
         }),
         prop("union(s, empty()) == s", func (s) {
-          SetMatcher(s).matches(natSet.union(s, Set.empty()))
+          SetMatcher(s).matches(natSet.union(s, natSet.empty()))
         }),
         prop("union(empty(), s) == s", func (s) {
-          SetMatcher(s).matches(natSet.union(Set.empty(), s))
+          SetMatcher(s).matches(natSet.union(natSet.empty(), s))
         }),
         prop("diff(empty(), s) == empty()", func (s) {
-          SetMatcher(Set.empty()).matches(natSet.diff(Set.empty(), s))
+          SetMatcher(natSet.empty()).matches(natSet.diff(natSet.empty(), s))
         }),
         prop("diff(s, empty()) == s", func (s) {
-          SetMatcher(s).matches(natSet.diff(s, Set.empty()))
+          SetMatcher(s).matches(natSet.diff(s, natSet.empty()))
         }),
         prop("intersect(s, s) == s", func (s) {
           SetMatcher(s).matches(natSet.intersect(s, s))
@@ -255,7 +255,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
           SetMatcher(s).matches(natSet.union(s, s))
         }),
         prop("diff(s, s) == empty()", func (s) {
-          SetMatcher(Set.empty()).matches(natSet.diff(s, s))
+          SetMatcher(natSet.empty()).matches(natSet.diff(s, s))
         }),
         prop2("intersect(s1, s2) == intersect(s2, s1)", func (s1, s2) {
           SetMatcher(natSet.intersect(s1, s2)).matches(natSet.intersect(s2, s1))
@@ -267,7 +267,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
           natSet.isSubset(natSet.diff(s1, s2), s1)
         }),
         prop2("intersect(diff(s1, s2), s2) == empty()", func (s1, s2) {
-          SetMatcher(natSet.intersect(natSet.diff(s1, s2), s2)).matches(Set.empty())
+          SetMatcher(natSet.intersect(natSet.diff(s1, s2), s2)).matches(natSet.empty())
         }),
         prop3("union(union(s1, s2), s3) == union(s1, union(s2, s3))", func (s1, s2, s3) {
           SetMatcher(natSet.union(natSet.union(s1, s2), s3)).matches(natSet.union(s1, natSet.union(s2, s3)))

@@ -36,7 +36,7 @@ module {
   /// Set type with a size attached to the root node of the rbtree.
   public type Set <T> = { size: Nat; root: Tree<T> };
 
-  /// Opertaions on `Set`, that require a comparator.
+  /// Operations on `Set`, that require a comparator.
   ///
   /// The object should be created once, then used for all the operations
   /// with `Set` to maintain invariant that comparator did not changed.
@@ -294,7 +294,7 @@ module {
     /// Space: `O(n)` retained memory
     /// where `n` denotes the number of elements stored in the set.
     public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T> = // TODO: optimize via direct recursion
-      foldLeft(s, empty(), func (elem : T1, acc : Set<T>) : Set<T> { put(acc, f(elem)) });
+      Internal.foldLeft(s.root, empty(), func (elem : T1, acc : Set<T>) : Set<T> { put(acc, f(elem)) });
 
     /// Creates a new map by applying `f` to each element in the set `s`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
@@ -337,7 +337,7 @@ module {
           }
         }
       };
-      foldLeft(s, empty(), combine)
+      Internal.foldLeft(s.root, empty(), combine)
     };
 
     /// Test if `set1` is subset of `set2`.
@@ -403,179 +403,179 @@ module {
       };
       return true;
     };
-  };
 
-  /// Returns an Iterator (`Iter`) over the elements of the set.
-  /// Iterator provides a single method `next()`, which returns
-  /// elements in ascending order, or `null` when out of elements to iterate over.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat";
-  /// import Iter "mo:base/Iter";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Set.vals(set))));
-  /// // [0, 1, 2]
-  /// ```
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of elements stored in the set.
-  ///
-  /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func vals<T>(s : Set<T>) : I.Iter<T> 
-    = Internal.iter(s.root, #fwd);
+    /// Returns an Iterator (`Iter`) over the elements of the set.
+    /// Iterator provides a single method `next()`, which returns
+    /// elements in ascending order, or `null` when out of elements to iterate over.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let setOps = Set.SetOps<Nat>(Nat.compare);
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    ///
+    /// Debug.print(debug_show(Iter.toArray(Set.vals(set))));
+    /// // [0, 1, 2]
+    /// ```
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// where `n` denotes the number of elements stored in the set.
+    ///
+    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func vals(s : Set<T>) : I.Iter<T> 
+      = Internal.iter(s.root, #fwd);
 
-  /// Same as `vals()` but iterates over elements of the set `s` in the descending order.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat";
-  /// import Iter "mo:base/Iter";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-  ///
-  /// Debug.print(debug_show(Iter.toArray(Set.valsRev(set))));
-  /// // [2, 1, 0]
-  /// ```
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// where `n` denotes the number of elements stored in the set.
-  ///
-  /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func valsRev<T>(s : Set<T>) : I.Iter<T>
-    = Internal.iter(s.root, #bwd);
+    /// Same as `vals()` but iterates over elements of the set `s` in the descending order.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let setOps = Set.SetOps<Nat>(Nat.compare);
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    ///
+    /// Debug.print(debug_show(Iter.toArray(Set.valsRev(set))));
+    /// // [2, 1, 0]
+    /// ```
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
+    /// where `n` denotes the number of elements stored in the set.
+    ///
+    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func valsRev(s : Set<T>) : I.Iter<T>
+      = Internal.iter(s.root, #bwd);
 
-  /// Create a new empty Set.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  ///
-  /// let set = Set.empty<Nat>();
-  ///
-  /// Debug.print(debug_show(Set.size(set))); // => 0
-  /// ```
-  ///
-  /// Cost of empty set creation
-  /// Runtime: `O(1)`.
-  /// Space: `O(1)`
-  public func empty<T>() : Set<T> 
-    = { root = #leaf; size = 0};
+    /// Create a new empty Set.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    ///
+    /// let set = Set.empty<Nat>();
+    ///
+    /// Debug.print(debug_show(Set.size(set))); // => 0
+    /// ```
+    ///
+    /// Cost of empty set creation
+    /// Runtime: `O(1)`.
+    /// Space: `O(1)`
+    public func empty() : Set<T> 
+      = { root = #leaf; size = 0};
 
-  /// Returns the number of elements in the set.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat";
-  /// import Iter "mo:base/Iter";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-  ///
-  /// Debug.print(debug_show(Set.size(set))); // => 3
-  /// ```
-  ///
-  /// Runtime: `O(1)`.
-  /// Space: `O(1)`.
-  public func size<T>(s : Set<T>) : Nat
-    = s.size;
+    /// Returns the number of elements in the set.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let setOps = Set.SetOps<Nat>(Nat.compare);
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    ///
+    /// Debug.print(debug_show(Set.size(set))); // => 3
+    /// ```
+    ///
+    /// Runtime: `O(1)`.
+    /// Space: `O(1)`.
+    public func size(s : Set<T>) : Nat
+      = s.size;
 
-  /// Collapses the elements in `set` into a single value by starting with `base`
-  /// and progessively combining elements into `base` with `combine`. Iteration runs
-  /// left to right.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat";
-  /// import Iter "mo:base/Iter";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-  ///
-  /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
-  ///
-  /// Debug.print(debug_show(Set.foldLeft(set, 0, folder)));
-  /// // 3
-  /// ```
-  ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: depends on `combine` function plus garbage, see the note below.
-  /// where `n` denotes the number of elements stored in the set.
-  ///
-  /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func foldLeft<T, Accum>(
-    set : Set<T>,
-    base : Accum,
-    combine : (T, Accum) -> Accum
-  ) : Accum
-    = Internal.foldLeft(set.root, base, combine);
+    /// Collapses the elements in `set` into a single value by starting with `base`
+    /// and progessively combining elements into `base` with `combine`. Iteration runs
+    /// left to right.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let setOps = Set.SetOps<Nat>(Nat.compare);
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    ///
+    /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
+    ///
+    /// Debug.print(debug_show(Set.foldLeft(set, 0, folder)));
+    /// // 3
+    /// ```
+    ///
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: depends on `combine` function plus garbage, see the note below.
+    /// where `n` denotes the number of elements stored in the set.
+    ///
+    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func foldLeft<Accum>(
+      set : Set<T>,
+      base : Accum,
+      combine : (T, Accum) -> Accum
+    ) : Accum
+      = Internal.foldLeft(set.root, base, combine);
 
-  /// Collapses the elements in `set` into a single value by starting with `base`
-  /// and progessively combining elements into `base` with `combine`. Iteration runs
-  /// right to left.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Nat "mo:base/Nat";
-  /// import Iter "mo:base/Iter";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let setOps = Set.SetOps<Nat>(Nat.compare);
-  /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-  ///
-  /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
-  ///
-  /// Debug.print(debug_show(Set.foldRight(set, 0, folder)));
-  /// // 3
-  /// ```
-  ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Space: depends on `combine` function plus garbage, see the note below.
-  /// where `n` denotes the number of elements stored in the set.
-  ///
-  /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-  public func foldRight<T, Accum>(
-    set : Set<T>,
-    base : Accum,
-    combine : (T, Accum) -> Accum
-  ) : Accum
-    = Internal.foldRight(set.root, base, combine);
+    /// Collapses the elements in `set` into a single value by starting with `base`
+    /// and progessively combining elements into `base` with `combine`. Iteration runs
+    /// right to left.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let setOps = Set.SetOps<Nat>(Nat.compare);
+    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    ///
+    /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
+    ///
+    /// Debug.print(debug_show(Set.foldRight(set, 0, folder)));
+    /// // 3
+    /// ```
+    ///
+    /// Cost of iteration over all elements:
+    /// Runtime: `O(n)`.
+    /// Space: depends on `combine` function plus garbage, see the note below.
+    /// where `n` denotes the number of elements stored in the set.
+    ///
+    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+    public func foldRight<Accum>(
+      set : Set<T>,
+      base : Accum,
+      combine : (T, Accum) -> Accum
+    ) : Accum
+      = Internal.foldRight(set.root, base, combine);
 
-  /// Test if the given set `s` is empty.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/PersistentOrderedSet";
-  /// import Debug "mo:base/Debug";
-  ///
-  /// let set = Set.empty<Nat>();
-  ///
-  /// Debug.print(debug_show(Set.isEmpty(set))); // => true
-  /// ```
-  ///
-  /// Runtime: `O(1)`.
-  /// Space: `O(1)`
-  public func isEmpty<T> (s : Set<T>) : Bool {
-    switch (s.root) {
-      case (#leaf) { true };
-      case _ { false };
+    /// Test if the given set `s` is empty.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let set = Set.empty<Nat>();
+    ///
+    /// Debug.print(debug_show(Set.isEmpty(set))); // => true
+    /// ```
+    ///
+    /// Runtime: `O(1)`.
+    /// Space: `O(1)`
+    public func isEmpty(s : Set<T>) : Bool {
+      switch (s.root) {
+        case (#leaf) { true };
+        case _ { false };
+      };
     };
   };
 
