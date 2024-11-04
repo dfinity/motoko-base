@@ -429,7 +429,7 @@ module {
 
     /// Returns an Iterator (`Iter`) over the values of the map.
     /// Iterator provides a single method `next()`, which returns
-    /// values in no specific order, or `null` when out of values to iterate over.
+    /// values in ascending order of associated keys, or `null` when out of values to iterate over.
     ///
     /// Example:
     /// ```motoko
