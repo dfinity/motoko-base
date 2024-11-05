@@ -177,6 +177,16 @@ run(
         natSetOps.isEmpty(buildTestSet()),
         M.equals(T.bool(true))
       ),
+      test(
+        "max",
+        natSetOps.max(buildTestSet()),
+        M.equals(T.optional(entryTestable, null: ?Nat))
+      ),
+      test(
+        "min",
+        natSetOps.min(buildTestSet()),
+        M.equals(T.optional(entryTestable, null: ?Nat))
+      )
     ]
   )
 );
@@ -252,6 +262,26 @@ run(
         "is empty",
         natSetOps.isEmpty(buildTestSet()),
         M.equals(T.bool(false))
+      ),
+      test(
+        "max",
+        natSetOps.max(buildTestSet()),
+        M.equals(T.optional(entryTestable, ?0))
+      ),
+      test(
+        "min",
+        natSetOps.min(buildTestSet()),
+        M.equals(T.optional(entryTestable, ?0))
+      ),
+      test(
+        "all",
+        natSetOps.all(buildTestSet(), func (k) = (k == 0)),
+        M.equals(T.bool(true))
+      ),
+      test(
+        "some",
+        natSetOps.some(buildTestSet(), func (k) = (k == 0)),
+        M.equals(T.bool(true))
       ),
     ]
   )
@@ -340,6 +370,36 @@ func rebalanceTests(buildTestSet : () -> Set.Set<Nat>) : [Suite.Suite] =
     test(
       "is empty",
       natSetOps.isEmpty(buildTestSet()),
+      M.equals(T.bool(false))
+    ),
+    test(
+      "max",
+      natSetOps.max(buildTestSet()),
+      M.equals(T.optional(entryTestable, ?2))
+    ),
+    test(
+      "min",
+      natSetOps.min(buildTestSet()),
+      M.equals(T.optional(entryTestable, ?0))
+    ),
+    test(
+      "all true",
+      natSetOps.all(buildTestSet(), func (k) = (k >= 0)),
+      M.equals(T.bool(true))
+    ),
+    test(
+      "all false",
+      natSetOps.all(buildTestSet(), func (k) = (k > 0)),
+      M.equals(T.bool(false))
+    ),
+    test(
+      "some true",
+      natSetOps.some(buildTestSet(), func (k) = (k >= 2)),
+      M.equals(T.bool(true))
+    ),
+    test(
+      "some false",
+      natSetOps.some(buildTestSet(), func (k) = (k > 2)),
       M.equals(T.bool(false))
     ),
   ];

@@ -157,6 +157,50 @@ module {
     public func contains(s : Set<T>, value : T) : Bool 
       = Internal.contains(s, compare, value);
 
+    /// Get a maximal element of the set `s` if it is not empty, otherwise returns `null`
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let s = natSet.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let s = natSet.empty();
+    /// 
+    /// Debug.print(debug_show(natSet.max(s))); // => ?2
+    /// Debug.print(debug_show(natSet.max(s2))); // => null
+    /// ```
+    ///
+    /// Runtime: `O(log(n))`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of elements in the set
+    public func max(s: Set<T>) : ?T
+      = Internal.max(s.root);
+
+    /// Get a minimal element of the set `s` if it is not empty, otherwise returns `null`
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let s = natSet.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let s = natSet.empty();
+    /// 
+    /// Debug.print(debug_show(natSet.min(s))); // => ?0
+    /// Debug.print(debug_show(natSet.min(s2))); // => null
+    /// ```
+    ///
+    /// Runtime: `O(log(n))`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of elements in the set
+    public func min(s: Set<T>): ?T
+      = Internal.min(s.root);
+
     /// [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)) operation.
     ///
     /// Example:
@@ -296,7 +340,7 @@ module {
     public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T>
       = Internal.foldLeft(s.root, empty(), func (elem : T1, acc : Set<T>) : Set<T> { Internal.put(acc, compare, f(elem)) });
 
-    /// Creates a new map by applying `f` to each element in the set `s`. For each element
+    /// Creates a new set by applying `f` to each element in the set `s`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
     /// Otherwise, the entry is transformed into a new entry `x2`, where
     /// the new value `x2` is the result of applying `f` to `x`.
@@ -577,6 +621,52 @@ module {
         case _ { false };
       };
     };
+
+    /// Test whether all values in the set `s` satisfy a given predicate `pred`.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter<Text>(Iter.fromArray([0, 2, 1]));
+    ///
+    /// Debug.print(debug_show(natSet.all(set, func (v) = (v < 10))));
+    /// // true
+    /// Debug.print(debug_show(natSet.all(set, func (v) = (v < 2))));
+    /// // false
+    /// ```
+    ///
+    /// Runtime: `O(n)`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of elements stored in the set.
+    public func all(s: Set<T>, pred: T -> Bool): Bool
+      = Internal.all(s.root, pred);
+
+    /// Test if there exists a key-value pair satisfying a given predicate `pred`.
+    ///
+    /// Example:
+    /// ```motoko
+    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    ///
+    /// let setOps = Set.SetOps<Nat>(Nat.compare);
+    /// let set = setOps.fromIter<Text>(Iter.fromArray([0, 2, 1]));
+    ///
+    /// Debug.print(debug_show(setOps.some(set, func (v) = (k >= 3))));
+    /// // false
+    /// Debug.print(debug_show(setOps.some(set, func (v) = (k >= 0))));
+    /// // true
+    /// ```
+    ///
+    /// Runtime: `O(n)`.
+    /// Space: `O(1)`.
+    /// where `n` denotes the number of elements stored in the set.
+    public func some(s: Set<T>, pred: (T) -> Bool): Bool
+      = Internal.some(s.root, pred);
   };
 
   module Internal {
@@ -601,6 +691,62 @@ module {
       }
       };
       f (s.root, elem);
+    };
+
+    public func max<V>(m: Tree<V>): ?V {
+      func rightmost(m: Tree<V>): V {
+        switch m {
+          case (#red(_, v, #leaf))   { v };
+          case (#red(_, _, r))       { rightmost(r) };
+          case (#black(_, v, #leaf)) { v };
+          case (#black(_, _, r))     { rightmost(r) };
+          case (#leaf)               { Debug.trap "PersistentOrderedSet.impossible" }
+        }
+      };
+      switch m {
+        case (#leaf) { null };
+        case (_)     { ?rightmost(m) }
+      }
+    };
+
+    public func min<V>(m: Tree<V>): ?V {
+      func leftmost(m: Tree<V>): V {
+        switch m {
+          case (#red(#leaf, v, _))   { v };
+          case (#red(l, _, _))       { leftmost(l) };
+          case (#black(#leaf, v, _)) { v };
+          case (#black(l, _, _))     { leftmost(l)};
+          case (#leaf)               { Debug.trap "PersistentOrderedSet.impossible" }
+        }
+      };
+      switch m {
+        case (#leaf) { null };
+        case (_)     { ?leftmost(m) }
+      }
+    };
+
+    public func all<V>(m: Tree<V>, pred: V -> Bool): Bool {
+      switch m {
+        case (#red(l, v, r)) {
+          pred(v) and all(l, pred) and all(r, pred)
+        };
+        case (#black(l, v, r)) {
+          pred(v) and all(l, pred) and all(r, pred)
+        };
+        case (#leaf) { true }
+      }
+    };
+
+    public func some<V>(m: Tree<V>, pred: V -> Bool): Bool {
+      switch m {
+        case (#red(l, v, r)) {
+          pred(v) or some(l, pred) or some(r, pred)
+        };
+        case (#black(l, v, r)) {
+          pred(v) or some(l, pred) or some(r, pred)
+        };
+        case (#leaf) { false }
+      }
     };
 
     type IterRep<T> = List.List<{ #tr : Tree<T>; #x : T }>;
