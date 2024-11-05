@@ -27,28 +27,43 @@ import Nat "Nat";
 import O "Order";
 
 module {
-
-  /// Red-black tree of nodes with key-value entries, ordered by the keys.
+  /// Collection of key-value entries, ordered by the keys and key unique.
   /// The keys have the generic type `K` and the values the generic type `V`.
-  /// Leaves are considered implicitly black.
+  /// If `K` and `V` is stable types then `Map<K, V>` is also stable. 
+  /// To ensure that property the `Map<K, V>` does not have any methods, instead 
+  /// they are gathered in the functor-like class `MapOps` (see example there).
   public type Map<K, V> = {
     size : Nat;
     root : Tree<K, V>
   };
 
+  // Note: Leaves are considered implicitly black.
   type Tree<K, V> = {
     #red : (Tree<K, V>, K, V, Tree<K, V>);
     #black : (Tree<K, V>, K, V, Tree<K, V>);
     #leaf
   };
 
-  /// Operations on `Map`, that require a comparator.
+  /// Class that captures key type `K` along with its ordering function `compare` 
+  /// and provides all operations to work with a map of type `Map<K, _>`.
   ///
-  /// The object should be created once, then used for all the operations
-  /// with `Map` to ensure that the same comparator is used for every operation.
+  /// An instance object should be created once as a canister field to ensure 
+  /// that the same comparator is used for every operation.
   ///
-  /// `MapOps` contains methods that require `compare` internally:
-  /// operations that may reshape a `Map` or should find something.
+  /// Example:
+  /// ```motoko
+  /// import Map "mo:base/OrderedMap";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// actor {
+  ///   let natMap = Map.MapOps<Nat>(Nat.compare);
+  ///   stable var keyStorage = natMap.empty<Text>(); // : Map<Nat, Text>
+  ///   
+  ///   public func addKey(id : Nat, key : Text) : async () {
+  ///     keyStorage = natMap.put(keyStorage, id, key);
+  ///   }
+  /// }
+  /// ```
   public class MapOps<K>(compare : (K, K) -> O.Order) {
 
     /// Returns a new map, containing all entries given by the iterator `i`.
@@ -61,10 +76,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let m = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let m = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(m))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(m))));
     ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
@@ -88,14 +103,14 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
     /// var map = Map.empty<Text>();
     ///
-    /// map := mapOps.put(map, 0, "Zero");
-    /// map := mapOps.put(map, 2, "Two");
-    /// map := mapOps.put(map, 1, "One");
+    /// map := natMap.put(map, 0, "Zero");
+    /// map := natMap.put(map, 2, "Two");
+    /// map := natMap.put(map, 1, "One");
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(map))));
     ///
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
@@ -119,19 +134,19 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map0 = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// let (map1, old1) = mapOps.replace(map0, 0, "Nil");
+    /// let (map1, old1) = natMap.replace(map0, 0, "Nil");
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map1))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(map1))));
     /// Debug.print(debug_show(old1));
     /// // [(0, "Nil"), (1, "One"), (2, "Two")]
     /// // ?"Zero"
     ///
-    /// let (map2, old2) = mapOps.replace(map0, 3, "Three");
+    /// let (map2, old2) = natMap.replace(map0, 3, "Three");
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map2))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(map2))));
     /// Debug.print(debug_show(old2));
     /// // [(0, "Zero"), (1, "One"), (2, "Two"), (3, "Three")]
     /// // null
@@ -162,17 +177,17 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// func f(key : Nat, val : Text) : ?Text {
     ///   if(key == 0) {null}
     ///   else { ?("Twenty " # val)}
     /// };
     ///
-    /// let newMap = mapOps.mapFilter(map, f);
+    /// let newMap = natMap.mapFilter(map, f);
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(newMap))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(newMap))));
     ///
     /// // [(1, "Twenty One"), (2, "Twenty Two")]
     /// ```
@@ -194,11 +209,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(mapOps.get(map, 1)));
-    /// Debug.print(debug_show(mapOps.get(map, 42)));
+    /// Debug.print(debug_show(natMap.get(map, 1)));
+    /// Debug.print(debug_show(natMap.get(map, 42)));
     ///
     /// // ?"One"
     /// // null
@@ -219,11 +234,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show mapOps.contains(map, 1)); // => true
-    /// Debug.print(debug_show mapOps.contains(map, 42)); // => false
+    /// Debug.print(debug_show natMap.contains(map, 1)); // => true
+    /// Debug.print(debug_show natMap.contains(map, 42)); // => false
     /// ```
     ///
     /// Runtime: `O(log(n))`.
@@ -241,11 +256,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(mapOps.maxEntry(map))); // => ?(2, "Two")
-    /// Debug.print(debug_show(mapOps.maxEntry(mapOps.empty()))); // => null
+    /// Debug.print(debug_show(natMap.maxEntry(map))); // => ?(2, "Two")
+    /// Debug.print(debug_show(natMap.maxEntry(natMap.empty()))); // => null
     /// ```
     ///
     /// Runtime: `O(log(n))`.
@@ -262,11 +277,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(mapOps.minEntry(map))); // => ?(0, "Zero")
-    /// Debug.print(debug_show(mapOps.minEntry(mapOps.empty()))); // => null
+    /// Debug.print(debug_show(natMap.minEntry(map))); // => ?(0, "Zero")
+    /// Debug.print(debug_show(natMap.minEntry(natMap.empty()))); // => null
     /// ```
     ///
     /// Runtime: `O(log(n))`.
@@ -284,11 +299,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(mapOps.delete(map, 1)))));
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(mapOps.delete(map, 42)))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(natMap.delete(map, 1)))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(natMap.delete(map, 42)))));
     ///
     /// // [(0, "Zero"), (2, "Two")]
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
@@ -313,19 +328,19 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map0 = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map0 = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// let (map1, old1) = mapOps.remove(map0, 0);
+    /// let (map1, old1) = natMap.remove(map0, 0);
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map1))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(map1))));
     /// Debug.print(debug_show(old1));
     /// // [(1, "One"), (2, "Two")]
     /// // ?"Zero"
     ///
-    /// let (map2, old2) = mapOps.remove(map0, 42);
+    /// let (map2, old2) = natMap.remove(map0, 42);
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map2))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(map2))));
     /// Debug.print(debug_show(old2));
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// // null
@@ -352,11 +367,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
     ///
-    /// let map = mapOps.empty<Text>();
+    /// let map = natMap.empty<Text>();
     ///
-    /// Debug.print(debug_show(mapOps.size(map)));
+    /// Debug.print(debug_show(natMap.size(map)));
     ///
     /// // 0
     /// ```
@@ -378,10 +393,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(map))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(map))));
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// var sum = 0;
     /// for ((k, _) in map.entries()) { sum += k; }
@@ -411,10 +426,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.keys(map))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.keys(map))));
     ///
     /// // [0, 1, 2]
     /// ```
@@ -439,10 +454,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.vals(map))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.vals(map))));
     ///
     /// // ["Zero", "One", "Two"]
     /// ```
@@ -466,14 +481,14 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// func f(key : Nat, _val : Text) : Nat = key * 2;
     ///
-    /// let resMap = mapOps.map(map, f);
+    /// let resMap = natMap.map(map, f);
     ///
-    /// Debug.print(debug_show(Iter.toArray(mapOps.entries(resMap))));
+    /// Debug.print(debug_show(Iter.toArray(natMap.entries(resMap))));
     /// // [(0, 0), (1, 2), (2, 4)]
     /// ```
     ///
@@ -493,10 +508,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// Debug.print(debug_show(mapOps.size(map)));
+    /// Debug.print(debug_show(natMap.size(map)));
     /// // 3
     /// ```
     ///
@@ -516,13 +531,13 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
     ///   = (key + accum.0, accum.1 # val);
     ///
-    /// Debug.print(debug_show(mapOps.foldLeft(map, (0, ""), folder)));
+    /// Debug.print(debug_show(natMap.foldLeft(map, (0, ""), folder)));
     ///
     /// // (3, "ZeroOneTwo")
     /// ```
@@ -551,13 +566,13 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
     ///   = (key + accum.0, accum.1 # val);
     ///
-    /// Debug.print(debug_show(mapOps.foldRight(map, (0, ""), folder)));
+    /// Debug.print(debug_show(natMap.foldRight(map, (0, ""), folder)));
     ///
     /// // (3, "TwoOneZero")
     /// ```
@@ -583,12 +598,12 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
     ///
-    /// Debug.print(debug_show(mapOps.all(map, func (k, v) = (v == debug_show(k)))));
+    /// Debug.print(debug_show(natMap.all(map, func (k, v) = (v == debug_show(k)))));
     /// // true
-    /// Debug.print(debug_show(mapOps.all(map, func (k, v) = (k < 2))));
+    /// Debug.print(debug_show(natMap.all(map, func (k, v) = (k < 2))));
     /// // false
     /// ```
     ///
@@ -606,12 +621,12 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let mapOps = Map.MapOps<Nat>(Nat.compare);
-    /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
+    /// let natMap = Map.MapOps<Nat>(Nat.compare);
+    /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
     ///
-    /// Debug.print(debug_show(mapOps.some(map, func (k, v) = (k >= 3))));
+    /// Debug.print(debug_show(natMap.some(map, func (k, v) = (k >= 3))));
     /// // false
-    /// Debug.print(debug_show(mapOps.some(map, func (k, v) = (k >= 0))));
+    /// Debug.print(debug_show(natMap.some(map, func (k, v) = (k >= 0))));
     /// // true
     /// ```
     ///
@@ -1125,6 +1140,7 @@ module {
     }
   };
 
+  /// Test helpers
   public module MapDebug {
     public func checkMapInvariants<K, V>(rbMap : Map<K, V>, comp : (K, K) -> O.Order) {
       ignore blackDepth(rbMap.root, comp)

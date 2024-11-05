@@ -33,16 +33,36 @@ module {
     #leaf
   };
 
-  /// Set type with a size attached to the root node of the rbtree.
+  /// Ordered collection of unique elements of the generic type `T`.
+  /// If type `T` is stable then `Set<T>` is also stable.
+  /// To ensure that property the `Set<T>` does not have any methods,
+  /// instead they are gathered in the functor-like class `SetOps` (see example there).
   public type Set<T> = { size : Nat; root : Tree<T> };
 
-  /// Operations on `Set`, that require a comparator.
+  /// OClass that captures element type `T` along with its ordering function `compare`
+  /// and provide all operations to work with a set of type `Set<T>`.
   ///
-  /// The object should be created once, then used for all the operations
-  /// with `Set` to maintain invariant that comparator did not changed.
+  /// An instance object should be created once as a canister field to ensure
+  /// that the same comparator is used for every operation.
   ///
-  /// `SetOps` contains methods that require `compare` internally:
-  /// operations that may reshape a `Set` or should find something.
+  /// Example:
+  /// ```motoko
+  /// import Set "mo:base/OrderedSet";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// actor {
+  ///   let natSet = Set.SetOps<Nat>(Nat.compare);
+  ///   stable var usedIds = natSet.empty(); // : Set<Nat>
+  ///   
+  ///   public func createId(id : Nat) : async () {
+  ///     usedIds = natMap.put(usedIds, id);
+  ///   }
+  ///   
+  ///   public func idIsUsed(id: Nat) : async Bool {
+  ///      return natMap.contains(usedIds, id);  
+  ///   }
+  /// }
+  /// ```
   public class SetOps<T>(compare : (T, T) -> O.Order) {
 
     /// Returns a new Set, containing all entries given by the iterator `i`.
@@ -55,10 +75,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(set))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(set))));
     /// // [0, 1, 2]
     /// ```
     ///
@@ -86,14 +106,14 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// var set = Set.empty<Nat>();
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// var set = natSet.empty();
     ///
-    /// set := setOps.put(set, 0);
-    /// set := setOps.put(set, 2);
-    /// set := setOps.put(set, 1);
+    /// set := natSet.put(set, 0);
+    /// set := natSet.put(set, 2);
+    /// set := natSet.put(set, 1);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(set))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(set))));
     /// // [0, 1, 2]
     /// ```
     ///
@@ -115,11 +135,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(setOps.delete(set, 1)))));
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(setOps.delete(set, 42)))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(natSet.delete(set, 1)))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(natSet.delete(set, 42)))));
     /// // [0, 2]
     /// // [0, 1, 2]
     /// ```
@@ -141,11 +161,11 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show setOps.contains(set, 1)); // => true
-    /// Debug.print(debug_show setOps.contains(set, 42)); // => false
+    /// Debug.print(debug_show natSet.contains(set, 1)); // => true
+    /// Debug.print(debug_show natSet.contains(set, 42)); // => false
     /// ```
     ///
     /// Runtime: `O(log(n))`.
@@ -210,11 +230,11 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
-    /// let set2 = setOps.fromIter(Iter.fromArray([2, 3, 4]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set1 = natSet.fromIter(Iter.fromArray([0, 1, 2]));
+    /// let set2 = natSet.fromIter(Iter.fromArray([2, 3, 4]));
     ///
-    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.union(set1, set2))));
+    /// Debug.print(debug_show Iter.toArray(natSet.vals(natSet.union(set1, set2))));
     /// // [0, 1, 2, 3, 4]
     /// ```
     ///
@@ -240,11 +260,11 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
-    /// let set2 = setOps.fromIter(Iter.fromArray([1, 2, 3]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set1 = natSet.fromIter(Iter.fromArray([0, 1, 2]));
+    /// let set2 = natSet.fromIter(Iter.fromArray([1, 2, 3]));
     ///
-    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.intersect(set1, set2))));
+    /// Debug.print(debug_show Iter.toArray(natSet.vals(natSet.intersect(set1, set2))));
     /// // [1, 2]
     /// ```
     ///
@@ -279,11 +299,11 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set1 = setOps.fromIter(Iter.fromArray([0, 1, 2]));
-    /// let set2 = setOps.fromIter(Iter.fromArray([1, 2, 3]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set1 = natSet.fromIter(Iter.fromArray([0, 1, 2]));
+    /// let set2 = natSet.fromIter(Iter.fromArray([1, 2, 3]));
     ///
-    /// Debug.print(debug_show Iter.toArray(Set.elements(setOps.diff(set1, set2))));
+    /// Debug.print(debug_show Iter.toArray(natSet.vals(natSet.diff(set1, set2))));
     /// // [0]
     /// ```
     ///
@@ -321,14 +341,14 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 1, 2, 3]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 1, 2, 3]));
     ///
     /// func f(x : Nat) : Nat = if (x < 2) { x } else { 0 };
     ///
-    /// let resSet = setOps.map(set, f);
+    /// let resSet = natSet.map(set, f);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(resSet))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(resSet))));
     /// // [0, 1]
     /// ```
     ///
@@ -351,17 +371,17 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 1, 2, 3]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 1, 2, 3]));
     ///
     /// func f(x : Nat) : ?Nat {
     ///   if(x == 0) {null}
     ///   else { ?( x * 2 )}
     /// };
     ///
-    /// let newRbSet = setOps.mapFilter(set, f);
+    /// let newRbSet = natSet.mapFilter(set, f);
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.elements(newRbSet))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(newRbSet))));
     /// // [2, 4, 6]
     /// ```
     ///
@@ -392,11 +412,11 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set1 = setOps.fromIter(Iter.fromArray([1, 2]));
-    /// let set2 = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set1 = natSet.fromIter(Iter.fromArray([1, 2]));
+    /// let set2 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show setOps.isSubset(set1, set2)); // => true
+    /// Debug.print(debug_show natSet.isSubset(set1, set2)); // => true
     /// ```
     ///
     /// Runtime: `O(m * log(n))`.
@@ -419,12 +439,12 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set1 = setOps.fromIter(Iter.fromArray([0, 2, 1]));
-    /// let set2 = setOps.fromIter(Iter.fromArray([1, 2]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set1 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let set2 = natSet.fromIter(Iter.fromArray([1, 2]));
     ///
-    /// Debug.print(debug_show setOps.equals(set1, set1)); // => true
-    /// Debug.print(debug_show setOps.equals(set1, set2)); // => false
+    /// Debug.print(debug_show natSet.equals(set1, set1)); // => true
+    /// Debug.print(debug_show natSet.equals(set1, set2)); // => false
     /// ```
     ///
     /// Runtime: `O(m * log(n))`.
@@ -458,10 +478,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.vals(set))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.vals(set))));
     /// // [0, 1, 2]
     /// ```
     /// Cost of iteration over all elements:
@@ -482,10 +502,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Iter.toArray(Set.valsRev(set))));
+    /// Debug.print(debug_show(Iter.toArray(natSet.valsRev(set))));
     /// // [2, 1, 0]
     /// ```
     /// Cost of iteration over all elements:
@@ -503,9 +523,9 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     ///
-    /// let set = Set.empty<Nat>();
+    /// let set = natSet.empty();
     ///
-    /// Debug.print(debug_show(Set.size(set))); // => 0
+    /// Debug.print(debug_show(natSet.size(set))); // => 0
     /// ```
     ///
     /// Cost of empty set creation
@@ -523,10 +543,10 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(Set.size(set))); // => 3
+    /// Debug.print(debug_show(natSet.size(set))); // => 3
     /// ```
     ///
     /// Runtime: `O(1)`.
@@ -545,12 +565,12 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
     ///
-    /// Debug.print(debug_show(Set.foldLeft(set, 0, folder)));
+    /// Debug.print(debug_show(natSet.foldLeft(set, 0, folder)));
     /// // 3
     /// ```
     ///
@@ -578,12 +598,12 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
     ///
-    /// Debug.print(debug_show(Set.foldRight(set, 0, folder)));
+    /// Debug.print(debug_show(natSet.foldRight(set, 0, folder)));
     /// // 3
     /// ```
     ///
@@ -607,9 +627,9 @@ module {
     /// import Set "mo:base/OrderedSet";
     /// import Debug "mo:base/Debug";
     ///
-    /// let set = Set.empty<Nat>();
+    /// let set = natSet.empty();
     ///
-    /// Debug.print(debug_show(Set.isEmpty(set))); // => true
+    /// Debug.print(debug_show(natSet.isEmpty(set))); // => true
     /// ```
     ///
     /// Runtime: `O(1)`.
@@ -652,12 +672,12 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
-    /// let setOps = Set.SetOps<Nat>(Nat.compare);
-    /// let set = setOps.fromIter<Text>(Iter.fromArray([0, 2, 1]));
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let set = natSet.fromIter<Text>(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(setOps.some(set, func (v) = (k >= 3))));
+    /// Debug.print(debug_show(natSet.some(set, func (v) = (k >= 3))));
     /// // false
-    /// Debug.print(debug_show(setOps.some(set, func (v) = (k >= 0))));
+    /// Debug.print(debug_show(natSet.some(set, func (v) = (k >= 0))));
     /// // true
     /// ```
     ///
@@ -1077,6 +1097,7 @@ module {
     }
   };
 
+  /// Test helpers
   public module SetDebug {
     // check binary search tree order of elements and black depth invariant of the RB-tree
     public func checkSetInvariants<T>(s : Set<T>, comp : (T, T) -> O.Order) {
