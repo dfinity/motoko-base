@@ -1,6 +1,6 @@
 // @testmode wasi
 
-import Set "../src/PersistentOrderedSet";
+import Set "../src/OrderedSet";
 import Array "../src/Array";
 import Nat "../src/Nat";
 import Iter "../src/Iter";

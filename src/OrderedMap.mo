@@ -57,7 +57,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -84,7 +84,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -115,7 +115,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -158,7 +158,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -191,7 +191,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -216,7 +216,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -238,7 +238,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -259,7 +259,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -281,7 +281,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -309,7 +309,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -349,7 +349,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -374,7 +374,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -405,7 +405,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -433,7 +433,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -460,7 +460,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -487,7 +487,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -510,7 +510,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -545,7 +545,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -578,7 +578,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -601,7 +601,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Map "mo:base/PersistentOrderedMap";
+    /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -784,7 +784,7 @@ module {
           case (#red(_, _, _, r))       { rightmost(r) };
           case (#black(_, k, v, #leaf)) { (k, v) };
           case (#black(_, _, _, r))     { rightmost(r) };
-          case (#leaf)                  { Debug.trap "PersistentOrderedMap.impossible" }
+          case (#leaf)                  { Debug.trap "OrderedMap.impossible" }
         }
       };
       switch m {
@@ -800,7 +800,7 @@ module {
           case (#red(l, _, _, _))       { leftmost(l) };
           case (#black(#leaf, k, v, _)) { (k, v) };
           case (#black(l, _, _, _))     { leftmost(l)};
-          case (#leaf)                  { Debug.trap "PersistentOrderedMap.impossible" }
+          case (#leaf)                  { Debug.trap "OrderedMap.impossible" }
         }
       };
       switch m {
@@ -839,7 +839,7 @@ module {
           (#red (l, x, y, r))
         };
         case _ {
-          Debug.trap "PersistentOrderedMap.red"
+          Debug.trap "OrderedMap.red"
         }
       }
     };

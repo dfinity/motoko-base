@@ -50,7 +50,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -81,7 +81,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -111,7 +111,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -137,7 +137,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -161,7 +161,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -183,7 +183,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -205,7 +205,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -236,7 +236,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -275,7 +275,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -317,7 +317,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -347,7 +347,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -388,7 +388,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -415,7 +415,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -454,7 +454,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -478,7 +478,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -502,7 +502,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     ///
     /// let set = Set.empty<Nat>();
     ///
@@ -519,7 +519,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -541,7 +541,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -574,7 +574,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
@@ -605,7 +605,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Debug "mo:base/Debug";
     ///
     /// let set = Set.empty<Nat>();
@@ -626,7 +626,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -649,7 +649,7 @@ module {
     ///
     /// Example:
     /// ```motoko
-    /// import Set "mo:base/PersistentOrderedSet";
+    /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -700,7 +700,7 @@ module {
           case (#red(_, _, r))       { rightmost(r) };
           case (#black(_, v, #leaf)) { v };
           case (#black(_, _, r))     { rightmost(r) };
-          case (#leaf)               { Debug.trap "PersistentOrderedSet.impossible" }
+          case (#leaf)               { Debug.trap "OrderedSet.impossible" }
         }
       };
       switch m {
@@ -716,7 +716,7 @@ module {
           case (#red(l, _, _))       { leftmost(l) };
           case (#black(#leaf, v, _)) { v };
           case (#black(l, _, _))     { leftmost(l)};
-          case (#leaf)               { Debug.trap "PersistentOrderedSet.impossible" }
+          case (#leaf)               { Debug.trap "OrderedSet.impossible" }
         }
       };
       switch m {
@@ -839,7 +839,7 @@ module {
           (#red (l, x, r))
         };
         case _ {
-          Debug.trap "PersistentOrderedSet.red"
+          Debug.trap "OrderedSet.red"
         }
       }
     };

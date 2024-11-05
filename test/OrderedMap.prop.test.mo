@@ -1,6 +1,6 @@
 // @testmode wasi
 
-import Map "../src/PersistentOrderedMap";
+import Map "../src/OrderedMap";
 import Nat "../src/Nat";
 import Iter "../src/Iter";
 import Debug "../src/Debug";
