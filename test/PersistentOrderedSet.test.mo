@@ -26,64 +26,9 @@ class SetMatcher(expected : [Nat]) : M.Matcher<Set.Set<Nat>> {
 
 let natSetOps = Set.SetOps<Nat>(Nat.compare);
 
-func checkSet(s : Set.Set<Nat>) {
-  ignore blackDepth(s.root)
-};
-
-func blackDepth(node : Set.Tree<Nat>) : Nat {
-  func checkNode(left : Set.Tree<Nat>, elem : Nat, right : Set.Tree<Nat>) : Nat {
-    checkElem(left, func(x) { x < elem });
-    checkElem(right, func(x) { x > elem });
-    let leftBlacks = blackDepth(left);
-    let rightBlacks = blackDepth(right);
-    assert (leftBlacks == rightBlacks);
-    leftBlacks
-  };
-  switch node {
-    case (#leaf) 0;
-    case (#red(left, x1, right)) {
-      checkElem(left, func(x) { x < x1 });
-      checkElem(right, func(x) { x > x1 });
-      let leftBlacks = blackDepth(left);
-      let rightBlacks = blackDepth(right);
-      assert (leftBlacks == rightBlacks);
-      assert (not isRed(left));
-      assert (not isRed(right));
-      leftBlacks
-    };
-    case (#black(left, x1, right)) {
-      checkElem(left, func(x) { x < x1 });
-      checkElem(right, func(x) { x > x1 });
-      let rightBlacks = blackDepth(right);
-      let leftBlacks = blackDepth(left);
-      assert (leftBlacks == rightBlacks);
-      leftBlacks + 1
-    };
-  };
-};
-
-func isRed(node : Set.Tree<Nat>) : Bool {
-  switch node {
-    case (#red(_, _, _)) true;
-    case _ false;
-  }
-};
-
-func checkElem(node : Set.Tree<Nat>, isValid : Nat -> Bool) {
-  switch node {
-    case (#leaf) {};
-    case (#black(_, elem, _)) {
-      assert (isValid(elem))
-    };
-    case (#red(_, elem, _)) {
-      assert (isValid(elem))
-    }
-  }
-};
-
 func insert(s : Set.Set<Nat>, key : Nat) : Set.Set<Nat>  {
   let updatedTree = natSetOps.put(s, key);
-  checkSet(updatedTree);
+  Set.SetDebug.checkSetInvariants(updatedTree, Nat.compare);
   updatedTree
 };
 
@@ -102,7 +47,7 @@ func clear(initialRbSet : Set.Set<Nat>) : Set.Set<Nat> {
   for (elem in natSetOps.vals(initialRbSet)) {
     let newSet = natSetOps.delete(rbSet, elem);
     rbSet := newSet;
-    checkSet(rbSet)
+    Set.SetDebug.checkSetInvariants(rbSet, Nat.compare)
   };
   rbSet
 };

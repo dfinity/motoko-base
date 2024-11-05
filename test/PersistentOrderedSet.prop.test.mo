@@ -212,6 +212,11 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
         }),
       ]),
 
+      prop("search tree invariant", func (s) {
+        Set.SetDebug.checkSetInvariants<Nat>(s, Nat.compare);
+        true
+      }),
+
       suite("mapFilter", [
         prop_with_elem("not contains(mapFilter(s, (!=e)), e)", func (s, e) {
           not natSet.contains(natSet.mapFilter<Nat>(s,

@@ -27,7 +27,7 @@ import O "Order";
 module {
   /// Red-black tree of nodes with ordered set elements.
   /// Leaves are considered implicitly black.
-  public type Tree<T> = {
+  type Tree<T> = {
     #red : (Tree<T>, T, Tree<T>);
     #black : (Tree<T>, T, Tree<T>);
     #leaf
@@ -1068,5 +1068,53 @@ module {
       { root = newRoot;
         size = if changed {s.size-1} else {s.size}}
     };
-  }
+  };
+
+  public module SetDebug {
+    // check binary search tree order of elements and black depth invariant of the RB-tree
+    public func checkSetInvariants<T>(s : Set<T>, comp: (T, T) -> O.Order) {
+      ignore blackDepth(s.root, comp)
+    };
+
+    func blackDepth<T>(node : Tree<T>, comp: (T, T) -> O.Order) : Nat {
+      func checkNode(left: Tree<T>, x1: T, right: Tree<T>): Nat {
+        checkElem(left,  func(x: T): Bool { comp(x, x1) == #less });
+        checkElem(right, func(x: T): Bool { comp(x, x1) == #greater });
+        let leftBlacks = blackDepth(left, comp);
+        let rightBlacks = blackDepth(right, comp);
+        assert (leftBlacks == rightBlacks);
+        leftBlacks  
+      };
+      switch node {
+        case (#leaf) 0;
+        case (#red(left, x1, right)) {
+          assert (not isRed(left));
+          assert (not isRed(right));
+          checkNode(left, x1, right)
+        };
+        case (#black(left, x1, right)) {
+          checkNode(left, x1, right) + 1
+        };
+      };
+    };
+
+    func isRed<T>(node : Tree<T>) : Bool {
+      switch node {
+        case (#red(_, _, _)) true;
+        case _ false;
+      }
+    };
+
+    func checkElem<T>(node : Tree<T>, isValid : T -> Bool) {
+      switch node {
+        case (#leaf) {};
+        case (#black(_, elem, _)) {
+          assert (isValid(elem))
+        };
+        case (#red(_, elem, _)) {
+          assert (isValid(elem))
+        }
+      }
+    };
+  };
 }

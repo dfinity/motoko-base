@@ -26,52 +26,7 @@ class MapMatcher(expected : [(Nat, Text)]) : M.Matcher<Map.Map<Nat, Text>> {
   }
 };
 
-func checkMap(rbMap : Map.Map<Nat, Text>) {
-  ignore blackDepth(rbMap.root)
-};
-
-func blackDepth(node : Map.Tree<Nat, Text>) : Nat {
-  func checkNode(left : Map.Tree<Nat, Text>, key : Nat, right : Map.Tree<Nat, Text>) : Nat {
-    checkKey(left, func(x) { x < key });
-    checkKey(right, func(x) { x > key });
-    let leftBlacks = blackDepth(left);
-    let rightBlacks = blackDepth(right);
-    assert (leftBlacks == rightBlacks);
-    leftBlacks
-  };
-  switch node {
-    case (#leaf) 0;
-    case (#red(left, key, _, right)) {
-      let leftBlacks = checkNode(left, key, right);
-      assert (not isRed(left));
-      assert (not isRed(right));
-      leftBlacks
-    };
-    case (#black(left, key, _, right)) {
-      checkNode(left, key, right) + 1
-    }
-  }
-};
-
-
-func isRed(node : Map.Tree<Nat, Text>) : Bool {
-  switch node {
-    case (#red(_, _, _, _)) true;
-    case _ false
-  }
-};
-
-func checkKey(node : Map.Tree<Nat, Text>, isValid : Nat -> Bool) {
-  switch node {
-    case (#leaf) {};
-    case (#red( _, key, _, _)) {
-      assert (isValid(key))
-    };
-    case (#black( _, key, _, _)) {
-      assert (isValid(key))
-    }
-  }
-};
+func checkMap(m: Map.Map<Nat, Text>) { Map.MapDebug.checkMapInvariants(m, Nat.compare); };
 
 func insert(rbTree : Map.Map<Nat, Text>, key : Nat) : Map.Map<Nat, Text>  {
   let updatedTree = natMapOps.put(rbTree, key, debug_show (key));

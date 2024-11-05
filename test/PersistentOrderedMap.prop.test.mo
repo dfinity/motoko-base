@@ -179,6 +179,11 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
         })
       ]),
 
+      prop("search tree invariant", func (m) {
+        Map.MapDebug.checkMapInvariants(m, Nat.compare);
+        true
+      }),
+
       suite("keys,vals,entries,entriesRe",  [
         prop("fromIter(entries(m)) == m", func (m) {
           MapMatcher(m).matches(natMap.fromIter(natMap.entries(m)))

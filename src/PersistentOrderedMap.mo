@@ -37,7 +37,7 @@ module {
     root: Tree<K, V>;
   };
 
-  public type Tree<K, V> = {
+  type Tree<K, V> = {
     #red : (Tree<K, V>, K, V, Tree<K, V>);
     #black : (Tree<K, V>, K, V, Tree<K, V>);
     #leaf
@@ -1103,5 +1103,55 @@ module {
         case other { (other, y0) };
       };
     }
-  }
+  };
+
+  public module MapDebug {
+    public func checkMapInvariants<K, V>(rbMap : Map<K, V>, comp: (K, K) -> O.Order) {
+      ignore blackDepth(rbMap.root, comp)
+    };
+
+    func blackDepth<K, V>(node : Tree<K, V>, comp: (K, K) -> O.Order) : Nat {
+      func checkNode(left : Tree<K, V>, key : K, right : Tree<K, V>) : Nat {
+        checkKey(left, func(x: K): Bool { comp(x, key) == #less });
+        checkKey(right, func(x: K): Bool { comp(x, key) == #greater });
+        let leftBlacks = blackDepth(left, comp);
+        let rightBlacks = blackDepth(right, comp);
+        assert (leftBlacks == rightBlacks);
+        leftBlacks
+      };
+      switch node {
+        case (#leaf) 0;
+        case (#red(left, key, _, right)) {
+          let leftBlacks = checkNode(left, key, right);
+          assert (not isRed(left));
+          assert (not isRed(right));
+          leftBlacks
+        };
+        case (#black(left, key, _, right)) {
+          checkNode(left, key, right) + 1
+        }
+      }
+    };
+
+
+    func isRed<K, V>(node : Tree<K, V>) : Bool {
+      switch node {
+        case (#red(_, _, _, _)) true;
+        case _ false
+      }
+    };
+
+    func checkKey<K, V>(node : Tree<K, V>, isValid : K -> Bool) {
+      switch node {
+        case (#leaf) {};
+        case (#red( _, key, _, _)) {
+          assert (isValid(key))
+        };
+        case (#black( _, key, _, _)) {
+          assert (isValid(key))
+        }
+      }
+    };
+
+  };
 }
