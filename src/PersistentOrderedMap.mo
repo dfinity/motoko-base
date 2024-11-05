@@ -249,7 +249,7 @@ module {
     /// Debug.print(debug_show(mapOps.maxEntry(mapOps.empty()))); // => null
     /// ```
     ///
-    /// Runtime: `O(log(n))`
+    /// Runtime: `O(log(n))`.
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the map.
     public func maxEntry<V>(m: Map<K, V>): ?(K, V)
@@ -270,7 +270,7 @@ module {
     /// Debug.print(debug_show(mapOps.minEntry(mapOps.empty()))); // => null
     /// ```
     ///
-    /// Runtime: `O(log(n))`
+    /// Runtime: `O(log(n))`.
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the map.
     public func minEntry<V>(m: Map<K, V>): ?(K, V)
@@ -496,13 +496,11 @@ module {
     /// let map = mapOps.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
     /// Debug.print(debug_show(mapOps.size(map)));
-    ///
     /// // 3
     /// ```
     ///
     /// Runtime: `O(n)`.
     /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the tree.
     public func size<V>(m : Map<K, V>) : Nat
       = m.size;
 
@@ -579,7 +577,7 @@ module {
     /// Test whether all key-value pairs satisfy a given predicate `pred`.
     ///
     /// Example:
-    /// ```
+    /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
@@ -595,14 +593,14 @@ module {
     ///
     /// Runtime: `O(n)`.
     /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the tree.
+    /// where `n` denotes the number of key-value entries stored in the map.
     public func all<V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool
       = Internal.all(m.root, pred);
 
     /// Test if there exists a key-value pair satisfying a given predicate `pred`.
     ///
     /// Example:
-    /// ```
+    /// ```motoko
     /// import Map "mo:base/PersistentOrderedMap";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
@@ -618,7 +616,7 @@ module {
     ///
     /// Runtime: `O(n)`.
     /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the tree.
+    /// where `n` denotes the number of key-value entries stored in the map.
     public func some<V>(m: Map<K, V>, pred: (K, V) -> Bool): Bool
       = Internal.some(m.root, pred);
   };
