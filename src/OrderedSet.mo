@@ -39,7 +39,7 @@ module {
   /// instead they are gathered in the functor-like class `SetOps` (see example there).
   public type Set<T> = { size : Nat; root : Tree<T> };
 
-  /// OClass that captures element type `T` along with its ordering function `compare`
+  /// Class that captures element type `T` along with its ordering function `compare`
   /// and provide all operations to work with a set of type `Set<T>`.
   ///
   /// An instance object should be created once as a canister field to ensure
@@ -175,7 +175,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func contains(s : Set<T>, value : T) : Bool 
-      = Internal.contains(s, compare, value);
+      = Internal.contains(s.root, compare, value);
 
     /// Get a maximal element of the set `s` if it is not empty, otherwise returns `null`
     ///
@@ -277,14 +277,21 @@ module {
       if (size(s1) < size(s2)) {
         foldLeft(s1, empty(),
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(s2, compare, elem)) { Internal.put(acc, compare, elem) } else { acc }
+            if (Internal.contains(s2.root, compare, elem)) { 
+              Internal.put(acc, compare, elem) 
+            } else { 
+              acc 
+            }
           }
         )
-      }
-      else {
+      } else {
         foldLeft(s2, empty(),
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(s1, compare, elem)) { Internal.put(acc, compare, elem) } else { acc }
+            if (Internal.contains(s1.root, compare, elem)) { 
+              Internal.put(acc, compare, elem) 
+            } else { 
+              acc 
+            }
           }
         )
       }
@@ -316,14 +323,14 @@ module {
       if (size(s1) < size(s2)) {
         foldLeft(s1, empty(),
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(s2, compare, elem)) { acc } else { Internal.put(acc, compare, elem) }
+            if (Internal.contains(s2.root, compare, elem)) { acc } else { Internal.put(acc, compare, elem) }
           }
         )
       }
       else {
         foldLeft(s2, s1,
           func (elem : T, acc : Set<T>) : Set<T> {
-            if (Internal.contains(acc, compare, elem)) { Internal.delete(acc, compare, elem) } else { acc }
+            if (Internal.contains(acc.root, compare, elem)) { Internal.delete(acc, compare, elem) } else { acc }
           }
         )
       }
@@ -426,8 +433,8 @@ module {
     ///
     /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
     public func isSubset(s1 : Set<T>, s2 : Set<T>) : Bool {
-      if (size(s1) > size(s2)) { return false };
-      isSubsetHelper(s1, s2)
+      if (s1.size > s2.size) { return false };
+      isSubsetHelper(s1.root, s2.root)
     };
 
     /// Test if two sets are equal.
@@ -454,17 +461,24 @@ module {
     ///
     /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
     public func equals(s1 : Set<T>, s2 : Set<T>) : Bool {
-      if (size(s1) != size(s2)) { return false };
-      isSubsetHelper(s1, s2)
+      if (s1.size != s2.size) { return false };
+      isSubsetHelper(s1.root, s2.root)
     };
 
-    func isSubsetHelper(s1 : Set<T>, s2 : Set<T>) : Bool {
-      for (x in vals(s1)) {
-        if (not (Internal.contains(s2, compare, x))) {
-          return false
+    func isSubsetHelper(t1 : Tree<T>, t2 : Tree<T>) : Bool {
+      switch (t1, t2) {
+        case (#leaf, _) { true  };
+        case (_, #leaf) { false };
+        case ((#red(t1l, x1, t1r) or #black(t1l, x1, t1r)), (#red(t2l, x2, t2r)) or #black(t2l, x2, t2r)) {
+          switch (compare(x1, x2)) {
+            case (#equal)   { isSubsetHelper(t1l, t2l) and isSubsetHelper(t1r, t2r) };
+            // x1 < x2 ==> x1 \in t2l /\ t1l \subset t2l
+            case (#less)    { Internal.contains(t2l, compare, x1) and isSubsetHelper(t1l, t2l) and isSubsetHelper(t1r, t2) };
+            // x2 < x1 ==> x1 \in t2r /\ t1r \subset t2r  
+            case (#greater) { Internal.contains(t2r, compare, x1) and isSubsetHelper(t1l, t2) and isSubsetHelper(t1r, t2r) }
+          }
         }
-      };
-      return true
+      }
     };
 
     /// Returns an Iterator (`Iter`) over the elements of the set.
@@ -689,7 +703,7 @@ module {
   };
 
   module Internal {
-    public func contains<T>(s : Set<T>, compare : (T, T) -> O.Order, elem : T) : Bool {
+    public func contains<T>(tree : Tree<T>, compare : (T, T) -> O.Order, elem : T) : Bool {
       func f(t : Tree<T>, x : T) : Bool {
         switch t {
           case (#black(l, x1, r)) {
@@ -709,7 +723,7 @@ module {
           case (#leaf) { false }
         }
       };
-      f(s.root, elem)
+      f(tree, elem)
     };
 
     public func max<V>(m : Tree<V>) : ?V {
