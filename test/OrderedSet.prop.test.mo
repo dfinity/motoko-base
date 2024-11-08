@@ -212,10 +212,23 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
         }),
       ]),
 
-      prop("search tree invariant", func (s) {
-        Set.SetDebug.checkSetInvariants<Nat>(s, Nat.compare);
-        true
-      }),
+      suite(("Internal"), [
+        prop("search tree invariant", func (s) {
+          Set.SetDebug.checkSetInvariants<Nat>(s, Nat.compare);
+          true
+        }),
+        prop("buildFromSorted makes RB tree", func (s) {
+          let a = Iter.toArray(natSet.vals(s));
+          let t = Set.SetDebug.buildFromSorted(a);
+          Set.SetDebug.checkSetInvariants<Nat>(t, Nat.compare);
+          true
+        }),
+        prop("buildFromSorted(toArray(t)) == t", func (s) {
+          let a = Iter.toArray(natSet.vals(s));
+          let t = Set.SetDebug.buildFromSorted(a);
+          SetMatcher(s).matches(t)
+        })
+      ]),
 
       suite("mapFilter", [
         prop_with_elem("not contains(mapFilter(s, (!=e)), e)", func (s, e) {
