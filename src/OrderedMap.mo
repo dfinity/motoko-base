@@ -116,11 +116,13 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    ///    
+    /// Note: The returned map shares with the `m` most of the tree nodes. 
+    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.put(m, k)`)
+    /// causes collecting `O(log(n))` nodes.
     public func put<V>(m : Map<K, V>, key : K, value : V) : Map<K, V>
       = replace(m, key, value).0;
 
@@ -153,11 +155,13 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: The returned map shares with the `m` most of the tree nodes. 
+    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.replace(m, k).0`)
+    /// causes collecting `O(log(n))` nodes.
     public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K, V>, ?V) {
       switch (Internal.replace(m.root, compare, key, value)) {
         case (t, null) { ({root = t; size = m.size + 1}, null) };
@@ -192,12 +196,12 @@ module {
     /// // [(1, "Twenty One"), (2, "Twenty Two")]
     /// ```
     ///
-    /// Runtime: `O(n)`.
+    /// Runtime: `O(n * log(n))`.
     /// Space: `O(n)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
     public func mapFilter<V1, V2>(m : Map<K, V1>, f : (K, V1) -> ?V2) : Map<K, V2>
       = Internal.mapFilter(m, compare, f);
 
@@ -310,11 +314,13 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Space: `O(log(n))`
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: The returned map shares with the `m` most of the tree nodes. 
+    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.delete(m, k).0`)
+    /// causes collecting `O(log(n))` nodes.
     public func delete<V>(m : Map<K, V>, key : K) : Map<K, V>
       = remove(m, key).0;
 
@@ -347,11 +353,13 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Space: `O(log(n))`.
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: The returned map shares with the `m` most of the tree nodes. 
+    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.remove(m, k)`)
+    /// causes collecting `O(log(n))` nodes.
     public func remove<V>(m : Map<K, V>, key : K) : (Map<K, V>, ?V) {
       switch (Internal.remove(m.root, compare, key)) {
         case (t, null) { ({root = t; size = m.size }, null) };

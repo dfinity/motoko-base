@@ -118,11 +118,13 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the set and
+    /// Space: `O(log(n))`.
+    /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: The returned set shares with the `s` most of the tree nodes. 
+    /// Garbage collecting one of sets (e.g. after an assignment `m := natSet.delete(m, k)`)
+    /// causes collecting `O(log(n))` nodes.
     public func put(s : Set<T>, value : T) : Set<T> 
       = Internal.put(s, compare, value);
 
@@ -145,11 +147,13 @@ module {
     /// ```
     ///
     /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
+    /// Space: `O(log(n))`.
     /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: The returned set shares with the `s` most of the tree nodes. 
+    /// Garbage collecting one of sets (e.g. after an assignment `m := natSet.delete(m, k)`)
+    /// causes collecting `O(log(n))` nodes.
     public func delete(s : Set<T>, value : T) : Set<T> 
       = Internal.delete(s, compare, value);
 
@@ -172,8 +176,6 @@ module {
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func contains(s : Set<T>, value : T) : Bool 
       = Internal.contains(s.root, compare, value);
 
@@ -239,10 +241,10 @@ module {
     /// ```
     ///
     /// Runtime: `O(m * log(n))`.
-    /// Space: `O(1)`, retained memory plus garbage, see the note below.
+    /// Space: `O(m)`, retained memory plus garbage, see the note below.
     /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
     public func union(s1 : Set<T>, s2 : Set<T>) : Set<T> {
       if (size(s1) < size(s2)) {
         foldLeft(s1, s2, func(elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
@@ -272,7 +274,7 @@ module {
     /// Space: `O(m)`, retained memory plus garbage, see the note below.
     /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
     ///
-    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(m)` temporary objects that will be collected as garbage.
     public func intersect(s1 : Set<T>, s2 : Set<T>) : Set<T> {
       let elems = Buffer.Buffer<T>(Nat.min(Nat.min(s1.size, s2.size), 100));
       if (s1.size < s2.size) {
@@ -357,9 +359,11 @@ module {
     /// ```
     ///
     /// Cost of mapping all the elements:
-    /// Runtime: `O(n)`.
+    /// Runtime: `O(n * log(n))`.
     /// Space: `O(n)` retained memory
     /// where `n` denotes the number of elements stored in the set.
+    ///
+    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
     public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T>
       = Internal.foldLeft(s.root, empty(), func (elem : T1, acc : Set<T>) : Set<T> { Internal.put(acc, compare, f(elem)) });
 
@@ -389,12 +393,12 @@ module {
     /// // [2, 4, 6]
     /// ```
     ///
-    /// Runtime: `O(n)`.
+    /// Runtime: `O(n * log(n))`.
     /// Space: `O(n)` retained memory plus garbage, see the note below.
     /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
     public func mapFilter<T1>(s : Set<T1>, f : T1 -> ?T) : Set<T> {
       func combine(elem : T1, acc : Set<T>) : Set<T> {
         switch (f(elem)) {
@@ -427,8 +431,6 @@ module {
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `m` and `n` denote the number of elements stored in the sets set1 and set2, respectively,
     /// and assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
     public func isSubset(s1 : Set<T>, s2 : Set<T>) : Bool {
       if (s1.size > s2.size) { return false };
       isSubsetHelper(s1.root, s2.root)
@@ -455,8 +457,6 @@ module {
     /// Space: `O(1)` retained memory plus garbage, see the note below.
     /// where `m` and `n` denote the number of elements stored in the sets set1 and set2, respectively,
     /// and assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
     public func equals(s1 : Set<T>, s2 : Set<T>) : Bool {
       if (s1.size != s2.size) { return false };
       isSubsetHelper(s1.root, s2.root)
@@ -644,7 +644,7 @@ module {
     /// ```
     ///
     /// Runtime: `O(1)`.
-    /// Space: `O(1)`
+    /// Space: `O(1)`.
     public func isEmpty(s : Set<T>) : Bool {
       switch (s.root) {
         case (#leaf) { true };
@@ -675,7 +675,7 @@ module {
     public func all(s : Set<T>, pred : T -> Bool) : Bool
       = Internal.all(s.root, pred);
 
-    /// Test if there exists a key-value pair satisfying a given predicate `pred`.
+    /// Test if there exists an element in the set `s` satisfying the given predicate `pred`.
     ///
     /// Example:
     /// ```motoko
