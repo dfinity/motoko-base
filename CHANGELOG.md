@@ -1,5 +1,9 @@
 ## 0.13.2
 
+* Add modules `OrderedMap` and `OrderedSet` (thanks to Serokell) (#662).
+
+## 0.13.2
+
 (nothing)
 
 ## 0.13.1
