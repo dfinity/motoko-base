@@ -33,6 +33,8 @@
 ** xref:./None.adoc[None]
 ** xref:./Option.adoc[Option]
 ** xref:./Order.adoc[Order]
+** xref:./OrderedMap.adoc[OrderedMap]
+** xref:./OrderedSet.adoc[OrderedSet]
 ** xref:./Prelude.adoc[Prelude]
 ** xref:./Principal.adoc[Principal]
 ** xref:./RBTree.adoc[RBTree]
