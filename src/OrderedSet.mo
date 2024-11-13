@@ -52,7 +52,7 @@ module {
   ///
   /// actor {
   ///   let natSet = Set.Make<Nat>(Nat.compare); // : Operations<Nat>
-  ///   stable var : Set<Nat> usedIds = natSet.empty();
+  ///   stable var usedIds : Set.Set<Nat> = natSet.empty();
   ///   
   ///   public func createId(id : Nat) : async () {
   ///     usedIds := natSet.put(usedIds, id);

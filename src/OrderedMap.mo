@@ -57,7 +57,7 @@ module {
   ///
   /// actor {
   ///   let natMap = Map.Make<Nat>(Nat.compare); // : Operations<Nat>
-  ///   stable var keyStorage : Map<Nat, Text> = natMap.empty<Text>();
+  ///   stable var keyStorage : Map.Map<Nat, Text> = natMap.empty<Text>();
   ///   
   ///   public func addKey(id : Nat, key : Text) : async () {
   ///     keyStorage := natMap.put(keyStorage, id, key);
