@@ -12,7 +12,7 @@ import M "mo:matchers/Matchers";
 
 let { run; test; suite } = Suite;
 
-let natSet = Set.SetOps<Nat>(Nat.compare);
+let natSet = Set.Make<Nat>(Nat.compare);
 
 class SetMatcher(expected : Set.Set<Nat>) : M.Matcher<Set.Set<Nat>> {
   public func describeMismatch(actual : Set.Set<Nat>, _description : M.Description) {

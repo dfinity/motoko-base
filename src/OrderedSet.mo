@@ -36,14 +36,14 @@ module {
   /// Ordered collection of unique elements of the generic type `T`.
   /// If type `T` is stable then `Set<T>` is also stable.
   /// To ensure that property the `Set<T>` does not have any methods,
-  /// instead they are gathered in the functor-like class `SetOps` (see example there).
+  /// instead they are gathered in the functor-like class `Operations` (see example there).
   public type Set<T> = { size : Nat; root : Tree<T> };
 
   /// Class that captures element type `T` along with its ordering function `compare`
   /// and provide all operations to work with a set of type `Set<T>`.
   ///
   /// An instance object should be created once as a canister field to ensure
-  /// that the same comparator is used for every operation.
+  /// that the same ordering function is used for every operation.
   ///
   /// Example:
   /// ```motoko
@@ -51,8 +51,8 @@ module {
   /// import Nat "mo:base/Nat";
   ///
   /// actor {
-  ///   let natSet = Set.SetOps<Nat>(Nat.compare);
-  ///   stable var usedIds = natSet.empty(); // : Set<Nat>
+  ///   let natSet = Set.Make<Nat>(Nat.compare); // : Operations<Nat>
+  ///   stable var : Set<Nat> usedIds = natSet.empty();
   ///   
   ///   public func createId(id : Nat) : async () {
   ///     usedIds := natSet.put(usedIds, id);
@@ -63,7 +63,7 @@ module {
   ///   }
   /// }
   /// ```
-  public class SetOps<T>(compare : (T, T) -> O.Order) {
+  public class Operations<T>(compare : (T, T) -> O.Order) {
 
     /// Returns a new Set, containing all entries given by the iterator `i`.
     /// If there are multiple identical entries only one is taken.
@@ -75,7 +75,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(Iter.toArray(natSet.vals(set))));
@@ -106,7 +106,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// var set = natSet.empty();
     ///
     /// set := natSet.put(set, 0);
@@ -138,7 +138,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(Iter.toArray(natSet.vals(natSet.delete(set, 1)))));
@@ -167,7 +167,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show natSet.contains(set, 1)); // => true
@@ -190,7 +190,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let s1 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     /// let s2 = natSet.empty();
     ///
@@ -213,7 +213,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let s1 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     /// let s2 = natSet.empty();
     ///
@@ -236,7 +236,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set1 = natSet.fromIter(Iter.fromArray([0, 1, 2]));
     /// let set2 = natSet.fromIter(Iter.fromArray([2, 3, 4]));
     ///
@@ -266,7 +266,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set1 = natSet.fromIter(Iter.fromArray([0, 1, 2]));
     /// let set2 = natSet.fromIter(Iter.fromArray([1, 2, 3]));
     ///
@@ -306,7 +306,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set1 = natSet.fromIter(Iter.fromArray([0, 1, 2]));
     /// let set2 = natSet.fromIter(Iter.fromArray([1, 2, 3]));
     ///
@@ -351,7 +351,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 1, 2, 3]));
     ///
     /// func f(x : Nat) : Nat = if (x < 2) { x } else { 0 };
@@ -383,7 +383,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 1, 2, 3]));
     ///
     /// func f(x : Nat) : ?Nat {
@@ -424,7 +424,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set1 = natSet.fromIter(Iter.fromArray([1, 2]));
     /// let set2 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
@@ -449,7 +449,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set1 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     /// let set2 = natSet.fromIter(Iter.fromArray([1, 2]));
     ///
@@ -493,7 +493,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(Iter.toArray(natSet.vals(set))));
@@ -517,7 +517,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(Iter.toArray(natSet.valsRev(set))));
@@ -540,7 +540,7 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     /// 
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.empty();
     /// 
     /// Debug.print(debug_show(natSet.size(set))); // => 0
@@ -561,7 +561,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(natSet.size(set))); // => 3
@@ -583,7 +583,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
@@ -616,7 +616,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
@@ -646,7 +646,7 @@ module {
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     /// 
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.empty();
     /// 
     /// Debug.print(debug_show(natSet.isEmpty(set))); // => true
@@ -670,7 +670,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(natSet.all(set, func (v) = (v < 10))));
@@ -694,7 +694,7 @@ module {
     /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
-    /// let natSet = Set.SetOps<Nat>(Nat.compare);
+    /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(natSet.some(set, func (v) = (v >= 3))));
@@ -1156,6 +1156,21 @@ module {
         size = if changed { s.size -1 } else { s.size } }
     }
   };
+
+  /// Create `OrderedSet.Operations` object capturing element type `T` and `compare` function. 
+  /// It is an alias for the `Operations` constructor.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Set "mo:base/OrderedSet";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// actor {
+  ///   let natSet = Set.Make<Nat>(Nat.compare);
+  ///   stable var set : Set.Set<Nat> = natSet.empty();
+  /// };
+  /// ```
+  public let Make : <T>(compare : (T, T) -> O.Order) -> Operations<T> = Operations;
 
   /// Test helpers
   public module SetDebug {

@@ -46,7 +46,7 @@ object Random {
   }
 };
 
-let natMap = Map.MapOps<Nat>(Nat.compare);
+let natMap = Map.Make<Nat>(Nat.compare);
 
 func mapGen(samples_number: Nat, size: Nat, range: (Nat, Nat)): Iter.Iter<Map.Map<Nat, Text>> {
   object {
