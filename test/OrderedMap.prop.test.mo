@@ -227,7 +227,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
       suite("folds", [
         prop("foldLeft as entries()", func (m) {
           let it = natMap.entries(m);
-          natMap.foldLeft<Text, Bool>(m, true, func (k, v, acc) {acc and it.next() == ?(k, v)})
+          natMap.foldLeft<Text, Bool>(m, true, func (acc, k, v) {acc and it.next() == ?(k, v)})
         }),
         prop("foldRight as entriesRev()", func(m) {
           let it = natMap.entriesRev(m);
@@ -238,11 +238,11 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
       suite("all/some", [
         prop("all through fold", func(m) {
           let pred = func(k: Nat, v: Text): Bool = (k <= range.1 - 2 and range.0 + 2 <= k);
-          natMap.all(m, pred) == natMap.foldLeft<Text, Bool>(m, true, func (k, v, acc) {acc and pred(k, v)})
+          natMap.all(m, pred) == natMap.foldLeft<Text, Bool>(m, true, func (acc, k, v) {acc and pred(k, v)})
         }),
         prop("some through fold", func(m) {
           let pred = func(k: Nat, v: Text): Bool = (k >= range.1 - 1 or range.0 + 1 >= k);
-          natMap.some(m, pred) == natMap.foldLeft<Text, Bool>(m, false, func (k, v, acc) {acc or pred(k, v)})
+          natMap.some(m, pred) == natMap.foldLeft<Text, Bool>(m, false, func (acc, k, v) {acc or pred(k, v)})
         }),
 
         prop("forall k, v in map, v == show_debug(k)", func(m) {
@@ -258,7 +258,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
 
       suite("minEntry/maxEntry", [
         prop("max through fold", func (m) {
-          let expected = natMap.foldLeft<Text, ?(Nat, Text)>(m, null: ?(Nat, Text), func (k, v, _) = ?(k, v) );
+          let expected = natMap.foldLeft<Text, ?(Nat, Text)>(m, null: ?(Nat, Text), func (_, k, v) = ?(k, v) );
           M.equals(T.optional(entryTestable, expected)).matches(natMap.maxEntry(m));
         }),
 

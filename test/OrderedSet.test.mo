@@ -36,6 +36,10 @@ func concatenateKeys(key : Nat, accum : Text) : Text {
   accum # debug_show(key)
 };
 
+func concatenateKeys2(accum : Text, key : Nat) : Text {
+  accum # debug_show(key)
+};
+
 func containsAll (rbSet : Set.Set<Nat>, elems : [Nat]) {
     for (elem in elems.vals()) {
         assert (natSet.contains(rbSet, elem))
@@ -104,7 +108,7 @@ run(
       ),
       test(
         "empty left fold",
-        natSet.foldLeft(buildTestSet(), "", concatenateKeys),
+        natSet.foldLeft(buildTestSet(), "", concatenateKeys2),
         M.equals(T.text(""))
       ),
       test(
@@ -185,7 +189,7 @@ run(
       ),
       test(
         "left fold",
-        natSet.foldLeft(buildTestSet(), "", concatenateKeys),
+        natSet.foldLeft(buildTestSet(), "", concatenateKeys2),
         M.equals(T.text("0"))
       ),
       test(
@@ -284,7 +288,7 @@ func rebalanceTests(buildTestSet : () -> Set.Set<Nat>) : [Suite.Suite] =
     ),
     test(
       "left fold",
-      natSet.foldLeft(buildTestSet(), "", concatenateKeys),
+      natSet.foldLeft(buildTestSet(), "", concatenateKeys2),
       M.equals(T.text("012"))
     ),
     test(

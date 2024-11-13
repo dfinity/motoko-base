@@ -62,7 +62,15 @@ func concatenateKeys(key : Nat, value : Text, accum : Text) : Text {
   accum # debug_show(key)
 };
 
+func concatenateKeys2(accum : Text, key : Nat, value : Text) : Text {
+  accum # debug_show(key)
+};
+
 func concatenateValues(key : Nat, value : Text, accum : Text) : Text {
+  accum # value
+};
+
+func concatenateValues2(accum: Text, key : Nat, value : Text) : Text {
   accum # value
 };
 
@@ -159,7 +167,7 @@ run(
       ),
       test(
         "empty left fold keys",
-        natMap.foldLeft(buildTestMap(), "", concatenateKeys),
+        natMap.foldLeft(buildTestMap(), "", concatenateKeys2),
         M.equals(T.text(""))
       ),
       test(
@@ -169,7 +177,7 @@ run(
       ),
       test(
         "empty left fold values",
-        natMap.foldLeft(buildTestMap(), "", concatenateValues),
+        natMap.foldLeft(buildTestMap(), "", concatenateValues2),
         M.equals(T.text(""))
       ),
       test(
@@ -293,7 +301,7 @@ run(
       ),
       test(
         "left fold keys",
-        natMap.foldLeft(buildTestMap(), "", concatenateKeys),
+        natMap.foldLeft(buildTestMap(), "", concatenateKeys2),
         M.equals(T.text("0"))
       ),
       test(
@@ -303,7 +311,7 @@ run(
       ),
       test(
         "left fold values",
-        natMap.foldLeft(buildTestMap(), "", concatenateValues),
+        natMap.foldLeft(buildTestMap(), "", concatenateValues2),
         M.equals(T.text("0"))
       ),
       test(
@@ -412,7 +420,7 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
     ),
     test(
       "left fold keys",
-      natMap.foldLeft(buildTestMap(), "", concatenateKeys),
+      natMap.foldLeft(buildTestMap(), "", concatenateKeys2),
       M.equals(T.text("012"))
     ),
     test(
@@ -422,7 +430,7 @@ func rebalanceTests(buildTestMap : () -> Map.Map<Nat, Text>) : [Suite.Suite] =
     ),
     test(
       "left fold values",
-      natMap.foldLeft(buildTestMap(), "", concatenateValues),
+      natMap.foldLeft(buildTestMap(), "", concatenateValues2),
       M.equals(T.text("012"))
     ),
     test(

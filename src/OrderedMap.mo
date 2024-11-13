@@ -547,7 +547,7 @@ module {
     /// let natMap = Map.Make<Nat>(Nat.compare);
     /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "Zero"), (2, "Two"), (1, "One")]));
     ///
-    /// func folder(key : Nat, val : Text, accum : (Nat, Text)) : ((Nat, Text))
+    /// func folder(accum : (Nat, Text), key : Nat, val : Text) : ((Nat, Text))
     ///   = (key + accum.0, accum.1 # val);
     ///
     /// Debug.print(debug_show(natMap.foldLeft(map, (0, ""), folder)));
@@ -564,7 +564,7 @@ module {
     public func foldLeft<Value, Accum>(
       map : Map<K, Value>,
       base : Accum,
-      combine : (K, Value, Accum) -> Accum
+      combine : (Accum, K, Value) -> Accum
     ) : Accum
     = Internal.foldLeft(map.root, base, combine);
 
@@ -730,18 +730,18 @@ module {
     public func foldLeft<Key, Value, Accum>(
       map : Tree<Key, Value>,
       base : Accum,
-      combine : (Key, Value, Accum) -> Accum
+      combine : (Accum, Key, Value) -> Accum
     ) : Accum {
       switch (map) {
         case (#leaf) { base };
         case (#red(l, k, v, r)) {
           let left = foldLeft(l, base, combine);
-          let middle = combine(k, v, left);
+          let middle = combine(left, k, v);
           foldLeft(r, middle, combine)
         };
         case (#black(l, k, v, r)) {
           let left = foldLeft(l, base, combine);
-          let middle = combine(k, v, left);
+          let middle = combine(left, k, v);
           foldLeft(r, middle, combine)
         }
       }
@@ -769,7 +769,7 @@ module {
 
     public func mapFilter<K, V1, V2>(map : Map<K, V1>, compare : (K, K) -> O.Order, f : (K, V1) -> ?V2) : Map<K, V2> {
       var size = 0;
-      func combine(key : K, value1 : V1, acc : Tree<K, V2>) : Tree<K, V2> {
+      func combine(acc : Tree<K, V2>, key : K, value1 : V1) : Tree<K, V2> {
         switch (f(key, value1)) {
           case null { acc };
           case (?value2) {

@@ -149,9 +149,20 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
         }),
       ]),
 
+      suite("folds", [
+        prop("foldLeft as vals()", func (m) {
+          let it = natSet.vals(m);
+          natSet.foldLeft<Bool>(m, true, func (acc, v) {acc and it.next() == ?v})
+        }),
+        prop("foldRight as valsRev()", func(m) {
+          let it = natSet.valsRev(m);
+          natSet.foldRight<Bool>(m, true, func (v, acc) {acc and it.next() == ?v})
+        })
+      ]),
+
       suite("min/max", [
         prop("max through fold", func (s) {
-          let expected = natSet.foldLeft<?Nat>(s, null: ?Nat, func (v, _) = ?v );
+          let expected = natSet.foldLeft<?Nat>(s, null: ?Nat, func (_, v) = ?v );
           M.equals(T.optional(T.natTestable, expected)).matches(natSet.max(s));
         }),
         prop("min through fold", func (s) {
@@ -163,11 +174,11 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
       suite("all/some", [
         prop("all through fold", func(s) {
           let pred = func(k: Nat): Bool = (k <= range.1 - 2 and range.0 + 2 <= k);
-          natSet.all(s, pred) == natSet.foldLeft<Bool>(s, true, func (v, acc) {acc and pred(v)})
+          natSet.all(s, pred) == natSet.foldLeft<Bool>(s, true, func (acc, v) {acc and pred(v)})
         }),
         prop("some through fold", func(s) {
           let pred = func(k: Nat): Bool = (k >= range.1 - 1 or range.0 + 1 >= k);
-          natSet.some(s, pred) == natSet.foldLeft<Bool>(s, false, func (v, acc) {acc or pred(v)})
+          natSet.some(s, pred) == natSet.foldLeft<Bool>(s, false, func (acc, v) {acc or pred(v)})
         }),
       ]),
 

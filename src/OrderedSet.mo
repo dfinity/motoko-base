@@ -251,9 +251,9 @@ module {
     /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
     public func union(s1 : Set<T>, s2 : Set<T>) : Set<T> {
       if (size(s1) < size(s2)) {
-        foldLeft(s1, s2, func(elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
+        foldLeft(s1, s2, func(acc : Set<T>, elem : T) : Set<T> { Internal.put(acc, compare, elem) })
       } else {
-        foldLeft(s2, s1, func(elem : T, acc : Set<T>) : Set<T> { Internal.put(acc, compare, elem) })
+        foldLeft(s2, s1, func(acc : Set<T>, elem : T) : Set<T> { Internal.put(acc, compare, elem) })
       }
     };
 
@@ -332,7 +332,7 @@ module {
       }
       else {
         foldLeft(s2, s1,
-          func (elem : T, acc : Set<T>) : Set<T> {
+          func (acc : Set<T>, elem : T) : Set<T> {
             if (Internal.contains(acc.root, compare, elem)) { Internal.delete(acc, compare, elem) } else { acc }
           }
         )
@@ -369,7 +369,7 @@ module {
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
     public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T>
-      = Internal.foldLeft(s.root, empty(), func (elem : T1, acc : Set<T>) : Set<T> { Internal.put(acc, compare, f(elem)) });
+      = Internal.foldLeft(s.root, empty(), func (acc : Set<T>, elem : T1) : Set<T> { Internal.put(acc, compare, f(elem)) });
 
     /// Creates a new set by applying `f` to each element in the set `s`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
@@ -404,7 +404,7 @@ module {
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
     public func mapFilter<T1>(s : Set<T1>, f : T1 -> ?T) : Set<T> {
-      func combine(elem : T1, acc : Set<T>) : Set<T> {
+      func combine(acc : Set<T>, elem : T1) : Set<T> {
         switch (f(elem)) {
           case null { acc };
           case (?elem2) {
@@ -586,7 +586,7 @@ module {
     /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// func folder(val : Nat, accum : Nat) : Nat = val + accum;
+    /// func folder(accum : Nat, val : Nat) : Nat = val + accum;
     ///
     /// Debug.print(debug_show(natSet.foldLeft(set, 0, folder)));
     /// // 3
@@ -601,7 +601,7 @@ module {
     public func foldLeft<Accum>(
       set : Set<T>,
       base : Accum,
-      combine : (T, Accum) -> Accum
+      combine : (Accum, T) -> Accum
     ) : Accum
       = Internal.foldLeft(set.root, base, combine);
 
@@ -873,18 +873,18 @@ module {
     public func foldLeft<T, Accum>(
       tree : Tree<T>,
       base : Accum,
-      combine : (T, Accum) -> Accum
+      combine : (Accum, T) -> Accum
     ) : Accum {
       switch (tree) {
         case (#leaf) { base };
         case (#black(l, x, r)) {
           let left = foldLeft(l, base, combine);
-          let middle = combine(x, left);
+          let middle = combine(left, x);
           foldLeft(r, middle, combine)
         };
         case (#red(l, x, r)) {
           let left = foldLeft(l, base, combine);
-          let middle = combine(x, left);
+          let middle = combine(left, x);
           foldLeft(r, middle, combine)
         }
       }
