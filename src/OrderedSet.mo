@@ -55,11 +55,11 @@ module {
   ///   stable var usedIds = natSet.empty(); // : Set<Nat>
   ///   
   ///   public func createId(id : Nat) : async () {
-  ///     usedIds = natMap.put(usedIds, id);
-  ///   }
+  ///     usedIds := natSet.put(usedIds, id);
+  ///   };
   ///   
   ///   public func idIsUsed(id: Nat) : async Bool {
-  ///      return natMap.contains(usedIds, id);  
+  ///      natSet.contains(usedIds, id)
   ///   }
   /// }
   /// ```
@@ -135,6 +135,7 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natSet = Set.SetOps<Nat>(Nat.compare);
@@ -163,6 +164,7 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natSet = Set.SetOps<Nat>(Nat.compare);
@@ -185,13 +187,14 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natSet = Set.SetOps<Nat>(Nat.compare);
-    /// let s = natSet.fromIter(Iter.fromArray([0, 2, 1]));
-    /// let s = natSet.empty();
+    /// let s1 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let s2 = natSet.empty();
     ///
-    /// Debug.print(debug_show(natSet.max(s))); // => ?2
+    /// Debug.print(debug_show(natSet.max(s1))); // => ?2
     /// Debug.print(debug_show(natSet.max(s2))); // => null
     /// ```
     ///
@@ -207,13 +210,14 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natSet = Set.SetOps<Nat>(Nat.compare);
-    /// let s = natSet.fromIter(Iter.fromArray([0, 2, 1]));
-    /// let s = natSet.empty();
+    /// let s1 = natSet.fromIter(Iter.fromArray([0, 2, 1]));
+    /// let s2 = natSet.empty();
     ///
-    /// Debug.print(debug_show(natSet.min(s))); // => ?0
+    /// Debug.print(debug_show(natSet.min(s1))); // => ?0
     /// Debug.print(debug_show(natSet.min(s2))); // => null
     /// ```
     ///
@@ -533,9 +537,12 @@ module {
     /// Example:
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
-    ///
+    /// import Nat "mo:base/Nat";
+    /// import Debug "mo:base/Debug";
+    /// 
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
     /// let set = natSet.empty();
-    ///
+    /// 
     /// Debug.print(debug_show(natSet.size(set))); // => 0
     /// ```
     ///
@@ -636,10 +643,12 @@ module {
     /// Example:
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
+    /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
-    ///
+    /// 
+    /// let natSet = Set.SetOps<Nat>(Nat.compare);
     /// let set = natSet.empty();
-    ///
+    /// 
     /// Debug.print(debug_show(natSet.isEmpty(set))); // => true
     /// ```
     ///
@@ -658,10 +667,11 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natSet = Set.SetOps<Nat>(Nat.compare);
-    /// let set = natSet.fromIter<Text>(Iter.fromArray([0, 2, 1]));
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
     /// Debug.print(debug_show(natSet.all(set, func (v) = (v < 10))));
     /// // true
@@ -681,14 +691,15 @@ module {
     /// ```motoko
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natSet = Set.SetOps<Nat>(Nat.compare);
-    /// let set = natSet.fromIter<Text>(Iter.fromArray([0, 2, 1]));
+    /// let set = natSet.fromIter(Iter.fromArray([0, 2, 1]));
     ///
-    /// Debug.print(debug_show(natSet.some(set, func (v) = (k >= 3))));
+    /// Debug.print(debug_show(natSet.some(set, func (v) = (v >= 3))));
     /// // false
-    /// Debug.print(debug_show(natSet.some(set, func (v) = (k >= 0))));
+    /// Debug.print(debug_show(natSet.some(set, func (v) = (v >= 0))));
     /// // true
     /// ```
     ///

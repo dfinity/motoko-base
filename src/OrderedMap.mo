@@ -60,7 +60,7 @@ module {
   ///   stable var keyStorage = natMap.empty<Text>(); // : Map<Nat, Text>
   ///   
   ///   public func addKey(id : Nat, key : Text) : async () {
-  ///     keyStorage = natMap.put(keyStorage, id, key);
+  ///     keyStorage := natMap.put(keyStorage, id, key);
   ///   }
   /// }
   /// ```
@@ -104,7 +104,7 @@ module {
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
-    /// var map = Map.empty<Text>();
+    /// var map = natMap.empty<Text>();
     ///
     /// map := natMap.put(map, 0, "Zero");
     /// map := natMap.put(map, 2, "Two");
@@ -211,6 +211,7 @@ module {
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
@@ -236,6 +237,7 @@ module {
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
@@ -258,6 +260,7 @@ module {
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
@@ -278,6 +281,7 @@ module {
     /// Example:
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
+    /// import Iter "mo:base/Iter";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
     ///
@@ -301,6 +305,7 @@ module {
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
@@ -407,7 +412,7 @@ module {
     /// Debug.print(debug_show(Iter.toArray(natMap.entries(map))));
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// var sum = 0;
-    /// for ((k, _) in map.entries()) { sum += k; }
+    /// for ((k, _) in natMap.entries(map)) { sum += k; };
     /// Debug.print(debug_show(sum)); // => 3
     /// ```
     /// Cost of iteration over all elements:
@@ -604,14 +609,15 @@ module {
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
     /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
     ///
-    /// Debug.print(debug_show(natMap.all(map, func (k, v) = (v == debug_show(k)))));
+    /// Debug.print(debug_show(natMap.all<Text>(map, func (k, v) = (v == debug_show(k)))));
     /// // true
-    /// Debug.print(debug_show(natMap.all(map, func (k, v) = (k < 2))));
+    /// Debug.print(debug_show(natMap.all<Text>(map, func (k, v) = (k < 2))));
     /// // false
     /// ```
     ///
@@ -627,14 +633,15 @@ module {
     /// ```motoko
     /// import Map "mo:base/OrderedMap";
     /// import Nat "mo:base/Nat";
+    /// import Iter "mo:base/Iter";
     /// import Debug "mo:base/Debug";
     ///
     /// let natMap = Map.MapOps<Nat>(Nat.compare);
     /// let map = natMap.fromIter<Text>(Iter.fromArray([(0, "0"), (2, "2"), (1, "1")]));
     ///
-    /// Debug.print(debug_show(natMap.some(map, func (k, v) = (k >= 3))));
+    /// Debug.print(debug_show(natMap.some<Text>(map, func (k, v) = (k >= 3))));
     /// // false
-    /// Debug.print(debug_show(natMap.some(map, func (k, v) = (k >= 0))));
+    /// Debug.print(debug_show(natMap.some<Text>(map, func (k, v) = (k >= 0))));
     /// // true
     /// ```
     ///
