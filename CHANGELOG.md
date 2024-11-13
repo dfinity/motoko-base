@@ -1,6 +1,6 @@
 ## 0.13.2
 
-* Add modules `OrderedMap` and `OrderedSet` (thanks to Serokell) (#662).
+* Add modules `OrderedMap` and `OrderedSet` to replace `RBTree` (thanks to Serokell) (#662).
 
 ## 0.13.2
 
