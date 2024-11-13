@@ -708,6 +708,12 @@ module {
     /// where `n` denotes the number of elements stored in the set.
     public func some(s : Set<T>, pred : (T) -> Bool) : Bool
       = Internal.some(s.root, pred);
+
+    /// Test helper that check internal invariant for the given set `s`. 
+    /// Raise an error (for a stack trace) if invariants are violated.
+    public func validate(s : Set<T>): () {
+      Internal.validate(s, compare);
+    }
   };
 
   module Internal {
@@ -1154,32 +1160,10 @@ module {
       };
       { root = newRoot;
         size = if changed { s.size -1 } else { s.size } }
-    }
-  };
-
-  /// Create `OrderedSet.Operations` object capturing element type `T` and `compare` function. 
-  /// It is an alias for the `Operations` constructor.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Set "mo:base/OrderedSet";
-  /// import Nat "mo:base/Nat";
-  ///
-  /// actor {
-  ///   let natSet = Set.Make<Nat>(Nat.compare);
-  ///   stable var set : Set.Set<Nat> = natSet.empty();
-  /// };
-  /// ```
-  public let Make : <T>(compare : (T, T) -> O.Order) -> Operations<T> = Operations;
-
-  /// Test helpers
-  public module SetDebug {
-    public func buildFromSorted<T>(a : [T]) : Set<T> {
-      { root = Internal.buildFromSorted(Buffer.fromArray<T>(a)); size = a.size()}
     };
 
     // check binary search tree order of elements and black depth invariant of the RB-tree
-    public func checkSetInvariants<T>(s : Set<T>, comp : (T, T) -> O.Order) {
+    public func validate<T>(s : Set<T>, comp : (T, T) -> O.Order) {
       ignore blackDepth(s.root, comp)
     };
 
@@ -1223,5 +1207,20 @@ module {
         }
       }
     }
-  }
+  };
+
+  /// Create `OrderedSet.Operations` object capturing element type `T` and `compare` function. 
+  /// It is an alias for the `Operations` constructor.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Set "mo:base/OrderedSet";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// actor {
+  ///   let natSet = Set.Make<Nat>(Nat.compare);
+  ///   stable var set : Set.Set<Nat> = natSet.empty();
+  /// };
+  /// ```
+  public let Make : <T>(compare : (T, T) -> O.Order) -> Operations<T> = Operations
 }

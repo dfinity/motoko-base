@@ -225,19 +225,8 @@ func run_all_props(range: (Nat, Nat), size: Nat, set_samples: Nat, query_samples
 
       suite(("Internal"), [
         prop("search tree invariant", func (s) {
-          Set.SetDebug.checkSetInvariants<Nat>(s, Nat.compare);
+          natSet.validate(s);
           true
-        }),
-        prop("buildFromSorted makes RB tree", func (s) {
-          let a = Iter.toArray(natSet.vals(s));
-          let t = Set.SetDebug.buildFromSorted(a);
-          Set.SetDebug.checkSetInvariants<Nat>(t, Nat.compare);
-          true
-        }),
-        prop("buildFromSorted(toArray(t)) == t", func (s) {
-          let a = Iter.toArray(natSet.vals(s));
-          let t = Set.SetDebug.buildFromSorted(a);
-          SetMatcher(s).matches(t)
         })
       ]),
 

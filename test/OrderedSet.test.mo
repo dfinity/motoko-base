@@ -28,7 +28,7 @@ let natSet = Set.Make<Nat>(Nat.compare);
 
 func insert(s : Set.Set<Nat>, key : Nat) : Set.Set<Nat>  {
   let updatedTree = natSet.put(s, key);
-  Set.SetDebug.checkSetInvariants(updatedTree, Nat.compare);
+  natSet.validate(updatedTree);
   updatedTree
 };
 
@@ -51,7 +51,7 @@ func clear(initialRbSet : Set.Set<Nat>) : Set.Set<Nat> {
   for (elem in natSet.vals(initialRbSet)) {
     let newSet = natSet.delete(rbSet, elem);
     rbSet := newSet;
-    Set.SetDebug.checkSetInvariants(rbSet, Nat.compare)
+    natSet.validate(rbSet)
   };
   rbSet
 };

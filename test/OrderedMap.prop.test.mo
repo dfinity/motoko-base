@@ -180,7 +180,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
       ]),
 
       prop("search tree invariant", func (m) {
-        Map.MapDebug.checkMapInvariants(m, Nat.compare);
+        natMap.validate(m);
         true
       }),
 

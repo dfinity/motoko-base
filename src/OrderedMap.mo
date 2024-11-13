@@ -650,6 +650,12 @@ module {
     /// where `n` denotes the number of key-value entries stored in the map.
     public func some<V>(m : Map<K, V>, pred : (K, V) -> Bool) : Bool
       = Internal.some(m.root, pred);
+
+    /// Debug helper that check internal invariants of the given map `m`. 
+    /// Raise an error (for a stack trace) if invariants are violated.
+    public func validate<V>(m : Map<K, V>) : () {
+      Internal.validate(m, compare);
+    };
   };
 
   module Internal {
@@ -1152,27 +1158,10 @@ module {
         };
         case other { (other, y0) }
       }
-    }
-  };
+    };
 
-  /// Create `OrderedMap.Operations` object capturing key type `K` and `compare` function. 
-  /// It is an alias for the `Operations` constructor.
-  ///
-  /// Example:
-  /// ```motoko
-  /// import Map "mo:base/OrderedMap";
-  /// import Nat "mo:base/Nat";
-  ///
-  /// actor {
-  ///   let natMap = Map.Make<Nat>(Nat.compare);
-  ///   stable var map : Map.Map<Nat, Text> = natMap.empty<Text>();
-  /// };
-  /// ```
-  public let Make : <K>(compare : (K, K) -> O.Order) -> Operations<K> = Operations;  
-
-  /// Test helpers
-  public module MapDebug {
-    public func checkMapInvariants<K, V>(rbMap : Map<K, V>, comp : (K, K) -> O.Order) {
+    // Test helper
+    public func validate<K, V>(rbMap : Map<K, V>, comp : (K, K) -> O.Order) {
       ignore blackDepth(rbMap.root, comp)
     };
 
@@ -1217,6 +1206,20 @@ module {
         }
       }
     };
+  };
 
-  }
+  /// Create `OrderedMap.Operations` object capturing key type `K` and `compare` function. 
+  /// It is an alias for the `Operations` constructor.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import Map "mo:base/OrderedMap";
+  /// import Nat "mo:base/Nat";
+  ///
+  /// actor {
+  ///   let natMap = Map.Make<Nat>(Nat.compare);
+  ///   stable var map : Map.Map<Nat, Text> = natMap.empty<Text>();
+  /// };
+  /// ```
+  public let Make : <K>(compare : (K, K) -> O.Order) -> Operations<K> = Operations
 }

@@ -26,7 +26,7 @@ class MapMatcher(expected : [(Nat, Text)]) : M.Matcher<Map.Map<Nat, Text>> {
   }
 };
 
-func checkMap(m: Map.Map<Nat, Text>) { Map.MapDebug.checkMapInvariants(m, Nat.compare); };
+func checkMap(m: Map.Map<Nat, Text>) { natMap.validate(m); };
 
 func insert(rbTree : Map.Map<Nat, Text>, key : Nat) : Map.Map<Nat, Text>  {
   let updatedTree = natMap.put(rbTree, key, debug_show (key));
