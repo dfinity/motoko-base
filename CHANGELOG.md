@@ -1,3 +1,13 @@
+## 0.13.4
+
+* Breaking change (minor): `Float.format(#hex)` is no longer supported. 
+  This is because newer versions of Motoko (such as with enhanced orthogonal persistence)
+  rely on the Rust-native formatter that does not offer this functionality.
+  It is expected that this formatter is very rarely used in practice.
+
+* Formatter change (minor): The text formatting of `NaN`, positive or negative, 
+  will be `NaN` in newer Motoko versions, while it was `nan` or `-nan` in older versions.
+
 ## 0.13.3
 
 * Add modules `OrderedMap` and `OrderedSet` to replace `RBTree` (thanks to Serokell) (#662).
