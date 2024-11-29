@@ -402,13 +402,15 @@ module {
   /// * `#fix prec` as fixed-point format with `prec` digits
   /// * `#exp prec` as exponential format with `prec` digits
   /// * `#gen prec` as generic format with `prec` digits
-  /// * `#hex prec` as hexadecimal format with `prec` digits
   /// * `#exact` as exact format that can be decoded without loss.
   ///
   /// `-0.0` is formatted with negative sign bit.
-  /// Positive infinity is formatted as `inf`.
-  /// Negative infinity is formatted as `-inf`.
-  /// `NaN` is formatted as `NaN` or `-NaN` depending on its sign bit.
+  /// Positive infinity is formatted as "inf".
+  /// Negative infinity is formatted as "-inf".
+  ///
+  /// Note: The numerical precision and the text format can vary between
+  /// Motoko versions and runtime configuration. Moreover, `NaN` can be printed
+  /// differently, i.e. "NaN" or "nan", potentially omitting the `NaN` sign.
   ///
   /// Example:
   /// ```motoko
@@ -416,11 +418,10 @@ module {
   ///
   /// Float.format(#exp 3, 123.0) // => "1.230e+02"
   /// ```
-  public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #hex : Nat8; #exact }, x : Float) : Text = switch fmt {
+  public func format(fmt : { #fix : Nat8; #exp : Nat8; #gen : Nat8; #exact }, x : Float) : Text = switch fmt {
     case (#fix(prec)) { Prim.floatToFormattedText(x, prec, 0) };
     case (#exp(prec)) { Prim.floatToFormattedText(x, prec, 1) };
     case (#gen(prec)) { Prim.floatToFormattedText(x, prec, 2) };
-    case (#hex(prec)) { Prim.floatToFormattedText(x, prec, 3) };
     case (#exact) { Prim.floatToFormattedText(x, 17, 2) }
   };
 
