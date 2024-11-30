@@ -88,7 +88,7 @@ module {
       value : ?V
     ) : (AssocList<K, V>, ?V) {
     var prev : ?V = null;
-    func del(al : AssocList<K, V>) : AssocList<K, V> {
+    let del = func(al : AssocList<K, V>) : AssocList<K, V> {
       switch (al) {
         case (?(kv, tl)) {
           if (equal(key, kv.0)) {
@@ -149,7 +149,7 @@ module {
     map2 : AssocList<K, W>,
     equal : (K, K) -> Bool
   ) : AssocList<K, V> {
-    func rec(al1 : AssocList<K, V>) : AssocList<K, V> {
+    let rec = func(al1 : AssocList<K, V>) : AssocList<K, V> {
       switch al1 {
         case (null) { null };
         case (?((k, v1), tl)) {
@@ -169,7 +169,7 @@ module {
     map2 : AssocList<K, W>,
     f : (?V, ?W) -> X
   ) : AssocList<K, X> {
-    func rec(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> {
+    let rec = func(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> {
       switch (al1, al2) {
         case (null, null) { null };
         case (?((k, v), al1_), _) { ?((k, f(?v, null)), rec(al1_, al2)) };
@@ -291,10 +291,10 @@ module {
     equal : (K, K) -> Bool,
     combine : (?V, ?W) -> X
   ) : AssocList<K, X> {
-    func rec1(al1Rec : AssocList<K, V>) : AssocList<K, X> {
+    let rec1 = func(al1Rec : AssocList<K, V>) : AssocList<K, X> {
       switch al1Rec {
         case (null) {
-          func rec2(al2 : AssocList<K, W>) : AssocList<K, X> {
+          let rec2 = func(al2 : AssocList<K, W>) : AssocList<K, X> {
             switch al2 {
               case (null) { null };
               case (?((k, v2), tl)) {
@@ -351,7 +351,7 @@ module {
     equal : (K, K) -> Bool,
     combine : (V, W) -> X
   ) : AssocList<K, X> {
-    func rec(al1 : AssocList<K, V>) : AssocList<K, X> {
+    let rec = func(al1 : AssocList<K, V>) : AssocList<K, X> {
       switch al1 {
         case (null) { null };
         case (?((k, v1), tl)) {
@@ -391,7 +391,7 @@ module {
     base : X,
     combine : (K, V, X) -> X
   ) : X {
-    func rec(al : AssocList<K, V>) : X {
+    let rec = func(al : AssocList<K, V>) : X {
       switch al {
         case null { base };
         case (?((k, v), t)) { combine(k, v, rec(t)) }

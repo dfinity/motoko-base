@@ -54,8 +54,8 @@ module {
 
   public class HashMap<K, V>(
     initCapacity : Nat,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyEq : stable (K, K) -> Bool,
+    keyHash : stable K -> Hash.Hash
   ) {
 
     var table : [var KVs<K, V>] = [var];
@@ -340,8 +340,8 @@ module {
   /// Expected Space: O(size), Worst Case Space: O(size)
   public func clone<K, V>(
     map : HashMap<K, V>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyEq : stable (K, K) -> Bool,
+    keyHash : stable K -> Hash.Hash
   ) : HashMap<K, V> {
     let h2 = HashMap<K, V>(map.size(), keyEq, keyHash);
     for ((k, v) in map.entries()) {
@@ -369,8 +369,8 @@ module {
   public func fromIter<K, V>(
     iter : Iter.Iter<(K, V)>,
     initCapacity : Nat,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
+    keyEq : stable (K, K) -> Bool,
+    keyHash : stable K -> Hash.Hash
   ) : HashMap<K, V> {
     let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
     for ((k, v) in iter) {
@@ -399,8 +399,8 @@ module {
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func map<K, V1, V2>(
     hashMap : HashMap<K, V1>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
+    keyEq : stable (K, K) -> Bool,
+    keyHash : stable K -> Hash.Hash,
     f : (K, V1) -> V2
   ) : HashMap<K, V2> {
     let h2 = HashMap<K, V2>(hashMap.size(), keyEq, keyHash);
@@ -438,8 +438,8 @@ module {
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapFilter<K, V1, V2>(
     hashMap : HashMap<K, V1>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
+    keyEq : stable (K, K) -> Bool,
+    keyHash : stable K -> Hash.Hash,
     f : (K, V1) -> ?V2
   ) : HashMap<K, V2> {
     let h2 = HashMap<K, V2>(hashMap.size(), keyEq, keyHash);

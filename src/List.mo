@@ -311,7 +311,7 @@ module {
   ///
   /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapResult<T, R, E>(xs : List<T>, f : T -> Result.Result<R, E>) : Result.Result<List<R>, E> {
-    func go(xs : List<T>, acc : List<R>) : Result.Result<List<R>, E> {
+    let go = func(xs : List<T>, acc : List<R>) : Result.Result<List<R>, E> {
       switch xs {
         case null { #ok(acc) };
         case (?(head, tail)) {

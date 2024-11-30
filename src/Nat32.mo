@@ -28,7 +28,9 @@ module {
   /// ```motoko include=import
   /// Nat32.toNat(123); // => 123 : Nat
   /// ```
-  public let toNat : Nat32 -> Nat = Prim.nat32ToNat;
+  public func toNat(x : Nat32): Nat {
+    Prim.nat32ToNat(x);
+  };
 
   /// Converts an unsigned integer with infinite precision to a 32-bit unsigned integer.
   ///
