@@ -1038,6 +1038,16 @@ run(
         "toArray-example",
         Array.freeze(Text.toVarArray("Café")),
         M.equals(T.array<Char>(T.charTestable, ['C', 'a', 'f', 'é']))
+      ),
+      test(
+        "fromArray-example",
+        Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']),
+        M.equals(T.text "Avocado")
+      ),
+      test(
+        "fromVarArray-example",
+        Text.fromVarArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']),
+        M.equals(T.text "Eggplant")
       )
     ]
   )
