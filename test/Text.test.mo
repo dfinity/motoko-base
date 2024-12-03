@@ -1046,7 +1046,7 @@ run(
       ),
       test(
         "fromVarArray-example",
-        Text.fromVarArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']),
+        Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']),
         M.equals(T.text "Eggplant")
       )
     ]

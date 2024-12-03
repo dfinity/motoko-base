@@ -54,7 +54,7 @@ module {
   /// Converts the given `[var Char]` to a `Text` value.
   ///
   /// ```motoko include=import
-  /// let text = Text.fromVarArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
+  /// let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
   /// ```
   public func fromVarArray(a : [var Char]) : Text = fromIter(a.vals());
 
