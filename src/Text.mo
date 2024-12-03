@@ -49,14 +49,14 @@ module {
   /// ```motoko include=import
   /// let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
   /// ```
-  public let fromArray : (a : [Char]) -> Text = fromIter(a.vals());
+  public func fromArray(a : [Char]) -> Text = fromIter(a.vals());
 
   /// Converts the given `[var Char]` to a `Text` value.
   ///
   /// ```motoko include=import
-  /// let text = Text.fromArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
+  /// let text = Text.fromVarArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
   /// ```
-  public let fromVarArray : (a : [var Char]) -> Text = fromIter(a.vals());
+  public func fromVarArray(a : [var Char]) -> Text = fromIter(a.vals());
 
   /// Iterates over each `Char` value in the given `Text`.
   ///
@@ -90,7 +90,7 @@ module {
       func _ {
         switch (cs.next()) {
           case (?c) { c };
-          case (null) { Prim.trap("Text.toArray") };
+          case null { Prim.trap("Text.toArray") };
         };
       }
     )
