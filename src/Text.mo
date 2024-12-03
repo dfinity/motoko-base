@@ -49,14 +49,14 @@ module {
   /// ```motoko include=import
   /// let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
   /// ```
-  public func fromArray(a : [Char]) -> Text = fromIter(a.vals());
+  public func fromArray(a : [Char]) : Text = fromIter(a.vals());
 
   /// Converts the given `[var Char]` to a `Text` value.
   ///
   /// ```motoko include=import
   /// let text = Text.fromVarArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
   /// ```
-  public func fromVarArray(a : [var Char]) -> Text = fromIter(a.vals());
+  public func fromVarArray(a : [var Char]) : Text = fromIter(a.vals());
 
   /// Iterates over each `Char` value in the given `Text`.
   ///
