@@ -44,6 +44,20 @@ module {
   /// ```
   public let fromChar : (c : Char) -> Text = Prim.charToText;
 
+  /// Converts the given `[Char]` to a `Text` value.
+  ///
+  /// ```motoko include=import
+  /// let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
+  /// ```
+  public let fromArray : (a : [Char]) -> Text = fromIter(a.vals());
+
+  /// Converts the given `[var Char]` to a `Text` value.
+  ///
+  /// ```motoko include=import
+  /// let text = Text.fromArray(['E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
+  /// ```
+  public let fromVarArray : (a : [var Char]) -> Text = fromIter(a.vals());
+
   /// Iterates over each `Char` value in the given `Text`.
   ///
   /// Equivalent to calling the `t.chars()` method where `t` is a `Text` value.
