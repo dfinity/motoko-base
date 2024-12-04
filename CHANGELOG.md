@@ -1,3 +1,7 @@
+## 0.13.x
+
+* Added `Text.fromArray` and `Text.fromVarArray` functions (#674).
+
 ## 0.13.4
 
 * Breaking change (minor): `Float.format(#hex)` is no longer supported. 
