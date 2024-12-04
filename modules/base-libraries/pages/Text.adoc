@@ -53,6 +53,40 @@ Converts the given `Char` to a `Text` value.
 let text = Text.fromChar('A'); // "A"
 ```
 
+[[fromArray]]
+== fromArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromArray(a : pass:[[]Charpass:[]]) : xref:#type.Text[Text]
+----
+
+Converts the given `[Char]` to a `Text` value.
+
+```motoko include=import
+let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
+```
+
+Runtime: O(a.size())
+Space: O(a.size())
+
+[[fromVarArray]]
+== fromVarArray
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromVarArray(a : pass:[[]var Charpass:[]]) : xref:#type.Text[Text]
+----
+
+Converts the given `[var Char]` to a `Text` value.
+
+```motoko include=import
+let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
+```
+
+Runtime: O(a.size())
+Space: O(a.size())
+
 [[toIter]]
 == toIter
 
