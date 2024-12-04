@@ -49,6 +49,9 @@ module {
   /// ```motoko include=import
   /// let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
   /// ```
+  ///
+  /// Runtime: O(a.size())
+  /// Space: O(a.size())
   public func fromArray(a : [Char]) : Text = fromIter(a.vals());
 
   /// Converts the given `[var Char]` to a `Text` value.
@@ -56,6 +59,9 @@ module {
   /// ```motoko include=import
   /// let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
   /// ```
+  ///
+  /// Runtime: O(a.size())
+  /// Space: O(a.size())
   public func fromVarArray(a : [var Char]) : Text = fromIter(a.vals());
 
   /// Iterates over each `Char` value in the given `Text`.
