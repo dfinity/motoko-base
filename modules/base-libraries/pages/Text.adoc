@@ -159,6 +159,42 @@ Creates a `Text` value from a `Char` iterator.
 let text = Text.fromIter(['a', 'b', 'c'].vals()); // "abc"
 ```
 
+[[fromList]]
+== fromList
+
+[source.no-repl,motoko,subs=+macros]
+----
+func fromList(cs : xref:List.adoc#type.List[List.List]<Char>) : xref:#type.Text[Text]
+----
+
+Create a text from a character list.
+Example:
+```motoko include=initialize
+fromList(?('H', ?('e', ?('l', ?('l', ?('o', null))))));
+// => "Hello"
+```
+
+Runtime: O(size cs)
+Space: O(size cs)
+
+[[toList]]
+== toList
+
+[source.no-repl,motoko,subs=+macros]
+----
+func toList(t : xref:#type.Text[Text]) : xref:List.adoc#type.List[List.List]<Char>
+----
+
+Create a character list from a text.
+Example:
+```motoko include=initialize
+toList("Hello");
+// => ?('H', ?('e', ?('l', ?('l', ?('o', null)))))
+```
+
+Runtime: O(t.size())
+Space: O(t.size())
+
 [[size]]
 == size
 
