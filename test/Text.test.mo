@@ -1055,6 +1055,24 @@ run(
 
 run(
   suite(
+    "list-conversions",
+    [
+      test(
+        "toList-example",
+        Text.toList("Café"),
+        M.equals(T.list<Char>(T.charTestable, ?('C', ?('a', ?('f', ?('é', null)))))),
+      ),
+      test(
+        "fromList-example",
+        Text.fromList(?('H', ?('e', ?('l', ?('l', ?('o', null)))))),
+        M.equals(T.text "Hello")
+      )
+    ]
+  )
+);
+
+run(
+  suite(
     "text-toLowercase",
     [
       test(
