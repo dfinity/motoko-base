@@ -1,5 +1,7 @@
 ## 0.13.x
 
+* Added `Text.fromList` and `Text.toList` functions (#676).
+
 * Added `Text.fromArray` and `Text.fromVarArray` functions (#674).
 
 ## 0.13.4
