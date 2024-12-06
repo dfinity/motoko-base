@@ -4,6 +4,8 @@
 
 * Added `Text.fromArray` and `Text.fromVarArray` functions (#674).
 
+* Added `replyDeadline` to `ExperimentalInternetComputer` (#677).
+
 ## 0.13.4
 
 * Breaking change (minor): `Float.format(#hex)` is no longer supported. 
