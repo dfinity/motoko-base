@@ -4,7 +4,7 @@
 ///
 /// Note: The resolution of the timers is in the order of the block rate,
 ///       so durations should be chosen well above that. For frequent
-///       canister wake-ups the heatbeat mechanism should be considered.
+///       canister wake-ups the heartbeat mechanism should be considered.
 ///
 /// Note: The functionality described below is enabled only when the actor does not override it by declaring an explicit `system func timer`.
 ///
