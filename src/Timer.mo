@@ -21,7 +21,7 @@
 ///
 /// Note: For further usage information for timers on the IC please consult
 ///       https://internetcomputer.org/docs/current/developer-docs/backend/periodic-tasks#timers-library-limitations
-
+q
 import { setTimer = setTimerNano; cancelTimer = cancel } = "mo:⛔";
 import { fromIntWrap } = "Nat64";
 
@@ -57,7 +57,7 @@ module {
   /// executes the future `job()` and reinserts itself for another expiration.
   ///
   /// Note: A duration of 0 will only expire once.
-  /// Note: Since `job` can be called more than once (under rare circumstances),
+  /// Note: Since `job` can be called more than once per expiration (under rare circumstances),
   ///       it should not possess side-effects.
   ///
   /// ```motoko no-repl
