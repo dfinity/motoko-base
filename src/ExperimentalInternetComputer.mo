@@ -85,7 +85,6 @@ module {
   /// Returns the time (in nanoseconds from the epoch start) by when the update message should
   /// reply to the best effort message so that it can be received by the requesting canister.
   /// Queries and non-best-effort update messages return zero.
-  ///
   public func replyDeadline() : Nat = Prim.nat64ToNat(Prim.replyDeadline());
 
 }
