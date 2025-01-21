@@ -21,7 +21,6 @@
 ///
 /// Note: For further usage information for timers on the IC please consult
 ///       https://internetcomputer.org/docs/current/developer-docs/backend/periodic-tasks#timers-library-limitations
-q
 import { setTimer = setTimerNano; cancelTimer = cancel } = "mo:⛔";
 import { fromIntWrap } = "Nat64";
 
