@@ -37,9 +37,6 @@ module {
   /// Installs a one-off timer that upon expiration after given duration `d`
   /// executes the future `job()`.
   ///
-  /// Note: Since `job` can be called more than once (under rare circumstances),
-  ///       it should not possess side-effects.
-  ///
   /// ```motoko no-repl
   /// let now = Time.now();
   /// let thirtyMinutes = 1_000_000_000 * 60 * 30;
@@ -56,8 +53,6 @@ module {
   /// executes the future `job()` and reinserts itself for another expiration.
   ///
   /// Note: A duration of 0 will only expire once.
-  /// Note: Since `job` can be called more than once per expiration (under rare circumstances),
-  ///       it should not possess side-effects.
   ///
   /// ```motoko no-repl
   /// func checkAndWaterPlants() : async () {
