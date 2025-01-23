@@ -8,7 +8,7 @@
 /// The functionality described below is enabled only when the actor does not override it by declaring an explicit `system func timer`.
 ///
 /// Timers are _not_ persisted across upgrades. One possible strategy
-/// to re-establish timers after an upgrade is to walk stable variables
+/// to re-establish timers after an upgrade is to use stable variables
 /// in the `post_upgrade` hook and distill necessary timer information
 /// from there.
 ///
