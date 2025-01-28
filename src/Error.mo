@@ -17,6 +17,8 @@ module {
   ///   #system_fatal;
   ///   // Transient error.
   ///   #system_transient;
+  ///   // Unknown execution status due to expired deadline.
+  ///   #system_unknown;
   ///   // Destination invalid.
   ///   #destination_invalid;
   ///   // Explicit reject by canister code.
