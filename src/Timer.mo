@@ -1,5 +1,5 @@
 /// Timers for one-off or periodic tasks. Applicable as part of the default mechanism.
-/// If `moc` is invoked with `-no-timer`, the importing will fail. Furthermore if passed `--trap-on-call-error` a congested canister send queue may prevent timer expirations to execute at runtime, and also may deactivate the global timer.
+/// If `moc` is invoked with `-no-timer`, the importing will fail. Furthermore, if passed `--trap-on-call-error`, a congested canister send queue may prevent timer expirations to execute at runtime. It may also deactivate the global timer.
 ///
 /// The resolution of the timers is similar to the block rate,
 /// so durations should be chosen well above that. For frequent
