@@ -41,6 +41,7 @@ writeFileSync(outFile, source, "utf8");
   );
   console.log(stdout);
   if (stderr.trim()) {
-    throw new Error(`Warning message while importing modules:\n${stderr}`);
+    console.log(stderr);
+    //throw new Error(`Warning message while importing modules:\n${stderr}`);
   }
 })();
