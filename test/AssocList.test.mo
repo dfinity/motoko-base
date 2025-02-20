@@ -2,6 +2,7 @@ import AssocList "../src/AssocList";
 import List "../src/List";
 import Nat "../src/Nat";
 import Debug "../src/Debug";
+import Iter "../src/Iter";
 
 import Suite "mo:matchers/Suite";
 import T "mo:matchers/Testable";
@@ -247,6 +248,16 @@ let suite = Suite.suite(
                 func(k, v, acc) = k * v + acc
             ),
             M.equals(T.nat(0))
+        ),
+        Suite.test(
+            "keys",
+            Iter.toArray(AssocList.keys(map1)),
+            M.equals(T.array<Nat>(T.natTestable, [0, 2, 4]))
+        ),
+        Suite.test(
+            "vals",
+            Iter.toArray(AssocList.vals(map1)),
+            M.equals(T.array<Nat>(T.natTestable, [10, 12, 14]))
         )
     ]
 );
