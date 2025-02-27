@@ -1,3 +1,7 @@
+## 0.14.3
+
+* Added `retriable : Error -> Bool` to `Error` (#692).
+
 ## 0.14.2
 
 (nothing)
