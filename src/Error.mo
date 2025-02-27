@@ -60,11 +60,26 @@ module {
   /// Example:
   /// ```motoko
   /// import Error "mo:base/Error";
-  /// import Debug "mo:base/Debug";
   ///
   /// let error = Error.reject("Example error");
   /// Error.message(error) // "Example error"
   /// ```
   public let message : (error : Error) -> Text = Prim.errorMessage;
+
+  /// Returns whether retrying to send a message may result in success.
+  ///
+  /// Example:
+  /// ```motoko
+  /// import { message; retriable } "mo:base/Error";
+  /// import { print } "mo:base/Debug";
+  ///
+  /// try await (with timeout = 3) Actor.call(arg)
+  /// catch e { if (retriable e) print(message e) }
+  /// ```
+  public func retriable(error : Error) : Bool =
+    switch (code error) {
+      case (#system_unknown or #system_transient) true;
+      case _ false
+    };
 
 }
