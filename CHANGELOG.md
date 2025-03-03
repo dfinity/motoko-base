@@ -1,6 +1,6 @@
 ## 0.14.3
 
-* Added `isRetriable : Error -> Bool` to `Error` (#692).
+* Added `isRetryPossible : Error -> Bool` to `Error` (#692).
 
 ## 0.14.2
 

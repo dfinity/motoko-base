@@ -70,13 +70,13 @@ module {
   ///
   /// Example:
   /// ```motoko
-  /// import { message; isRetriable } "mo:base/Error";
+  /// import { message; isRetryPossible } "mo:base/Error";
   /// import { print } "mo:base/Debug";
   ///
   /// try await (with timeout = 3) Actor.call(arg)
-  /// catch e { if (isRetriable e) print(message e) }
+  /// catch e { if (isRetryPossible e) print(message e) }
   /// ```
-  public func isRetriable(error : Error) : Bool =
+  public func isRetryPossible(error : Error) : Bool =
     switch (code error) {
       case (#system_unknown or #system_transient) true;
       case _ false
