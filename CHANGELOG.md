@@ -3,6 +3,7 @@
 * Added `isRetryPossible : Error -> Bool` to `Error` (#692).
 * Made `ExperimentalInternetComputer.replyDeadline` to return
   an optional return type (#693).
+  _Caveat_: Breaking change (minor).
 
 ## 0.14.2
 
