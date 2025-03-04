@@ -37,6 +37,16 @@ let output : ?OutputType = from_candid(rawReply); // { decimals = 8 }
 
 [Learn more about Candid serialization](https://internetcomputer.org/docs/current/motoko/main/reference/language-manual#candid-serialization)
 
+[[isReplicated]]
+== isReplicated
+
+[source.no-repl,motoko,subs=+macros]
+----
+let isReplicated : () -> Bool
+----
+
+`isReplicated` is true for update messages and for queries that passed through consensus.
+
 [[countInstructions]]
 == countInstructions
 
