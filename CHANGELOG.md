@@ -4,6 +4,7 @@
 * Made `ExperimentalInternetComputer.replyDeadline` to return
   an optional return type (#693).
   _Caveat_: Breaking change (minor).
+* Added `isReplicated : () -> Bool` to `ExperimentalInternetComputer` (#694).
 
 ## 0.14.2
 
