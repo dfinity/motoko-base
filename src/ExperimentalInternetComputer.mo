@@ -32,7 +32,7 @@ module {
   public let call : (canister : Principal, name : Text, data : Blob) -> async (reply : Blob) = Prim.call_raw;
 
   /// `isReplicated` is true for update messages and for queries that passed through consensus.
-  public let isReplicated() : Bool = Prim.isReplicatedExecution;
+  public let isReplicated : () -> Bool = Prim.isReplicatedExecution;
 
   /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
   /// instructions performed during the execution of `comp()`.
