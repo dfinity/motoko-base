@@ -1,6 +1,8 @@
 ## 0.14.3
 
 * Added `isRetryPossible : Error -> Bool` to `Error` (#692).
+* Made `ExperimentalInternetComputer.replyDeadline` to return
+  an optional return type (#693).
 
 ## 0.14.2
 
