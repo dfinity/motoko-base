@@ -1,3 +1,7 @@
+## 0.14.4
+
+* Added `burn : <system>Nat -> Nat` to `ExperimentalCycles` (#699).
+
 ## 0.14.3
 
 * Added `isRetryPossible : Error -> Bool` to `Error` (#692).
