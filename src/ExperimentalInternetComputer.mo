@@ -93,4 +93,15 @@ module {
     if (raw == 0) null else ?Prim.nat64ToNat(raw)
   };
 
+  /// Returns the subnet's principal for the running actor.
+  /// Note: Due to canister migration the hosting subnet can vary with time.
+  ///
+  /// Example:
+  /// ```motoko no-repl
+  /// import IC "mo:base/ExperimentalInternetComputer";
+  ///
+  /// let subnetPrincipal = IC.subnet();
+  /// ```
+  public let subnet : () -> Principal = Prim.canisterSubnet;
+
 }
