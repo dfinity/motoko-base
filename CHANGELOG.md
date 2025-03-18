@@ -1,3 +1,7 @@
+## 0.14.4
+
+* Added `ExperimentalInternetComputer.subnet : () -> Principal` (#700).
+
 ## 0.14.3
 
 * Added `isRetryPossible : Error -> Bool` to `Error` (#692).
