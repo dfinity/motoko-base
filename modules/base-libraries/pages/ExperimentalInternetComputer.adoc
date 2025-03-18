@@ -116,3 +116,21 @@ Returns the time (in nanoseconds from the epoch start) by when the update messag
 reply to the best effort message so that it can be received by the requesting canister.
 Queries and unbounded-time update messages return null.
 
+[[subnet]]
+== subnet
+
+[source.no-repl,motoko,subs=+macros]
+----
+let subnet : () -> Principal
+----
+
+Returns the subnet's principal for the running actor.
+Note: Due to canister migration the hosting subnet can vary with time.
+
+Example:
+```motoko no-repl
+import IC "mo:base/ExperimentalInternetComputer";
+
+let subnetPrincipal = IC.subnet();
+```
+
