@@ -148,4 +148,22 @@ module {
   /// ```
   public let refunded : () -> (amount : Nat) = Prim.cyclesRefunded;
 
+  /// Attempts to burn `amount` of cycles, deducting `burned` from the canister's
+  /// cycle balance. The burned cycles are irrevocably lost and not available to any
+  /// other principal either.
+  ///
+  /// Example for use on the IC:
+  /// ```motoko no-repl
+  /// import Cycles "mo:base/ExperimentalCycles";
+  /// import Debug "mo:base/Debug";
+  ///
+  /// actor {
+  ///   public func main() : async() {
+  ///     let burnt = Cycles.burn<system>(10_000_000);
+  ///     Debug.print("Burned: " # debug_show burnt); // 10_000_000
+  ///   }
+  /// }
+  /// ```
+  public let burn : <system>(amount : Nat) -> (burned : Nat) = Prim.cyclesBurn;
+
 }
