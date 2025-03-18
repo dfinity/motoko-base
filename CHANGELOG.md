@@ -1,6 +1,7 @@
 ## 0.14.4
 
 * Added `burn : <system>Nat -> Nat` to `ExperimentalCycles` (#699).
+* Added `ExperimentalInternetComputer.subnet : () -> Principal` (#700).
 
 ## 0.14.3
 
