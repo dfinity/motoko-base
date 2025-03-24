@@ -1224,7 +1224,7 @@ module {
   /// buffer.add(6);
   ///
   /// let sub = Buffer.subBuffer(buffer, 3, 2);
-  /// Buffer.toText(sub, Nat.toText); // => [4, 5]
+  /// Buffer.toText(sub, Nat.toText); // => "[4, 5]"
   /// ```
   ///
   /// Runtime: O(length)
