@@ -18,7 +18,7 @@ System time is represent as nanoseconds since 1970-01-01.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let now : () -> xref:#type.Time[Time]
+func now() : xref:#type.Time[Time]
 ----
 
 Current system time given as nanoseconds since 1970-01-01. The system guarantees that:

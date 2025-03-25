@@ -55,7 +55,7 @@ Int64.maximumValue // => +9_223_372_036_854_775_807
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt : xref:#type.Int64[Int64] -> Int
+func toInt(_ : xref:#type.Int64[Int64]) : Int
 ----
 
 Converts a 64-bit signed integer to a signed integer with infinite precision.
@@ -70,7 +70,7 @@ Int64.toInt(123_456) // => 123_456 : Int
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt : Int -> xref:#type.Int64[Int64]
+func fromInt(_ : Int) : xref:#type.Int64[Int64]
 ----
 
 Converts a signed integer with infinite precision to a 64-bit signed integer.
@@ -87,7 +87,7 @@ Int64.fromInt(123_456) // => +123_456 : Int64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt32 : Int32 -> xref:#type.Int64[Int64]
+func fromInt32(_ : Int32) : xref:#type.Int64[Int64]
 ----
 
 Converts a 32-bit signed integer to a 64-bit signed integer.
@@ -104,7 +104,7 @@ Int64.fromInt32(-123_456) // => -123_456 : Int64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt32 : xref:#type.Int64[Int64] -> Int32
+func toInt32(_ : xref:#type.Int64[Int64]) : Int32
 ----
 
 Converts a 64-bit signed integer to a 32-bit signed integer.
@@ -121,7 +121,7 @@ Int64.toInt32(-123_456) // => -123_456 : Int32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromIntWrap : Int -> xref:#type.Int64[Int64]
+func fromIntWrap(_ : Int) : xref:#type.Int64[Int64]
 ----
 
 Converts a signed integer with infinite precision to a 64-bit signed integer.
@@ -138,7 +138,7 @@ Int64.fromIntWrap(-123_456) // => -123_456 : Int64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat64 : Nat64 -> xref:#type.Int64[Int64]
+func fromNat64(_ : Nat64) : xref:#type.Int64[Int64]
 ----
 
 Converts an unsigned 64-bit integer to a signed 64-bit integer.
@@ -155,7 +155,7 @@ Int64.fromNat64(123_456) // => +123_456 : Int64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat64 : xref:#type.Int64[Int64] -> Nat64
+func toNat64(_ : xref:#type.Int64[Int64]) : Nat64
 ----
 
 Converts a signed 64-bit integer to an unsigned 64-bit integer.
@@ -817,7 +817,7 @@ Int64.bitflip(255, 7) // => +127
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountNonZero : (x : xref:#type.Int64[Int64]) -> xref:#type.Int64[Int64]
+func bitcountNonZero(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the count of non-zero bits in `x`.
@@ -832,7 +832,7 @@ Int64.bitcountNonZero(0xffff) // => +16
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountLeadingZero : (x : xref:#type.Int64[Int64]) -> xref:#type.Int64[Int64]
+func bitcountLeadingZero(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the count of leading zero bits in `x`.
@@ -847,7 +847,7 @@ Int64.bitcountLeadingZero(0x8000_0000) // => +32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountTrailingZero : (x : xref:#type.Int64[Int64]) -> xref:#type.Int64[Int64]
+func bitcountTrailingZero(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
 Returns the count of trailing zero bits in `x`.

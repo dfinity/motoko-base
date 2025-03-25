@@ -52,7 +52,7 @@ type ErrorCode = {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let reject : (message : Text) -> xref:#type.Error[Error]
+func reject(message : Text) : xref:#type.Error[Error]
 ----
 
 Create an error from the message with the code `#canister_reject`.
@@ -69,7 +69,7 @@ Error.reject("Example error") // can be used as throw argument
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let code : (error : xref:#type.Error[Error]) -> xref:#type.ErrorCode[ErrorCode]
+func code(error : xref:#type.Error[Error]) : xref:#type.ErrorCode[ErrorCode]
 ----
 
 Returns the code of an error.
@@ -87,7 +87,7 @@ Error.code(error) // #canister_reject
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let message : (error : xref:#type.Error[Error]) -> Text
+func message(error : xref:#type.Error[Error]) : Text
 ----
 
 Returns the message of an error.

@@ -42,7 +42,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let balance : () -> (amount : Nat)
+func balance() : (amount : Nat)
 ----
 
 Returns the actor's current balance of cycles as `amount`.
@@ -65,7 +65,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let available : () -> (amount : Nat)
+func available() : (amount : Nat)
 ----
 
 Returns the currently available `amount` of cycles.
@@ -92,7 +92,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let accept : (amount : Nat) -> (accepted : Nat)
+func accept<$>(amount : Nat) : (accepted : Nat)
 ----
 
 Transfers up to `amount` from `available()` to `balance()`.
@@ -122,7 +122,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let add : (amount : Nat) -> ()
+func add<$>(amount : Nat) : ()
 ----
 
 Indicates additional `amount` of cycles to be transferred in
@@ -157,7 +157,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let refunded : () -> (amount : Nat)
+func refunded() : (amount : Nat)
 ----
 
 Reports `amount` of cycles refunded in the last `await` of the current
@@ -189,7 +189,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let burn : (amount : Nat) -> (burned : Nat)
+func burn<$>(amount : Nat) : (burned : Nat)
 ----
 
 Attempts to burn `amount` of cycles, deducting `burned` from the canister's

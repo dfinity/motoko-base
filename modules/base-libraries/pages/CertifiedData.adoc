@@ -17,7 +17,7 @@ calls to your canister tamperproof.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let set : (data : Blob) -> ()
+func set(data : Blob) : ()
 ----
 
 Set the certified data.
@@ -45,7 +45,7 @@ See a full example on how to use certified variables here: https://github.com/df
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let getCertificate : () -> ?Blob
+func getCertificate() : ?Blob
 ----
 
 Gets a certificate

@@ -40,7 +40,7 @@ Nat32.maximumValue; // => 4294967295 : Nat32
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat : xref:#type.Nat32[Nat32] -> Nat
+func toNat(_ : xref:#type.Nat32[Nat32]) : Nat
 ----
 
 Converts a 32-bit unsigned integer to an unsigned integer with infinite precision.
@@ -55,7 +55,7 @@ Nat32.toNat(123); // => 123 : Nat
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat : Nat -> xref:#type.Nat32[Nat32]
+func fromNat(_ : Nat) : xref:#type.Nat32[Nat32]
 ----
 
 Converts an unsigned integer with infinite precision to a 32-bit unsigned integer.
@@ -136,7 +136,7 @@ Nat32.toNat64(123); // => 123 : Nat64
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromIntWrap : Int -> xref:#type.Nat32[Nat32]
+func fromIntWrap(_ : Int) : xref:#type.Nat32[Nat32]
 ----
 
 Converts a signed integer with infinite precision to a 32-bit unsigned integer.
@@ -742,7 +742,7 @@ Nat32.bitflip(5, 2); // => 1
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountNonZero : (x : xref:#type.Nat32[Nat32]) -> xref:#type.Nat32[Nat32]
+func bitcountNonZero(x : xref:#type.Nat32[Nat32]) : xref:#type.Nat32[Nat32]
 ----
 
 Returns the count of non-zero bits in `x`.
@@ -757,7 +757,7 @@ Nat32.bitcountNonZero(5); // => 2
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountLeadingZero : (x : xref:#type.Nat32[Nat32]) -> xref:#type.Nat32[Nat32]
+func bitcountLeadingZero(x : xref:#type.Nat32[Nat32]) : xref:#type.Nat32[Nat32]
 ----
 
 Returns the count of leading zero bits in `x`.
@@ -772,7 +772,7 @@ Nat32.bitcountLeadingZero(5); // => 29
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let bitcountTrailingZero : (x : xref:#type.Nat32[Nat32]) -> xref:#type.Nat32[Nat32]
+func bitcountTrailingZero(x : xref:#type.Nat32[Nat32]) : xref:#type.Nat32[Nat32]
 ----
 
 Returns the count of trailing zero bits in `x`.

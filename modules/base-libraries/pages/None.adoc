@@ -23,7 +23,7 @@ The empty type. A subtype of all types.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let impossible : <A>xref:#type.None[None] -> A
+func impossible<A>(_ : xref:#type.None[None]) : A
 ----
 
 Turns an absurd value into an arbitrary type.

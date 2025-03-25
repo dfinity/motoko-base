@@ -777,7 +777,7 @@ Raise an error (for a stack trace) if invariants are violated.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let Make : <T>(compare : (T, T) -> xref:Order.adoc#type.Order[O.Order]) -> xref:#type.Operations[Operations]<T>
+func Make<T>(compare : (T, T) -> xref:Order.adoc#type.Order[O.Order]) : xref:#type.Operations[Operations]<T>
 ----
 
 Create `OrderedSet.Operations` object capturing element type `T` and `compare` function. 

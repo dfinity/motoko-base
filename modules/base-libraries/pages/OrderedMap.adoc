@@ -778,7 +778,7 @@ Raise an error (for a stack trace) if invariants are violated.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let Make : <K>(compare : (K, K) -> xref:Order.adoc#type.Order[O.Order]) -> xref:#type.Operations[Operations]<K>
+func Make<K>(compare : (K, K) -> xref:Order.adoc#type.Order[O.Order]) : xref:#type.Operations[Operations]<K>
 ----
 
 Create `OrderedMap.Operations` object capturing key type `K` and `compare` function. 

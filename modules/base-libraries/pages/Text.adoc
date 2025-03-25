@@ -44,7 +44,7 @@ let concat = hello # " " # emoji; // "Hello! 👋"
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromChar : (c : Char) -> xref:#type.Text[Text]
+func fromChar(c : Char) : xref:#type.Text[Text]
 ----
 
 Converts the given `Char` to a `Text` value.
@@ -586,7 +586,7 @@ Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) // #greate
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let encodeUtf8 : xref:#type.Text[Text] -> Blob
+func encodeUtf8(_ : xref:#type.Text[Text]) : Blob
 ----
 
 Returns a UTF-8 encoded `Blob` from the given `Text`.
@@ -600,7 +600,7 @@ let blob = Text.encodeUtf8("Hello");
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let decodeUtf8 : Blob -> ?xref:#type.Text[Text]
+func decodeUtf8(_ : Blob) : ?xref:#type.Text[Text]
 ----
 
 Tries to decode the given `Blob` as UTF-8.
@@ -615,7 +615,7 @@ let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toLowercase : xref:#type.Text[Text] -> xref:#type.Text[Text]
+func toLowercase(_ : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
 Returns the text argument in lowercase.
@@ -630,7 +630,7 @@ let text = Text.toLowercase("Good Day"); // ?"good day"
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toUppercase : xref:#type.Text[Text] -> xref:#type.Text[Text]
+func toUppercase(_ : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
 Returns the text argument in uppercase. Unicode compliant.

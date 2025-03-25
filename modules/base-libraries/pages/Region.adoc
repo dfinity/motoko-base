@@ -68,7 +68,7 @@ A stateful handle to an isolated region of IC stable memory.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let new : () -> xref:#type.Region[Region]
+func new() : xref:#type.Region[Region]
 ----
 
 Allocate a new, isolated Region of size 0.
@@ -85,7 +85,7 @@ assert Region.size(region) == 0;
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let id : xref:#type.Region[Region] -> Nat
+func id(_ : xref:#type.Region[Region]) : Nat
 ----
 
 Return a Nat identifying the given region.
@@ -106,7 +106,7 @@ assert Region.id(region) == 16;
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let size : (region : xref:#type.Region[Region]) -> (pages : Nat64)
+func size(region : xref:#type.Region[Region]) : (pages : Nat64)
 ----
 
 Current size of `region`, in pages.
@@ -129,7 +129,7 @@ afterSize - beforeSize // => 10
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let grow : (region : xref:#type.Region[Region], newPages : Nat64) -> (oldPages : Nat64)
+func grow(region : xref:#type.Region[Region], newPages : Nat64) : (oldPages : Nat64)
 ----
 
 Grow current `size` of `region` by the given number of pages.
@@ -158,7 +158,7 @@ afterSize - beforeSize // => 10
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat8 : (region : xref:#type.Region[Region], offset : Nat64) -> Nat8
+func loadNat8(region : xref:#type.Region[Region], offset : Nat64) : Nat8
 ----
 
 Within `region`, load a `Nat8` value from `offset`.
@@ -178,7 +178,7 @@ Region.loadNat8(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat8 : (region : xref:#type.Region[Region], offset : Nat64, value : Nat8) -> ()
+func storeNat8(region : xref:#type.Region[Region], offset : Nat64, value : Nat8) : ()
 ----
 
 Within `region`, store a `Nat8` value at `offset`.
@@ -198,7 +198,7 @@ Region.loadNat8(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat16 : (region : xref:#type.Region[Region], offset : Nat64) -> Nat16
+func loadNat16(region : xref:#type.Region[Region], offset : Nat64) : Nat16
 ----
 
 Within `region`, load a `Nat16` value from `offset`.
@@ -218,7 +218,7 @@ Region.loadNat16(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat16 : (region : xref:#type.Region[Region], offset : Nat64, value : Nat16) -> ()
+func storeNat16(region : xref:#type.Region[Region], offset : Nat64, value : Nat16) : ()
 ----
 
 Within `region`, store a `Nat16` value at `offset`.
@@ -238,7 +238,7 @@ Region.loadNat16(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat32 : (region : xref:#type.Region[Region], offset : Nat64) -> Nat32
+func loadNat32(region : xref:#type.Region[Region], offset : Nat64) : Nat32
 ----
 
 Within `region`, load a `Nat32` value from `offset`.
@@ -258,7 +258,7 @@ Region.loadNat32(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat32 : (region : xref:#type.Region[Region], offset : Nat64, value : Nat32) -> ()
+func storeNat32(region : xref:#type.Region[Region], offset : Nat64, value : Nat32) : ()
 ----
 
 Within `region`, store a `Nat32` value at `offset`.
@@ -278,7 +278,7 @@ Region.loadNat32(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat64 : (region : xref:#type.Region[Region], offset : Nat64) -> Nat64
+func loadNat64(region : xref:#type.Region[Region], offset : Nat64) : Nat64
 ----
 
 Within `region`, load a `Nat64` value from `offset`.
@@ -298,7 +298,7 @@ Region.loadNat64(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat64 : (region : xref:#type.Region[Region], offset : Nat64, value : Nat64) -> ()
+func storeNat64(region : xref:#type.Region[Region], offset : Nat64, value : Nat64) : ()
 ----
 
 Within `region`, store a `Nat64` value at `offset`.
@@ -318,7 +318,7 @@ Region.loadNat64(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt8 : (region : xref:#type.Region[Region], offset : Nat64) -> Int8
+func loadInt8(region : xref:#type.Region[Region], offset : Nat64) : Int8
 ----
 
 Within `region`, load a `Int8` value from `offset`.
@@ -338,7 +338,7 @@ Region.loadInt8(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt8 : (region : xref:#type.Region[Region], offset : Nat64, value : Int8) -> ()
+func storeInt8(region : xref:#type.Region[Region], offset : Nat64, value : Int8) : ()
 ----
 
 Within `region`, store a `Int8` value at `offset`.
@@ -358,7 +358,7 @@ Region.loadInt8(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt16 : (region : xref:#type.Region[Region], offset : Nat64) -> Int16
+func loadInt16(region : xref:#type.Region[Region], offset : Nat64) : Int16
 ----
 
 Within `region`, load a `Int16` value from `offset`.
@@ -378,7 +378,7 @@ Region.loadInt16(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt16 : (region : xref:#type.Region[Region], offset : Nat64, value : Int16) -> ()
+func storeInt16(region : xref:#type.Region[Region], offset : Nat64, value : Int16) : ()
 ----
 
 Within `region`, store a `Int16` value at `offset`.
@@ -398,7 +398,7 @@ Region.loadInt16(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt32 : (region : xref:#type.Region[Region], offset : Nat64) -> Int32
+func loadInt32(region : xref:#type.Region[Region], offset : Nat64) : Int32
 ----
 
 Within `region`, load a `Int32` value from `offset`.
@@ -418,7 +418,7 @@ Region.loadInt32(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt32 : (region : xref:#type.Region[Region], offset : Nat64, value : Int32) -> ()
+func storeInt32(region : xref:#type.Region[Region], offset : Nat64, value : Int32) : ()
 ----
 
 Within `region`, store a `Int32` value at `offset`.
@@ -438,7 +438,7 @@ Region.loadInt32(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt64 : (region : xref:#type.Region[Region], offset : Nat64) -> Int64
+func loadInt64(region : xref:#type.Region[Region], offset : Nat64) : Int64
 ----
 
 Within `region`, load a `Int64` value from `offset`.
@@ -458,7 +458,7 @@ Region.loadInt64(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt64 : (region : xref:#type.Region[Region], offset : Nat64, value : Int64) -> ()
+func storeInt64(region : xref:#type.Region[Region], offset : Nat64, value : Int64) : ()
 ----
 
 Within `region`, store a `Int64` value at `offset`.
@@ -478,7 +478,7 @@ Region.loadInt64(region, offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadFloat : (region : xref:#type.Region[Region], offset : Nat64) -> Float
+func loadFloat(region : xref:#type.Region[Region], offset : Nat64) : Float
 ----
 
 Within `region`, loads a `Float` value from the given `offset`.
@@ -498,7 +498,7 @@ Region.loadFloat(region, offset) // => 1.25
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeFloat : (region : xref:#type.Region[Region], offset : Nat64, value : Float) -> ()
+func storeFloat(region : xref:#type.Region[Region], offset : Nat64, value : Float) : ()
 ----
 
 Within `region`, store float `value` at the given `offset`.
@@ -518,7 +518,7 @@ Region.loadFloat(region, offset) // => 1.25
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadBlob : (region : xref:#type.Region[Region], offset : Nat64, size : Nat) -> Blob
+func loadBlob(region : xref:#type.Region[Region], offset : Nat64, size : Nat) : Blob
 ----
 
 Within `region,` load `size` bytes starting from `offset` as a `Blob`.
@@ -541,7 +541,7 @@ Blob.toArray(Region.loadBlob(region, offset, size)) // => [1, 2, 3]
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeBlob : (region : xref:#type.Region[Region], offset : Nat64, value : Blob) -> ()
+func storeBlob(region : xref:#type.Region[Region], offset : Nat64, value : Blob) : ()
 ----
 
 Within `region, write `blob.size()` bytes of `blob` beginning at `offset`.

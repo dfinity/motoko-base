@@ -18,7 +18,7 @@ Characters represented as Unicode code points.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toNat32 : (c : xref:#type.Char[Char]) -> Nat32
+func toNat32(c : xref:#type.Char[Char]) : Nat32
 ----
 
 Convert character `c` to a word containing its Unicode scalar value.
@@ -28,7 +28,7 @@ Convert character `c` to a word containing its Unicode scalar value.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromNat32 : (w : Nat32) -> xref:#type.Char[Char]
+func fromNat32(w : Nat32) : xref:#type.Char[Char]
 ----
 
 Convert `w` to a character.
@@ -40,7 +40,7 @@ Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFF
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toText : (c : xref:#type.Char[Char]) -> Text
+func toText(c : xref:#type.Char[Char]) : Text
 ----
 
 Convert character `c` to single character text.
@@ -60,7 +60,7 @@ Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isWhitespace : (c : xref:#type.Char[Char]) -> Bool
+func isWhitespace(c : xref:#type.Char[Char]) : Bool
 ----
 
 Returns the Unicode _White_Space_ property of `c`.
@@ -70,7 +70,7 @@ Returns the Unicode _White_Space_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isLowercase : (c : xref:#type.Char[Char]) -> Bool
+func isLowercase(c : xref:#type.Char[Char]) : Bool
 ----
 
 Returns the Unicode _Lowercase_ property of `c`.
@@ -80,7 +80,7 @@ Returns the Unicode _Lowercase_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isUppercase : (c : xref:#type.Char[Char]) -> Bool
+func isUppercase(c : xref:#type.Char[Char]) : Bool
 ----
 
 Returns the Unicode _Uppercase_ property of `c`.
@@ -90,7 +90,7 @@ Returns the Unicode _Uppercase_ property of `c`.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isAlphabetic : (c : xref:#type.Char[Char]) -> Bool
+func isAlphabetic(c : xref:#type.Char[Char]) : Bool
 ----
 
 Returns the Unicode _Alphabetic_ property of `c`.

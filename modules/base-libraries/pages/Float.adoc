@@ -103,7 +103,7 @@ Float.isNaN(0.0/0.0) // => true
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let abs : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func abs(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the absolute value of `x`.
@@ -128,7 +128,7 @@ Float.abs(-1.2) // => 1.2
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let sqrt : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func sqrt(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the square root of `x`.
@@ -153,7 +153,7 @@ Float.sqrt(6.25) // => 2.5
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let ceil : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func ceil(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the smallest integral float greater than or equal to `x`.
@@ -179,7 +179,7 @@ Float.ceil(1.2) // => 2.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let floor : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func floor(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the largest integral float less than or equal to `x`.
@@ -205,7 +205,7 @@ Float.floor(1.2) // => 1.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let trunc : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func trunc(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the nearest integral float not greater in magnitude than `x`.
@@ -232,7 +232,7 @@ Float.trunc(2.75) // => 2.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let nearest : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func nearest(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the nearest integral float to `x`.
@@ -260,7 +260,7 @@ Float.nearest(2.75) // => 3.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let copySign : (x : xref:#type.Float[Float], y : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func copySign(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns `x` if `x` and `y` have same sign, otherwise `x` with negated sign.
@@ -279,7 +279,7 @@ Float.copySign(1.2, -2.3) // => -1.2
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let min : (x : xref:#type.Float[Float], y : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func min(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the smaller value of `x` and `y`.
@@ -302,7 +302,7 @@ Float.min(1.2, -2.3) // => -2.3 (with numerical imprecision)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let max : (x : xref:#type.Float[Float], y : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func max(x : xref:#type.Float[Float], y : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the larger value of `x` and `y`.
@@ -325,7 +325,7 @@ Float.max(1.2, -2.3) // => 1.2
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let sin : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func sin(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the sine of the radian angle `x`.
@@ -349,7 +349,7 @@ Float.sin(Float.pi / 2) // => 1.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let cos : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func cos(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the cosine of the radian angle `x`.
@@ -373,7 +373,7 @@ Float.cos(Float.pi / 2) // => 0.0 (with numerical imprecision)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let tan : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func tan(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the tangent of the radian angle `x`.
@@ -397,7 +397,7 @@ Float.tan(Float.pi / 4) // => 1.0 (with numerical imprecision)
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arcsin : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func arcsin(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the arc sine of `x` in radians.
@@ -421,7 +421,7 @@ Float.arcsin(1.0) // => Float.pi / 2
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arccos : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func arccos(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the arc cosine of `x` in radians.
@@ -445,7 +445,7 @@ Float.arccos(1.0) // => 0.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arctan : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func arctan(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the arc tangent of `x` in radians.
@@ -469,7 +469,7 @@ Float.arctan(1.0) // => Float.pi / 4
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let arctan2 : (y : xref:#type.Float[Float], x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func arctan2(y : xref:#type.Float[Float], x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Given `(y,x)`, returns the arc tangent in radians of `y/x` based on the signs of both values to determine the correct quadrant.
@@ -501,7 +501,7 @@ Float.arctan2(sqrt2over2, sqrt2over2) // => Float.pi / 4
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let exp : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func exp(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the value of `e` raised to the `x`-th power.
@@ -525,7 +525,7 @@ Float.exp(1.0) // => Float.e
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let log : (x : xref:#type.Float[Float]) -> xref:#type.Float[Float]
+func log(x : xref:#type.Float[Float]) : xref:#type.Float[Float]
 ----
 
 Returns the natural logarithm (base-`e`) of `x`.
@@ -582,7 +582,7 @@ Float.format(#exp 3, 123.0) // => "1.230e+02"
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toText : xref:#type.Float[Float] -> Text
+func toText(_ : xref:#type.Float[Float]) : Text
 ----
 
 Conversion to Text. Use `format(fmt, x)` for more detailed control.
@@ -604,7 +604,7 @@ Float.toText(0.12) // => "0.12"
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt64 : xref:#type.Float[Float] -> Int64
+func toInt64(_ : xref:#type.Float[Float]) : Int64
 ----
 
 Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
@@ -624,7 +624,7 @@ Float.toInt64(-12.3) // => -12
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt64 : Int64 -> xref:#type.Float[Float]
+func fromInt64(_ : Int64) : xref:#type.Float[Float]
 ----
 
 Conversion from Int64.
@@ -643,7 +643,7 @@ Float.fromInt64(-42) // => -42.0
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let toInt : xref:#type.Float[Float] -> Int
+func toInt(_ : xref:#type.Float[Float]) : Int
 ----
 
 Conversion to Int.
@@ -662,7 +662,7 @@ Float.toInt(1.2e6) // => +1_200_000
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let fromInt : Int -> xref:#type.Float[Float]
+func fromInt(_ : Int) : xref:#type.Float[Float]
 ----
 
 Conversion from Int. May result in `Inf`.

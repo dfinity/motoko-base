@@ -50,7 +50,7 @@ import StableMemory "mo:base/ExperimentalStableMemory";
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let size : () -> (pages : Nat64)
+func size() : (pages : Nat64)
 ----
 
 Current size of the stable memory, in pages.
@@ -72,7 +72,7 @@ afterSize - beforeSize // => 10
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let grow : (newPages : Nat64) -> (oldPages : Nat64)
+func grow(newPages : Nat64) : (oldPages : Nat64)
 ----
 
 Grow current `size` of stable memory by the given number of pages.
@@ -100,7 +100,7 @@ afterSize - beforeSize // => 10
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let stableVarQuery : () -> (shared query () -> async { size : Nat64 })
+func stableVarQuery() : (shared query () -> async { size : Nat64 })
 ----
 
 Returns a query that, when called, returns the number of bytes of (real) IC stable memory that would be
@@ -129,7 +129,7 @@ actor {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat32 : (offset : Nat64) -> Nat32
+func loadNat32(offset : Nat64) : Nat32
 ----
 
 Loads a `Nat32` value from stable memory at the given `offset`.
@@ -148,7 +148,7 @@ StableMemory.loadNat32(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat32 : (offset : Nat64, value : Nat32) -> ()
+func storeNat32(offset : Nat64, value : Nat32) : ()
 ----
 
 Stores a `Nat32` value in stable memory at the given `offset`.
@@ -167,7 +167,7 @@ StableMemory.loadNat32(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat8 : (offset : Nat64) -> Nat8
+func loadNat8(offset : Nat64) : Nat8
 ----
 
 Loads a `Nat8` value from stable memory at the given `offset`.
@@ -186,7 +186,7 @@ StableMemory.loadNat8(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat8 : (offset : Nat64, value : Nat8) -> ()
+func storeNat8(offset : Nat64, value : Nat8) : ()
 ----
 
 Stores a `Nat8` value in stable memory at the given `offset`.
@@ -205,7 +205,7 @@ StableMemory.loadNat8(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat16 : (offset : Nat64) -> Nat16
+func loadNat16(offset : Nat64) : Nat16
 ----
 
 Loads a `Nat16` value from stable memory at the given `offset`.
@@ -224,7 +224,7 @@ StableMemory.loadNat16(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat16 : (offset : Nat64, value : Nat16) -> ()
+func storeNat16(offset : Nat64, value : Nat16) : ()
 ----
 
 Stores a `Nat16` value in stable memory at the given `offset`.
@@ -243,7 +243,7 @@ StableMemory.loadNat16(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadNat64 : (offset : Nat64) -> Nat64
+func loadNat64(offset : Nat64) : Nat64
 ----
 
 Loads a `Nat64` value from stable memory at the given `offset`.
@@ -262,7 +262,7 @@ StableMemory.loadNat64(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeNat64 : (offset : Nat64, value : Nat64) -> ()
+func storeNat64(offset : Nat64, value : Nat64) : ()
 ----
 
 Stores a `Nat64` value in stable memory at the given `offset`.
@@ -281,7 +281,7 @@ StableMemory.loadNat64(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt32 : (offset : Nat64) -> Int32
+func loadInt32(offset : Nat64) : Int32
 ----
 
 Loads an `Int32` value from stable memory at the given `offset`.
@@ -300,7 +300,7 @@ StableMemory.loadInt32(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt32 : (offset : Nat64, value : Int32) -> ()
+func storeInt32(offset : Nat64, value : Int32) : ()
 ----
 
 Stores an `Int32` value in stable memory at the given `offset`.
@@ -319,7 +319,7 @@ StableMemory.loadInt32(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt8 : (offset : Nat64) -> Int8
+func loadInt8(offset : Nat64) : Int8
 ----
 
 Loads an `Int8` value from stable memory at the given `offset`.
@@ -338,7 +338,7 @@ StableMemory.loadInt8(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt8 : (offset : Nat64, value : Int8) -> ()
+func storeInt8(offset : Nat64, value : Int8) : ()
 ----
 
 Stores an `Int8` value in stable memory at the given `offset`.
@@ -357,7 +357,7 @@ StableMemory.loadInt8(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt16 : (offset : Nat64) -> Int16
+func loadInt16(offset : Nat64) : Int16
 ----
 
 Loads an `Int16` value from stable memory at the given `offset`.
@@ -376,7 +376,7 @@ StableMemory.loadInt16(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt16 : (offset : Nat64, value : Int16) -> ()
+func storeInt16(offset : Nat64, value : Int16) : ()
 ----
 
 Stores an `Int16` value in stable memory at the given `offset`.
@@ -395,7 +395,7 @@ StableMemory.loadInt16(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadInt64 : (offset : Nat64) -> Int64
+func loadInt64(offset : Nat64) : Int64
 ----
 
 Loads an `Int64` value from stable memory at the given `offset`.
@@ -414,7 +414,7 @@ StableMemory.loadInt64(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeInt64 : (offset : Nat64, value : Int64) -> ()
+func storeInt64(offset : Nat64, value : Int64) : ()
 ----
 
 Stores an `Int64` value in stable memory at the given `offset`.
@@ -433,7 +433,7 @@ StableMemory.loadInt64(offset) // => 123
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadFloat : (offset : Nat64) -> Float
+func loadFloat(offset : Nat64) : Float
 ----
 
 Loads a `Float` value from stable memory at the given `offset`.
@@ -452,7 +452,7 @@ StableMemory.loadFloat(offset) // => 1.25
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeFloat : (offset : Nat64, value : Float) -> ()
+func storeFloat(offset : Nat64, value : Float) : ()
 ----
 
 Stores a `Float` value in stable memory at the given `offset`.
@@ -471,7 +471,7 @@ StableMemory.loadFloat(offset) // => 1.25
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let loadBlob : (offset : Nat64, size : Nat) -> Blob
+func loadBlob(offset : Nat64, size : Nat) : Blob
 ----
 
 Load `size` bytes starting from `offset` as a `Blob`.
@@ -493,7 +493,7 @@ Blob.toArray(StableMemory.loadBlob(offset, size)) // => [1, 2, 3]
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let storeBlob : (offset : Nat64, value : Blob) -> ()
+func storeBlob(offset : Nat64, value : Blob) : ()
 ----
 
 Write bytes of `blob` beginning at `offset`.

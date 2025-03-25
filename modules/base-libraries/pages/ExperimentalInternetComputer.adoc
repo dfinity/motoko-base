@@ -10,7 +10,7 @@ Low-level interface to the Internet Computer.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let call : (canister : Principal, name : Text, data : Blob) -> async (reply : Blob)
+func call<$>(canister : Principal, name : Text, data : Blob) : async (reply : Blob)
 ----
 
 Calls ``canister``'s update or query function, `name`, with the binary contents of `data` as IC argument.
@@ -42,7 +42,7 @@ let output : ?OutputType = from_candid(rawReply); // { decimals = 8 }
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let isReplicated : () -> Bool
+func isReplicated() : Bool
 ----
 
 `isReplicated` is true for update messages and for queries that passed through consensus.
@@ -77,7 +77,7 @@ let count = IC.countInstructions(func() {
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let performanceCounter : (counter : Nat32) -> (value : Nat64)
+func performanceCounter(counter : Nat32) : (value : Nat64)
 ----
 
 Returns the current value of IC _performance counter_ `counter`.
@@ -121,7 +121,7 @@ Queries and unbounded-time update messages return null.
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let subnet : () -> Principal
+func subnet() : Principal
 ----
 
 Returns the subnet's principal for the running actor.

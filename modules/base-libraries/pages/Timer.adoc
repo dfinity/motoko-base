@@ -89,7 +89,7 @@ let daily = recurringTimer(#seconds (24 * 60 * 60), checkAndWaterPlants);
 
 [source.no-repl,motoko,subs=+macros]
 ----
-let cancelTimer : xref:#type.TimerId[TimerId] -> ()
+func cancelTimer(_ : xref:#type.TimerId[TimerId]) : ()
 ----
 
 Cancels a still active timer with `(id : TimerId)`. For expired timers
