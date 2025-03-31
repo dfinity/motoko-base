@@ -1,12 +1,21 @@
-/// Signed integer numbers with infinite precision (also called big integers).
+///Signed integer numbers with infinite precision (also called big integers).
 ///
-/// Most operations on integer numbers (e.g. addition) are available as built-in operators (e.g. `-1 + 1`).
-/// This module provides equivalent functions and `Text` conversion.
+///:::note
+///Most operations on integer numbers (e.g. addition) are available as built-in operators (e.g. `-1 + 1`).
+///This module provides equivalent functions and `Text` conversion.
+///:::
 ///
-/// Import from the base library to use this module.
-/// ```motoko name=import
-/// import Int "mo:base/Int";
-/// ```
+///:::info [Function form for higher-order use]
+///
+///Several arithmetic and comparison functions (e.g. `add`, `sub`, `equal`, `less`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
+///:::
+///
+///Import from the base library to use this module.
+///
+///```motoko name=import
+///import Int "mo:base/Int";
+///```
+///
 
 import Prim "mo:⛔";
 import Prelude "Prelude";
@@ -102,8 +111,11 @@ module {
     return hash
   };
 
-  /// Computes a hash from the least significant 32-bits of `i`, ignoring other bits.
-  /// @deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
+  ///:::warning [Deprecated function]
+  ///
+  ///The function `hash` is deprecated. It computes a hash using only the least significant 32 bits of the `Int`, ignoring the rest.
+  ///For large integers, this may lead to hash collisions. Use a bespoke hash function that considers all bits of the value instead.
+  ///:::
   public func hash(i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
@@ -115,8 +127,11 @@ module {
     ])
   };
 
-  /// Computes an accumulated hash from `h1` and the least significant 32-bits of `i`, ignoring other bits in `i`.
-  /// @deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
+  ///:::warning [Deprecated function]
+  ///
+  ///The function `hashAcc` is deprecated. It accumulates a hash using only the least significant 32 bits of the `Int`, ignoring other bits.
+  ///This limits its effectiveness for large integers. Prefer using a custom hash function that processes the full integer input.
+  ///:::
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
@@ -137,10 +152,6 @@ module {
   /// Int.equal(-1, -1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `==`
-  /// as a function value at the moment.
   ///
   /// Example:
   /// ```motoko include=import
@@ -162,10 +173,7 @@ module {
   /// Int.notEqual(-1, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `!=`
-  /// as a function value at the moment.
+
   public func notEqual(x : Int, y : Int) : Bool { x != y };
 
   /// "Less than" function for Int types.
@@ -176,10 +184,7 @@ module {
   /// Int.less(-2, 1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<`
-  /// as a function value at the moment.
+
   public func less(x : Int, y : Int) : Bool { x < y };
 
   /// "Less than or equal" function for Int types.
@@ -190,10 +195,7 @@ module {
   /// Int.lessOrEqual(-2, 1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<=`
-  /// as a function value at the moment.
+
   public func lessOrEqual(x : Int, y : Int) : Bool { x <= y };
 
   /// "Greater than" function for Int types.
@@ -204,10 +206,7 @@ module {
   /// Int.greater(1, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>`
-  /// as a function value at the moment.
+
   public func greater(x : Int, y : Int) : Bool { x > y };
 
   /// "Greater than or equal" function for Int types.
@@ -218,10 +217,7 @@ module {
   /// Int.greaterOrEqual(1, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>=`
-  /// as a function value at the moment.
+
   public func greaterOrEqual(x : Int, y : Int) : Bool { x >= y };
 
   /// General-purpose comparison function for `Int`. Returns the `Order` (
@@ -250,10 +246,7 @@ module {
   /// Int.neg(123) // => -123
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   public func neg(x : Int) : Int { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -265,10 +258,7 @@ module {
   /// Int.add(1, -2); // => -1
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -286,10 +276,7 @@ module {
   /// Int.sub(1, 2); // => -1
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -307,10 +294,7 @@ module {
   /// Int.mul(-2, 3); // => -6
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -329,10 +313,7 @@ module {
   /// Int.div(6, -2); // => -3
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `/` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `/`
-  /// as a function value at the moment.
+
   public func div(x : Int, y : Int) : Int { x / y };
 
   /// Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
@@ -345,10 +326,7 @@ module {
   /// Int.rem(6, -4); // => 2
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `%`
-  /// as a function value at the moment.
+
   public func rem(x : Int, y : Int) : Int { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
@@ -361,10 +339,6 @@ module {
   /// Int.pow(-2, 3); // => -8
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**`
-  /// as a function value at the moment.
   public func pow(x : Int, y : Int) : Int { x ** y };
 
 }

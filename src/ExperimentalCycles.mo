@@ -1,38 +1,44 @@
-/// Managing cycles within actors on the Internet Computer (IC).
+///Managing cycles within actors on the Internet Computer (IC).
 ///
-/// The usage of the Internet Computer is measured, and paid for, in _cycles_.
-/// This library provides imperative operations for observing cycles, transferring cycles, and
-/// observing refunds of cycles.
+///The usage of the Internet Computer is measured, and paid for, in _cycles_.
+///This library provides imperative operations for observing cycles, transferring cycles, and observing refunds of cycles.
 ///
-/// **WARNING:** This low-level API is **experimental** and likely to change or even disappear.
-/// Dedicated syntactic support for manipulating cycles may be added to the language in future, obsoleting this library.
+///:::warning [Experimental API]
 ///
-/// **NOTE:** Since cycles measure computational resources, the value of  `balance()` can change from one call to the next.
+///This low-level API is experimental and may change or be removed in the future.
+///Dedicated syntactic support for manipulating cycles may be added to the language, which would make this library obsolete.
+///:::
 ///
-/// Example for use on IC:
-/// ```motoko no-repl
-/// import Cycles "mo:base/ExperimentalCycles";
-/// import Debug "mo:base/Debug";
+///:::note [Volatile cycle balance]
 ///
-/// actor {
-///   public func main() : async() {
-///     Debug.print("Main balance: " # debug_show(Cycles.balance()));
-///     Cycles.add<system>(15_000_000);
-///     await operation(); // accepts 10_000_000 cycles
-///     Debug.print("Main refunded: " # debug_show(Cycles.refunded())); // 5_000_000
-///     Debug.print("Main balance: " # debug_show(Cycles.balance())); // decreased by around 10_000_000
-///   };
+///Since cycles measure computational resources, the value of `balance()` can change from one call to the next.
+///:::
 ///
-///   func operation() : async() {
-///     Debug.print("Operation balance: " # debug_show(Cycles.balance()));
-///     Debug.print("Operation available: " # debug_show(Cycles.available()));
-///     let obtained = Cycles.accept<system>(10_000_000);
-///     Debug.print("Operation obtained: " # debug_show(obtained)); // => 10_000_000
-///     Debug.print("Operation balance: " # debug_show(Cycles.balance())); // increased by 10_000_000
-///     Debug.print("Operation available: " # debug_show(Cycles.available())); // decreased by 10_000_000
-///   }
-/// }
-/// ```
+///Example for use on IC:
+///
+///```motoko no-repl
+///import Cycles "mo:base/ExperimentalCycles";
+///import Debug "mo:base/Debug";
+///
+///actor {
+///  public func main() : async() {
+///    Debug.print("Main balance: " # debug_show(Cycles.balance()));
+///    Cycles.add<system>(15_000_000);
+///    await operation(); // accepts 10_000_000 cycles
+///    Debug.print("Main refunded: " # debug_show(Cycles.refunded())); // 5_000_000
+///    Debug.print("Main balance: " # debug_show(Cycles.balance())); // decreased by around 10_000_000
+///  };
+///
+///  func operation() : async() {
+///    Debug.print("Operation balance: " # debug_show(Cycles.balance()));
+///    Debug.print("Operation available: " # debug_show(Cycles.available()));
+///    let obtained = Cycles.accept<system>(10_000_000);
+///    Debug.print("Operation obtained: " # debug_show(obtained)); // => 10_000_000
+///    Debug.print("Operation balance: " # debug_show(Cycles.balance())); // increased by 10_000_000
+///    Debug.print("Operation available: " # debug_show(Cycles.available())); // decreased by 10_000_000
+///  }
+///}
+///```
 import Prim "mo:⛔";
 module {
 
@@ -103,8 +109,10 @@ module {
   /// the last call is deducted from `balance()`.
   /// If this total exceeds `balance()`, the caller traps, aborting the call.
   ///
-  /// **Note**: The implicit register of added amounts is reset to zero on entry to
-  /// a shared function and after each shared function call or resume from an await.
+  ///:::note [Reset behaviour]
+  ///
+  ///The implicit register of added amounts is reset to zero on entry to a shared function and after each shared function call or resume from an await.
+  ///:::
   ///
   /// Example for use on the IC (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl

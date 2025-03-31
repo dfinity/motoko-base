@@ -1,12 +1,16 @@
-/// Purely-functional, singly-linked lists.
-
-/// A list of type `List<T>` is either `null` or an optional pair of a value of type `T` and a tail, itself of type `List<T>`.
+///Purely-functional, singly-linked lists.
+///A list of type `List<T>` is either `null` or an optional pair of a value of type `T` and a tail, itself of type `List<T>`.
 ///
-/// To use this library, import it using:
+///:::note [Assumptions]
 ///
-/// ```motoko name=initialize
-/// import List "mo:base/List";
-/// ```
+///Runtime and space complexity assumes that `equal`, and other functions execute in `O(1)` time and space.
+///:::
+///
+///To use this library, import it using:
+///
+///```motoko name=initialize
+///import List "mo:base/List";
+///```
 
 import Array "Array";
 import Iter "IterType";
@@ -28,9 +32,9 @@ module {
   /// List.nil<Nat>() // => null
   /// ```
   ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(1)` | `O(1)` |
   public func nil<T>() : List<T> = null;
 
   /// Check whether a list is empty and return true if the list is empty.
@@ -40,9 +44,9 @@ module {
   /// List.isNil<Nat>(null) // => true
   /// ```
   ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(1)` | `O(1)` |
   public func isNil<T>(l : List<T>) : Bool {
     switch l {
       case null { true };
@@ -57,9 +61,9 @@ module {
   /// List.push<Nat>(0, null) // => ?(0, null);
   /// ```
   ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(1)` | `O(1)` |
   public func push<T>(x : T, l : List<T>) : List<T> = ?(x, l);
 
   /// Return the last element of the list, if present.
@@ -68,9 +72,9 @@ module {
   /// List.last<Nat>(?(0, ?(1, null))) // => ?1
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(1)` |
   public func last<T>(l : List<T>) : ?T {
     switch l {
       case null { null };
@@ -87,9 +91,9 @@ module {
   /// List.pop<Nat>(?(0, ?(1, null))) // => (?0, ?(1, null))
   /// ```
   ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(1)` | `O(1)` |
   public func pop<T>(l : List<T>) : (?T, List<T>) {
     switch l {
       case null { (null, null) };
@@ -104,9 +108,9 @@ module {
   /// List.size<Nat>(?(0, ?(1, null))) // => 2
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(1)` |
   public func size<T>(l : List<T>) : Nat {
     func rec(l : List<T>, n : Nat) : Nat {
       switch l {
@@ -116,20 +120,23 @@ module {
     };
     rec(l, 0)
   };
-  /// Access any item in a list, zero-based.
+  ///Access any item in a list, zero-based.
   ///
-  /// NOTE: Indexing into a list is a linear operation, and usually an
-  /// indication that a list might not be the best data structure
-  /// to use.
+  ///:::note [Consideration]
+  /// Indexing into a list is a linear operation, and usually an
+  ///indication that a list might not be the best data structure
+  ///to use.
+  ///:::
   ///
-  /// Example:
-  /// ```motoko include=initialize
-  /// List.get<Nat>(?(0, ?(1, null)), 1) // => ?1
-  /// ```
+  ///Example:
   ///
-  /// Runtime: O(size)
+  ///```motoko include=initialize
+  ///List.get<Nat>(?(0, ?(1, null)), 1) // => ?1
+  ///```
   ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(1)` |
   public func get<T>(l : List<T>, n : Nat) : ?T {
     switch (n, l) {
       case (_, null) { null };
@@ -145,9 +152,9 @@ module {
   /// List.reverse<Nat>(?(0, ?(1, ?(2, null)))) // => ?(2, ?(1, ?(0, null)))
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func reverse<T>(l : List<T>) : List<T> {
     func rec(l : List<T>, r : List<T>) : List<T> {
       switch l {
@@ -167,11 +174,10 @@ module {
   /// sum // => 3
   /// ```
   ///
-  /// Runtime: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
       case null { () };
@@ -188,10 +194,10 @@ module {
   /// List.map<Nat, Text>(?(0, ?(1, ?(2, null))), Nat.toText) // => ?("0", ?("1", ?("2", null))
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
+
   public func map<T, U>(l : List<T>, f : T -> U) : List<U> {
     switch l {
       case null { null };
@@ -207,9 +213,9 @@ module {
   /// List.filter<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }) // => ?(0, ?(2, null))
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func filter<T>(l : List<T>, f : T -> Bool) : List<T> {
     switch l {
       case null { null };
@@ -233,11 +239,10 @@ module {
   /// List.partition<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }) // => (?(0, ?(2, null)), ?(1, null))
   /// ```
   ///
-  /// Runtime: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>) {
     switch l {
       case null { (null, null) };
@@ -271,11 +276,10 @@ module {
   /// ) // => ?(4, ?(6, null))
   /// ```
   ///
-  /// Runtime: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapFilter<T, U>(l : List<T>, f : T -> ?U) : List<U> {
     switch l {
       case null { null };
@@ -305,11 +309,10 @@ module {
   /// ); // => #ok ?(2, ?(4, ?(6, null))
   /// ```
   ///
-  /// Runtime: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   ///
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
   public func mapResult<T, R, E>(xs : List<T>, f : T -> Result.Result<R, E>) : Result.Result<List<R>, E> {
     func go(xs : List<T>, acc : List<R>) : Result.Result<List<R>, E> {
       switch xs {
@@ -335,9 +338,9 @@ module {
   /// ); // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
   ///
-  /// Runtime: O(size(l))
-  ///
-  /// Space: O(size(l))
+  ///| Runtime     | Space       |
+  ///|-------------|-------------|
+  ///| `O(size(l))`  | `O(size(l))`  |
   func revAppend<T>(l : List<T>, m : List<T>) : List<T> {
     switch l {
       case null { m };
@@ -355,9 +358,9 @@ module {
   /// ) // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
   ///
-  /// Runtime: O(size(l))
-  ///
-  /// Space: O(size(l))
+  ///| Runtime     | Space       |
+  ///|-------------|-------------|
+  ///| `O(size(l))`  | `O(size(l))`  |
   public func append<T>(l : List<T>, m : List<T>) : List<T> {
     revAppend(reverse(l), m)
   };
@@ -373,11 +376,11 @@ module {
   /// ); // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
   ///
-  /// Runtime: O(size*size)
-  ///
-  /// Space: O(size*size)
+  ///| Runtime     | Space       |
+  ///|-------------|-------------|
+  ///| `O(size*size)`  | `O(size*size)`  |
   public func flatten<T>(l : List<List<T>>) : List<T> {
-  //FIXME: this is quadratic, not linear https://github.com/dfinity/motoko-base/issues/459
+    //FIXME: this is quadratic, not linear https://github.com/dfinity/motoko-base/issues/459
     foldLeft<List<T>, List<T>>(l, null, func(a, b) { append<T>(a, b) })
   };
 
@@ -393,9 +396,9 @@ module {
   /// ); // => ?(0, ?(1, null))
   /// ```
   ///
-  /// Runtime: O(n)
-  ///
-  /// Space: O(n)
+  ///| Runtime     | Space       |
+  ///|-------------|-------------|
+  ///| `O(n)`  | `O(n)`  |
   public func take<T>(l : List<T>, n : Nat) : List<T> {
     switch (l, n) {
       case (_, 0) { null };
@@ -414,9 +417,9 @@ module {
   /// ); // => ?(2, null)
   /// ```
   ///
-  /// Runtime: O(n)
-  ///
-  /// Space: O(1)
+  ///| Runtime     | Space       |
+  ///|-------------|-------------|
+  ///| `O(n)`  | `O(1)`  |
   public func drop<T>(l : List<T>, n : Nat) : List<T> {
     switch (l, n) {
       case (l_, 0) { l_ };
@@ -440,11 +443,11 @@ module {
   /// ) // => "123"
   /// ```
   ///
-  /// Runtime: O(size(list))
+  ///| Runtime        | Space (Heap) | Space (Stack) |
+  ///|----------------|--------------|----------------|
+  ///| `O(size(list))`  | `O(1)`         | `O(1)`    |
   ///
-  /// Space: O(1) heap, O(1) stack
-  ///
-  /// *Runtime and space assumes that `combine` runs in O(1) time and space.
+
   public func foldLeft<T, S>(list : List<T>, base : S, combine : (S, T) -> S) : S {
     switch list {
       case null { base };
@@ -467,11 +470,10 @@ module {
   /// ) // => "123"
   /// ```
   ///
-  /// Runtime: O(size(list))
+  ///| Runtime       | Space (Heap) | Space (Stack)     |
+  ///|---------------|--------------|-------------------|
+  ///| `O(size(list))` | `O(1)`         | `O(size(list))`  |
   ///
-  /// Space: O(1) heap, O(size(list)) stack
-  ///
-  /// *Runtime and space assumes that `combine` runs in O(1) time and space.
   public func foldRight<T, S>(list : List<T>, base : S, combine : (T, S) -> S) : S {
     switch list {
       case null { base };
@@ -491,11 +493,11 @@ module {
   /// ); // => ?2
   /// ```
   ///
-  /// Runtime: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(1)` |
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+
   public func find<T>(l : List<T>, f : T -> Bool) : ?T {
     switch l {
       case null { null };
@@ -515,11 +517,11 @@ module {
   /// ) // => true
   /// ```
   ///
-  /// Runtime: O(size(list))
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(1)` |
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+
   public func some<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null { false };
@@ -539,11 +541,11 @@ module {
   /// ); // => false
   /// ```
   ///
-  /// Runtime: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(1)` |
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+
   public func all<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
       case null { true };
@@ -565,11 +567,11 @@ module {
   /// ); // => ?(1, ?(2, ?(2, ?(4, ?(4, ?(6, null))))))),
   /// ```
   ///
-  /// Runtime: O(size(l1) + size(l2))
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(size(l1) + size(l2))`     | `O(size(l1) + size(l2))` |
   ///
-  /// Space: O(size(l1) + size(l2))
-  ///
-  /// *Runtime and space assumes that `lessThanOrEqual` runs in O(1) time and space.
+
   // TODO: replace by merge taking a compare : (T, T) -> Order.Order function?
   public func merge<T>(l1 : List<T>, l2 : List<T>, lessThanOrEqual : (T, T) -> Bool) : List<T> {
     switch (l1, l2) {
@@ -612,13 +614,13 @@ module {
   /// ) // => #less
   /// ```
   ///
-  /// Runtime: O(size(l1))
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(size(l1))`     | `O(1)` |
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that argument `compare` runs in O(1) time and space.
+
   public func compare<T>(l1 : List<T>, l2 : List<T>, compare : (T, T) -> Order.Order) : Order.Order {
-     compareAux<T>(l1, l2, compare);
+    compareAux<T>(l1, l2, compare)
   };
 
   private func equalAux<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
@@ -627,7 +629,7 @@ module {
         equal(h1, h2) and equalAux<T>(t1, t2, equal)
       };
       case (null, null) { true };
-      case _ { false };
+      case _ { false }
     }
   };
   /// Compare two lists for equality using the argument function `equal` to determine equality of their elements.
@@ -643,13 +645,12 @@ module {
   /// ); // => false
   /// ```
   ///
-  /// Runtime: O(size(l1))
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(size(l1))`     | `O(1)` |
   ///
-  /// Space: O(1)
-  ///
-  /// *Runtime and space assumes that argument `equal` runs in O(1) time and space.
   public func equal<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
-    equalAux<T>(l1, l2, equal);
+    equalAux<T>(l1, l2, equal)
   };
 
   /// Generate a list based on a length and a function that maps from
@@ -663,11 +664,11 @@ module {
   /// ) // => ?(0, ?(2, (?4, null)))
   /// ```
   ///
-  /// Runtime: O(n)
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(n)`     | `O(n)` |
   ///
-  /// Space: O(n)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+
   public func tabulate<T>(n : Nat, f : Nat -> T) : List<T> {
     var i = 0;
     var l : List<T> = null;
@@ -687,9 +688,9 @@ module {
   /// ) // => ?(0, null)
   /// ```
   ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(1)` | `O(1)` |
   public func make<T>(x : T) : List<T> = ?(x, null);
 
   /// Create a list of the given length with the same value in each position.
@@ -702,9 +703,9 @@ module {
   /// ) // => ?(0, ?(0, ?(0, null)))
   /// ```
   ///
-  /// Runtime: O(n)
-  ///
-  /// Space: O(n)
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(n)`     | `O(n)` |
   public func replicate<T>(n : Nat, x : T) : List<T> {
     var i = 0;
     var l : List<T> = null;
@@ -728,9 +729,9 @@ module {
   /// ) // => ?((0, "0"), ?((1, "1"), null))
   /// ```
   ///
-  /// Runtime: O(min(size(xs), size(ys)))
-  ///
-  /// Space: O(min(size(xs), size(ys)))
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(min(size(xs), size(ys)))`     | `O(min(size(xs), size(ys)))` |
   public func zip<T, U>(xs : List<T>, ys : List<U>) : List<(T, U)> = zipWith<T, U, (T, U)>(xs, ys, func(x, y) { (x, y) });
 
   /// Create a list in which elements are created by applying function `f` to each pair `(x, y)` of elements
@@ -751,11 +752,11 @@ module {
   /// ) // => ?("0a", ?("1b", null))
   /// ```
   ///
-  /// Runtime: O(min(size(xs), size(ys)))
+  ///| Runtime                    | Space                  |
+  ///|----------------------------|------------------------|
+  ///| `O(min(size(xs), size(ys)))`     | `O(min(size(xs), size(ys)))` |
   ///
-  /// Space: O(min(size(xs), size(ys)))
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+
   public func zipWith<T, U, V>(
     xs : List<T>,
     ys : List<U>,
@@ -784,9 +785,9 @@ module {
   /// ) // => (?(0, ?(1, null)), ?(2, null))
   /// ```
   ///
-  /// Runtime: O(n)
-  ///
-  /// Space: O(n)
+  ///| Runtime     | Space       |
+  ///|-------------|-------------|
+  ///| `O(n)`  | `O(n)`  |
   public func split<T>(n : Nat, xs : List<T>) : (List<T>, List<T>) {
     if (n == 0) { (null, xs) } else {
       func rec(n : Nat, xs : List<T>) : (List<T>, List<T>) {
@@ -821,9 +822,9 @@ module {
   /// */
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func chunks<T>(n : Nat, xs : List<T>) : List<List<T>> {
     let (l, r) = split<T>(n, xs);
     if (isNil<T>(l)) {
@@ -841,9 +842,9 @@ module {
   /// // =>  ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func fromArray<T>(xs : [T]) : List<T> {
     Array.foldRight<T, List<T>>(
       xs,
@@ -862,9 +863,9 @@ module {
   /// // =>  ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func fromVarArray<T>(xs : [var T]) : List<T> = fromArray<T>(Array.freeze<T>(xs));
 
   /// Create an array from a list.
@@ -874,9 +875,9 @@ module {
   /// // => [0, 1, 2, 3, 4]
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func toArray<T>(xs : List<T>) : [T] {
     let length = size<T>(xs);
     var list = xs;
@@ -900,9 +901,9 @@ module {
   /// // => [var 0, 1, 2, 3, 4]
   /// ```
   ///
-  /// Runtime: O(size)
-  ///
-  /// Space: O(size)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func toVarArray<T>(xs : List<T>) : [var T] = Array.thaw<T>(toArray<T>(xs));
 
   /// Create an iterator from a list.
@@ -916,9 +917,9 @@ module {
   /// // => 10
   /// ```
   ///
-  /// Runtime: O(1)
-  ///
-  /// Space: O(1)
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(1)` | `O(1)` |
   public func toIter<T>(xs : List<T>) : Iter.Iter<T> {
     var state = xs;
     object {

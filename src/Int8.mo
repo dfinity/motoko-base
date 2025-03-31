@@ -1,10 +1,18 @@
-/// Provides utility functions on 8-bit signed integers.
+///Provides utility functions on 8-bit signed integers.
 ///
-/// Note that most operations are available as built-in operators (e.g. `1 + 1`).
+///:::info [Function form for higher-order use]
 ///
-/// Import from the base library to use this module.
-/// ```motoko name=import
-/// import Int8 "mo:base/Int8";
+///Several arithmetic and comparison functions (e.g. `add`, `sub`, `bitor`, `bitand`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
+///:::
+///
+///:::note
+///Most operations are available as built-in operators (e.g. `1 + 1`).
+///:::
+///Import from the base library to use this module.
+///
+///```motoko name=import
+///import Int8 "mo:base/Int8";
+///```
 /// ```
 import Int "Int";
 import Prim "mo:⛔";
@@ -146,10 +154,7 @@ module {
   /// Int8.equal(-1, -1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `==`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -171,10 +176,7 @@ module {
   /// Int8.notEqual(-1, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `!=`
-  /// as a function value at the moment.
+
   public func notEqual(x : Int8, y : Int8) : Bool { x != y };
 
   /// "Less than" function for Int8 types.
@@ -185,10 +187,7 @@ module {
   /// Int8.less(-2, 1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<`
-  /// as a function value at the moment.
+
   public func less(x : Int8, y : Int8) : Bool { x < y };
 
   /// "Less than or equal" function for Int8 types.
@@ -199,10 +198,7 @@ module {
   /// Int8.lessOrEqual(-2, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<=`
-  /// as a function value at the moment.
+
   public func lessOrEqual(x : Int8, y : Int8) : Bool { x <= y };
 
   /// "Greater than" function for Int8 types.
@@ -213,10 +209,7 @@ module {
   /// Int8.greater(-2, -3); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>`
-  /// as a function value at the moment.
+
   public func greater(x : Int8, y : Int8) : Bool { x > y };
 
   /// "Greater than or equal" function for Int8 types.
@@ -227,10 +220,7 @@ module {
   /// Int8.greaterOrEqual(-2, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>=`
-  /// as a function value at the moment.
+
   public func greaterOrEqual(x : Int8, y : Int8) : Bool { x >= y };
 
   /// General-purpose comparison function for `Int8`. Returns the `Order` (
@@ -261,10 +251,7 @@ module {
   /// Int8.neg(123) // => -123
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   public func neg(x : Int8) : Int8 { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -276,10 +263,7 @@ module {
   /// Int8.add(100, 23) // => +123
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -297,10 +281,7 @@ module {
   /// Int8.sub(123, 23) // => +100
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -318,10 +299,7 @@ module {
   /// Int8.mul(12, 10) // => +120
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -340,10 +318,7 @@ module {
   /// Int8.div(123, 10) // => +12
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `/` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `/`
-  /// as a function value at the moment.
+
   public func div(x : Int8, y : Int8) : Int8 { x / y };
 
   /// Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
@@ -356,10 +331,7 @@ module {
   /// Int8.rem(123, 10) // => +3
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `%`
-  /// as a function value at the moment.
+
   public func rem(x : Int8, y : Int8) : Int8 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
@@ -371,10 +343,7 @@ module {
   /// Int8.pow(2, 6) // => +64
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**`
-  /// as a function value at the moment.
+
   public func pow(x : Int8, y : Int8) : Int8 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
@@ -384,10 +353,7 @@ module {
   /// Int8.bitnot(-16 /* 0xf0 */) // => +15 // 0x0f
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `^` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `^`
-  /// as a function value at the moment.
+
   public func bitnot(x : Int8) : Int8 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
@@ -397,10 +363,7 @@ module {
   /// Int8.bitand(0x1f, 0x70) // => +16 // 0x10
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `&` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `&`
-  /// as a function value at the moment.
+
   public func bitand(x : Int8, y : Int8) : Int8 { x & y };
 
   /// Returns the bitwise "or" of `x` and `y`, `x | y`.
@@ -410,10 +373,7 @@ module {
   /// Int8.bitor(0x0f, 0x70) // => +127 // 0x7f
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `|` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `|`
-  /// as a function value at the moment.
+
   public func bitor(x : Int8, y : Int8) : Int8 { x | y };
 
   /// Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
@@ -423,10 +383,7 @@ module {
   /// Int8.bitxor(0x70, 0x7f) // => +15 // 0x0f
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `^` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `^`
-  /// as a function value at the moment.
+
   public func bitxor(x : Int8, y : Int8) : Int8 { x ^ y };
 
   /// Returns the bitwise left shift of `x` by `y`, `x << y`.
@@ -441,10 +398,7 @@ module {
   /// Int8.bitshiftLeft(1, 4) // => +16 // 0x10 equivalent to `2 ** 4`.
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<<`
-  /// as a function value at the moment.
+
   public func bitshiftLeft(x : Int8, y : Int8) : Int8 { x << y };
 
   /// Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
@@ -459,10 +413,7 @@ module {
   /// Int8.bitshiftRight(64, 4) // => +4 // equivalent to `64 / (2 ** 4)`
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>>`
-  /// as a function value at the moment.
+
   public func bitshiftRight(x : Int8, y : Int8) : Int8 { x >> y };
 
   /// Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
@@ -477,10 +428,7 @@ module {
   /// Int8.bitrotLeft(0x11 /* 0b0001_0001 */, 2) // => +68 // 0b0100_0100 == 0x44.
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<<>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<<>`
-  /// as a function value at the moment.
+
   public func bitrotLeft(x : Int8, y : Int8) : Int8 { x <<> y };
 
   /// Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
@@ -495,10 +443,7 @@ module {
   /// Int8.bitrotRight(0x11 /* 0b0001_0001 */, 1) // => -120 // 0b1000_1000 == 0x88.
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<>>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<>>`
-  /// as a function value at the moment.
+
   public func bitrotRight(x : Int8, y : Int8) : Int8 { x <>> y };
 
   /// Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
@@ -579,10 +524,7 @@ module {
   /// Int8.addWrap(2 ** 6, 2 ** 6) // => -128 // overflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+%`
-  /// as a function value at the moment.
+
   public func addWrap(x : Int8, y : Int8) : Int8 { x +% y };
 
   /// Returns the difference of `x` and `y`, `x -% y`.
@@ -594,10 +536,7 @@ module {
   /// Int8.subWrap(-2 ** 7, 1) // => +127 // underflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-%`
-  /// as a function value at the moment.
+
   public func subWrap(x : Int8, y : Int8) : Int8 { x -% y };
 
   /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -609,10 +548,7 @@ module {
   /// Int8.mulWrap(2 ** 4, 2 ** 4) // => 0 // overflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*%`
-  /// as a function value at the moment.
+
   public func mulWrap(x : Int8, y : Int8) : Int8 { x *% y };
 
   /// Returns `x` to the power of `y`, `x **% y`.
@@ -625,10 +561,7 @@ module {
   /// Int8.powWrap(2, 7) // => -128 // overflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**%`
-  /// as a function value at the moment.
+
   public func powWrap(x : Int8, y : Int8) : Int8 { x **% y };
 
 }

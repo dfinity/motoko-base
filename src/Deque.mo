@@ -1,24 +1,23 @@
-/// Double-ended queue (deque) of a generic element type `T`.
+///Double-ended queue (deque) of a generic element type `T`.
 ///
-/// The interface to deques is purely functional, not imperative, and deques are immutable values.
-/// In particular, deque operations such as push and pop do not update their input deque but,  instead, return the
-/// value of the modified deque, alongside any other data.
-/// The input deque is left unchanged.
+///The interface to deques is purely functional, not imperative, and deques are immutable values.
+///In particular, deque operations such as push and pop do not update their input deque but instead return the value of the modified deque, alongside any other data.
+///The input deque is left unchanged.
 ///
-/// Examples of use-cases:
-/// Queue (FIFO) by using `pushBack()` and `popFront()`.
-/// Stack (LIFO) by using `pushFront()` and `popFront()`.
+///Examples of use-cases:
+///Queue (FIFO) by using `pushBack()` and `popFront()`.
+///Stack (LIFO) by using `pushFront()` and `popFront()`.
 ///
-/// A deque is internally implemented as two lists, a head access list and a (reversed) tail access list,
-/// that are dynamically size-balanced by splitting.
+///A deque is internally implemented as two lists, a head access list and a (reversed) tail access list, that are dynamically size-balanced by splitting.
 ///
-/// Construction: Create a new deque with the `empty<T>()` function.
+///Construction: Create a new deque with the `empty<T>()` function.
 ///
-/// Note on the costs of push and pop functions:
-/// * Runtime: `O(1) amortized costs, `O(n)` worst case cost per single call.
-/// * Space: `O(1) amortized costs, `O(n)` worst case cost per single call.
+///:::note [Performance characteristics]
 ///
-/// `n` denotes the number of elements stored in the deque.
+///Push and pop operations have `O(1)` amortized cost and `O(n)` worst-case cost per call.
+///Space usage follows the same pattern.
+///`n` denotes the number of elements stored in the deque.
+///:::
 
 import List "List";
 import P "Prelude";
@@ -38,9 +37,10 @@ module {
   /// Deque.empty<Nat>()
   /// ```
   ///
-  /// Runtime: `O(1)`.
-  ///
-  /// Space: `O(1)`.
+  ///| Runtime | Space |
+  ///|---------|--------|
+  ///| `O(1)`  | `O(1)` |
+
   public func empty<T>() : Deque<T> { (List.nil(), List.nil()) };
 
   /// Determine whether a deque is empty.
@@ -54,9 +54,9 @@ module {
   /// Deque.isEmpty(deque) // => true
   /// ```
   ///
-  /// Runtime: `O(1)`.
-  ///
-  /// Space: `O(1)`.
+  ///| Runtime | Space |
+  ///|---------|--------|
+  ///| `O(1)`  | `O(1)` |
   public func isEmpty<T>(deque : Deque<T>) : Bool {
     switch deque {
       case (f, r) { List.isNil(f) and List.isNil(r) }
@@ -89,9 +89,9 @@ module {
   /// Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1) // deque with elements [1, 2]
   /// ```
   ///
-  /// Runtime: `O(n)` worst-case, amortized to `O(1)`.
-  ///
-  /// Space: `O(n)` worst-case, amortized to `O(1)`.
+  ///| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+  ///|------------------|----------------------|----------------|---------------------|
+  ///| `O(n)`           | `O(1)`               | `O(n)`         | `O(1)`              |
   ///
   /// `n` denotes the number of elements stored in the deque.
   public func pushFront<T>(deque : Deque<T>, element : T) : Deque<T> {
@@ -109,9 +109,9 @@ module {
   /// Deque.peekFront(deque) // => ?1
   /// ```
   ///
-  /// Runtime: `O(1)`.
-  ///
-  /// Space: `O(1)`.
+  ///| Runtime | Space |
+  ///|---------|--------|
+  ///| `O(1)`  | `O(1)` |
   ///
   public func peekFront<T>(deque : Deque<T>) : ?T {
     switch deque {
@@ -145,11 +145,9 @@ module {
   /// }
   /// ```
   ///
-  /// Runtime: `O(n)` worst-case, amortized to `O(1)`.
-  ///
-  /// Space: `O(n)` worst-case, amortized to `O(1)`.
-  ///
-  /// `n` denotes the number of elements stored in the deque.
+  ///| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+  ///|------------------|----------------------|----------------|---------------------|
+  ///| `O(n)`           | `O(1)`               | `O(n)`         | `O(1)`              |
   public func popFront<T>(deque : Deque<T>) : ?(T, Deque<T>) {
     switch deque {
       case (?(x, f), r) { ?(x, check(f, r)) };
@@ -170,9 +168,9 @@ module {
   /// Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2) // deque with elements [1, 2]
   /// ```
   ///
-  /// Runtime: `O(n)` worst-case, amortized to `O(1)`.
-  ///
-  /// Space: `O(n)` worst-case, amortized to `O(1)`.
+  ///| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+  ///|------------------|----------------------|----------------|---------------------|
+  ///| `O(n)`           | `O(1)`               | `O(n)`         | `O(1)`              |
   ///
   /// `n` denotes the number of elements stored in the deque.
   public func pushBack<T>(deque : Deque<T>, element : T) : Deque<T> {
@@ -190,9 +188,10 @@ module {
   /// Deque.peekBack(deque) // => ?2
   /// ```
   ///
-  /// Runtime: `O(1)`.
+  ///| Runtime | Space |
+  ///|---------|--------|
+  ///| `O(1)`  | `O(1)` |
   ///
-  /// Space: `O(1)`.
   ///
   public func peekBack<T>(deque : Deque<T>) : ?T {
     switch deque {
@@ -228,11 +227,9 @@ module {
   /// }
   /// ```
   ///
-  /// Runtime: `O(n)` worst-case, amortized to `O(1)`.
-  ///
-  /// Space: `O(n)` worst-case, amortized to `O(1)`.
-  ///
-  /// `n` denotes the number of elements stored in the deque.
+  ///| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+  ///|------------------|----------------------|----------------|---------------------|
+  ///| `O(n)`           | `O(1)`               | `O(n)`         | `O(1)`              |
   public func popBack<T>(deque : Deque<T>) : ?(Deque<T>, T) {
     switch deque {
       case (f, ?(x, r)) { ?(check(f, r), x) };

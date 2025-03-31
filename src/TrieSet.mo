@@ -1,11 +1,15 @@
 /// Functional set
 ///
-/// Sets are partial maps from element type to unit type,
-/// i.e., the partial map represents the set with its domain.
+///Sets are partial maps from element type to unit type,
+///i.e., the partial map represents the set with its domain.
 ///
-/// LIMITATIONS: This data structure allows at most MAX_LEAF_SIZE=8 hash collisions:
-/// attempts to insert more than MAX_LEAF_SIZE elements (whether directly via `put` or indirectly via other operations) with the same hash value will trap.
-/// This limitation is inherited from the underlying `Trie` data structure.
+///:::warning [Limitations]
+///
+///This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
+///Attempts to insert more than 8 elements with the same hash value—either directly via `put` or indirectly via other operations—will trap.
+///This limitation is inherited from the underlying `Trie` data structure.
+///:::
+///
 
 // TODO-Matthew:
 // ---------------
@@ -80,32 +84,32 @@ module {
   public func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     if (Trie.size(s1) != Trie.size(s2)) return false;
     for (k in keys(s1)) {
-      if (Trie.find<T,()>(s2, k, eq) == null) {
-        return false;
+      if (Trie.find<T, ()>(s2, k, eq) == null) {
+        return false
       }
     };
-    return true;
+    return true
   };
 
   /// The number of set elements, set's cardinality.
   public func size<T>(s : Set<T>) : Nat {
-    Trie.size(s);
+    Trie.size(s)
   };
 
   /// Test if `s` is the empty set.
   public func isEmpty<T>(s : Set<T>) : Bool {
-    Trie.size(s) == 0;
+    Trie.size(s) == 0
   };
 
   /// Test if `s1` is a subset of `s2`.
   public func isSubset<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     if (Trie.size(s1) > Trie.size(s2)) return false;
     for (k in keys(s1)) {
-      if (Trie.find<T,()>(s2, k, eq) == null) {
-        return false;
+      if (Trie.find<T, ()>(s2, k, eq) == null) {
+        return false
       }
     };
-    return true;
+    return true
   };
 
   /// @deprecated: use `TrieSet.contains()`

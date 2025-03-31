@@ -1,30 +1,31 @@
-/// A module for obtaining randomness on the Internet Computer (IC).
+///A module for obtaining randomness on the Internet Computer (IC).
 ///
-/// This module provides the fundamentals for user abstractions to build on.
+///This module provides the fundamentals for user abstractions to build on.
 ///
-/// Dealing with randomness on a deterministic computing platform, such
-/// as the IC, is intricate. Some basic rules need to be followed by the
-/// user of this module to obtain (and maintain) the benefits of crypto-
-/// graphic randomness:
+///Dealing with randomness on a deterministic computing platform, such
+///as the IC, is intricate. Some basic rules need to be followed by the
+///user of this module to obtain (and maintain) the benefits of crypto-
+///graphic randomness:
 ///
-/// - cryptographic entropy (randomness source) is only obtainable
-///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
-/// - all bets must be closed *before* entropy is being asked for in
-///   order to decide them
-/// - this implies that the same entropy (i.e. `Blob`) - or surplus entropy
-///   not utilised yet - cannot be used for a new round of bets without
-///   losing the cryptographic guarantees.
+///- cryptographic entropy (randomness source) is only obtainable
+///  asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
+///- all bets must be closed *before* entropy is being asked for in
+///  order to decide them
+///- this implies that the same entropy (i.e. `Blob`) - or surplus entropy
+///  not utilised yet - cannot be used for a new round of bets without
+///  losing the cryptographic guarantees.
 ///
-/// Concretely, the below class `Finite`, as well as the
-/// `*From` methods risk the carrying-over of state from previous rounds.
-/// These are provided for performance (and convenience) reasons, and need
-/// special care when used. Similar caveats apply for user-defined (pseudo)
-/// random number generators.
+///Concretely, the below class `Finite`, as well as the
+///`*From` methods risk the carrying-over of state from previous rounds.
+///These are provided for performance (and convenience) reasons, and need
+///special care when used. Similar caveats apply for user-defined (pseudo)
+///random number generators.
 ///
-/// Usage:
-/// ```motoko no-repl
-/// import Random "mo:base/Random";
-/// ```
+///Usage:
+///
+///```motoko no-repl
+///import Random "mo:base/Random";
+///```
 
 import I "Iter";
 import Option "Option";
@@ -124,8 +125,7 @@ module {
       for (i in it) {
         if (8 : Nat8 <= pp) {
           acc := acc * 256 + Prim.nat8ToNat(i)
-        }
-        else if (0 : Nat8 == pp) {
+        } else if (0 : Nat8 == pp) {
           return ?acc
         } else {
           acc *= Prim.nat8ToNat(1 << pp);
@@ -134,9 +134,7 @@ module {
         };
         pp -= 8
       };
-      if (0 : Nat8 == pp)
-        ?acc
-      else null
+      if (0 : Nat8 == pp) ?acc else null
     };
 
     /// Counts the number of heads in `n` fair coin tosses.
@@ -163,9 +161,7 @@ module {
         };
         nn -= 8
       };
-      if (0 : Nat8 == nn)
-        ?acc
-      else null
+      if (0 : Nat8 == nn) ?acc else null
     }
   };
 
@@ -229,8 +225,7 @@ module {
     };
     if (0 : Nat8 == pp) {
       return acc
-    }
-    else Prim.trap("Random.rangeFrom")
+    } else Prim.trap("Random.rangeFrom")
   };
 
   /// Counts the number of heads in `n` coin tosses.
@@ -263,8 +258,7 @@ module {
     };
     if (0 : Nat8 == nn) {
       return acc
-    }
-    else Prim.trap("Random.binomialFrom")
+    } else Prim.trap("Random.binomialFrom")
   }
 
 }

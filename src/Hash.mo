@@ -22,8 +22,10 @@ module {
     ha == hb
   };
 
-  /// Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
-  /// @deprecated For large `Nat` values consider using a bespoke hash function that considers all of the argument's bits.
+  ///:::warning [Deprecated function]
+  ///This function computes a hash from the least significant 32 bits of `n`, ignoring other bits.
+  ///For large `Nat` values, consider using a bespoke hash function that considers all of the argument's bits.
+  ///:::
   public func hash(n : Nat) : Hash {
     let j = Prim.intToNat32Wrap(n);
     hashNat8([
@@ -34,7 +36,10 @@ module {
     ])
   };
 
-  /// @deprecated This function will be removed in future.
+  //:::warning [Deprecated function]
+
+  ///This function will be removed in a future version.
+  ///:::
   public func debugPrintBits(bits : Hash) {
     for (j in Iter.range(0, length - 1)) {
       if (bit(bits, j)) {
@@ -45,7 +50,10 @@ module {
     }
   };
 
-  /// @deprecated This function will be removed in future.
+  ///:::warning [Deprecated function]
+
+  ///This function will be removed in a future version.
+  ///:::
   public func debugPrintBitsRev(bits : Hash) {
     for (j in Iter.revRange(length - 1, 0)) {
       if (bit(bits, Prim.abs(j))) {
@@ -60,12 +68,14 @@ module {
   ///
   /// https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
   ///
-  /// The input type should actually be `[Nat8]`.
-  /// Note: Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and to shift into lower 8 bits.
+  ///:::note
+  ///The input type should actually be `[Nat8]`.
+  ///Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and shift into the lower 8 bits.
+  ///:::
+  ///:::warning [Deprecated function]
 
-  // should this really be public?
-  // NB: Int.mo contains a local copy of hashNat8 (redefined to suppress the deprecation warning).
-  /// @deprecated This function may be removed or changed in future.
+  ///This function may be removed or changed in a future version.
+  ///:::
   public func hashNat8(key : [Hash]) : Hash {
     var hash : Nat32 = 0;
     for (natOfKey in key.vals()) {

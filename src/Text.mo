@@ -17,8 +17,9 @@
 /// import Text "mo:base/Text";
 /// ```
 ///
-/// Note: `Text` values are represented as ropes of UTF-8 character sequences with O(1) concatenation.
-///
+/// :::note
+/// `Text` values are represented as ropes of UTF-8 character sequences with O(1) concatenation.
+///:::
 
 import Char "Char";
 import Iter "Iter";
@@ -97,8 +98,8 @@ module {
       func _ {
         switch (cs.next()) {
           case (?c) { c };
-          case null { Prim.trap("Text.toArray") };
-        };
+          case null { Prim.trap("Text.toArray") }
+        }
       }
     )
   };
@@ -116,13 +117,13 @@ module {
   public func toVarArray(t : Text) : [var Char] {
     let n = t.size();
     if (n == 0) {
-      return [var];
+      return [var]
     };
     let array = Prim.Array_init<Char>(n, ' ');
     var i = 0;
     for (c in t.chars()) {
       array[i] := c;
-      i += 1;
+      i += 1
     };
     array
   };
@@ -163,7 +164,7 @@ module {
   public func toList(t : Text) : List.List<Char> {
     var acc : List.List<Char> = null;
     for (c in t.chars()) {
-        acc := ?(c, acc)
+      acc := ?(c, acc)
     };
     List.reverse acc
   };
@@ -461,7 +462,7 @@ module {
   };
 
   /// Splits the input `Text` with the specified `Pattern`.
-  /// 
+  ///
   /// Two fields are separated by exactly one match.
   ///
   /// ```motoko include=import
@@ -858,18 +859,20 @@ module {
   public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
 
   /// Returns the text argument in lowercase.
-  /// WARNING: Unicode compliant only when compiled, not interpreted.
-  ///
+  /// :::warning [Compliance]
+  /// Unicode compliant only when compiled, not interpreted.
+  ///:::
   /// ```motoko include=import
   /// let text = Text.toLowercase("Good Day"); // ?"good day"
   /// ```
   public let toLowercase : Text -> Text = Prim.textLowercase;
 
   /// Returns the text argument in uppercase. Unicode compliant.
-  /// WARNING: Unicode compliant only when compiled, not interpreted.
+  /// :::warning [Compliance]
+  /// Unicode compliant only when compiled, not interpreted.
   ///
   /// ```motoko include=import
   /// let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
   /// ```
-  public let toUppercase : Text -> Text = Prim.textUppercase;
+  public let toUppercase : Text -> Text = Prim.textUppercase
 }

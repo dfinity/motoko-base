@@ -1,22 +1,35 @@
-/// Stable ordered set implemented as a red-black tree.
+///Stable ordered set implemented as a red-black tree.
 ///
-/// A red-black tree is a balanced binary search tree ordered by the elements.
+///A red-black tree is a balanced binary search tree ordered by the elements.
 ///
-/// The tree data structure internally colors each of its nodes either red or black,
-/// and uses this information to balance the tree during the modifying operations.
+///The tree data structure internally colors each of its nodes either red or black,
+///and uses this information to balance the tree during the modifying operations.
 ///
-/// Performance:
-/// * Runtime: `O(log(n))` worst case cost per insertion, removal, and retrieval operation.
-/// * Space: `O(n)` for storing the entire tree.
-/// `n` denotes the number of elements (i.e. nodes) stored in the tree.
+///| Runtime   | Space |
+///|----------|------------|
+///| `O(log(n))` (worst case per insertion, removal, or retrieval)  | `O(n)` (for storing the entire tree) |
 ///
-/// Credits:
+///`n` denotes the number of key-value entries (i.e. nodes) stored in the tree.
 ///
-/// The core of this implementation is derived from:
+///:::note [Garbage collection]
 ///
-/// * Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
-/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
-
+///Unless stated otherwise, operations that iterate over or modify the map (such as insertion, deletion, traversal, and transformation) may create temporary objects with worst-case space usage of `O(log(n))` or `O(n)`. These objects are short-lived and will be collected by the garbage collector automatically.
+///
+///:::
+///
+///:::note [Assumptions]
+///
+///Runtime and space complexity assumes that `compare`, `equal`, and other functions execute in `O(1)` time and space.
+///:::
+///
+///:::info [Credits]
+///
+///The core of this implementation is derived from:
+///
+///* Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
+///* Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
+///:::
+///
 import Debug "Debug";
 import Buffer "Buffer";
 import I "Iter";
@@ -53,11 +66,11 @@ module {
   /// actor {
   ///   let natSet = Set.Make<Nat>(Nat.compare); // : Operations<Nat>
   ///   stable var usedIds : Set.Set<Nat> = natSet.empty();
-  ///   
+  ///
   ///   public func createId(id : Nat) : async () {
   ///     usedIds := natSet.put(usedIds, id);
   ///   };
-  ///   
+  ///
   ///   public func idIsUsed(id: Nat) : async Bool {
   ///      natSet.contains(usedIds, id)
   ///   }
@@ -82,12 +95,9 @@ module {
     /// // [0, 1, 2]
     /// ```
     ///
-    /// Runtime: `O(n * log(n))`.
-    /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
+    ///| Runtime   | Space |
+    ///|----------|------------|
+    ///| `O(n * log(n))`  | `O(n)` (retained memory + garbage) |
     public func fromIter(i : I.Iter<T>) : Set<T> {
       var set = empty() : Set<T>;
       for (val in i) {
@@ -122,11 +132,10 @@ module {
     /// where `n` denotes the number of elements stored in the set and
     /// assuming that the `compare` function implements an `O(1)` comparison.
     ///
-    /// Note: The returned set shares with the `s` most of the tree nodes. 
+    /// Note: The returned set shares with the `s` most of the tree nodes.
     /// Garbage collecting one of sets (e.g. after an assignment `m := natSet.delete(m, k)`)
     /// causes collecting `O(log(n))` nodes.
-    public func put(s : Set<T>, value : T) : Set<T> 
-      = Internal.put(s, compare, value);
+    public func put(s : Set<T>, value : T) : Set<T> = Internal.put(s, compare, value);
 
     /// Deletes the value `value` from the set `s`. Has no effect if `value` is not
     /// present in the set. Returns modified set.
@@ -147,16 +156,10 @@ module {
     /// // [0, 1, 2]
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(log(n))`.
-    /// where `n` denotes the number of elements stored in the set and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: The returned set shares with the `s` most of the tree nodes. 
-    /// Garbage collecting one of sets (e.g. after an assignment `m := natSet.delete(m, k)`)
-    /// causes collecting `O(log(n))` nodes.
-    public func delete(s : Set<T>, value : T) : Set<T> 
-      = Internal.delete(s, compare, value);
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(log(n))` | `O(log(n))`   |
+    public func delete(s : Set<T>, value : T) : Set<T> = Internal.delete(s, compare, value);
 
     /// Test if the set 's' contains a given element.
     ///
@@ -174,12 +177,10 @@ module {
     /// Debug.print(debug_show natSet.contains(set, 42)); // => false
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    public func contains(s : Set<T>, value : T) : Bool 
-      = Internal.contains(s.root, compare, value);
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(log(n))` | `O(1)`   |
+    public func contains(s : Set<T>, value : T) : Bool = Internal.contains(s.root, compare, value);
 
     /// Get a maximal element of the set `s` if it is not empty, otherwise returns `null`
     ///
@@ -198,11 +199,10 @@ module {
     /// Debug.print(debug_show(natSet.max(s2))); // => null
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of elements in the set
-    public func max(s : Set<T>) : ?T
-      = Internal.max(s.root);
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(log(n))` | `O(1)`   |
+    public func max(s : Set<T>) : ?T = Internal.max(s.root);
 
     /// Get a minimal element of the set `s` if it is not empty, otherwise returns `null`
     ///
@@ -221,11 +221,10 @@ module {
     /// Debug.print(debug_show(natSet.min(s2))); // => null
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of elements in the set
-    public func min(s : Set<T>) : ?T
-      = Internal.min(s.root);
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(log(n))` | `O(log(1))`   |
+    public func min(s : Set<T>) : ?T = Internal.min(s.root);
 
     /// [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)) operation.
     ///
@@ -244,11 +243,9 @@ module {
     /// // [0, 1, 2, 3, 4]
     /// ```
     ///
-    /// Runtime: `O(m * log(n))`.
-    /// Space: `O(m)`, retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
-    ///
-    /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(m* log(n))` | `O(m)`retained + garbage   |
     public func union(s1 : Set<T>, s2 : Set<T>) : Set<T> {
       if (size(s1) < size(s2)) {
         foldLeft(s1, s2, func(acc : Set<T>, elem : T) : Set<T> { Internal.put(acc, compare, elem) })
@@ -274,25 +271,31 @@ module {
     /// // [1, 2]
     /// ```
     ///
-    /// Runtime: `O(m * log(n))`.
-    /// Space: `O(m)`, retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(m* log(n))` | `O(m)`retained + garbage   |
     ///
     /// Note: Creates `O(m)` temporary objects that will be collected as garbage.
     public func intersect(s1 : Set<T>, s2 : Set<T>) : Set<T> {
       let elems = Buffer.Buffer<T>(Nat.min(Nat.min(s1.size, s2.size), 100));
       if (s1.size < s2.size) {
-        Internal.iterate(s1.root, func (x: T) {
-          if (Internal.contains(s2.root, compare, x)) {
-            elems.add(x)
+        Internal.iterate(
+          s1.root,
+          func(x : T) {
+            if (Internal.contains(s2.root, compare, x)) {
+              elems.add(x)
+            }
           }
-        });
+        )
       } else {
-        Internal.iterate(s2.root, func (x: T) {
-          if (Internal.contains(s1.root, compare, x)) {
-            elems.add(x)
+        Internal.iterate(
+          s2.root,
+          func(x : T) {
+            if (Internal.contains(s1.root, compare, x)) {
+              elems.add(x)
+            }
           }
-        });
+        )
       };
       { root = Internal.buildFromSorted(elems); size = elems.size() }
     };
@@ -314,26 +317,29 @@ module {
     /// // [0]
     /// ```
     ///
-    /// Runtime: `O(m * log(n))`.
-    /// Space: `O(m)`, retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements in the sets, and `m <= n`.
-    ///
-    /// Note: Creates `O(m * log(n))` temporary objects that will be collected as garbage.
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(m* log(n))` | `O(m)`retained + garbage   |
     public func diff(s1 : Set<T>, s2 : Set<T>) : Set<T> {
       if (size(s1) < size(s2)) {
         let elems = Buffer.Buffer<T>(Nat.min(s1.size, 100));
-        Internal.iterate(s1.root, func (x : T) {
-            if (not Internal.contains(s2.root, compare, x)) { 
+        Internal.iterate(
+          s1.root,
+          func(x : T) {
+            if (not Internal.contains(s2.root, compare, x)) {
               elems.add(x)
             }
           }
         );
         { root = Internal.buildFromSorted(elems); size = elems.size() }
-      }
-      else {
-        foldLeft(s2, s1,
-          func (acc : Set<T>, elem : T) : Set<T> {
-            if (Internal.contains(acc.root, compare, elem)) { Internal.delete(acc, compare, elem) } else { acc }
+      } else {
+        foldLeft(
+          s2,
+          s1,
+          func(acc : Set<T>, elem : T) : Set<T> {
+            if (Internal.contains(acc.root, compare, elem)) {
+              Internal.delete(acc, compare, elem)
+            } else { acc }
           }
         )
       }
@@ -363,13 +369,10 @@ module {
     /// ```
     ///
     /// Cost of mapping all the elements:
-    /// Runtime: `O(n * log(n))`.
-    /// Space: `O(n)` retained memory
-    /// where `n` denotes the number of elements stored in the set.
-    ///
-    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
-    public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T>
-      = Internal.foldLeft(s.root, empty(), func (acc : Set<T>, elem : T1) : Set<T> { Internal.put(acc, compare, f(elem)) });
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(n* log(n))` | `O(n)`retained + garbage   |
+    public func map<T1>(s : Set<T1>, f : T1 -> T) : Set<T> = Internal.foldLeft(s.root, empty(), func(acc : Set<T>, elem : T1) : Set<T> { Internal.put(acc, compare, f(elem)) });
 
     /// Creates a new set by applying `f` to each element in the set `s`. For each element
     /// `x` in the old set, if `f` evaluates to `null`, the element is discarded.
@@ -397,12 +400,9 @@ module {
     /// // [2, 4, 6]
     /// ```
     ///
-    /// Runtime: `O(n * log(n))`.
-    /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(n* log(n))` | `O(n)`retained + garbage   |
     public func mapFilter<T1>(s : Set<T1>, f : T1 -> ?T) : Set<T> {
       func combine(acc : Set<T>, elem : T1) : Set<T> {
         switch (f(elem)) {
@@ -431,10 +431,9 @@ module {
     /// Debug.print(debug_show natSet.isSubset(set1, set2)); // => true
     /// ```
     ///
-    /// Runtime: `O(m * log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements stored in the sets set1 and set2, respectively,
-    /// and assuming that the `compare` function implements an `O(1)` comparison.
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(n* log(n))` | `O(1)`   |
     public func isSubset(s1 : Set<T>, s2 : Set<T>) : Bool {
       if (s1.size > s2.size) { return false };
       isSubsetHelper(s1.root, s2.root)
@@ -457,10 +456,9 @@ module {
     /// Debug.print(debug_show natSet.equals(set1, set2)); // => false
     /// ```
     ///
-    /// Runtime: `O(m * log(n))`.
-    /// Space: `O(1)` retained memory plus garbage, see the note below.
-    /// where `m` and `n` denote the number of elements stored in the sets set1 and set2, respectively,
-    /// and assuming that the `compare` function implements an `O(1)` comparison.
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(m * log(n))` | `O(1)`   |
     public func equals(s1 : Set<T>, s2 : Set<T>) : Bool {
       if (s1.size != s2.size) { return false };
       isSubsetHelper(s1.root, s2.root)
@@ -468,15 +466,21 @@ module {
 
     func isSubsetHelper(t1 : Tree<T>, t2 : Tree<T>) : Bool {
       switch (t1, t2) {
-        case (#leaf, _) { true  };
+        case (#leaf, _) { true };
         case (_, #leaf) { false };
         case ((#red(t1l, x1, t1r) or #black(t1l, x1, t1r)), (#red(t2l, x2, t2r)) or #black(t2l, x2, t2r)) {
           switch (compare(x1, x2)) {
-            case (#equal)   { isSubsetHelper(t1l, t2l) and isSubsetHelper(t1r, t2r) };
+            case (#equal) {
+              isSubsetHelper(t1l, t2l) and isSubsetHelper(t1r, t2r)
+            };
             // x1 < x2 ==> x1 \in t2l /\ t1l \subset t2l
-            case (#less)    { Internal.contains(t2l, compare, x1) and isSubsetHelper(t1l, t2l) and isSubsetHelper(t1r, t2) };
-            // x2 < x1 ==> x1 \in t2r /\ t1r \subset t2r  
-            case (#greater) { Internal.contains(t2r, compare, x1) and isSubsetHelper(t1l, t2) and isSubsetHelper(t1r, t2r) }
+            case (#less) {
+              Internal.contains(t2l, compare, x1) and isSubsetHelper(t1l, t2l) and isSubsetHelper(t1r, t2)
+            };
+            // x2 < x1 ==> x1 \in t2r /\ t1r \subset t2r
+            case (#greater) {
+              Internal.contains(t2r, compare, x1) and isSubsetHelper(t1l, t2) and isSubsetHelper(t1r, t2r)
+            }
           }
         }
       }
@@ -499,14 +503,11 @@ module {
     /// Debug.print(debug_show(Iter.toArray(natSet.vals(set))));
     /// // [0, 1, 2]
     /// ```
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set.
-    ///
-    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func vals(s : Set<T>) : I.Iter<T> 
-      = Internal.iter(s.root, #fwd);
+
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(n)` | `O(log(n))` retained + garbage  |
+    public func vals(s : Set<T>) : I.Iter<T> = Internal.iter(s.root, #fwd);
 
     /// Same as `vals()` but iterates over elements of the set `s` in the descending order.
     ///
@@ -523,14 +524,11 @@ module {
     /// Debug.print(debug_show(Iter.toArray(natSet.valsRev(set))));
     /// // [2, 1, 0]
     /// ```
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set.
-    ///
-    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func valsRev(s : Set<T>) : I.Iter<T>
-      = Internal.iter(s.root, #bwd);
+
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(n)` | `O(log(n))` retained + garbage  |
+    public func valsRev(s : Set<T>) : I.Iter<T> = Internal.iter(s.root, #bwd);
 
     /// Create a new empty Set.
     ///
@@ -539,18 +537,17 @@ module {
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
-    /// 
+    ///
     /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.empty();
-    /// 
+    ///
     /// Debug.print(debug_show(natSet.size(set))); // => 0
     /// ```
     ///
     /// Cost of empty set creation
     /// Runtime: `O(1)`.
     /// Space: `O(1)`
-    public func empty() : Set<T> 
-      = { root = #leaf; size = 0};
+    public func empty() : Set<T> = { root = #leaf; size = 0 };
 
     /// Returns the number of elements in the set.
     ///
@@ -567,10 +564,10 @@ module {
     /// Debug.print(debug_show(natSet.size(set))); // => 3
     /// ```
     ///
-    /// Runtime: `O(1)`.
-    /// Space: `O(1)`.
-    public func size(s : Set<T>) : Nat
-      = s.size;
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(1)` | `O(1)` |
+    public func size(s : Set<T>) : Nat = s.size;
 
     /// Collapses the elements in `set` into a single value by starting with `base`
     /// and progessively combining elements into `base` with `combine`. Iteration runs
@@ -592,18 +589,15 @@ module {
     /// // 3
     /// ```
     ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: depends on `combine` function plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set.
-    ///
-    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | Depends on `combine` + `O(n)` garbage |
     public func foldLeft<Accum>(
       set : Set<T>,
       base : Accum,
       combine : (Accum, T) -> Accum
-    ) : Accum
-      = Internal.foldLeft(set.root, base, combine);
+    ) : Accum = Internal.foldLeft(set.root, base, combine);
 
     /// Collapses the elements in `set` into a single value by starting with `base`
     /// and progessively combining elements into `base` with `combine`. Iteration runs
@@ -625,18 +619,15 @@ module {
     /// // 3
     /// ```
     ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: depends on `combine` function plus garbage, see the note below.
-    /// where `n` denotes the number of elements stored in the set.
-    ///
-    /// Note: Full set iteration creates `O(n)` temporary objects that will be collected as garbage.
+
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | Depends on `combine` + `O(n)` garbage |
     public func foldRight<Accum>(
       set : Set<T>,
       base : Accum,
       combine : (T, Accum) -> Accum
-    ) : Accum
-      = Internal.foldRight(set.root, base, combine);
+    ) : Accum = Internal.foldRight(set.root, base, combine);
 
     /// Test if the given set `s` is empty.
     ///
@@ -645,10 +636,10 @@ module {
     /// import Set "mo:base/OrderedSet";
     /// import Nat "mo:base/Nat";
     /// import Debug "mo:base/Debug";
-    /// 
+    ///
     /// let natSet = Set.Make<Nat>(Nat.compare);
     /// let set = natSet.empty();
-    /// 
+    ///
     /// Debug.print(debug_show(natSet.isEmpty(set))); // => true
     /// ```
     ///
@@ -679,11 +670,10 @@ module {
     /// // false
     /// ```
     ///
-    /// Runtime: `O(n)`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of elements stored in the set.
-    public func all(s : Set<T>, pred : T -> Bool) : Bool
-      = Internal.all(s.root, pred);
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | `O(n)` |
+    public func all(s : Set<T>, pred : T -> Bool) : Bool = Internal.all(s.root, pred);
 
     /// Test if there exists an element in the set `s` satisfying the given predicate `pred`.
     ///
@@ -703,16 +693,15 @@ module {
     /// // true
     /// ```
     ///
-    /// Runtime: `O(n)`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of elements stored in the set.
-    public func some(s : Set<T>, pred : (T) -> Bool) : Bool
-      = Internal.some(s.root, pred);
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | `O(1)` |
+    public func some(s : Set<T>, pred : (T) -> Bool) : Bool = Internal.some(s.root, pred);
 
-    /// Test helper that check internal invariant for the given set `s`. 
+    /// Test helper that check internal invariant for the given set `s`.
     /// Raise an error (for a stack trace) if invariants are violated.
-    public func validate(s : Set<T>): () {
-      Internal.validate(s, compare);
+    public func validate(s : Set<T>) : () {
+      Internal.validate(s, compare)
     }
   };
 
@@ -743,32 +732,32 @@ module {
     public func max<V>(m : Tree<V>) : ?V {
       func rightmost(m : Tree<V>) : V {
         switch m {
-          case (#red(_, v, #leaf))   { v };
-          case (#red(_, _, r))       { rightmost(r) };
+          case (#red(_, v, #leaf)) { v };
+          case (#red(_, _, r)) { rightmost(r) };
           case (#black(_, v, #leaf)) { v };
-          case (#black(_, _, r))     { rightmost(r) };
-          case (#leaf)               { Debug.trap "OrderedSet.impossible" }
+          case (#black(_, _, r)) { rightmost(r) };
+          case (#leaf) { Debug.trap "OrderedSet.impossible" }
         }
       };
       switch m {
         case (#leaf) { null };
-        case (_)     { ?rightmost(m) }
+        case (_) { ?rightmost(m) }
       }
     };
 
     public func min<V>(m : Tree<V>) : ?V {
       func leftmost(m : Tree<V>) : V {
         switch m {
-          case (#red(#leaf, v, _))   { v };
-          case (#red(l, _, _))       { leftmost(l) };
+          case (#red(#leaf, v, _)) { v };
+          case (#red(l, _, _)) { leftmost(l) };
           case (#black(#leaf, v, _)) { v };
-          case (#black(l, _, _))     { leftmost(l)};
-          case (#leaf)               { Debug.trap "OrderedSet.impossible" }
+          case (#black(l, _, _)) { leftmost(l) };
+          case (#leaf) { Debug.trap "OrderedSet.impossible" }
         }
       };
       switch m {
         case (#leaf) { null };
-        case (_)     { ?leftmost(m) }
+        case (_) { ?leftmost(m) }
       }
     };
 
@@ -798,9 +787,9 @@ module {
 
     public func iterate<V>(m : Tree<V>, f : V -> ()) {
       switch m {
-        case (#leaf) { };
+        case (#leaf) {};
         case (#black(l, v, r)) { iterate(l, f); f(v); iterate(r, f) };
-        case (#red(l, v, r))   { iterate(l, f); f(v); iterate(r, f) }
+        case (#red(l, v, r)) { iterate(l, f); f(v); iterate(r, f) }
       }
     };
 
@@ -810,28 +799,28 @@ module {
       var maxSize = 1;
       while (maxSize < buf.size()) {
         maxDepth += 1;
-        maxSize += maxSize + 1;
+        maxSize += maxSize + 1
       };
-      maxDepth := if (maxDepth == 0) {1} else {maxDepth}; // keep root black for 1 element tree
+      maxDepth := if (maxDepth == 0) { 1 } else { maxDepth }; // keep root black for 1 element tree
       func buildFromSortedHelper(l : Nat, r : Nat, depth : Nat) : Tree<V> {
         if (l + 1 == r) {
           if (depth == maxDepth) {
-            return #red(#leaf, buf.get(l), #leaf);
+            return #red(#leaf, buf.get(l), #leaf)
           } else {
-            return #black(#leaf, buf.get(l), #leaf);
+            return #black(#leaf, buf.get(l), #leaf)
           }
         };
         if (l >= r) {
-          return #leaf;
+          return #leaf
         };
         let m = (l + r) / 2;
         return #black(
-                  buildFromSortedHelper(l, m, depth+1), 
-                  buf.get(m), 
-                  buildFromSortedHelper(m+1, r, depth+1)
-                )
+          buildFromSortedHelper(l, m, depth +1),
+          buf.get(m),
+          buildFromSortedHelper(m +1, r, depth +1)
+        )
       };
-      buildFromSortedHelper(0, buf.size(), 0);
+      buildFromSortedHelper(0, buf.size(), 0)
     };
 
     type IterRep<T> = List.List<{ #tr : Tree<T>; #x : T }>;
@@ -863,12 +852,14 @@ module {
       }
     };
 
-    public func iter<T>(s : Tree<T>, direction : {#fwd; #bwd}) : I.Iter<T> {
-      let turnLeftFirst : SetTraverser<T>
-      = func (l, x, r, ts) { ?(#tr(l), ?(#x(x), ?(#tr(r), ts))) };
+    public func iter<T>(s : Tree<T>, direction : { #fwd; #bwd }) : I.Iter<T> {
+      let turnLeftFirst : SetTraverser<T> = func(l, x, r, ts) {
+        ?(#tr(l), ?(#x(x), ?(#tr(r), ts)))
+      };
 
-      let turnRightFirst : SetTraverser<T>
-      = func (l, x, r, ts) { ?(#tr(r), ?(#x(x), ?(#tr(l), ts))) };
+      let turnRightFirst : SetTraverser<T> = func(l, x, r, ts) {
+        ?(#tr(r), ?(#x(x), ?(#tr(l), ts)))
+      };
 
       switch direction {
         case (#fwd) IterSet(s, turnLeftFirst);
@@ -918,9 +909,7 @@ module {
 
     func redden<T>(t : Tree<T>) : Tree<T> {
       switch t {
-        case (#black(l, x, r)) {
-          (#red (l, x, r))
-        };
+        case (#black(l, x, r)) { (#red(l, x, r)) };
         case _ {
           Debug.trap "OrderedSet.red"
         }
@@ -1017,8 +1006,10 @@ module {
         };
         case other { other }
       };
-      { root = newRoot; 
-        size = if newNodeIsCreated { s.size + 1 } else { s.size } }
+      {
+        root = newRoot;
+        size = if newNodeIsCreated { s.size + 1 } else { s.size }
+      }
     };
 
     func balLeft<T>(left : Tree<T>, x : T, right : Tree<T>) : Tree<T> {
@@ -1158,8 +1149,10 @@ module {
         };
         case other { other }
       };
-      { root = newRoot;
-        size = if changed { s.size -1 } else { s.size } }
+      {
+        root = newRoot;
+        size = if changed { s.size -1 } else { s.size }
+      }
     };
 
     // check binary search tree order of elements and black depth invariant of the RB-tree
@@ -1169,8 +1162,8 @@ module {
 
     func blackDepth<T>(node : Tree<T>, comp : (T, T) -> O.Order) : Nat {
       func checkNode(left : Tree<T>, x1 : T, right : Tree<T>) : Nat {
-        checkElem(left,  func(x: T) : Bool { comp(x, x1) == #less });
-        checkElem(right, func(x: T) : Bool { comp(x, x1) == #greater });
+        checkElem(left, func(x : T) : Bool { comp(x, x1) == #less });
+        checkElem(right, func(x : T) : Bool { comp(x, x1) == #greater });
         let leftBlacks = blackDepth(left, comp);
         let rightBlacks = blackDepth(right, comp);
         assert (leftBlacks == rightBlacks);
@@ -1209,7 +1202,7 @@ module {
     }
   };
 
-  /// Create `OrderedSet.Operations` object capturing element type `T` and `compare` function. 
+  /// Create `OrderedSet.Operations` object capturing element type `T` and `compare` function.
   /// It is an alias for the `Operations` constructor.
   ///
   /// Example:

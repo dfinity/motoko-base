@@ -210,7 +210,7 @@ module {
   /// On the IC, a common convention is to use `#Ok` and `#Err` as the variants of a result type,
   /// but in Motoko, we use `#ok` and `#err` instead.
   public func fromUpper<Ok, Err>(
-    result : { #Ok: Ok; #Err: Err }
+    result : { #Ok : Ok; #Err : Err }
   ) : Result<Ok, Err> {
     switch result {
       case (#Ok(ok)) { #ok(ok) };
@@ -223,7 +223,7 @@ module {
   /// but in Motoko, we use `#ok` and `#err` instead.
   public func toUpper<Ok, Err>(
     result : Result<Ok, Err>
-  ) : { #Ok: Ok; #Err: Err } {
+  ) : { #Ok : Ok; #Err : Err } {
     switch result {
       case (#ok(ok)) { #Ok(ok) };
       case (#err(err)) { #Err(err) }

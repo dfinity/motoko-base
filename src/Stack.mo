@@ -8,9 +8,9 @@
 ///
 /// let stack = Stack.Stack<Nat>(); // create a stack
 /// ```
-/// Runtime: O(1)
-///
-/// Space: O(1)
+///| Runtime   | Space     |
+///|-----------|-----------|
+///| `O(1)` | `O(1)` |
 
 import List "List";
 
@@ -29,10 +29,9 @@ module {
     /// stack.push(3);
     /// stack.peek(); // examine the top most element
     /// ```
-    ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)` | `O(1)` |
     public func push(x : T) {
       stack := ?(x, stack)
     };
@@ -44,9 +43,9 @@ module {
     /// stack.isEmpty();
     /// ```
     ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)` | `O(1)` |
     public func isEmpty() : Bool {
       List.isNil<T>(stack)
     };
@@ -61,9 +60,9 @@ module {
     /// stack.peek();
     /// ```
     ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)` | `O(1)` |
     public func peek() : ?T {
       switch stack {
         case null { null };
@@ -80,9 +79,9 @@ module {
     /// stack.isEmpty();
     /// ```
     ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)` | `O(1)` |
     public func pop() : ?T {
       switch stack {
         case null { null };

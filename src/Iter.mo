@@ -171,17 +171,17 @@ module {
     object {
       public func next() : ?A {
         if (aEnded) {
-          return b.next();
+          return b.next()
         };
         switch (a.next()) {
           case (?x) ?x;
           case (null) {
             aEnded := true;
-            b.next();
-          };
-        };
-      };
-    };
+            b.next()
+          }
+        }
+      }
+    }
   };
 
   /// Creates an iterator that produces the elements of an Array in ascending index order.

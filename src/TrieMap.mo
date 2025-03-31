@@ -1,27 +1,42 @@
-/// Class `TrieMap<K, V>` provides a map from keys of type `K` to values of type `V`.
-/// The class wraps and manipulates an underyling hash trie, found in the `Trie`
-/// module. The trie is a binary tree in which the position of elements in the
-/// tree are determined using the hash of the elements.
+///Class `TrieMap<K, V>` provides a map from keys of type `K` to values of type `V`.
+///The class wraps and manipulates an underlying hash trie, found in the `Trie` module.
+///The trie is a binary tree where element positions are determined using the hash of the keys.
 ///
-/// LIMITATIONS: This data structure allows at most MAX_LEAF_SIZE=8 hash collisions:
-/// attempts to insert more than MAX_LEAF_SIZE keys (whether directly via `put` or indirectly via other operations) with the same hash value will trap.
-/// This limitation is inherited from the underlying `Trie` data structure.
+///:::warning [Limitations]
 ///
+///This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
+///Attempts to insert more than 8 keys (whether directly via `put` or indirectly via other operations) with the same hash value will trap.
+///This limitation is inherited from the underlying `Trie` data structure.
+///:::
 ///
-/// Note: The `class` `TrieMap` exposes the same interface as `HashMap`.
+///:::note [Interface compatibility]
 ///
-/// Creating a map:
-/// The equality function is used to compare keys, and the hash function is used
-/// to hash keys. See the example below.
+///The `class` `TrieMap` exposes the same interface as `HashMap`.
+///:::
 ///
-/// ```motoko name=initialize
-/// import TrieMap "mo:base/TrieMap";
-/// import Nat "mo:base/Nat";
-/// import Hash "mo:base/Hash";
-/// import Iter "mo:base/Iter";
+///:::note [Assumptions]
 ///
-/// let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash)
-/// ```
+///Runtime and space complexity assumes that `hash`, `equal`, and other function parameters execute in `O(1)` time and space.
+///Where applicable, runtimes also assume the trie is reasonably balanced.
+///:::
+///
+///:::note [Iterator performance]
+///
+///All iterator-related runtime and space costs refer to iterator construction.
+///The iteration itself takes linear time and logarithmic space to execute.
+///:::
+///
+///Creating a map:
+///The equality function is used to compare keys, and the hash function is used to hash keys. See the example below.
+///
+///```motoko name=initialize
+///import TrieMap "mo:base/TrieMap";
+///import Nat "mo:base/Nat";
+///import Hash "mo:base/Hash";
+///import Iter "mo:base/Iter";
+///
+///let map = TrieMap.TrieMap<Nat, Nat>(Nat.equal, Hash.hash)
+///```
 
 import T "Trie";
 import P "Prelude";
@@ -41,8 +56,9 @@ module {
     /// map.size()
     /// ```
     ///
-    /// Runtime: O(1)
-    /// Space: O(1)
+    ///| Runtime        | Space         |
+    ///|----------------|---------------|
+    ///| `O(1)`   | `O(log(1))`  |
     public func size() : Nat { _size };
 
     /// Maps `key` to `value`, and overwrites the old entry if the key
@@ -55,11 +71,9 @@ module {
     /// Iter.toArray(map.entries())
     /// ```
     ///
-    /// Runtime: O(log(size))
-    /// Space: O(log(size))
-    ///
-    /// *Runtime and space assumes that the trie is reasonably balanced and the
-    /// map is using a constant time and space equality and hash function.
+    ///| Runtime        | Space         |
+    ///|----------------|---------------|
+    ///| `O(log(size))`   | `O(log(size))`  |
     public func put(key : K, value : V) = ignore replace(key, value);
 
     /// Maps `key` to `value`. Overwrites _and_ returns the old entry as an
@@ -71,11 +85,9 @@ module {
     /// map.replace(0, 20)
     /// ```
     ///
-    /// Runtime: O(log(size))
-    /// Space: O(log(size))
-    ///
-    /// *Runtime and space assumes that the trie is reasonably balanced and the
-    /// map is using a constant time and space equality and hash function.
+    ///| Runtime        | Space         |
+    ///|----------------|---------------|
+    ///| `O(log(size))`   | `O(log(size))`  |
     public func replace(key : K, value : V) : ?V {
       let keyObj = { key; hash = hashOf(key) };
       let (map2, ov) = T.put<K, V>(map, keyObj, isEq, value);
@@ -96,11 +108,9 @@ module {
     /// map.get(0)
     /// ```
     ///
-    /// Runtime: O(log(size))
-    /// Space: O(log(size))
-    ///
-    /// *Runtime and space assumes that the trie is reasonably balanced and the
-    /// map is using a constant time and space equality and hash function.
+    ///| Runtime        | Space         |
+    ///|----------------|---------------|
+    ///| `O(log(size))`   | `O(log(size))`  |
     public func get(key : K) : ?V {
       let keyObj = { key; hash = hashOf(key) };
       T.find<K, V>(map, keyObj, isEq)
@@ -118,11 +128,9 @@ module {
     /// map.get(0)
     /// ```
     ///
-    /// Runtime: O(log(size))
-    /// Space: O(log(size))
-    ///
-    /// *Runtime and space assumes that the trie is reasonably balanced and the
-    /// map is using a constant time and space equality and hash function.
+    ///| Runtime        | Space         |
+    ///|----------------|---------------|
+    ///| `O(log(size))`   | `O(log(size))`  |
     public func delete(key : K) = ignore remove(key);
 
     /// Delete the entry associated with key `key`. Return the deleted value
@@ -136,11 +144,9 @@ module {
     /// map.remove(0)
     /// ```
     ///
-    /// Runtime: O(log(size))
-    /// Space: O(log(size))
-    ///
-    /// *Runtime and space assumes that the trie is reasonably balanced and the
-    /// map is using a constant time and space equality and hash function.
+    ///| Runtime        | Space         |
+    ///|----------------|---------------|
+    ///| `O(log(size))`   | `O(log(size))`  |
     public func remove(key : K) : ?V {
       let keyObj = { key; hash = hashOf(key) };
       let (t, ov) = T.remove<K, V>(map, keyObj, isEq);
@@ -172,11 +178,9 @@ module {
     /// sum
     /// ```
     ///
-    /// Runtime: O(1)
-    /// Space: O(1)
-    ///
-    /// *The above runtime and space are for the construction of the iterator.
-    /// The iteration itself takes linear time and logarithmic space to execute.
+    ///| Runtime | Space |
+    ///|---------|--------|
+    ///| `O(1)`    | `O(1)`   |
     public func keys() : I.Iter<K> {
       I.map(entries(), func(kv : (K, V)) : K { kv.0 })
     };
@@ -201,11 +205,9 @@ module {
     /// sum
     /// ```
     ///
-    /// Runtime: O(1)
-    /// Space: O(1)
-    ///
-    /// *The above runtime and space are for the construction of the iterator.
-    /// The iteration itself takes linear time and logarithmic space to execute.
+    ///| Runtime | Space |
+    ///|---------|--------|
+    ///| `O(1)`   | `O(1)`  |
     public func vals() : I.Iter<V> {
       I.map(entries(), func(kv : (K, V)) : V { kv.1 })
     };
@@ -230,11 +232,9 @@ module {
     /// sum
     /// ```
     ///
-    /// Runtime: O(1)
-    /// Space: O(1)
-    ///
-    /// *The above runtime and space are for the construction of the iterator.
-    /// The iteration itself takes linear time and logarithmic space to execute.
+    ///| Runtime | Space |
+    ///|---------|--------|
+    ///| `O(1)`    | `O(1)`   |
     public func entries() : I.Iter<(K, V)> {
       object {
         var stack = ?(map, null) : List.List<T.Trie<K, V>>;
@@ -280,11 +280,9 @@ module {
   /// Iter.toArray(mapCopy.entries())
   /// ```
   ///
-  /// Runtime: O(size * log(size))
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that the trie underlying `map` is reasonably
-  /// balanced and that `keyEq` and `keyHash` run in O(1) time and space.
+  ///| Runtime             | Space    |
+  ///|---------------------|----------|
+  ///| `O(size * log(size))` | `O(size)`  |
   public func clone<K, V>(
     map : TrieMap<K, V>,
     keyEq : (K, K) -> Bool,
@@ -307,11 +305,9 @@ module {
   /// newMap.get(2)
   /// ```
   ///
-  /// Runtime: O(size * log(size))
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `entries` returns elements in O(1) time,
-  /// and `keyEq` and `keyHash` run in O(1) time and space.
+  ///| Runtime             | Space    |
+  ///|---------------------|----------|
+  ///| `O(size * log(size))` | `O(size)`  |
   public func fromEntries<K, V>(
     entries : I.Iter<(K, V)>,
     keyEq : (K, K) -> Bool,
@@ -337,10 +333,9 @@ module {
   /// Iter.toArray(newMap.entries())
   /// ```
   ///
-  /// Runtime: O(size * log(size))
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f`, `keyEq`, and `keyHash` run in O(1)
+  ///| Runtime             | Space    |
+  ///|---------------------|----------|
+  ///| `O(size * log(size))` | `O(size)`  |
   /// time and space.
   public func map<K, V1, V2>(
     map : TrieMap<K, V1>,
@@ -376,11 +371,9 @@ module {
   /// Iter.toArray(newMap.entries())
   /// ```
   ///
-  /// Runtime: O(size * log(size))
-  /// Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f`, `keyEq`, and `keyHash` run in O(1)
-  /// time and space.
+  ///| Runtime             | Space    |
+  ///|---------------------|----------|
+  ///| `O(size * log(size))` | `O(size)`
   public func mapFilter<K, V1, V2>(
     map : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,

@@ -1,11 +1,21 @@
-/// Provides utility functions on 64-bit unsigned integers.
+///Provides utility functions on 64-bit unsigned integers.
 ///
-/// Note that most operations are available as built-in operators (e.g. `1 + 1`).
+///:::note
+///Most operations on integer numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+///This module provides equivalent functions and `Text` conversion.
+///:::
 ///
-/// Import from the base library to use this module.
-/// ```motoko name=import
-/// import Nat64 "mo:base/Nat64";
-/// ```
+///:::info [Function form for higher-order use]
+///
+///Several arithmetic and comparison functions (e.g. `add`, `sub`, `equal`, `less`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
+///:::
+///
+///Import from the base library to use this module.
+///
+///```motoko name=import
+///import Nat64 "mo:base/Nat64";
+///```
+///
 import Nat "Nat";
 import Prim "mo:⛔";
 
@@ -113,10 +123,7 @@ module {
   /// (1 : Nat64) == (1 : Nat64) // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `==`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -137,10 +144,7 @@ module {
   /// (1 : Nat64) != (2 : Nat64) // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `!=`
-  /// as a function value at the moment.
+
   public func notEqual(x : Nat64, y : Nat64) : Bool { x != y };
 
   /// "Less than" function for Nat64 types.
@@ -152,10 +156,7 @@ module {
   /// (1 : Nat64) < (2 : Nat64) // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<`
-  /// as a function value at the moment.
+
   public func less(x : Nat64, y : Nat64) : Bool { x < y };
 
   /// "Less than or equal" function for Nat64 types.
@@ -167,10 +168,7 @@ module {
   /// (1 : Nat64) <= (2 : Nat64) // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<=`
-  /// as a function value at the moment.
+
   public func lessOrEqual(x : Nat64, y : Nat64) : Bool { x <= y };
 
   /// "Greater than" function for Nat64 types.
@@ -182,10 +180,7 @@ module {
   /// (2 : Nat64) > (1 : Nat64) // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>`
-  /// as a function value at the moment.
+
   public func greater(x : Nat64, y : Nat64) : Bool { x > y };
 
   /// "Greater than or equal" function for Nat64 types.
@@ -197,10 +192,7 @@ module {
   /// (2 : Nat64) >= (1 : Nat64) // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>=`
-  /// as a function value at the moment.
+
   public func greaterOrEqual(x : Nat64, y : Nat64) : Bool { x >= y };
 
   /// General purpose comparison function for `Nat64`. Returns the `Order` (
@@ -231,10 +223,7 @@ module {
   /// (1 : Nat64) + (2 : Nat64) // => 3
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -252,10 +241,7 @@ module {
   /// (3 : Nat64) - (1 : Nat64) // => 2
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -273,10 +259,7 @@ module {
   /// (2 : Nat64) * (3 : Nat64) // => 6
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -294,10 +277,7 @@ module {
   /// (6 : Nat64) / (2 : Nat64) // => 3
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `/` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `/`
-  /// as a function value at the moment.
+
   public func div(x : Nat64, y : Nat64) : Nat64 { x / y };
 
   /// Returns the remainder of `x` divided by `y`, `x % y`.
@@ -309,10 +289,7 @@ module {
   /// (6 : Nat64) % (4 : Nat64) // => 2
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `%`
-  /// as a function value at the moment.
+
   public func rem(x : Nat64, y : Nat64) : Nat64 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
@@ -323,10 +300,7 @@ module {
   /// (2 : Nat64) ** (3 : Nat64) // => 8
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**`
-  /// as a function value at the moment.
+
   public func pow(x : Nat64, y : Nat64) : Nat64 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
@@ -337,10 +311,7 @@ module {
   /// ^(0 : Nat64) // => 18446744073709551615
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `^` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `^`
-  /// as a function value at the moment.
+
   public func bitnot(x : Nat64) : Nat64 { ^x };
 
   /// Returns the bitwise and of `x` and `y`, `x & y`.
@@ -351,10 +322,7 @@ module {
   /// (1 : Nat64) & (3 : Nat64) // => 1
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `&` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `&`
-  /// as a function value at the moment.
+
   public func bitand(x : Nat64, y : Nat64) : Nat64 { x & y };
 
   /// Returns the bitwise or of `x` and `y`, `x | y`.
@@ -365,10 +333,7 @@ module {
   /// (1 : Nat64) | (3 : Nat64) // => 3
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `|` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `|`
-  /// as a function value at the moment.
+
   public func bitor(x : Nat64, y : Nat64) : Nat64 { x | y };
 
   /// Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
@@ -379,10 +344,7 @@ module {
   /// (1 : Nat64) ^ (3 : Nat64) // => 2
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `^` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `^`
-  /// as a function value at the moment.
+
   public func bitxor(x : Nat64, y : Nat64) : Nat64 { x ^ y };
 
   /// Returns the bitwise shift left of `x` by `y`, `x << y`.
@@ -393,10 +355,7 @@ module {
   /// (1 : Nat64) << (3 : Nat64) // => 8
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<<`
-  /// as a function value at the moment.
+
   public func bitshiftLeft(x : Nat64, y : Nat64) : Nat64 { x << y };
 
   /// Returns the bitwise shift right of `x` by `y`, `x >> y`.
@@ -407,10 +366,7 @@ module {
   /// (8 : Nat64) >> (3 : Nat64) // => 1
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>>`
-  /// as a function value at the moment.
+
   public func bitshiftRight(x : Nat64, y : Nat64) : Nat64 { x >> y };
 
   /// Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
@@ -421,10 +377,7 @@ module {
   /// (1 : Nat64) <<> (3 : Nat64) // => 8
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<<>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<<>`
-  /// as a function value at the moment.
+
   public func bitrotLeft(x : Nat64, y : Nat64) : Nat64 { x <<> y };
 
   /// Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
@@ -435,10 +388,7 @@ module {
   /// (8 : Nat64) <>> (3 : Nat64) // => 1
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<>>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<>>`
-  /// as a function value at the moment.
+
   public func bitrotRight(x : Nat64, y : Nat64) : Nat64 { x <>> y };
 
   /// Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
@@ -514,10 +464,7 @@ module {
   /// Nat64.maximumValue +% (1 : Nat64) // => 0
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+%`
-  /// as a function value at the moment.
+
   public func addWrap(x : Nat64, y : Nat64) : Nat64 { x +% y };
 
   /// Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
@@ -528,10 +475,7 @@ module {
   /// (0 : Nat64) -% (1 : Nat64) // => 18446744073709551615
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-%`
-  /// as a function value at the moment.
+
   public func subWrap(x : Nat64, y : Nat64) : Nat64 { x -% y };
 
   /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -542,10 +486,7 @@ module {
   /// (4294967296 : Nat64) *% (4294967296 : Nat64) // => 0
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*%`
-  /// as a function value at the moment.
+
   public func mulWrap(x : Nat64, y : Nat64) : Nat64 { x *% y };
 
   /// Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
@@ -556,10 +497,7 @@ module {
   /// (2 : Nat64) **% (64 : Nat64) // => 0
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**%`
-  /// as a function value at the moment.
+
   public func powWrap(x : Nat64, y : Nat64) : Nat64 { x **% y };
 
 }

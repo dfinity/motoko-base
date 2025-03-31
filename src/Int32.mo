@@ -1,8 +1,14 @@
 /// Provides utility functions on 32-bit signed integers.
 ///
-/// Note that most operations are available as built-in operators (e.g. `1 + 1`).
+///:::note
+///Most operations are available as built-in operators (e.g. `1 + 1`).
+///:::
 ///
-/// Import from the base library to use this module.
+///:::info [Function form for higher-order use]
+///
+///Several arithmetic and comparison functions (e.g. `add`, `sub`, `bitor`, `bitand`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
+///:::
+///
 /// ```motoko name=import
 /// import Int32 "mo:base/Int32";
 /// ```
@@ -165,10 +171,7 @@ module {
   /// Int32.equal(-1, -1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `==`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -190,10 +193,7 @@ module {
   /// Int32.notEqual(-1, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `!=`
-  /// as a function value at the moment.
+
   public func notEqual(x : Int32, y : Int32) : Bool { x != y };
 
   /// "Less than" function for Int32 types.
@@ -204,10 +204,7 @@ module {
   /// Int32.less(-2, 1); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<`
-  /// as a function value at the moment.
+
   public func less(x : Int32, y : Int32) : Bool { x < y };
 
   /// "Less than or equal" function for Int32 types.
@@ -218,10 +215,7 @@ module {
   /// Int32.lessOrEqual(-2, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<=`
-  /// as a function value at the moment.
+
   public func lessOrEqual(x : Int32, y : Int32) : Bool { x <= y };
 
   /// "Greater than" function for Int32 types.
@@ -232,10 +226,7 @@ module {
   /// Int32.greater(-2, -3); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>`
-  /// as a function value at the moment.
+
   public func greater(x : Int32, y : Int32) : Bool { x > y };
 
   /// "Greater than or equal" function for Int32 types.
@@ -246,10 +237,7 @@ module {
   /// Int32.greaterOrEqual(-2, -2); // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>=`
-  /// as a function value at the moment.
+
   public func greaterOrEqual(x : Int32, y : Int32) : Bool { x >= y };
 
   /// General-purpose comparison function for `Int32`. Returns the `Order` (
@@ -280,10 +268,7 @@ module {
   /// Int32.neg(123) // => -123
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   public func neg(x : Int32) : Int32 { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
@@ -295,10 +280,7 @@ module {
   /// Int32.add(100, 23) // => +123
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -316,10 +298,7 @@ module {
   /// Int32.sub(1234, 123) // => +1_111
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -337,10 +316,7 @@ module {
   /// Int32.mul(123, 100) // => +12_300
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -359,10 +335,7 @@ module {
   /// Int32.div(123, 10) // => +12
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `/` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `/`
-  /// as a function value at the moment.
+
   public func div(x : Int32, y : Int32) : Int32 { x / y };
 
   /// Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
@@ -375,10 +348,7 @@ module {
   /// Int32.rem(123, 10) // => +3
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `%`
-  /// as a function value at the moment.
+
   public func rem(x : Int32, y : Int32) : Int32 { x % y };
 
   /// Returns `x` to the power of `y`, `x ** y`.
@@ -390,10 +360,7 @@ module {
   /// Int32.pow(2, 10) // => +1_024
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**`
-  /// as a function value at the moment.
+
   public func pow(x : Int32, y : Int32) : Int32 { x ** y };
 
   /// Returns the bitwise negation of `x`, `^x`.
@@ -403,10 +370,7 @@ module {
   /// Int32.bitnot(-256 /* 0xffff_ff00 */) // => +255 // 0xff
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `^` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `^`
-  /// as a function value at the moment.
+
   public func bitnot(x : Int32) : Int32 { ^x };
 
   /// Returns the bitwise "and" of `x` and `y`, `x & y`.
@@ -416,10 +380,7 @@ module {
   /// Int32.bitand(0xffff, 0x00f0) // => +240 // 0xf0
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `&` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `&`
-  /// as a function value at the moment.
+
   public func bitand(x : Int32, y : Int32) : Int32 { x & y };
 
   /// Returns the bitwise "or" of `x` and `y`, `x | y`.
@@ -429,10 +390,7 @@ module {
   /// Int32.bitor(0xffff, 0x00f0) // => +65_535 // 0xffff
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `|` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `|`
-  /// as a function value at the moment.
+
   public func bitor(x : Int32, y : Int32) : Int32 { x | y };
 
   /// Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
@@ -442,10 +400,7 @@ module {
   /// Int32.bitxor(0xffff, 0x00f0) // => +65_295 // 0xff0f
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `^` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `^`
-  /// as a function value at the moment.
+
   public func bitxor(x : Int32, y : Int32) : Int32 { x ^ y };
 
   /// Returns the bitwise left shift of `x` by `y`, `x << y`.
@@ -460,10 +415,7 @@ module {
   /// Int32.bitshiftLeft(1, 8) // => +256 // 0x100 equivalent to `2 ** 8`.
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<<`
-  /// as a function value at the moment.
+
   public func bitshiftLeft(x : Int32, y : Int32) : Int32 { x << y };
 
   /// Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
@@ -478,10 +430,7 @@ module {
   /// Int32.bitshiftRight(1024, 8) // => +4 // equivalent to `1024 / (2 ** 8)`
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>>`
-  /// as a function value at the moment.
+
   public func bitshiftRight(x : Int32, y : Int32) : Int32 { x >> y };
 
   /// Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
@@ -496,10 +445,7 @@ module {
   /// Int32.bitrotLeft(0x2000_0001, 4) // => +18 // 0x12.
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<<>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<<>`
-  /// as a function value at the moment.
+
   public func bitrotLeft(x : Int32, y : Int32) : Int32 { x <<> y };
 
   /// Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
@@ -514,10 +460,7 @@ module {
   /// Int32.bitrotRight(0x0002_0001, 8) // => +16_777_728 // 0x0100_0200.
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<>>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<>>`
-  /// as a function value at the moment.
+
   public func bitrotRight(x : Int32, y : Int32) : Int32 { x <>> y };
 
   /// Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
@@ -598,10 +541,7 @@ module {
   /// Int32.addWrap(2 ** 30, 2 ** 30) // => -2_147_483_648 // overflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `+%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `+%`
-  /// as a function value at the moment.
+
   public func addWrap(x : Int32, y : Int32) : Int32 { x +% y };
 
   /// Returns the difference of `x` and `y`, `x -% y`.
@@ -613,10 +553,7 @@ module {
   /// Int32.subWrap(-2 ** 31, 1) // => +2_147_483_647 // underflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `-%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `-%`
-  /// as a function value at the moment.
+
   public func subWrap(x : Int32, y : Int32) : Int32 { x -% y };
 
   /// Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
@@ -628,10 +565,7 @@ module {
   /// Int32.mulWrap(2 ** 16, 2 ** 16) // => 0 // overflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `*%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `*%`
-  /// as a function value at the moment.
+
   public func mulWrap(x : Int32, y : Int32) : Int32 { x *% y };
 
   /// Returns `x` to the power of `y`, `x **% y`.
@@ -644,10 +578,7 @@ module {
   /// Int32.powWrap(2, 31) // => -2_147_483_648 // overflow
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `**%` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `**%`
-  /// as a function value at the moment.
+
   public func powWrap(x : Int32, y : Int32) : Int32 { x **% y };
 
 }

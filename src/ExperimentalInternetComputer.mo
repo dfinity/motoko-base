@@ -1,7 +1,8 @@
 /// Low-level interface to the Internet Computer.
 ///
-/// **WARNING:** This low-level API is **experimental** and likely to change or even disappear.
-
+///:::warning [Experimental API]
+///This low-level API is **experimental** and likely to change or even disappear.
+///:::
 import Prim "mo:⛔";
 
 module {
@@ -12,8 +13,10 @@ module {
   /// * The message data of an IC reply determines the binary contents of `reply`.
   /// * The error code and textual message data of an IC reject determines the future's `Error` value.
   ///
-  /// Note: `call` is an asynchronous function and can only be applied in an asynchronous context.
-  ///
+  /// :::note [Asynchronous context required]
+
+  ///`call` is an asynchronous function and can only be applied in an asynchronous context.
+  ///:::
   /// Example:
   /// ```motoko no-repl
   /// import IC "mo:base/ExperimentalInternetComputer";
@@ -34,22 +37,26 @@ module {
   /// `isReplicated` is true for update messages and for queries that passed through consensus.
   public let isReplicated : () -> Bool = Prim.isReplicatedExecution;
 
-  /// Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
-  /// instructions performed during the execution of `comp()`.
+  ///Given computation, `comp`, counts the number of actual and (for IC system calls) notional WebAssembly
+  ///instructions performed during the execution of `comp()`.
+
+  ///More precisely, returns the difference between the state of the IC instruction counter (_performance counter_ `0`) before and after executing `comp()`
+  ///(see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
+
+  ///:::note [GC cost not included]
+
+  ///`countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
+  ///:::
+
+  ///Example:
+
+  ///```motoko no-repl
+  ///import IC "mo:base/ExperimentalInternetComputer";
   ///
-  /// More precisely, returns the difference between the state of the IC instruction counter (_performance counter_ `0`) before and after executing `comp()`
-  /// (see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
-  ///
-  /// NB: `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
-  ///
-  /// Example:
-  /// ```motoko no-repl
-  /// import IC "mo:base/ExperimentalInternetComputer";
-  ///
-  /// let count = IC.countInstructions(func() {
-  ///   // ...
-  /// });
-  /// ```
+  ///let count = IC.countInstructions(func() {
+  // ...
+  ///});
+  ///```
   public func countInstructions(comp : () -> ()) : Nat64 {
     let init = Prim.performanceCounter(0);
     let pre = Prim.performanceCounter(0);
@@ -83,7 +90,7 @@ module {
   /// work();
   /// let diff : Nat64 = IC.performanceCounter(1) - c1;
   /// ```
-  public let performanceCounter : (counter : Nat32) -> (value: Nat64) = Prim.performanceCounter;
+  public let performanceCounter : (counter : Nat32) -> (value : Nat64) = Prim.performanceCounter;
 
   /// Returns the time (in nanoseconds from the epoch start) by when the update message should
   /// reply to the best effort message so that it can be received by the requesting canister.

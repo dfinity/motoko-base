@@ -1,24 +1,35 @@
-/// Stable key-value map implemented as a red-black tree with nodes storing key-value pairs.
+///Stable key-value map implemented as a red-black tree with nodes storing key-value pairs.
 ///
-/// A red-black tree is a balanced binary search tree ordered by the keys.
+///A red-black tree is a balanced binary search tree ordered by the keys.
 ///
-/// The tree data structure internally colors each of its nodes either red or black,
-/// and uses this information to balance the tree during the modifying operations.
+///The tree data structure internally colors each of its nodes either red or black,
+///and uses this information to balance the tree during the modifying operations.
 ///
-/// Performance:
-/// * Runtime: `O(log(n))` worst case cost per insertion, removal, and retrieval operation.
-/// * Space: `O(n)` for storing the entire tree.
-/// `n` denotes the number of key-value entries (i.e. nodes) stored in the tree.
+///| Runtime   | Space |
+///|----------|------------|
+///| `O(log(n))` (worst case per insertion, removal, or retrieval)  | `O(n)` (for storing the entire tree) |
 ///
-/// Note:
-/// * Map operations, such as retrieval, insertion, and removal create `O(log(n))` temporary objects that become garbage.
+///`n` denotes the number of key-value entries (i.e. nodes) stored in the tree.
 ///
-/// Credits:
+///:::note [Garbage collection]
 ///
-/// The core of this implementation is derived from:
+///Unless stated otherwise, operations that iterate over or modify the map (such as insertion, deletion, traversal, and transformation) may create temporary objects with worst-case space usage of `O(log(n))` or `O(n)`. These objects are short-lived and will be collected by the garbage collector automatically.
 ///
-/// * Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
-/// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
+///:::
+///
+///:::note [Assumptions]
+///
+///Runtime and space complexity assumes that `compare`, `equal`, and other functions execute in `O(1)` time and space.
+///:::
+///
+///:::info [Credits]
+///
+///The core of this implementation is derived from:
+///
+///* Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
+///* Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
+///:::
+///
 
 import Debug "Debug";
 import I "Iter";
@@ -29,8 +40,8 @@ import O "Order";
 module {
   /// Collection of key-value entries, ordered by the keys and key unique.
   /// The keys have the generic type `K` and the values the generic type `V`.
-  /// If `K` and `V` is stable types then `Map<K, V>` is also stable. 
-  /// To ensure that property the `Map<K, V>` does not have any methods, instead 
+  /// If `K` and `V` is stable types then `Map<K, V>` is also stable.
+  /// To ensure that property the `Map<K, V>` does not have any methods, instead
   /// they are gathered in the functor-like class `Operations` (see example there).
   public type Map<K, V> = {
     size : Nat;
@@ -44,10 +55,10 @@ module {
     #leaf
   };
 
-  /// Class that captures key type `K` along with its ordering function `compare` 
+  /// Class that captures key type `K` along with its ordering function `compare`
   /// and provides all operations to work with a map of type `Map<K, _>`.
   ///
-  /// An instance object should be created once as a canister field to ensure 
+  /// An instance object should be created once as a canister field to ensure
   /// that the same ordering function is used for every operation.
   ///
   /// Example:
@@ -58,7 +69,7 @@ module {
   /// actor {
   ///   let natMap = Map.Make<Nat>(Nat.compare); // : Operations<Nat>
   ///   stable var keyStorage : Map.Map<Nat, Text> = natMap.empty<Text>();
-  ///   
+  ///
   ///   public func addKey(id : Nat, key : Text) : async () {
   ///     keyStorage := natMap.put(keyStorage, id, key);
   ///   }
@@ -84,14 +95,12 @@ module {
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
     ///
-    /// Runtime: `O(n * log(n))`.
-    /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
+    ///| Runtime   | Space |
+    ///|----------|------------|
+    ///| `O(n * log(n))`  | `O(n)` (retained memory + garbage) |
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
-    public func fromIter<V>(i : I.Iter<(K, V)>) : Map<K, V>
-      = Internal.fromIter(i, compare);
+    public func fromIter<V>(i : I.Iter<(K, V)>) : Map<K, V> = Internal.fromIter(i, compare);
 
     /// Insert the value `value` with key `key` into the map `m`. Overwrites any existing entry with key `key`.
     /// Returns a modified map.
@@ -115,16 +124,10 @@ module {
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///    
-    /// Note: The returned map shares with the `m` most of the tree nodes. 
-    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.put(m, k)`)
-    /// causes collecting `O(log(n))` nodes.
-    public func put<V>(m : Map<K, V>, key : K, value : V) : Map<K, V>
-      = replace(m, key, value).0;
+    ///| Runtime     | Space         |
+    ///|-------------|---------------|
+    ///| `O(log(n))` | `O(log(n))`   |
+    public func put<V>(m : Map<K, V>, key : K, value : V) : Map<K, V> = replace(m, key, value).0;
 
     /// Insert the value `value` with key `key` into the map `m`. Returns modified map and
     /// the previous value associated with key `key` or `null` if no such value exists.
@@ -154,18 +157,14 @@ module {
     /// // null
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
+    ///| Runtime       | Space                       |
+    ///|---------------|-----------------------------|
+    ///| `O(log(n))`   | `O(log(n))` retained memory |
     ///
-    /// Note: The returned map shares with the `m` most of the tree nodes. 
-    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.replace(m, k).0`)
-    /// causes collecting `O(log(n))` nodes.
     public func replace<V>(m : Map<K, V>, key : K, value : V) : (Map<K, V>, ?V) {
       switch (Internal.replace(m.root, compare, key, value)) {
-        case (t, null) { ({root = t; size = m.size + 1}, null) };
-        case (t, v)    { ({root = t; size = m.size}, v)}
+        case (t, null) { ({ root = t; size = m.size + 1 }, null) };
+        case (t, v) { ({ root = t; size = m.size }, v) }
       }
     };
 
@@ -196,14 +195,12 @@ module {
     /// // [(1, "Twenty One"), (2, "Twenty Two")]
     /// ```
     ///
-    /// Runtime: `O(n * log(n))`.
-    /// Space: `O(n)` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
+    ///| Runtime   | Space |
+    ///|----------|------------|
+    ///| `O(n * log(n))`  | `O(n)` (retained memory + garbage) |
     ///
     /// Note: Creates `O(n * log(n))` temporary objects that will be collected as garbage.
-    public func mapFilter<V1, V2>(m : Map<K, V1>, f : (K, V1) -> ?V2) : Map<K, V2>
-      = Internal.mapFilter(m, compare, f);
+    public func mapFilter<V1, V2>(m : Map<K, V1>, f : (K, V1) -> ?V2) : Map<K, V2> = Internal.mapFilter(m, compare, f);
 
     /// Get the value associated with key `key` in the given map `m` if present and `null` otherwise.
     ///
@@ -228,8 +225,7 @@ module {
     /// Space: `O(1)`.
     /// where `n` denotes the number of key-value entries stored in the map and
     /// assuming that the `compare` function implements an `O(1)` comparison.
-    public func get<V>(m : Map<K, V>, key : K) : ?V
-      = Internal.get(m.root, compare, key);
+    public func get<V>(m : Map<K, V>, key : K) : ?V = Internal.get(m.root, compare, key);
 
     /// Test whether the map `m` contains any binding for the given `key`.
     ///
@@ -247,12 +243,10 @@ module {
     /// Debug.print(debug_show natMap.contains(map, 42)); // => false
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    public func contains<V>(m: Map<K, V>, key: K) : Bool 
-      = Internal.contains(m.root, compare, key);
+    ///| Runtime       | Space                       |
+    ///|---------------|-----------------------------|
+    ///| `O(log(n))`   | `O(1)` |
+    public func contains<V>(m : Map<K, V>, key : K) : Bool = Internal.contains(m.root, compare, key);
 
     /// Retrieves a key-value pair from the map `m` with a maximal key. If the map is empty returns `null`.
     ///
@@ -270,11 +264,10 @@ module {
     /// Debug.print(debug_show(natMap.maxEntry(natMap.empty()))); // => null
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    public func maxEntry<V>(m: Map<K, V>) : ?(K, V)
-      = Internal.maxEntry(m.root);
+    ///| Runtime       | Space                       |
+    ///|---------------|-----------------------------|
+    ///| `O(log(n))`   | `O(1)` |
+    public func maxEntry<V>(m : Map<K, V>) : ?(K, V) = Internal.maxEntry(m.root);
 
     /// Retrieves a key-value pair from the map `m` with a minimal key. If the map is empty returns `null`.
     ///
@@ -292,11 +285,10 @@ module {
     /// Debug.print(debug_show(natMap.minEntry(natMap.empty()))); // => null
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    public func minEntry<V>(m : Map<K, V>) : ?(K, V)
-      = Internal.minEntry(m.root);
+    ///| Runtime       | Space                       |
+    ///|---------------|-----------------------------|
+    ///| `O(log(n))`   | `O(1)` |
+    public func minEntry<V>(m : Map<K, V>) : ?(K, V) = Internal.minEntry(m.root);
 
     /// Deletes the entry with the key `key` from the map `m`. Has no effect if `key` is not
     /// present in the map. Returns modified map.
@@ -318,16 +310,10 @@ module {
     /// // [(0, "Zero"), (1, "One"), (2, "Two")]
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(log(n))`
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: The returned map shares with the `m` most of the tree nodes. 
-    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.delete(m, k).0`)
-    /// causes collecting `O(log(n))` nodes.
-    public func delete<V>(m : Map<K, V>, key : K) : Map<K, V>
-      = remove(m, key).0;
+    ///| Runtime       | Space                       |
+    ///|---------------|-----------------------------|
+    ///| `O(log(n))`   | `O(log(n))` |
+    public func delete<V>(m : Map<K, V>, key : K) : Map<K, V> = remove(m, key).0;
 
     /// Deletes the entry with the key `key`. Returns modified map and the
     /// previous value associated with key `key` or `null` if no such value exists.
@@ -357,18 +343,13 @@ module {
     /// // null
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the map and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: The returned map shares with the `m` most of the tree nodes. 
-    /// Garbage collecting one of maps (e.g. after an assignment `m := natMap.remove(m, k)`)
-    /// causes collecting `O(log(n))` nodes.
+    ///| Runtime       | Space                       |
+    ///|---------------|-----------------------------|
+    ///| `O(log(n))`   | `O(log(n))` |
     public func remove<V>(m : Map<K, V>, key : K) : (Map<K, V>, ?V) {
       switch (Internal.remove(m.root, compare, key)) {
-        case (t, null) { ({root = t; size = m.size }, null) };
-        case (t, v)    { ({root = t; size = m.size - 1}, v) }
+        case (t, null) { ({ root = t; size = m.size }, null) };
+        case (t, v) { ({ root = t; size = m.size - 1 }, v) }
       }
     };
 
@@ -392,8 +373,7 @@ module {
     /// Cost of empty map creation
     /// Runtime: `O(1)`.
     /// Space: `O(1)`
-    public func empty<V>() : Map<K, V> 
-      = Internal.empty();
+    public func empty<V>() : Map<K, V> = Internal.empty();
 
     /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
     /// Iterator provides a single method `next()`, which returns
@@ -415,18 +395,13 @@ module {
     /// for ((k, _) in natMap.entries(map)) { sum += k; };
     /// Debug.print(debug_show(sum)); // => 3
     /// ```
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    ///
-    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func entries<V>(m : Map<K, V>) : I.Iter<(K, V)> 
-      = Internal.iter(m.root, #fwd);
+    ///| Runtime | Space                               |
+    ///|---------|-------------------------------------|
+    ///| `O(n)`  | `O(log(n))` retained + `O(n)` garbage |
+    public func entries<V>(m : Map<K, V>) : I.Iter<(K, V)> = Internal.iter(m.root, #fwd);
 
     /// Same as `entries` but iterates in the descending order.
-    public func entriesRev<V>(m : Map<K, V>) : I.Iter<(K, V)> 
-      = Internal.iter(m.root, #bwd);
+    public func entriesRev<V>(m : Map<K, V>) : I.Iter<(K, V)> = Internal.iter(m.root, #bwd);
 
     /// Returns an Iterator (`Iter`) over the keys of the map.
     /// Iterator provides a single method `next()`, which returns
@@ -446,15 +421,10 @@ module {
     ///
     /// // [0, 1, 2]
     /// ```
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    ///
-    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func keys<V>(m : Map<K, V>) : I.Iter<K>
-      = I.map(entries(m), func(kv : (K, V)) : K {kv.0});
-
+    ///| Runtime | Space                               |
+    ///|---------|-------------------------------------|
+    ///| `O(n)`  | `O(log(n))` retained + `O(n)` garbage |
+    public func keys<V>(m : Map<K, V>) : I.Iter<K> = I.map(entries(m), func(kv : (K, V)) : K { kv.0 });
 
     /// Returns an Iterator (`Iter`) over the values of the map.
     /// Iterator provides a single method `next()`, which returns
@@ -474,14 +444,11 @@ module {
     ///
     /// // ["Zero", "One", "Two"]
     /// ```
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    ///
-    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
-    public func vals<V>(m : Map<K, V>) : I.Iter<V>
-      = I.map(entries(m), func(kv : (K, V)) : V {kv.1});
+
+    ///| Runtime | Space                               |
+    ///|---------|-------------------------------------|
+    ///| `O(n)`  | `O(log(n))` retained + `O(n)` garbage |
+    public func vals<V>(m : Map<K, V>) : I.Iter<V> = I.map(entries(m), func(kv : (K, V)) : V { kv.1 });
 
     /// Creates a new map by applying `f` to each entry in the map `m`. Each entry
     /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
@@ -505,12 +472,10 @@ module {
     /// // [(0, 0), (1, 2), (2, 4)]
     /// ```
     ///
-    /// Cost of mapping all the elements:
-    /// Runtime: `O(n)`.
-    /// Space: `O(n)` retained memory
-    /// where `n` denotes the number of key-value entries stored in the map.
-    public func map<V1, V2>(m : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2>
-      = Internal.map(m, f);
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | `O(n)` |
+    public func map<V1, V2>(m : Map<K, V1>, f : (K, V1) -> V2) : Map<K, V2> = Internal.map(m, f);
 
     /// Determine the size of the map as the number of key-value entries.
     ///
@@ -528,10 +493,10 @@ module {
     /// // 3
     /// ```
     ///
-    /// Runtime: `O(n)`.
-    /// Space: `O(1)`.
-    public func size<V>(m : Map<K, V>) : Nat
-      = m.size;
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | `O(1)` |
+    public func size<V>(m : Map<K, V>) : Nat = m.size;
 
     /// Collapses the elements in the `map` into a single value by starting with `base`
     /// and progressively combining keys and values into `base` with `combine`. Iteration runs
@@ -555,18 +520,14 @@ module {
     /// // (3, "ZeroOneTwo")
     /// ```
     ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: depends on `combine` function plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    ///
-    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | Depends on `combine` + `O(n)` garbage |
     public func foldLeft<Value, Accum>(
       map : Map<K, Value>,
       base : Accum,
       combine : (Accum, K, Value) -> Accum
-    ) : Accum
-    = Internal.foldLeft(map.root, base, combine);
+    ) : Accum = Internal.foldLeft(map.root, base, combine);
 
     /// Collapses the elements in the `map` into a single value by starting with `base`
     /// and progressively combining keys and values into `base` with `combine`. Iteration runs
@@ -590,18 +551,14 @@ module {
     /// // (3, "TwoOneZero")
     /// ```
     ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Space: depends on `combine` function plus garbage, see the note below.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    ///
-    /// Note: Full map iteration creates `O(n)` temporary objects that will be collected as garbage.
+    ///| Runtime | Space                        |
+    ///|---------|------------------------------|
+    ///| `O(n)`  | Depends on `combine` + `O(n)` garbage |
     public func foldRight<Value, Accum>(
       map : Map<K, Value>,
       base : Accum,
       combine : (K, Value, Accum) -> Accum
-    ) : Accum
-    = Internal.foldRight(map.root, base, combine);
+    ) : Accum = Internal.foldRight(map.root, base, combine);
 
     /// Test whether all key-value pairs satisfy a given predicate `pred`.
     ///
@@ -621,11 +578,10 @@ module {
     /// // false
     /// ```
     ///
-    /// Runtime: `O(n)`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    public func all<V>(m : Map<K, V>, pred : (K, V) -> Bool) : Bool
-      = Internal.all(m.root, pred);
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(n)` | `O(1)` |
+    public func all<V>(m : Map<K, V>, pred : (K, V) -> Bool) : Bool = Internal.all(m.root, pred);
 
     /// Test if there exists a key-value pair satisfying a given predicate `pred`.
     ///
@@ -645,33 +601,30 @@ module {
     /// // true
     /// ```
     ///
-    /// Runtime: `O(n)`.
-    /// Space: `O(1)`.
-    /// where `n` denotes the number of key-value entries stored in the map.
-    public func some<V>(m : Map<K, V>, pred : (K, V) -> Bool) : Bool
-      = Internal.some(m.root, pred);
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(n)` | `O(1)` |
+    public func some<V>(m : Map<K, V>, pred : (K, V) -> Bool) : Bool = Internal.some(m.root, pred);
 
-    /// Debug helper that check internal invariants of the given map `m`. 
+    /// Debug helper that check internal invariants of the given map `m`.
     /// Raise an error (for a stack trace) if invariants are violated.
     public func validate<V>(m : Map<K, V>) : () {
-      Internal.validate(m, compare);
-    };
+      Internal.validate(m, compare)
+    }
   };
 
   module Internal {
 
-    public func empty<K, V>() : Map<K, V> {
-      { size = 0; root = #leaf }
-    };
+    public func empty<K, V>() : Map<K, V> { { size = 0; root = #leaf } };
 
-    public func fromIter<K, V>(i : I.Iter<(K,V)>, compare : (K, K) -> O.Order) : Map<K, V> {
+    public func fromIter<K, V>(i : I.Iter<(K, V)>, compare : (K, K) -> O.Order) : Map<K, V> {
       var map = #leaf : Tree<K, V>;
       var size = 0;
-      for(val in i) {
+      for (val in i) {
         map := put(map, compare, val.0, val.1);
-        size += 1;
+        size += 1
       };
-      {root = map; size}
+      { root = map; size }
     };
 
     type IterRep<K, V> = List.List<{ #tr : Tree<K, V>; #xy : (K, V) }>;
@@ -809,40 +762,40 @@ module {
 
     public func contains<K, V>(m : Tree<K, V>, compare : (K, K) -> O.Order, key : K) : Bool {
       switch (get(m, compare, key)) {
-        case(null) { false }; 
-        case(_)    { true } 
+        case (null) { false };
+        case (_) { true }
       }
     };
 
     public func maxEntry<K, V>(m : Tree<K, V>) : ?(K, V) {
       func rightmost(m : Tree<K, V>) : (K, V) {
         switch m {
-          case (#red(_, k, v, #leaf))   { (k, v) };
-          case (#red(_, _, _, r))       { rightmost(r) };
+          case (#red(_, k, v, #leaf)) { (k, v) };
+          case (#red(_, _, _, r)) { rightmost(r) };
           case (#black(_, k, v, #leaf)) { (k, v) };
-          case (#black(_, _, _, r))     { rightmost(r) };
-          case (#leaf)                  { Debug.trap "OrderedMap.impossible" }
+          case (#black(_, _, _, r)) { rightmost(r) };
+          case (#leaf) { Debug.trap "OrderedMap.impossible" }
         }
       };
       switch m {
         case (#leaf) { null };
-        case (_)     { ?rightmost(m) }
+        case (_) { ?rightmost(m) }
       }
     };
 
     public func minEntry<K, V>(m : Tree<K, V>) : ?(K, V) {
       func leftmost(m : Tree<K, V>) : (K, V) {
         switch m {
-          case (#red(#leaf, k, v, _))   { (k, v) };
-          case (#red(l, _, _, _))       { leftmost(l) };
+          case (#red(#leaf, k, v, _)) { (k, v) };
+          case (#red(l, _, _, _)) { leftmost(l) };
           case (#black(#leaf, k, v, _)) { (k, v) };
-          case (#black(l, _, _, _))     { leftmost(l)};
-          case (#leaf)                  { Debug.trap "OrderedMap.impossible" }
+          case (#black(l, _, _, _)) { leftmost(l) };
+          case (#leaf) { Debug.trap "OrderedMap.impossible" }
         }
       };
       switch m {
         case (#leaf) { null };
-        case (_)     { ?leftmost(m) }
+        case (_) { ?leftmost(m) }
       }
     };
 
@@ -872,9 +825,7 @@ module {
 
     func redden<K, V>(t : Tree<K, V>) : Tree<K, V> {
       switch t {
-        case (#black (l, x, y, r)) {
-          (#red (l, x, y, r))
-        };
+        case (#black(l, x, y, r)) { (#red(l, x, y, r)) };
         case _ {
           Debug.trap "OrderedMap.red"
         }
@@ -1104,8 +1055,7 @@ module {
       }
     };
 
-    public func delete<K, V>(m : Tree<K, V>, compare : (K, K) -> O.Order, key : K) : Tree<K, V>
-      = remove(m, compare, key).0;
+    public func delete<K, V>(m : Tree<K, V>, compare : (K, K) -> O.Order, key : K) : Tree<K, V> = remove(m, compare, key).0;
 
     public func remove<K, V>(tree : Tree<K, V>, compare : (K, K) -> O.Order, x : K) : (Tree<K, V>, ?V) {
       var y0 : ?V = null;
@@ -1153,9 +1103,7 @@ module {
         }
       };
       switch (del(tree)) {
-        case (#red(left, x, y, right)) {
-          (#black(left, x, y, right), y0)
-        };
+        case (#red(left, x, y, right)) { (#black(left, x, y, right), y0) };
         case other { (other, y0) }
       }
     };
@@ -1205,10 +1153,10 @@ module {
           assert (isValid(key))
         }
       }
-    };
+    }
   };
 
-  /// Create `OrderedMap.Operations` object capturing key type `K` and `compare` function. 
+  /// Create `OrderedMap.Operations` object capturing key type `K` and `compare` function.
   /// It is an alias for the `Operations` constructor.
   ///
   /// Example:

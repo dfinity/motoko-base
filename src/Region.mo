@@ -12,7 +12,7 @@
 /// A new, empty `Region` is allocated using function `new()`.
 ///
 /// Regions are stateful objects and can be distinguished by the numeric identifier returned by function `id(region)`.
-/// Every region owns an initially empty, but growable sequence of virtual IC stable memory pages. 
+/// Every region owns an initially empty, but growable sequence of virtual IC stable memory pages.
 /// The current size, in pages, of a region is returned by function `size(region)`.
 /// The size of a region determines the range, [ 0, ..., size(region)*2^16 ), of valid byte-offsets into the region; these offsets are used as the source and destination of `load`/`store` operations on the region.
 ///
@@ -21,7 +21,7 @@
 ///
 /// A size of a region can only grow and never shrink.
 /// In addition, the stable memory pages allocated to a region will *not* be reclaimed by garbage collection, even
-/// if the region object itself becomes unreachable. 
+/// if the region object itself becomes unreachable.
 ///
 /// Growth is capped by a soft limit on physical page count controlled by compile-time flag
 /// `--max-stable-pages <n>` (the default is 65536, or 4GiB).
@@ -118,7 +118,6 @@ module {
   /// afterSize - beforeSize // => 10
   /// ```
   public let grow : (region : Region, newPages : Nat64) -> (oldPages : Nat64) = Prim.regionGrow;
-
 
   /// Within `region`, load a `Nat8` value from `offset`.
   /// Traps on an out-of-bounds access.
@@ -328,7 +327,6 @@ module {
   /// ```
   public let storeInt64 : (region : Region, offset : Nat64, value : Int64) -> () = Prim.regionStoreInt64;
 
-
   /// Within `region`, loads a `Float` value from the given `offset`.
   /// Traps on an out-of-bounds access.
   ///
@@ -353,7 +351,7 @@ module {
   /// Region.storeFloat(region, offset, value);
   /// Region.loadFloat(region, offset) // => 1.25
   /// ```
-  public let storeFloat : (region: Region, offset : Nat64, value : Float) -> () = Prim.regionStoreFloat;
+  public let storeFloat : (region : Region, offset : Nat64, value : Float) -> () = Prim.regionStoreFloat;
 
   /// Within `region,` load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on an out-of-bounds access.

@@ -23,22 +23,23 @@
 /// }
 /// ```
 ///
-/// Performance:
+/// :::note [Performance]
 /// * Runtime: `O(log(n))` worst case cost per insertion, removal, and retrieval operation.
 /// * Heap space: `O(n)` for storing the entire tree.
 /// * Stack space: `O(log(n)) for storing the entire tree.
 /// `n` denotes the number of key-value entries (i.e. nodes) stored in the tree.
+///:::
 ///
-/// Note:
-/// * Tree insertion, replacement, and removal produce `O(log(n))` garbage objects.
+/// :::note
+/// Tree insertion, replacement, and removal produce `O(log(n))` garbage objects.
+/// :::
 ///
-/// Credits:
-///
+/// ::info [Credits]
 /// The core of this implementation is derived from:
 ///
 /// * Ken Friis Larsen's [RedBlackMap.sml](https://github.com/kfl/mosml/blob/master/src/mosmllib/Redblackmap.sml), which itself is based on:
 /// * Stefan Kahrs, "Red-black trees with types", Journal of Functional Programming, 11(4): 425-432 (2001), [version 1 in web appendix](http://www.cs.ukc.ac.uk/people/staff/smk/redblack/rb.html).
-
+///:::
 
 import Debug "Debug";
 import I "Iter";
@@ -70,8 +71,6 @@ module {
     #leaf
   };
 
-
-
   /// A map from keys of type `K` to values of type `V` implemented as a red-black tree.
   /// The entries of key-value pairs are ordered by `compare` function applied to the keys.
   ///
@@ -89,10 +88,9 @@ module {
   /// let tree = RBTree.RBTree<Nat, Text>(Nat.compare); // Create a map of `Nat` to `Text` using the `Nat.compare` order
   /// ```
   ///
-  /// Costs of instantiation (only empty tree):
-  /// Runtime: `O(1)`.
-  /// Heap space: `O(1)`.
-  /// Stack space: `O(1)`.
+  ///| Runtime        | Space (Heap) | Space (Stack) |
+  ///|----------------|--------------|----------------|
+  ///| `O(1)`  | `O(1))`        | `O(1))`    |
   public class RBTree<K, V>(compare : (K, K) -> O.Order) {
 
     var tree : Tree<K, V> = (#leaf : Tree<K, V>);
@@ -113,9 +111,9 @@ module {
     /// Useful for storing the state of a tree object as a stable variable, determining its size, pretty-printing, and sharing it across async function calls,
     /// i.e. passing it in async arguments or async results.
     ///
-    /// Runtime: `O(1)`.
-    /// Heap space: `O(1)`.
-    /// Stack space: `O(1)`.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(1)`  | `O(1))`        | `O(1))`    |
     public func share() : Tree<K, V> {
       tree
     };
@@ -135,13 +133,12 @@ module {
     ///
     /// Useful for restoring the state of a tree object from stable data, saved, for example, in a stable variable.
     ///
-    /// Runtime: `O(1)`.
-    /// Heap space: `O(1)`.
-    /// Stack space: `O(1)`.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(1)`  | `O(1))`       | `O(1))`    |
     public func unshare(t : Tree<K, V>) : () {
       tree := t
     };
-
 
     /// Retrieve the value associated with a given key, if present. Returns `null`, if the key is absent.
     /// The key is searched according to the `compare` function defined on the class instantiation.
@@ -155,11 +152,9 @@ module {
     /// tree.get(1) // => ?"one"
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Heap space: `O(1)`.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(log(n))`  | `O(1))` retained + garbage        | `O(log(n))`    |
     public func get(key : K) : ?V {
       getRec(key, compare, tree)
     };
@@ -181,13 +176,9 @@ module {
     /// Iter.toArray(tree.entries()) // => [(1, "new one"), (2, "two")]
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` garbage objects.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(log(n))`  | `O(1))` retained + garbage        | `O(log(n))`    |
     public func replace(key : K, value : V) : ?V {
       let (t, res) = insert(tree, compare, key, value);
       tree := t;
@@ -206,13 +197,9 @@ module {
     /// Iter.toArray(tree.entries()) // now contains three entries
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` garbage objects.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(log(n))`  | `O(1))` retained + garbage        | `O(log(n))`    |
     public func put(key : K, value : V) {
       let (t, _res) = insert(tree, compare, key, value);
       tree := t
@@ -233,13 +220,9 @@ module {
     /// Iter.toArray(tree.entries()) // => [(2, "two")].
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(log(n))`  | `O(1))` retained + garbage        | `O(log(n))`    |
     public func delete(key : K) {
       let (_res, t) = removeRec(key, compare, tree);
       tree := t
@@ -259,13 +242,9 @@ module {
     /// Iter.toArray(tree.entries()) // => [(2, "two")].
     /// ```
     ///
-    /// Runtime: `O(log(n))`.
-    /// Heap space: `O(1)` retained memory plus garbage, see the note below.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree and
-    /// assuming that the `compare` function implements an `O(1)` comparison.
-    ///
-    /// Note: Creates `O(log(n))` garbage objects.
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(log(n))`  | `O(1))` retained + garbage        | `O(log(n))`    |
     public func remove(key : K) : ?V {
       let (res, t) = removeRec(key, compare, tree);
       tree := t;
@@ -292,13 +271,10 @@ module {
     /// // Entry key=3 value="three"
     /// ```
     ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Heap space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree.
-    ///
-    /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
+
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(n)`  | `O(log(n))` retained + garbage        | `O(log(n))`    |
     public func entries() : I.Iter<(K, V)> { iter(tree, #fwd) };
 
     /// An iterator for the key-value entries of the map, in descending key order.
@@ -322,13 +298,10 @@ module {
     /// // Entry key=1 value="one"
     /// ```
     ///
-    /// Cost of iteration over all elements:
-    /// Runtime: `O(n)`.
-    /// Heap space: `O(log(n))` retained memory plus garbage, see the note below.
-    /// Stack space: `O(log(n))`.
-    /// where `n` denotes the number of key-value entries stored in the tree.
-    ///
-    /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
+
+    ///| Runtime        | Space (Heap) | Space (Stack) |
+    ///|----------------|--------------|----------------|
+    ///| `O(n)`  | `O(log(n))` retained + garbage        | `O(log(n))`    |
     public func entriesRev() : I.Iter<(K, V)> { iter(tree, #bwd) };
 
   }; // end class
@@ -358,13 +331,10 @@ module {
   /// // Entry key=1 value="one"
   /// ```
   ///
-  /// Cost of iteration over all elements:
-  /// Runtime: `O(n)`.
-  /// Heap space: `O(log(n))` retained memory plus garbage, see the note below.
-  /// Stack space: `O(log(n))`.
-  /// where `n` denotes the number of key-value entries stored in the tree.
-  ///
-  /// Note: Full tree iteration creates `O(n)` temporary objects that will be collected as garbage.
+
+  ///| Runtime        | Space (Heap) | Space (Stack) |
+  ///|----------------|--------------|----------------|
+  ///| `O(n)`  | `O(log(n))` retained + garbage        | `O(log(n))`    |
   public func iter<X, Y>(tree : Tree<X, Y>, direction : { #fwd; #bwd }) : I.Iter<(X, Y)> {
     object {
       var trees : IterRep<X, Y> = ?(#tr(tree), null);
@@ -398,7 +368,7 @@ module {
   /// Remove the value associated with a given key.
   func removeRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
     let (t1, r) = remove(t, compare, x);
-    (r, t1);
+    (r, t1)
   };
 
   func getRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : ?Y {
@@ -429,10 +399,9 @@ module {
   /// RBTree.size(tree.share()) // 3 entries
   /// ```
   ///
-  /// Runtime: `O(log(n))`.
-  /// Heap space: `O(1)`.
-  /// Stack space: `O(log(n))`.
-  /// where `n` denotes the number of key-value entries stored in the tree.
+  ///| Runtime        | Space (Heap) | Space (Stack) |
+  ///|----------------|--------------|----------------|
+  ///| `O(log(n))`  | `O(1)`         | `O(log(n))`    |
   public func size<X, Y>(t : Tree<X, Y>) : Nat {
     switch t {
       case (#leaf) { 0 };
@@ -444,56 +413,58 @@ module {
 
   func redden<X, Y>(t : Tree<X, Y>) : Tree<X, Y> {
     switch t {
-      case (#node (#B, l, xy, r)) {
-        (#node (#R, l, xy, r))
-      };
+      case (#node(#B, l, xy, r)) { (#node(#R, l, xy, r)) };
       case _ {
         Debug.trap "RBTree.red"
       }
     }
   };
 
-  func lbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func lbalance<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (#node(#R, #node(#R, l1, xy1, r1), xy2, r2), r) {
         #node(
           #R,
           #node(#B, l1, xy1, r1),
           xy2,
-          #node(#B, r2, xy, r))
+          #node(#B, r2, xy, r)
+        )
       };
       case (#node(#R, l1, xy1, #node(#R, l2, xy2, r2)), r) {
         #node(
           #R,
           #node(#B, l1, xy1, l2),
           xy2,
-          #node(#B, r2, xy, r))
+          #node(#B, r2, xy, r)
+        )
       };
       case _ {
-         #node(#B, left, xy, right)
+        #node(#B, left, xy, right)
       }
     }
   };
 
-  func rbalance<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func rbalance<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, #node(#R, l2, xy2, r2))) {
         #node(
           #R,
           #node(#B, l, xy, l1),
           xy1,
-          #node(#B, l2, xy2, r2))
+          #node(#B, l2, xy2, r2)
+        )
       };
       case (l, #node(#R, #node(#R, l1, xy1, r1), xy2, r2)) {
         #node(
           #R,
           #node(#B, l, xy, l1),
           xy1,
-          #node(#B, r1, xy2, r2))
+          #node(#B, r1, xy2, r2)
+        )
       };
       case _ {
         #node(#B, left, xy, right)
-      };
+      }
     }
   };
 
@@ -502,16 +473,15 @@ module {
     compare : (X, X) -> O.Order,
     x : X,
     y : Y
-  )
-  : (Tree<X,Y>, ?Y) {
+  ) : (Tree<X, Y>, ?Y) {
     var y0 : ?Y = null;
-    func ins(tree : Tree<X,Y>) : Tree<X,Y> {
+    func ins(tree : Tree<X, Y>) : Tree<X, Y> {
       switch tree {
         case (#leaf) {
-          #node(#R, #leaf, (x,?y), #leaf)
+          #node(#R, #leaf, (x, ?y), #leaf)
         };
         case (#node(#B, left, xy, right)) {
-          switch (compare (x, xy.0)) {
+          switch (compare(x, xy.0)) {
             case (#less) {
               lbalance(ins left, xy, right)
             };
@@ -520,12 +490,12 @@ module {
             };
             case (#equal) {
               y0 := xy.1;
-              #node(#B, left, (x,?y), right)
+              #node(#B, left, (x, ?y), right)
             }
           }
         };
         case (#node(#R, left, xy, right)) {
-          switch (compare (x, xy.0)) {
+          switch (compare(x, xy.0)) {
             case (#less) {
               #node(#R, ins left, xy, right)
             };
@@ -534,77 +504,86 @@ module {
             };
             case (#equal) {
               y0 := xy.1;
-              #node(#R, left, (x,?y), right)
+              #node(#R, left, (x, ?y), right)
             }
           }
         }
-      };
+      }
     };
     switch (ins tree) {
       case (#node(#R, left, xy, right)) {
-        (#node(#B, left, xy, right), y0);
+        (#node(#B, left, xy, right), y0)
       };
-      case other { (other, y0) };
-    };
+      case other { (other, y0) }
+    }
   };
 
-
-  func balLeft<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func balLeft<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (#node(#R, l1, xy1, r1), r) {
         #node(
           #R,
           #node(#B, l1, xy1, r1),
           xy,
-          r)
+          r
+        )
       };
       case (_, #node(#B, l2, xy2, r2)) {
         rbalance(left, xy, #node(#R, l2, xy2, r2))
       };
       case (_, #node(#R, #node(#B, l2, xy2, r2), xy3, r3)) {
-        #node(#R,
+        #node(
+          #R,
           #node(#B, left, xy, l2),
           xy2,
-          rbalance(r2, xy3, redden r3))
+          rbalance(r2, xy3, redden r3)
+        )
       };
-      case _ { Debug.trap "balLeft" };
+      case _ { Debug.trap "balLeft" }
     }
   };
 
-  func balRight<X,Y>(left : Tree<X, Y>, xy : (X,?Y), right : Tree<X, Y>) : Tree<X,Y> {
+  func balRight<X, Y>(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
       case (l, #node(#R, l1, xy1, r1)) {
-        #node(#R,
+        #node(
+          #R,
           l,
           xy,
-          #node(#B, l1, xy1, r1))
+          #node(#B, l1, xy1, r1)
+        )
       };
       case (#node(#B, l1, xy1, r1), r) {
-        lbalance(#node(#R, l1, xy1, r1), xy, r);
+        lbalance(#node(#R, l1, xy1, r1), xy, r)
       };
       case (#node(#R, l1, xy1, #node(#B, l2, xy2, r2)), r3) {
-        #node(#R,
+        #node(
+          #R,
           lbalance(redden l1, xy1, l2),
           xy2,
-          #node(#B, r2, xy, r3))
+          #node(#B, r2, xy, r3)
+        )
       };
-      case _ { Debug.trap "balRight" };
+      case _ { Debug.trap "balRight" }
     }
   };
 
-  func append<X,Y>(left : Tree<X, Y>, right: Tree<X, Y>) : Tree<X, Y> {
+  func append<X, Y>(left : Tree<X, Y>, right : Tree<X, Y>) : Tree<X, Y> {
     switch (left, right) {
-      case (#leaf,  _) { right };
-      case (_,  #leaf) { left };
-      case (#node (#R, l1, xy1, r1),
-            #node (#R, l2, xy2, r2)) {
-        switch (append (r1, l2)) {
-          case (#node (#R, l3, xy3, r3)) {
+      case (#leaf, _) { right };
+      case (_, #leaf) { left };
+      case (
+        #node(#R, l1, xy1, r1),
+        #node(#R, l2, xy2, r2)
+      ) {
+        switch (append(r1, l2)) {
+          case (#node(#R, l3, xy3, r3)) {
             #node(
               #R,
               #node(#R, l1, xy1, l3),
               xy3,
-              #node(#R, r3, xy2, r2))
+              #node(#R, r3, xy2, r2)
+            )
           };
           case r1l2 {
             #node(#R, l1, xy1, #node(#R, r1l2, xy2, r2))
@@ -617,16 +596,18 @@ module {
       case (#node(#R, l1, xy1, r1), t2) {
         #node(#R, l1, xy1, append(r1, t2))
       };
-      case (#node(#B, l1, xy1, r1), #node (#B, l2, xy2, r2)) {
-        switch (append (r1, l2)) {
-          case (#node (#R, l3, xy3, r3)) {
-            #node(#R,
+      case (#node(#B, l1, xy1, r1), #node(#B, l2, xy2, r2)) {
+        switch (append(r1, l2)) {
+          case (#node(#R, l3, xy3, r3)) {
+            #node(
+              #R,
               #node(#B, l1, xy1, l3),
               xy3,
-              #node(#B, r3, xy2, r2))
+              #node(#B, r3, xy2, r2)
+            )
           };
           case r1l2 {
-            balLeft (
+            balLeft(
               l1,
               xy1,
               #node(#B, r1l2, xy2, r2)
@@ -637,10 +618,10 @@ module {
     }
   };
 
-  func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X,Y>, ?Y) {
+  func remove<X, Y>(tree : Tree<X, Y>, compare : (X, X) -> O.Order, x : X) : (Tree<X, Y>, ?Y) {
     var y0 : ?Y = null;
-    func delNode(left : Tree<X,Y>, xy : (X, ?Y), right : Tree<X,Y>) : Tree<X,Y> {
-      switch (compare (x, xy.0)) {
+    func delNode(left : Tree<X, Y>, xy : (X, ?Y), right : Tree<X, Y>) : Tree<X, Y> {
+      switch (compare(x, xy.0)) {
         case (#less) {
           let newLeft = del left;
           switch left {
@@ -666,10 +647,10 @@ module {
         case (#equal) {
           y0 := xy.1;
           append(left, right)
-        };
+        }
       }
     };
-    func del(tree : Tree<X,Y>) : Tree<X,Y> {
+    func del(tree : Tree<X, Y>) : Tree<X, Y> {
       switch tree {
         case (#leaf) {
           tree
@@ -677,14 +658,14 @@ module {
         case (#node(_, left, xy, right)) {
           delNode(left, xy, right)
         }
-      };
+      }
     };
     switch (del(tree)) {
       case (#node(#R, left, xy, right)) {
-        (#node(#B, left, xy, right), y0);
+        (#node(#B, left, xy, right), y0)
       };
-      case other { (other, y0) };
-    };
+      case other { (other, y0) }
+    }
   }
 
 }

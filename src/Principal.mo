@@ -1,28 +1,35 @@
-/// Module for interacting with Principals (users and canisters).
+///Module for interacting with Principals (users and canisters).
 ///
-/// Principals are used to identify entities that can interact with the Internet
-/// Computer. These entities are either users or canisters.
+///Principals are used to identify entities that can interact with the Internet
+///Computer. These entities are either users or canisters.
 ///
-/// Example textual representation of Principals:
+///Example textual representation of Principals:
 ///
-/// `un4fu-tqaaa-aaaab-qadjq-cai`
+///`un4fu-tqaaa-aaaab-qadjq-cai`
 ///
-/// In Motoko, there is a primitive Principal type called `Principal`. As an example
-/// of where you might see Principals, you can access the Principal of the
-/// caller of your shared function.
+///In Motoko, there is a primitive Principal type called `Principal`. As an example
+///of where you might see Principals, you can access the Principal of the
+///caller of your shared function.
 ///
-/// ```motoko no-repl
-/// shared(msg) func foo() {
-///   let caller : Principal = msg.caller;
-/// };
-/// ```
+///```motoko no-repl
+///shared(msg) func foo() {
+///  let caller : Principal = msg.caller;
+///};
+///```
 ///
-/// Then, you can use this module to work with the `Principal`.
+///Then, you can use this module to work with the `Principal`.
 ///
-/// Import from the base library to use this module.
-/// ```motoko name=import
-/// import Principal "mo:base/Principal";
-/// ```
+///:::note [Comparison usage]
+///
+///These functions are defined in this library in addition to the existing comparison operators so that they can be passed as function values to higher-order functions. It is currently not possible to use operators such as `==`, `!=`, `<`, `<=`, `>`, or `>=` as function values directly.
+///:::
+///
+///Import from the base library to use this module.
+///
+///```motoko name=import
+///import Principal "mo:base/Principal";
+///```
+///
 
 import Prim "mo:⛔";
 import Blob "Blob";
@@ -181,10 +188,7 @@ module {
   /// principal1 == principal2 // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `==`
-  /// as a function value at the moment.
+
   ///
   /// Example:
   /// ```motoko include=import
@@ -209,10 +213,7 @@ module {
   /// principal1 != principal2 // => false
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `!=`
-  /// as a function value at the moment.
+
   public func notEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 != principal2
   };
@@ -228,10 +229,7 @@ module {
   /// principal1 < principal2 // => false
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<`
-  /// as a function value at the moment.
+
   public func less(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 < principal2
   };
@@ -247,10 +245,7 @@ module {
   /// principal1 <= principal2 // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `<=`
-  /// as a function value at the moment.
+
   public func lessOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 <= principal2
   };
@@ -266,10 +261,7 @@ module {
   /// principal1 > principal2 // => false
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>`
-  /// as a function value at the moment.
+
   public func greater(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 > principal2
   };
@@ -285,10 +277,7 @@ module {
   /// principal1 >= principal2 // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function
-  /// value to pass to a higher order function. It is not possible to use `>=`
-  /// as a function value at the moment.
+
   public func greaterOrEqual(principal1 : Principal, principal2 : Principal) : Bool {
     principal1 >= principal2
   };

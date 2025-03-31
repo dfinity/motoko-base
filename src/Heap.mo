@@ -1,25 +1,23 @@
-/// Class `Heap<X>` provides a priority queue of elements of type `X`.
+///Class `Heap<X>` provides a priority queue of elements of type `X`.
 ///
-/// The class wraps a purely-functional implementation based on a leftist heap.
+///The class wraps a purely-functional implementation based on a leftist heap.
 ///
-/// Note on the constructor:
-/// The constructor takes in a comparison function `compare` that defines the
-/// ordering between elements of type `X`. Most primitive types have a default
-/// version of this comparison function defined in their modules (e.g. `Nat.compare`).
-/// The runtime analysis in this documentation assumes that the `compare` function
-/// runs in `O(1)` time and space.
+///:::note [Constructor details]
+///The constructor takes in a comparison function `compare` that defines the ordering between elements of type `X`. Most primitive types have a default version of this comparison function defined in their modules (e.g. `Nat.compare`). The runtime analysis in this documentation assumes that the `compare` function runs in `O(1)` time and space.
+///:::
 ///
-/// Example:
-/// ```motoko name=initialize
-/// import Heap "mo:base/Heap";
-/// import Text "mo:base/Text";
+///Example:
 ///
-/// let heap = Heap.Heap<Text>(Text.compare);
-/// ```
+///```motoko name=initialize
+///import Heap "mo:base/Heap";
+///import Text "mo:base/Text";
 ///
-/// Runtime: `O(1)`
+///let heap = Heap.Heap<Text>(Text.compare);
+///```
 ///
-/// Space: `O(1)`
+///| Runtime   | Space     |
+///|-----------|-----------|
+///| `O(1)`    | `O(1)`    |
 
 import O "Order";
 import P "Prelude";
@@ -42,9 +40,9 @@ module {
     /// heap.peekMin() // => ?"apple"
     /// ```
     ///
-    /// Runtime: `O(log(n))`
-    ///
-    /// Space: `O(log(n))`
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)`    | `O(1)`    |
     public func put(x : X) {
       heap := merge(heap, ?(1, x, null, null), compare)
     };
@@ -60,9 +58,9 @@ module {
     /// heap.peekMin() // => ?"apple"
     /// ```
     ///
-    /// Runtime: `O(1)`
-    ///
-    /// Space: `O(1)`
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)`    | `O(1)`    |
     public func peekMin() : ?X {
       switch heap {
         case (null) { null };
@@ -82,9 +80,9 @@ module {
     /// heap.peekMin(); // => ?"banana"
     /// ```
     ///
-    /// Runtime: `O(log(n))`
-    ///
-    /// Space: `O(log(n))`
+    ///| Runtime      | Space       |
+    ///|--------------|-------------|
+    ///| `O(log(n))`  | `O(log(n))` |
     public func deleteMin() {
       switch heap {
         case null {};
@@ -103,9 +101,9 @@ module {
     /// heap.removeMin(); // => ?"apple"
     /// ```
     ///
-    /// Runtime: `O(log(n))`
-    ///
-    /// Space: `O(log(n))`
+    ///| Runtime      | Space       |
+    ///|--------------|-------------|
+    ///| `O(log(n))`  | `O(log(n))` |
     public func removeMin() : (minElement : ?X) {
       switch heap {
         case null { null };
@@ -129,9 +127,9 @@ module {
     /// Useful for storing the heap as a stable variable, pretty-printing, and sharing it across async function calls,
     /// i.e. passing it in async arguments or async results.
     ///
-    /// Runtime: `O(1)`
-    ///
-    /// Space: `O(1)`
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)`    | `O(1)`    |
     public func share() : Tree<X> {
       heap
     };
@@ -154,9 +152,9 @@ module {
     /// Useful for loading a stored heap from a stable variable or accesing a heap
     /// snapshot passed from an async function call.
     ///
-    /// Runtime: `O(1)`.
-    ///
-    /// Space: `O(1)`.
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)`    | `O(1)`    |
     public func unsafeUnshare(tree : Tree<X>) {
       heap := tree
     };
@@ -203,9 +201,9 @@ module {
   /// newHeap.peekMin() // => ?"apple"
   /// ```
   ///
-  /// Runtime: `O(size)`
-  ///
-  /// Space: `O(size)`
+  ///| Runtime   | Space     |
+  ///|-----------|-----------|
+  ///| `O(size)` | `O(size)` |
   public func fromIter<X>(iter : I.Iter<X>, compare : (X, X) -> O.Order) : Heap<X> {
     let heap = Heap<X>(compare);
     func build(xs : L.List<Tree<X>>) : Tree<X> {

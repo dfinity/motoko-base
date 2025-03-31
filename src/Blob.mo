@@ -1,34 +1,40 @@
-/// Module for working with Blobs: immutable sequence of bytes.
+///`Blob` is an immutable, iterable sequence of bytes. Unlike `[Nat8]`, which is less compact (using 4 bytes per logical byte), `Blob` provides a more efficient representation.
 ///
-/// Blobs represent sequences of bytes. They are immutable, iterable, but not indexable and can be empty.
+///Blobs are not indexable and can be empty. To manipulate a `Blob`, convert it to `[var Nat8]` or `Buffer<Nat8>`, perform your changes, then convert it back.
 ///
-/// Byte sequences are also often represented as `[Nat8]`, i.e. an array of bytes, but this representation is currently much less compact than `Blob`, taking 4 physical bytes to represent each logical byte in the sequence.
-/// If you would like to manipulate Blobs, it is recommended that you convert
-/// Blobs to `[var Nat8]` or `Buffer<Nat8>`, do the manipulation, then convert back.
+///Import from the base library to use this module.
 ///
-/// Import from the base library to use this module.
-/// ```motoko name=import
-/// import Blob "mo:base/Blob";
-/// ```
+///```motoko name=import
+///import Blob "mo:base/Blob";
+///```
 ///
-/// Some built in features not listed in this module:
+///:::note [Additional features]
 ///
-/// * You can create a `Blob` literal from a `Text` literal, provided the context expects an expression of type `Blob`.
-/// * `b.size() : Nat` returns the number of bytes in the blob `b`;
-/// * `b.vals() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob `b`.
+///Some built-in features are not listed in this module:
 ///
-/// For example:
-/// ```motoko include=import
-/// import Debug "mo:base/Debug";
-/// import Nat8 "mo:base/Nat8";
+///- You can create a `Blob` literal from a `Text` literal, provided the context expects an expression of type `Blob`.
+///- `b.size() : Nat` returns the number of bytes in the blob `b`.
+///- `b.vals() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob `b`.
+///:::
 ///
-/// let blob = "\00\00\00\ff" : Blob; // blob literals, where each byte is delimited by a back-slash and represented in hex
-/// let blob2 = "charsもあり" : Blob; // you can also use characters in the literals
-/// let numBytes = blob.size(); // => 4 (returns the number of bytes in the Blob)
-/// for (byte : Nat8 in blob.vals()) { // iterator over the Blob
-///   Debug.print(Nat8.toText(byte))
-/// }
-/// ```
+///For example:
+///
+///```motoko include=import
+///import Debug "mo:base/Debug";
+///import Nat8 "mo:base/Nat8";
+///
+///let blob = "\00\00\00\ff" : Blob; // blob literals, where each byte is delimited by a back-slash and represented in hex
+///let blob2 = "charsもあり" : Blob; // you can also use characters in the literals
+///let numBytes = blob.size(); // => 4 (returns the number of bytes in the Blob)
+///for (byte : Nat8 in blob.vals()) { // iterator over the Blob
+///  Debug.print(Nat8.toText(byte))
+///}
+///```
+///:::note [Operator limitation]
+///
+///Comparison functions (`equal`, `notEqual`, `less`, `lessOrEqual`, `greater`, `greaterOrEqual`) are defined in this library to allow their use as function values in higher-order functions.
+///Operators like `==`, `!=`, `<`, `<=`, `>`, and `>=` cannot currently be passed as function values.
+///:::
 import Prim "mo:⛔";
 module {
   public type Blob = Prim.Types.Blob;
@@ -103,19 +109,6 @@ module {
   /// blob1 == blob2 // => true
   /// ```
   ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `==` operator) is so that you can use it as a function value
-  /// to pass to a higher order function. It is not possible to use `==` as a
-  /// function value at the moment.
-  ///
-  /// Example:
-  /// ```motoko include=import
-  /// import Buffer "mo:base/Buffer";
-  ///
-  /// let buffer1 = Buffer.Buffer<Blob>(3);
-  /// let buffer2 = Buffer.Buffer<Blob>(3);
-  /// Buffer.equal(buffer1, buffer2, Blob.equal) // => true
-  /// ```
   public func equal(blob1 : Blob, blob2 : Blob) : Bool { blob1 == blob2 };
 
   /// Inequality function for `Blob` types.
@@ -128,11 +121,7 @@ module {
   /// ignore Blob.notEqual(blob1, blob2);
   /// blob1 != blob2 // => true
   /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `!=` operator) is so that you can use it as a function value
-  /// to pass to a higher order function. It is not possible to use `!=` as a
-  /// function value at the moment.
+
   public func notEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 != blob2 };
 
   /// "Less than" function for `Blob` types.
@@ -145,11 +134,7 @@ module {
   /// ignore Blob.less(blob1, blob2);
   /// blob1 < blob2 // => true
   /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<` operator) is so that you can use it as a function value
-  /// to pass to a higher order function. It is not possible to use `<` as a
-  /// function value at the moment.
+
   public func less(blob1 : Blob, blob2 : Blob) : Bool { blob1 < blob2 };
 
   /// "Less than or equal to" function for `Blob` types.
@@ -162,11 +147,6 @@ module {
   /// ignore Blob.lessOrEqual(blob1, blob2);
   /// blob1 <= blob2 // => true
   /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `<=` operator) is so that you can use it as a function value
-  /// to pass to a higher order function. It is not possible to use `<=` as a
-  /// function value at the moment.
   public func lessOrEqual(blob1 : Blob, blob2 : Blob) : Bool { blob1 <= blob2 };
 
   /// "Greater than" function for `Blob` types.
@@ -179,11 +159,6 @@ module {
   /// ignore Blob.greater(blob1, blob2);
   /// blob1 > blob2 // => true
   /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>` operator) is so that you can use it as a function value
-  /// to pass to a higher order function. It is not possible to use `>` as a
-  /// function value at the moment.
   public func greater(blob1 : Blob, blob2 : Blob) : Bool { blob1 > blob2 };
 
   /// "Greater than or equal to" function for `Blob` types.
@@ -196,11 +171,6 @@ module {
   /// ignore Blob.greaterOrEqual(blob1, blob2);
   /// blob1 >= blob2 // => true
   /// ```
-  ///
-  /// Note: The reason why this function is defined in this library (in addition
-  /// to the existing `>=` operator) is so that you can use it as a function value
-  /// to pass to a higher order function. It is not possible to use `>=` as a
-  /// function value at the moment.
   public func greaterOrEqual(blob1 : Blob, blob2 : Blob) : Bool {
     blob1 >= blob2
   }

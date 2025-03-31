@@ -1,40 +1,43 @@
-/// Class `HashMap<K, V>` provides a hashmap from keys of type `K` to values of type `V`.
-
-/// The class is parameterized by the key's equality and hash functions,
-/// and an initial capacity.  However, the underlying allocation happens only when
-/// the first key-value entry is inserted.
+///Class `HashMap<K, V>` provides a hashmap from keys of type `K` to values of type `V`.
+///The class is parameterized by the key's equality and hash functions, and an initial capacity.
+///However, the underlying allocation occurs only upon the first insertion.
 ///
-/// Internally, the map is represented as an array of `AssocList` (buckets).
-/// The growth policy of the underyling array is very simple, for now: double
-/// the current capacity when the expected bucket list size grows beyond a
-/// certain constant.
+///Internally, the map is backed by an array of `AssocList` (buckets).
+///The array doubles in size when the expected bucket list size grows beyond a fixed threshold.
 ///
-/// WARNING: Certain operations are amortized O(1) time, such as `put`, but run
-/// in worst case O(size) time. These worst case runtimes may exceed the cycles limit
-/// per message if the size of the map is large enough. Further, this runtime analysis
-/// assumes that the hash functions uniformly maps keys over the hash space. Grow these structures
-/// with discretion, and with good hash functions. All amortized operations
-/// below also list the worst case runtime.
+///:::warning [Performance considerations]
 ///
-/// For maps without amortization, see `TrieMap`.
+///Certain operations, such as `put`, are amortized `O(1)` but can run in worst-case `O(size)` time.
+///These worst cases may exceed the cycle limit per message on large maps.
+///This analysis assumes that the hash function distributes keys uniformly.
+///Use caution when growing large maps and ensure good hash functions are used.
 ///
-/// Note on the constructor:
-/// The argument `initCapacity` determines the initial number of buckets in the
-/// underyling array. Also, the runtime and space anlyses in this documentation
-/// assumes that the equality and hash functions for keys used to construct the
-/// map run in O(1) time and space.
+///:::
 ///
-/// Example:
-/// ```motoko name=initialize
-/// import HashMap "mo:base/HashMap";
-/// import Text "mo:base/Text";
+///:::note [Non-amortized alternative]
 ///
-/// let map = HashMap.HashMap<Text, Nat>(5, Text.equal, Text.hash);
-/// ```
+///For maps without amortization, see `TrieMap`.
+///:::
 ///
-/// Runtime: O(1)
+///:::info [Constructor note]
 ///
-/// Space: O(1)
+///The `initCapacity` argument sets the initial number of buckets.
+///All runtime and space complexities assume that the equality and hash functions run in `O(1)` time and space.
+///
+///:::
+///
+///Example:
+///
+///```motoko name=initialize
+///import HashMap "mo:base/HashMap";
+///import Text "mo:base/Text";
+///
+///let map = HashMap.HashMap<Text, Nat>(5, Text.equal, Text.hash);
+///```
+///
+///| Runtime   | Space     |
+///|-----------|-----------|
+///| `O(1)` | `O(1)` |
 
 import Prim "mo:⛔";
 import P "Prelude";
@@ -68,9 +71,9 @@ module {
     /// map.size() // => 0
     /// ```
     ///
-    /// Runtime: O(1)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(1)` | `O(1)` |
     public func size() : Nat = _count;
 
     /// Returns the value assocaited with key `key` if present and `null` otherwise.
@@ -81,9 +84,10 @@ module {
     /// map.get("key") // => ?3
     /// ```
     ///
-    /// Expected Runtime: O(1), Worst Case Runtime: O(size)
+    ///| Runtime(worst) | Runtime(amortized) |  Space |
+    ///|----------------------------|--------------------|---------------------------|
+    ///| `O(size)`                     | `O(1)`          | `O(1)`                    |
     ///
-    /// Space: O(1)
     public func get(key : K) : (value : ?V) {
       let h = Prim.nat32ToNat(keyHash(key));
       let m = table.size();
@@ -102,12 +106,13 @@ module {
     /// map.get("key") // => ?3
     /// ```
     ///
-    /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(size)
+    ///| Runtime(amortized) | Runtime(worst) | Space (amortized) | Space(worst)
+    ///|----------------------------|--------------------|---------------------------|------------------|
+    ///| `O(1)`                     | `O(size)`          | `O(1)`                    | `O(size)`        |
+    ///:::note [Initial allocation]
     ///
-    /// Expected Amortized Space: O(1), Worst Case Space: O(size)
-    ///
-    /// Note: If this is the first entry into this map, this operation will cause
-    /// the initial allocation of the underlying array.
+    ///This operation triggers the allocation of the underlying array if it is the first entry in the map.
+    ///:::
     public func put(key : K, value : V) = ignore replace(key, value);
 
     /// Insert the value `value` with key `key`. Returns the previous value
@@ -120,12 +125,14 @@ module {
     /// map.get("key") // => ?2
     /// ```
     ///
-    /// Expected Amortized Runtime: O(1), Worst Case Runtime: O(size)
+    ///| Expected Amortized Runtime | Worst Case Runtime | Expected Amortized Space | Worst Case Space |
+    ///|----------------------------|--------------------|---------------------------|------------------|
+    ///| `O(1)`                     | `O(size)`          | `O(1)`                    | `O(size)`        |
     ///
-    /// Expected Amortized Space: O(1), Worst Case Space: O(size)
+    ///:::note [Initial allocation]
     ///
-    /// Note: If this is the first entry into this map, this operation will cause
-    /// the initial allocation of the underlying array.
+    ///This operation triggers the allocation of the underlying array if it is the first entry in the map.
+    ///:::
     public func replace(key : K, value : V) : (oldValue : ?V) {
       if (_count >= table.size()) {
         let size = if (_count == 0) {
@@ -174,9 +181,10 @@ module {
     /// map.get("key"); // => null
     /// ```
     ///
-    /// Expected Runtime: O(1), Worst Case Runtime: O(size)
+    ///| Expected Runtime | Worst Case Runtime | Expected Space | Worst Case Space |
+    ///|------------------|--------------------|----------------|------------------|
+    ///| `O(1)`           | `O(size)`          | `O(1)`         | `O(size)`        |
     ///
-    /// Expected Space: O(1), Worst Case Space: O(size)
     public func delete(key : K) = ignore remove(key);
 
     func keyHash_(k : K) : Key<K> = (keyHash(k), k);
@@ -194,9 +202,9 @@ module {
     /// map.remove("key"); // => ?3
     /// ```
     ///
-    /// Expected Runtime: O(1), Worst Case Runtime: O(size)
-    ///
-    /// Expected Space: O(1), Worst Case Space: O(size)
+    ///| Expected Runtime | Worst Case Runtime | Expected Space | Worst Case Space |
+    ///|------------------|--------------------|----------------|------------------|
+    ///| `O(1)`           | `O(size)`          | `O(1)`         | `O(size)`        |
     public func remove(key : K) : (oldValue : ?V) {
       let m = table.size();
       if (m > 0) {
@@ -234,9 +242,9 @@ module {
     ///
     /// Cost of iteration over all keys:
     ///
-    /// Runtime: O(size)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(size)` | `O(1)` |
     public func keys() : Iter.Iter<K> {
       Iter.map(entries(), func(kv : (K, V)) : K { kv.0 })
     };
@@ -259,11 +267,9 @@ module {
     /// sum // => 6
     /// ```
     ///
-    /// Cost of iteration over all values:
-    ///
-    /// Runtime: O(size)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(size)` | `O(1)` |
     public func vals() : Iter.Iter<V> {
       Iter.map(entries(), func(kv : (K, V)) : V { kv.1 })
     };
@@ -289,9 +295,9 @@ module {
     ///
     /// Cost of iteration over all pairs:
     ///
-    /// Runtime: O(size)
-    ///
-    /// Space: O(1)
+    ///| Runtime   | Space     |
+    ///|-----------|-----------|
+    ///| `O(size)` | `O(1)` |
     public func entries() : Iter.Iter<(K, V)> {
       if (table.size() == 0) {
         object { public func next() : ?(K, V) { null } }
@@ -335,9 +341,9 @@ module {
   /// map2.get("key1") // => ?1
   /// ```
   ///
-  /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
-  ///
-  /// Expected Space: O(size), Worst Case Space: O(size)
+  ///| Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
+  ///|------------------|--------------------|----------------|------------------|
+  ///| `O(size)`        | `O(size * size)`   | `O(size)`      | `O(size)`        |
   public func clone<K, V>(
     map : HashMap<K, V>,
     keyEq : (K, K) -> Bool,
@@ -363,9 +369,9 @@ module {
   /// map2.get("key1") // => ?1
   /// ```
   ///
-  /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
-  ///
-  /// Expected Space: O(size), Worst Case Space: O(size)
+  ///| Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
+  ///|------------------|--------------------|----------------|------------------|
+  ///| `O(size)`        | `O(size * size)`   | `O(size)`      | `O(size)`        |
   public func fromIter<K, V>(
     iter : Iter.Iter<(K, V)>,
     initCapacity : Nat,
@@ -394,9 +400,9 @@ module {
   ///
   /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
   ///
-  /// Expected Space: O(size), Worst Case Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+  ///| Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
+  ///|------------------|--------------------|----------------|------------------|
+  ///| `O(size)`        | `O(size * size)`   | `O(size)`      | `O(size)`        |
   public func map<K, V1, V2>(
     hashMap : HashMap<K, V1>,
     keyEq : (K, K) -> Bool,
@@ -431,11 +437,9 @@ module {
   /// map2.get("key3") // => ?6
   /// ```
   ///
-  /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
-  ///
-  /// Expected Space: O(size), Worst Case Space: O(size)
-  ///
-  /// *Runtime and space assumes that `f` runs in O(1) time and space.
+  ///| Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
+  ///|------------------|--------------------|----------------|------------------|
+  ///| `O(size)`        | `O(size * size)`   | `O(size)`      | `O(size)`        |
   public func mapFilter<K, V1, V2>(
     hashMap : HashMap<K, V1>,
     keyEq : (K, K) -> Bool,

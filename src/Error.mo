@@ -76,10 +76,9 @@ module {
   /// try await (with timeout = 3) Actor.call(arg)
   /// catch e { if (isRetryPossible e) print(message e) }
   /// ```
-  public func isRetryPossible(error : Error) : Bool =
-    switch (code error) {
-      case (#system_unknown or #system_transient) true;
-      case _ false
-    };
+  public func isRetryPossible(error : Error) : Bool = switch (code error) {
+    case (#system_unknown or #system_transient) true;
+    case _ false
+  };
 
 }

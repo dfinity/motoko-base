@@ -137,23 +137,29 @@ module {
     case (_, _) { false }
   };
 
-  /// Asserts that the value is not `null`; fails otherwise.
-  /// @deprecated Option.assertSome will be removed soon; use an assert expression instead
+  /// /:::warning [Deprecated function]
+  ///
+  ///`Option.assertSome` will be removed soon. Use an `assert` expression instead.
+  ///
+  ///:::
   public func assertSome(x : ?Any) = switch x {
     case null { P.unreachable() };
     case _ {}
   };
 
-  /// Asserts that the value _is_ `null`; fails otherwise.
-  /// @deprecated Option.assertNull will be removed soon; use an assert expression instead
+  ///:::warning [Deprecated function]
+  ///
+  ///`Option.assertNull` will be removed soon. Use an `assert` expression instead.
+  ///
   public func assertNull(x : ?Any) = switch x {
     case null {};
     case _ { P.unreachable() }
   };
 
-  /// Unwraps an optional value, i.e. `unwrap(?x) = x`.
+  ///:::warning [Deprecated function]
   ///
-  /// @deprecated Option.unwrap is unsafe and fails if the argument is null; it will be removed soon; use a `switch` or `do?` expression instead
+  ///`Option.unwrap` is unsafe and will be removed soon. Use a `switch` or `do?` expression instead.
+  ///
   public func unwrap<T>(x : ?T) : T = switch x {
     case null { P.unreachable() };
     case (?x_) { x_ }

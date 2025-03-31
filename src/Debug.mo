@@ -9,9 +9,13 @@ import Prim "mo:⛔";
 module {
   /// Prints `text` to output stream.
   ///
-  /// NOTE: When running on an ICP network, all output is written to the [canister log](https://internetcomputer.org/docs/current/developer-docs/smart-contracts/maintain/logs) with the exclusion of any output
-  /// produced during the execution of non-replicated queries and composite queries.
-  /// In other environments, like the interpreter and stand-alone wasm engines, the output is written to standard out.
+  /// :::note
+
+  ///When running on an ICP network, all output is written to the [canister log](https://internetcomputer.org/docs/current/developer-docs/smart-contracts/maintain/logs) with the exclusion of any output
+  ///produced during the execution of non-replicated queries and composite queries.
+  //In other environments, like the interpreter and stand-alone wasm engines, the output is written to standard out.
+
+  ///:::
   ///
   /// ```motoko include=import
   /// Debug.print "Hello New World!";
@@ -28,9 +32,12 @@ module {
   /// `#canister_error` and message `m`. Here `m` is a more descriptive `Text`
   /// message derived from the provided `t`. See example for more details.
   ///
-  /// NOTE: Other execution environments that cannot handle traps may only
-  /// propagate the trap and terminate execution, with or without some
-  /// descriptive message.
+  ///:::note
+
+  ///Other execution environments that cannot handle traps may only
+  ///propagate the trap and terminate execution, with or without some
+  ///descriptive message.
+  ///:::
   ///
   /// ```motoko
   /// import Debug "mo:base/Debug";
