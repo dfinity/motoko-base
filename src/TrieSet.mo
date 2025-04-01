@@ -1,15 +1,15 @@
-/// Functional set
-///
-///Sets are partial maps from element type to unit type,
-///i.e., the partial map represents the set with its domain.
-///
-///:::warning [Limitations]
-///
-///This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
-///Attempts to insert more than 8 elements with the same hash value—either directly via `put` or indirectly via other operations—will trap.
-///This limitation is inherited from the underlying `Trie` data structure.
-///:::
-///
+///  Functional set
+/// 
+/// Sets are partial maps from element type to unit type,
+/// i.e., the partial map represents the set with its domain.
+/// 
+/// :::warning [Limitations]
+/// 
+/// This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
+/// Attempts to insert more than 8 elements with the same hash value—either directly via `put` or indirectly via other operations—will trap.
+/// This limitation is inherited from the underlying `Trie` data structure.
+/// :::
+/// 
 
 // TODO-Matthew:
 // ---------------
@@ -65,22 +65,22 @@ module {
     }
   };
 
-  /// Empty set.
+  ///  Empty set.
   public func empty<T>() : Set<T> { Trie.empty<T, ()>() };
 
-  /// Put an element into the set.
+  ///  Put an element into the set.
   public func put<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
     let (s2, _) = Trie.put<T, ()>(s, { key = x; hash = xh }, eq, ());
     s2
   };
 
-  /// Delete an element from the set.
+  ///  Delete an element from the set.
   public func delete<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Set<T> {
     let (s2, _) = Trie.remove<T, ()>(s, { key = x; hash = xh }, eq);
     s2
   };
 
-  /// Test if two sets are equal.
+  ///  Test if two sets are equal.
   public func equal<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     if (Trie.size(s1) != Trie.size(s2)) return false;
     for (k in keys(s1)) {
@@ -91,17 +91,17 @@ module {
     return true
   };
 
-  /// The number of set elements, set's cardinality.
+  ///  The number of set elements, set's cardinality.
   public func size<T>(s : Set<T>) : Nat {
     Trie.size(s)
   };
 
-  /// Test if `s` is the empty set.
+  ///  Test if `s` is the empty set.
   public func isEmpty<T>(s : Set<T>) : Bool {
     Trie.size(s) == 0
   };
 
-  /// Test if `s1` is a subset of `s2`.
+  ///  Test if `s1` is a subset of `s2`.
   public func isSubset<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Bool {
     if (Trie.size(s1) > Trie.size(s2)) return false;
     for (k in keys(s1)) {
@@ -112,14 +112,14 @@ module {
     return true
   };
 
-  /// @deprecated: use `TrieSet.contains()`
-  ///
-  /// Test if a set contains a given element.
+  ///  @deprecated: use `TrieSet.contains()`
+  /// 
+  ///  Test if a set contains a given element.
   public func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
     contains(s, x, xh, eq)
   };
 
-  /// Test if a set contains a given element.
+  ///  Test if a set contains a given element.
   public func contains<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
     switch (Trie.find<T, ()>(s, { key = x; hash = xh }, eq)) {
       case null { false };
@@ -127,26 +127,26 @@ module {
     }
   };
 
-  /// [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
+  ///  [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
   public func union<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let s3 = Trie.merge<T, ()>(s1, s2, eq);
     s3
   };
 
-  /// [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
+  ///  [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
   public func diff<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let s3 = Trie.diff<T, (), ()>(s1, s2, eq);
     s3
   };
 
-  /// [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
+  ///  [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
   public func intersect<T>(s1 : Set<T>, s2 : Set<T>, eq : (T, T) -> Bool) : Set<T> {
     let noop : ((), ()) -> (()) = func(_ : (), _ : ()) : (()) = ();
     let s3 = Trie.join<T, (), (), ()>(s1, s2, eq, noop);
     s3
   };
 
-  //// Construct a set from an array.
+  /// / Construct a set from an array.
   public func fromArray<T>(arr : [T], elemHash : T -> Hash, eq : (T, T) -> Bool) : Set<T> {
     var s = empty<T>();
     for (elem in arr.vals()) {
@@ -155,7 +155,7 @@ module {
     s
   };
 
-  //// Returns the set as an array.
+  /// / Returns the set as an array.
   public func toArray<T>(s : Set<T>) : [T] {
     Trie.toArray(s, func(t : T, _ : ()) : T { t })
   }
