@@ -1,3 +1,7 @@
+## 0.14.7
+
+Deprecated `ExperimentalCycles.add`, use a parenthetical `(with cycles = <amount>) <send>` instead (#703).
+
 ## 0.14.6
 
 (nothing)
