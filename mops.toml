@@ -11,4 +11,4 @@ matchers = "https://github.com/kritzcreek/motoko-matchers#v1.3.0@3dac8a071b69e4e
 
 [toolchain]
 moc = "0.14.7"
-wasmtime = "17.0.0"
+wasmtime = "21.0.0"
