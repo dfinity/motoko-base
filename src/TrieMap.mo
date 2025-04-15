@@ -119,7 +119,9 @@ module {
     ///  Delete the entry associated with key `key`, if it exists. If the key is
     ///  absent, there is no effect.
     /// 
-    ///  Note: The deletion of an existing key shrinks the trie map.
+    /// :::note
+    /// The deletion of an existing key shrinks the trie map.
+    /// :::
     /// 
     ///  Example:
     ///  ```motoko include=initialize
@@ -136,7 +138,9 @@ module {
     ///  Delete the entry associated with key `key`. Return the deleted value
     ///  as an option if it exists, and `null` otherwise.
     /// 
-    ///  Note: The deletion of an existing key shrinks the trie map.
+    /// :::note
+    /// The deletion of an existing key shrinks the trie map.
+    /// :::
     /// 
     ///  Example:
     ///  ```motoko include=initialize
@@ -336,7 +340,6 @@ module {
   /// | Runtime             | Space    |
   /// |---------------------|----------|
   /// | `O(size * log(size))` | `O(size)`  |
-  ///  time and space.
   public func map<K, V1, V2>(
     map : TrieMap<K, V1>,
     keyEq : (K, K) -> Bool,

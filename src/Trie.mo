@@ -110,7 +110,7 @@ module {
 
   let MAX_LEAF_SIZE = 8; // to do -- further profiling and tuning
 
-  ///  Binary hash tries: either empty, a leaf node, or a branch node
+  ///  Binary hash tries: either empty, a leaf node, or a branch node.
   public type Trie<K, V> = {
     #empty;
     #leaf : Leaf<K, V>;
@@ -134,8 +134,8 @@ module {
 
   public type AssocList<K, V> = AssocList.AssocList<K, V>;
 
-  ///  A `Key` for the trie has an associated hash value
-  ///  - `hash` permits fast inequality checks, and permits collisions, while
+  ///  A `Key` for the trie has an associated hash value:
+  ///  - `hash` permits fast inequality checks, and permits collisions.
   ///  - `key` permits precise equality checks, but is only used on values with equal hashes.
   public type Key<K> = {
     hash : Hash.Hash;
@@ -207,8 +207,6 @@ module {
 
   ///  Get the size in O(1) time.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -327,11 +325,9 @@ module {
   ///  Also returns the replaced value if the key existed and `null` otherwise.
   ///  Compares keys using the provided function `k_eq`.
   /// 
-  ///  note:::
-  /// /Replacing a key's value by `null` removes the key and also shrinks the trie.
+  /// :::note
+  /// Replacing a key's value by `null` removes the key and also shrinks the trie.
   /// :::
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -372,8 +368,6 @@ module {
 
   ///  Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -385,8 +379,6 @@ module {
 
   ///  Get the value of the given key in the trie, or return null if nonexistent.
   /// 
-  ///  For a more detailed overview of how to use a Trie,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -400,8 +392,6 @@ module {
 
   ///  Find the given key's value in the trie, or return `null` if nonexistent
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -451,12 +441,11 @@ module {
   ///  Merge tries, preferring the left trie where there are collisions
   ///  in common keys.
   /// 
-  ///  note: the `disj` operation generalizes this `merge`
+  /// :::note
+  /// The `disj` operation generalizes this `merge`
   ///  operation in various ways, and does not (in general) lose
   ///  information; this operation is a simpler, special case.
-  /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
+  /// :::
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -515,8 +504,6 @@ module {
   ///  Merge tries like `merge`, but traps if there are collisions in common keys between the
   ///  left and right inputs.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -571,8 +558,6 @@ module {
   ///  the left trie whose keys are not present in the right trie; the
   ///  values of the right trie are irrelevant.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -800,8 +785,6 @@ module {
   /// 
   ///  Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -976,8 +959,6 @@ module {
   ///  Fold over the key-value pairs of the trie, using an accumulator.
   ///  The key-value pairs have no reliable or meaningful ordering.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1008,8 +989,6 @@ module {
 
   ///  Test whether a given key-value pair is present, or not.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1045,8 +1024,6 @@ module {
 
   ///  Test whether all key-value pairs have a given property.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1084,11 +1061,10 @@ module {
 
   ///  Project the nth key-value pair from the trie.
   /// 
-  ///  Note: This position is not meaningful; it's only here so that we
+  /// :::note
+  /// This position is not meaningful; it's only here so that we
   ///  can inject tries into arrays using functions like `Array.tabulate`.
-  /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
+  /// :::
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1128,8 +1104,6 @@ module {
 
   ///  Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1163,8 +1137,6 @@ module {
 
   ///  Filter the key-value pairs by a given predicate.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1203,8 +1175,6 @@ module {
 
   ///  Map and filter the key-value pairs by a given predicate.
   /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1280,8 +1250,6 @@ module {
   ///  and only if successful, do the success continuation,
   ///  otherwise, return the failure value
   /// 
-  ///  For a more detailed overview of how to use a Trie,
-  ///  see the [User's Overview](#overview).
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1327,10 +1295,7 @@ module {
     }
   };
 
-  ///  Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key
-  /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
+  ///  Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key.
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1405,10 +1370,9 @@ module {
   ///  Also returns the removed value if the key existed and `null` otherwise.
   ///  Compares keys using the provided function `k_eq`.
   /// 
-  ///  Note: The removal of an existing key shrinks the trie.
-  /// 
-  ///  For a more detailed overview of how to use a `Trie`,
-  ///  see the [User's Overview](#overview).
+  /// :::note 
+  /// The removal of an existing key shrinks the trie.
+  /// :::
   /// 
   ///  Example:
   ///  ```motoko include=initialize
@@ -1422,7 +1386,7 @@ module {
 
   ///  Remove the given key's value in the trie,
   ///  and only if successful, do the success continuation,
-  ///  otherwise, return the failure value
+  ///  otherwise, return the failure value.
   public func removeThen<K, V, X>(
     t : Trie<K, V>,
     k : Key<K>,

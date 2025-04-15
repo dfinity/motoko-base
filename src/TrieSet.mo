@@ -1,4 +1,3 @@
-///  Functional set
 /// 
 /// Sets are partial maps from element type to unit type,
 /// i.e., the partial map represents the set with its domain.
@@ -112,7 +111,9 @@ module {
     return true
   };
 
-  ///  @deprecated: use `TrieSet.contains()`
+  /// :::warning [ Deprecated function ]
+  /// Use `TrieSet.contains()` instead.
+  /// :::
   /// 
   ///  Test if a set contains a given element.
   public func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
@@ -146,7 +147,7 @@ module {
     s3
   };
 
-  /// / Construct a set from an array.
+  /// Construct a set from an array.
   public func fromArray<T>(arr : [T], elemHash : T -> Hash, eq : (T, T) -> Bool) : Set<T> {
     var s = empty<T>();
     for (elem in arr.vals()) {
@@ -155,7 +156,7 @@ module {
     s
   };
 
-  /// / Returns the set as an array.
+  /// Returns the set as an array.
   public func toArray<T>(s : Set<T>) : [T] {
     Trie.toArray(s, func(t : T, _ : ()) : T { t })
   }
