@@ -1,5 +1,3 @@
-///  Certified data.
-/// 
 /// The Internet Computer allows canister smart contracts to store a small amount of data during
 /// update method processing so that during query call processing, the canister can obtain
 /// a certificate about that data.
