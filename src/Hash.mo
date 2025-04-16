@@ -1,4 +1,3 @@
-///  Hash values
 
 import Prim "mo:⛔";
 import Iter "Iter";
