@@ -815,7 +815,9 @@ module {
   ///  Returns the floating point division remainder `x % y`,
   ///  which is defined as `x - trunc(x / y) * y`.
   /// 
-  ///  Note: Numerical errors may occur, see comment above.
+  /// :::info 
+  /// Numerical errors may occur, see comment above.
+  /// :::
   /// 
   ///  Special cases:
   ///  ```
