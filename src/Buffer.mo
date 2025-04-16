@@ -26,7 +26,7 @@
 /// Use with care when growing buffers dynamically.
 /// :::
 /// 
-/// :::info [Constructor behaviour]
+/// :::info [Constructor behavior]
 /// 
 /// The `initCapacity` argument sets the initial capacity of the underlying array.
 /// 
@@ -99,7 +99,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(0); // add 0 to buffer
     /// buffer.add(1);
     /// buffer.add(2);
@@ -123,7 +122,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.get(0); // => 10
@@ -145,7 +143,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// let x = buffer.getOpt(0); // => ?10
@@ -184,7 +181,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.removeLast(); // => ?11
@@ -225,7 +221,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -287,7 +282,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -310,7 +304,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -388,7 +381,6 @@ module {
     /// Example:
     /// 
     /// ```motoko include=initialize
-    /// 
     /// let buffer = Buffer.Buffer<Nat>(2); // underlying array has capacity 2
     /// buffer.add(10);
     /// let c1 = buffer.capacity(); // => 2
@@ -405,7 +397,6 @@ module {
     /// Changes the capacity to `capacity`. Traps if `capacity` < `size`.
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.reserve(4);
     /// buffer.add(10);
     /// buffer.add(11);
@@ -525,7 +516,6 @@ module {
     /// buffer1.insertBuffer(1, buffer2);
     /// Buffer.toArray(buffer1) // => [10, 12, 13, 11]
     /// ```
-    /// `
     /// 
     /// | Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
     /// |------------------|----------------------|----------------|---------------------|
@@ -576,7 +566,6 @@ module {
     /// Sort is deterministic, stable, and in-place.
     /// 
     /// ```motoko include=initialize
-    /// 
     /// import Nat "mo:base/Nat";
     /// 
     /// buffer.add(11);
@@ -665,7 +654,6 @@ module {
     /// elements in order, or `null` when out of elements to iterate over.
     /// 
     /// ```motoko include=initialize
-    /// 
     /// buffer.add(10);
     /// buffer.add(11);
     /// buffer.add(12);
@@ -788,7 +776,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(1);
   /// 
   /// let clone = Buffer.clone(buffer);
@@ -1005,7 +992,7 @@ module {
   };
 
   /// Hashes `buffer` using `hash` to hash the underlying elements.
-  /// The deterministic hash function is a function of the elements in the Buffer, as well
+  /// The deterministic hash function is a function of the elements in the `buffer`, as well
   /// as their ordering.
   /// 
   /// Example:
@@ -1180,7 +1167,7 @@ module {
     null
   };
 
-  /// Similar to indexOf, but runs in logarithmic time. Assumes that `buffer` is sorted.
+  /// Similar to `indexOf`, but runs in logarithmic time. Assumes that `buffer` is sorted.
   /// Behavior is undefined if `buffer` is not sorted. Uses `compare` to
   /// perform the search. Returns an index of `element` if it is found.
   /// 
@@ -1541,11 +1528,9 @@ module {
   ///  Buffer.isStrictSuffixOf(suf, buffer, Nat.equal); // => true
   ///  ```
   /// 
-  ///  Runtime: O(length of suffix)
-  /// 
-  ///  Space: O(length of suffix)
-  /// 
-  ///  *Runtime and space assumes that `equal` runs in O(1) time and space.
+/// | Runtime   | Space     |
+  /// |-----------|-----------|
+  /// | `O(length)` | `O(length)` |
   public func isStrictSuffixOf<X>(suffix : Buffer<X>, buffer : Buffer<X>, equal : (X, X) -> Bool) : Bool {
     if (buffer.size() <= suffix.size()) {
       return false
@@ -1558,7 +1543,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(4);
@@ -1584,7 +1568,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(4);
@@ -1610,7 +1593,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(2);
   /// buffer.add(3);
   /// buffer.add(4);
@@ -1631,18 +1613,16 @@ module {
     true
   };
 
-  /// Creates an array containing elements from `buffer`.
+  /// Creates an `array` containing elements from `buffer`.
   /// 
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
   /// 
   /// Buffer.toArray<Nat>(buffer); // => [1, 2, 3]
-  /// 
   /// ```
   /// 
   /// | Runtime   | Space     |
@@ -1663,7 +1643,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1687,7 +1666,7 @@ module {
     }
   };
 
-  /// Creates a buffer containing elements from `array`.
+  /// Creates a `buffer` containing elements from `array`.
   /// 
   /// Example:
   /// 
@@ -1720,7 +1699,7 @@ module {
     newBuffer
   };
 
-  /// Creates a buffer containing elements from `array`.
+  /// Creates a `buffer` containing elements from `array`.
   /// 
   /// Example:
   /// 
@@ -1746,7 +1725,7 @@ module {
     newBuffer
   };
 
-  /// Creates a buffer containing elements from `iter`.
+  /// Creates a `buffer` containing elements from `iter`.
   /// 
   /// Example:
   /// 
@@ -1778,7 +1757,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// let buffer = Buffer.Buffer<Nat>(10);
   /// buffer.add(1);
   /// buffer.add(2);
@@ -1798,7 +1776,7 @@ module {
     }
   };
 
-  /// Creates a new buffer by applying `f` to each element in `buffer`.
+  /// Creates a new `buffer` by applying `f` to each element in `buffer`.
   /// 
   /// Example:
   /// 
@@ -1859,7 +1837,6 @@ module {
   /// 
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1891,7 +1868,6 @@ module {
   /// 
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1932,7 +1908,6 @@ module {
   /// 
   /// ```motoko include=initialize
   /// import Result "mo:base/Result";
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -1968,7 +1943,7 @@ module {
     #ok newBuffer
   };
 
-  /// Creates a new buffer by applying `k` to each element in `buffer`,
+  /// Creates a new `buffer` by applying `k` to each element in `buffer`,
   /// and concatenating the resulting buffers in order. This operation
   /// is similar to what in other functional languages is known as monadic bind.
   /// 
@@ -1976,7 +1951,6 @@ module {
   /// 
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2011,7 +1985,6 @@ module {
   /// 
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2040,7 +2013,6 @@ module {
   /// 
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2072,7 +2044,6 @@ module {
   /// Example:
   /// 
   /// ```motoko include=initialize
-  /// 
   /// buffer.add(1);
   /// buffer.add(2);
   /// buffer.add(3);
@@ -2102,7 +2073,7 @@ module {
   /// | `O(1)` | `O(1)` |
   public func last<X>(buffer : Buffer<X>) : X = buffer.get(buffer.size() - 1);
 
-  /// Returns a new buffer with capacity and size 1, containing `element`.
+  /// Returns a new `buffer` with capacity and size 1, containing `element`.
   /// 
   /// Example:
   /// 
@@ -2157,7 +2128,7 @@ module {
     }
   };
 
-  /// Merges two sorted buffers into a single sorted buffer, using `compare` to define
+  /// Merges two sorted buffers into a single sorted `buffer`, using `compare` to define
   /// the ordering. The final ordering is stable. Behavior is undefined if either
   /// `buffer1` or `buffer2` is not sorted.
   /// 
@@ -2298,7 +2269,7 @@ module {
   };
 
   /// Splits `buffer` into a pair of buffers where all elements in the left
-  /// buffer satisfy `predicate` and all elements in the right buffer do not.
+  /// `buffer` satisfy `predicate` and all elements in the right `buffer` do not.
   /// 
   /// Example:
   /// 
@@ -2484,7 +2455,7 @@ module {
     newBuffer
   };
 
-  /// Flattens the buffer of buffers into a single buffer.
+  /// Flattens the `buffer` of buffers into a single `buffer`.
   /// 
   /// Example:
   /// 
