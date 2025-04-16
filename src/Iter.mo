@@ -208,7 +208,7 @@ module {
     }
   };
 
-  ///  Like `fromArray` but for `Arrays` with mutable elements. Captures
+  ///  Like `fromArray` but for `Array`s with mutable elements. Captures
   ///  the elements of the `Array` at the time the iterator is created, so
   ///  further modifications won't be reflected in the iterator.
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
@@ -230,7 +230,7 @@ module {
     return Buffer.toArray(buffer)
   };
 
-  ///  Like `toArray` but for `Arrays` with mutable elements.
+  ///  Like `toArray` but for `Array`s with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
     Array.thaw<A>(toArray<A>(xs))
   };
