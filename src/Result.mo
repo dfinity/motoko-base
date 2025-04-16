@@ -1,4 +1,4 @@
-/// Error handling with the Result type.
+///  Error handling with the `Result` type.
 
 import Prim "mo:⛔";
 import P "Prelude";
@@ -6,20 +6,20 @@ import Order "Order";
 
 module {
 
-  /// `Result<Ok, Err>` is the type used for returning and propagating errors. It
-  /// is a type with the variants, `#ok(Ok)`, representing success and containing
-  /// a value, and `#err(Err)`, representing error and containing an error value.
-  ///
-  /// The simplest way of working with `Result`s is to pattern match on them:
-  ///
-  /// For example, given a function `createUser(user : User) : Result<Id, String>`
-  /// where `String` is an error message we could use it like so:
-  /// ```motoko no-repl
-  /// switch(createUser(myUser)) {
-  ///   case (#ok(id)) { Debug.print("Created new user with id: " # id) };
-  ///   case (#err(msg)) { Debug.print("Failed to create user with the error: " # msg) };
-  /// }
-  /// ```
+  ///  `Result<Ok, Err>` is the type used for returning and propagating errors. It
+  ///  is a type with the variants, `#ok(Ok)`, representing success and containing
+  ///  a value, and `#err(Err)`, representing error and containing an error value.
+  /// 
+  ///  The simplest way of working with `Result`s is to pattern match on them:
+  /// 
+  ///  For example, given a function `createUser(user : User) : Result<Id, String>`
+  ///  where `String` is an error message we could use it like so:
+  ///  ```motoko no-repl
+  ///  switch(createUser(myUser)) {
+  ///    case (#ok(id)) { Debug.print("Created new user with id: " # id) };
+  ///    case (#err(msg)) { Debug.print("Failed to create user with the error: " # msg) };
+  ///  }
+  ///  ```
   public type Result<Ok, Err> = {
     #ok : Ok;
     #err : Err
@@ -63,24 +63,24 @@ module {
     }
   };
 
-  /// Allows sequencing of `Result` values and functions that return
-  /// `Result`'s themselves.
-  /// ```motoko
-  /// import Result "mo:base/Result";
-  /// type Result<T,E> = Result.Result<T, E>;
-  /// func largerThan10(x : Nat) : Result<Nat, Text> =
-  ///   if (x > 10) { #ok(x) } else { #err("Not larger than 10.") };
-  ///
-  /// func smallerThan20(x : Nat) : Result<Nat, Text> =
-  ///   if (x < 20) { #ok(x) } else { #err("Not smaller than 20.") };
-  ///
-  /// func between10And20(x : Nat) : Result<Nat, Text> =
-  ///   Result.chain(largerThan10(x), smallerThan20);
-  ///
-  /// assert(between10And20(15) == #ok(15));
-  /// assert(between10And20(9) == #err("Not larger than 10."));
-  /// assert(between10And20(21) == #err("Not smaller than 20."));
-  /// ```
+  ///  Allows sequencing of `Result` values and functions that return
+  ///  `Result`'s themselves.
+  ///  ```motoko
+  ///  import Result "mo:base/Result";
+  ///  type Result<T,E> = Result.Result<T, E>;
+  ///  func largerThan10(x : Nat) : Result<Nat, Text> =
+  ///    if (x > 10) { #ok(x) } else { #err("Not larger than 10.") };
+  /// 
+  ///  func smallerThan20(x : Nat) : Result<Nat, Text> =
+  ///    if (x < 20) { #ok(x) } else { #err("Not smaller than 20.") };
+  /// 
+  ///  func between10And20(x : Nat) : Result<Nat, Text> =
+  ///    Result.chain(largerThan10(x), smallerThan20);
+  /// 
+  ///  assert(between10And20(15) == #ok(15));
+  ///  assert(between10And20(9) == #err("Not larger than 10."));
+  ///  assert(between10And20(21) == #err("Not smaller than 20."));
+  ///  ```
   public func chain<R1, R2, Error>(
     x : Result<R1, Error>,
     y : R1 -> Result<R2, Error>
@@ -91,14 +91,14 @@ module {
     }
   };
 
-  /// Flattens a nested Result.
-  ///
-  /// ```motoko
-  /// import Result "mo:base/Result";
-  /// assert(Result.flatten<Nat, Text>(#ok(#ok(10))) == #ok(10));
-  /// assert(Result.flatten<Nat, Text>(#err("Wrong")) == #err("Wrong"));
-  /// assert(Result.flatten<Nat, Text>(#ok(#err("Wrong"))) == #err("Wrong"));
-  /// ```
+  ///  Flattens a nested `Result`.
+  /// 
+  ///  ```motoko
+  ///  import Result "mo:base/Result";
+  ///  assert(Result.flatten<Nat, Text>(#ok(#ok(10))) == #ok(10));
+  ///  assert(Result.flatten<Nat, Text>(#err("Wrong")) == #err("Wrong"));
+  ///  assert(Result.flatten<Nat, Text>(#ok(#err("Wrong"))) == #err("Wrong"));
+  ///  ```
   public func flatten<Ok, Error>(
     result : Result<Result<Ok, Error>, Error>
   ) : Result<Ok, Error> {
@@ -108,7 +108,7 @@ module {
     }
   };
 
-  /// Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
+  ///  Maps the `Ok` type/value, leaving any `Error` type/value unchanged.
   public func mapOk<Ok1, Ok2, Error>(
     x : Result<Ok1, Error>,
     f : Ok1 -> Ok2
@@ -119,7 +119,7 @@ module {
     }
   };
 
-  /// Maps the `Err` type/value, leaving any `Ok` type/value unchanged.
+  ///  Maps the `Err` type/value, leaving any `Ok` type/value unchanged.
   public func mapErr<Ok, Error1, Error2>(
     x : Result<Ok, Error1>,
     f : Error1 -> Error2
@@ -130,12 +130,12 @@ module {
     }
   };
 
-  /// Create a result from an option, including an error value to handle the `null` case.
-  /// ```motoko
-  /// import Result "mo:base/Result";
-  /// assert(Result.fromOption(?42, "err") == #ok(42));
-  /// assert(Result.fromOption(null, "err") == #err("err"));
-  /// ```
+  ///  Create a `Result` from an option, including an error value to handle the `null` case.
+  ///  ```motoko
+  ///  import Result "mo:base/Result";
+  ///  assert(Result.fromOption(?42, "err") == #ok(42));
+  ///  assert(Result.fromOption(null, "err") == #err("err"));
+  ///  ```
   public func fromOption<R, E>(x : ?R, err : E) : Result<R, E> {
     switch x {
       case (?x) { #ok(x) };
@@ -143,12 +143,12 @@ module {
     }
   };
 
-  /// Create an option from a result, turning all #err into `null`.
-  /// ```motoko
-  /// import Result "mo:base/Result";
-  /// assert(Result.toOption(#ok(42)) == ?42);
-  /// assert(Result.toOption(#err("err")) == null);
-  /// ```
+  ///  Create an option from a `Result`, turning all #err into `null`.
+  ///  ```motoko
+  ///  import Result "mo:base/Result";
+  ///  assert(Result.toOption(#ok(42)) == ?42);
+  ///  assert(Result.toOption(#err("err")) == null);
+  ///  ```
   public func toOption<R, E>(r : Result<R, E>) : ?R {
     switch r {
       case (#ok(x)) { ?x };
@@ -156,17 +156,17 @@ module {
     }
   };
 
-  /// Applies a function to a successful value, but discards the result. Use
-  /// `iterate` if you're only interested in the side effect `f` produces.
-  ///
-  /// ```motoko
-  /// import Result "mo:base/Result";
-  /// var counter : Nat = 0;
-  /// Result.iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
-  /// assert(counter == 5);
-  /// Result.iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
-  /// assert(counter == 5);
-  /// ```
+  ///  Applies a function to a successful value, but discards the result. Use
+  ///  `iterate` if you're only interested in the side effect `f` produces.
+  /// 
+  ///  ```motoko
+  ///  import Result "mo:base/Result";
+  ///  var counter : Nat = 0;
+  ///  Result.iterate<Nat, Text>(#ok(5), func (x : Nat) { counter += x });
+  ///  assert(counter == 5);
+  ///  Result.iterate<Nat, Text>(#err("Wrong"), func (x : Nat) { counter += x });
+  ///  assert(counter == 5);
+  ///  ```
   public func iterate<Ok, Err>(res : Result<Ok, Err>, f : Ok -> ()) {
     switch res {
       case (#ok(ok)) { f(ok) };
@@ -190,7 +190,7 @@ module {
     }
   };
 
-  /// Asserts that its argument is an `#ok` result, traps otherwise.
+  ///  Asserts that its argument is an `#ok` result, traps otherwise.
   public func assertOk(r : Result<Any, Any>) {
     switch (r) {
       case (#err(_)) { assert false };
@@ -198,7 +198,7 @@ module {
     }
   };
 
-  /// Asserts that its argument is an `#err` result, traps otherwise.
+  ///  Asserts that its argument is an `#err` result, traps otherwise.
   public func assertErr(r : Result<Any, Any>) {
     switch (r) {
       case (#err(_)) {};
@@ -206,11 +206,11 @@ module {
     }
   };
 
-  /// Converts an upper cased `#Ok`, `#Err` result type into a lowercased `#ok`, `#err` result type.
-  /// On the IC, a common convention is to use `#Ok` and `#Err` as the variants of a result type,
-  /// but in Motoko, we use `#ok` and `#err` instead.
+  ///  Converts an upper cased `#Ok`, `#Err` result type into a lowercased `#ok`, `#err` result type.
+  ///  On the IC, a common convention is to use `#Ok` and `#Err` as the variants of a result type,
+  ///  but in Motoko, we use `#ok` and `#err` instead.
   public func fromUpper<Ok, Err>(
-    result : { #Ok: Ok; #Err: Err }
+    result : { #Ok : Ok; #Err : Err }
   ) : Result<Ok, Err> {
     switch result {
       case (#Ok(ok)) { #ok(ok) };
@@ -218,12 +218,12 @@ module {
     }
   };
 
-  /// Converts a lower cased `#ok`, `#err` result type into an upper cased `#Ok`, `#Err` result type.
-  /// On the IC, a common convention is to use `#Ok` and `#Err` as the variants of a result type,
-  /// but in Motoko, we use `#ok` and `#err` instead.
+  ///  Converts a lower cased `#ok`, `#err` result type into an upper cased `#Ok`, `#Err` result type.
+  ///  On the IC, a common convention is to use `#Ok` and `#Err` as the variants of a result type,
+  ///  but in Motoko, we use `#ok` and `#err` instead.
   public func toUpper<Ok, Err>(
     result : Result<Ok, Err>
-  ) : { #Ok: Ok; #Err: Err } {
+  ) : { #Ok : Ok; #Err : Err } {
     switch result {
       case (#ok(ok)) { #Ok(ok) };
       case (#err(err)) { #Err(err) }

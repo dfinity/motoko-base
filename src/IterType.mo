@@ -1,4 +1,3 @@
-/// The Iterator type
 
 // Just here to break cyclic module definitions
 
