@@ -428,7 +428,7 @@ module {
     case (#exact) { Prim.floatToFormattedText(x, 17, 2) }
   };
 
-  ///  Conversion to Text. Use `format(fmt, x)` for more detailed control.
+  ///  Conversion to `Text`. Use `format(fmt, x)` for more detailed control.
   /// 
   ///  `-0.0` is formatted with negative sign bit.
   ///  Positive infinity is formatted as `inf`.
