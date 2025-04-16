@@ -842,7 +842,9 @@ module {
 
   ///  Returns `x` to the power of `y`, `x ** y`.
   /// 
-  ///  Note: Numerical errors may occur, see comment above.
+  /// :::info 
+  /// Numerical errors may occur, see comment above.
+  /// :::
   /// 
   ///  Special cases:
   ///  ```
