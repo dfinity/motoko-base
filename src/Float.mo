@@ -458,7 +458,9 @@ module {
 
   ///  Conversion from `Int64`.
   /// 
-  ///  Note: The floating point number may be imprecise for large or small Int64.
+  /// :::note
+  /// The floating point number may be imprecise for large or small `Int64`.
+  /// :::
   /// 
   ///  Example:
   ///  ```motoko
