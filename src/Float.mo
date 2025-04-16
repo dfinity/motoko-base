@@ -638,23 +638,25 @@ module {
   ///  ```
   public func greaterOrEqual(x : Float, y : Float) : Bool { x >= y };
 
-  ///  Defines a total order of `x` and `y` for use in sorting.
+  /// Defines a total order of `x` and `y` for use in sorting.
   /// 
-  ///  Note: Using this operation to determine equality or inequality is discouraged for two reasons:
+  /// :::note 
+  /// Using this operation to determine equality or inequality is discouraged for two reasons:
   ///  * It does not consider numerical errors, see comment above. Use `equalWithin(x, y, espilon)` or
   ///    `notEqualWithin(x, y, epsilon)` to test for equality or inequality, respectively.
   ///  * `NaN` are here considered equal if their sign matches, which is different to the standard equality
   ///     by `==` or when using `equal()` or `notEqual()`.
-  /// 
-  ///  Total order:
-  ///  * negative NaN (no distinction between signalling and quiet negative NaN)
+  /// :::
+  ///
+  /// Total order:
+  ///  * negative `NaN` (no distinction between signalling and quiet negative `NaN`)
   ///  * negative infinity
   ///  * negative numbers (including negative subnormal numbers in standard order)
   ///  * negative zero (`-0.0`)
   ///  * positive zero (`+0.0`)
   ///  * positive numbers (including positive subnormal numbers in standard order)
   ///  * positive infinity
-  ///  * positive NaN (no distinction between signalling and quiet positive NaN)
+  ///  * positive `NaN` (no distinction between signalling and quiet positive `NaN`)
   /// 
   ///  Example:
   ///  ```motoko
