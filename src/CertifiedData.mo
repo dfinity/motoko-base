@@ -60,8 +60,8 @@ module {
   /// CertifiedData.getCertificate();
   /// ```
   /// 
-  /// ::: info
-  /// See a full example on how to use certified variables [here](https://github.com/dfinity/examples/tree/master/motoko/cert-var).
+  /// :::info
+  /// [See a full example on how to use certified variables](https://github.com/dfinity/examples/tree/master/motoko/cert-var).
   /// :::
   public let getCertificate : () -> ?Blob = Prim.getCertificate
 }
