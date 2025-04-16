@@ -27,7 +27,7 @@ module {
   public type Nat = Prim.Types.Nat;
 
   ///  Converts a natural number to its textual representation. Textual
-  ///  representation _do not_ contain underscores to represent commas.
+  ///  representation _does not_ contain underscores to represent commas.
   /// 
   ///  Example:
   ///  ```motoko include=import
