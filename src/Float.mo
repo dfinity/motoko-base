@@ -505,7 +505,9 @@ module {
   public func equal(x : Float, y : Float) : Bool { x == y };
 
   ///  Returns `x != y`.
-  ///  @deprecated Use `Float.notEqualWithin()` as this function does not consider numerical errors.
+  /// :::warning [Deprecated function
+  /// Use `Float.notEqualWithin()` as this function does not consider numerical errors.
+  /// :::
   public func notEqual(x : Float, y : Float) : Bool { x != y };
 
   ///  Determines whether `x` is equal to `y` within the defined tolerance of `epsilon`.
