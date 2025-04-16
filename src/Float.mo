@@ -470,7 +470,7 @@ module {
   ///  ```
   public let fromInt64 : Int64 -> Float = Prim.int64ToFloat;
 
-  ///  Conversion to Int.
+  ///  Conversion to `Int`.
   /// 
   ///  Traps for `inf`, `-inf`, and `NaN`.
   /// 
