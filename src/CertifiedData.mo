@@ -37,7 +37,7 @@ module {
   /// ```
   /// 
   /// :::info
-  /// See a full example on how to use certified variables [here](https://github.com/dfinity/examples/tree/master/motoko/cert-var).
+  /// [See a full example on how to use certified variables](https://github.com/dfinity/examples/tree/master/motoko/cert-var).
   /// :::
   /// 
   public let set : (data : Blob) -> () = Prim.setCertifiedData;
