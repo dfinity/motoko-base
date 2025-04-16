@@ -17,7 +17,7 @@
 ///  import Text "mo:base/Text";
 ///  ```
 /// 
-///  :::note
+/// :::note
 ///  `Text` values are represented as ropes of UTF-8 character sequences with O(1) concatenation.
 /// :::
 
@@ -52,8 +52,9 @@ module {
   ///  let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
   ///  ```
   /// 
-  ///  Runtime: O(a.size())
-  ///  Space: O(a.size())
+/// | Runtime   | Space     |
+/// |-----------|-----------|
+/// | O(a.size()) | O(a.size()) |
   public func fromArray(a : [Char]) : Text = fromIter(a.vals());
 
   ///  Converts the given `[var Char]` to a `Text` value.
@@ -62,8 +63,9 @@ module {
   ///  let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
   ///  ```
   /// 
-  ///  Runtime: O(a.size())
-  ///  Space: O(a.size())
+/// | Runtime   | Space     |
+/// |-----------|-----------|
+/// | O(a.size()) | O(a.size()) |
   public func fromVarArray(a : [var Char]) : Text = fromIter(a.vals());
 
   ///  Iterates over each `Char` value in the given `Text`.
@@ -87,8 +89,9 @@ module {
   ///  assert Text.toArray("Café") == ['C', 'a', 'f', 'é'];
   ///  ```
   /// 
-  ///  Runtime: O(t.size())
-  ///  Space: O(t.size())
+/// | Runtime   | Space     |
+/// |-----------|-----------|
+/// | O(t.size()) | O(t.size()) |
   public func toArray(t : Text) : [Char] {
     let cs = t.chars();
     // We rely on Array_tabulate's implementation details: it fills
@@ -112,8 +115,9 @@ module {
   ///  assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
   ///  ```
   /// 
-  ///  Runtime: O(t.size())
-  ///  Space: O(t.size())
+/// | Runtime   | Space     |
+/// |-----------|-----------|
+/// | O(t.size()) | O(t.size()) |
   public func toVarArray(t : Text) : [var Char] {
     let n = t.size();
     if (n == 0) {
@@ -148,8 +152,9 @@ module {
   ///  // => "Hello"
   ///  ```
   /// 
-  ///  Runtime: O(size cs)
-  ///  Space: O(size cs)
+/// | Runtime   | Space     |
+/// |-----------|-----------|
+/// | O(size cs) | O(size cs) |
   public func fromList(cs : List.List<Char>) : Text = fromIter(List.toIter cs);
 
   ///  Create a character list from a text.
@@ -159,8 +164,9 @@ module {
   ///  // => ?('H', ?('e', ?('l', ?('l', ?('o', null)))))
   ///  ```
   /// 
-  ///  Runtime: O(t.size())
-  ///  Space: O(t.size())
+/// | Runtime   | Space     |
+/// |-----------|-----------|
+/// | O(t.size()) | O(t.size()) |
   public func toList(t : Text) : List.List<Char> {
     var acc : List.List<Char> = null;
     for (c in t.chars()) {
@@ -184,7 +190,9 @@ module {
   ///  let hash = Text.hash("abc");
   ///  ```
   /// 
-  ///  Note: this algorithm is intended for use in data structures rather than as a cryptographic hash function.
+  /// :::info
+  /// This algorithm is intended for use in data structures rather than as a cryptographic hash function.
+  /// :::
   public func hash(t : Text) : Hash.Hash {
     var x : Nat32 = 5381;
     for (char in t.chars()) {
@@ -859,17 +867,20 @@ module {
   public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
 
   ///  Returns the text argument in lowercase.
-  ///  :::warning [Compliance]
+  /// 
+  /// :::warning [Compliance]
   ///  Unicode compliant only when compiled, not interpreted.
   /// :::
+  /// 
   ///  ```motoko include=import
   ///  let text = Text.toLowercase("Good Day"); // ?"good day"
   ///  ```
   public let toLowercase : Text -> Text = Prim.textLowercase;
 
   ///  Returns the text argument in uppercase. Unicode compliant.
-  ///  :::warning [Compliance]
+  /// :::warning [Compliance]
   ///  Unicode compliant only when compiled, not interpreted.
+  /// :::
   /// 
   ///  ```motoko include=import
   ///  let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"

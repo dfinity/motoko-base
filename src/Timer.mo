@@ -30,7 +30,7 @@
 /// 
 /// :::note [Further information]
 /// 
-/// For further usage information for timers [see here](https://internetcomputer.org/docs/current/developer-docs/backend/periodic-tasks#timers-library-limitations)
+/// [Further usage information for timers](https://internetcomputer.org/docs/current/developer-docs/backend/periodic-tasks#timers-library-limitations).
 /// :::
 /// 
 /// :::note [Compilation flag]
@@ -70,7 +70,9 @@ module {
   ///  Installs a recurring timer that upon expiration after given duration `d`
   ///  executes the future `job()` and reinserts itself for another expiration.
   /// 
-  ///  Note: A duration of 0 will only expire once.
+  /// :::info
+  /// A duration of 0 will only expire once.
+  /// :::
   /// 
   ///  ```motoko no-repl
   ///  func checkAndWaterPlants() : async () {
