@@ -1,4 +1,3 @@
-/// 
 ///  Optional values can be seen as a typesafe `null`. A value of type `?Int` can
 ///  be constructed with either `null` or `?42`. The simplest way to get at the
 ///  contents of an optional is to use pattern matching:
@@ -158,7 +157,7 @@ module {
   /// :::warning [Deprecated function]
   /// 
   /// `Option.unwrap` is unsafe and will be removed soon. Use a `switch` or `do?` expression instead.
-  /// 
+  /// :::
   public func unwrap<T>(x : ?T) : T = switch x {
     case null { P.unreachable() };
     case (?x_) { x_ }
