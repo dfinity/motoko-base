@@ -223,7 +223,6 @@ module {
   /// Sort is deterministic, stable, and in-place.
   /// 
   /// ```motoko include=import
-  /// 
   /// import {compare} "mo:base/Nat";
   /// 
   /// let array = [var 4, 2, 6];
