@@ -759,7 +759,9 @@ module {
 
   ///  Returns the product of `x` and `y`, `x * y`.
   /// 
-  ///  Note: Numerical errors may occur, see comment above.
+  /// :::info 
+  /// Numerical errors may occur, see comment above.
+  /// :::
   /// 
   ///  Special cases:
   ///  ```
