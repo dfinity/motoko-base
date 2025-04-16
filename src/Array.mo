@@ -851,7 +851,7 @@ module {
 
   /// Returns a new subarray of given length from the beginning or end of the given array.
   /// 
-  /// Returns the entire array if the length is greater than the size of the array
+  /// Returns the entire array if the length is greater than the size of the array.
   /// 
   /// ```motoko include=import
   /// let array = [1, 2, 3, 4, 5];

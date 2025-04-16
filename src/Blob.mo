@@ -38,7 +38,7 @@
 import Prim "mo:⛔";
 module {
   public type Blob = Prim.Types.Blob;
-  ///  Creates a `Blob` from an array of bytes (`[Nat8]`), by copying each element.
+  ///  Creates a `Blob` from an array of bytes (`[Nat8]`) by copying each element.
   /// 
   ///  Example:
   ///  ```motoko include=import
@@ -47,7 +47,7 @@ module {
   ///  ```
   public func fromArray(bytes : [Nat8]) : Blob = Prim.arrayToBlob bytes;
 
-  ///  Creates a `Blob` from a mutable array of bytes (`[var Nat8]`), by copying each element.
+  ///  Creates a `Blob` from a mutable array of bytes (`[var Nat8]`) by copying each element.
   /// 
   ///  Example:
   ///  ```motoko include=import
@@ -56,7 +56,7 @@ module {
   ///  ```
   public func fromArrayMut(bytes : [var Nat8]) : Blob = Prim.arrayMutToBlob bytes;
 
-  ///  Converts a `Blob` to an array of bytes (`[Nat8]`), by copying each element.
+  ///  Converts a `Blob` to an array of bytes (`[Nat8]`) by copying each element.
   /// 
   ///  Example:
   ///  ```motoko include=import
@@ -65,7 +65,7 @@ module {
   ///  ```
   public func toArray(blob : Blob) : [Nat8] = Prim.blobToArray blob;
 
-  ///  Converts a `Blob` to a mutable array of bytes (`[var Nat8]`), by copying each element.
+  ///  Converts a `Blob` to a mutable array of bytes (`[var Nat8]`) by copying each element.
   /// 
   ///  Example:
   ///  ```motoko include=import
