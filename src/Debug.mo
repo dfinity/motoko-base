@@ -12,7 +12,7 @@ module {
   ///  :::note
   /// When running on an ICP network, all output is written to the [canister log](https://internetcomputer.org/docs/current/developer-docs/smart-contracts/maintain/logs) with the exclusion of any output
   /// produced during the execution of non-replicated queries and composite queries.
-  //In other environments, like the interpreter and stand-alone wasm engines, the output is written to standard out.
+  /// In other environments, like the interpreter and stand-alone Wasm engines, the output is written to standard out.
 
   /// :::
   /// 
