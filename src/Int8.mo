@@ -13,7 +13,6 @@
 /// ```motoko name=import
 /// import Int8 "mo:base/Int8";
 /// ```
-///  ```
 import Int "Int";
 import Prim "mo:⛔";
 

@@ -43,7 +43,6 @@
 /// ```motoko no-repl
 /// import StableMemory "mo:base/ExperimentalStableMemory";
 /// ```
-///  ```
 
 import Prim "mo:⛔";
 

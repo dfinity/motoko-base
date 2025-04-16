@@ -1,6 +1,6 @@
 /// Double-ended queue (deque) of a generic element type `T`.
 /// 
-/// The interface to deques is purely functional, not imperative, and deques are immutable values.
+/// The interface of deques is purely functional, not imperative, and deques are immutable values.
 /// In particular, deque operations such as push and pop do not update their input deque but instead return the value of the modified deque, alongside any other data.
 /// The input deque is left unchanged.
 /// 

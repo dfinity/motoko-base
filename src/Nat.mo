@@ -38,8 +38,8 @@ module {
   ///  Creates a natural number from its textual representation. Returns `null`
   ///  if the input is not a valid natural number.
   /// 
-  ///  :::note
-  ///  The textual representation _must not_ contain underscores.
+  /// :::note
+  /// The textual representation _must not_ contain underscores.
   /// :::
   ///  Example:
   ///  ```motoko include=import

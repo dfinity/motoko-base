@@ -1,7 +1,7 @@
-/// Module for interacting with Principals (users and canisters).
+/// Module for interacting with Principals (users, canisters, or other entities).
 /// 
 /// Principals are used to identify entities that can interact with the Internet
-/// Computer. These entities are either users or canisters.
+/// Computer including users or canisters.
 /// 
 /// Example textual representation of Principals:
 /// 

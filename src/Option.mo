@@ -1,4 +1,3 @@
-///  Typesafe nulls
 /// 
 ///  Optional values can be seen as a typesafe `null`. A value of type `?Int` can
 ///  be constructed with either `null` or `?42`. The simplest way to get at the
@@ -137,7 +136,7 @@ module {
     case (_, _) { false }
   };
 
-  ///  /:::warning [Deprecated function]
+  ///  :::warning [Deprecated function]
   /// 
   /// `Option.assertSome` will be removed soon. Use an `assert` expression instead.
   /// 
@@ -150,7 +149,7 @@ module {
   /// :::warning [Deprecated function]
   /// 
   /// `Option.assertNull` will be removed soon. Use an `assert` expression instead.
-  /// 
+  /// :::
   public func assertNull(x : ?Any) = switch x {
     case null {};
     case _ { P.unreachable() }

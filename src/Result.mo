@@ -1,4 +1,4 @@
-///  Error handling with the Result type.
+///  Error handling with the `Result` type.
 
 import Prim "mo:⛔";
 import P "Prelude";
@@ -91,7 +91,7 @@ module {
     }
   };
 
-  ///  Flattens a nested Result.
+  ///  Flattens a nested `Result`.
   /// 
   ///  ```motoko
   ///  import Result "mo:base/Result";
@@ -130,7 +130,7 @@ module {
     }
   };
 
-  ///  Create a result from an option, including an error value to handle the `null` case.
+  ///  Create a `Result` from an option, including an error value to handle the `null` case.
   ///  ```motoko
   ///  import Result "mo:base/Result";
   ///  assert(Result.fromOption(?42, "err") == #ok(42));
@@ -143,7 +143,7 @@ module {
     }
   };
 
-  ///  Create an option from a result, turning all #err into `null`.
+  ///  Create an option from a `Result`, turning all #err into `null`.
   ///  ```motoko
   ///  import Result "mo:base/Result";
   ///  assert(Result.toOption(#ok(42)) == ?42);

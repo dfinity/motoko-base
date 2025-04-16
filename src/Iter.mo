@@ -1,4 +1,3 @@
-///  Iterators
 
 import Array "Array";
 import Buffer "Buffer";
@@ -184,7 +183,7 @@ module {
     }
   };
 
-  ///  Creates an iterator that produces the elements of an Array in ascending index order.
+  ///  Creates an iterator that produces the elements of an `Array` in ascending index order.
   ///  ```motoko
   ///  import Iter "mo:base/Iter";
   ///  let iter = Iter.fromArray([1, 2, 3]);
@@ -209,8 +208,8 @@ module {
     }
   };
 
-  ///  Like `fromArray` but for Arrays with mutable elements. Captures
-  ///  the elements of the Array at the time the iterator is created, so
+  ///  Like `fromArray` but for `Arrays` with mutable elements. Captures
+  ///  the elements of the `Array` at the time the iterator is created, so
   ///  further modifications won't be reflected in the iterator.
   public func fromArrayMut<A>(xs : [var A]) : Iter<A> {
     fromArray<A>(Array.freeze<A>(xs))
@@ -219,7 +218,7 @@ module {
   ///  Like `fromArray` but for Lists.
   public let fromList = List.toIter;
 
-  ///  Consumes an iterator and collects its produced elements in an Array.
+  ///  Consumes an iterator and collects its produced elements in an `Array`.
   ///  ```motoko
   ///  import Iter "mo:base/Iter";
   ///  let iter = Iter.range(1, 3);
@@ -231,7 +230,7 @@ module {
     return Buffer.toArray(buffer)
   };
 
-  ///  Like `toArray` but for Arrays with mutable elements.
+  ///  Like `toArray` but for `Arrays` with mutable elements.
   public func toArrayMut<A>(xs : Iter<A>) : [var A] {
     Array.thaw<A>(toArray<A>(xs))
   };

@@ -435,7 +435,6 @@ module {
   ///  Example:
   ///  ```motoko include=initialize
   ///  import Nat "mo:base/Nat";
-  /// 
   ///  List.foldLeft<Nat, Text>(
   ///    ?(1, ?(2, ?(3, null))),
   ///    "",
@@ -462,7 +461,6 @@ module {
   ///  Example:
   ///  ```motoko include=initialize
   ///  import Nat "mo:base/Nat";
-  /// 
   ///  List.foldRight<Nat, Text>(
   ///    ?(1, ?(2, ?(3, null))),
   ///    "",
@@ -486,7 +484,6 @@ module {
   /// 
   ///  Example:
   ///  ```motoko include=initialize
-  /// 
   ///  List.find<Nat>(
   ///    ?(1, ?(2, ?(3, null))),
   ///    func n { n > 1 }
@@ -510,7 +507,6 @@ module {
   /// 
   ///  Example:
   ///  ```motoko include=initialize
-  /// 
   ///  List.some<Nat>(
   ///    ?(1, ?(2, ?(3, null))),
   ///    func n { n > 1 }
@@ -534,7 +530,6 @@ module {
   /// 
   ///  Example:
   ///  ```motoko include=initialize
-  /// 
   ///  List.all<Nat>(
   ///    ?(1, ?(2, ?(3, null))),
   ///    func n { n > 1 }
@@ -559,7 +554,6 @@ module {
   /// 
   ///  Example:
   ///  ```motoko include=initialize
-  /// 
   ///  List.merge<Nat>(
   ///    ?(1, ?(2, ?(4, null))),
   ///    ?(2, ?(4, ?(6, null))),

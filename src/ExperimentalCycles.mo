@@ -1,4 +1,4 @@
-/// Managing cycles within actors on the Internet Computer (IC).
+/// Managing cycles within actors on the Internet Computer (ICP).
 /// 
 /// The usage of the Internet Computer is measured, and paid for, in _cycles_.
 /// This library provides imperative operations for observing cycles, transferring cycles, and observing refunds of cycles.
@@ -14,7 +14,7 @@
 /// Since cycles measure computational resources, the value of `balance()` can change from one call to the next.
 /// :::
 /// 
-/// Example for use on IC:
+/// Example:
 /// 
 /// ```motoko no-repl
 /// import Cycles "mo:base/ExperimentalCycles";
@@ -44,7 +44,7 @@ module {
 
   ///  Returns the actor's current balance of cycles as `amount`.
   /// 
-  ///  Example for use on the IC:
+  ///  Example:
   ///  ```motoko no-repl
   ///  import Cycles "mo:base/ExperimentalCycles";
   ///  import Debug "mo:base/Debug";
@@ -64,7 +64,7 @@ module {
   ///  On exit from the current shared function or async expression via `return` or `throw`,
   ///  any remaining available amount is automatically refunded to the caller/context.
   /// 
-  ///  Example for use on the IC:
+  ///  Example:
   ///  ```motoko no-repl
   ///  import Cycles "mo:base/ExperimentalCycles";
   ///  import Debug "mo:base/Debug";
@@ -82,7 +82,7 @@ module {
   ///  Returns the amount actually transferred, which may be less than
   ///  requested, for example, if less is available, or if canister balance limits are reached.
   /// 
-  ///  Example for use on the IC (for simplicity, only transferring cycles to itself):
+  ///  Example (for simplicity, only transferring cycles to itself):
   ///  ```motoko no-repl
   ///  import Cycles "mo:base/ExperimentalCycles";
   ///  import Debug "mo:base/Debug";
@@ -114,7 +114,7 @@ module {
   /// The implicit register of added amounts is reset to zero on entry to a shared function and after each shared function call or resume from an await.
   /// :::
   /// 
-  ///  Example for use on the IC (for simplicity, only transferring cycles to itself):
+  ///  Example (for simplicity, only transferring cycles to itself):
   ///  ```motoko no-repl
   ///  import Cycles "mo:base/ExperimentalCycles";
   /// 
@@ -137,7 +137,7 @@ module {
   ///  Instead, refunds are automatically added to the current balance,
   ///  whether or not `refunded` is used to observe them.
   /// 
-  ///  Example for use on the IC (for simplicity, only transferring cycles to itself):
+  ///  Example (for simplicity, only transferring cycles to itself):
   ///  ```motoko no-repl
   ///  import Cycles "mo:base/ExperimentalCycles";
   ///  import Debug "mo:base/Debug";
@@ -160,7 +160,7 @@ module {
   ///  cycle balance. The burned cycles are irrevocably lost and not available to any
   ///  other principal either.
   /// 
-  ///  Example for use on the IC:
+  ///  Example:
   ///  ```motoko no-repl
   ///  import Cycles "mo:base/ExperimentalCycles";
   ///  import Debug "mo:base/Debug";

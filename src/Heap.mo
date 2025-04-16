@@ -35,7 +35,6 @@ module {
     /// 
     ///  Example:
     ///  ```motoko include=initialize
-    /// 
     ///  heap.put("apple");
     ///  heap.peekMin() // => ?"apple"
     ///  ```
@@ -51,7 +50,6 @@ module {
     /// 
     ///  Example:
     ///  ```motoko include=initialize
-    /// 
     ///  heap.put("apple");
     ///  heap.put("banana");
     ///  heap.put("cantaloupe");
@@ -72,7 +70,6 @@ module {
     /// 
     ///  Example:
     ///  ```motoko include=initialize
-    /// 
     ///  heap.put("apple");
     ///  heap.put("banana");
     ///  heap.put("cantaloupe");
@@ -94,7 +91,6 @@ module {
     /// 
     ///  Example:
     ///  ```motoko include=initialize
-    /// 
     ///  heap.put("apple");
     ///  heap.put("banana");
     ///  heap.put("cantaloupe");
@@ -119,7 +115,6 @@ module {
     /// 
     ///  Example:
     ///  ```motoko include=initialize
-    /// 
     ///  heap.put("banana");
     ///  heap.share();
     ///  ```
@@ -140,7 +135,6 @@ module {
     /// 
     ///  Example:
     ///  ```motoko include=initialize
-    /// 
     ///  heap.put("apple");
     ///  heap.put("banana");
     ///  let snapshot = heap.share();

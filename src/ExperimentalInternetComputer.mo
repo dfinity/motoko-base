@@ -14,9 +14,9 @@ module {
   ///  * The error code and textual message data of an IC reject determines the future's `Error` value.
   /// 
   ///  :::note [Asynchronous context required]
-
   /// `call` is an asynchronous function and can only be applied in an asynchronous context.
   /// :::
+  
   ///  Example:
   ///  ```motoko no-repl
   ///  import IC "mo:base/ExperimentalInternetComputer";
@@ -43,7 +43,7 @@ module {
   /// More precisely, returns the difference between the state of the IC instruction counter (_performance counter_ `0`) before and after executing `comp()`
   /// (see [Performance Counter](https://internetcomputer.org/docs/current/references/ic-interface-spec#system-api-performance-counter)).
 
-  /// :::note [GC cost not included]
+  /// :::note [Garbage collection cost not included]
 
   /// `countInstructions(comp)` will _not_ account for any deferred garbage collection costs incurred by `comp()`.
   /// :::

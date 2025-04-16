@@ -36,7 +36,7 @@ module {
     ])
   };
 
-  //:::warning [Deprecated function]
+  /// :::warning [Deprecated function]
 
   /// This function will be removed in a future version.
   /// :::
@@ -64,9 +64,7 @@ module {
     }
   };
 
-  ///  Jenkin's one at a time:
-  /// 
-  ///  https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
+  ///  [View Jenkin's one at a time](https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time).
   /// 
   /// :::note
   /// The input type should actually be `[Nat8]`.

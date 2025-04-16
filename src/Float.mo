@@ -3,13 +3,16 @@
 ///  This module contains common floating-point constants and utility functions.
 /// 
 ///  Notation for special values in the documentation below:
+/// 
 ///  `+inf`: Positive infinity
+/// 
 ///  `-inf`: Negative infinity
+/// 
 ///  `NaN`: "not a number" (can have different sign bit values, but `NaN != NaN` regardless of the sign).
 /// 
-///  Note:
+///  :::note
 ///  Floating point numbers have limited precision and operations may inherently result in numerical errors.
-/// 
+/// :::
 ///  Examples of numerical errors:
 ///    ```motoko
 ///    0.1 + 0.1 + 0.1 == 0.3 // => false
@@ -19,7 +22,6 @@
 ///   1e16 + 1.0 != 1e16 // => false
 ///    ```
 /// 
-///   (and many more cases)
 /// 
 ///  Advice:
 ///  * Floating point number comparisons by `==` or `!=` are discouraged. Instead, it is better to compare
@@ -35,12 +37,12 @@
 ///    Float.equalWithin(x, y, epsilon) // => true
 ///    ```
 /// 
-///  * For absolute precision, it is recommened to encode the fraction number as a pair of a Nat for the base
-///    and a Nat for the exponent (decimal point).
+///  * For absolute precision, it is recommened to encode the fraction number as a pair of a `Nat` for the base
+///    and a `Nat` for the exponent (decimal point).
 /// 
-///  NaN sign:
-///  * The NaN sign is only applied by `abs`, `neg`, and `copySign`. Other operations can have an arbitrary
-///    sign bit for NaN results.
+///  `NaN` sign:
+///  * The `NaN` sign is only applied by `abs`, `neg`, and `copySign`. Other operations can have an arbitrary
+///    sign bit for `NaN` results.
 
 import Prim "mo:⛔";
 import Int "Int";
@@ -61,8 +63,8 @@ module {
   ///  Determines whether the `number` is a `NaN` ("not a number" in the floating point representation).
   ///  Notes:
   ///  * Equality test of `NaN` with itself or another number is always `false`.
-  ///  * There exist many internal `NaN` value representations, such as positive and negative NaN,
-  ///    signalling and quiet NaNs, each with many different bit representations.
+  ///  * There exist many internal `NaN` value representations, such as positive and negative `NaN`,
+  ///    signalling and quiet `NaN`s, each with many different bit representations.
   /// 
   ///  Example:
   ///  ```motoko

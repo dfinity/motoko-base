@@ -1,4 +1,3 @@
-///  General utilities
 /// 
 ///  This prelude file proposes standard library features that _may_
 ///  belong in the _language_ (compiler-internal) prelude sometime, after
@@ -8,11 +7,13 @@ import Debug "Debug";
 
 module {
 
-  ///  Not yet implemented
+  /// :::warning
+  /// Not yet implemented
+  /// :::
   /// 
   ///  Mark incomplete code with the `nyi` and `xxx` functions.
   /// 
-  ///  Each have calls are well-typed in all typing contexts, which
+  ///  Each have calls that are well-typed in all typing contexts, which
   ///  trap in all execution contexts.
   public func nyi() : None {
     Debug.trap("Prelude.nyi()")

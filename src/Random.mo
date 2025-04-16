@@ -7,11 +7,11 @@
 /// user of this module to obtain (and maintain) the benefits of crypto-
 /// graphic randomness:
 /// 
-/// - cryptographic entropy (randomness source) is only obtainable
-///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s)
-/// - all bets must be closed *before* entropy is being asked for in
-///   order to decide them
-/// - this implies that the same entropy (i.e. `Blob`) - or surplus entropy
+/// - Cryptographic entropy (randomness source) is only obtainable
+///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s).
+/// - All bets must be closed *before* entropy is being asked for in
+///   order to decide them.
+/// - This implies that the same entropy (i.e. `Blob`) - or surplus entropy
 ///   not utilised yet - cannot be used for a new round of bets without
 ///   losing the cryptographic guarantees.
 /// 
