@@ -712,7 +712,9 @@ module {
 
   ///  Returns the sum of `x` and `y`, `x + y`.
   /// 
-  ///  Note: Numerical errors may occur, see comment above.
+  /// :::info
+  /// Numerical errors may occur, see comment above.
+  /// :::
   /// 
   ///  Special cases:
   ///  ```
