@@ -785,7 +785,9 @@ module {
 
   ///  Returns the division of `x` by `y`, `x / y`.
   /// 
-  ///  Note: Numerical errors may occur, see comment above.
+  /// :::info 
+  /// Numerical errors may occur, see comment above.
+  /// :::
   /// 
   ///  Special cases:
   ///  ```
