@@ -2062,7 +2062,6 @@ module {
   /// 
   ///  Example:
   ///  ```motoko include=initialize
-  /// 
   ///  buffer.add(1);
   ///  buffer.add(2);
   ///  buffer.add(3);
