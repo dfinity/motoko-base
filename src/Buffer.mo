@@ -152,6 +152,8 @@ module {
     /// | Runtime   | Space     |
     /// |-----------|-----------|
     /// | `O(1)` | `O(1)` |
+
+  
     public func getOpt(index : Nat) : ?X {
       if (index < _size) {
         elements[index]
@@ -159,7 +161,7 @@ module {
         null
       }
     };
-
+    ///```motoko include=initialize
     /// buffer.add(10);
     /// buffer.put(0, 20); // overwrites 10 at index 0 with 20
     /// Buffer.toArray(buffer) // => [20]
@@ -1634,7 +1636,7 @@ module {
     buffer.size(),
     func(i : Nat) : X { buffer.get(i) }
   );
-
+  ///``` motoko include=initialize
   /// func toVarArray<X>(buffer : Buffer<X>) : [var X]
   /// ```
   /// 
