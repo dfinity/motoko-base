@@ -5,7 +5,7 @@
 /// :::info [Intended audience]
 /// 
 /// This module provides a _low-level_ interface to this API, aimed at advanced
-/// users and library implementors. See the Internet Computer functional
+/// users and library implementors. See the Internet Computer interface
 /// specification and corresponding documentation for how to use this to make query
 /// calls to your canister tamperproof.
 /// :::
