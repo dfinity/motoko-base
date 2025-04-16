@@ -17,7 +17,7 @@ module {
     (h & (Prim.natToNat32(1) << Prim.natToNat32(pos))) != Prim.natToNat32(0)
   };
 
-  ///  Test if two hashes are equal
+  ///  Test if two hashes are equal.
   public func equal(ha : Hash, hb : Hash) : Bool {
     ha == hb
   };
