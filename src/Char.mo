@@ -1,4 +1,3 @@
-///  Characters
 import Prim "mo:⛔";
 module {
 
