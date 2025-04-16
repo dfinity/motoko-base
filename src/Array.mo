@@ -224,7 +224,6 @@ module {
   /// 
   /// ```motoko include=import
   /// import {compare} "mo:base/Nat";
-  /// 
   /// let array = [var 4, 2, 6];
   /// Array.sortInPlace(array, compare);
   /// array
@@ -302,7 +301,6 @@ module {
   /// 
   /// ```motoko include=import
   /// let array = [10, 11, 12];
-  /// 
   /// Array.reverse(array)
   /// ```
   /// 
@@ -657,7 +655,6 @@ module {
   /// 
   /// ```motoko include=import
   /// let array = [10, 11, 12];
-  /// 
   /// var sum = 0;
   /// for (element in array.vals()) {
   ///   sum += element;
@@ -682,7 +679,6 @@ module {
   /// 
   /// ```motoko include=import
   /// let array = [10, 11, 12];
-  /// 
   /// var sum = 0;
   /// for (element in array.keys()) {
   ///   sum += element;
