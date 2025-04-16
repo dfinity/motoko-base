@@ -301,7 +301,6 @@ module {
   /// Creates a new array by reversing the order of elements in `array`.
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [10, 11, 12];
   /// 
   /// Array.reverse(array)
@@ -320,7 +319,6 @@ module {
   /// Retains original ordering of elements.
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [0, 1, 2, 3];
   /// Array.map<Nat, Nat>(array, func x = x * 3)
   /// ```
@@ -372,7 +370,6 @@ module {
   /// Retains original ordering of elements.
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [10, 10, 10, 10];
   /// Array.mapEntries<Nat, Nat>(array, func (x, i) = i * x)
   /// ```
@@ -609,7 +606,6 @@ module {
   /// ordering of the elements.
   /// 
   /// ```motoko include=import
-  /// 
   /// let arrays = [[0, 1, 2], [2, 3], [], [4]];
   /// Array.flatten<Nat>(arrays)
   /// ```
@@ -660,7 +656,6 @@ module {
   /// :::
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [10, 11, 12];
   /// 
   /// var sum = 0;
@@ -679,14 +674,13 @@ module {
   /// Iterator provides a single method `next()`, which returns
   /// indices in order, or `null` when out of index to iterate over.
   /// 
-  /// ::: note [Alternative approach]
+  /// :::note [Alternative approach]
   /// You can also use `array.keys()` instead of this function. See example
   /// below.
   /// 
   /// :::
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [10, 11, 12];
   /// 
   /// var sum = 0;
@@ -709,7 +703,6 @@ module {
   /// :::
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [10, 11, 12];
   /// let size = Array.size(array);
   /// ```
@@ -719,14 +712,13 @@ module {
   /// | `O(1)` | `O(1)` |
   public func size<X>(array : [X]) : Nat = array.size();
 
-  /// Returns a new subarray from the given array provided the start index and length of elements in the subarray
+  /// Returns a new subarray from the given array provided the start index and length of elements in the subarray.
   /// 
   /// :::note [Limitations]
-  ///  Traps if the start index + length is greater than the size of the array
+  ///  Traps if the start index + length is greater than the size of the array.
   /// :::
   /// 
   /// ```motoko include=import
-  /// 
   /// let array = [1,2,3,4,5];
   /// let subArray = Array.subArray<Nat>(array, 2, 3);
   /// ```
@@ -857,7 +849,7 @@ module {
     }
   };
 
-  /// Returns a new subarray of given length from the beginning or end of the given array
+  /// Returns a new subarray of given length from the beginning or end of the given array.
   /// 
   /// Returns the entire array if the length is greater than the size of the array
   /// 
