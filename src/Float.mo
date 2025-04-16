@@ -443,7 +443,7 @@ module {
   ///  ```
   public let toText : Float -> Text = Prim.floatToText;
 
-  ///  Conversion to Int64 by truncating Float, equivalent to `toInt64(trunc(f))`
+  ///  Conversion to `Int64` by truncating Float, equivalent to `toInt64(trunc(f))`
   /// 
   ///  Traps if the floating point number is larger or smaller than the representable Int64.
   ///  Also traps for `inf`, `-inf`, and `NaN`.
