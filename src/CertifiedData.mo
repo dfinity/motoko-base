@@ -42,7 +42,7 @@ module {
   /// 
   public let set : (data : Blob) -> () = Prim.setCertifiedData;
 
-  /// Gets a certificate
+  /// Gets a certificate.
   /// 
   /// :::note [When available]
   /// 
