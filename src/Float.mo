@@ -482,7 +482,7 @@ module {
   ///  ```
   public let toInt : Float -> Int = Prim.floatToInt;
 
-  ///  Conversion from Int. May result in `Inf`.
+  ///  Conversion from `Int`. May result in `Inf`.
   /// 
   ///  Note: The floating point number may be imprecise for large or small Int values.
   ///  Returns `inf` if the integer is greater than the maximum floating point number.
