@@ -98,6 +98,18 @@ on that branch.
 
 External contributions are best made against `master`.
 
+- `master` branch is meant for the newest **released** version of `moc`
+  - The CI runs on this branch
+- `next-moc` branch is meant for the **in-development** version of `moc`
+  - This branch is used by the [`motoko` repository](https://github.com/dfinity/motoko)'s CI
+
+Both branches are kept in sync with each other by mutual, circular merges:
+- `next-moc` is updated automatically on each push to `master` via the [sync.yml](.github/workflows/sync.yml) workflow
+- `master` is updated **manually** on each release of `moc` as part of the `motoko` release process
+
+Only *normal* merges are allowed between `master` and `next-moc`, because development is permitted on both branches.
+This policy makes every PR (to either branch) visible in the history of both branches.
+
 Contributing
 ------------
 
