@@ -873,6 +873,21 @@ Example:
 Int16.bitcountTrailingZero(0x0100) // => +8
 ```
 
+[[explode]]
+== explode
+
+[source.no-repl,motoko,subs=+macros]
+----
+func explode(x : xref:#type.Int16[Int16]) : (msb : Nat8, lsb : Nat8)
+----
+
+Returns the upper (i.e. most significant) and lower (least significant) byte of `x`.
+
+Example:
+```motoko include=import
+Int16.explode 0x77ee // => (119, 238)
+```
+
 [[addWrap]]
 == addWrap
 

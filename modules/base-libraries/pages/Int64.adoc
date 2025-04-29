@@ -857,6 +857,22 @@ Example:
 Int64.bitcountTrailingZero(0x0201_0000) // => +16
 ```
 
+[[explode]]
+== explode
+
+[source.no-repl,motoko,subs=+macros]
+----
+func explode(x : xref:#type.Int64[Int64]) : (msb : Nat8, Nat8, Nat8, Nat8, Nat8, Nat8, Nat8, lsb : Nat8)
+----
+
+Returns the upper (i.e. most significant), lower (least significant)
+and in-between bytes of `x`.
+
+Example:
+```motoko include=import
+Int64.explode 0x33772266aa885511 // => (51, 119, 34, 102, 170, 136, 85, 17)
+```
+
 [[addWrap]]
 == addWrap
 

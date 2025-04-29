@@ -773,6 +773,21 @@ Example:
 Nat16.bitcountTrailingZero(5); // => 0
 ```
 
+[[explode]]
+== explode
+
+[source.no-repl,motoko,subs=+macros]
+----
+func explode(x : xref:#type.Nat16[Nat16]) : (msb : Nat8, lsb : Nat8)
+----
+
+Returns the upper (i.e. most significant) and lower (least significant) byte of `x`.
+
+Example:
+```motoko include=import
+Nat16.explode 0xaa88 // => (170, 136)
+```
+
 [[addWrap]]
 == addWrap
 
