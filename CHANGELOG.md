@@ -1,3 +1,10 @@
+
+* Added `explode` to `Int16`/`32`/`64`, `Nat16`/`32`/`64`, slicing fixed-length numbers into constituent bytes (#716).
+
+## 0.14.9
+
+(nothing)
+
 ## 0.14.8
 
 (nothing)

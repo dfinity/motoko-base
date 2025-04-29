@@ -576,6 +576,15 @@ module {
   /// ```
   public let bitcountTrailingZero : (x : Int64) -> Int64 = Prim.ctzInt64;
 
+  /// Returns the upper (i.e. most significant), lower (least significant)
+  /// and in-between bytes of `x`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Int64.explode 0x33772266aa885511 // => (51, 119, 34, 102, 170, 136, 85, 17)
+  /// ```
+  public let explode : (x : Int64) -> (msb : Nat8, Nat8, Nat8, Nat8, Nat8, Nat8, Nat8, lsb : Nat8) = Prim.explodeInt64;
+
   /// Returns the sum of `x` and `y`, `x +% y`.
   ///
   /// Wraps on overflow/underflow.
