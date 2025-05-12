@@ -171,17 +171,45 @@ module {
     object {
       public func next() : ?A {
         if (aEnded) {
-          return b.next();
+          return b.next()
         };
         switch (a.next()) {
           case (?x) ?x;
           case (null) {
             aEnded := true;
-            b.next();
-          };
-        };
-      };
+            b.next()
+          }
+        }
+      }
+    }
+  };
+
+  /// Consumes an iterator and returns a new iterator which produces a part (page) of the given iterator.
+  /// ```motoko
+  /// import Iter "mo:base/Iter";
+  /// let iter = Iter.range(1, 10);
+  /// let page = Iter.slice(iter, 3, 5);
+  /// assert(?6 == page.next());
+  /// assert(?7 == page.next());
+  /// assert(?8 == page.next());
+  /// assert(null == page.next());
+  /// ```
+  public func slice<A>(xs : Iter<A>, limit : Nat, skip : Nat) : Iter<A> {
+    var i = 0;
+    while (i < skip) {
+      let ?_ = xs.next() else return { next = func() = null };
+      i += 1
     };
+    i := 0;
+    object {
+      public func next() : ?A {
+        if (i == limit) {
+          return null
+        };
+        i += 1;
+        xs.next()
+      }
+    }
   };
 
   /// Creates an iterator that produces the elements of an Array in ascending index order.
