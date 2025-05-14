@@ -473,15 +473,28 @@ module {
   ///  ```
   public let bitcountTrailingZero : (x : Nat16) -> Nat16 = Prim.ctzNat16;
 
-  ///  Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
-  /// 
-  ///  Example:
-  ///  ```motoko include=import
-  ///  ignore Nat16.addWrap(65532, 5); // => 1
-  ///  (65532 : Nat16) +% (5 : Nat16) // => 1
-  ///  ```
-  /// 
+  /// Returns the upper (i.e. most significant) and lower (least significant) byte of `x`.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// Nat16.explode 0xaa88 // => (170, 136)
+  /// ```
+  public let explode : (x : Nat16) -> (msb : Nat8, lsb : Nat8) = Prim.explodeNat16;
 
+  /// Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+  ///
+  /// Example:
+  /// ```motoko include=import
+  /// ignore Nat16.addWrap(65532, 5); // => 1
+  /// (65532 : Nat16) +% (5 : Nat16) // => 1
+  /// ```
+  ///
+  /// :::info 
+  /// The reason why this function is defined in this library (in addition
+  /// to the existing `+%` operator) is so that you can use it as a function
+  /// value to pass to a higher order function. It is not possible to use `+%`
+  /// as a function value at the moment.
+  /// :::
   public func addWrap(x : Nat16, y : Nat16) : Nat16 { x +% y };
 
   ///  Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
