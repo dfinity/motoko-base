@@ -1,14 +1,21 @@
 [[module.Int64]]
 = Int64
 
-Provides utility functions on 64-bit signed integers.
+ Provides utility functions on 64-bit signed integers.
 
-Note that most operations are available as built-in operators (e.g. `1 + 1`).
+:::note
+Most operations are available as built-in operators (e.g. `1 + 1`).
+:::
 
-Import from the base library to use this module.
-```motoko name=import
-import Int64 "mo:base/Int64";
-```
+:::info [Function form for higher-order use]
+
+Several arithmetic and comparison functions (e.g. `add`, `sub`, `bitor`, `bitand`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
+:::
+
+ Import from the base library to use this module.
+ ```motoko name=import
+ import Int64 "mo:base/Int64";
+ ```
 
 [[type.Int64]]
 == Int64
@@ -18,7 +25,7 @@ import Int64 "mo:base/Int64";
 type Int64 = Prim.Types.Int64
 ----
 
-64-bit signed integers.
+ 64-bit signed integers.
 
 [[minimumValue]]
 == minimumValue
@@ -28,12 +35,12 @@ type Int64 = Prim.Types.Int64
 let minimumValue : xref:#type.Int64[Int64]
 ----
 
-Minimum 64-bit integer value, `-2 ** 63`.
+ Minimum 64-bit integer value, `-2 ** 63`.
 
-Example:
-```motoko include=import
-Int64.minimumValue // => -9_223_372_036_854_775_808
-```
+ Example:
+ ```motoko include=import
+ Int64.minimumValue // => -9_223_372_036_854_775_808
+ ```
 
 [[maximumValue]]
 == maximumValue
@@ -43,12 +50,12 @@ Int64.minimumValue // => -9_223_372_036_854_775_808
 let maximumValue : xref:#type.Int64[Int64]
 ----
 
-Maximum 64-bit integer value, `+2 ** 63 - 1`.
+ Maximum 64-bit integer value, `+2 ** 63 - 1`.
 
-Example:
-```motoko include=import
-Int64.maximumValue // => +9_223_372_036_854_775_807
-```
+ Example:
+ ```motoko include=import
+ Int64.maximumValue // => +9_223_372_036_854_775_807
+ ```
 
 [[toInt]]
 == toInt
@@ -58,12 +65,12 @@ Int64.maximumValue // => +9_223_372_036_854_775_807
 func toInt(_ : xref:#type.Int64[Int64]) : Int
 ----
 
-Converts a 64-bit signed integer to a signed integer with infinite precision.
+ Converts a 64-bit signed integer to a signed integer with infinite precision.
 
-Example:
-```motoko include=import
-Int64.toInt(123_456) // => 123_456 : Int
-```
+ Example:
+ ```motoko include=import
+ Int64.toInt(123_456) // => 123_456 : Int
+ ```
 
 [[fromInt]]
 == fromInt
@@ -73,14 +80,14 @@ Int64.toInt(123_456) // => 123_456 : Int
 func fromInt(_ : Int) : xref:#type.Int64[Int64]
 ----
 
-Converts a signed integer with infinite precision to a 64-bit signed integer.
+ Converts a signed integer with infinite precision to a 64-bit signed integer.
 
-Traps on overflow/underflow.
+ Traps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.fromInt(123_456) // => +123_456 : Int64
-```
+ Example:
+ ```motoko include=import
+ Int64.fromInt(123_456) // => +123_456 : Int64
+ ```
 
 [[fromInt32]]
 == fromInt32
@@ -90,14 +97,14 @@ Int64.fromInt(123_456) // => +123_456 : Int64
 func fromInt32(_ : Int32) : xref:#type.Int64[Int64]
 ----
 
-Converts a 32-bit signed integer to a 64-bit signed integer.
+ Converts a 32-bit signed integer to a 64-bit signed integer.
 
-Traps on overflow/underflow.
+ Traps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.fromInt32(-123_456) // => -123_456 : Int64
-```
+ Example:
+ ```motoko include=import
+ Int64.fromInt32(-123_456) // => -123_456 : Int64
+ ```
 
 [[toInt32]]
 == toInt32
@@ -107,14 +114,14 @@ Int64.fromInt32(-123_456) // => -123_456 : Int64
 func toInt32(_ : xref:#type.Int64[Int64]) : Int32
 ----
 
-Converts a 64-bit signed integer to a 32-bit signed integer.
+ Converts a 64-bit signed integer to a 32-bit signed integer.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.toInt32(-123_456) // => -123_456 : Int32
-```
+ Example:
+ ```motoko include=import
+ Int64.toInt32(-123_456) // => -123_456 : Int32
+ ```
 
 [[fromIntWrap]]
 == fromIntWrap
@@ -124,14 +131,14 @@ Int64.toInt32(-123_456) // => -123_456 : Int32
 func fromIntWrap(_ : Int) : xref:#type.Int64[Int64]
 ----
 
-Converts a signed integer with infinite precision to a 64-bit signed integer.
+ Converts a signed integer with infinite precision to a 64-bit signed integer.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.fromIntWrap(-123_456) // => -123_456 : Int64
-```
+ Example:
+ ```motoko include=import
+ Int64.fromIntWrap(-123_456) // => -123_456 : Int64
+ ```
 
 [[fromNat64]]
 == fromNat64
@@ -141,14 +148,14 @@ Int64.fromIntWrap(-123_456) // => -123_456 : Int64
 func fromNat64(_ : Nat64) : xref:#type.Int64[Int64]
 ----
 
-Converts an unsigned 64-bit integer to a signed 64-bit integer.
+ Converts an unsigned 64-bit integer to a signed 64-bit integer.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.fromNat64(123_456) // => +123_456 : Int64
-```
+ Example:
+ ```motoko include=import
+ Int64.fromNat64(123_456) // => +123_456 : Int64
+ ```
 
 [[toNat64]]
 == toNat64
@@ -158,14 +165,14 @@ Int64.fromNat64(123_456) // => +123_456 : Int64
 func toNat64(_ : xref:#type.Int64[Int64]) : Nat64
 ----
 
-Converts a signed 64-bit integer to an unsigned 64-bit integer.
+ Converts a signed 64-bit integer to an unsigned 64-bit integer.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.toNat64(-1) // => 18_446_744_073_709_551_615 : Nat64 // underflow
-```
+ Example:
+ ```motoko include=import
+ Int64.toNat64(-1) // => 18_446_744_073_709_551_615 : Nat64 // underflow
+ ```
 
 [[toText]]
 == toText
@@ -175,14 +182,14 @@ Int64.toNat64(-1) // => 18_446_744_073_709_551_615 : Nat64 // underflow
 func toText(x : xref:#type.Int64[Int64]) : Text
 ----
 
-Returns the Text representation of `x`. Textual representation _do not_
-contain underscores to represent commas.
+ Returns the Text representation of `x`. Textual representation _do not_
+ contain underscores to represent commas.
 
 
-Example:
-```motoko include=import
-Int64.toText(-123456) // => "-123456"
-```
+ Example:
+ ```motoko include=import
+ Int64.toText(-123456) // => "-123456"
+ ```
 
 [[abs]]
 == abs
@@ -192,14 +199,14 @@ Int64.toText(-123456) // => "-123456"
 func abs(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the absolute value of `x`.
+ Returns the absolute value of `x`.
 
-Traps when `x == -2 ** 63` (the minimum `Int64` value).
+ Traps when `x == -2 ** 63` (the minimum `Int64` value).
 
-Example:
-```motoko include=import
-Int64.abs(-123456) // => +123_456
-```
+ Example:
+ ```motoko include=import
+ Int64.abs(-123456) // => +123_456
+ ```
 
 [[min]]
 == min
@@ -209,12 +216,12 @@ Int64.abs(-123456) // => +123_456
 func min(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the minimum of `x` and `y`.
+ Returns the minimum of `x` and `y`.
 
-Example:
-```motoko include=import
-Int64.min(+2, -3) // => -3
-```
+ Example:
+ ```motoko include=import
+ Int64.min(+2, -3) // => -3
+ ```
 
 [[max]]
 == max
@@ -224,12 +231,12 @@ Int64.min(+2, -3) // => -3
 func max(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the maximum of `x` and `y`.
+ Returns the maximum of `x` and `y`.
 
-Example:
-```motoko include=import
-Int64.max(+2, -3) // => +2
-```
+ Example:
+ ```motoko include=import
+ Int64.max(+2, -3) // => +2
+ ```
 
 [[equal]]
 == equal
@@ -239,29 +246,25 @@ Int64.max(+2, -3) // => +2
 func equal(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
-Equality function for Int64 types.
-This is equivalent to `x == y`.
+ Equality function for Int64 types.
+ This is equivalent to `x == y`.
 
-Example:
-```motoko include=import
-Int64.equal(-1, -1); // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.equal(-1, -1); // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `==` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `==`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Buffer "mo:base/Buffer";
+ Example:
+ ```motoko include=import
+ import Buffer "mo:base/Buffer";
 
-let buffer1 = Buffer.Buffer<Int64>(1);
-buffer1.add(-3);
-let buffer2 = Buffer.Buffer<Int64>(1);
-buffer2.add(-3);
-Buffer.equal(buffer1, buffer2, Int64.equal) // => true
-```
+ let buffer1 = Buffer.Buffer<Int64>(1);
+ buffer1.add(-3);
+ let buffer2 = Buffer.Buffer<Int64>(1);
+ buffer2.add(-3);
+ Buffer.equal(buffer1, buffer2, Int64.equal) // => true
+ ```
 
 [[notEqual]]
 == notEqual
@@ -271,18 +274,14 @@ Buffer.equal(buffer1, buffer2, Int64.equal) // => true
 func notEqual(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
-Inequality function for Int64 types.
-This is equivalent to `x != y`.
+ Inequality function for Int64 types.
+ This is equivalent to `x != y`.
 
-Example:
-```motoko include=import
-Int64.notEqual(-1, -2); // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.notEqual(-1, -2); // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `!=` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `!=`
-as a function value at the moment.
 
 [[less]]
 == less
@@ -292,18 +291,14 @@ as a function value at the moment.
 func less(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
-"Less than" function for Int64 types.
-This is equivalent to `x < y`.
+ "Less than" function for Int64 types.
+ This is equivalent to `x < y`.
 
-Example:
-```motoko include=import
-Int64.less(-2, 1); // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.less(-2, 1); // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<`
-as a function value at the moment.
 
 [[lessOrEqual]]
 == lessOrEqual
@@ -313,18 +308,14 @@ as a function value at the moment.
 func lessOrEqual(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
-"Less than or equal" function for Int64 types.
-This is equivalent to `x <= y`.
+ "Less than or equal" function for Int64 types.
+ This is equivalent to `x <= y`.
 
-Example:
-```motoko include=import
-Int64.lessOrEqual(-2, -2); // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.lessOrEqual(-2, -2); // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<=` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<=`
-as a function value at the moment.
 
 [[greater]]
 == greater
@@ -334,18 +325,14 @@ as a function value at the moment.
 func greater(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
-"Greater than" function for Int64 types.
-This is equivalent to `x > y`.
+ "Greater than" function for Int64 types.
+ This is equivalent to `x > y`.
 
-Example:
-```motoko include=import
-Int64.greater(-2, -3); // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.greater(-2, -3); // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `>`
-as a function value at the moment.
 
 [[greaterOrEqual]]
 == greaterOrEqual
@@ -355,18 +342,14 @@ as a function value at the moment.
 func greaterOrEqual(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : Bool
 ----
 
-"Greater than or equal" function for Int64 types.
-This is equivalent to `x >= y`.
+ "Greater than or equal" function for Int64 types.
+ This is equivalent to `x >= y`.
 
-Example:
-```motoko include=import
-Int64.greaterOrEqual(-2, -2); // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.greaterOrEqual(-2, -2); // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `>=` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `>=`
-as a function value at the moment.
 
 [[compare]]
 == compare
@@ -376,21 +359,21 @@ as a function value at the moment.
 func compare(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : {#less; #equal; #greater}
 ----
 
-General-purpose comparison function for `Int64`. Returns the `Order` (
-either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
+ General-purpose comparison function for `Int64`. Returns the `Order` (
+ either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
 
-Example:
-```motoko include=import
-Int64.compare(-3, 2) // => #less
-```
+ Example:
+ ```motoko include=import
+ Int64.compare(-3, 2) // => #less
+ ```
 
-This function can be used as value for a high order function, such as a sort function.
+ This function can be used as value for a high order function, such as a sort function.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.sort([1, -2, -3] : [Int64], Int64.compare) // => [-3, -2, 1]
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.sort([1, -2, -3] : [Int64], Int64.compare) // => [-3, -2, 1]
+ ```
 
 [[neg]]
 == neg
@@ -400,19 +383,15 @@ Array.sort([1, -2, -3] : [Int64], Int64.compare) // => [-3, -2, 1]
 func neg(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the negation of `x`, `-x`.
+ Returns the negation of `x`, `-x`.
 
-Traps on overflow, i.e. for `neg(-2 ** 63)`.
+ Traps on overflow, i.e. for `neg(-2 ** 63)`.
 
-Example:
-```motoko include=import
-Int64.neg(123) // => -123
-```
+ Example:
+ ```motoko include=import
+ Int64.neg(123) // => -123
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `-` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `-`
-as a function value at the moment.
 
 [[add]]
 == add
@@ -422,25 +401,21 @@ as a function value at the moment.
 func add(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the sum of `x` and `y`, `x + y`.
+ Returns the sum of `x` and `y`, `x + y`.
 
-Traps on overflow/underflow.
+ Traps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.add(1234, 123) // => +1_357
-```
+ Example:
+ ```motoko include=import
+ Int64.add(1234, 123) // => +1_357
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `+` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `+`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.foldLeft<Int64, Int64>([1, -2, -3], 0, Int64.add) // => -4
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.foldLeft<Int64, Int64>([1, -2, -3], 0, Int64.add) // => -4
+ ```
 
 [[sub]]
 == sub
@@ -450,25 +425,21 @@ Array.foldLeft<Int64, Int64>([1, -2, -3], 0, Int64.add) // => -4
 func sub(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the difference of `x` and `y`, `x - y`.
+ Returns the difference of `x` and `y`, `x - y`.
 
-Traps on overflow/underflow.
+ Traps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.sub(123, 100) // => +23
-```
+ Example:
+ ```motoko include=import
+ Int64.sub(123, 100) // => +23
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `-` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `-`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.foldLeft<Int64, Int64>([1, -2, -3], 0, Int64.sub) // => 4
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.foldLeft<Int64, Int64>([1, -2, -3], 0, Int64.sub) // => 4
+ ```
 
 [[mul]]
 == mul
@@ -478,25 +449,21 @@ Array.foldLeft<Int64, Int64>([1, -2, -3], 0, Int64.sub) // => 4
 func mul(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the product of `x` and `y`, `x * y`.
+ Returns the product of `x` and `y`, `x * y`.
 
-Traps on overflow/underflow.
+ Traps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.mul(123, 10) // => +1_230
-```
+ Example:
+ ```motoko include=import
+ Int64.mul(123, 10) // => +1_230
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `*` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `*`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.foldLeft<Int64, Int64>([1, -2, -3], 1, Int64.mul) // => 6
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.foldLeft<Int64, Int64>([1, -2, -3], 1, Int64.mul) // => 6
+ ```
 
 [[div]]
 == div
@@ -506,20 +473,16 @@ Array.foldLeft<Int64, Int64>([1, -2, -3], 1, Int64.mul) // => 6
 func div(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the signed integer division of `x` by `y`, `x / y`.
-Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
+ Returns the signed integer division of `x` by `y`, `x / y`.
+ Rounds the quotient towards zero, which is the same as truncating the decimal places of the quotient.
 
-Traps when `y` is zero.
+ Traps when `y` is zero.
 
-Example:
-```motoko include=import
-Int64.div(123, 10) // => +12
-```
+ Example:
+ ```motoko include=import
+ Int64.div(123, 10) // => +12
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `/` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `/`
-as a function value at the moment.
 
 [[rem]]
 == rem
@@ -529,20 +492,16 @@ as a function value at the moment.
 func rem(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
-which is defined as `x - x / y * y`.
+ Returns the remainder of the signed integer division of `x` by `y`, `x % y`,
+ which is defined as `x - x / y * y`.
 
-Traps when `y` is zero.
+ Traps when `y` is zero.
 
-Example:
-```motoko include=import
-Int64.rem(123, 10) // => +3
-```
+ Example:
+ ```motoko include=import
+ Int64.rem(123, 10) // => +3
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `%`
-as a function value at the moment.
 
 [[pow]]
 == pow
@@ -552,19 +511,15 @@ as a function value at the moment.
 func pow(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns `x` to the power of `y`, `x ** y`.
+ Returns `x` to the power of `y`, `x ** y`.
 
-Traps on overflow/underflow and when `y < 0 or y >= 64`.
+ Traps on overflow/underflow and when `y < 0 or y >= 64`.
 
-Example:
-```motoko include=import
-Int64.pow(2, 10) // => +1_024
-```
+ Example:
+ ```motoko include=import
+ Int64.pow(2, 10) // => +1_024
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `**` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `**`
-as a function value at the moment.
 
 [[bitnot]]
 == bitnot
@@ -574,17 +529,13 @@ as a function value at the moment.
 func bitnot(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise negation of `x`, `^x`.
+ Returns the bitwise negation of `x`, `^x`.
 
-Example:
-```motoko include=import
-Int64.bitnot(-256 /* 0xffff_ffff_ffff_ff00 */) // => +255 // 0xff
-```
+ Example:
+ ```motoko include=import
+ Int64.bitnot(-256 /* 0xffff_ffff_ffff_ff00 */) // => +255 // 0xff
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `^` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `^`
-as a function value at the moment.
 
 [[bitand]]
 == bitand
@@ -594,17 +545,13 @@ as a function value at the moment.
 func bitand(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise "and" of `x` and `y`, `x & y`.
+ Returns the bitwise "and" of `x` and `y`, `x & y`.
 
-Example:
-```motoko include=import
-Int64.bitand(0xffff, 0x00f0) // => +240 // 0xf0
-```
+ Example:
+ ```motoko include=import
+ Int64.bitand(0xffff, 0x00f0) // => +240 // 0xf0
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `&` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `&`
-as a function value at the moment.
 
 [[bitor]]
 == bitor
@@ -614,17 +561,13 @@ as a function value at the moment.
 func bitor(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise "or" of `x` and `y`, `x | y`.
+ Returns the bitwise "or" of `x` and `y`, `x | y`.
 
-Example:
-```motoko include=import
-Int64.bitor(0xffff, 0x00f0) // => +65_535 // 0xffff
-```
+ Example:
+ ```motoko include=import
+ Int64.bitor(0xffff, 0x00f0) // => +65_535 // 0xffff
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `|` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `|`
-as a function value at the moment.
 
 [[bitxor]]
 == bitxor
@@ -634,17 +577,13 @@ as a function value at the moment.
 func bitxor(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
+ Returns the bitwise "exclusive or" of `x` and `y`, `x ^ y`.
 
-Example:
-```motoko include=import
-Int64.bitxor(0xffff, 0x00f0) // => +65_295 // 0xff0f
-```
+ Example:
+ ```motoko include=import
+ Int64.bitxor(0xffff, 0x00f0) // => +65_295 // 0xff0f
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `^` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `^`
-as a function value at the moment.
 
 [[bitshiftLeft]]
 == bitshiftLeft
@@ -654,22 +593,18 @@ as a function value at the moment.
 func bitshiftLeft(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise left shift of `x` by `y`, `x << y`.
-The right bits of the shift filled with zeros.
-Left-overflowing bits, including the sign bit, are discarded.
+ Returns the bitwise left shift of `x` by `y`, `x << y`.
+ The right bits of the shift filled with zeros.
+ Left-overflowing bits, including the sign bit, are discarded.
 
-For `y >= 64`, the semantics is the same as for `bitshiftLeft(x, y % 64)`.
-For `y < 0`,  the semantics is the same as for `bitshiftLeft(x, y + y % 64)`.
+ For `y >= 64`, the semantics is the same as for `bitshiftLeft(x, y % 64)`.
+ For `y < 0`,  the semantics is the same as for `bitshiftLeft(x, y + y % 64)`.
 
-Example:
-```motoko include=import
-Int64.bitshiftLeft(1, 8) // => +256 // 0x100 equivalent to `2 ** 8`.
-```
+ Example:
+ ```motoko include=import
+ Int64.bitshiftLeft(1, 8) // => +256 // 0x100 equivalent to `2 ** 8`.
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<<` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<<`
-as a function value at the moment.
 
 [[bitshiftRight]]
 == bitshiftRight
@@ -679,22 +614,18 @@ as a function value at the moment.
 func bitshiftRight(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
-The sign bit is retained and the left side is filled with the sign bit.
-Right-underflowing bits are discarded, i.e. not rotated to the left side.
+ Returns the signed bitwise right shift of `x` by `y`, `x >> y`.
+ The sign bit is retained and the left side is filled with the sign bit.
+ Right-underflowing bits are discarded, i.e. not rotated to the left side.
 
-For `y >= 64`, the semantics is the same as for `bitshiftRight(x, y % 64)`.
-For `y < 0`,  the semantics is the same as for `bitshiftRight (x, y + y % 64)`.
+ For `y >= 64`, the semantics is the same as for `bitshiftRight(x, y % 64)`.
+ For `y < 0`,  the semantics is the same as for `bitshiftRight (x, y + y % 64)`.
 
-Example:
-```motoko include=import
-Int64.bitshiftRight(1024, 8) // => +4 // equivalent to `1024 / (2 ** 8)`
-```
+ Example:
+ ```motoko include=import
+ Int64.bitshiftRight(1024, 8) // => +4 // equivalent to `1024 / (2 ** 8)`
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `>>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `>>`
-as a function value at the moment.
 
 [[bitrotLeft]]
 == bitrotLeft
@@ -704,23 +635,19 @@ as a function value at the moment.
 func bitrotLeft(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
-Each left-overflowing bit is inserted again on the right side.
-The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
+ Returns the bitwise left rotatation of `x` by `y`, `x <<> y`.
+ Each left-overflowing bit is inserted again on the right side.
+ The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
 
-Changes the direction of rotation for negative `y`.
-For `y >= 64`, the semantics is the same as for `bitrotLeft(x, y % 64)`.
+ Changes the direction of rotation for negative `y`.
+ For `y >= 64`, the semantics is the same as for `bitrotLeft(x, y % 64)`.
 
-Example:
-```motoko include=import
+ Example:
+ ```motoko include=import
 
-Int64.bitrotLeft(0x2000_0000_0000_0001, 4) // => +18 // 0x12.
-```
+ Int64.bitrotLeft(0x2000_0000_0000_0001, 4) // => +18 // 0x12.
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<<>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<<>`
-as a function value at the moment.
 
 [[bitrotRight]]
 == bitrotRight
@@ -730,22 +657,18 @@ as a function value at the moment.
 func bitrotRight(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
-Each right-underflowing bit is inserted again on the right side.
-The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
+ Returns the bitwise right rotation of `x` by `y`, `x <>> y`.
+ Each right-underflowing bit is inserted again on the right side.
+ The sign bit is rotated like other bits, i.e. the rotation interprets the number as unsigned.
 
-Changes the direction of rotation for negative `y`.
-For `y >= 64`, the semantics is the same as for `bitrotRight(x, y % 64)`.
+ Changes the direction of rotation for negative `y`.
+ For `y >= 64`, the semantics is the same as for `bitrotRight(x, y % 64)`.
 
-Example:
-```motoko include=import
-Int64.bitrotRight(0x0002_0000_0000_0001, 48) // => +65538 // 0x1_0002.
-```
+ Example:
+ ```motoko include=import
+ Int64.bitrotRight(0x0002_0000_0000_0001, 48) // => +65538 // 0x1_0002.
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<>>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<>>`
-as a function value at the moment.
 
 [[bittest]]
 == bittest
@@ -755,14 +678,14 @@ as a function value at the moment.
 func bittest(x : xref:#type.Int64[Int64], p : Nat) : Bool
 ----
 
-Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
-If `p >= 64`, the semantics is the same as for `bittest(x, p % 64)`.
-This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
+ Returns the value of bit `p` in `x`, `x & 2**p == 2**p`.
+ If `p >= 64`, the semantics is the same as for `bittest(x, p % 64)`.
+ This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
 
-Example:
-```motoko include=import
-Int64.bittest(128, 7) // => true
-```
+ Example:
+ ```motoko include=import
+ Int64.bittest(128, 7) // => true
+ ```
 
 [[bitset]]
 == bitset
@@ -772,13 +695,13 @@ Int64.bittest(128, 7) // => true
 func bitset(x : xref:#type.Int64[Int64], p : Nat) : xref:#type.Int64[Int64]
 ----
 
-Returns the value of setting bit `p` in `x` to `1`.
-If `p >= 64`, the semantics is the same as for `bitset(x, p % 64)`.
+ Returns the value of setting bit `p` in `x` to `1`.
+ If `p >= 64`, the semantics is the same as for `bitset(x, p % 64)`.
 
-Example:
-```motoko include=import
-Int64.bitset(0, 7) // => +128
-```
+ Example:
+ ```motoko include=import
+ Int64.bitset(0, 7) // => +128
+ ```
 
 [[bitclear]]
 == bitclear
@@ -788,13 +711,13 @@ Int64.bitset(0, 7) // => +128
 func bitclear(x : xref:#type.Int64[Int64], p : Nat) : xref:#type.Int64[Int64]
 ----
 
-Returns the value of clearing bit `p` in `x` to `0`.
-If `p >= 64`, the semantics is the same as for `bitclear(x, p % 64)`.
+ Returns the value of clearing bit `p` in `x` to `0`.
+ If `p >= 64`, the semantics is the same as for `bitclear(x, p % 64)`.
 
-Example:
-```motoko include=import
-Int64.bitclear(-1, 7) // => -129
-```
+ Example:
+ ```motoko include=import
+ Int64.bitclear(-1, 7) // => -129
+ ```
 
 [[bitflip]]
 == bitflip
@@ -804,13 +727,13 @@ Int64.bitclear(-1, 7) // => -129
 func bitflip(x : xref:#type.Int64[Int64], p : Nat) : xref:#type.Int64[Int64]
 ----
 
-Returns the value of flipping bit `p` in `x`.
-If `p >= 64`, the semantics is the same as for `bitclear(x, p % 64)`.
+ Returns the value of flipping bit `p` in `x`.
+ If `p >= 64`, the semantics is the same as for `bitclear(x, p % 64)`.
 
-Example:
-```motoko include=import
-Int64.bitflip(255, 7) // => +127
-```
+ Example:
+ ```motoko include=import
+ Int64.bitflip(255, 7) // => +127
+ ```
 
 [[bitcountNonZero]]
 == bitcountNonZero
@@ -820,12 +743,12 @@ Int64.bitflip(255, 7) // => +127
 func bitcountNonZero(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the count of non-zero bits in `x`.
+ Returns the count of non-zero bits in `x`.
 
-Example:
-```motoko include=import
-Int64.bitcountNonZero(0xffff) // => +16
-```
+ Example:
+ ```motoko include=import
+ Int64.bitcountNonZero(0xffff) // => +16
+ ```
 
 [[bitcountLeadingZero]]
 == bitcountLeadingZero
@@ -835,12 +758,12 @@ Int64.bitcountNonZero(0xffff) // => +16
 func bitcountLeadingZero(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the count of leading zero bits in `x`.
+ Returns the count of leading zero bits in `x`.
 
-Example:
-```motoko include=import
-Int64.bitcountLeadingZero(0x8000_0000) // => +32
-```
+ Example:
+ ```motoko include=import
+ Int64.bitcountLeadingZero(0x8000_0000) // => +32
+ ```
 
 [[bitcountTrailingZero]]
 == bitcountTrailingZero
@@ -850,12 +773,12 @@ Int64.bitcountLeadingZero(0x8000_0000) // => +32
 func bitcountTrailingZero(x : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the count of trailing zero bits in `x`.
+ Returns the count of trailing zero bits in `x`.
 
-Example:
-```motoko include=import
-Int64.bitcountTrailingZero(0x0201_0000) // => +16
-```
+ Example:
+ ```motoko include=import
+ Int64.bitcountTrailingZero(0x0201_0000) // => +16
+ ```
 
 [[explode]]
 == explode
@@ -890,10 +813,12 @@ Example:
 Int64.addWrap(2 ** 62, 2 ** 62) // => -9_223_372_036_854_775_808 // overflow
 ```
 
-Note: The reason why this function is defined in this library (in addition
+:::info 
+The reason why this function is defined in this library (in addition
 to the existing `+%` operator) is so that you can use it as a function
 value to pass to a higher order function. It is not possible to use `+%`
 as a function value at the moment.
+:::
 
 [[subWrap]]
 == subWrap
@@ -903,19 +828,15 @@ as a function value at the moment.
 func subWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the difference of `x` and `y`, `x -% y`.
+ Returns the difference of `x` and `y`, `x -% y`.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.subWrap(-2 ** 63, 1) // => +9_223_372_036_854_775_807 // underflow
-```
+ Example:
+ ```motoko include=import
+ Int64.subWrap(-2 ** 63, 1) // => +9_223_372_036_854_775_807 // underflow
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `-%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `-%`
-as a function value at the moment.
 
 [[mulWrap]]
 == mulWrap
@@ -925,19 +846,15 @@ as a function value at the moment.
 func mulWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Int64.mulWrap(2 ** 32, 2 ** 32) // => 0 // overflow
-```
+ Example:
+ ```motoko include=import
+ Int64.mulWrap(2 ** 32, 2 ** 32) // => 0 // overflow
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `*%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `*%`
-as a function value at the moment.
 
 [[powWrap]]
 == powWrap
@@ -947,18 +864,14 @@ as a function value at the moment.
 func powWrap(x : xref:#type.Int64[Int64], y : xref:#type.Int64[Int64]) : xref:#type.Int64[Int64]
 ----
 
-Returns `x` to the power of `y`, `x **% y`.
+ Returns `x` to the power of `y`, `x **% y`.
 
-Wraps on overflow/underflow.
-Traps if `y < 0 or y >= 64`.
+ Wraps on overflow/underflow.
+ Traps if `y < 0 or y >= 64`.
 
-Example:
-```motoko include=import
-Int64.powWrap(2, 63) // => -9_223_372_036_854_775_808 // overflow
-```
+ Example:
+ ```motoko include=import
+ Int64.powWrap(2, 63) // => -9_223_372_036_854_775_808 // overflow
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `**%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `**%`
-as a function value at the moment.
 

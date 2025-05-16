@@ -1,8 +1,6 @@
 [[module.Hash]]
 = Hash
 
-Hash values
-
 [[type.Hash]]
 == Hash
 
@@ -11,7 +9,7 @@ Hash values
 type Hash = Nat32
 ----
 
-Hash values represent a string of _hash bits_, packed into a `Nat32`.
+ Hash values represent a string of _hash bits_, packed into a `Nat32`.
 
 [[length]]
 == length
@@ -21,7 +19,7 @@ Hash values represent a string of _hash bits_, packed into a `Nat32`.
 let length : Nat
 ----
 
-The hash length, always 31.
+ The hash length, always 31.
 
 [[bit]]
 == bit
@@ -31,7 +29,7 @@ The hash length, always 31.
 func bit(h : xref:#type.Hash[Hash], pos : Nat) : Bool
 ----
 
-Project a given bit from the bit vector.
+ Project a given bit from the bit vector.
 
 [[equal]]
 == equal
@@ -41,7 +39,7 @@ Project a given bit from the bit vector.
 func equal(ha : xref:#type.Hash[Hash], hb : xref:#type.Hash[Hash]) : Bool
 ----
 
-Test if two hashes are equal
+ Test if two hashes are equal.
 
 [[hash]]
 == hash
@@ -51,8 +49,10 @@ Test if two hashes are equal
 func hash(n : Nat) : xref:#type.Hash[Hash]
 ----
 
-Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
-@deprecated For large `Nat` values consider using a bespoke hash function that considers all of the argument's bits.
+:::warning [Deprecated function]
+This function computes a hash from the least significant 32 bits of `n`, ignoring other bits.
+For large `Nat` values, consider using a bespoke hash function that considers all of the argument's bits.
+:::
 
 [[debugPrintBits]]
 == debugPrintBits
@@ -62,7 +62,9 @@ Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
 func debugPrintBits(bits : xref:#type.Hash[Hash])
 ----
 
-@deprecated This function will be removed in future.
+:::warning [Deprecated function]
+This function will be removed in a future version.
+:::
 
 [[debugPrintBitsRev]]
 == debugPrintBitsRev
@@ -72,7 +74,9 @@ func debugPrintBits(bits : xref:#type.Hash[Hash])
 func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
 ----
 
-@deprecated This function will be removed in future.
+:::warning [Deprecated function]
+This function will be removed in a future version.
+:::
 
 [[hashNat8]]
 == hashNat8
@@ -82,11 +86,13 @@ func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
 func hashNat8(key : pass:[[]xref:#type.Hash[Hash]pass:[]]) : xref:#type.Hash[Hash]
 ----
 
-Jenkin's one at a time:
+ [View Jenkin's one at a time](https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time).
 
-https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
-
+:::note
 The input type should actually be `[Nat8]`.
-Note: Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and to shift into lower 8 bits.
-@deprecated This function may be removed or changed in future.
+Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and shift into the lower 8 bits.
+:::
+:::warning [Deprecated function]
+This function may be removed or changed in a future version.
+:::
 

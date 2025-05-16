@@ -3,9 +3,18 @@
 
 Provides utility functions on 8-bit unsigned integers.
 
-Note that most operations are available as built-in operators (e.g. `1 + 1`).
+:::note
+Most operations on integer numbers (e.g. addition) are available as built-in operators (e.g. `1 + 1`).
+This module provides equivalent functions and `Text` conversion.
+:::
+
+:::info [Function form for higher-order use]
+
+Several arithmetic and comparison functions (e.g. `add`, `sub`, `equal`, `less`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
+:::
 
 Import from the base library to use this module.
+
 ```motoko name=import
 import Nat8 "mo:base/Nat8";
 ```
@@ -18,7 +27,7 @@ import Nat8 "mo:base/Nat8";
 type Nat8 = Prim.Types.Nat8
 ----
 
-8-bit natural numbers.
+ 8-bit natural numbers.
 
 [[maximumValue]]
 == maximumValue
@@ -28,12 +37,12 @@ type Nat8 = Prim.Types.Nat8
 let maximumValue : xref:#type.Nat8[Nat8]
 ----
 
-Maximum 8-bit natural number. `2 ** 8 - 1`.
+ Maximum 8-bit natural number. `2 ** 8 - 1`.
 
-Example:
-```motoko include=import
-Nat8.maximumValue; // => 255 : Nat8
-```
+ Example:
+ ```motoko include=import
+ Nat8.maximumValue; // => 255 : Nat8
+ ```
 
 [[toNat]]
 == toNat
@@ -43,12 +52,12 @@ Nat8.maximumValue; // => 255 : Nat8
 func toNat(_ : xref:#type.Nat8[Nat8]) : Nat
 ----
 
-Converts an 8-bit unsigned integer to an unsigned integer with infinite precision.
+ Converts an 8-bit unsigned integer to an unsigned integer with infinite precision.
 
-Example:
-```motoko include=import
-Nat8.toNat(123); // => 123 : Nat
-```
+ Example:
+ ```motoko include=import
+ Nat8.toNat(123); // => 123 : Nat
+ ```
 
 [[fromNat]]
 == fromNat
@@ -58,14 +67,14 @@ Nat8.toNat(123); // => 123 : Nat
 func fromNat(_ : Nat) : xref:#type.Nat8[Nat8]
 ----
 
-Converts an unsigned integer with infinite precision to an 8-bit unsigned integer.
+ Converts an unsigned integer with infinite precision to an 8-bit unsigned integer.
 
-Traps on overflow.
+ Traps on overflow.
 
-Example:
-```motoko include=import
-Nat8.fromNat(123); // => 123 : Nat8
-```
+ Example:
+ ```motoko include=import
+ Nat8.fromNat(123); // => 123 : Nat8
+ ```
 
 [[fromNat16]]
 == fromNat16
@@ -75,14 +84,14 @@ Nat8.fromNat(123); // => 123 : Nat8
 func fromNat16(_ : Nat16) : xref:#type.Nat8[Nat8]
 ----
 
-Converts a 16-bit unsigned integer to a 8-bit unsigned integer.
+ Converts a 16-bit unsigned integer to a 8-bit unsigned integer.
 
-Traps on overflow.
+ Traps on overflow.
 
-Example:
-```motoko include=import
-Nat8.fromNat16(123); // => 123 : Nat8
-```
+ Example:
+ ```motoko include=import
+ Nat8.fromNat16(123); // => 123 : Nat8
+ ```
 
 [[toNat16]]
 == toNat16
@@ -92,12 +101,12 @@ Nat8.fromNat16(123); // => 123 : Nat8
 func toNat16(_ : xref:#type.Nat8[Nat8]) : Nat16
 ----
 
-Converts an 8-bit unsigned integer to a 16-bit unsigned integer.
+ Converts an 8-bit unsigned integer to a 16-bit unsigned integer.
 
-Example:
-```motoko include=import
-Nat8.toNat16(123); // => 123 : Nat16
-```
+ Example:
+ ```motoko include=import
+ Nat8.toNat16(123); // => 123 : Nat16
+ ```
 
 [[fromIntWrap]]
 == fromIntWrap
@@ -107,14 +116,14 @@ Nat8.toNat16(123); // => 123 : Nat16
 func fromIntWrap(_ : Int) : xref:#type.Nat8[Nat8]
 ----
 
-Converts a signed integer with infinite precision to an 8-bit unsigned integer.
+ Converts a signed integer with infinite precision to an 8-bit unsigned integer.
 
-Wraps on overflow/underflow.
+ Wraps on overflow/underflow.
 
-Example:
-```motoko include=import
-Nat8.fromIntWrap(123); // => 123 : Nat8
-```
+ Example:
+ ```motoko include=import
+ Nat8.fromIntWrap(123); // => 123 : Nat8
+ ```
 
 [[toText]]
 == toText
@@ -124,12 +133,12 @@ Nat8.fromIntWrap(123); // => 123 : Nat8
 func toText(x : xref:#type.Nat8[Nat8]) : Text
 ----
 
-Converts `x` to its textual representation.
+ Converts `x` to its textual representation.
 
-Example:
-```motoko include=import
-Nat8.toText(123); // => "123" : Text
-```
+ Example:
+ ```motoko include=import
+ Nat8.toText(123); // => "123" : Text
+ ```
 
 [[min]]
 == min
@@ -139,12 +148,12 @@ Nat8.toText(123); // => "123" : Text
 func min(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the minimum of `x` and `y`.
+ Returns the minimum of `x` and `y`.
 
-Example:
-```motoko include=import
-Nat8.min(123, 200); // => 123 : Nat8
-```
+ Example:
+ ```motoko include=import
+ Nat8.min(123, 200); // => 123 : Nat8
+ ```
 
 [[max]]
 == max
@@ -154,12 +163,12 @@ Nat8.min(123, 200); // => 123 : Nat8
 func max(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the maximum of `x` and `y`.
+ Returns the maximum of `x` and `y`.
 
-Example:
-```motoko include=import
-Nat8.max(123, 200); // => 200 : Nat8
-```
+ Example:
+ ```motoko include=import
+ Nat8.max(123, 200); // => 200 : Nat8
+ ```
 
 [[equal]]
 == equal
@@ -169,28 +178,24 @@ Nat8.max(123, 200); // => 200 : Nat8
 func equal(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
-Equality function for Nat8 types.
-This is equivalent to `x == y`.
+ Equality function for Nat8 types.
+ This is equivalent to `x == y`.
 
-Example:
-```motoko include=import
-ignore Nat8.equal(1, 1); // => true
-(1 : Nat8) == (1 : Nat8) // => true
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.equal(1, 1); // => true
+ (1 : Nat8) == (1 : Nat8) // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `==` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `==`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Buffer "mo:base/Buffer";
+ Example:
+ ```motoko include=import
+ import Buffer "mo:base/Buffer";
 
-let buffer1 = Buffer.Buffer<Nat8>(3);
-let buffer2 = Buffer.Buffer<Nat8>(3);
-Buffer.equal(buffer1, buffer2, Nat8.equal) // => true
-```
+ let buffer1 = Buffer.Buffer<Nat8>(3);
+ let buffer2 = Buffer.Buffer<Nat8>(3);
+ Buffer.equal(buffer1, buffer2, Nat8.equal) // => true
+ ```
 
 [[notEqual]]
 == notEqual
@@ -200,19 +205,15 @@ Buffer.equal(buffer1, buffer2, Nat8.equal) // => true
 func notEqual(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
-Inequality function for Nat8 types.
-This is equivalent to `x != y`.
+ Inequality function for Nat8 types.
+ This is equivalent to `x != y`.
 
-Example:
-```motoko include=import
-ignore Nat8.notEqual(1, 2); // => true
-(1 : Nat8) != (2 : Nat8) // => true
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.notEqual(1, 2); // => true
+ (1 : Nat8) != (2 : Nat8) // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `!=` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `!=`
-as a function value at the moment.
 
 [[less]]
 == less
@@ -222,19 +223,15 @@ as a function value at the moment.
 func less(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
-"Less than" function for Nat8 types.
-This is equivalent to `x < y`.
+ "Less than" function for Nat8 types.
+ This is equivalent to `x < y`.
 
-Example:
-```motoko include=import
-ignore Nat8.less(1, 2); // => true
-(1 : Nat8) < (2 : Nat8) // => true
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.less(1, 2); // => true
+ (1 : Nat8) < (2 : Nat8) // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<`
-as a function value at the moment.
 
 [[lessOrEqual]]
 == lessOrEqual
@@ -244,19 +241,15 @@ as a function value at the moment.
 func lessOrEqual(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
-"Less than or equal" function for Nat8 types.
-This is equivalent to `x <= y`.
+ "Less than or equal" function for Nat8 types.
+ This is equivalent to `x <= y`.
 
-Example:
-```motoko include=import
-ignore Nat.lessOrEqual(1, 2); // => true
-1 <= 2 // => true
-```
+ Example:
+ ```motoko include=import
+ ignore Nat.lessOrEqual(1, 2); // => true
+ 1 <= 2 // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<=` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<=`
-as a function value at the moment.
 
 [[greater]]
 == greater
@@ -266,19 +259,15 @@ as a function value at the moment.
 func greater(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
-"Greater than" function for Nat8 types.
-This is equivalent to `x > y`.
+ "Greater than" function for Nat8 types.
+ This is equivalent to `x > y`.
 
-Example:
-```motoko include=import
-ignore Nat8.greater(2, 1); // => true
-(2 : Nat8) > (1 : Nat8) // => true
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.greater(2, 1); // => true
+ (2 : Nat8) > (1 : Nat8) // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `>`
-as a function value at the moment.
 
 [[greaterOrEqual]]
 == greaterOrEqual
@@ -288,19 +277,15 @@ as a function value at the moment.
 func greaterOrEqual(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : Bool
 ----
 
-"Greater than or equal" function for Nat8 types.
-This is equivalent to `x >= y`.
+ "Greater than or equal" function for Nat8 types.
+ This is equivalent to `x >= y`.
 
-Example:
-```motoko include=import
-ignore Nat8.greaterOrEqual(2, 1); // => true
-(2 : Nat8) >= (1 : Nat8) // => true
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.greaterOrEqual(2, 1); // => true
+ (2 : Nat8) >= (1 : Nat8) // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `>=` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `>=`
-as a function value at the moment.
 
 [[compare]]
 == compare
@@ -310,21 +295,21 @@ as a function value at the moment.
 func compare(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : {#less; #equal; #greater}
 ----
 
-General purpose comparison function for `Nat8`. Returns the `Order` (
-either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
+ General purpose comparison function for `Nat8`. Returns the `Order` (
+ either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
 
-Example:
-```motoko include=import
-Nat8.compare(2, 3) // => #less
-```
+ Example:
+ ```motoko include=import
+ Nat8.compare(2, 3) // => #less
+ ```
 
-This function can be used as value for a high order function, such as a sort function.
+ This function can be used as value for a high order function, such as a sort function.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.sort([2, 3, 1] : [Nat8], Nat8.compare) // => [1, 2, 3]
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.sort([2, 3, 1] : [Nat8], Nat8.compare) // => [1, 2, 3]
+ ```
 
 [[add]]
 == add
@@ -334,25 +319,21 @@ Array.sort([2, 3, 1] : [Nat8], Nat8.compare) // => [1, 2, 3]
 func add(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the sum of `x` and `y`, `x + y`.
-Traps on overflow.
+ Returns the sum of `x` and `y`, `x + y`.
+ Traps on overflow.
 
-Example:
-```motoko include=import
-ignore Nat8.add(1, 2); // => 3
-(1 : Nat8) + (2 : Nat8) // => 3
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.add(1, 2); // => 3
+ (1 : Nat8) + (2 : Nat8) // => 3
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `+` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `+`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.foldLeft<Nat8, Nat8>([2, 3, 1], 0, Nat8.add) // => 6
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.foldLeft<Nat8, Nat8>([2, 3, 1], 0, Nat8.add) // => 6
+ ```
 
 [[sub]]
 == sub
@@ -362,25 +343,21 @@ Array.foldLeft<Nat8, Nat8>([2, 3, 1], 0, Nat8.add) // => 6
 func sub(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the difference of `x` and `y`, `x - y`.
-Traps on underflow.
+ Returns the difference of `x` and `y`, `x - y`.
+ Traps on underflow.
 
-Example:
-```motoko include=import
-ignore Nat8.sub(2, 1); // => 1
-(2 : Nat8) - (1 : Nat8) // => 1
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.sub(2, 1); // => 1
+ (2 : Nat8) - (1 : Nat8) // => 1
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `-` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `-`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.foldLeft<Nat8, Nat8>([2, 3, 1], 20, Nat8.sub) // => 14
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.foldLeft<Nat8, Nat8>([2, 3, 1], 20, Nat8.sub) // => 14
+ ```
 
 [[mul]]
 == mul
@@ -390,25 +367,21 @@ Array.foldLeft<Nat8, Nat8>([2, 3, 1], 20, Nat8.sub) // => 14
 func mul(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the product of `x` and `y`, `x * y`.
-Traps on overflow.
+ Returns the product of `x` and `y`, `x * y`.
+ Traps on overflow.
 
-Example:
-```motoko include=import
-ignore Nat8.mul(2, 3); // => 6
-(2 : Nat8) * (3 : Nat8) // => 6
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.mul(2, 3); // => 6
+ (2 : Nat8) * (3 : Nat8) // => 6
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `*` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `*`
-as a function value at the moment.
 
-Example:
-```motoko include=import
-import Array "mo:base/Array";
-Array.foldLeft<Nat8, Nat8>([2, 3, 1], 1, Nat8.mul) // => 6
-```
+ Example:
+ ```motoko include=import
+ import Array "mo:base/Array";
+ Array.foldLeft<Nat8, Nat8>([2, 3, 1], 1, Nat8.mul) // => 6
+ ```
 
 [[div]]
 == div
@@ -418,19 +391,15 @@ Array.foldLeft<Nat8, Nat8>([2, 3, 1], 1, Nat8.mul) // => 6
 func div(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the quotient of `x` divided by `y`, `x / y`.
-Traps when `y` is zero.
+ Returns the quotient of `x` divided by `y`, `x / y`.
+ Traps when `y` is zero.
 
-Example:
-```motoko include=import
-ignore Nat8.div(6, 2); // => 3
-(6 : Nat8) / (2 : Nat8) // => 3
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.div(6, 2); // => 3
+ (6 : Nat8) / (2 : Nat8) // => 3
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `/` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `/`
-as a function value at the moment.
 
 [[rem]]
 == rem
@@ -440,19 +409,15 @@ as a function value at the moment.
 func rem(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the remainder of `x` divided by `y`, `x % y`.
-Traps when `y` is zero.
+ Returns the remainder of `x` divided by `y`, `x % y`.
+ Traps when `y` is zero.
 
-Example:
-```motoko include=import
-ignore Nat8.rem(6, 4); // => 2
-(6 : Nat8) % (4 : Nat8) // => 2
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.rem(6, 4); // => 2
+ (6 : Nat8) % (4 : Nat8) // => 2
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `%`
-as a function value at the moment.
 
 [[pow]]
 == pow
@@ -462,19 +427,15 @@ as a function value at the moment.
 func pow(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns `x` to the power of `y`, `x ** y`.
-Traps on overflow.
+ Returns `x` to the power of `y`, `x ** y`.
+ Traps on overflow.
 
-Example:
-```motoko include=import
-ignore Nat8.pow(2, 3); // => 8
-(2 : Nat8) ** (3 : Nat8) // => 8
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.pow(2, 3); // => 8
+ (2 : Nat8) ** (3 : Nat8) // => 8
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `**` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `**`
-as a function value at the moment.
 
 [[bitnot]]
 == bitnot
@@ -484,18 +445,14 @@ as a function value at the moment.
 func bitnot(x : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise negation of `x`, `^x`.
+ Returns the bitwise negation of `x`, `^x`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitnot(0); // => 255
-^(0 : Nat8) // => 255
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitnot(0); // => 255
+ ^(0 : Nat8) // => 255
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `^` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `^`
-as a function value at the moment.
 
 [[bitand]]
 == bitand
@@ -505,18 +462,14 @@ as a function value at the moment.
 func bitand(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise and of `x` and `y`, `x & y`.
+ Returns the bitwise and of `x` and `y`, `x & y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitand(3, 2); // => 2
-(3 : Nat8) & (2 : Nat8) // => 2
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitand(3, 2); // => 2
+ (3 : Nat8) & (2 : Nat8) // => 2
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `&` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `&`
-as a function value at the moment.
 
 [[bitor]]
 == bitor
@@ -526,18 +479,14 @@ as a function value at the moment.
 func bitor(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise or of `x` and `y`, `x | y`.
+ Returns the bitwise or of `x` and `y`, `x | y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitor(3, 2); // => 3
-(3 : Nat8) | (2 : Nat8) // => 3
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitor(3, 2); // => 3
+ (3 : Nat8) | (2 : Nat8) // => 3
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `|` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `|`
-as a function value at the moment.
 
 [[bitxor]]
 == bitxor
@@ -547,18 +496,14 @@ as a function value at the moment.
 func bitxor(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+ Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitxor(3, 2); // => 1
-(3 : Nat8) ^ (2 : Nat8) // => 1
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitxor(3, 2); // => 1
+ (3 : Nat8) ^ (2 : Nat8) // => 1
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `^` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `^`
-as a function value at the moment.
 
 [[bitshiftLeft]]
 == bitshiftLeft
@@ -568,18 +513,14 @@ as a function value at the moment.
 func bitshiftLeft(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise shift left of `x` by `y`, `x << y`.
+ Returns the bitwise shift left of `x` by `y`, `x << y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitshiftLeft(1, 2); // => 4
-(1 : Nat8) << (2 : Nat8) // => 4
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitshiftLeft(1, 2); // => 4
+ (1 : Nat8) << (2 : Nat8) // => 4
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<<` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<<`
-as a function value at the moment.
 
 [[bitshiftRight]]
 == bitshiftRight
@@ -589,18 +530,14 @@ as a function value at the moment.
 func bitshiftRight(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise shift right of `x` by `y`, `x >> y`.
+ Returns the bitwise shift right of `x` by `y`, `x >> y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitshiftRight(4, 2); // => 1
-(4 : Nat8) >> (2 : Nat8) // => 1
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitshiftRight(4, 2); // => 1
+ (4 : Nat8) >> (2 : Nat8) // => 1
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `>>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `>>`
-as a function value at the moment.
 
 [[bitrotLeft]]
 == bitrotLeft
@@ -610,18 +547,14 @@ as a function value at the moment.
 func bitrotLeft(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+ Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitrotLeft(128, 1); // => 1
-(128 : Nat8) <<> (1 : Nat8) // => 1
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitrotLeft(128, 1); // => 1
+ (128 : Nat8) <<> (1 : Nat8) // => 1
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<<>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<<>`
-as a function value at the moment.
 
 [[bitrotRight]]
 == bitrotRight
@@ -631,18 +564,14 @@ as a function value at the moment.
 func bitrotRight(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+ Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 
-Example:
-```motoko include=import
-ignore Nat8.bitrotRight(1, 1); // => 128
-(1 : Nat8) <>> (1 : Nat8) // => 128
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.bitrotRight(1, 1); // => 128
+ (1 : Nat8) <>> (1 : Nat8) // => 128
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `<>>` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `<>>`
-as a function value at the moment.
 
 [[bittest]]
 == bittest
@@ -652,13 +581,13 @@ as a function value at the moment.
 func bittest(x : xref:#type.Nat8[Nat8], p : Nat) : Bool
 ----
 
-Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
-This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
+ Returns the value of bit `p mod 8` in `x`, `(x & 2^(p mod 8)) == 2^(p mod 8)`.
+ This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
 
-Example:
-```motoko include=import
-Nat8.bittest(5, 2); // => true
-```
+ Example:
+ ```motoko include=import
+ Nat8.bittest(5, 2); // => true
+ ```
 
 [[bitset]]
 == bitset
@@ -668,12 +597,12 @@ Nat8.bittest(5, 2); // => true
 func bitset(x : xref:#type.Nat8[Nat8], p : Nat) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the value of setting bit `p mod 8` in `x` to `1`.
+ Returns the value of setting bit `p mod 8` in `x` to `1`.
 
-Example:
-```motoko include=import
-Nat8.bitset(5, 1); // => 7
-```
+ Example:
+ ```motoko include=import
+ Nat8.bitset(5, 1); // => 7
+ ```
 
 [[bitclear]]
 == bitclear
@@ -683,12 +612,12 @@ Nat8.bitset(5, 1); // => 7
 func bitclear(x : xref:#type.Nat8[Nat8], p : Nat) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the value of clearing bit `p mod 8` in `x` to `0`.
+ Returns the value of clearing bit `p mod 8` in `x` to `0`.
 
-Example:
-```motoko include=import
-Nat8.bitclear(5, 2); // => 1
-```
+ Example:
+ ```motoko include=import
+ Nat8.bitclear(5, 2); // => 1
+ ```
 
 [[bitflip]]
 == bitflip
@@ -698,12 +627,12 @@ Nat8.bitclear(5, 2); // => 1
 func bitflip(x : xref:#type.Nat8[Nat8], p : Nat) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the value of flipping bit `p mod 8` in `x`.
+ Returns the value of flipping bit `p mod 8` in `x`.
 
-Example:
-```motoko include=import
-Nat8.bitflip(5, 2); // => 1
-```
+ Example:
+ ```motoko include=import
+ Nat8.bitflip(5, 2); // => 1
+ ```
 
 [[bitcountNonZero]]
 == bitcountNonZero
@@ -713,12 +642,12 @@ Nat8.bitflip(5, 2); // => 1
 func bitcountNonZero(x : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the count of non-zero bits in `x`.
+ Returns the count of non-zero bits in `x`.
 
-Example:
-```motoko include=import
-Nat8.bitcountNonZero(5); // => 2
-```
+ Example:
+ ```motoko include=import
+ Nat8.bitcountNonZero(5); // => 2
+ ```
 
 [[bitcountLeadingZero]]
 == bitcountLeadingZero
@@ -728,12 +657,12 @@ Nat8.bitcountNonZero(5); // => 2
 func bitcountLeadingZero(x : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the count of leading zero bits in `x`.
+ Returns the count of leading zero bits in `x`.
 
-Example:
-```motoko include=import
-Nat8.bitcountLeadingZero(5); // => 5
-```
+ Example:
+ ```motoko include=import
+ Nat8.bitcountLeadingZero(5); // => 5
+ ```
 
 [[bitcountTrailingZero]]
 == bitcountTrailingZero
@@ -743,12 +672,12 @@ Nat8.bitcountLeadingZero(5); // => 5
 func bitcountTrailingZero(x : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the count of trailing zero bits in `x`.
+ Returns the count of trailing zero bits in `x`.
 
-Example:
-```motoko include=import
-Nat8.bitcountTrailingZero(6); // => 1
-```
+ Example:
+ ```motoko include=import
+ Nat8.bitcountTrailingZero(6); // => 1
+ ```
 
 [[addWrap]]
 == addWrap
@@ -758,18 +687,14 @@ Nat8.bitcountTrailingZero(6); // => 1
 func addWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
+ Returns the sum of `x` and `y`, `x +% y`. Wraps on overflow.
 
-Example:
-```motoko include=import
-ignore Nat8.addWrap(230, 26); // => 0
-(230 : Nat8) +% (26 : Nat8) // => 0
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.addWrap(230, 26); // => 0
+ (230 : Nat8) +% (26 : Nat8) // => 0
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `+%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `+%`
-as a function value at the moment.
 
 [[subWrap]]
 == subWrap
@@ -779,17 +704,13 @@ as a function value at the moment.
 func subWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+ Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
 
-Example:
-```motoko include=import
-ignore Nat8.subWrap(0, 1); // => 255
-(0 : Nat8) -% (1 : Nat8) // => 255
-```
-Note: The reason why this function is defined in this library (in addition
-to the existing `-%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `-%`
-as a function value at the moment.
+ Example:
+ ```motoko include=import
+ ignore Nat8.subWrap(0, 1); // => 255
+ (0 : Nat8) -% (1 : Nat8) // => 255
+ ```
 
 [[mulWrap]]
 == mulWrap
@@ -799,18 +720,14 @@ as a function value at the moment.
 func mulWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+ Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
-Example:
-```motoko include=import
-ignore Nat8.mulWrap(230, 26); // => 92
-(230 : Nat8) *% (26 : Nat8) // => 92
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.mulWrap(230, 26); // => 92
+ (230 : Nat8) *% (26 : Nat8) // => 92
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `*%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `*%`
-as a function value at the moment.
 
 [[powWrap]]
 == powWrap
@@ -820,16 +737,12 @@ as a function value at the moment.
 func powWrap(x : xref:#type.Nat8[Nat8], y : xref:#type.Nat8[Nat8]) : xref:#type.Nat8[Nat8]
 ----
 
-Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
+ Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
 
-Example:
-```motoko include=import
-ignore Nat8.powWrap(2, 8); // => 0
-(2 : Nat8) **% (8 : Nat8) // => 0
-```
+ Example:
+ ```motoko include=import
+ ignore Nat8.powWrap(2, 8); // => 0
+ (2 : Nat8) **% (8 : Nat8) // => 0
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `**%` operator) is so that you can use it as a function
-value to pass to a higher order function. It is not possible to use `**%`
-as a function value at the moment.
 

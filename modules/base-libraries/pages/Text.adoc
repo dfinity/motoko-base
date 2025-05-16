@@ -1,27 +1,28 @@
 [[module.Text]]
 = Text
 
-Utility functions for `Text` values.
+ Utility functions for `Text` values.
 
-A `Text` value represents human-readable text as a sequence of characters of type `Char`.
+ A `Text` value represents human-readable text as a sequence of characters of type `Char`.
 
-```motoko
-let text = "Hello!";
-let size = text.size(); // 6
-let iter = text.chars(); // iterator ('H', 'e', 'l', 'l', 'o', '!')
-let concat = text # " 👋"; // "Hello! 👋"
-```
+ ```motoko
+ let text = "Hello!";
+ let size = text.size(); // 6
+ let iter = text.chars(); // iterator ('H', 'e', 'l', 'l', 'o', '!')
+ let concat = text # " 👋"; // "Hello! 👋"
+ ```
 
-The `"mo:base/Text"` module defines additional operations on `Text` values.
+ The `"mo:base/Text"` module defines additional operations on `Text` values.
 
-Import the module from the base library:
+ Import the module from the base library:
 
-```motoko name=import
-import Text "mo:base/Text";
-```
+ ```motoko name=import
+ import Text "mo:base/Text";
+ ```
 
-Note: `Text` values are represented as ropes of UTF-8 character sequences with O(1) concatenation.
-
+:::note
+ `Text` values are represented as ropes of UTF-8 character sequences with O(1) concatenation.
+:::
 
 [[type.Text]]
 == Text
@@ -31,13 +32,13 @@ Note: `Text` values are represented as ropes of UTF-8 character sequences with O
 type Text = Prim.Types.Text
 ----
 
-The type corresponding to primitive `Text` values.
+ The type corresponding to primitive `Text` values.
 
-```motoko
-let hello = "Hello!";
-let emoji = "👋";
-let concat = hello # " " # emoji; // "Hello! 👋"
-```
+ ```motoko
+ let hello = "Hello!";
+ let emoji = "👋";
+ let concat = hello # " " # emoji; // "Hello! 👋"
+ ```
 
 [[fromChar]]
 == fromChar
@@ -47,11 +48,11 @@ let concat = hello # " " # emoji; // "Hello! 👋"
 func fromChar(c : Char) : xref:#type.Text[Text]
 ----
 
-Converts the given `Char` to a `Text` value.
+ Converts the given `Char` to a `Text` value.
 
-```motoko include=import
-let text = Text.fromChar('A'); // "A"
-```
+ ```motoko include=import
+ let text = Text.fromChar('A'); // "A"
+ ```
 
 [[fromArray]]
 == fromArray
@@ -61,14 +62,15 @@ let text = Text.fromChar('A'); // "A"
 func fromArray(a : pass:[[]Charpass:[]]) : xref:#type.Text[Text]
 ----
 
-Converts the given `[Char]` to a `Text` value.
+ Converts the given `[Char]` to a `Text` value.
 
-```motoko include=import
-let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
-```
+ ```motoko include=import
+ let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
+ ```
 
-Runtime: O(a.size())
-Space: O(a.size())
+| Runtime   | Space     |
+|-----------|-----------|
+| O(a.size()) | O(a.size()) |
 
 [[fromVarArray]]
 == fromVarArray
@@ -78,14 +80,15 @@ Space: O(a.size())
 func fromVarArray(a : pass:[[]var Charpass:[]]) : xref:#type.Text[Text]
 ----
 
-Converts the given `[var Char]` to a `Text` value.
+ Converts the given `[var Char]` to a `Text` value.
 
-```motoko include=import
-let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
-```
+ ```motoko include=import
+ let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
+ ```
 
-Runtime: O(a.size())
-Space: O(a.size())
+| Runtime   | Space     |
+|-----------|-----------|
+| O(a.size()) | O(a.size()) |
 
 [[toIter]]
 == toIter
@@ -95,17 +98,17 @@ Space: O(a.size())
 func toIter(t : xref:#type.Text[Text]) : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>
 ----
 
-Iterates over each `Char` value in the given `Text`.
+ Iterates over each `Char` value in the given `Text`.
 
-Equivalent to calling the `t.chars()` method where `t` is a `Text` value.
+ Equivalent to calling the `t.chars()` method where `t` is a `Text` value.
 
-```motoko include=import
-import { print } "mo:base/Debug";
+ ```motoko include=import
+ import { print } "mo:base/Debug";
 
-for (c in Text.toIter("abc")) {
-  print(debug_show c);
-}
-```
+ for (c in Text.toIter("abc")) {
+   print(debug_show c);
+ }
+ ```
 
 [[toArray]]
 == toArray
@@ -115,16 +118,17 @@ for (c in Text.toIter("abc")) {
 func toArray(t : xref:#type.Text[Text]) : pass:[[]Charpass:[]]
 ----
 
-Creates a new `Array` containing characters of the given `Text`.
+ Creates a new `Array` containing characters of the given `Text`.
 
-Equivalent to `Iter.toArray(t.chars())`.
+ Equivalent to `Iter.toArray(t.chars())`.
 
-```motoko include=import
-assert Text.toArray("Café") == ['C', 'a', 'f', 'é'];
-```
+ ```motoko include=import
+ assert Text.toArray("Café") == ['C', 'a', 'f', 'é'];
+ ```
 
-Runtime: O(t.size())
-Space: O(t.size())
+| Runtime   | Space     |
+|-----------|-----------|
+| O(t.size()) | O(t.size()) |
 
 [[toVarArray]]
 == toVarArray
@@ -134,16 +138,17 @@ Space: O(t.size())
 func toVarArray(t : xref:#type.Text[Text]) : pass:[[]var Charpass:[]]
 ----
 
-Creates a new mutable `Array` containing characters of the given `Text`.
+ Creates a new mutable `Array` containing characters of the given `Text`.
 
-Equivalent to `Iter.toArrayMut(t.chars())`.
+ Equivalent to `Iter.toArrayMut(t.chars())`.
 
-```motoko include=import
-assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
-```
+ ```motoko include=import
+ assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
+ ```
 
-Runtime: O(t.size())
-Space: O(t.size())
+| Runtime   | Space     |
+|-----------|-----------|
+| O(t.size()) | O(t.size()) |
 
 [[fromIter]]
 == fromIter
@@ -153,11 +158,11 @@ Space: O(t.size())
 func fromIter(cs : xref:Iter.adoc#type.Iter[Iter.Iter]<Char>) : xref:#type.Text[Text]
 ----
 
-Creates a `Text` value from a `Char` iterator.
+ Creates a `Text` value from a `Char` iterator.
 
-```motoko include=import
-let text = Text.fromIter(['a', 'b', 'c'].vals()); // "abc"
-```
+ ```motoko include=import
+ let text = Text.fromIter(['a', 'b', 'c'].vals()); // "abc"
+ ```
 
 [[fromList]]
 == fromList
@@ -167,15 +172,16 @@ let text = Text.fromIter(['a', 'b', 'c'].vals()); // "abc"
 func fromList(cs : xref:List.adoc#type.List[List.List]<Char>) : xref:#type.Text[Text]
 ----
 
-Create a text from a character list.
-Example:
-```motoko include=initialize
-fromList(?('H', ?('e', ?('l', ?('l', ?('o', null))))));
-// => "Hello"
-```
+ Create a text from a character list.
+ Example:
+ ```motoko include=initialize
+ fromList(?('H', ?('e', ?('l', ?('l', ?('o', null))))));
+ // => "Hello"
+ ```
 
-Runtime: O(size cs)
-Space: O(size cs)
+| Runtime   | Space     |
+|-----------|-----------|
+| O(size cs) | O(size cs) |
 
 [[toList]]
 == toList
@@ -185,15 +191,16 @@ Space: O(size cs)
 func toList(t : xref:#type.Text[Text]) : xref:List.adoc#type.List[List.List]<Char>
 ----
 
-Create a character list from a text.
-Example:
-```motoko include=initialize
-toList("Hello");
-// => ?('H', ?('e', ?('l', ?('l', ?('o', null)))))
-```
+ Create a character list from a text.
+ Example:
+ ```motoko include=initialize
+ toList("Hello");
+ // => ?('H', ?('e', ?('l', ?('l', ?('o', null)))))
+ ```
 
-Runtime: O(t.size())
-Space: O(t.size())
+| Runtime   | Space     |
+|-----------|-----------|
+| O(t.size()) | O(t.size()) |
 
 [[size]]
 == size
@@ -203,13 +210,13 @@ Space: O(t.size())
 func size(t : xref:#type.Text[Text]) : Nat
 ----
 
-Returns the number of characters in the given `Text`.
+ Returns the number of characters in the given `Text`.
 
-Equivalent to calling `t.size()` where `t` is a `Text` value.
+ Equivalent to calling `t.size()` where `t` is a `Text` value.
 
-```motoko include=import
-let size = Text.size("abc"); // 3
-```
+ ```motoko include=import
+ let size = Text.size("abc"); // 3
+ ```
 
 [[hash]]
 == hash
@@ -219,13 +226,15 @@ let size = Text.size("abc"); // 3
 func hash(t : xref:#type.Text[Text]) : xref:Hash.adoc#type.Hash[Hash.Hash]
 ----
 
-Returns a hash obtained by using the `djb2` algorithm ([more details](http://www.cse.yorku.ca/~oz/hash.html)).
+ Returns a hash obtained by using the `djb2` algorithm ([more details](http://www.cse.yorku.ca/~oz/hash.html)).
 
-```motoko include=import
-let hash = Text.hash("abc");
-```
+ ```motoko include=import
+ let hash = Text.hash("abc");
+ ```
 
-Note: this algorithm is intended for use in data structures rather than as a cryptographic hash function.
+:::info
+This algorithm is intended for use in data structures rather than as a cryptographic hash function.
+:::
 
 [[concat]]
 == concat
@@ -235,15 +244,15 @@ Note: this algorithm is intended for use in data structures rather than as a cry
 func concat(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
-Returns `t1 # t2`, where `#` is the `Text` concatenation operator.
+ Returns `t1 # t2`, where `#` is the `Text` concatenation operator.
 
-```motoko include=import
-let a = "Hello";
-let b = "There";
-let together = a # b; // "HelloThere"
-let withSpace = a # " " # b; // "Hello There"
-let togetherAgain = Text.concat(a, b); // "HelloThere"
-```
+ ```motoko include=import
+ let a = "Hello";
+ let b = "There";
+ let together = a # b; // "HelloThere"
+ let withSpace = a # " " # b; // "Hello There"
+ let togetherAgain = Text.concat(a, b); // "HelloThere"
+ ```
 
 [[equal]]
 == equal
@@ -253,7 +262,7 @@ let togetherAgain = Text.concat(a, b); // "HelloThere"
 func equal(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
-Returns `t1 == t2`.
+ Returns `t1 == t2`.
 
 [[notEqual]]
 == notEqual
@@ -263,7 +272,7 @@ Returns `t1 == t2`.
 func notEqual(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
-Returns `t1 != t2`.
+ Returns `t1 != t2`.
 
 [[less]]
 == less
@@ -273,7 +282,7 @@ Returns `t1 != t2`.
 func less(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
-Returns `t1 < t2`.
+ Returns `t1 < t2`.
 
 [[lessOrEqual]]
 == lessOrEqual
@@ -283,7 +292,7 @@ Returns `t1 < t2`.
 func lessOrEqual(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
-Returns `t1 <= t2`.
+ Returns `t1 <= t2`.
 
 [[greater]]
 == greater
@@ -293,7 +302,7 @@ Returns `t1 <= t2`.
 func greater(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
-Returns `t1 > t2`.
+ Returns `t1 > t2`.
 
 [[greaterOrEqual]]
 == greaterOrEqual
@@ -303,7 +312,7 @@ Returns `t1 > t2`.
 func greaterOrEqual(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : Bool
 ----
 
-Returns `t1 >= t2`.
+ Returns `t1 >= t2`.
 
 [[compare]]
 == compare
@@ -313,15 +322,15 @@ Returns `t1 >= t2`.
 func compare(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text]) : {#less; #equal; #greater}
 ----
 
-Compares `t1` and `t2` lexicographically.
+ Compares `t1` and `t2` lexicographically.
 
-```motoko include=import
-import { print } "mo:base/Debug";
+ ```motoko include=import
+ import { print } "mo:base/Debug";
 
-print(debug_show Text.compare("abc", "abc")); // #equal
-print(debug_show Text.compare("abc", "def")); // #less
-print(debug_show Text.compare("abc", "ABC")); // #greater
-```
+ print(debug_show Text.compare("abc", "abc")); // #equal
+ print(debug_show Text.compare("abc", "def")); // #less
+ print(debug_show Text.compare("abc", "ABC")); // #greater
+ ```
 
 [[join]]
 == join
@@ -331,11 +340,11 @@ print(debug_show Text.compare("abc", "ABC")); // #greater
 func join(sep : xref:#type.Text[Text], ts : xref:Iter.adoc#type.Iter[Iter.Iter]<xref:#type.Text[Text]>) : xref:#type.Text[Text]
 ----
 
-Join an iterator of `Text` values with a given delimiter.
+ Join an iterator of `Text` values with a given delimiter.
 
-```motoko include=import
-let joined = Text.join(", ", ["a", "b", "c"].vals()); // "a, b, c"
-```
+ ```motoko include=import
+ let joined = Text.join(", ", ["a", "b", "c"].vals()); // "a, b, c"
+ ```
 
 [[map]]
 == map
@@ -345,15 +354,15 @@ let joined = Text.join(", ", ["a", "b", "c"].vals()); // "a, b, c"
 func map(t : xref:#type.Text[Text], f : Char -> Char) : xref:#type.Text[Text]
 ----
 
-Applies a function to each character in a `Text` value, returning the concatenated `Char` results.
+ Applies a function to each character in a `Text` value, returning the concatenated `Char` results.
 
-```motoko include=import
-// Replace all occurrences of '?' with '!'
-let result = Text.map("Motoko?", func(c) {
-  if (c == '?') '!'
-  else c
-});
-```
+ ```motoko include=import
+ // Replace all occurrences of '?' with '!'
+ let result = Text.map("Motoko?", func(c) {
+   if (c == '?') '!'
+   else c
+ });
+ ```
 
 [[translate]]
 == translate
@@ -363,15 +372,15 @@ let result = Text.map("Motoko?", func(c) {
 func translate(t : xref:#type.Text[Text], f : Char -> xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
-Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
+ Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
 
-```motoko include=import
-// Replace all occurrences of '?' with "!!"
-let result = Text.translate("Motoko?", func(c) {
-  if (c == '?') "!!"
-  else Text.fromChar(c)
-}); // "Motoko!!"
-```
+ ```motoko include=import
+ // Replace all occurrences of '?' with "!!"
+ let result = Text.translate("Motoko?", func(c) {
+   if (c == '?') "!!"
+   else Text.fromChar(c)
+ }); // "Motoko!!"
+ ```
 
 [[type.Pattern]]
 == Pattern
@@ -381,19 +390,19 @@ let result = Text.translate("Motoko?", func(c) {
 type Pattern = {#char : Char; #text : xref:#type.Text[Text]; #predicate : (Char -> Bool)}
 ----
 
-A pattern `p` describes a sequence of characters. A pattern has one of the following forms:
+ A pattern `p` describes a sequence of characters. A pattern has one of the following forms:
 
-* `#char c` matches the single character sequence, `c`.
-* `#text t` matches multi-character text sequence `t`.
-* `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
+ * `#char c` matches the single character sequence, `c`.
+ * `#text t` matches multi-character text sequence `t`.
+ * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
 
-A _match_ for `p` is any sequence of characters matching the pattern `p`.
+ A _match_ for `p` is any sequence of characters matching the pattern `p`.
 
-```motoko include=import
-let charPattern = #char 'A';
-let textPattern = #text "phrase";
-let predicatePattern : Text.Pattern = #predicate (func(c) { c == 'A' or c == 'B' }); // matches "A" or "B"
-```
+ ```motoko include=import
+ let charPattern = #char 'A';
+ let textPattern = #text "phrase";
+ let predicatePattern : Text.Pattern = #predicate (func(c) { c == 'A' or c == 'B' }); // matches "A" or "B"
+ ```
 
 [[split]]
 == split
@@ -403,14 +412,14 @@ let predicatePattern : Text.Pattern = #predicate (func(c) { c == 'A' or c == 'B'
 func split(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<xref:#type.Text[Text]>
 ----
 
-Splits the input `Text` with the specified `Pattern`.
+ Splits the input `Text` with the specified `Pattern`.
 
-Two fields are separated by exactly one match.
+ Two fields are separated by exactly one match.
 
-```motoko include=import
-let words = Text.split("This is a sentence.", #char ' ');
-Text.join("|", words) // "This|is|a|sentence."
-```
+ ```motoko include=import
+ let words = Text.split("This is a sentence.", #char ' ');
+ Text.join("|", words) // "This|is|a|sentence."
+ ```
 
 [[tokens]]
 == tokens
@@ -420,14 +429,14 @@ Text.join("|", words) // "This|is|a|sentence."
 func tokens(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:Iter.adoc#type.Iter[Iter.Iter]<xref:#type.Text[Text]>
 ----
 
-Returns a sequence of tokens from the input `Text` delimited by the specified `Pattern`, derived from start to end.
-A "token" is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
-Two tokens may be separated by one or more matches of `p`.
+ Returns a sequence of tokens from the input `Text` delimited by the specified `Pattern`, derived from start to end.
+ A "token" is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
+ Two tokens may be separated by one or more matches of `p`.
 
-```motoko include=import
-let tokens = Text.tokens("this needs\n an   example", #predicate (func(c) { c == ' ' or c == '\n' }));
-Text.join("|", tokens) // "this|needs|an|example"
-```
+ ```motoko include=import
+ let tokens = Text.tokens("this needs\n an   example", #predicate (func(c) { c == ' ' or c == '\n' }));
+ Text.join("|", tokens) // "this|needs|an|example"
+ ```
 
 [[contains]]
 == contains
@@ -437,11 +446,11 @@ Text.join("|", tokens) // "this|needs|an|example"
 func contains(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
-Returns `true` if the input `Text` contains a match for the specified `Pattern`.
+ Returns `true` if the input `Text` contains a match for the specified `Pattern`.
 
-```motoko include=import
-Text.contains("Motoko", #text "oto") // true
-```
+ ```motoko include=import
+ Text.contains("Motoko", #text "oto") // true
+ ```
 
 [[startsWith]]
 == startsWith
@@ -451,11 +460,11 @@ Text.contains("Motoko", #text "oto") // true
 func startsWith(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
-Returns `true` if the input `Text` starts with a prefix matching the specified `Pattern`.
+ Returns `true` if the input `Text` starts with a prefix matching the specified `Pattern`.
 
-```motoko include=import
-Text.startsWith("Motoko", #text "Mo") // true
-```
+ ```motoko include=import
+ Text.startsWith("Motoko", #text "Mo") // true
+ ```
 
 [[endsWith]]
 == endsWith
@@ -465,11 +474,11 @@ Text.startsWith("Motoko", #text "Mo") // true
 func endsWith(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : Bool
 ----
 
-Returns `true` if the input `Text` ends with a suffix matching the specified `Pattern`.
+ Returns `true` if the input `Text` ends with a suffix matching the specified `Pattern`.
 
-```motoko include=import
-Text.endsWith("Motoko", #char 'o') // true
-```
+ ```motoko include=import
+ Text.endsWith("Motoko", #char 'o') // true
+ ```
 
 [[replace]]
 == replace
@@ -479,11 +488,11 @@ Text.endsWith("Motoko", #char 'o') // true
 func replace(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern], r : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
-Returns the input text `t` with all matches of pattern `p` replaced by text `r`.
+ Returns the input text `t` with all matches of pattern `p` replaced by text `r`.
 
-```motoko include=import
-let result = Text.replace("abcabc", #char 'a', "A"); // "AbcAbc"
-```
+ ```motoko include=import
+ let result = Text.replace("abcabc", #char 'a', "A"); // "AbcAbc"
+ ```
 
 [[stripStart]]
 == stripStart
@@ -493,15 +502,15 @@ let result = Text.replace("abcabc", #char 'a', "A"); // "AbcAbc"
 func stripStart(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : ?xref:#type.Text[Text]
 ----
 
-Strips one occurrence of the given `Pattern` from the beginning of the input `Text`.
-If you want to remove multiple instances of the pattern, use `Text.trimStart()` instead.
+ Strips one occurrence of the given `Pattern` from the beginning of the input `Text`.
+ If you want to remove multiple instances of the pattern, use `Text.trimStart()` instead.
 
-```motoko include=import
-// Try to strip a nonexistent character
-let none = Text.stripStart("abc", #char '-'); // null
-// Strip just one '-'
-let one = Text.stripStart("--abc", #char '-'); // ?"-abc"
-```
+ ```motoko include=import
+ // Try to strip a nonexistent character
+ let none = Text.stripStart("abc", #char '-'); // null
+ // Strip just one '-'
+ let one = Text.stripStart("--abc", #char '-'); // ?"-abc"
+ ```
 
 [[stripEnd]]
 == stripEnd
@@ -511,15 +520,15 @@ let one = Text.stripStart("--abc", #char '-'); // ?"-abc"
 func stripEnd(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : ?xref:#type.Text[Text]
 ----
 
-Strips one occurrence of the given `Pattern` from the end of the input `Text`.
-If you want to remove multiple instances of the pattern, use `Text.trimEnd()` instead.
+ Strips one occurrence of the given `Pattern` from the end of the input `Text`.
+ If you want to remove multiple instances of the pattern, use `Text.trimEnd()` instead.
 
-```motoko include=import
-// Try to strip a nonexistent character
-let none = Text.stripEnd("xyz", #char '-'); // null
-// Strip just one '-'
-let one = Text.stripEnd("xyz--", #char '-'); // ?"xyz-"
-```
+ ```motoko include=import
+ // Try to strip a nonexistent character
+ let none = Text.stripEnd("xyz", #char '-'); // null
+ // Strip just one '-'
+ let one = Text.stripEnd("xyz--", #char '-'); // ?"xyz-"
+ ```
 
 [[trimStart]]
 == trimStart
@@ -529,12 +538,12 @@ let one = Text.stripEnd("xyz--", #char '-'); // ?"xyz-"
 func trimStart(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:#type.Text[Text]
 ----
 
-Trims the given `Pattern` from the start of the input `Text`.
-If you only want to remove a single instance of the pattern, use `Text.stripStart()` instead.
+ Trims the given `Pattern` from the start of the input `Text`.
+ If you only want to remove a single instance of the pattern, use `Text.stripStart()` instead.
 
-```motoko include=import
-let trimmed = Text.trimStart("---abc", #char '-'); // "abc"
-```
+ ```motoko include=import
+ let trimmed = Text.trimStart("---abc", #char '-'); // "abc"
+ ```
 
 [[trimEnd]]
 == trimEnd
@@ -544,12 +553,12 @@ let trimmed = Text.trimStart("---abc", #char '-'); // "abc"
 func trimEnd(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:#type.Text[Text]
 ----
 
-Trims the given `Pattern` from the end of the input `Text`.
-If you only want to remove a single instance of the pattern, use `Text.stripEnd()` instead.
+ Trims the given `Pattern` from the end of the input `Text`.
+ If you only want to remove a single instance of the pattern, use `Text.stripEnd()` instead.
 
-```motoko include=import
-let trimmed = Text.trimEnd("xyz---", #char '-'); // "xyz"
-```
+ ```motoko include=import
+ let trimmed = Text.trimEnd("xyz---", #char '-'); // "xyz"
+ ```
 
 [[trim]]
 == trim
@@ -559,11 +568,11 @@ let trimmed = Text.trimEnd("xyz---", #char '-'); // "xyz"
 func trim(t : xref:#type.Text[Text], p : xref:#type.Pattern[Pattern]) : xref:#type.Text[Text]
 ----
 
-Trims the given `Pattern` from both the start and end of the input `Text`.
+ Trims the given `Pattern` from both the start and end of the input `Text`.
 
-```motoko include=import
-let trimmed = Text.trim("---abcxyz---", #char '-'); // "abcxyz"
-```
+ ```motoko include=import
+ let trimmed = Text.trim("---abcxyz---", #char '-'); // "abcxyz"
+ ```
 
 [[compareWith]]
 == compareWith
@@ -573,13 +582,13 @@ let trimmed = Text.trim("---abcxyz---", #char '-'); // "abcxyz"
 func compareWith(t1 : xref:#type.Text[Text], t2 : xref:#type.Text[Text], cmp : (Char, Char) -> {#less; #equal; #greater}) : {#less; #equal; #greater}
 ----
 
-Compares `t1` and `t2` using the provided character-wise comparison function.
+ Compares `t1` and `t2` using the provided character-wise comparison function.
 
-```motoko include=import
-import Char "mo:base/Char";
+ ```motoko include=import
+ import Char "mo:base/Char";
 
-Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) // #greater
-```
+ Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) // #greater
+ ```
 
 [[encodeUtf8]]
 == encodeUtf8
@@ -589,11 +598,11 @@ Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) // #greate
 func encodeUtf8(_ : xref:#type.Text[Text]) : Blob
 ----
 
-Returns a UTF-8 encoded `Blob` from the given `Text`.
+ Returns a UTF-8 encoded `Blob` from the given `Text`.
 
-```motoko include=import
-let blob = Text.encodeUtf8("Hello");
-```
+ ```motoko include=import
+ let blob = Text.encodeUtf8("Hello");
+ ```
 
 [[decodeUtf8]]
 == decodeUtf8
@@ -603,12 +612,12 @@ let blob = Text.encodeUtf8("Hello");
 func decodeUtf8(_ : Blob) : ?xref:#type.Text[Text]
 ----
 
-Tries to decode the given `Blob` as UTF-8.
-Returns `null` if the blob is not valid UTF-8.
+ Tries to decode the given `Blob` as UTF-8.
+ Returns `null` if the blob is not valid UTF-8.
 
-```motoko include=import
-let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
-```
+ ```motoko include=import
+ let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
+ ```
 
 [[toLowercase]]
 == toLowercase
@@ -618,12 +627,15 @@ let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
 func toLowercase(_ : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
-Returns the text argument in lowercase.
-WARNING: Unicode compliant only when compiled, not interpreted.
+ Returns the text argument in lowercase.
 
-```motoko include=import
-let text = Text.toLowercase("Good Day"); // ?"good day"
-```
+:::warning [Compliance]
+ Unicode compliant only when compiled, not interpreted.
+:::
+
+ ```motoko include=import
+ let text = Text.toLowercase("Good Day"); // ?"good day"
+ ```
 
 [[toUppercase]]
 == toUppercase
@@ -633,10 +645,12 @@ let text = Text.toLowercase("Good Day"); // ?"good day"
 func toUppercase(_ : xref:#type.Text[Text]) : xref:#type.Text[Text]
 ----
 
-Returns the text argument in uppercase. Unicode compliant.
-WARNING: Unicode compliant only when compiled, not interpreted.
+ Returns the text argument in uppercase. Unicode compliant.
+:::warning [Compliance]
+ Unicode compliant only when compiled, not interpreted.
+:::
 
-```motoko include=import
-let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
-```
+ ```motoko include=import
+ let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
+ ```
 

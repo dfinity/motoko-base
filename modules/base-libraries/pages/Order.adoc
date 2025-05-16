@@ -1,8 +1,6 @@
 [[module.Order]]
 = Order
 
-Order
-
 [[type.Order]]
 == Order
 
@@ -11,7 +9,7 @@ Order
 type Order = {#less; #equal; #greater}
 ----
 
-A type to represent an order.
+ A type to represent an order.
 
 [[isLess]]
 == isLess
@@ -21,7 +19,7 @@ A type to represent an order.
 func isLess(order : xref:#type.Order[Order]) : Bool
 ----
 
-Check if an order is #less.
+ Check if an order is `#less`.
 
 [[isEqual]]
 == isEqual
@@ -31,7 +29,7 @@ Check if an order is #less.
 func isEqual(order : xref:#type.Order[Order]) : Bool
 ----
 
-Check if an order is #equal.
+ Check if an order is `#equal`.
 
 [[isGreater]]
 == isGreater
@@ -41,7 +39,7 @@ Check if an order is #equal.
 func isGreater(order : xref:#type.Order[Order]) : Bool
 ----
 
-Check if an order is #greater.
+ Check if an order is `#greater`.
 
 [[equal]]
 == equal
@@ -51,5 +49,5 @@ Check if an order is #greater.
 func equal(o1 : xref:#type.Order[Order], o2 : xref:#type.Order[Order]) : Bool
 ----
 
-Returns true if only if  `o1` and `o2` are the same ordering.
+ Returns true if only if  `o1` and `o2` are the same ordering.
 

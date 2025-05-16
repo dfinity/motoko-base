@@ -1,26 +1,27 @@
 [[module.Blob]]
 = Blob
 
-Module for working with Blobs: immutable sequence of bytes.
+`Blob` is an immutable, iterable sequence of bytes. Unlike `[Nat8]`, which is less compact (using 4 bytes per logical byte), `Blob` provides a more efficient representation.
 
-Blobs represent sequences of bytes. They are immutable, iterable, but not indexable and can be empty.
-
-Byte sequences are also often represented as `[Nat8]`, i.e. an array of bytes, but this representation is currently much less compact than `Blob`, taking 4 physical bytes to represent each logical byte in the sequence.
-If you would like to manipulate Blobs, it is recommended that you convert
-Blobs to `[var Nat8]` or `Buffer<Nat8>`, do the manipulation, then convert back.
+Blobs are not indexable and can be empty. To manipulate a `Blob`, convert it to `[var Nat8]` or `Buffer<Nat8>`, perform your changes, then convert it back.
 
 Import from the base library to use this module.
+
 ```motoko name=import
 import Blob "mo:base/Blob";
 ```
 
-Some built in features not listed in this module:
+:::note [Additional features]
 
-* You can create a `Blob` literal from a `Text` literal, provided the context expects an expression of type `Blob`.
-* `b.size() : Nat` returns the number of bytes in the blob `b`;
-* `b.vals() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob `b`.
+Some built-in features are not listed in this module:
+
+- You can create a `Blob` literal from a `Text` literal, provided the context expects an expression of type `Blob`.
+- `b.size() : Nat` returns the number of bytes in the blob `b`.
+- `b.vals() : Iter.Iter<Nat8>` returns an iterator to enumerate the bytes of the blob `b`.
+:::
 
 For example:
+
 ```motoko include=import
 import Debug "mo:base/Debug";
 import Nat8 "mo:base/Nat8";
@@ -32,6 +33,11 @@ for (byte : Nat8 in blob.vals()) { // iterator over the Blob
   Debug.print(Nat8.toText(byte))
 }
 ```
+:::note [Operator limitation]
+
+Comparison functions (`equal`, `notEqual`, `less`, `lessOrEqual`, `greater`, `greaterOrEqual`) are defined in this library to allow their use as function values in higher-order functions.
+Operators like `==`, `!=`, `<`, `<=`, `>`, and `>=` cannot currently be passed as function values.
+:::
 
 [[type.Blob]]
 == Blob
@@ -51,13 +57,13 @@ type Blob = Prim.Types.Blob
 func fromArray(bytes : pass:[[]Nat8pass:[]]) : xref:#type.Blob[Blob]
 ----
 
-Creates a `Blob` from an array of bytes (`[Nat8]`), by copying each element.
+ Creates a `Blob` from an array of bytes (`[Nat8]`) by copying each element.
 
-Example:
-```motoko include=import
-let bytes : [Nat8] = [0, 255, 0];
-let blob = Blob.fromArray(bytes); // => "\00\FF\00"
-```
+ Example:
+ ```motoko include=import
+ let bytes : [Nat8] = [0, 255, 0];
+ let blob = Blob.fromArray(bytes); // => "\00\FF\00"
+ ```
 
 [[fromArrayMut]]
 == fromArrayMut
@@ -67,13 +73,13 @@ let blob = Blob.fromArray(bytes); // => "\00\FF\00"
 func fromArrayMut(bytes : pass:[[]var Nat8pass:[]]) : xref:#type.Blob[Blob]
 ----
 
-Creates a `Blob` from a mutable array of bytes (`[var Nat8]`), by copying each element.
+ Creates a `Blob` from a mutable array of bytes (`[var Nat8]`) by copying each element.
 
-Example:
-```motoko include=import
-let bytes : [var Nat8] = [var 0, 255, 0];
-let blob = Blob.fromArrayMut(bytes); // => "\00\FF\00"
-```
+ Example:
+ ```motoko include=import
+ let bytes : [var Nat8] = [var 0, 255, 0];
+ let blob = Blob.fromArrayMut(bytes); // => "\00\FF\00"
+ ```
 
 [[toArray]]
 == toArray
@@ -83,13 +89,13 @@ let blob = Blob.fromArrayMut(bytes); // => "\00\FF\00"
 func toArray(blob : xref:#type.Blob[Blob]) : pass:[[]Nat8pass:[]]
 ----
 
-Converts a `Blob` to an array of bytes (`[Nat8]`), by copying each element.
+ Converts a `Blob` to an array of bytes (`[Nat8]`) by copying each element.
 
-Example:
-```motoko include=import
-let blob = "\00\FF\00" : Blob;
-let bytes = Blob.toArray(blob); // => [0, 255, 0]
-```
+ Example:
+ ```motoko include=import
+ let blob = "\00\FF\00" : Blob;
+ let bytes = Blob.toArray(blob); // => [0, 255, 0]
+ ```
 
 [[toArrayMut]]
 == toArrayMut
@@ -99,13 +105,13 @@ let bytes = Blob.toArray(blob); // => [0, 255, 0]
 func toArrayMut(blob : xref:#type.Blob[Blob]) : pass:[[]var Nat8pass:[]]
 ----
 
-Converts a `Blob` to a mutable array of bytes (`[var Nat8]`), by copying each element.
+ Converts a `Blob` to a mutable array of bytes (`[var Nat8]`) by copying each element.
 
-Example:
-```motoko include=import
-let blob = "\00\FF\00" : Blob;
-let bytes = Blob.toArrayMut(blob); // => [var 0, 255, 0]
-```
+ Example:
+ ```motoko include=import
+ let blob = "\00\FF\00" : Blob;
+ let bytes = Blob.toArrayMut(blob); // => [var 0, 255, 0]
+ ```
 
 [[hash]]
 == hash
@@ -115,13 +121,13 @@ let bytes = Blob.toArrayMut(blob); // => [var 0, 255, 0]
 func hash(blob : xref:#type.Blob[Blob]) : Nat32
 ----
 
-Returns the (non-cryptographic) hash of `blob`.
+ Returns the (non-cryptographic) hash of `blob`.
 
-Example:
-```motoko include=import
-let blob = "\00\FF\00" : Blob;
-Blob.hash(blob) // => 1_818_567_776
-```
+ Example:
+ ```motoko include=import
+ let blob = "\00\FF\00" : Blob;
+ Blob.hash(blob) // => 1_818_567_776
+ ```
 
 [[compare]]
 == compare
@@ -131,16 +137,16 @@ Blob.hash(blob) // => 1_818_567_776
 func compare(b1 : xref:#type.Blob[Blob], b2 : xref:#type.Blob[Blob]) : {#less; #equal; #greater}
 ----
 
-General purpose comparison function for `Blob` by comparing the value of
-the bytes. Returns the `Order` (either `#less`, `#equal`, or `#greater`)
-by comparing `blob1` with `blob2`.
+ General purpose comparison function for `Blob` by comparing the value of
+ the bytes. Returns the `Order` (either `#less`, `#equal`, or `#greater`)
+ by comparing `blob1` with `blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\00\00\00" : Blob;
-let blob2 = "\00\FF\00" : Blob;
-Blob.compare(blob1, blob2) // => #less
-```
+ Example:
+ ```motoko include=import
+ let blob1 = "\00\00\00" : Blob;
+ let blob2 = "\00\FF\00" : Blob;
+ Blob.compare(blob1, blob2) // => #less
+ ```
 
 [[equal]]
 == equal
@@ -150,30 +156,17 @@ Blob.compare(blob1, blob2) // => #less
 func equal(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : Bool
 ----
 
-Equality function for `Blob` types.
-This is equivalent to `blob1 == blob2`.
+ Equality function for `Blob` types.
+ This is equivalent to `blob1 == blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\00\FF\00" : Blob;
-let blob2 = "\00\FF\00" : Blob;
-ignore Blob.equal(blob1, blob2);
-blob1 == blob2 // => true
-```
+ Example:
+ ```motoko include=import
+ let blob1 = "\00\FF\00" : Blob;
+ let blob2 = "\00\FF\00" : Blob;
+ ignore Blob.equal(blob1, blob2);
+ blob1 == blob2 // => true
+ ```
 
-Note: The reason why this function is defined in this library (in addition
-to the existing `==` operator) is so that you can use it as a function value
-to pass to a higher order function. It is not possible to use `==` as a
-function value at the moment.
-
-Example:
-```motoko include=import
-import Buffer "mo:base/Buffer";
-
-let buffer1 = Buffer.Buffer<Blob>(3);
-let buffer2 = Buffer.Buffer<Blob>(3);
-Buffer.equal(buffer1, buffer2, Blob.equal) // => true
-```
 
 [[notEqual]]
 == notEqual
@@ -183,21 +176,16 @@ Buffer.equal(buffer1, buffer2, Blob.equal) // => true
 func notEqual(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : Bool
 ----
 
-Inequality function for `Blob` types.
-This is equivalent to `blob1 != blob2`.
+ Inequality function for `Blob` types.
+ This is equivalent to `blob1 != blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\00\AA\AA" : Blob;
-let blob2 = "\00\FF\00" : Blob;
-ignore Blob.notEqual(blob1, blob2);
-blob1 != blob2 // => true
-```
-
-Note: The reason why this function is defined in this library (in addition
-to the existing `!=` operator) is so that you can use it as a function value
-to pass to a higher order function. It is not possible to use `!=` as a
-function value at the moment.
+ Example:
+ ```motoko include=import
+ let blob1 = "\00\AA\AA" : Blob;
+ let blob2 = "\00\FF\00" : Blob;
+ ignore Blob.notEqual(blob1, blob2);
+ blob1 != blob2 // => true
+ ```
 
 [[less]]
 == less
@@ -207,21 +195,16 @@ function value at the moment.
 func less(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : Bool
 ----
 
-"Less than" function for `Blob` types.
-This is equivalent to `blob1 < blob2`.
+ "Less than" function for `Blob` types.
+ This is equivalent to `blob1 < blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\00\AA\AA" : Blob;
-let blob2 = "\00\FF\00" : Blob;
-ignore Blob.less(blob1, blob2);
-blob1 < blob2 // => true
-```
-
-Note: The reason why this function is defined in this library (in addition
-to the existing `<` operator) is so that you can use it as a function value
-to pass to a higher order function. It is not possible to use `<` as a
-function value at the moment.
+ Example:
+ ```motoko include=import
+ let blob1 = "\00\AA\AA" : Blob;
+ let blob2 = "\00\FF\00" : Blob;
+ ignore Blob.less(blob1, blob2);
+ blob1 < blob2 // => true
+ ```
 
 [[lessOrEqual]]
 == lessOrEqual
@@ -231,21 +214,16 @@ function value at the moment.
 func lessOrEqual(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : Bool
 ----
 
-"Less than or equal to" function for `Blob` types.
-This is equivalent to `blob1 <= blob2`.
+ "Less than or equal to" function for `Blob` types.
+ This is equivalent to `blob1 <= blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\00\AA\AA" : Blob;
-let blob2 = "\00\FF\00" : Blob;
-ignore Blob.lessOrEqual(blob1, blob2);
-blob1 <= blob2 // => true
-```
-
-Note: The reason why this function is defined in this library (in addition
-to the existing `<=` operator) is so that you can use it as a function value
-to pass to a higher order function. It is not possible to use `<=` as a
-function value at the moment.
+ Example:
+ ```motoko include=import
+ let blob1 = "\00\AA\AA" : Blob;
+ let blob2 = "\00\FF\00" : Blob;
+ ignore Blob.lessOrEqual(blob1, blob2);
+ blob1 <= blob2 // => true
+ ```
 
 [[greater]]
 == greater
@@ -255,21 +233,16 @@ function value at the moment.
 func greater(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : Bool
 ----
 
-"Greater than" function for `Blob` types.
-This is equivalent to `blob1 > blob2`.
+ "Greater than" function for `Blob` types.
+ This is equivalent to `blob1 > blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\BB\AA\AA" : Blob;
-let blob2 = "\00\00\00" : Blob;
-ignore Blob.greater(blob1, blob2);
-blob1 > blob2 // => true
-```
-
-Note: The reason why this function is defined in this library (in addition
-to the existing `>` operator) is so that you can use it as a function value
-to pass to a higher order function. It is not possible to use `>` as a
-function value at the moment.
+ Example:
+ ```motoko include=import
+ let blob1 = "\BB\AA\AA" : Blob;
+ let blob2 = "\00\00\00" : Blob;
+ ignore Blob.greater(blob1, blob2);
+ blob1 > blob2 // => true
+ ```
 
 [[greaterOrEqual]]
 == greaterOrEqual
@@ -279,19 +252,14 @@ function value at the moment.
 func greaterOrEqual(blob1 : xref:#type.Blob[Blob], blob2 : xref:#type.Blob[Blob]) : Bool
 ----
 
-"Greater than or equal to" function for `Blob` types.
-This is equivalent to `blob1 >= blob2`.
+ "Greater than or equal to" function for `Blob` types.
+ This is equivalent to `blob1 >= blob2`.
 
-Example:
-```motoko include=import
-let blob1 = "\BB\AA\AA" : Blob;
-let blob2 = "\00\00\00" : Blob;
-ignore Blob.greaterOrEqual(blob1, blob2);
-blob1 >= blob2 // => true
-```
-
-Note: The reason why this function is defined in this library (in addition
-to the existing `>=` operator) is so that you can use it as a function value
-to pass to a higher order function. It is not possible to use `>=` as a
-function value at the moment.
+ Example:
+ ```motoko include=import
+ let blob1 = "\BB\AA\AA" : Blob;
+ let blob2 = "\00\00\00" : Blob;
+ ignore Blob.greaterOrEqual(blob1, blob2);
+ blob1 >= blob2 // => true
+ ```
 

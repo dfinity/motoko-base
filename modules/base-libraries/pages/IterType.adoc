@@ -1,8 +1,6 @@
 [[module.IterType]]
 = IterType
 
-The Iterator type
-
 [[type.Iter]]
 == Iter
 

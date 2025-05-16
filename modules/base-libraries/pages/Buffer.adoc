@@ -2,40 +2,52 @@
 = Buffer
 
 Class `Buffer<X>` provides a mutable list of elements of type `X`.
-The class wraps and resizes an underyling array that holds the elements,
-and thus is comparable to ArrayLists or Vectors in other languages.
+It wraps a resizable underlying array and is comparable to `ArrayList` or `Vector` in other languages.
 
-When required, the current state of a buffer object can be converted to a fixed-size array of its elements.
-This is recommended for example when storing a buffer to a stable variable.
+You can convert a buffer to a fixed-size array using `Buffer.toArray`, which is recommended for storing data in stable variables.
 
-Throughout this documentation, two terms come up that can be confused: `size`
-and `capacity`. `size` is the length of the list that the buffer represents.
-`capacity` is the length of the underyling array that backs this list.
-`capacity` >= `size` is an invariant for this class.
+Like arrays, buffer elements are indexed from `0` to `size - 1`.
 
-Like arrays, elements in the buffer are ordered by indices from 0 to `size`-1.
+:::note [Assumptions]
 
-WARNING: Certain operations are amortized O(1) time, such as `add`, but run
-in worst case O(n) time. These worst case runtimes may exceed the cycles limit
-per message if the size of the buffer is large enough. Grow these structures
-with discretion. All amortized operations below also list the worst case runtime.
+Runtime and space complexity assumes that `combine`, `equal`, and other functions execute in `O(1)` time and space.
 
-Constructor:
-The argument `initCapacity` determines the initial capacity of the array.
-The underlying array grows by a factor of 1.5 when its current capacity is
-exceeded. Further, when the size of the buffer shrinks to be less than 1/4th
-of the capacity, the underyling array is shrunk by a factor of 2.
+:::
+
+:::note [Size vs capacity]
+
+- `size`: Number of elements in the buffer.
+- `capacity`: Length of the underlying array.
+
+The invariant `capacity >= size` always holds.
+:::
+
+:::warning [Performance caveat]
+
+Operations like `add` are amortized `O(1)` but can take `O(n)` in the worst case.
+For large buffers, these worst cases may exceed the cycle limit per message.
+Use with care when growing buffers dynamically.
+:::
+
+:::info [Constructor behavior]
+
+The `initCapacity` argument sets the initial capacity of the underlying array.
+
+- When the capacity is exceeded, the array grows by a factor of 1.5.
+- When the buffer size drops below 1/4 of the capacity, it shrinks by a factor of 2.
+:::
 
 Example:
+
 ```motoko name=initialize
 import Buffer "mo:base/Buffer";
 
 let buffer = Buffer.Buffer<Nat>(3); // Creates a new Buffer
 ```
 
-Runtime: O(initCapacity)
-
-Space: O(initCapacity)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(initCapacity)` | `O(initCapacity)` |
 
 [[type.Buffer]]
 == Buffer
@@ -60,13 +72,14 @@ func size() : Nat
 Returns the current number of elements in the buffer.
 
 Example:
+
 ```motoko include=initialize
 buffer.size() // => 0
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.add]]
 === add
@@ -80,8 +93,8 @@ Adds a single element to the end of the buffer, doubling
 the size of the array if capacity is exceeded.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(0); // add 0 to buffer
 buffer.add(1);
 buffer.add(2);
@@ -89,9 +102,9 @@ buffer.add(3); // causes underlying array to increase in capacity
 Buffer.toArray(buffer) // => [0, 1, 2, 3]
 ```
 
-Amortized Runtime: O(1), Worst Case Runtime: O(size)
-
-Amortized Space: O(1), Worst Case Space: O(size)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size)`           | `O(1)`               | `O(size)`         | `O(1)`              |
 
 [[Buffer.get]]
 === get
@@ -104,16 +117,16 @@ func get(index : Nat) : X
 Returns the element at index `index`. Traps if  `index >= size`. Indexing is zero-based.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(10);
 buffer.add(11);
 buffer.get(0); // => 10
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.getOpt]]
 === getOpt
@@ -127,17 +140,17 @@ Returns the element at index `index` as an option.
 Returns `null` when `index >= size`. Indexing is zero-based.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(10);
 buffer.add(11);
 let x = buffer.getOpt(0); // => ?10
 let y = buffer.getOpt(2); // => null
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.put]]
 === put
@@ -147,20 +160,14 @@ Space: O(1)
 func put(index : Nat, element : X)
 ----
 
-Overwrites the current element at `index` with `element`. Traps if
-`index` >= size. Indexing is zero-based.
-
-Example:
-```motoko include=initialize
-
 buffer.add(10);
 buffer.put(0, 20); // overwrites 10 at index 0 with 20
 Buffer.toArray(buffer) // => [20]
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.removeLast]]
 === removeLast
@@ -174,16 +181,16 @@ Removes and returns the last item in the buffer or `null` if
 the buffer is empty.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(10);
 buffer.add(11);
 buffer.removeLast(); // => ?11
 ```
 
-Amortized Runtime: O(1), Worst Case Runtime: O(size)
-
-Amortized Space: O(1), Worst Case Space: O(size)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size)`           | `O(1)`               | `O(size)`         | `O(1)`              |
 
 [[Buffer.remove]]
 === remove
@@ -199,13 +206,14 @@ This may cause a downsizing of the array.
 
 Traps if index >= size.
 
-WARNING: Repeated removal of elements using this method is ineffecient
-and might be a sign that you should consider a different data-structure
-for your use case.
+:::warning [Inefficient pattern]
+
+Repeated removal of elements using this method is inefficient and may indicate that a different data structure would better suit your use case.
+:::
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(10);
 buffer.add(11);
 buffer.add(12);
@@ -213,9 +221,9 @@ let x = buffer.remove(1); // evaluates to 11. 11 no longer in list.
 Buffer.toArray(buffer) // => [10, 12]
 ```
 
-Runtime: O(size)
-
-Amortized Space: O(1), Worst Case Space: O(size)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size)`           |-               | `O(size)`         | `O(1)`              |
 
 [[Buffer.clear]]
 === clear
@@ -228,8 +236,8 @@ func clear()
 Resets the buffer. Capacity is set to 8.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(10);
 buffer.add(11);
 buffer.add(12);
@@ -237,9 +245,9 @@ buffer.clear(); // buffer is now empty
 Buffer.toArray(buffer) // => []
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.filterEntries]]
 === filterEntries
@@ -254,8 +262,8 @@ The predicate is given both the index of the element and the element itself.
 This may cause a downsizing of the array.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(10);
 buffer.add(11);
 buffer.add(12);
@@ -263,9 +271,10 @@ buffer.filterEntries(func(_, x) = x % 2 == 0); // only keep even elements
 Buffer.toArray(buffer) // => [10, 12]
 ```
 
-Runtime: O(size)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size)`           | -               | `O(size)`         | `O(1)`              |
 
-Amortized Space: O(1), Worst Case Space: O(size)
 
 [[Buffer.capacity]]
 === capacity
@@ -278,8 +287,8 @@ func capacity() : Nat
 Returns the capacity of the buffer (the length of the underlying array).
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 let buffer = Buffer.Buffer<Nat>(2); // underlying array has capacity 2
 buffer.add(10);
 let c1 = buffer.capacity(); // => 2
@@ -288,9 +297,9 @@ buffer.add(12); // causes capacity to increase by factor of 1.5
 let c2 = buffer.capacity(); // => 3
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.reserve]]
 === reserve
@@ -303,16 +312,15 @@ func reserve(capacity : Nat)
 Changes the capacity to `capacity`. Traps if `capacity` < `size`.
 
 ```motoko include=initialize
-
 buffer.reserve(4);
 buffer.add(10);
 buffer.add(11);
 buffer.capacity(); // => 4
 ```
 
-Runtime: O(capacity)
-
-Space: O(capacity)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(capacity)` | `O(capacity)` |
 
 [[Buffer.append]]
 === append
@@ -335,9 +343,9 @@ buffer1.append(buffer2); // adds elements from buffer2 to buffer1
 Buffer.toArray(buffer1) // => [10, 11, 12, 13]
 ```
 
-Amortized Runtime: O(size2), Worst Case Runtime: O(size1 + size2)
-
-Amortized Space: O(1), Worst Case Space: O(size1 + size2)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size1 + size2)`           | `O(size2)`              | `O(size1 +size2)`         | `O(1)`              |
 
 [[Buffer.insert]]
 === insert
@@ -359,9 +367,9 @@ buffer.insert(1, 9);
 Buffer.toArray(buffer) // => [10, 9, 11]
 ```
 
-Runtime: O(size)
-
-Amortized Space: O(1), Worst Case Space: O(size)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size)`           | -               | `O(size)`         | `O(1)`              |
 
 [[Buffer.insertBuffer]]
 === insertBuffer
@@ -385,9 +393,9 @@ buffer1.insertBuffer(1, buffer2);
 Buffer.toArray(buffer1) // => [10, 12, 13, 11]
 ```
 
-Runtime: O(size)
-
-Amortized Space: O(1), Worst Case Space: O(size1 + size2)
+| Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
+|------------------|----------------------|----------------|---------------------|
+| `O(size)`           | -             | `O(size1 +size2)`         | `O(1)`              |
 
 [[Buffer.sort]]
 === sort
@@ -401,7 +409,6 @@ Sorts the elements in the buffer according to `compare`.
 Sort is deterministic, stable, and in-place.
 
 ```motoko include=initialize
-
 import Nat "mo:base/Nat";
 
 buffer.add(11);
@@ -411,9 +418,9 @@ buffer.sort(Nat.compare);
 Buffer.toArray(buffer) // => [10, 11, 12]
 ```
 
-Runtime: O(size * log(size))
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size * log(size))` | `O(size)` |
 
 [[Buffer.vals]]
 === vals
@@ -428,7 +435,6 @@ Iterator provides a single method `next()`, which returns
 elements in order, or `null` when out of elements to iterate over.
 
 ```motoko include=initialize
-
 buffer.add(10);
 buffer.add(11);
 buffer.add(12);
@@ -440,9 +446,9 @@ for (element in buffer.vals()) {
 sum // => 33
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[Buffer.clone]]
 === clone
@@ -452,7 +458,10 @@ Space: O(1)
 func clone() : xref:#type.Buffer[Buffer]<X>
 ----
 
-@deprecated Use static library function instead.
+:::warning [Deprecated function]
+
+Use the static library function instead of this instance method.
+:::
 
 [[Buffer.toArray]]
 === toArray
@@ -462,7 +471,10 @@ func clone() : xref:#type.Buffer[Buffer]<X>
 func toArray() : pass:[[]Xpass:[]]
 ----
 
-@deprecated Use static library function instead.
+:::warning [Deprecated function]
+
+Use the static library function instead of this instance method.
+:::
 
 [[Buffer.toVarArray]]
 === toVarArray
@@ -472,7 +484,10 @@ func toArray() : pass:[[]Xpass:[]]
 func toVarArray() : pass:[[]var Xpass:[]]
 ----
 
-@deprecated Use static library function instead.
+:::warning [Deprecated function]
+
+Use the static library function instead of this instance method.
+:::
 
 [[isEmpty]]
 == isEmpty
@@ -485,6 +500,7 @@ func isEmpty<X>(buffer : xref:#type.Buffer[Buffer]<X>) : Bool
 Returns true if and only if the buffer is empty.
 
 Example:
+
 ```motoko include=initialize
 buffer.add(2);
 buffer.add(0);
@@ -496,9 +512,9 @@ Buffer.isEmpty(buffer); // => false
 Buffer.isEmpty(buffer); // => true
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[contains]]
 == contains
@@ -508,11 +524,11 @@ Space: O(1)
 func contains<X>(buffer : xref:#type.Buffer[Buffer]<X>, element : X, equal : (X, X) -> Bool) : Bool
 ----
 
-Returns true iff `buffer` contains `element` with respect to equality
+Returns true if `buffer` contains `element` with respect to equality
 defined by `equal`.
 
-
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -522,11 +538,9 @@ buffer.add(3);
 Buffer.contains<Nat>(buffer, 2, Nat.equal); // => true
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[clone]]
 == clone
@@ -538,19 +552,18 @@ func clone<X>(buffer : xref:#type.Buffer[Buffer]<X>) : xref:#type.Buffer[Buffer]
 
 Returns a copy of `buffer`, with the same capacity.
 
-
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(1);
 
 let clone = Buffer.clone(buffer);
 Buffer.toArray(clone); // => [1]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[max]]
 == max
@@ -563,8 +576,8 @@ func max<X>(buffer : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:#typ
 Finds the greatest element in `buffer` defined by `compare`.
 Returns `null` if `buffer` is empty.
 
-
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -574,11 +587,9 @@ buffer.add(2);
 Buffer.max(buffer, Nat.compare); // => ?2
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `compare` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[min]]
 == min
@@ -592,6 +603,7 @@ Finds the least element in `buffer` defined by `compare`.
 Returns `null` if `buffer` is empty.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -601,11 +613,9 @@ buffer.add(2);
 Buffer.min(buffer, Nat.compare); // => ?1
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `compare` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[equal]]
 == equal
@@ -616,12 +626,12 @@ func equal<X>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffe
 ----
 
 Defines equality for two buffers, using `equal` to recursively compare elements in the
-buffers. Returns true iff the two buffers are of the same size, and `equal`
+buffers. Returns true if the two buffers are of the same size, and `equal`
 evaluates to true for every pair of elements in the two buffers of the same
 index.
 
-
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -636,11 +646,9 @@ buffer2.add(2);
 Buffer.equal(buffer1, buffer2, Nat.equal); // => true
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[compare]]
 == compare
@@ -653,8 +661,8 @@ func compare<X>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buf
 Defines comparison for two buffers, using `compare` to recursively compare elements in the
 buffers. Comparison is defined lexicographically.
 
-
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -669,11 +677,9 @@ buffer2.add(4);
 Buffer.compare<Nat>(buffer1, buffer2, Nat.compare); // => #less
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `compare` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[toText]]
 == toText
@@ -687,6 +693,7 @@ Creates a textual representation of `buffer`, using `toText` to recursively
 convert the elements into Text.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -698,11 +705,9 @@ buffer.add(4);
 Buffer.toText(buffer, Nat.toText); // => "[1, 2, 3, 4]"
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `toText` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[hash]]
 == hash
@@ -713,10 +718,11 @@ func hash<X>(buffer : xref:#type.Buffer[Buffer]<X>, hash : X -> Nat32) : Nat32
 ----
 
 Hashes `buffer` using `hash` to hash the underlying elements.
-The deterministic hash function is a function of the elements in the Buffer, as well
+The deterministic hash function is a function of the elements in the `buffer`, as well
 as their ordering.
 
 Example:
+
 ```motoko include=initialize
 import Hash "mo:base/Hash";
 
@@ -728,11 +734,9 @@ buffer.add(1000);
 Buffer.hash<Nat>(buffer, Hash.hash); // => 2_872_640_342
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `hash` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[indexOf]]
 == indexOf
@@ -746,6 +750,7 @@ Finds the first index of `element` in `buffer` using equality of elements define
 by `equal`. Returns `null` if `element` is not found.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -757,11 +762,9 @@ buffer.add(4);
 Buffer.indexOf<Nat>(3, buffer, Nat.equal); // => ?2
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[lastIndexOf]]
 == lastIndexOf
@@ -775,6 +778,7 @@ Finds the last index of `element` in `buffer` using equality of elements defined
 by `equal`. Returns `null` if `element` is not found.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -788,11 +792,9 @@ buffer.add(2);
 Buffer.lastIndexOf<Nat>(2, buffer, Nat.equal); // => ?5
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[indexOfBuffer]]
 == indexOfBuffer
@@ -805,6 +807,7 @@ func indexOfBuffer<X>(subBuffer : xref:#type.Buffer[Buffer]<X>, buffer : xref:#t
 Searches for `subBuffer` in `buffer`, and returns the starting index if it is found.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -823,11 +826,9 @@ sub.add(6);
 Buffer.indexOfBuffer<Nat>(sub, buffer, Nat.equal); // => ?3
 ```
 
-Runtime: O(size of buffer + size of subBuffer)
-
-Space: O(size of subBuffer)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size of buffer + size of subBuffer)` | `O(size of subBuffer)` |
 
 [[binarySearch]]
 == binarySearch
@@ -837,11 +838,12 @@ Space: O(size of subBuffer)
 func binarySearch<X>(element : X, buffer : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:Order.adoc#type.Order[Order.Order]) : ?Nat
 ----
 
-Similar to indexOf, but runs in logarithmic time. Assumes that `buffer` is sorted.
+Similar to `indexOf`, but runs in logarithmic time. Assumes that `buffer` is sorted.
 Behavior is undefined if `buffer` is not sorted. Uses `compare` to
 perform the search. Returns an index of `element` if it is found.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -853,11 +855,9 @@ buffer.add(6);
 Buffer.binarySearch<Nat>(5, buffer, Nat.compare); // => ?2
 ```
 
-Runtime: O(log(size))
-
-Space: O(1)
-
-*Runtime and space assumes that `compare` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(log(size))` | `O(1)` |
 
 [[subBuffer]]
 == subBuffer
@@ -872,6 +872,7 @@ of length `length`. Traps if `start` is out of bounds, or `start + length`
 is greater than the size of `buffer`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -886,9 +887,9 @@ let sub = Buffer.subBuffer(buffer, 3, 2);
 Buffer.toText(sub, Nat.toText); // => [4, 5]
 ```
 
-Runtime: O(length)
-
-Space: O(length)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(length)` | `O(length)` |
 
 [[isSubBufferOf]]
 == isSubBufferOf
@@ -902,6 +903,7 @@ Checks if `subBuffer` is a sub-Buffer of `buffer`. Uses `equal` to
 compare elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -918,11 +920,9 @@ sub.add(3);
 Buffer.isSubBufferOf(sub, buffer, Nat.equal); // => true
 ```
 
-Runtime: O(size of subBuffer + size of buffer)
-
-Space: O(size of subBuffer)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size of subBuffer + size of buffer)` | `O(size of subBuffer)` |
 
 [[isStrictSubBufferOf]]
 == isStrictSubBufferOf
@@ -937,6 +937,7 @@ strictly contained inside both the first and last indices of `buffer`.
 Uses `equal` to compare elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -951,11 +952,9 @@ sub.add(3);
 Buffer.isStrictSubBufferOf(sub, buffer, Nat.equal); // => true
 ```
 
-Runtime: O(size of subBuffer + size of buffer)
-
-Space: O(size of subBuffer)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size of subBuffer + size of buffer)` | `O(size of subBuffer)` |
 
 [[prefix]]
 == prefix
@@ -969,6 +968,7 @@ Returns the prefix of `buffer` of length `length`. Traps if `length`
 is greater than the size of `buffer`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -981,9 +981,10 @@ let pre = Buffer.prefix(buffer, 3); // => [1, 2, 3]
 Buffer.toText(pre, Nat.toText);
 ```
 
-Runtime: O(length)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(length)` | `O(length)` |
 
-Space: O(length)
 
 [[isPrefixOf]]
 == isPrefixOf
@@ -997,6 +998,7 @@ Checks if `prefix` is a prefix of `buffer`. Uses `equal` to
 compare elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1011,11 +1013,9 @@ pre.add(2);
 Buffer.isPrefixOf(pre, buffer, Nat.equal); // => true
 ```
 
-Runtime: O(size of prefix)
-
-Space: O(size of prefix)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size of prefix)` | `O(size of prefix)` |
 
 [[isStrictPrefixOf]]
 == isStrictPrefixOf
@@ -1029,6 +1029,7 @@ Checks if `prefix` is a strict prefix of `buffer`. Uses `equal` to
 compare elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1044,11 +1045,9 @@ pre.add(3);
 Buffer.isStrictPrefixOf(pre, buffer, Nat.equal); // => true
 ```
 
-Runtime: O(size of prefix)
-
-Space: O(size of prefix)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size of prefix)` | `O(size of prefix)` |
 
 [[suffix]]
 == suffix
@@ -1062,6 +1061,7 @@ Returns the suffix of `buffer` of length `length`.
 Traps if `length`is greater than the size of `buffer`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1074,9 +1074,9 @@ let suf = Buffer.suffix(buffer, 3); // => [2, 3, 4]
 Buffer.toText(suf, Nat.toText);
 ```
 
-Runtime: O(length)
-
-Space: O(length)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(length)` | `O(length)` |
 
 [[isSuffixOf]]
 == isSuffixOf
@@ -1090,6 +1090,7 @@ Checks if `suffix` is a suffix of `buffer`. Uses `equal` to compare
 elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1105,11 +1106,9 @@ suf.add(4);
 Buffer.isSuffixOf(suf, buffer, Nat.equal); // => true
 ```
 
-Runtime: O(length of suffix)
-
-Space: O(length of suffix)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(length of suffix)` | `O(length of suffix)` |
 
 [[isStrictSuffixOf]]
 == isStrictSuffixOf
@@ -1119,30 +1118,28 @@ Space: O(length of suffix)
 func isStrictSuffixOf<X>(suffix : xref:#type.Buffer[Buffer]<X>, buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) : Bool
 ----
 
-Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
-elements.
+ Checks if `suffix` is a strict suffix of `buffer`. Uses `equal` to compare
+ elements.
 
-Example:
-```motoko include=initialize
-import Nat "mo:base/Nat";
+ Example:
+ ```motoko include=initialize
+ import Nat "mo:base/Nat";
 
-buffer.add(1);
-buffer.add(2);
-buffer.add(3);
-buffer.add(4);
+ buffer.add(1);
+ buffer.add(2);
+ buffer.add(3);
+ buffer.add(4);
 
-let suf = Buffer.Buffer<Nat>(3);
-suf.add(2);
-suf.add(3);
-suf.add(4);
-Buffer.isStrictSuffixOf(suf, buffer, Nat.equal); // => true
-```
+ let suf = Buffer.Buffer<Nat>(3);
+ suf.add(2);
+ suf.add(3);
+ suf.add(4);
+ Buffer.isStrictSuffixOf(suf, buffer, Nat.equal); // => true
+ ```
 
-Runtime: O(length of suffix)
-
-Space: O(length of suffix)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(length)` | `O(length)` |
 
 [[forAll]]
 == forAll
@@ -1152,11 +1149,11 @@ Space: O(length of suffix)
 func forAll<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : Bool
 ----
 
-Returns true iff every element in `buffer` satisfies `predicate`.
+Returns true if every element in `buffer` satisfies `predicate`.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(2);
 buffer.add(3);
 buffer.add(4);
@@ -1164,11 +1161,9 @@ buffer.add(4);
 Buffer.forAll<Nat>(buffer, func x { x > 1 }); // => true
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `predicate` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[forSome]]
 == forSome
@@ -1178,11 +1173,11 @@ Space: O(1)
 func forSome<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : Bool
 ----
 
-Returns true iff some element in `buffer` satisfies `predicate`.
+Returns true if some element in `buffer` satisfies `predicate`.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(2);
 buffer.add(3);
 buffer.add(4);
@@ -1190,11 +1185,9 @@ buffer.add(4);
 Buffer.forSome<Nat>(buffer, func x { x > 3 }); // => true
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `predicate` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[forNone]]
 == forNone
@@ -1204,11 +1197,11 @@ Space: O(1)
 func forNone<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) : Bool
 ----
 
-Returns true iff no element in `buffer` satisfies `predicate`.
+Returns true if no element in `buffer` satisfies `predicate`.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(2);
 buffer.add(3);
 buffer.add(4);
@@ -1216,11 +1209,9 @@ buffer.add(4);
 Buffer.forNone<Nat>(buffer, func x { x == 0 }); // => true
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `predicate` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[toArray]]
 == toArray
@@ -1230,22 +1221,21 @@ Space: O(1)
 func toArray<X>(buffer : xref:#type.Buffer[Buffer]<X>) : pass:[[]Xpass:[]]
 ----
 
-Creates an array containing elements from `buffer`.
+Creates an `array` containing elements from `buffer`.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
 
 Buffer.toArray<Nat>(buffer); // => [1, 2, 3]
-
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[toVarArray]]
 == toVarArray
@@ -1255,11 +1245,14 @@ Space: O(size)
 func toVarArray<X>(buffer : xref:#type.Buffer[Buffer]<X>) : pass:[[]var Xpass:[]]
 ----
 
+func toVarArray<X>(buffer : Buffer<X>) : [var X]
+```
+
 Creates a mutable array containing elements from `buffer`.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1267,9 +1260,9 @@ buffer.add(3);
 Buffer.toVarArray<Nat>(buffer); // => [1, 2, 3]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[fromArray]]
 == fromArray
@@ -1279,9 +1272,10 @@ Space: O(size)
 func fromArray<X>(array : pass:[[]Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Creates a buffer containing elements from `array`.
+Creates a `buffer` containing elements from `array`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1291,9 +1285,9 @@ let buf = Buffer.fromArray<Nat>(array); // => [2, 3]
 Buffer.toText(buf, Nat.toText);
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[fromVarArray]]
 == fromVarArray
@@ -1303,9 +1297,10 @@ Space: O(size)
 func fromVarArray<X>(array : pass:[[]var Xpass:[]]) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Creates a buffer containing elements from `array`.
+Creates a `buffer` containing elements from `array`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1315,9 +1310,9 @@ let buf = Buffer.fromVarArray<Nat>(array); // => [1, 2, 3]
 Buffer.toText(buf, Nat.toText);
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[fromIter]]
 == fromIter
@@ -1327,9 +1322,10 @@ Space: O(size)
 func fromIter<X>(iter : { next : () -> ?X }) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Creates a buffer containing elements from `iter`.
+Creates a `buffer` containing elements from `iter`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1340,9 +1336,9 @@ let buf = Buffer.fromIter<Nat>(iter); // => [1, 1, 1]
 Buffer.toText(buf, Nat.toText);
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[trimToSize]]
 == trimToSize
@@ -1355,8 +1351,8 @@ func trimToSize<X>(buffer : xref:#type.Buffer[Buffer]<X>)
 Reallocates the array underlying `buffer` such that capacity == size.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 let buffer = Buffer.Buffer<Nat>(10);
 buffer.add(1);
 buffer.add(2);
@@ -1366,9 +1362,9 @@ Buffer.trimToSize<Nat>(buffer);
 buffer.capacity(); // => 3
 ```
 
-Runtime: O(size)
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[map]]
 == map
@@ -1378,9 +1374,10 @@ Space: O(size)
 func map<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, f : X -> Y) : xref:#type.Buffer[Buffer]<Y>
 ----
 
-Creates a new buffer by applying `f` to each element in `buffer`.
+Creates a new `buffer` by applying `f` to each element in `buffer`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1392,11 +1389,9 @@ let newBuf = Buffer.map<Nat, Nat>(buffer, func (x) { x + 1 });
 Buffer.toText(newBuf, Nat.toText); // => [2, 3, 4]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `f` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[iterate]]
 == iterate
@@ -1409,6 +1404,7 @@ func iterate<X>(buffer : xref:#type.Buffer[Buffer]<X>, f : X -> ())
 Applies `f` to each element in `buffer`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
@@ -1422,11 +1418,10 @@ Buffer.iterate<Nat>(buffer, func (x) {
 });
 ```
 
-Runtime: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
-Space: O(size)
-
-*Runtime and space assumes that `f` runs in O(1) time and space.
 
 [[mapEntries]]
 == mapEntries
@@ -1439,9 +1434,9 @@ func mapEntries<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, f : (Nat, X) -> Y) 
 Applies `f` to each element in `buffer` and its index.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
-
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1450,11 +1445,9 @@ let newBuf = Buffer.mapEntries<Nat, Nat>(buffer, func (x, i) { x + i + 1 });
 Buffer.toText(newBuf, Nat.toText); // => [2, 4, 6]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `f` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[mapFilter]]
 == mapFilter
@@ -1468,9 +1461,9 @@ Creates a new buffer by applying `f` to each element in `buffer`,
 and keeping all non-null elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
-
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1485,11 +1478,9 @@ let newBuf = Buffer.mapFilter<Nat, Nat>(buffer, func (x) {
 Buffer.toText(newBuf, Nat.toText); // => [4, 6]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `f` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[mapResult]]
 == mapResult
@@ -1504,9 +1495,9 @@ If any invocation of `f` produces an `#err`, returns an `#err`. Otherwise
 Returns an `#ok` containing the new buffer.
 
 Example:
+
 ```motoko include=initialize
 import Result "mo:base/Result";
-
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1522,11 +1513,9 @@ let result = Buffer.mapResult<Nat, Nat, Text>(buffer, func (k) {
 Result.mapOk<Buffer.Buffer<Nat>, [Nat], Text>(result, func buffer = Buffer.toArray(buffer)) // => #ok([1, 2, 3])
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `f` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[chain]]
 == chain
@@ -1536,14 +1525,14 @@ Space: O(size)
 func chain<X, Y>(buffer : xref:#type.Buffer[Buffer]<X>, k : X -> xref:#type.Buffer[Buffer]<Y>) : xref:#type.Buffer[Buffer]<Y>
 ----
 
-Creates a new buffer by applying `k` to each element in `buffer`,
+Creates a new `buffer` by applying `k` to each element in `buffer`,
 and concatenating the resulting buffers in order. This operation
 is similar to what in other functional languages is known as monadic bind.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
-
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1557,11 +1546,9 @@ let chain = Buffer.chain<Nat, Nat>(buffer, func (x) {
 Buffer.toText(chain, Nat.toText); // => [1, 2, 2, 4, 3, 6]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `k` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[foldLeft]]
 == foldLeft
@@ -1576,9 +1563,9 @@ and progessively combining elements into `base` with `combine`. Iteration runs
 left to right.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
-
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1586,11 +1573,9 @@ buffer.add(3);
 Buffer.foldLeft<Text, Nat>(buffer, "", func (acc, x) { acc # Nat.toText(x)}); // => "123"
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `combine` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[foldRight]]
 == foldRight
@@ -1605,9 +1590,9 @@ and progessively combining elements into `base` with `combine`. Iteration runs
 right to left.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
-
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1615,11 +1600,9 @@ buffer.add(3);
 Buffer.foldRight<Nat, Text>(buffer, "", func (x, acc) { Nat.toText(x) # acc }); // => "123"
 ```
 
-Runtime: O(size)
-
-Space: O(1)
-
-*Runtime and space assumes that `combine` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[first]]
 == first
@@ -1632,8 +1615,8 @@ func first<X>(buffer : xref:#type.Buffer[Buffer]<X>) : X
 Returns the first element of `buffer`. Traps if `buffer` is empty.
 
 Example:
-```motoko include=initialize
 
+```motoko include=initialize
 buffer.add(1);
 buffer.add(2);
 buffer.add(3);
@@ -1641,9 +1624,9 @@ buffer.add(3);
 Buffer.first(buffer); // => 1
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[last]]
 == last
@@ -1653,21 +1636,20 @@ Space: O(1)
 func last<X>(buffer : xref:#type.Buffer[Buffer]<X>) : X
 ----
 
-Returns the last element of `buffer`. Traps if `buffer` is empty.
+ Returns the last element of `buffer`. Traps if `buffer` is empty.
 
-Example:
-```motoko include=initialize
+ Example:
+ ```motoko include=initialize
+ buffer.add(1);
+ buffer.add(2);
+ buffer.add(3);
 
-buffer.add(1);
-buffer.add(2);
-buffer.add(3);
+ Buffer.last(buffer); // => 3
+ ```
 
-Buffer.last(buffer); // => 3
-```
-
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[make]]
 == make
@@ -1677,9 +1659,10 @@ Space: O(1)
 func make<X>(element : X) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Returns a new buffer with capacity and size 1, containing `element`.
+Returns a new `buffer` with capacity and size 1, containing `element`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1687,9 +1670,9 @@ let buffer = Buffer.make<Nat>(1);
 Buffer.toText(buffer, Nat.toText); // => [1]
 ```
 
-Runtime: O(1)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(1)` | `O(1)` |
 
 [[reverse]]
 == reverse
@@ -1699,23 +1682,23 @@ Space: O(1)
 func reverse<X>(buffer : xref:#type.Buffer[Buffer]<X>)
 ----
 
-Reverses the order of elements in `buffer`.
+ Reverses the order of elements in `buffer`.
 
-Example:
-```motoko include=initialize
-import Nat "mo:base/Nat";
+ Example:
+ ```motoko include=initialize
+ import Nat "mo:base/Nat";
 
-buffer.add(1);
-buffer.add(2);
-buffer.add(3);
+ buffer.add(1);
+ buffer.add(2);
+ buffer.add(3);
 
-Buffer.reverse(buffer);
-Buffer.toText(buffer, Nat.toText); // => [3, 2, 1]
-```
+ Buffer.reverse(buffer);
+ Buffer.toText(buffer, Nat.toText); // => [3, 2, 1]
+ ```
 
-Runtime: O(size)
-
-Space: O(1)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(1)` |
 
 [[merge]]
 == merge
@@ -1725,11 +1708,12 @@ Space: O(1)
 func merge<X>(buffer1 : xref:#type.Buffer[Buffer]<X>, buffer2 : xref:#type.Buffer[Buffer]<X>, compare : (X, X) -> xref:#type.Order[Order]) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Merges two sorted buffers into a single sorted buffer, using `compare` to define
+Merges two sorted buffers into a single sorted `buffer`, using `compare` to define
 the ordering. The final ordering is stable. Behavior is undefined if either
 `buffer1` or `buffer2` is not sorted.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1747,11 +1731,9 @@ let merged = Buffer.merge<Nat>(buffer1, buffer2, Nat.compare);
 Buffer.toText(merged, Nat.toText); // => [1, 2, 2, 4, 4, 6]
 ```
 
-Runtime: O(size1 + size2)
-
-Space: O(size1 + size2)
-
-*Runtime and space assumes that `compare` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size1 + size2)` | `O(size1 + size2)` |
 
 [[removeDuplicates]]
 == removeDuplicates
@@ -1765,6 +1747,7 @@ Eliminates all duplicate elements in `buffer` as defined by `compare`.
 Elimination is stable with respect to the original ordering of the elements.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1779,9 +1762,9 @@ Buffer.removeDuplicates<Nat>(buffer, Nat.compare);
 Buffer.toText(buffer, Nat.toText); // => [1, 2, 3]
 ```
 
-Runtime: O(size * log(size))
-
-Space: O(size)
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size * log(size))` | `O(size)` |
 
 [[partition]]
 == partition
@@ -1792,9 +1775,10 @@ func partition<X>(buffer : xref:#type.Buffer[Buffer]<X>, predicate : X -> Bool) 
 ----
 
 Splits `buffer` into a pair of buffers where all elements in the left
-buffer satisfy `predicate` and all elements in the right buffer do not.
+`buffer` satisfy `predicate` and all elements in the right `buffer` do not.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1809,11 +1793,9 @@ let partitions = Buffer.partition<Nat>(buffer, func (x) { x % 2 == 0 });
 (Buffer.toArray(partitions.0), Buffer.toArray(partitions.1)) // => ([2, 4, 6], [1, 3, 5])
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `predicate` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[split]]
 == split
@@ -1829,6 +1811,7 @@ elements with indices greater than or equal to `index`. Traps if `index` is out
 of bounds.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1843,11 +1826,9 @@ let split = Buffer.split<Nat>(buffer, 3);
 (Buffer.toArray(split.0), Buffer.toArray(split.1)) // => ([1, 2, 3], [4, 5, 6])
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `compare` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[chunk]]
 == chunk
@@ -1862,6 +1843,7 @@ have less than `size` elements if the number of elements is not divisible
 by the chunk size.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1876,9 +1858,10 @@ let chunks = Buffer.chunk<Nat>(buffer, 3);
 Buffer.toText<Buffer.Buffer<Nat>>(chunks, func buf = Buffer.toText(buf, Nat.toText)); // => [[1, 2, 3], [4, 5, 6]]
 ```
 
-Runtime: O(number of elements in buffer)
+ | Runtime   | Space     |
+|-----------|-----------|
+| `O(number of elements in buffer)` | `O(number of elements in buffer)` |
 
-Space: O(number of elements in buffer)
 
 [[groupBy]]
 == groupBy
@@ -1891,6 +1874,7 @@ func groupBy<X>(buffer : xref:#type.Buffer[Buffer]<X>, equal : (X, X) -> Bool) :
 Groups equal and adjacent elements in the list into sub lists.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1905,11 +1889,9 @@ let grouped = Buffer.groupBy<Nat>(buffer, func (x, y) { x == y });
 Buffer.toText<Buffer.Buffer<Nat>>(grouped, func buf = Buffer.toText(buf, Nat.toText)); // => [[1], [2, 2], [4], [5, 5]]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `equal` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[flatten]]
 == flatten
@@ -1919,9 +1901,10 @@ Space: O(size)
 func flatten<X>(buffer : xref:#type.Buffer[Buffer]<xref:#type.Buffer[Buffer]<X>>) : xref:#type.Buffer[Buffer]<X>
 ----
 
-Flattens the buffer of buffers into a single buffer.
+Flattens the `buffer` of buffers into a single `buffer`.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -1943,9 +1926,9 @@ let flat = Buffer.flatten<Nat>(buffer);
 Buffer.toText<Nat>(flat, Nat.toText); // => [1, 2, 3, 4]
 ```
 
-Runtime: O(number of elements in buffer)
-
-Space: O(number of elements in buffer)
+ | Runtime   | Space     |
+|-----------|-----------|
+| `O(number of elements in buffer)` | `O(number of elements in buffer)` |
 
 [[zip]]
 == zip
@@ -1960,6 +1943,7 @@ elements with the same index. If one buffer is longer than the other, the
 remaining elements from the longer buffer are not included.
 
 Example:
+
 ```motoko include=initialize
 
 let buffer1 = Buffer.Buffer<Nat>(2);
@@ -1975,9 +1959,9 @@ let zipped = Buffer.zip(buffer1, buffer2);
 Buffer.toArray(zipped); // => [(1, 4), (2, 5)]
 ```
 
-Runtime: O(min(size1, size2))
-
-Space: O(min(size1, size2))
+ | Runtime   | Space     |
+|-----------|-----------|
+| `O(min(size1, size2))` | `O(min(size1, size2))` |
 
 [[zipWith]]
 == zipWith
@@ -1993,6 +1977,7 @@ one buffer is longer than the other, the remaining elements from
 the longer buffer are not included.
 
 Example:
+
 ```motoko include=initialize
 
 let buffer1 = Buffer.Buffer<Nat>(2);
@@ -2009,11 +1994,10 @@ let zipped = Buffer.zipWith<Nat, Nat, Nat>(buffer1, buffer2, func (x, y) { x + y
 Buffer.toArray(zipped) // => [5, 7, 9]
 ```
 
-Runtime: O(min(size1, size2))
+ | Runtime   | Space     |
+|-----------|-----------|
+| `O(min(size1, size2))` | `O(min(size1, size2))` |
 
-Space: O(min(size1, size2))
-
-*Runtime and space assumes that `zip` runs in O(1) time and space.
 
 [[takeWhile]]
 == takeWhile
@@ -2027,6 +2011,7 @@ Creates a new buffer taking elements in order from `buffer` until predicate
 returns false.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -2038,11 +2023,9 @@ let newBuf = Buffer.takeWhile<Nat>(buffer, func (x) { x < 3 });
 Buffer.toText(newBuf, Nat.toText); // => [1, 2]
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `predicate` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 
 [[dropWhile]]
 == dropWhile
@@ -2056,6 +2039,7 @@ Creates a new buffer excluding elements in order from `buffer` until predicate
 returns false.
 
 Example:
+
 ```motoko include=initialize
 import Nat "mo:base/Nat";
 
@@ -2067,9 +2051,7 @@ let newBuf = Buffer.dropWhile<Nat>(buffer, func x { x < 3 }); // => [3]
 Buffer.toText(newBuf, Nat.toText);
 ```
 
-Runtime: O(size)
-
-Space: O(size)
-
-*Runtime and space assumes that `predicate` runs in O(1) time and space.
+| Runtime   | Space     |
+|-----------|-----------|
+| `O(size)` | `O(size)` |
 

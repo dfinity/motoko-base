@@ -1,12 +1,12 @@
 [[module.Bool]]
 = Bool
 
-Boolean type and operations.
+ Boolean type and operations.
 
-While boolean operators `_ and _` and `_ or _` are short-circuiting,
-avoiding computation of the right argument when possible, the functions
-`logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
-of their arguments.
+ While boolean operators `_ and _` and `_ or _` are short-circuiting,
+ avoiding computation of the right argument when possible, the functions
+ `logand(_, _)` and `logor(_, _)` are *strict* and will always evaluate *both*
+ of their arguments.
 
 [[type.Bool]]
 == Bool
@@ -16,7 +16,7 @@ of their arguments.
 type Bool = Prim.Types.Bool
 ----
 
-Booleans with constants `true` and `false`.
+ Booleans with constants `true` and `false`.
 
 [[toText]]
 == toText
@@ -26,7 +26,7 @@ Booleans with constants `true` and `false`.
 func toText(x : xref:#type.Bool[Bool]) : Text
 ----
 
-Conversion.
+ Conversion.
 
 [[logand]]
 == logand
@@ -36,7 +36,7 @@ Conversion.
 func logand(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
-Returns `x and y`.
+ Returns `x and y`.
 
 [[logor]]
 == logor
@@ -46,7 +46,7 @@ Returns `x and y`.
 func logor(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
-Returns `x or y`.
+ Returns `x or y`.
 
 [[logxor]]
 == logxor
@@ -56,7 +56,7 @@ Returns `x or y`.
 func logxor(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
-Returns exclusive or of `x` and `y`, `x != y`.
+ Returns exclusive or of `x` and `y`, `x != y`.
 
 [[lognot]]
 == lognot
@@ -66,7 +66,7 @@ Returns exclusive or of `x` and `y`, `x != y`.
 func lognot(x : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
-Returns `not x`.
+ Returns `not x`.
 
 [[equal]]
 == equal
@@ -76,7 +76,7 @@ Returns `not x`.
 func equal(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
-Returns `x == y`.
+ Returns `x == y`.
 
 [[notEqual]]
 == notEqual
@@ -86,7 +86,7 @@ Returns `x == y`.
 func notEqual(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : xref:#type.Bool[Bool]
 ----
 
-Returns `x != y`.
+ Returns `x != y`.
 
 [[compare]]
 == compare
@@ -96,5 +96,5 @@ Returns `x != y`.
 func compare(x : xref:#type.Bool[Bool], y : xref:#type.Bool[Bool]) : {#less; #equal; #greater}
 ----
 
-Returns the order of `x` and `y`, where `false < true`.
+ Returns the order of `x` and `y`, where `false < true`.
 

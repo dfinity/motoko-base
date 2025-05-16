@@ -1,14 +1,17 @@
 [[module.TrieSet]]
 = TrieSet
 
-Functional set
 
 Sets are partial maps from element type to unit type,
 i.e., the partial map represents the set with its domain.
 
-LIMITATIONS: This data structure allows at most MAX_LEAF_SIZE=8 hash collisions:
-attempts to insert more than MAX_LEAF_SIZE elements (whether directly via `put` or indirectly via other operations) with the same hash value will trap.
+:::warning [Limitations]
+
+This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
+Attempts to insert more than 8 elements with the same hash value—either directly via `put` or indirectly via other operations—will trap.
 This limitation is inherited from the underlying `Trie` data structure.
+:::
+
 
 [[type.Hash]]
 == Hash
@@ -38,7 +41,7 @@ type Set<T> = xref:Trie.adoc#type.Trie[Trie.Trie]<T, ()>
 func empty<T>() : xref:#type.Set[Set]<T>
 ----
 
-Empty set.
+ Empty set.
 
 [[put]]
 == put
@@ -48,7 +51,7 @@ Empty set.
 func put<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
-Put an element into the set.
+ Put an element into the set.
 
 [[delete]]
 == delete
@@ -58,7 +61,7 @@ Put an element into the set.
 func delete<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
-Delete an element from the set.
+ Delete an element from the set.
 
 [[equal]]
 == equal
@@ -68,7 +71,7 @@ Delete an element from the set.
 func equal<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : Bool
 ----
 
-Test if two sets are equal.
+ Test if two sets are equal.
 
 [[size]]
 == size
@@ -78,7 +81,7 @@ Test if two sets are equal.
 func size<T>(s : xref:#type.Set[Set]<T>) : Nat
 ----
 
-The number of set elements, set's cardinality.
+ The number of set elements, set's cardinality.
 
 [[isEmpty]]
 == isEmpty
@@ -88,7 +91,7 @@ The number of set elements, set's cardinality.
 func isEmpty<T>(s : xref:#type.Set[Set]<T>) : Bool
 ----
 
-Test if `s` is the empty set.
+ Test if `s` is the empty set.
 
 [[isSubset]]
 == isSubset
@@ -98,7 +101,7 @@ Test if `s` is the empty set.
 func isSubset<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : Bool
 ----
 
-Test if `s1` is a subset of `s2`.
+ Test if `s1` is a subset of `s2`.
 
 [[mem]]
 == mem
@@ -108,9 +111,11 @@ Test if `s1` is a subset of `s2`.
 func mem<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
 ----
 
-@deprecated: use `TrieSet.contains()`
+:::warning [ Deprecated function ]
+Use `TrieSet.contains()` instead.
+:::
 
-Test if a set contains a given element.
+ Test if a set contains a given element.
 
 [[contains]]
 == contains
@@ -120,7 +125,7 @@ Test if a set contains a given element.
 func contains<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
 ----
 
-Test if a set contains a given element.
+ Test if a set contains a given element.
 
 [[union]]
 == union
@@ -130,7 +135,7 @@ Test if a set contains a given element.
 func union<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
-[Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
+ [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
 
 [[diff]]
 == diff
@@ -140,7 +145,7 @@ func union<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T,
 func diff<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
-[Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
+ [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
 
 [[intersect]]
 == intersect
@@ -150,7 +155,7 @@ func diff<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, 
 func intersect<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
-[Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
+ [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
 
 [[fromArray]]
 == fromArray
@@ -160,7 +165,7 @@ func intersect<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq :
 func fromArray<T>(arr : pass:[[]Tpass:[]], elemHash : T -> xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
-
+Construct a set from an array.
 
 [[toArray]]
 == toArray
@@ -170,5 +175,5 @@ func fromArray<T>(arr : pass:[[]Tpass:[]], elemHash : T -> xref:#type.Hash[Hash]
 func toArray<T>(s : xref:#type.Set[Set]<T>) : pass:[[]Tpass:[]]
 ----
 
-
+Returns the set as an array.
 
