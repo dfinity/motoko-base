@@ -9,7 +9,7 @@
 type Char = Prim.Types.Char
 ----
 
- Characters represented as Unicode code points.
+Characters represented as Unicode code points.
 
 [[toNat32]]
 == toNat32
@@ -19,7 +19,7 @@ type Char = Prim.Types.Char
 func toNat32(c : xref:#type.Char[Char]) : Nat32
 ----
 
- Convert character `c` to a word containing its Unicode scalar value.
+Convert character `c` to a word containing its Unicode scalar value.
 
 [[fromNat32]]
 == fromNat32
@@ -29,9 +29,9 @@ func toNat32(c : xref:#type.Char[Char]) : Nat32
 func fromNat32(w : Nat32) : xref:#type.Char[Char]
 ----
 
- Convert `w` to a character.
- Traps if `w` is not a valid Unicode scalar value.
- Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
+Convert `w` to a character.
+Traps if `w` is not a valid Unicode scalar value.
+Value `w` is valid if, and only if, `w < 0xD800 or (0xE000 <= w and w <= 0x10FFFF)`.
 
 [[toText]]
 == toText
@@ -41,7 +41,7 @@ func fromNat32(w : Nat32) : xref:#type.Char[Char]
 func toText(c : xref:#type.Char[Char]) : Text
 ----
 
- Convert character `c` to single character text.
+Convert character `c` to single character text.
 
 [[isDigit]]
 == isDigit
@@ -51,7 +51,7 @@ func toText(c : xref:#type.Char[Char]) : Text
 func isDigit(c : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
+Returns `true` when `c` is a decimal digit between `0` and `9`, otherwise `false`.
 
 [[isWhitespace]]
 == isWhitespace
@@ -61,7 +61,7 @@ func isDigit(c : xref:#type.Char[Char]) : Bool
 func isWhitespace(c : xref:#type.Char[Char]) : Bool
 ----
 
- Returns the Unicode _White_Space_ property of `c`.
+Returns the Unicode _White_Space_ property of `c`.
 
 [[isLowercase]]
 == isLowercase
@@ -71,7 +71,7 @@ func isWhitespace(c : xref:#type.Char[Char]) : Bool
 func isLowercase(c : xref:#type.Char[Char]) : Bool
 ----
 
- Returns the Unicode _Lowercase_ property of `c`.
+Returns the Unicode _Lowercase_ property of `c`.
 
 [[isUppercase]]
 == isUppercase
@@ -81,7 +81,7 @@ func isLowercase(c : xref:#type.Char[Char]) : Bool
 func isUppercase(c : xref:#type.Char[Char]) : Bool
 ----
 
- Returns the Unicode _Uppercase_ property of `c`.
+Returns the Unicode _Uppercase_ property of `c`.
 
 [[isAlphabetic]]
 == isAlphabetic
@@ -91,7 +91,7 @@ func isUppercase(c : xref:#type.Char[Char]) : Bool
 func isAlphabetic(c : xref:#type.Char[Char]) : Bool
 ----
 
- Returns the Unicode _Alphabetic_ property of `c`.
+Returns the Unicode _Alphabetic_ property of `c`.
 
 [[equal]]
 == equal
@@ -101,7 +101,7 @@ func isAlphabetic(c : xref:#type.Char[Char]) : Bool
 func equal(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `x == y`.
+Returns `x == y`.
 
 [[notEqual]]
 == notEqual
@@ -111,7 +111,7 @@ func equal(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 func notEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `x != y`.
+Returns `x != y`.
 
 [[less]]
 == less
@@ -121,7 +121,7 @@ func notEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 func less(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `x < y`.
+Returns `x < y`.
 
 [[lessOrEqual]]
 == lessOrEqual
@@ -131,7 +131,7 @@ func less(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 func lessOrEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `x <= y`.
+Returns `x <= y`.
 
 [[greater]]
 == greater
@@ -141,7 +141,7 @@ func lessOrEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 func greater(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `x > y`.
+Returns `x > y`.
 
 [[greaterOrEqual]]
 == greaterOrEqual
@@ -151,7 +151,7 @@ func greater(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 func greaterOrEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 ----
 
- Returns `x >= y`.
+Returns `x >= y`.
 
 [[compare]]
 == compare
@@ -161,5 +161,5 @@ func greaterOrEqual(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : Bool
 func compare(x : xref:#type.Char[Char], y : xref:#type.Char[Char]) : {#less; #equal; #greater}
 ----
 
- Returns the order of `x` and `y`.
+Returns the order of `x` and `y`.
 

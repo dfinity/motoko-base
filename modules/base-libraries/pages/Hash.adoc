@@ -9,7 +9,7 @@
 type Hash = Nat32
 ----
 
- Hash values represent a string of _hash bits_, packed into a `Nat32`.
+Hash values represent a string of _hash bits_, packed into a `Nat32`.
 
 [[length]]
 == length
@@ -19,7 +19,7 @@ type Hash = Nat32
 let length : Nat
 ----
 
- The hash length, always 31.
+The hash length, always 31.
 
 [[bit]]
 == bit
@@ -29,7 +29,7 @@ let length : Nat
 func bit(h : xref:#type.Hash[Hash], pos : Nat) : Bool
 ----
 
- Project a given bit from the bit vector.
+Project a given bit from the bit vector.
 
 [[equal]]
 == equal
@@ -39,7 +39,7 @@ func bit(h : xref:#type.Hash[Hash], pos : Nat) : Bool
 func equal(ha : xref:#type.Hash[Hash], hb : xref:#type.Hash[Hash]) : Bool
 ----
 
- Test if two hashes are equal.
+Test if two hashes are equal.
 
 [[hash]]
 == hash
@@ -49,7 +49,7 @@ func equal(ha : xref:#type.Hash[Hash], hb : xref:#type.Hash[Hash]) : Bool
 func hash(n : Nat) : xref:#type.Hash[Hash]
 ----
 
-:::warning [Deprecated function]
+:::warning Deprecated function
 This function computes a hash from the least significant 32 bits of `n`, ignoring other bits.
 For large `Nat` values, consider using a bespoke hash function that considers all of the argument's bits.
 :::
@@ -62,7 +62,7 @@ For large `Nat` values, consider using a bespoke hash function that considers al
 func debugPrintBits(bits : xref:#type.Hash[Hash])
 ----
 
-:::warning [Deprecated function]
+:::warning Deprecated function
 This function will be removed in a future version.
 :::
 
@@ -74,7 +74,7 @@ This function will be removed in a future version.
 func debugPrintBitsRev(bits : xref:#type.Hash[Hash])
 ----
 
-:::warning [Deprecated function]
+:::warning Deprecated function
 This function will be removed in a future version.
 :::
 
@@ -86,13 +86,13 @@ This function will be removed in a future version.
 func hashNat8(key : pass:[[]xref:#type.Hash[Hash]pass:[]]) : xref:#type.Hash[Hash]
 ----
 
- [View Jenkin's one at a time](https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time).
+[View Jenkin's one at a time](https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time).
 
 :::note
 The input type should actually be `[Nat8]`.
 Be sure to explode each `Nat8` of a `Nat32` into its own `Nat32`, and shift into the lower 8 bits.
 :::
-:::warning [Deprecated function]
+:::warning Deprecated function
 This function may be removed or changed in a future version.
 :::
 

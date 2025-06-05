@@ -8,7 +8,7 @@ Most operations on integer numbers (e.g. addition) are available as built-in ope
 This module provides equivalent functions and `Text` conversion.
 :::
 
-:::info [Function form for higher-order use]
+:::info Function form for higher-order use
 
 Several arithmetic and comparison functions (e.g. `add`, `sub`, `equal`, `less`, `pow`) are defined in this module to enable their use as first-class function values, which is not possible with operators like `+`, `-`, `==`, etc., in Motoko. This allows you to pass these operations to higher-order functions such as `map`, `foldLeft`, or `sort`.
 :::
@@ -28,7 +28,7 @@ import Nat64 "mo:base/Nat64";
 type Nat64 = Prim.Types.Nat64
 ----
 
- 64-bit natural numbers.
+64-bit natural numbers.
 
 [[maximumValue]]
 == maximumValue
@@ -38,12 +38,12 @@ type Nat64 = Prim.Types.Nat64
 let maximumValue : xref:#type.Nat64[Nat64]
 ----
 
- Maximum 64-bit natural number. `2 ** 64 - 1`.
+Maximum 64-bit natural number. `2 ** 64 - 1`.
 
- Example:
- ```motoko include=import
- Nat64.maximumValue; // => 18446744073709551615 : Nat64
- ```
+Example:
+```motoko include=import
+Nat64.maximumValue; // => 18446744073709551615 : Nat64
+```
 
 [[toNat]]
 == toNat
@@ -53,12 +53,12 @@ let maximumValue : xref:#type.Nat64[Nat64]
 func toNat(_ : xref:#type.Nat64[Nat64]) : Nat
 ----
 
- Converts a 64-bit unsigned integer to an unsigned integer with infinite precision.
+Converts a 64-bit unsigned integer to an unsigned integer with infinite precision.
 
- Example:
- ```motoko include=import
- Nat64.toNat(123); // => 123 : Nat
- ```
+Example:
+```motoko include=import
+Nat64.toNat(123); // => 123 : Nat
+```
 
 [[fromNat]]
 == fromNat
@@ -68,14 +68,14 @@ func toNat(_ : xref:#type.Nat64[Nat64]) : Nat
 func fromNat(_ : Nat) : xref:#type.Nat64[Nat64]
 ----
 
- Converts an unsigned integer with infinite precision to a 64-bit unsigned integer.
+Converts an unsigned integer with infinite precision to a 64-bit unsigned integer.
 
- Traps on overflow.
+Traps on overflow.
 
- Example:
- ```motoko include=import
- Nat64.fromNat(123); // => 123 : Nat64
- ```
+Example:
+```motoko include=import
+Nat64.fromNat(123); // => 123 : Nat64
+```
 
 [[fromNat32]]
 == fromNat32
@@ -85,12 +85,12 @@ func fromNat(_ : Nat) : xref:#type.Nat64[Nat64]
 func fromNat32(x : Nat32) : xref:#type.Nat64[Nat64]
 ----
 
- Converts a 32-bit unsigned integer to a 64-bit unsigned integer.
+Converts a 32-bit unsigned integer to a 64-bit unsigned integer.
 
- Example:
- ```motoko include=import
- Nat64.fromNat32(123); // => 123 : Nat64
- ```
+Example:
+```motoko include=import
+Nat64.fromNat32(123); // => 123 : Nat64
+```
 
 [[toNat32]]
 == toNat32
@@ -100,14 +100,14 @@ func fromNat32(x : Nat32) : xref:#type.Nat64[Nat64]
 func toNat32(x : xref:#type.Nat64[Nat64]) : Nat32
 ----
 
- Converts a 64-bit unsigned integer to a 32-bit unsigned integer.
+Converts a 64-bit unsigned integer to a 32-bit unsigned integer.
 
- Traps on overflow.
+Traps on overflow.
 
- Example:
- ```motoko include=import
- Nat64.toNat32(123); // => 123 : Nat32
- ```
+Example:
+```motoko include=import
+Nat64.toNat32(123); // => 123 : Nat32
+```
 
 [[fromIntWrap]]
 == fromIntWrap
@@ -117,14 +117,14 @@ func toNat32(x : xref:#type.Nat64[Nat64]) : Nat32
 func fromIntWrap(_ : Int) : xref:#type.Nat64[Nat64]
 ----
 
- Converts a signed integer with infinite precision to a 64-bit unsigned integer.
+Converts a signed integer with infinite precision to a 64-bit unsigned integer.
 
- Traps on overflow/underflow.
+Traps on overflow/underflow.
 
- Example:
- ```motoko include=import
- Nat64.fromIntWrap(123); // => 123 : Nat64
- ```
+Example:
+```motoko include=import
+Nat64.fromIntWrap(123); // => 123 : Nat64
+```
 
 [[toText]]
 == toText
@@ -134,13 +134,13 @@ func fromIntWrap(_ : Int) : xref:#type.Nat64[Nat64]
 func toText(x : xref:#type.Nat64[Nat64]) : Text
 ----
 
- Converts `x` to its textual representation. Textual representation _do not_
- contain underscores to represent commas.
+Converts `x` to its textual representation. Textual representation _do not_
+contain underscores to represent commas.
 
- Example:
- ```motoko include=import
- Nat64.toText(1234); // => "1234" : Text
- ```
+Example:
+```motoko include=import
+Nat64.toText(1234); // => "1234" : Text
+```
 
 [[min]]
 == min
@@ -150,12 +150,12 @@ func toText(x : xref:#type.Nat64[Nat64]) : Text
 func min(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the minimum of `x` and `y`.
+Returns the minimum of `x` and `y`.
 
- Example:
- ```motoko include=import
- Nat64.min(123, 456); // => 123 : Nat64
- ```
+Example:
+```motoko include=import
+Nat64.min(123, 456); // => 123 : Nat64
+```
 
 [[max]]
 == max
@@ -165,12 +165,12 @@ func min(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func max(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the maximum of `x` and `y`.
+Returns the maximum of `x` and `y`.
 
- Example:
- ```motoko include=import
- Nat64.max(123, 456); // => 456 : Nat64
- ```
+Example:
+```motoko include=import
+Nat64.max(123, 456); // => 456 : Nat64
+```
 
 [[equal]]
 == equal
@@ -180,24 +180,24 @@ func max(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func equal(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 ----
 
- Equality function for Nat64 types.
- This is equivalent to `x == y`.
+Equality function for Nat64 types.
+This is equivalent to `x == y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.equal(1, 1); // => true
- (1 : Nat64) == (1 : Nat64) // => true
- ```
+Example:
+```motoko include=import
+ignore Nat64.equal(1, 1); // => true
+(1 : Nat64) == (1 : Nat64) // => true
+```
 
 
- Example:
- ```motoko include=import
- import Buffer "mo:base/Buffer";
+Example:
+```motoko include=import
+import Buffer "mo:base/Buffer";
 
- let buffer1 = Buffer.Buffer<Nat64>(3);
- let buffer2 = Buffer.Buffer<Nat64>(3);
- Buffer.equal(buffer1, buffer2, Nat64.equal) // => true
- ```
+let buffer1 = Buffer.Buffer<Nat64>(3);
+let buffer2 = Buffer.Buffer<Nat64>(3);
+Buffer.equal(buffer1, buffer2, Nat64.equal) // => true
+```
 
 [[notEqual]]
 == notEqual
@@ -207,14 +207,14 @@ func equal(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 func notEqual(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 ----
 
- Inequality function for Nat64 types.
- This is equivalent to `x != y`.
+Inequality function for Nat64 types.
+This is equivalent to `x != y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.notEqual(1, 2); // => true
- (1 : Nat64) != (2 : Nat64) // => true
- ```
+Example:
+```motoko include=import
+ignore Nat64.notEqual(1, 2); // => true
+(1 : Nat64) != (2 : Nat64) // => true
+```
 
 
 [[less]]
@@ -225,14 +225,14 @@ func notEqual(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 func less(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 ----
 
- "Less than" function for Nat64 types.
- This is equivalent to `x < y`.
+"Less than" function for Nat64 types.
+This is equivalent to `x < y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.less(1, 2); // => true
- (1 : Nat64) < (2 : Nat64) // => true
- ```
+Example:
+```motoko include=import
+ignore Nat64.less(1, 2); // => true
+(1 : Nat64) < (2 : Nat64) // => true
+```
 
 
 [[lessOrEqual]]
@@ -243,14 +243,14 @@ func less(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 func lessOrEqual(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 ----
 
- "Less than or equal" function for Nat64 types.
- This is equivalent to `x <= y`.
+"Less than or equal" function for Nat64 types.
+This is equivalent to `x <= y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.lessOrEqual(1, 2); // => true
- (1 : Nat64) <= (2 : Nat64) // => true
- ```
+Example:
+```motoko include=import
+ignore Nat64.lessOrEqual(1, 2); // => true
+(1 : Nat64) <= (2 : Nat64) // => true
+```
 
 
 [[greater]]
@@ -261,14 +261,14 @@ func lessOrEqual(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Boo
 func greater(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 ----
 
- "Greater than" function for Nat64 types.
- This is equivalent to `x > y`.
+"Greater than" function for Nat64 types.
+This is equivalent to `x > y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.greater(2, 1); // => true
- (2 : Nat64) > (1 : Nat64) // => true
- ```
+Example:
+```motoko include=import
+ignore Nat64.greater(2, 1); // => true
+(2 : Nat64) > (1 : Nat64) // => true
+```
 
 
 [[greaterOrEqual]]
@@ -279,14 +279,14 @@ func greater(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 func greaterOrEqual(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : Bool
 ----
 
- "Greater than or equal" function for Nat64 types.
- This is equivalent to `x >= y`.
+"Greater than or equal" function for Nat64 types.
+This is equivalent to `x >= y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.greaterOrEqual(2, 1); // => true
- (2 : Nat64) >= (1 : Nat64) // => true
- ```
+Example:
+```motoko include=import
+ignore Nat64.greaterOrEqual(2, 1); // => true
+(2 : Nat64) >= (1 : Nat64) // => true
+```
 
 
 [[compare]]
@@ -297,21 +297,21 @@ func greaterOrEqual(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : 
 func compare(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : {#less; #equal; #greater}
 ----
 
- General purpose comparison function for `Nat64`. Returns the `Order` (
- either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
+General purpose comparison function for `Nat64`. Returns the `Order` (
+either `#less`, `#equal`, or `#greater`) of comparing `x` with `y`.
 
- Example:
- ```motoko include=import
- Nat64.compare(2, 3) // => #less
- ```
+Example:
+```motoko include=import
+Nat64.compare(2, 3) // => #less
+```
 
- This function can be used as value for a high order function, such as a sort function.
+This function can be used as value for a high order function, such as a sort function.
 
- Example:
- ```motoko include=import
- import Array "mo:base/Array";
- Array.sort([2, 3, 1] : [Nat64], Nat64.compare) // => [1, 2, 3]
- ```
+Example:
+```motoko include=import
+import Array "mo:base/Array";
+Array.sort([2, 3, 1] : [Nat64], Nat64.compare) // => [1, 2, 3]
+```
 
 [[add]]
 == add
@@ -321,21 +321,21 @@ func compare(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : {#less;
 func add(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the sum of `x` and `y`, `x + y`.
- Traps on overflow.
+Returns the sum of `x` and `y`, `x + y`.
+Traps on overflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.add(1, 2); // => 3
- (1 : Nat64) + (2 : Nat64) // => 3
- ```
+Example:
+```motoko include=import
+ignore Nat64.add(1, 2); // => 3
+(1 : Nat64) + (2 : Nat64) // => 3
+```
 
 
- Example:
- ```motoko include=import
- import Array "mo:base/Array";
- Array.foldLeft<Nat64, Nat64>([2, 3, 1], 0, Nat64.add) // => 6
- ```
+Example:
+```motoko include=import
+import Array "mo:base/Array";
+Array.foldLeft<Nat64, Nat64>([2, 3, 1], 0, Nat64.add) // => 6
+```
 
 [[sub]]
 == sub
@@ -345,21 +345,21 @@ func add(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func sub(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the difference of `x` and `y`, `x - y`.
- Traps on underflow.
+Returns the difference of `x` and `y`, `x - y`.
+Traps on underflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.sub(3, 1); // => 2
- (3 : Nat64) - (1 : Nat64) // => 2
- ```
+Example:
+```motoko include=import
+ignore Nat64.sub(3, 1); // => 2
+(3 : Nat64) - (1 : Nat64) // => 2
+```
 
 
- Example:
- ```motoko include=import
- import Array "mo:base/Array";
- Array.foldLeft<Nat64, Nat64>([2, 3, 1], 10, Nat64.sub) // => 4
- ```
+Example:
+```motoko include=import
+import Array "mo:base/Array";
+Array.foldLeft<Nat64, Nat64>([2, 3, 1], 10, Nat64.sub) // => 4
+```
 
 [[mul]]
 == mul
@@ -369,21 +369,21 @@ func sub(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func mul(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the product of `x` and `y`, `x * y`.
- Traps on overflow.
+Returns the product of `x` and `y`, `x * y`.
+Traps on overflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.mul(2, 3); // => 6
- (2 : Nat64) * (3 : Nat64) // => 6
- ```
+Example:
+```motoko include=import
+ignore Nat64.mul(2, 3); // => 6
+(2 : Nat64) * (3 : Nat64) // => 6
+```
 
 
- Example:
- ```motoko include=import
- import Array "mo:base/Array";
- Array.foldLeft<Nat64, Nat64>([2, 3, 1], 1, Nat64.mul) // => 6
- ```
+Example:
+```motoko include=import
+import Array "mo:base/Array";
+Array.foldLeft<Nat64, Nat64>([2, 3, 1], 1, Nat64.mul) // => 6
+```
 
 [[div]]
 == div
@@ -393,14 +393,14 @@ func mul(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func div(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the quotient of `x` divided by `y`, `x / y`.
- Traps when `y` is zero.
+Returns the quotient of `x` divided by `y`, `x / y`.
+Traps when `y` is zero.
 
- Example:
- ```motoko include=import
- ignore Nat64.div(6, 2); // => 3
- (6 : Nat64) / (2 : Nat64) // => 3
- ```
+Example:
+```motoko include=import
+ignore Nat64.div(6, 2); // => 3
+(6 : Nat64) / (2 : Nat64) // => 3
+```
 
 
 [[rem]]
@@ -411,14 +411,14 @@ func div(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func rem(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the remainder of `x` divided by `y`, `x % y`.
- Traps when `y` is zero.
+Returns the remainder of `x` divided by `y`, `x % y`.
+Traps when `y` is zero.
 
- Example:
- ```motoko include=import
- ignore Nat64.rem(6, 4); // => 2
- (6 : Nat64) % (4 : Nat64) // => 2
- ```
+Example:
+```motoko include=import
+ignore Nat64.rem(6, 4); // => 2
+(6 : Nat64) % (4 : Nat64) // => 2
+```
 
 
 [[pow]]
@@ -429,13 +429,13 @@ func rem(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func pow(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
+Returns `x` to the power of `y`, `x ** y`. Traps on overflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.pow(2, 3); // => 8
- (2 : Nat64) ** (3 : Nat64) // => 8
- ```
+Example:
+```motoko include=import
+ignore Nat64.pow(2, 3); // => 8
+(2 : Nat64) ** (3 : Nat64) // => 8
+```
 
 
 [[bitnot]]
@@ -446,13 +446,13 @@ func pow(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.
 func bitnot(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise negation of `x`, `^x`.
+Returns the bitwise negation of `x`, `^x`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitnot(0); // => 18446744073709551615
- ^(0 : Nat64) // => 18446744073709551615
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitnot(0); // => 18446744073709551615
+^(0 : Nat64) // => 18446744073709551615
+```
 
 
 [[bitand]]
@@ -463,13 +463,13 @@ func bitnot(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 func bitand(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise and of `x` and `y`, `x & y`.
+Returns the bitwise and of `x` and `y`, `x & y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitand(1, 3); // => 1
- (1 : Nat64) & (3 : Nat64) // => 1
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitand(1, 3); // => 1
+(1 : Nat64) & (3 : Nat64) // => 1
+```
 
 
 [[bitor]]
@@ -480,13 +480,13 @@ func bitand(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#ty
 func bitor(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise or of `x` and `y`, `x | y`.
+Returns the bitwise or of `x` and `y`, `x | y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitor(1, 3); // => 3
- (1 : Nat64) | (3 : Nat64) // => 3
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitor(1, 3); // => 3
+(1 : Nat64) | (3 : Nat64) // => 3
+```
 
 
 [[bitxor]]
@@ -497,13 +497,13 @@ func bitor(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#typ
 func bitxor(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
+Returns the bitwise exclusive or of `x` and `y`, `x ^ y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitxor(1, 3); // => 2
- (1 : Nat64) ^ (3 : Nat64) // => 2
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitxor(1, 3); // => 2
+(1 : Nat64) ^ (3 : Nat64) // => 2
+```
 
 
 [[bitshiftLeft]]
@@ -514,13 +514,13 @@ func bitxor(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#ty
 func bitshiftLeft(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise shift left of `x` by `y`, `x << y`.
+Returns the bitwise shift left of `x` by `y`, `x << y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitshiftLeft(1, 3); // => 8
- (1 : Nat64) << (3 : Nat64) // => 8
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitshiftLeft(1, 3); // => 8
+(1 : Nat64) << (3 : Nat64) // => 8
+```
 
 
 [[bitshiftRight]]
@@ -531,13 +531,13 @@ func bitshiftLeft(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xr
 func bitshiftRight(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise shift right of `x` by `y`, `x >> y`.
+Returns the bitwise shift right of `x` by `y`, `x >> y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitshiftRight(8, 3); // => 1
- (8 : Nat64) >> (3 : Nat64) // => 1
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitshiftRight(8, 3); // => 1
+(8 : Nat64) >> (3 : Nat64) // => 1
+```
 
 
 [[bitrotLeft]]
@@ -548,13 +548,13 @@ func bitshiftRight(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : x
 func bitrotLeft(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
+Returns the bitwise rotate left of `x` by `y`, `x <<> y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitrotLeft(1, 3); // => 8
- (1 : Nat64) <<> (3 : Nat64) // => 8
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitrotLeft(1, 3); // => 8
+(1 : Nat64) <<> (3 : Nat64) // => 8
+```
 
 
 [[bitrotRight]]
@@ -565,13 +565,13 @@ func bitrotLeft(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref
 func bitrotRight(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
+Returns the bitwise rotate right of `x` by `y`, `x <>> y`.
 
- Example:
- ```motoko include=import
- ignore Nat64.bitrotRight(8, 3); // => 1
- (8 : Nat64) <>> (3 : Nat64) // => 1
- ```
+Example:
+```motoko include=import
+ignore Nat64.bitrotRight(8, 3); // => 1
+(8 : Nat64) <>> (3 : Nat64) // => 1
+```
 
 
 [[bittest]]
@@ -582,13 +582,13 @@ func bitrotRight(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xre
 func bittest(x : xref:#type.Nat64[Nat64], p : Nat) : Bool
 ----
 
- Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
- This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
+Returns the value of bit `p mod 64` in `x`, `(x & 2^(p mod 64)) == 2^(p mod 64)`.
+This is equivalent to checking if the `p`-th bit is set in `x`, using 0 indexing.
 
- Example:
- ```motoko include=import
- Nat64.bittest(5, 2); // => true
- ```
+Example:
+```motoko include=import
+Nat64.bittest(5, 2); // => true
+```
 
 [[bitset]]
 == bitset
@@ -598,12 +598,12 @@ func bittest(x : xref:#type.Nat64[Nat64], p : Nat) : Bool
 func bitset(x : xref:#type.Nat64[Nat64], p : Nat) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the value of setting bit `p mod 64` in `x` to `1`.
+Returns the value of setting bit `p mod 64` in `x` to `1`.
 
- Example:
- ```motoko include=import
- Nat64.bitset(5, 1); // => 7
- ```
+Example:
+```motoko include=import
+Nat64.bitset(5, 1); // => 7
+```
 
 [[bitclear]]
 == bitclear
@@ -613,12 +613,12 @@ func bitset(x : xref:#type.Nat64[Nat64], p : Nat) : xref:#type.Nat64[Nat64]
 func bitclear(x : xref:#type.Nat64[Nat64], p : Nat) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the value of clearing bit `p mod 64` in `x` to `0`.
+Returns the value of clearing bit `p mod 64` in `x` to `0`.
 
- Example:
- ```motoko include=import
- Nat64.bitclear(5, 2); // => 1
- ```
+Example:
+```motoko include=import
+Nat64.bitclear(5, 2); // => 1
+```
 
 [[bitflip]]
 == bitflip
@@ -628,12 +628,12 @@ func bitclear(x : xref:#type.Nat64[Nat64], p : Nat) : xref:#type.Nat64[Nat64]
 func bitflip(x : xref:#type.Nat64[Nat64], p : Nat) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the value of flipping bit `p mod 64` in `x`.
+Returns the value of flipping bit `p mod 64` in `x`.
 
- Example:
- ```motoko include=import
- Nat64.bitflip(5, 2); // => 1
- ```
+Example:
+```motoko include=import
+Nat64.bitflip(5, 2); // => 1
+```
 
 [[bitcountNonZero]]
 == bitcountNonZero
@@ -643,12 +643,12 @@ func bitflip(x : xref:#type.Nat64[Nat64], p : Nat) : xref:#type.Nat64[Nat64]
 func bitcountNonZero(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the count of non-zero bits in `x`.
+Returns the count of non-zero bits in `x`.
 
- Example:
- ```motoko include=import
- Nat64.bitcountNonZero(5); // => 2
- ```
+Example:
+```motoko include=import
+Nat64.bitcountNonZero(5); // => 2
+```
 
 [[bitcountLeadingZero]]
 == bitcountLeadingZero
@@ -658,12 +658,12 @@ func bitcountNonZero(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 func bitcountLeadingZero(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the count of leading zero bits in `x`.
+Returns the count of leading zero bits in `x`.
 
- Example:
- ```motoko include=import
- Nat64.bitcountLeadingZero(5); // => 61
- ```
+Example:
+```motoko include=import
+Nat64.bitcountLeadingZero(5); // => 61
+```
 
 [[bitcountTrailingZero]]
 == bitcountTrailingZero
@@ -673,12 +673,12 @@ func bitcountLeadingZero(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 func bitcountTrailingZero(x : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the count of trailing zero bits in `x`.
+Returns the count of trailing zero bits in `x`.
 
- Example:
- ```motoko include=import
- Nat64.bitcountTrailingZero(16); // => 4
- ```
+Example:
+```motoko include=import
+Nat64.bitcountTrailingZero(16); // => 4
+```
 
 [[explode]]
 == explode
@@ -727,13 +727,13 @@ as a function value at the moment.
 func subWrap(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
+Returns the difference of `x` and `y`, `x -% y`. Wraps on underflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.subWrap(0, 1); // => 18446744073709551615
- (0 : Nat64) -% (1 : Nat64) // => 18446744073709551615
- ```
+Example:
+```motoko include=import
+ignore Nat64.subWrap(0, 1); // => 18446744073709551615
+(0 : Nat64) -% (1 : Nat64) // => 18446744073709551615
+```
 
 
 [[mulWrap]]
@@ -744,13 +744,13 @@ func subWrap(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#t
 func mulWrap(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
+Returns the product of `x` and `y`, `x *% y`. Wraps on overflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.mulWrap(4294967296, 4294967296); // => 0
- (4294967296 : Nat64) *% (4294967296 : Nat64) // => 0
- ```
+Example:
+```motoko include=import
+ignore Nat64.mulWrap(4294967296, 4294967296); // => 0
+(4294967296 : Nat64) *% (4294967296 : Nat64) // => 0
+```
 
 
 [[powWrap]]
@@ -761,12 +761,12 @@ func mulWrap(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#t
 func powWrap(x : xref:#type.Nat64[Nat64], y : xref:#type.Nat64[Nat64]) : xref:#type.Nat64[Nat64]
 ----
 
- Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
+Returns `x` to the power of `y`, `x **% y`. Wraps on overflow.
 
- Example:
- ```motoko include=import
- ignore Nat64.powWrap(2, 64); // => 0
- (2 : Nat64) **% (64 : Nat64) // => 0
- ```
+Example:
+```motoko include=import
+ignore Nat64.powWrap(2, 64); // => 0
+(2 : Nat64) **% (64 : Nat64) // => 0
+```
 
 

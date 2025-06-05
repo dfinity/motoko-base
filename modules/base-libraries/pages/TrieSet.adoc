@@ -5,7 +5,7 @@
 Sets are partial maps from element type to unit type,
 i.e., the partial map represents the set with its domain.
 
-:::warning [Limitations]
+:::warning Limitations
 
 This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
 Attempts to insert more than 8 elements with the same hash value—either directly via `put` or indirectly via other operations—will trap.
@@ -41,7 +41,7 @@ type Set<T> = xref:Trie.adoc#type.Trie[Trie.Trie]<T, ()>
 func empty<T>() : xref:#type.Set[Set]<T>
 ----
 
- Empty set.
+Empty set.
 
 [[put]]
 == put
@@ -51,7 +51,7 @@ func empty<T>() : xref:#type.Set[Set]<T>
 func put<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
- Put an element into the set.
+Put an element into the set.
 
 [[delete]]
 == delete
@@ -61,7 +61,7 @@ func put<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : 
 func delete<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
- Delete an element from the set.
+Delete an element from the set.
 
 [[equal]]
 == equal
@@ -71,7 +71,7 @@ func delete<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq
 func equal<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : Bool
 ----
 
- Test if two sets are equal.
+Test if two sets are equal.
 
 [[size]]
 == size
@@ -81,7 +81,7 @@ func equal<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T,
 func size<T>(s : xref:#type.Set[Set]<T>) : Nat
 ----
 
- The number of set elements, set's cardinality.
+The number of set elements, set's cardinality.
 
 [[isEmpty]]
 == isEmpty
@@ -91,7 +91,7 @@ func size<T>(s : xref:#type.Set[Set]<T>) : Nat
 func isEmpty<T>(s : xref:#type.Set[Set]<T>) : Bool
 ----
 
- Test if `s` is the empty set.
+Test if `s` is the empty set.
 
 [[isSubset]]
 == isSubset
@@ -101,7 +101,7 @@ func isEmpty<T>(s : xref:#type.Set[Set]<T>) : Bool
 func isSubset<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : Bool
 ----
 
- Test if `s1` is a subset of `s2`.
+Test if `s1` is a subset of `s2`.
 
 [[mem]]
 == mem
@@ -111,11 +111,11 @@ func isSubset<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : 
 func mem<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
 ----
 
-:::warning [ Deprecated function ]
+:::warning Deprecated function
 Use `TrieSet.contains()` instead.
 :::
 
- Test if a set contains a given element.
+Test if a set contains a given element.
 
 [[contains]]
 == contains
@@ -125,7 +125,7 @@ Use `TrieSet.contains()` instead.
 func contains<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], eq : (T, T) -> Bool) : Bool
 ----
 
- Test if a set contains a given element.
+Test if a set contains a given element.
 
 [[union]]
 == union
@@ -135,7 +135,7 @@ func contains<T>(s : xref:#type.Set[Set]<T>, x : T, xh : xref:#type.Hash[Hash], 
 func union<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
- [Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
+[Set union](https://en.wikipedia.org/wiki/Union_(set_theory)).
 
 [[diff]]
 == diff
@@ -145,7 +145,7 @@ func union<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T,
 func diff<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
- [Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
+[Set difference](https://en.wikipedia.org/wiki/Difference_(set_theory)).
 
 [[intersect]]
 == intersect
@@ -155,7 +155,7 @@ func diff<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, 
 func intersect<T>(s1 : xref:#type.Set[Set]<T>, s2 : xref:#type.Set[Set]<T>, eq : (T, T) -> Bool) : xref:#type.Set[Set]<T>
 ----
 
- [Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
+[Set intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)).
 
 [[fromArray]]
 == fromArray

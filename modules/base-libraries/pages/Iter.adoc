@@ -9,19 +9,19 @@
 type Iter<T> = { next : () -> ?T }
 ----
 
- An iterator that produces values of type `T`. Calling `next` returns
- `null` when iteration is finished.
+An iterator that produces values of type `T`. Calling `next` returns
+`null` when iteration is finished.
 
- Iterators are inherently stateful. Calling `next` "consumes" a value from
- the Iterator that cannot be put back, so keep that in mind when sharing
- iterators between consumers.
+Iterators are inherently stateful. Calling `next` "consumes" a value from
+the Iterator that cannot be put back, so keep that in mind when sharing
+iterators between consumers.
 
- An iterater `i` can be iterated over using
- ```
- for (x in i) {
-   …do something with x…
- }
- ```
+An iterater `i` can be iterated over using
+```
+for (x in i) {
+  …do something with x…
+}
+```
 
 [[type.range]]
 == range
@@ -31,16 +31,16 @@ type Iter<T> = { next : () -> ?T }
 class range(x : Nat, y : Int)
 ----
 
- Creates an iterator that produces all `Nat`s from `x` to `y` including
- both of the bounds.
- ```motoko
- import Iter "mo:base/Iter";
- let iter = Iter.range(1, 3);
- assert(?1 == iter.next());
- assert(?2 == iter.next());
- assert(?3 == iter.next());
- assert(null == iter.next());
- ```
+Creates an iterator that produces all `Nat`s from `x` to `y` including
+both of the bounds.
+```motoko
+import Iter "mo:base/Iter";
+let iter = Iter.range(1, 3);
+assert(?1 == iter.next());
+assert(?2 == iter.next());
+assert(?3 == iter.next());
+assert(null == iter.next());
+```
 
 
 
@@ -62,8 +62,8 @@ func next() : ?Nat
 class revRange(x : Int, y : Int)
 ----
 
- Like `range` but produces the values in the opposite
- order.
+Like `range` but produces the values in the opposite
+order.
 
 
 
@@ -85,17 +85,17 @@ func next() : ?Int
 func iterate<A>(xs : xref:#type.Iter[Iter]<A>, f : (A, Nat) -> ())
 ----
 
- Calls a function `f` on every value produced by an iterator and discards
- the results. If you're looking to keep these results use `map` instead.
+Calls a function `f` on every value produced by an iterator and discards
+the results. If you're looking to keep these results use `map` instead.
 
- ```motoko
- import Iter "mo:base/Iter";
- var sum = 0;
- Iter.iterate<Nat>(Iter.range(1, 3), func(x, _index) {
-   sum += x;
- });
- assert(6 == sum)
- ```
+```motoko
+import Iter "mo:base/Iter";
+var sum = 0;
+Iter.iterate<Nat>(Iter.range(1, 3), func(x, _index) {
+  sum += x;
+});
+assert(6 == sum)
+```
 
 [[size]]
 == size
@@ -105,8 +105,8 @@ func iterate<A>(xs : xref:#type.Iter[Iter]<A>, f : (A, Nat) -> ())
 func size<A>(xs : xref:#type.Iter[Iter]<A>) : Nat
 ----
 
- Consumes an iterator and counts how many elements were produced
- (discarding them in the process).
+Consumes an iterator and counts how many elements were produced
+(discarding them in the process).
 
 [[map]]
 == map
@@ -116,17 +116,17 @@ func size<A>(xs : xref:#type.Iter[Iter]<A>) : Nat
 func map<A, B>(xs : xref:#type.Iter[Iter]<A>, f : A -> B) : xref:#type.Iter[Iter]<B>
 ----
 
- Takes a function and an iterator and returns a new iterator that lazily applies
- the function to every element produced by the argument iterator.
- ```motoko
- import Iter "mo:base/Iter";
- let iter = Iter.range(1, 3);
- let mappedIter = Iter.map(iter, func (x : Nat) : Nat { x * 2 });
- assert(?2 == mappedIter.next());
- assert(?4 == mappedIter.next());
- assert(?6 == mappedIter.next());
- assert(null == mappedIter.next());
- ```
+Takes a function and an iterator and returns a new iterator that lazily applies
+the function to every element produced by the argument iterator.
+```motoko
+import Iter "mo:base/Iter";
+let iter = Iter.range(1, 3);
+let mappedIter = Iter.map(iter, func (x : Nat) : Nat { x * 2 });
+assert(?2 == mappedIter.next());
+assert(?4 == mappedIter.next());
+assert(?6 == mappedIter.next());
+assert(null == mappedIter.next());
+```
 
 [[filter]]
 == filter
@@ -136,16 +136,16 @@ func map<A, B>(xs : xref:#type.Iter[Iter]<A>, f : A -> B) : xref:#type.Iter[Iter
 func filter<A>(xs : xref:#type.Iter[Iter]<A>, f : A -> Bool) : xref:#type.Iter[Iter]<A>
 ----
 
- Takes a function and an iterator and returns a new iterator that produces
- elements from the original iterator if and only if the predicate is true.
- ```motoko
- import Iter "mo:base/Iter";
- let iter = Iter.range(1, 3);
- let mappedIter = Iter.filter(iter, func (x : Nat) : Bool { x % 2 == 1 });
- assert(?1 == mappedIter.next());
- assert(?3 == mappedIter.next());
- assert(null == mappedIter.next());
- ```
+Takes a function and an iterator and returns a new iterator that produces
+elements from the original iterator if and only if the predicate is true.
+```motoko
+import Iter "mo:base/Iter";
+let iter = Iter.range(1, 3);
+let mappedIter = Iter.filter(iter, func (x : Nat) : Bool { x % 2 == 1 });
+assert(?1 == mappedIter.next());
+assert(?3 == mappedIter.next());
+assert(null == mappedIter.next());
+```
 
 [[make]]
 == make
@@ -155,15 +155,15 @@ func filter<A>(xs : xref:#type.Iter[Iter]<A>, f : A -> Bool) : xref:#type.Iter[I
 func make<A>(x : A) : xref:#type.Iter[Iter]<A>
 ----
 
- Creates an iterator that produces an infinite sequence of `x`.
- ```motoko
- import Iter "mo:base/Iter";
- let iter = Iter.make(10);
- assert(?10 == iter.next());
- assert(?10 == iter.next());
- assert(?10 == iter.next());
- // ...
- ```
+Creates an iterator that produces an infinite sequence of `x`.
+```motoko
+import Iter "mo:base/Iter";
+let iter = Iter.make(10);
+assert(?10 == iter.next());
+assert(?10 == iter.next());
+assert(?10 == iter.next());
+// ...
+```
 
 [[concat]]
 == concat
@@ -173,19 +173,19 @@ func make<A>(x : A) : xref:#type.Iter[Iter]<A>
 func concat<A>(a : xref:#type.Iter[Iter]<A>, b : xref:#type.Iter[Iter]<A>) : xref:#type.Iter[Iter]<A>
 ----
 
- Takes two iterators and returns a new iterator that produces
- elements from the original iterators sequentally.
- ```motoko
- import Iter "mo:base/Iter";
- let iter1 = Iter.range(1, 2);
- let iter2 = Iter.range(5, 6);
- let concatenatedIter = Iter.concat(iter1, iter2);
- assert(?1 == concatenatedIter.next());
- assert(?2 == concatenatedIter.next());
- assert(?5 == concatenatedIter.next());
- assert(?6 == concatenatedIter.next());
- assert(null == concatenatedIter.next());
- ```
+Takes two iterators and returns a new iterator that produces
+elements from the original iterators sequentally.
+```motoko
+import Iter "mo:base/Iter";
+let iter1 = Iter.range(1, 2);
+let iter2 = Iter.range(5, 6);
+let concatenatedIter = Iter.concat(iter1, iter2);
+assert(?1 == concatenatedIter.next());
+assert(?2 == concatenatedIter.next());
+assert(?5 == concatenatedIter.next());
+assert(?6 == concatenatedIter.next());
+assert(null == concatenatedIter.next());
+```
 
 [[fromArray]]
 == fromArray
@@ -195,15 +195,15 @@ func concat<A>(a : xref:#type.Iter[Iter]<A>, b : xref:#type.Iter[Iter]<A>) : xre
 func fromArray<A>(xs : pass:[[]Apass:[]]) : xref:#type.Iter[Iter]<A>
 ----
 
- Creates an iterator that produces the elements of an `Array` in ascending index order.
- ```motoko
- import Iter "mo:base/Iter";
- let iter = Iter.fromArray([1, 2, 3]);
- assert(?1 == iter.next());
- assert(?2 == iter.next());
- assert(?3 == iter.next());
- assert(null == iter.next());
- ```
+Creates an iterator that produces the elements of an `Array` in ascending index order.
+```motoko
+import Iter "mo:base/Iter";
+let iter = Iter.fromArray([1, 2, 3]);
+assert(?1 == iter.next());
+assert(?2 == iter.next());
+assert(?3 == iter.next());
+assert(null == iter.next());
+```
 
 [[fromArrayMut]]
 == fromArrayMut
@@ -213,9 +213,9 @@ func fromArray<A>(xs : pass:[[]Apass:[]]) : xref:#type.Iter[Iter]<A>
 func fromArrayMut<A>(xs : pass:[[]var Apass:[]]) : xref:#type.Iter[Iter]<A>
 ----
 
- Like `fromArray` but for `Array`s with mutable elements. Captures
- the elements of the `Array` at the time the iterator is created, so
- further modifications won't be reflected in the iterator.
+Like `fromArray` but for `Array`s with mutable elements. Captures
+the elements of the `Array` at the time the iterator is created, so
+further modifications won't be reflected in the iterator.
 
 [[fromList]]
 == fromList
@@ -225,7 +225,7 @@ func fromArrayMut<A>(xs : pass:[[]var Apass:[]]) : xref:#type.Iter[Iter]<A>
 let fromList
 ----
 
- Like `fromArray` but for Lists.
+Like `fromArray` but for Lists.
 
 [[toArray]]
 == toArray
@@ -235,12 +235,12 @@ let fromList
 func toArray<A>(xs : xref:#type.Iter[Iter]<A>) : pass:[[]Apass:[]]
 ----
 
- Consumes an iterator and collects its produced elements in an `Array`.
- ```motoko
- import Iter "mo:base/Iter";
- let iter = Iter.range(1, 3);
- assert([1, 2, 3] == Iter.toArray(iter));
- ```
+Consumes an iterator and collects its produced elements in an `Array`.
+```motoko
+import Iter "mo:base/Iter";
+let iter = Iter.range(1, 3);
+assert([1, 2, 3] == Iter.toArray(iter));
+```
 
 [[toArrayMut]]
 == toArrayMut
@@ -250,7 +250,7 @@ func toArray<A>(xs : xref:#type.Iter[Iter]<A>) : pass:[[]Apass:[]]
 func toArrayMut<A>(xs : xref:#type.Iter[Iter]<A>) : pass:[[]var Apass:[]]
 ----
 
- Like `toArray` but for `Array`s with mutable elements.
+Like `toArray` but for `Array`s with mutable elements.
 
 [[toList]]
 == toList
@@ -260,7 +260,7 @@ func toArrayMut<A>(xs : xref:#type.Iter[Iter]<A>) : pass:[[]var Apass:[]]
 func toList<A>(xs : xref:#type.Iter[Iter]<A>) : xref:List.adoc#type.List[List.List]<A>
 ----
 
- Like `toArray` but for Lists.
+Like `toArray` but for Lists.
 
 [[sort]]
 == sort
@@ -270,5 +270,5 @@ func toList<A>(xs : xref:#type.Iter[Iter]<A>) : xref:List.adoc#type.List[List.Li
 func sort<A>(xs : xref:#type.Iter[Iter]<A>, compare : (A, A) -> xref:Order.adoc#type.Order[Order.Order]) : xref:#type.Iter[Iter]<A>
 ----
 
- Sorted iterator.  Will iterate over *all* elements to sort them, necessarily.
+Sorted iterator.  Will iterate over *all* elements to sort them, necessarily.
 
