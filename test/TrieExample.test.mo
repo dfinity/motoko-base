@@ -14,7 +14,7 @@ debug {
   let n : ?Nat = Trie.put(t1, key "hello", Text.equal, 0).1;
   assert (n == ?42);
 
-  ///  True if elements of a form a subset of those of b.
+  /// True if elements of a form a subset of those of b.
   func isSubSet<X>(a : [X], b : [X], eq : (X, X) -> Bool) : Bool {
     for (x in a.vals()) {
       var found = false;
