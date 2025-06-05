@@ -12,8 +12,8 @@
 /// - All bets must be closed *before* entropy is being asked for in
 ///   order to decide them.
 /// - This implies that the same entropy (i.e. `Blob`) - or surplus entropy
-///  not utilised yet - cannot be used for a new round of bets without
-///  losing the cryptographic guarantees.
+///   not utilised yet - cannot be used for a new round of bets without
+///   losing the cryptographic guarantees.
 /// 
 /// Concretely, the below class `Finite`, as well as the
 /// `*From` methods risk the carrying-over of state from previous rounds.
