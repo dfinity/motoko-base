@@ -1821,7 +1821,7 @@ module {
   /// buffer.add(3);
   /// 
   /// Buffer.iterate<Nat>(buffer, func (x) {
-  ///  Debug.print(Nat.toText(x)); // prints each element in buffer
+  ///   Debug.print(Nat.toText(x)); // prints each element in buffer
   /// });
   /// ```
   /// 
