@@ -1960,10 +1960,10 @@ module {
   /// buffer.add(3);
   /// 
   /// let chain = Buffer.chain<Nat, Nat>(buffer, func (x) {
-  ///  let b = Buffer.Buffer<Nat>(2);
-  ///  b.add(x);
-  ///  b.add(x * 2);
-  ///  return b;
+  /// let b = Buffer.Buffer<Nat>(2);
+  /// b.add(x);
+  /// b.add(x * 2);
+  /// return b;
   /// });
   /// Buffer.toText(chain, Nat.toText); // => [1, 2, 2, 4, 3, 6]
   /// ```
