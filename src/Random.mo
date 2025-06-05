@@ -8,7 +8,7 @@
 /// graphic randomness:
 /// 
 /// - Cryptographic entropy (randomness source) is only obtainable
-///  asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s).
+///   asyncronously in discrete chunks of 256 bits (32-byte sized `Blob`s).
 /// - All bets must be closed *before* entropy is being asked for in
 ///  order to decide them.
 /// - This implies that the same entropy (i.e. `Blob`) - or surplus entropy
