@@ -12,7 +12,7 @@
 /// 
 /// Construction: Create a new deque with the `empty<T>()` function.
 /// 
-/// :::note [Performance characteristics]
+/// :::note Performance characteristics
 /// 
 /// Push and pop operations have `O(1)` amortized cost and `O(n)` worst-case cost per call.
 /// Space usage follows the same pattern.
@@ -25,17 +25,17 @@ import P "Prelude";
 module {
   type List<T> = List.List<T>;
 
-  ///  Double-ended queue (deque) data type.
+  /// Double-ended queue (deque) data type.
   public type Deque<T> = (List<T>, List<T>);
 
-  ///  Create a new empty deque.
+  /// Create a new empty deque.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
   /// 
-  ///  Deque.empty<Nat>()
-  ///  ```
+  /// Deque.empty<Nat>()
+  /// ```
   /// 
   /// | Runtime | Space |
   /// |---------|--------|
@@ -43,16 +43,16 @@ module {
 
   public func empty<T>() : Deque<T> { (List.nil(), List.nil()) };
 
-  ///  Determine whether a deque is empty.
-  ///  Returns true if `deque` is empty, otherwise `false`.
+  /// Determine whether a deque is empty.
+  /// Returns true if `deque` is empty, otherwise `false`.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
   /// 
-  ///  let deque = Deque.empty<Nat>();
-  ///  Deque.isEmpty(deque) // => true
-  ///  ```
+  /// let deque = Deque.empty<Nat>();
+  /// Deque.isEmpty(deque) // => true
+  /// ```
   /// 
   /// | Runtime | Space |
   /// |---------|--------|
@@ -77,37 +77,37 @@ module {
     }
   };
 
-  ///  Insert a new element on the front end of a deque.
-  ///  Returns the new deque with `element` in the front followed by the elements of `deque`.
+  /// Insert a new element on the front end of a deque.
+  /// Returns the new deque with `element` in the front followed by the elements of `deque`.
   /// 
-  ///  This may involve dynamic rebalancing of the two, internally used lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
   /// 
-  ///  Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1) // deque with elements [1, 2]
-  ///  ```
+  /// Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1) // deque with elements [1, 2]
+  /// ```
   /// 
   /// | Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
   /// |------------------|----------------------|----------------|---------------------|
   /// | `O(n)`           | `O(1)`               | `O(n)`         | `O(1)`              |
   /// 
-  ///  `n` denotes the number of elements stored in the deque.
+  /// `n` denotes the number of elements stored in the deque.
   public func pushFront<T>(deque : Deque<T>, element : T) : Deque<T> {
     check(List.push(element, deque.0), deque.1)
   };
 
-  ///  Inspect the optional element on the front end of a deque.
-  ///  Returns `null` if `deque` is empty. Otherwise, the front element of `deque`.
+  /// Inspect the optional element on the front end of a deque.
+  /// Returns `null` if `deque` is empty. Otherwise, the front element of `deque`.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
   /// 
-  ///  let deque = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
-  ///  Deque.peekFront(deque) // => ?1
-  ///  ```
+  /// let deque = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
+  /// Deque.peekFront(deque) // => ?1
+  /// ```
   /// 
   /// | Runtime | Space |
   /// |---------|--------|
@@ -121,29 +121,29 @@ module {
     }
   };
 
-  ///  Remove the element on the front end of a deque.
-  ///  Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  ///  the first element and a new deque that contains all the remaining elements of `deque`.
+  /// Remove the element on the front end of a deque.
+  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
+  /// the first element and a new deque that contains all the remaining elements of `deque`.
   /// 
-  ///  This may involve dynamic rebalancing of the two, internally used lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
-  ///  import Debug "mo:base/Debug";
-  ///  let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
-  ///  // initial deque with elements [1, 2]
-  ///  let reduced = Deque.popFront(initial);
-  ///  switch reduced {
-  ///    case null {
-  ///      Debug.trap "Empty queue impossible"
-  ///    };
-  ///    case (?result) {
-  ///      let removedElement = result.0; // 1
-  ///      let reducedDeque = result.1; // deque with element [2].
-  ///    }
-  ///  }
-  ///  ```
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
+  /// import Debug "mo:base/Debug";
+  /// let initial = Deque.pushFront(Deque.pushFront(Deque.empty<Nat>(), 2), 1);
+  /// // initial deque with elements [1, 2]
+  /// let reduced = Deque.popFront(initial);
+  /// switch reduced {
+  ///   case null {
+  ///     Debug.trap "Empty queue impossible"
+  ///   };
+  ///   case (?result) {
+  ///     let removedElement = result.0; // 1
+  ///     let reducedDeque = result.1; // deque with element [2].
+  ///   }
+  /// }
+  /// ```
   /// 
   /// | Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
   /// |------------------|----------------------|----------------|---------------------|
@@ -156,37 +156,37 @@ module {
     }
   };
 
-  ///  Insert a new element on the back end of a deque.
-  ///  Returns the new deque with all the elements of `deque`, followed by `element` on the back.
+  /// Insert a new element on the back end of a deque.
+  /// Returns the new deque with all the elements of `deque`, followed by `element` on the back.
   /// 
-  ///  This may involve dynamic rebalancing of the two, internally used lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
   /// 
-  ///  Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2) // deque with elements [1, 2]
-  ///  ```
+  /// Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2) // deque with elements [1, 2]
+  /// ```
   /// 
   /// | Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
   /// |------------------|----------------------|----------------|---------------------|
   /// | `O(n)`           | `O(1)`               | `O(n)`         | `O(1)`              |
   /// 
-  ///  `n` denotes the number of elements stored in the deque.
+  /// `n` denotes the number of elements stored in the deque.
   public func pushBack<T>(deque : Deque<T>, element : T) : Deque<T> {
     check(deque.0, List.push(element, deque.1))
   };
 
-  ///  Inspect the optional element on the back end of a deque.
-  ///  Returns `null` if `deque` is empty. Otherwise, the back element of `deque`.
+  /// Inspect the optional element on the back end of a deque.
+  /// Returns `null` if `deque` is empty. Otherwise, the back element of `deque`.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
   /// 
-  ///  let deque = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
-  ///  Deque.peekBack(deque) // => ?2
-  ///  ```
+  /// let deque = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
+  /// Deque.peekBack(deque) // => ?2
+  /// ```
   /// 
   /// | Runtime | Space |
   /// |---------|--------|
@@ -201,31 +201,31 @@ module {
     }
   };
 
-  ///  Remove the element on the back end of a deque.
-  ///  Returns `null` if `deque` is empty. Otherwise, it returns a pair of
-  ///  a new deque that contains the remaining elements of `deque`
-  ///  and, as the second pair item, the removed back element.
+  /// Remove the element on the back end of a deque.
+  /// Returns `null` if `deque` is empty. Otherwise, it returns a pair of
+  /// a new deque that contains the remaining elements of `deque`
+  /// and, as the second pair item, the removed back element.
   /// 
-  ///  This may involve dynamic rebalancing of the two, internally used lists.
+  /// This may involve dynamic rebalancing of the two, internally used lists.
   /// 
-  ///  Example:
-  ///  ```motoko
-  ///  import Deque "mo:base/Deque";
-  ///  import Debug "mo:base/Debug";
+  /// Example:
+  /// ```motoko
+  /// import Deque "mo:base/Deque";
+  /// import Debug "mo:base/Debug";
   /// 
-  ///  let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
-  ///  // initial deque with elements [1, 2]
-  ///  let reduced = Deque.popBack(initial);
-  ///  switch reduced {
-  ///    case null {
-  ///      Debug.trap "Empty queue impossible"
-  ///    };
-  ///    case (?result) {
-  ///      let reducedDeque = result.0; // deque with element [1].
-  ///      let removedElement = result.1; // 2
-  ///    }
-  ///  }
-  ///  ```
+  /// let initial = Deque.pushBack(Deque.pushBack(Deque.empty<Nat>(), 1), 2);
+  /// // initial deque with elements [1, 2]
+  /// let reduced = Deque.popBack(initial);
+  /// switch reduced {
+  ///   case null {
+  ///     Debug.trap "Empty queue impossible"
+  ///   };
+  ///   case (?result) {
+  ///     let reducedDeque = result.0; // deque with element [1].
+  ///     let removedElement = result.1; // 2
+  ///   }
+  /// }
+  /// ```
   /// 
   /// | Runtime (worst) | Runtime (amortized) | Space (worst) | Space (amortized) |
   /// |------------------|----------------------|----------------|---------------------|

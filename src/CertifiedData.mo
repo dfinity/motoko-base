@@ -2,7 +2,7 @@
 /// update method processing so that during query call processing, the canister can obtain
 /// a certificate about that data.
 /// 
-/// :::info [Intended audience]
+/// :::info Intended audience
 /// 
 /// This module provides a _low-level_ interface to this API, aimed at advanced
 /// users and library implementors. See the Internet Computer interface
@@ -17,20 +17,20 @@ module {
 
   /// Set the certified data.
   /// 
-  /// :::note [Usage constraints]
-  /// 
+  /// :::note Usage constraints
+  ///
   /// Must be called from an update method, else traps.
   /// Must be passed a blob of at most 32 bytes, else traps.
   /// :::
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko no-repl
   /// import CertifiedData "mo:base/CertifiedData";
   /// import Blob "mo:base/Blob";
-  /// 
+  ///
   /// // Must be in an update call
-  /// 
+  ///
   /// let array : [Nat8] = [1, 2, 3];
   /// let blob = Blob.fromArray(array);
   /// CertifiedData.set(blob);
@@ -44,22 +44,22 @@ module {
 
   /// Gets a certificate.
   /// 
-  /// :::note [When available]
-  /// 
+  /// :::note When available
+  ///
   /// Returns `null` if no certificate is available, e.g. when processing an
   /// update call or inter-canister call. This returns a non-`null` value only
   /// when processing a query call.
   /// :::
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko no-repl
   /// import CertifiedData "mo:base/CertifiedData";
   /// // Must be in a query call
-  /// 
+  ///
   /// CertifiedData.getCertificate();
   /// ```
-  /// 
+  ///
   /// :::info
   /// [See a full example on how to use certified variables](https://github.com/dfinity/examples/tree/master/motoko/cert-var).
   /// :::
