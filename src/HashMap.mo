@@ -5,7 +5,7 @@
 /// Internally, the map is backed by an array of `AssocList` (buckets).
 /// The array doubles in size when the expected bucket list size grows beyond a fixed threshold.
 /// 
-/// :::warning [Performance considerations]
+/// :::warning Performance considerations
 /// 
 /// Certain operations, such as `put`, are amortized `O(1)` but can run in worst-case `O(size)` time.
 /// These worst cases may exceed the cycle limit per message on large maps.
@@ -14,12 +14,12 @@
 /// 
 /// :::
 /// 
-/// :::note [Non-amortized alternative]
+/// :::note Non-amortized alternative
 /// 
 /// For maps without amortization, see `TrieMap`.
 /// :::
 /// 
-/// :::info [Constructor note]
+/// :::info Constructor note
 /// 
 /// The `initCapacity` argument sets the initial number of buckets.
 /// All runtime and space complexities assume that the equality and hash functions run in `O(1)` time and space.
@@ -64,25 +64,25 @@ module {
     var table : [var KVs<K, V>] = [var];
     var _count : Nat = 0;
 
-    ///  Returns the current number of key-value entries in the map.
+    /// Returns the current number of key-value entries in the map.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  map.size() // => 0
-    ///  ```
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.size() // => 0
+    /// ```
     /// 
     /// | Runtime   | Space     |
     /// |-----------|-----------|
     /// | `O(1)` | `O(1)` |
     public func size() : Nat = _count;
 
-    ///  Returns the value assocaited with key `key` if present and `null` otherwise.
+    /// Returns the value assocaited with key `key` if present and `null` otherwise.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  map.put("key", 3);
-    ///  map.get("key") // => ?3
-    ///  ```
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.put("key", 3);
+    /// map.get("key") // => ?3
+    /// ```
     /// 
     /// | Runtime(worst) | Runtime(amortized) |  Space |
     /// |----------------------------|--------------------|---------------------------|
@@ -98,38 +98,38 @@ module {
       }
     };
 
-    ///  Insert the value `value` with key `key`. Overwrites any existing entry with key `key`.
+    /// Insert the value `value` with key `key`. Overwrites any existing entry with key `key`.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  map.put("key", 3);
-    ///  map.get("key") // => ?3
-    ///  ```
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.put("key", 3);
+    /// map.get("key") // => ?3
+    /// ```
     /// 
     /// | Runtime(amortized) | Runtime(worst) | Space (amortized) | Space(worst)
     /// |----------------------------|--------------------|---------------------------|------------------|
     /// | `O(1)`                     | `O(size)`          | `O(1)`                    | `O(size)`        |
-    /// :::note [Initial allocation]
+    /// :::note Initial allocation
     /// 
     /// This operation triggers the allocation of the underlying array if it is the first entry in the map.
     /// :::
     public func put(key : K, value : V) = ignore replace(key, value);
 
-    ///  Insert the value `value` with key `key`. Returns the previous value
-    ///  associated with key `key` or `null` if no such value exists.
+    /// Insert the value `value` with key `key`. Returns the previous value
+    /// associated with key `key` or `null` if no such value exists.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  map.put("key", 3);
-    ///  ignore map.replace("key", 2); // => ?3
-    ///  map.get("key") // => ?2
-    ///  ```
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.put("key", 3);
+    /// ignore map.replace("key", 2); // => ?3
+    /// map.get("key") // => ?2
+    /// ```
     /// 
     /// | Expected Amortized Runtime | Worst Case Runtime | Expected Amortized Space | Worst Case Space |
     /// |----------------------------|--------------------|---------------------------|------------------|
     /// | `O(1)`                     | `O(size)`          | `O(1)`                    | `O(size)`        |
     /// 
-    /// :::note [Initial allocation]
+    /// :::note Initial allocation
     /// 
     /// This operation triggers the allocation of the underlying array if it is the first entry in the map.
     /// :::
@@ -171,15 +171,15 @@ module {
       ov
     };
 
-    ///  Deletes the entry with the key `key`. Has no effect if `key` is not
-    ///  present in the map.
+    /// Deletes the entry with the key `key`. Has no effect if `key` is not
+    /// present in the map.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  map.put("key", 3);
-    ///  map.delete("key");
-    ///  map.get("key"); // => null
-    ///  ```
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.put("key", 3);
+    /// map.delete("key");
+    /// map.get("key"); // => null
+    /// ```
     /// 
     /// | Expected Runtime | Worst Case Runtime | Expected Space | Worst Case Space |
     /// |------------------|--------------------|----------------|------------------|
@@ -193,14 +193,14 @@ module {
       k1.0 == k2.0 and keyEq(k1.1, k2.1)
     };
 
-    ///  Deletes the entry with the key `key`. Returns the previous value
-    ///  associated with key `key` or `null` if no such value exists.
+    /// Deletes the entry with the key `key`. Returns the previous value
+    /// associated with key `key` or `null` if no such value exists.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  map.put("key", 3);
-    ///  map.remove("key"); // => ?3
-    ///  ```
+    /// Example:
+    /// ```motoko include=initialize
+    /// map.put("key", 3);
+    /// map.remove("key"); // => ?3
+    /// ```
     /// 
     /// | Expected Runtime | Worst Case Runtime | Expected Space | Worst Case Space |
     /// |------------------|--------------------|----------------|------------------|
@@ -222,25 +222,25 @@ module {
       }
     };
 
-    ///  Returns an Iterator (`Iter`) over the keys of the map.
-    ///  Iterator provides a single method `next()`, which returns
-    ///  keys in no specific order, or `null` when out of keys to iterate over.
+    /// Returns an Iterator (`Iter`) over the keys of the map.
+    /// Iterator provides a single method `next()`, which returns
+    /// keys in no specific order, or `null` when out of keys to iterate over.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
+    /// Example:
+    /// ```motoko include=initialize
     /// 
-    ///  map.put("key1", 1);
-    ///  map.put("key2", 2);
-    ///  map.put("key3", 3);
+    /// map.put("key1", 1);
+    /// map.put("key2", 2);
+    /// map.put("key3", 3);
     /// 
-    ///  var keys = "";
-    ///  for (key in map.keys()) {
-    ///    keys := key # " " # keys
-    ///  };
-    ///  keys // => "key3 key2 key1 "
-    ///  ```
+    /// var keys = "";
+    /// for (key in map.keys()) {
+    ///   keys := key # " " # keys
+    /// };
+    /// keys // => "key3 key2 key1 "
+    /// ```
     /// 
-    ///  Cost of iteration over all keys:
+    /// Cost of iteration over all keys:
     /// 
     /// | Runtime   | Space     |
     /// |-----------|-----------|
@@ -249,23 +249,23 @@ module {
       Iter.map(entries(), func(kv : (K, V)) : K { kv.0 })
     };
 
-    ///  Returns an Iterator (`Iter`) over the values of the map.
-    ///  Iterator provides a single method `next()`, which returns
-    ///  values in no specific order, or `null` when out of values to iterate over.
+    /// Returns an Iterator (`Iter`) over the values of the map.
+    /// Iterator provides a single method `next()`, which returns
+    /// values in no specific order, or `null` when out of values to iterate over.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
+    /// Example:
+    /// ```motoko include=initialize
     /// 
-    ///  map.put("key1", 1);
-    ///  map.put("key2", 2);
-    ///  map.put("key3", 3);
+    /// map.put("key1", 1);
+    /// map.put("key2", 2);
+    /// map.put("key3", 3);
     /// 
-    ///  var sum = 0;
-    ///  for (value in map.vals()) {
-    ///    sum += value;
-    ///  };
-    ///  sum // => 6
-    ///  ```
+    /// var sum = 0;
+    /// for (value in map.vals()) {
+    ///   sum += value;
+    /// };
+    /// sum // => 6
+    /// ```
     /// 
     /// | Runtime   | Space     |
     /// |-----------|-----------|
@@ -274,26 +274,26 @@ module {
       Iter.map(entries(), func(kv : (K, V)) : V { kv.1 })
     };
 
-    ///  Returns an Iterator (`Iter`) over the key-value pairs in the map.
-    ///  Iterator provides a single method `next()`, which returns
-    ///  pairs in no specific order, or `null` when out of pairs to iterate over.
+    /// Returns an Iterator (`Iter`) over the key-value pairs in the map.
+    /// Iterator provides a single method `next()`, which returns
+    /// pairs in no specific order, or `null` when out of pairs to iterate over.
     /// 
-    ///  Example:
-    ///  ```motoko include=initialize
-    ///  import Nat "mo:base/Nat";
+    /// Example:
+    /// ```motoko include=initialize
+    /// import Nat "mo:base/Nat";
     /// 
-    ///  map.put("key1", 1);
-    ///  map.put("key2", 2);
-    ///  map.put("key3", 3);
+    /// map.put("key1", 1);
+    /// map.put("key2", 2);
+    /// map.put("key3", 3);
     /// 
-    ///  var pairs = "";
-    ///  for ((key, value) in map.entries()) {
-    ///    pairs := "(" # key # ", " # Nat.toText(value) # ") " # pairs
-    ///  };
-    ///  pairs // => "(key3, 3) (key2, 2) (key1, 1)"
-    ///  ```
+    /// var pairs = "";
+    /// for ((key, value) in map.entries()) {
+    ///   pairs := "(" # key # ", " # Nat.toText(value) # ") " # pairs
+    /// };
+    /// pairs // => "(key3, 3) (key2, 2) (key1, 1)"
+    /// ```
     /// 
-    ///  Cost of iteration over all pairs:
+    /// Cost of iteration over all pairs:
     /// 
     /// | Runtime   | Space     |
     /// |-----------|-----------|
@@ -328,18 +328,18 @@ module {
 
   };
 
-  ///  Returns a copy of `map`, initializing the copy with the provided equality
-  ///  and hash functions.
+  /// Returns a copy of `map`, initializing the copy with the provided equality
+  /// and hash functions.
   /// 
-  ///  Example:
-  ///  ```motoko include=initialize
-  ///  map.put("key1", 1);
-  ///  map.put("key2", 2);
-  ///  map.put("key3", 3);
+  /// Example:
+  /// ```motoko include=initialize
+  /// map.put("key1", 1);
+  /// map.put("key2", 2);
+  /// map.put("key3", 3);
   /// 
-  ///  let map2 = HashMap.clone(map, Text.equal, Text.hash);
-  ///  map2.get("key1") // => ?1
-  ///  ```
+  /// let map2 = HashMap.clone(map, Text.equal, Text.hash);
+  /// map2.get("key1") // => ?1
+  /// ```
   /// 
   /// | Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
   /// |------------------|--------------------|----------------|------------------|
@@ -356,18 +356,18 @@ module {
     h2
   };
 
-  ///  Returns a new map, containing all entries given by the iterator `iter`.
-  ///  The new map is initialized with the provided initial capacity, equality,
-  ///  and hash functions.
+  /// Returns a new map, containing all entries given by the iterator `iter`.
+  /// The new map is initialized with the provided initial capacity, equality,
+  /// and hash functions.
   /// 
-  ///  Example:
-  ///  ```motoko include=initialize
-  ///  let entries = [("key3", 3), ("key2", 2), ("key1", 1)];
-  ///  let iter = entries.vals();
+  /// Example:
+  /// ```motoko include=initialize
+  /// let entries = [("key3", 3), ("key2", 2), ("key1", 1)];
+  /// let iter = entries.vals();
   /// 
-  ///  let map2 = HashMap.fromIter<Text, Nat>(iter, entries.size(), Text.equal, Text.hash);
-  ///  map2.get("key1") // => ?1
-  ///  ```
+  /// let map2 = HashMap.fromIter<Text, Nat>(iter, entries.size(), Text.equal, Text.hash);
+  /// map2.get("key1") // => ?1
+  /// ```
   /// 
   /// | Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
   /// |------------------|--------------------|----------------|------------------|
@@ -385,20 +385,20 @@ module {
     h
   };
 
-  ///  Creates a new map by applying `f` to each entry in `hashMap`. Each entry
-  ///  `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
-  ///  the new value `v2` is created by applying `f` to `(k, v)`.
+  /// Creates a new map by applying `f` to each entry in `hashMap`. Each entry
+  /// `(k, v)` in the old map is transformed into a new entry `(k, v2)`, where
+  /// the new value `v2` is created by applying `f` to `(k, v)`.
   /// 
-  ///  ```motoko include=initialize
-  ///  map.put("key1", 1);
-  ///  map.put("key2", 2);
-  ///  map.put("key3", 3);
+  /// ```motoko include=initialize
+  /// map.put("key1", 1);
+  /// map.put("key2", 2);
+  /// map.put("key3", 3);
   /// 
-  ///  let map2 = HashMap.map<Text, Nat, Nat>(map, Text.equal, Text.hash, func (k, v) = v * 2);
-  ///  map2.get("key2") // => ?4
-  ///  ```
+  /// let map2 = HashMap.map<Text, Nat, Nat>(map, Text.equal, Text.hash, func (k, v) = v * 2);
+  /// map2.get("key2") // => ?4
+  /// ```
   /// 
-  ///  Expected Runtime: O(size), Worst Case Runtime: O(size * size)
+  /// Expected Runtime: O(size), Worst Case Runtime: O(size * size)
   /// 
   /// | Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
   /// |------------------|--------------------|----------------|------------------|
@@ -417,25 +417,25 @@ module {
     h2
   };
 
-  ///  Creates a new map by applying `f` to each entry in `hashMap`. For each entry
-  ///  `(k, v)` in the old map, if `f` evaluates to `null`, the entry is discarded.
-  ///  Otherwise, the entry is transformed into a new entry `(k, v2)`, where
-  ///  the new value `v2` is the result of applying `f` to `(k, v)`.
+  /// Creates a new map by applying `f` to each entry in `hashMap`. For each entry
+  /// `(k, v)` in the old map, if `f` evaluates to `null`, the entry is discarded.
+  /// Otherwise, the entry is transformed into a new entry `(k, v2)`, where
+  /// the new value `v2` is the result of applying `f` to `(k, v)`.
   /// 
-  ///  ```motoko include=initialize
-  ///  map.put("key1", 1);
-  ///  map.put("key2", 2);
-  ///  map.put("key3", 3);
+  /// ```motoko include=initialize
+  /// map.put("key1", 1);
+  /// map.put("key2", 2);
+  /// map.put("key3", 3);
   /// 
-  ///  let map2 =
-  ///    HashMap.mapFilter<Text, Nat, Nat>(
-  ///      map,
-  ///      Text.equal,
-  ///      Text.hash,
-  ///      func (k, v) = if (v == 2) { null } else { ?(v * 2)}
-  ///  );
-  ///  map2.get("key3") // => ?6
-  ///  ```
+  /// let map2 =
+  ///   HashMap.mapFilter<Text, Nat, Nat>(
+  ///     map,
+  ///     Text.equal,
+  ///     Text.hash,
+  ///     func (k, v) = if (v == 2) { null } else { ?(v * 2)}
+  /// );
+  /// map2.get("key3") // => ?6
+  /// ```
   /// 
   /// | Runtime(expected) | Runtime(worst) |  Space(expected) | Space(worst) |
   /// |------------------|--------------------|----------------|------------------|
