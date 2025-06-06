@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "dfx": "0.11.2",
+  "canisters": {
+    "singleBTree": {
+      "type": "motoko",
+      "main": "src/singleBTree.mo"
+    },
+    "multipleBTrees": {
+      "type": "motoko",
+      "main": "src/multipleBTrees.mo"
+    }
+  },
+  "defaults": {
+    "replica": {
+      "subnet_type": "system"
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    }
+  }
+}
