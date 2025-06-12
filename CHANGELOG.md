@@ -1,3 +1,7 @@
+## 0.14.12
+
+* Improved documentation format - admonition boxes, tables, reduce repeated info (#719, #721).
+
 ## 0.14.11
 
 (nothing)
