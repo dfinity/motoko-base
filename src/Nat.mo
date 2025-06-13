@@ -20,6 +20,7 @@ import Int "Int";
 import Order "Order";
 import Prim "mo:⛔";
 import Char "Char";
+import Hash "Hash";
 
 module {
 
@@ -33,7 +34,10 @@ module {
   /// ```motoko include=import
   /// Nat.toText 1234 // => "1234"
   /// ```
-  public func toText(n : Nat) : Text = Int.toText n;
+  public let toText : Nat -> Text = Int.toText;
+
+  /// Computes a hash from the least significant 32-bits of `n`, ignoring other bits.
+  public let hash : Nat -> Hash.Hash = Int.hash;
 
   /// Creates a natural number from its textual representation. Returns `null`
   /// if the input is not a valid natural number.
