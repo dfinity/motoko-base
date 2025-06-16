@@ -1,5 +1,5 @@
 /// Error values and inspection.
-/// 
+///
 /// The `Error` type is the argument to `throw`, parameter of `catch`.
 /// The `Error` type is opaque.
 
@@ -35,44 +35,44 @@ module {
   public type ErrorCode = Prim.ErrorCode;
 
   /// Create an error from the message with the code `#canister_reject`.
-  /// 
+  ///
   /// Example:
   /// ```motoko
   /// import Error "mo:base/Error";
-  /// 
+  ///
   /// Error.reject("Example error") // can be used as throw argument
   /// ```
   public let reject : (message : Text) -> Error = Prim.error;
 
   /// Returns the code of an error.
-  /// 
+  ///
   /// Example:
   /// ```motoko
   /// import Error "mo:base/Error";
-  /// 
+  ///
   /// let error = Error.reject("Example error");
   /// Error.code(error) // #canister_reject
   /// ```
   public let code : (error : Error) -> ErrorCode = Prim.errorCode;
 
   /// Returns the message of an error.
-  /// 
+  ///
   /// Example:
   /// ```motoko
   /// import Error "mo:base/Error";
-  /// 
+  ///
   /// let error = Error.reject("Example error");
   /// Error.message(error) // "Example error"
   /// ```
   public let message : (error : Error) -> Text = Prim.errorMessage;
 
   /// Returns whether retrying to send a message may result in success.
-  /// 
+  ///
   /// Example:
   /// ```motoko
   /// import { message; isRetryPossible } "mo:base/Error";
   /// import { print } "mo:base/Debug";
-  /// 
+  ///
   /// try await (with timeout = 3) Actor.call(arg)
   /// catch e { if (isRetryPossible e) print(message e) }
   /// ```

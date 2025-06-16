@@ -1,13 +1,13 @@
 /// Purely-functional, singly-linked lists.
 /// A list of type `List<T>` is either `null` or an optional pair of a value of type `T` and a tail, itself of type `List<T>`.
-/// 
+///
 /// :::note Assumptions
-/// 
+///
 /// Runtime and space complexity assumes that `equal`, and other functions execute in `O(1)` time and space.
 /// :::
-/// 
+///
 /// To use this library, import it using:
-/// 
+///
 /// ```motoko name=initialize
 /// import List "mo:base/List";
 /// ```
@@ -26,24 +26,24 @@ module {
   public type List<T> = ?(T, List<T>);
 
   /// Create an empty list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.nil<Nat>() // => null
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(1)` | `O(1)` |
   public func nil<T>() : List<T> = null;
 
   /// Check whether a list is empty and return true if the list is empty.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.isNil<Nat>(null) // => true
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(1)` | `O(1)` |
@@ -55,12 +55,12 @@ module {
   };
 
   /// Add `x` to the head of `list`, and return the new list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.push<Nat>(0, null) // => ?(0, null);
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(1)` | `O(1)` |
@@ -71,7 +71,7 @@ module {
   /// ```motoko include=initialize
   /// List.last<Nat>(?(0, ?(1, null))) // => ?1
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
@@ -85,12 +85,12 @@ module {
 
   /// Remove the head of the list, returning the optioned head and the tail of the list in a pair.
   /// Returns `(null, null)` if the list is empty.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.pop<Nat>(?(0, ?(1, null))) // => (?0, ?(1, null))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(1)` | `O(1)` |
@@ -102,12 +102,12 @@ module {
   };
 
   /// Return the length of the list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.size<Nat>(?(0, ?(1, null))) // => 2
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
@@ -121,19 +121,19 @@ module {
     rec(l, 0)
   };
   /// Access any item in a list, zero-based.
-  /// 
+  ///
   /// :::note Consideration
   /// Indexing into a list is a linear operation, and usually an
   /// indication that a list might not be the best data structure
   /// to use.
   /// :::
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=initialize
   /// List.get<Nat>(?(0, ?(1, null)), 1) // => ?1
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
@@ -146,12 +146,12 @@ module {
   };
 
   /// Reverses the list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.reverse<Nat>(?(0, ?(1, ?(2, null)))) // => ?(2, ?(1, ?(0, null)))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -166,18 +166,18 @@ module {
   };
 
   /// Call the given function for its side effect, with each list element in turn.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// var sum = 0;
   /// List.iterate<Nat>(?(0, ?(1, ?(2, null))), func n { sum += n });
   /// sum // => 3
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
-  /// 
+  ///
   public func iterate<T>(l : List<T>, f : T -> ()) {
     switch l {
       case null { () };
@@ -187,13 +187,13 @@ module {
 
   /// Call the given function `f` on each list element and collect the results
   /// in a new list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Nat = "mo:base/Nat"
   /// List.map<Nat, Text>(?(0, ?(1, ?(2, null))), Nat.toText) // => ?("0", ?("1", ?("2", null))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -207,12 +207,12 @@ module {
 
   /// Create a new list with only those elements of the original list for which
   /// the given function (often called the _predicate_) returns true.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.filter<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }) // => ?(0, ?(2, null))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -233,16 +233,16 @@ module {
   /// The first list only includes the elements for which the given
   /// function `f` returns true and the second list only includes
   /// the elements for which the function returns false.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.partition<Nat>(?(0, ?(1, ?(2, null))), func n { n != 1 }) // => (?(0, ?(2, null)), ?(1, null))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
-  /// 
+  ///
   public func partition<T>(l : List<T>, f : T -> Bool) : (List<T>, List<T>) {
     switch l {
       case null { (null, null) };
@@ -261,7 +261,7 @@ module {
 
   /// Call the given function on each list element, and collect the non-null results
   /// in a new list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.mapFilter<Nat, Nat>(
@@ -275,11 +275,11 @@ module {
   ///   }
   /// ) // => ?(4, ?(6, null))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
-  /// 
+  ///
   public func mapFilter<T, U>(l : List<T>, f : T -> ?U) : List<U> {
     switch l {
       case null { null };
@@ -294,7 +294,7 @@ module {
 
   /// Maps a Result-returning function `f` over a List and returns either
   /// the first error or a list of successful values.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.mapResult<Nat, Nat, Text>(
@@ -308,11 +308,11 @@ module {
   ///   }
   /// ); // => #ok ?(2, ?(4, ?(6, null))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
-  /// 
+  ///
   public func mapResult<T, R, E>(xs : List<T>, f : T -> Result.Result<R, E>) : Result.Result<List<R>, E> {
     func go(xs : List<T>, acc : List<R>) : Result.Result<List<R>, E> {
       switch xs {
@@ -329,7 +329,7 @@ module {
   };
 
   /// Append the elements from the reverse of one list, 'l', to another list, 'm'.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.revAppend<Nat>(
@@ -337,7 +337,7 @@ module {
   ///   ?(3, ?(4, ?(5, null)))
   /// ); // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
-  /// 
+  ///
   /// | Runtime     | Space       |
   /// |-------------|-------------|
   /// | `O(size(l))`  | `O(size(l))`  |
@@ -349,7 +349,7 @@ module {
   };
 
   /// Append the elements from one list to another list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.append<Nat>(
@@ -357,7 +357,7 @@ module {
   ///   ?(3, ?(4, ?(5, null)))
   /// ) // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
-  /// 
+  ///
   /// | Runtime     | Space       |
   /// |-------------|-------------|
   /// | `O(size(l))`  | `O(size(l))`  |
@@ -366,7 +366,7 @@ module {
   };
 
   /// Flatten, or concatenate, a list of lists as a list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.flatten<Nat>(
@@ -375,7 +375,7 @@ module {
   ///       null))
   /// ); // => ?(0, ?(1, ?(2, ?(3, ?(4, ?(5, null))))))
   /// ```
-  /// 
+  ///
   /// | Runtime     | Space       |
   /// |-------------|-------------|
   /// | `O(size*size)`  | `O(size*size)`  |
@@ -387,7 +387,7 @@ module {
   /// Returns the first `n` elements of the given list.
   /// If the given list has fewer than `n` elements, this function returns
   /// a copy of the full input list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.take<Nat>(
@@ -395,7 +395,7 @@ module {
   ///   2
   /// ); // => ?(0, ?(1, null))
   /// ```
-  /// 
+  ///
   /// | Runtime     | Space       |
   /// |-------------|-------------|
   /// | `O(n)`  | `O(n)`  |
@@ -408,7 +408,7 @@ module {
   };
 
   /// Drop the first `n` elements from the given list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.drop<Nat>(
@@ -416,7 +416,7 @@ module {
   ///   2
   /// ); // => ?(2, null)
   /// ```
-  /// 
+  ///
   /// | Runtime     | Space       |
   /// |-------------|-------------|
   /// | `O(n)`  | `O(1)`  |
@@ -431,7 +431,7 @@ module {
   /// Collapses the elements in `list` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// left to right.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
@@ -441,11 +441,11 @@ module {
   ///   func (acc, x) { acc # Nat.toText(x)}
   /// ) // => "123"
   /// ```
-  /// 
+  ///
   /// | Runtime        | Space (Heap) | Space (Stack) |
   /// |----------------|--------------|----------------|
   /// | `O(size(list))`  | `O(1)`         | `O(1)`    |
-  /// 
+  ///
 
   public func foldLeft<T, S>(list : List<T>, base : S, combine : (S, T) -> S) : S {
     switch list {
@@ -457,7 +457,7 @@ module {
   /// Collapses the elements in `buffer` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// right to left.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
@@ -467,11 +467,11 @@ module {
   ///   func (x, acc) { Nat.toText(x) # acc}
   /// ) // => "123"
   /// ```
-  /// 
+  ///
   /// | Runtime       | Space (Heap) | Space (Stack)     |
   /// |---------------|--------------|-------------------|
   /// | `O(size(list))` | `O(1)`         | `O(size(list))`  |
-  /// 
+  ///
   public func foldRight<T, S>(list : List<T>, base : S, combine : (T, S) -> S) : S {
     switch list {
       case null { base };
@@ -481,7 +481,7 @@ module {
 
   /// Return the first element for which the given predicate `f` is true,
   /// if such an element exists.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.find<Nat>(
@@ -489,11 +489,11 @@ module {
   ///   func n { n > 1 }
   /// ); // => ?2
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
-  /// 
+  ///
 
   public func find<T>(l : List<T>, f : T -> Bool) : ?T {
     switch l {
@@ -504,7 +504,7 @@ module {
 
   /// Return true if there exists a list element for which
   /// the given predicate `f` is true.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.some<Nat>(
@@ -512,11 +512,11 @@ module {
   ///   func n { n > 1 }
   /// ) // => true
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
-  /// 
+  ///
 
   public func some<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
@@ -527,7 +527,7 @@ module {
 
   /// Return true if the given predicate `f` is true for all list
   /// elements.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.all<Nat>(
@@ -535,11 +535,11 @@ module {
   ///   func n { n > 1 }
   /// ); // => false
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
-  /// 
+  ///
 
   public func all<T>(l : List<T>, f : T -> Bool) : Bool {
     switch l {
@@ -551,7 +551,7 @@ module {
   /// Merge two ordered lists into a single ordered list.
   /// This function requires both list to be ordered as specified
   /// by the given relation `lessThanOrEqual`.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.merge<Nat>(
@@ -560,11 +560,11 @@ module {
   ///   func (n1, n2) { n1 <= n2 }
   /// ); // => ?(1, ?(2, ?(2, ?(4, ?(4, ?(6, null))))))),
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(size(l1) + size(l2))`     | `O(size(l1) + size(l2))` |
-  /// 
+  ///
 
   // TODO: replace by merge taking a compare : (T, T) -> Order.Order function?
   public func merge<T>(l1 : List<T>, l2 : List<T>, lessThanOrEqual : (T, T) -> Bool) : List<T> {
@@ -596,22 +596,22 @@ module {
   };
 
   /// Compare two lists using lexicographic ordering specified by argument function `compare`.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
+  ///
   /// List.compare<Nat>(
   ///   ?(1, ?(2, null)),
   ///   ?(3, ?(4, null)),
   ///   Nat.compare
   /// ) // => #less
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(size(l1))`     | `O(1)` |
-  /// 
+  ///
 
   public func compare<T>(l1 : List<T>, l2 : List<T>, compare : (T, T) -> Order.Order) : Order.Order {
     compareAux<T>(l1, l2, compare)
@@ -627,29 +627,29 @@ module {
     }
   };
   /// Compare two lists for equality using the argument function `equal` to determine equality of their elements.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Nat "mo:base/Nat";
-  /// 
+  ///
   /// List.equal<Nat>(
   ///   ?(1, ?(2, null)),
   ///   ?(3, ?(4, null)),
   ///   Nat.equal
   /// ); // => false
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(size(l1))`     | `O(1)` |
-  /// 
+  ///
   public func equal<T>(l1 : List<T>, l2 : List<T>, equal : (T, T) -> Bool) : Bool {
     equalAux<T>(l1, l2, equal)
   };
 
   /// Generate a list based on a length and a function that maps from
   /// a list index to a list element.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.tabulate<Nat>(
@@ -657,11 +657,11 @@ module {
   ///   func n { n * 2 }
   /// ) // => ?(0, ?(2, (?4, null)))
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(n)`     | `O(n)` |
-  /// 
+  ///
 
   public func tabulate<T>(n : Nat, f : Nat -> T) : List<T> {
     var i = 0;
@@ -674,21 +674,21 @@ module {
   };
 
   /// Create a list with exactly one element.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.make<Nat>(
   ///   0
   /// ) // => ?(0, null)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(1)` | `O(1)` |
   public func make<T>(x : T) : List<T> = ?(x, null);
 
   /// Create a list of the given length with the same value in each position.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.replicate<Nat>(
@@ -696,7 +696,7 @@ module {
   ///   0
   /// ) // => ?(0, ?(0, ?(0, null)))
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(n)`     | `O(n)` |
@@ -711,10 +711,10 @@ module {
   };
 
   /// Create a list of pairs from a pair of lists.
-  /// 
+  ///
   /// If the given lists have different lengths, then the created list will have a
   /// length equal to the length of the smaller list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.zip<Nat, Text>(
@@ -722,7 +722,7 @@ module {
   ///   ?("0", ?("1", null)),
   /// ) // => ?((0, "0"), ?((1, "1"), null))
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(min(size(xs), size(ys)))`     | `O(min(size(xs), size(ys)))` |
@@ -730,26 +730,26 @@ module {
 
   /// Create a list in which elements are created by applying function `f` to each pair `(x, y)` of elements
   /// occuring at the same position in list `xs` and list `ys`.
-  /// 
+  ///
   /// If the given lists have different lengths, then the created list will have a
   /// length equal to the length of the smaller list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Nat = "mo:base/Nat";
   /// import Char = "mo:base/Char";
-  /// 
+  ///
   /// List.zipWith<Nat, Char, Text>(
   ///   ?(0, ?(1, ?(2, null))),
   ///   ?('a', ?('b', null)),
   ///   func (n, c) { Nat.toText(n) # Char.toText(c) }
   /// ) // => ?("0a", ?("1b", null))
   /// ```
-  /// 
+  ///
   /// | Runtime                    | Space                  |
   /// |----------------------------|------------------------|
   /// | `O(min(size(xs), size(ys)))`     | `O(min(size(xs), size(ys)))` |
-  /// 
+  ///
 
   public func zipWith<T, U, V>(
     xs : List<T>,
@@ -770,7 +770,7 @@ module {
   };
 
   /// Split the given list at the given zero-based index.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.split<Nat>(
@@ -778,7 +778,7 @@ module {
   ///   ?(0, ?(1, ?(2, null)))
   /// ) // => (?(0, ?(1, null)), ?(2, null))
   /// ```
-  /// 
+  ///
   /// | Runtime     | Space       |
   /// |-------------|-------------|
   /// | `O(n)`  | `O(n)`  |
@@ -802,7 +802,7 @@ module {
   /// Split the given list into chunks of length `n`.
   /// The last chunk will be shorter if the length of the given list
   /// does not divide by `n` evenly.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.chunks<Nat>(
@@ -815,7 +815,7 @@ module {
   ///             null)))
   /// */
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -829,13 +829,13 @@ module {
   };
 
   /// Convert an array into a list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.fromArray<Nat>([ 0, 1, 2, 3, 4])
   /// // =>  ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -850,13 +850,13 @@ module {
   };
 
   /// Convert a mutable array into a list.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// List.fromVarArray<Nat>([var 0, 1, 2, 3, 4])
   /// // =>  ?(0, ?(1, ?(2, ?(3, ?(4, null)))))
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -868,7 +868,7 @@ module {
   /// List.toArray<Nat>(?(0, ?(1, ?(2, ?(3, ?(4, null))))))
   /// // => [0, 1, 2, 3, 4]
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -894,7 +894,7 @@ module {
   /// List.toVarArray<Nat>(?(0, ?(1, ?(2, ?(3, ?(4, null))))))
   /// // => [var 0, 1, 2, 3, 4]
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -910,7 +910,7 @@ module {
   /// sum
   /// // => 10
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(1)` | `O(1)` |

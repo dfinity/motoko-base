@@ -1,22 +1,22 @@
 /// Utility functions for `Text` values.
-/// 
+///
 /// A `Text` value represents human-readable text as a sequence of characters of type `Char`.
-/// 
+///
 /// ```motoko
 /// let text = "Hello!";
 /// let size = text.size(); // 6
 /// let iter = text.chars(); // iterator ('H', 'e', 'l', 'l', 'o', '!')
 /// let concat = text # " 👋"; // "Hello! 👋"
 /// ```
-/// 
+///
 /// The `"mo:base/Text"` module defines additional operations on `Text` values.
-/// 
+///
 /// Import the module from the base library:
-/// 
+///
 /// ```motoko name=import
 /// import Text "mo:base/Text";
 /// ```
-/// 
+///
 /// :::note
 /// `Text` values are represented as ropes of UTF-8 character sequences with O(1) concatenation.
 /// :::
@@ -31,7 +31,7 @@ import Prim "mo:⛔";
 module {
 
   /// The type corresponding to primitive `Text` values.
-  /// 
+  ///
   /// ```motoko
   /// let hello = "Hello!";
   /// let emoji = "👋";
@@ -40,41 +40,41 @@ module {
   public type Text = Prim.Types.Text;
 
   /// Converts the given `Char` to a `Text` value.
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.fromChar('A'); // "A"
   /// ```
   public let fromChar : (c : Char) -> Text = Prim.charToText;
 
   /// Converts the given `[Char]` to a `Text` value.
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.fromArray(['A', 'v', 'o', 'c', 'a', 'd', 'o']); // "Avocado"
   /// ```
-  /// 
+  ///
 /// | Runtime   | Space     |
 /// |-----------|-----------|
 /// | O(a.size()) | O(a.size()) |
   public func fromArray(a : [Char]) : Text = fromIter(a.vals());
 
   /// Converts the given `[var Char]` to a `Text` value.
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.fromVarArray([var 'E', 'g', 'g', 'p', 'l', 'a', 'n', 't']); // "Eggplant"
   /// ```
-  /// 
+  ///
 /// | Runtime   | Space     |
 /// |-----------|-----------|
 /// | O(a.size()) | O(a.size()) |
   public func fromVarArray(a : [var Char]) : Text = fromIter(a.vals());
 
   /// Iterates over each `Char` value in the given `Text`.
-  /// 
+  ///
   /// Equivalent to calling the `t.chars()` method where `t` is a `Text` value.
-  /// 
+  ///
   /// ```motoko include=import
   /// import { print } "mo:base/Debug";
-  /// 
+  ///
   /// for (c in Text.toIter("abc")) {
   ///   print(debug_show c);
   /// }
@@ -82,13 +82,13 @@ module {
   public func toIter(t : Text) : Iter.Iter<Char> = t.chars();
 
   /// Creates a new `Array` containing characters of the given `Text`.
-  /// 
+  ///
   /// Equivalent to `Iter.toArray(t.chars())`.
-  /// 
+  ///
   /// ```motoko include=import
   /// assert Text.toArray("Café") == ['C', 'a', 'f', 'é'];
   /// ```
-  /// 
+  ///
 /// | Runtime   | Space     |
 /// |-----------|-----------|
 /// | O(t.size()) | O(t.size()) |
@@ -108,13 +108,13 @@ module {
   };
 
   /// Creates a new mutable `Array` containing characters of the given `Text`.
-  /// 
+  ///
   /// Equivalent to `Iter.toArrayMut(t.chars())`.
-  /// 
+  ///
   /// ```motoko include=import
   /// assert Text.toVarArray("Café") == [var 'C', 'a', 'f', 'é'];
   /// ```
-  /// 
+  ///
 /// | Runtime   | Space     |
 /// |-----------|-----------|
 /// | O(t.size()) | O(t.size()) |
@@ -133,7 +133,7 @@ module {
   };
 
   /// Creates a `Text` value from a `Char` iterator.
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.fromIter(['a', 'b', 'c'].vals()); // "abc"
   /// ```
@@ -151,7 +151,7 @@ module {
   /// fromList(?('H', ?('e', ?('l', ?('l', ?('o', null))))));
   /// // => "Hello"
   /// ```
-  /// 
+  ///
 /// | Runtime   | Space     |
 /// |-----------|-----------|
 /// | O(size cs) | O(size cs) |
@@ -163,7 +163,7 @@ module {
   /// toList("Hello");
   /// // => ?('H', ?('e', ?('l', ?('l', ?('o', null)))))
   /// ```
-  /// 
+  ///
 /// | Runtime   | Space     |
 /// |-----------|-----------|
 /// | O(t.size()) | O(t.size()) |
@@ -176,20 +176,20 @@ module {
   };
 
   /// Returns the number of characters in the given `Text`.
-  /// 
+  ///
   /// Equivalent to calling `t.size()` where `t` is a `Text` value.
-  /// 
+  ///
   /// ```motoko include=import
   /// let size = Text.size("abc"); // 3
   /// ```
   public func size(t : Text) : Nat { t.size() };
 
   /// Returns a hash obtained by using the `djb2` algorithm ([more details](http://www.cse.yorku.ca/~oz/hash.html)).
-  /// 
+  ///
   /// ```motoko include=import
   /// let hash = Text.hash("abc");
   /// ```
-  /// 
+  ///
   /// :::info
   /// This algorithm is intended for use in data structures rather than as a cryptographic hash function.
   /// :::
@@ -203,7 +203,7 @@ module {
   };
 
   /// Returns `t1 # t2`, where `#` is the `Text` concatenation operator.
-  /// 
+  ///
   /// ```motoko include=import
   /// let a = "Hello";
   /// let b = "There";
@@ -232,10 +232,10 @@ module {
   public func greaterOrEqual(t1 : Text, t2 : Text) : Bool { t1 >= t2 };
 
   /// Compares `t1` and `t2` lexicographically.
-  /// 
+  ///
   /// ```motoko include=import
   /// import { print } "mo:base/Debug";
-  /// 
+  ///
   /// print(debug_show Text.compare("abc", "abc")); // #equal
   /// print(debug_show Text.compare("abc", "def")); // #less
   /// print(debug_show Text.compare("abc", "ABC")); // #greater
@@ -268,7 +268,7 @@ module {
   };
 
   /// Join an iterator of `Text` values with a given delimiter.
-  /// 
+  ///
   /// ```motoko include=import
   /// let joined = Text.join(", ", ["a", "b", "c"].vals()); // "a, b, c"
   /// ```
@@ -299,7 +299,7 @@ module {
   };
 
   /// Applies a function to each character in a `Text` value, returning the concatenated `Char` results.
-  /// 
+  ///
   /// ```motoko include=import
   /// // Replace all occurrences of '?' with '!'
   /// let result = Text.map("Motoko?", func(c) {
@@ -316,7 +316,7 @@ module {
   };
 
   /// Returns the result of applying `f` to each character in `ts`, concatenating the intermediate text values.
-  /// 
+  ///
   /// ```motoko include=import
   /// // Replace all occurrences of '?' with "!!"
   /// let result = Text.translate("Motoko?", func(c) {
@@ -333,13 +333,13 @@ module {
   };
 
   /// A pattern `p` describes a sequence of characters. A pattern has one of the following forms:
-  /// 
+  ///
   /// * `#char c` matches the single character sequence, `c`.
   /// * `#text t` matches multi-character text sequence `t`.
   /// * `#predicate p` matches any single character sequence `c` satisfying predicate `p(c)`.
-  /// 
+  ///
   /// A _match_ for `p` is any sequence of characters matching the pattern `p`.
-  /// 
+  ///
   /// ```motoko include=import
   /// let charPattern = #char 'A';
   /// let textPattern = #text "phrase";
@@ -470,9 +470,9 @@ module {
   };
 
   /// Splits the input `Text` with the specified `Pattern`.
-  /// 
+  ///
   /// Two fields are separated by exactly one match.
-  /// 
+  ///
   /// ```motoko include=import
   /// let words = Text.split("This is a sentence.", #char ' ');
   /// Text.join("|", words) // "This|is|a|sentence."
@@ -535,7 +535,7 @@ module {
   /// Returns a sequence of tokens from the input `Text` delimited by the specified `Pattern`, derived from start to end.
   /// A "token" is a non-empty maximal subsequence of `t` not containing a match for pattern `p`.
   /// Two tokens may be separated by one or more matches of `p`.
-  /// 
+  ///
   /// ```motoko include=import
   /// let tokens = Text.tokens("this needs\n an   example", #predicate (func(c) { c == ' ' or c == '\n' }));
   /// Text.join("|", tokens) // "this|needs|an|example"
@@ -553,7 +553,7 @@ module {
   };
 
   /// Returns `true` if the input `Text` contains a match for the specified `Pattern`.
-  /// 
+  ///
   /// ```motoko include=import
   /// Text.contains("Motoko", #text "oto") // true
   /// ```
@@ -582,7 +582,7 @@ module {
   };
 
   /// Returns `true` if the input `Text` starts with a prefix matching the specified `Pattern`.
-  /// 
+  ///
   /// ```motoko include=import
   /// Text.startsWith("Motoko", #text "Mo") // true
   /// ```
@@ -596,7 +596,7 @@ module {
   };
 
   /// Returns `true` if the input `Text` ends with a suffix matching the specified `Pattern`.
-  /// 
+  ///
   /// ```motoko include=import
   /// Text.endsWith("Motoko", #char 'o') // true
   /// ```
@@ -619,7 +619,7 @@ module {
   };
 
   /// Returns the input text `t` with all matches of pattern `p` replaced by text `r`.
-  /// 
+  ///
   /// ```motoko include=import
   /// let result = Text.replace("abcabc", #char 'a', "A"); // "AbcAbc"
   /// ```
@@ -660,7 +660,7 @@ module {
 
   /// Strips one occurrence of the given `Pattern` from the beginning of the input `Text`.
   /// If you want to remove multiple instances of the pattern, use `Text.trimStart()` instead.
-  /// 
+  ///
   /// ```motoko include=import
   /// // Try to strip a nonexistent character
   /// let none = Text.stripStart("abc", #char '-'); // null
@@ -680,7 +680,7 @@ module {
 
   /// Strips one occurrence of the given `Pattern` from the end of the input `Text`.
   /// If you want to remove multiple instances of the pattern, use `Text.trimEnd()` instead.
-  /// 
+  ///
   /// ```motoko include=import
   /// // Try to strip a nonexistent character
   /// let none = Text.stripEnd("xyz", #char '-'); // null
@@ -707,7 +707,7 @@ module {
 
   /// Trims the given `Pattern` from the start of the input `Text`.
   /// If you only want to remove a single instance of the pattern, use `Text.stripStart()` instead.
-  /// 
+  ///
   /// ```motoko include=import
   /// let trimmed = Text.trimStart("---abc", #char '-'); // "abc"
   /// ```
@@ -742,7 +742,7 @@ module {
 
   /// Trims the given `Pattern` from the end of the input `Text`.
   /// If you only want to remove a single instance of the pattern, use `Text.stripEnd()` instead.
-  /// 
+  ///
   /// ```motoko include=import
   /// let trimmed = Text.trimEnd("xyz---", #char '-'); // "xyz"
   /// ```
@@ -774,7 +774,7 @@ module {
   };
 
   /// Trims the given `Pattern` from both the start and end of the input `Text`.
-  /// 
+  ///
   /// ```motoko include=import
   /// let trimmed = Text.trim("---abcxyz---", #char '-'); // "abcxyz"
   /// ```
@@ -823,10 +823,10 @@ module {
   };
 
   /// Compares `t1` and `t2` using the provided character-wise comparison function.
-  /// 
+  ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
-  /// 
+  ///
   /// Text.compareWith("abc", "ABC", func(c1, c2) { Char.compare(c1, c2) }) // #greater
   /// ```
   public func compareWith(
@@ -852,7 +852,7 @@ module {
   };
 
   /// Returns a UTF-8 encoded `Blob` from the given `Text`.
-  /// 
+  ///
   /// ```motoko include=import
   /// let blob = Text.encodeUtf8("Hello");
   /// ```
@@ -860,18 +860,18 @@ module {
 
   /// Tries to decode the given `Blob` as UTF-8.
   /// Returns `null` if the blob is not valid UTF-8.
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.decodeUtf8("\48\65\6C\6C\6F"); // ?"Hello"
   /// ```
   public let decodeUtf8 : Blob -> ?Text = Prim.decodeUtf8;
 
   /// Returns the text argument in lowercase.
-  /// 
+  ///
   /// :::warning Compliance
   /// Unicode compliant only when compiled, not interpreted.
   /// :::
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.toLowercase("Good Day"); // ?"good day"
   /// ```
@@ -881,7 +881,7 @@ module {
   /// :::warning Compliance
   /// Unicode compliant only when compiled, not interpreted.
   /// :::
-  /// 
+  ///
   /// ```motoko include=import
   /// let text = Text.toUppercase("Good Day"); // ?"GOOD DAY"
   /// ```

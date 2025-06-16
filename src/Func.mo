@@ -2,7 +2,7 @@
 
 module {
   /// Import from the base library to use this module.
-  /// 
+  ///
   /// ```motoko name=import
   /// import { compose; const; identity } = "mo:base/Func";
   /// import Text = "mo:base/Text";
@@ -10,7 +10,7 @@ module {
   /// ```
 
   /// The composition of two functions `f` and `g` is a function that applies `g` and then `f`.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=import
   /// let textFromNat32 = compose(Text.fromChar, Char.fromNat32);
@@ -33,7 +33,7 @@ module {
   /// The const function is a _curried_ function that accepts an argument `x`,
   /// and then returns a function that discards its argument and always returns
   /// the `x`.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=import
   /// assert const<Nat, Text>(10)("hello") == 10;

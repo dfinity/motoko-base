@@ -1,45 +1,45 @@
 /// Byte-level access to (virtual) _stable memory_.
-/// 
+///
 /// :::warning Experimental module
-/// 
+///
 /// As the name suggests, this library is experimental, subject to change, and may be replaced by safer alternatives in later versions of Motoko.
 /// Use at your own risk and discretion.
 /// :::
-/// 
+///
 /// :::warning Deprecation notice
-/// 
+///
 /// Use of `ExperimentalStableMemory` may be deprecated in the future.
 /// Consider using `Region.mo` for isolated memory regions.
 /// Isolated regions ensure that writing to one region does not affect unrelated state elsewhere.
 /// :::
-/// 
+///
 /// This is a lightweight abstraction over IC _stable memory_ and supports persisting raw binary data across Motoko upgrades.
 /// It is fully compatible with Motoko's _stable variables_, which also use IC stable memory internally, but do not interfere with this API.
-/// 
+///
 /// Memory is allocated using `grow(pages)`, sequentially and on demand, in units of 64KiB pages, starting with 0 allocated pages.
 /// New pages are zero-initialized.
 /// Growth is capped by a soft page limit set with the compile-time flag `--max-stable-pages <n>` (default: 65536, or 4GiB).
-/// 
+///
 /// Each `load` reads from byte address `offset` in little-endian format using the natural bit-width of the type.
 /// Traps if reading beyond the allocated size.
-/// 
+///
 /// Each `store` writes to byte address `offset` in little-endian format using the natural bit-width of the type.
 /// Traps if writing beyond the allocated size.
-/// 
+///
 /// Text can be handled using `Text.decodeUtf8` and `Text.encodeUtf8` in combination with `loadBlob` and `storeBlob`.
-/// 
+///
 /// The current page allocation and contents are preserved across upgrades.
-/// 
+///
 /// :::note IC stable memory discrepancy
-/// 
+///
 /// The IC’s reported stable memory size (`ic0.stable_size`) may exceed what Motoko’s `size()` returns.
 /// This and the growth cap exist to protect Motoko’s internal use of stable variables.
 /// If you're not using stable variables (or using them sparingly), you may increase `--max-stable-pages` toward the IC maximum (currently 64GiB).
 /// Even if not using stable variables, always reserve at least one page.
 /// :::
-/// 
+///
 /// Usage:
-/// 
+///
 /// ```motoko no-repl
 /// import StableMemory "mo:base/ExperimentalStableMemory";
 /// ```
@@ -53,7 +53,7 @@ module {
   /// Initially `0`.
   /// Preserved across upgrades, together with contents of allocated
   /// stable memory.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let beforeSize = StableMemory.size();
@@ -70,11 +70,11 @@ module {
   /// Every new page is zero-initialized, containing byte 0x00 at every offset.
   /// Function `grow` is capped by a soft limit on `size` controlled by compile-time flag
   ///  `--max-stable-pages <n>` (the default is 65536, or 4GiB).
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// import Error "mo:base/Error";
-  /// 
+  ///
   /// let beforeSize = StableMemory.grow(10);
   /// if (beforeSize == 0xFFFF_FFFF_FFFF_FFFF) {
   ///   throw Error.reject("Out of memory");
@@ -90,7 +90,7 @@ module {
   /// The query computes the estimate by running the first half of an upgrade, including any `preupgrade` system method.
   /// Like any other query, its state changes are discarded so no actual upgrade (or other state change) takes place.
   /// The query can only be called by the enclosing actor and will trap for other callers.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// actor {
@@ -108,7 +108,7 @@ module {
 
   /// Loads a `Nat32` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -120,7 +120,7 @@ module {
 
   /// Stores a `Nat32` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -132,7 +132,7 @@ module {
 
   /// Loads a `Nat8` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -144,7 +144,7 @@ module {
 
   /// Stores a `Nat8` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -156,7 +156,7 @@ module {
 
   /// Loads a `Nat16` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -168,7 +168,7 @@ module {
 
   /// Stores a `Nat16` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -180,7 +180,7 @@ module {
 
   /// Loads a `Nat64` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -192,7 +192,7 @@ module {
 
   /// Stores a `Nat64` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -204,7 +204,7 @@ module {
 
   /// Loads an `Int32` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -216,7 +216,7 @@ module {
 
   /// Stores an `Int32` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -228,7 +228,7 @@ module {
 
   /// Loads an `Int8` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -240,7 +240,7 @@ module {
 
   /// Stores an `Int8` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -252,7 +252,7 @@ module {
 
   /// Loads an `Int16` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -264,7 +264,7 @@ module {
 
   /// Stores an `Int16` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -276,7 +276,7 @@ module {
 
   /// Loads an `Int64` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -288,7 +288,7 @@ module {
 
   /// Stores an `Int64` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -300,7 +300,7 @@ module {
 
   /// Loads a `Float` value from stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -312,7 +312,7 @@ module {
 
   /// Stores a `Float` value in stable memory at the given `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// let offset = 0;
@@ -324,11 +324,11 @@ module {
 
   /// Load `size` bytes starting from `offset` as a `Blob`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// import Blob "mo:base/Blob";
-  /// 
+  ///
   /// let offset = 0;
   /// let value = Blob.fromArray([1, 2, 3]);
   /// let size = value.size();
@@ -339,11 +339,11 @@ module {
 
   /// Write bytes of `blob` beginning at `offset`.
   /// Traps on an out-of-bounds access.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// import Blob "mo:base/Blob";
-  /// 
+  ///
   /// let offset = 0;
   /// let value = Blob.fromArray([1, 2, 3]);
   /// let size = value.size();

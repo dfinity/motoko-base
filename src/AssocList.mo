@@ -1,12 +1,12 @@
 /// Map implemented as a linked-list of key-value pairs ("Associations").
-/// 
+///
 /// :::note Usage context
-/// 
+///
 /// This map implementation primarily serves as the underlying bucket structure for other map types. In most cases, those higher-level map implementations are easier to use.
 /// :::
-/// 
+///
 /// :::note Assumptions
-/// 
+///
 /// Runtime and space complexity assumes that `combine`, `equal`, and other functions execute in `O(1)` time and space.
 /// :::
 
@@ -14,15 +14,15 @@ import List "List";
 
 module {
   /// Import from the base library to use this module.
-  /// 
+  ///
   /// ```motoko name=import
   /// import AssocList "mo:base/AssocList";
   /// import List "mo:base/List";
   /// import Nat "mo:base/Nat";
-  /// 
+  ///
   /// type AssocList<K, V> = AssocList.AssocList<K, V>;
   /// ```
-  /// 
+  ///
   /// Initialize an empty map using an empty list.
   /// ```motoko name=initialize include=import
   /// var map : AssocList<Nat, Nat> = List.nil(); // Empty list as an empty map
@@ -33,19 +33,19 @@ module {
 
   /// Find the value associated with key `key`, or `null` if no such key exists.
   /// Compares keys using the provided function `equal`.
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// // Create map = [(0, 10), (1, 11), (2, 12)]
   /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
   /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
   /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
-  /// 
+  ///
   /// // Find value associated with key 1
   /// AssocList.find(map, 1, Nat.equal)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
@@ -70,9 +70,9 @@ module {
   /// was already present. Returns the old value in an option if it existed and
   /// `null` otherwise, as well as the new map. Compares keys using the provided
   /// function `equal`.
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// // Add three entries to the map
   /// // map = [(0, 10), (1, 11), (2, 12)]
@@ -81,10 +81,10 @@ module {
   /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
   /// // Override second entry
   /// map := AssocList.replace(map, 1, Nat.equal, ?21).0;
-  /// 
+  ///
   /// List.toArray(map)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
@@ -124,26 +124,26 @@ module {
   /// Produces a new map containing all entries from `map1` whose keys are not
   /// contained in `map2`. The "extra" entries in `map2` are ignored. Compares
   /// keys using the provided function `equal`.
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
   /// var map1 : AssocList<Nat, Nat> = null;
   /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
   /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
   /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
-  /// 
+  ///
   /// // Create map2 = [(2, 12), (3, 13)]
   /// var map2 : AssocList<Nat, Nat> = null;
   /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
   /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
-  /// 
+  ///
   /// // Take the difference
   /// let newMap = AssocList.diff(map1, map2, Nat.equal);
   /// List.toArray(newMap)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size1 * size2)` | `O(1)` |
@@ -166,10 +166,7 @@ module {
     rec(map1)
   };
 
-  /// :::warning Deprecated function
-  /// 
-  /// `mapAppend` is deprecated and may be removed in future versions. Consider using an alternative approach.
-  /// :::
+  /// @deprecated `mapAppend` is deprecated and may be removed in future versions. Consider using an alternative approach.
   public func mapAppend<K, V, W, X>(
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
@@ -188,23 +185,23 @@ module {
   /// Produces a new map by mapping entries in `map1` and `map2` using `f` and
   /// concatenating the results. Assumes that there are no collisions between
   /// keys in `map1` and `map2`.
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// import { trap } "mo:base/Debug";
-  /// 
+  ///
   /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
   /// var map1 : AssocList<Nat, Nat> = null;
   /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
   /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
   /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
-  /// 
+  ///
   /// // Create map2 = [(4, "14"), (3, "13")]
   /// var map2 : AssocList<Nat, Text> = null;
   /// map2 := AssocList.replace(map2, 4, Nat.equal, ?"14").0;
   /// map2 := AssocList.replace(map2, 3, Nat.equal, ?"13").0;
-  /// 
+  ///
   /// // Map and append the two AssocLists
   /// let newMap =
   ///  AssocList.disjDisjoint<Nat, Nat, Text, Text>(
@@ -224,10 +221,10 @@ module {
   ///      }
   ///    }
   ///  );
-  /// 
+  ///
   /// List.toArray(newMap)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size1 + size2)` | `O(size1 + size2)` |
@@ -243,29 +240,29 @@ module {
   /// Creates a new map by merging entries from `map1` and `map2`, and mapping
   /// them using `combine`. `combine` is also used to combine the values of colliding keys.
   /// Keys are compared using the given `equal` function.
-  /// 
+  ///
   /// :::note Behavior guarantee
-  /// 
+  ///
   /// `combine` will never be applied to `(null, null)`.
-  /// 
+  ///
   /// :::
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// import { trap } "mo:base/Debug";
-  /// 
+  ///
   /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
   /// var map1 : AssocList<Nat, Nat> = null;
   /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
   /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
   /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
-  /// 
+  ///
   /// // Create map2 = [(2, 12), (3, 13)]
   /// var map2 : AssocList<Nat, Nat> = null;
   /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
   /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
-  /// 
+  ///
   /// // Merge the two maps using `combine`
   /// let newMap =
   ///  AssocList.disj<Nat, Nat, Nat, Nat>(
@@ -289,10 +286,10 @@ module {
   ///      }
   ///    }
   ///  );
-  /// 
+  ///
   /// List.toArray(newMap)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size1 * size2)` | `O(size1 + size2)` |
@@ -332,27 +329,27 @@ module {
   /// Takes the intersection of `map1` and `map2`, only keeping colliding keys
   /// and combining values using the `combine` function. Keys are compared using
   /// the `equal` function.
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// // Create map1 = [(0, 10), (1, 11), (2, 12)]
   /// var map1 : AssocList<Nat, Nat> = null;
   /// map1 := AssocList.replace(map1, 0, Nat.equal, ?10).0;
   /// map1 := AssocList.replace(map1, 1, Nat.equal, ?11).0;
   /// map1 := AssocList.replace(map1, 2, Nat.equal, ?12).0;
-  /// 
+  ///
   /// // Create map2 = [(2, 12), (3, 13)]
   /// var map2 : AssocList<Nat, Nat> = null;
   /// map2 := AssocList.replace(map2, 2, Nat.equal, ?12).0;
   /// map2 := AssocList.replace(map2, 3, Nat.equal, ?13).0;
-  /// 
+  ///
   /// // Take the intersection of the two maps, combining values by adding them
   /// let newMap = AssocList.join<Nat, Nat, Nat, Nat>(map1, map2, Nat.equal, Nat.add);
-  /// 
+  ///
   /// List.toArray(newMap)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size1 * size2)` | `O(size1 + size2)` |
@@ -379,20 +376,20 @@ module {
   /// Collapses the elements in `map` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
   /// left to right.
-  /// 
+  ///
   /// Example:
-  /// 
+  ///
   /// ```motoko include=import,initialize
   /// // Create map = [(0, 10), (1, 11), (2, 12)]
   /// var map : AssocList<Nat, Nat> = null;
   /// map := AssocList.replace(map, 0, Nat.equal, ?10).0;
   /// map := AssocList.replace(map, 1, Nat.equal, ?11).0;
   /// map := AssocList.replace(map, 2, Nat.equal, ?12).0;
-  /// 
+  ///
   /// // (0 * 10) + (1 * 11) + (2 * 12)
   /// AssocList.fold<Nat, Nat, Nat>(map, 0, func(k, v, sumSoFar) = (k * v) + sumSoFar)
   /// ```
-  /// 
+  ///
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |

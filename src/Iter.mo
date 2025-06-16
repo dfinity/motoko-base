@@ -8,11 +8,11 @@ module {
 
   /// An iterator that produces values of type `T`. Calling `next` returns
   /// `null` when iteration is finished.
-  /// 
+  ///
   /// Iterators are inherently stateful. Calling `next` "consumes" a value from
   /// the Iterator that cannot be put back, so keep that in mind when sharing
   /// iterators between consumers.
-  /// 
+  ///
   /// An iterater `i` can be iterated over using
   /// ```
   /// for (x in i) {
@@ -49,7 +49,7 @@ module {
 
   /// Calls a function `f` on every value produced by an iterator and discards
   /// the results. If you're looking to keep these results use `map` instead.
-  /// 
+  ///
   /// ```motoko
   /// import Iter "mo:base/Iter";
   /// var sum = 0;

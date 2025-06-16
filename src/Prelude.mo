@@ -9,9 +9,9 @@ module {
   /// :::warning
   /// Not yet implemented
   /// :::
-  /// 
+  ///
   /// Mark incomplete code with the `nyi` and `xxx` functions.
-  /// 
+  ///
   /// Each have calls that are well-typed in all typing contexts, which
   /// trap in all execution contexts.
   public func nyi() : None {
@@ -23,7 +23,7 @@ module {
   };
 
   /// Mark unreachable code with the `unreachable` function.
-  /// 
+  ///
   /// Calls are well-typed in all typing contexts, and they
   /// trap in all execution contexts.
   public func unreachable() : None {
