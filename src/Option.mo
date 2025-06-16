@@ -136,6 +136,7 @@ module {
   };
 
   /// Asserts that the value is not `null`; fails otherwise.
+  ///
   /// @deprecated Option.assertSome will be removed soon; use an assert expression instead
   public func assertSome(x : ?Any) = switch x {
     case null { P.unreachable() };
@@ -143,6 +144,7 @@ module {
   };
 
   /// Asserts that the value _is_ `null`; fails otherwise.
+  ///
   /// @deprecated Option.assertNull will be removed soon; use an assert expression instead
   public func assertNull(x : ?Any) = switch x {
     case null {};

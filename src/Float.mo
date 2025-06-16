@@ -500,10 +500,12 @@ module {
   public let fromInt : Int -> Float = Prim.intToFloat;
 
   /// Returns `x == y`.
+  ///
   /// @deprecated `Float.equalWithin()` as this function does not consider numerical errors.
   public func equal(x : Float, y : Float) : Bool { x == y };
 
   /// Returns `x != y`.
+  ///
   /// @deprecated Use `Float.notEqualWithin()` as this function does not consider numerical errors.
   public func notEqual(x : Float, y : Float) : Bool { x != y };
 
