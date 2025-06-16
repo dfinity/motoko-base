@@ -125,6 +125,7 @@ module {
   };
 
   /// Computes an accumulated hash from `h1` and the least significant 32-bits of `i`, ignoring other bits in `i`.
+  ///
   /// @deprecated For large `Int` values consider using a bespoke hash function that considers all of the argument's bits.
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
