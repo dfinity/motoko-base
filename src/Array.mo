@@ -1,24 +1,24 @@
 /// Provides extended utility functions on Arrays.
-/// 
+///
 /// :::warning
-/// 
+///
 /// If you are looking for a list that can grow and shrink in size,
 /// it is recommended you use either the `Buffer` or `List` data structure for
 /// those purposes.
-/// 
+///
 /// :::
-/// 
+///
 /// :::note Assumptions
-/// 
+///
 /// Runtime and space complexity assumes that `generator`, `equal`, and other functions execute in `O(1)` time and space.
 /// :::
-/// 
+///
 /// Import from the base library to use this module.
-/// 
+///
 /// ```motoko name=import
 /// import Array "mo:base/Array";
 /// ```
-/// 
+///
 
 import I "IterType";
 import Option "Option";
@@ -298,7 +298,7 @@ module {
   };
 
   /// Creates a new array by reversing the order of elements in `array`.
-  /// 
+  ///
   /// ```motoko include=import
   /// let array = [10, 11, 12];
   /// Array.reverse(array)
@@ -315,7 +315,7 @@ module {
   /// Creates a new array by applying `f` to each element in `array`. `f` "maps"
   /// each element it is applied to of type `X` to an element of type `Y`.
   /// Retains original ordering of elements.
-  /// 
+  ///
   /// ```motoko include=import
   /// let array = [0, 1, 2, 3];
   /// Array.map<Nat, Nat>(array, func x = x * 3)
@@ -652,7 +652,7 @@ module {
   ///
   /// Alternatively, you can use `array.size()` to achieve the same result. See the example below.
   /// :::
-  /// 
+  ///
   /// ```motoko include=import
   /// let array = [10, 11, 12];
   /// var sum = 0;
@@ -733,7 +733,7 @@ module {
   };
 
   /// Returns the index of the first `element` in the `array`.
-  /// 
+  ///
   /// ```motoko include=import
   /// import Char "mo:base/Char";
   /// let array = ['c', 'o', 'f', 'f', 'e', 'e'];

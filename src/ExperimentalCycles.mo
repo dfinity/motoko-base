@@ -1,25 +1,25 @@
 /// Managing cycles within actors on the Internet Computer (ICP).
-/// 
+///
 /// The usage of the Internet Computer is measured, and paid for, in _cycles_.
 /// This library provides imperative operations for observing cycles, transferring cycles, and observing refunds of cycles.
-/// 
+///
 /// :::warning Experimental API
-/// 
+///
 /// This low-level API is experimental and may change or be removed in the future.
 /// Dedicated syntactic support for manipulating cycles may be added to the language, which would make this library obsolete.
 /// :::
-/// 
+///
 /// :::note Volatile cycle balance
-/// 
+///
 /// Since cycles measure computational resources, the value of `balance()` can change from one call to the next.
 /// :::
-/// 
+///
 /// Example:
-/// 
+///
 /// ```motoko no-repl
 /// import Cycles "mo:base/ExperimentalCycles";
 /// import Debug "mo:base/Debug";
-/// 
+///
 /// actor {
 ///  public func main() : async() {
 ///    Debug.print("Main balance: " # debug_show(Cycles.balance()));
@@ -28,7 +28,7 @@
 ///    Debug.print("Main refunded: " # debug_show(Cycles.refunded())); // 5_000_000
 ///    Debug.print("Main balance: " # debug_show(Cycles.balance())); // decreased by around 10_000_000
 ///  };
-/// 
+///
 ///  func operation() : async() {
 ///    Debug.print("Operation balance: " # debug_show(Cycles.balance()));
 ///    Debug.print("Operation available: " # debug_show(Cycles.available()));
@@ -43,12 +43,12 @@ import Prim "mo:⛔";
 module {
 
   /// Returns the actor's current balance of cycles as `amount`.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
-  /// 
+  ///
   /// actor {
   ///   public func main() : async() {
   ///     let balance = Cycles.balance();
@@ -63,12 +63,12 @@ module {
   /// minus the cumulative amount `accept`ed by this call.
   /// On exit from the current shared function or async expression via `return` or `throw`,
   /// any remaining available amount is automatically refunded to the caller/context.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
-  /// 
+  ///
   /// actor {
   ///   public func main() : async() {
   ///     let available = Cycles.available();
@@ -81,18 +81,18 @@ module {
   /// Transfers up to `amount` from `available()` to `balance()`.
   /// Returns the amount actually transferred, which may be less than
   /// requested, for example, if less is available, or if canister balance limits are reached.
-  /// 
+  ///
   /// Example (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
-  /// 
+  ///
   /// actor {
   ///   public func main() : async() {
   ///     Cycles.add<system>(15_000_000);
   ///     await operation(); // accepts 10_000_000 cycles
   ///   };
-  /// 
+  ///
   ///   func operation() : async() {
   ///     let obtained = Cycles.accept<system>(10_000_000);
   ///     Debug.print("Obtained: " # debug_show(obtained)); // => 10_000_000
@@ -108,27 +108,28 @@ module {
   /// Upon the call, but not before, the total amount of cycles ``add``ed since
   /// the last call is deducted from `balance()`.
   /// If this total exceeds `balance()`, the caller traps, aborting the call.
-  /// 
+  ///
   /// :::note Reset behavior
-  /// 
+  ///
   /// The implicit register of added amounts is reset to zero on entry to a shared function and after each shared function call or resume from an await.
   /// :::
-  /// 
+  ///
   /// Example (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
-  /// 
+  ///
   /// actor {
   ///   func operation() : async() {
   ///     ignore Cycles.accept<system>(10_000_000);
   ///   };
-  /// 
+  ///
   ///   public func main() : async() {
   ///     Cycles.add<system>(15_000_000);
   ///     await operation();
   ///   }
   /// }
   /// ```
+  ///
   /// @deprecated This function will be removed in future. Use the parenthetical syntax on message sends and `async` expressions to attach cycles: `(with cycles = <amount>) C.send(...)`.
   public let add : <system>(amount : Nat) -> () = Prim.cyclesAdd;
 
@@ -137,17 +138,17 @@ module {
   /// Calling `refunded()` is solely informational and does not affect `balance()`.
   /// Instead, refunds are automatically added to the current balance,
   /// whether or not `refunded` is used to observe them.
-  /// 
+  ///
   /// Example (for simplicity, only transferring cycles to itself):
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
-  /// 
+  ///
   /// actor {
   ///   func operation() : async() {
   ///     ignore Cycles.accept<system>(10_000_000);
   ///   };
-  /// 
+  ///
   ///   public func main() : async() {
   ///     Cycles.add<system>(15_000_000);
   ///     await operation(); // accepts 10_000_000 cycles
@@ -160,12 +161,12 @@ module {
   /// Attempts to burn `amount` of cycles, deducting `burned` from the canister's
   /// cycle balance. The burned cycles are irrevocably lost and not available to any
   /// other principal either.
-  /// 
+  ///
   /// Example:
   /// ```motoko no-repl
   /// import Cycles "mo:base/ExperimentalCycles";
   /// import Debug "mo:base/Debug";
-  /// 
+  ///
   /// actor {
   ///   public func main() : async() {
   ///     let burnt = Cycles.burn<system>(10_000_000);

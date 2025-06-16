@@ -9,9 +9,9 @@ module {
   /// `Result<Ok, Err>` is the type used for returning and propagating errors. It
   /// is a type with the variants, `#ok(Ok)`, representing success and containing
   /// a value, and `#err(Err)`, representing error and containing an error value.
-  /// 
+  ///
   /// The simplest way of working with `Result`s is to pattern match on them:
-  /// 
+  ///
   /// For example, given a function `createUser(user : User) : Result<Id, String>`
   /// where `String` is an error message we could use it like so:
   /// ```motoko no-repl
@@ -70,13 +70,13 @@ module {
   /// type Result<T,E> = Result.Result<T, E>;
   /// func largerThan10(x : Nat) : Result<Nat, Text> =
   ///   if (x > 10) { #ok(x) } else { #err("Not larger than 10.") };
-  /// 
+  ///
   /// func smallerThan20(x : Nat) : Result<Nat, Text> =
   ///   if (x < 20) { #ok(x) } else { #err("Not smaller than 20.") };
-  /// 
+  ///
   /// func between10And20(x : Nat) : Result<Nat, Text> =
   ///   Result.chain(largerThan10(x), smallerThan20);
-  /// 
+  ///
   /// assert(between10And20(15) == #ok(15));
   /// assert(between10And20(9) == #err("Not larger than 10."));
   /// assert(between10And20(21) == #err("Not smaller than 20."));
@@ -92,7 +92,7 @@ module {
   };
 
   /// Flattens a nested `Result`.
-  /// 
+  ///
   /// ```motoko
   /// import Result "mo:base/Result";
   /// assert(Result.flatten<Nat, Text>(#ok(#ok(10))) == #ok(10));
@@ -158,7 +158,7 @@ module {
 
   /// Applies a function to a successful value, but discards the result. Use
   /// `iterate` if you're only interested in the side effect `f` produces.
-  /// 
+  ///
   /// ```motoko
   /// import Result "mo:base/Result";
   /// var counter : Nat = 0;
