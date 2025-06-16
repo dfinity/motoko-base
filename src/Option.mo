@@ -1,24 +1,24 @@
 /// Optional values can be seen as a typesafe `null`. A value of type `?Int` can
 /// be constructed with either `null` or `?42`. The simplest way to get at the
 /// contents of an optional is to use pattern matching:
-/// 
+///
 /// ```motoko
 /// let optionalInt1 : ?Int = ?42;
 /// let optionalInt2 : ?Int = null;
-/// 
+///
 /// let int1orZero : Int = switch optionalInt1 {
 ///   case null 0;
 ///   case (?int) int;
 /// };
 /// assert int1orZero == 42;
-/// 
+///
 /// let int2orZero : Int = switch optionalInt2 {
 ///   case null 0;
 ///   case (?int) int;
 /// };
 /// assert int2orZero == 0;
 /// ```
-/// 
+///
 /// The functions in this module capture some common operations when working
 /// with optionals that can be more succinct than using pattern matching.
 
@@ -53,7 +53,7 @@ module {
 
   /// Applies a function to the wrapped value, but discards the result. Use
   /// `iterate` if you're only interested in the side effect `f` produces.
-  /// 
+  ///
   /// ```motoko
   /// import Option "mo:base/Option";
   /// var counter : Nat = 0;
@@ -135,29 +135,25 @@ module {
     case (_, _) { false }
   };
 
-  /// :::warning Deprecated function
+  /// Asserts that the value is not `null`; fails otherwise.
   ///
-  /// `Option.assertSome` will be removed soon. Use an `assert` expression instead.
-  ///
-  /// :::
+  /// @deprecated Option.assertSome will be removed soon; use an assert expression instead
   public func assertSome(x : ?Any) = switch x {
     case null { P.unreachable() };
     case _ {}
   };
 
-  /// :::warning Deprecated function
-  /// 
-  /// `Option.assertNull` will be removed soon. Use an `assert` expression instead.
-  /// :::
+  /// Asserts that the value _is_ `null`; fails otherwise.
+  ///
+  /// @deprecated Option.assertNull will be removed soon; use an assert expression instead
   public func assertNull(x : ?Any) = switch x {
     case null {};
     case _ { P.unreachable() }
   };
 
-  /// :::warning Deprecated function
-  /// 
-  /// `Option.unwrap` is unsafe and will be removed soon. Use a `switch` or `do?` expression instead.
-  /// :::
+  /// Unwraps an optional value, i.e. `unwrap(?x) = x`.
+  ///
+  /// @deprecated Option.unwrap is unsafe and fails if the argument is null; it will be removed soon; use a `switch` or `do?` expression instead
   public func unwrap<T>(x : ?T) : T = switch x {
     case null { P.unreachable() };
     case (?x_) { x_ }

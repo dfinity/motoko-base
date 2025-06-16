@@ -1,14 +1,14 @@
-/// 
+///
 /// Sets are partial maps from element type to unit type,
 /// i.e., the partial map represents the set with its domain.
-/// 
+///
 /// :::warning Limitations
-/// 
+///
 /// This data structure allows at most `MAX_LEAF_SIZE = 8` hash collisions.
 /// Attempts to insert more than 8 elements with the same hash value—either directly via `put` or indirectly via other operations—will trap.
 /// This limitation is inherited from the underlying `Trie` data structure.
 /// :::
-/// 
+///
 
 // TODO-Matthew:
 // ---------------
@@ -114,7 +114,7 @@ module {
   /// :::warning Deprecated function
   /// Use `TrieSet.contains()` instead.
   /// :::
-  /// 
+  ///
   /// Test if a set contains a given element.
   public func mem<T>(s : Set<T>, x : T, xh : Hash, eq : (T, T) -> Bool) : Bool {
     contains(s, x, xh, eq)

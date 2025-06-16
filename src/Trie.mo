@@ -1,39 +1,39 @@
 /// Functional key-value hash map.
-/// 
+///
 /// Provides an applicative (purely functional) hash map, called a *trie*, where each operation returns a new version of the structure without mutating the original.
-/// 
+///
 /// Operations use `Key` records that group the key value with its precomputed hash.
-/// 
+///
 /// For imperative or object-oriented alternatives, see [`TrieMap`](../TrieMap) or [`HashMap`](../HashMap).
-/// 
+///
 /// :::warning Hash collision limit
 /// Each trie node supports at most 8 distinct keys with the same hash (`MAX_LEAF_SIZE = 8`). Exceeding this will cause a trap.
 /// :::
-/// 
+///
 /// :::info Credits
 /// Based on Section 6 of ["Incremental computation via function caching", Pugh & Teitelbaum](https://dl.acm.org/citation.cfm?id=75305).
 /// :::
-/// 
+///
 /// Example:
-/// 
+///
 /// ```motoko
 /// import Trie "mo:base/Trie";
 /// import Text "mo:base/Text";
-/// 
+///
 /// // we do this to have shorter type names and thus
 /// // better readability
 /// type Trie<K, V> = Trie.Trie<K, V>;
 /// type Key<K> = Trie.Key<K>;
-/// 
+///
 /// // we have to provide `put`, `get` and `remove` with
 /// // a record of type `Key<K> = { hash : Hash.Hash; key : K }`;
 /// // thus we define the following function that takes a value of type `K`
 /// // (in this case `Text`) and returns a `Key<K>` record.
 /// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
-/// 
+///
 /// // we start off by creating an empty `Trie`
 /// let t0 : Trie<Text, Nat> = Trie.empty();
-/// 
+///
 /// // `put` requires 4 arguments:
 /// // - the trie we want to insert the value into,
 /// // - the key of the value we want to insert (note that we use the `key` function defined above),
@@ -45,7 +45,7 @@
 /// // and assign it to `t1` and `t2` respectively.
 /// let t1 : Trie<Text, Nat> = Trie.put(t0, key "hello", Text.equal, 42).0;
 /// let t2 : Trie<Text, Nat> = Trie.put(t1, key "world", Text.equal, 24).0;
-/// 
+///
 /// // If for a given key there already was a value in the trie, `put` returns
 /// // that previous value as the second element of the tuple.
 /// // in our case we have already inserted the value 42 for the key "hello", so
@@ -57,7 +57,7 @@
 ///  0,
 /// );
 /// assert (n == ?42);
-/// 
+///
 /// // `get` requires 3 arguments:
 /// // - the trie we want to get the value from
 /// // - the key of the value we want to get (note that we use the `key` function defined above)
@@ -68,7 +68,7 @@
 /// assert(value == ?0);
 /// value := Trie.get(t3, key "universe", Text.equal); // Returns `null`
 /// assert(value == null);
-/// 
+///
 /// // `remove` requires 3 arguments:
 /// // - the trie we want to remove the value from,
 /// // - the key of the value we want to remove (note that we use the `key` function defined above), and
@@ -84,7 +84,7 @@
 ///  Text.equal,
 /// ).1;
 /// assert (removedValue == ?0);
-/// 
+///
 /// // To iterate over the Trie, we use the `iter` function that takes a trie
 /// // of type `Trie<K,V>` and returns an iterator of type `Iter<(K,V)>`:
 /// var sum : Nat = 0;
@@ -185,18 +185,18 @@ module {
   public type Trie3D<K1, K2, K3, V> = Trie<K1, Trie2D<K2, K3, V>>;
 
   /// An empty trie. This is usually the starting point for building a trie.
-  /// 
+  ///
   /// Example:
   /// ```motoko name=initialize
   /// import { print } "mo:base/Debug";
   /// import Trie "mo:base/Trie";
   /// import Text "mo:base/Text";
-  /// 
+  ///
   /// // we do this to have shorter type names and thus
   /// // better readibility
   /// type Trie<K, V> = Trie.Trie<K, V>;
   /// type Key<K> = Trie.Key<K>;
-  /// 
+  ///
   /// // We have to provide `put`, `get` and `remove` with
   /// // a function of return type `Key<K> = { hash : Hash.Hash; key : K }`
   /// func key(t: Text) : Key<Text> { { hash = Text.hash t; key = t } };
@@ -206,8 +206,8 @@ module {
   public func empty<K, V>() : Trie<K, V> = #empty;
 
   /// Get the size in O(1) time.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// var size = Trie.size(trie); // Returns 0, as `trie` is empty
@@ -232,7 +232,7 @@ module {
   };
 
   /// Construct a leaf node, computing the size stored there.
-  /// 
+  ///
   /// This helper function automatically enforces the MAX_LEAF_SIZE
   /// by constructing branches as necessary; to do so, it also needs the bitpos
   /// of the leaf.
@@ -292,7 +292,7 @@ module {
   };
 
   /// Clone the trie efficiently, via sharing.
-  /// 
+  ///
   /// Purely-functional representation permits _O(1)_ copy, via persistent sharing.
   public func clone<K, V>(t : Trie<K, V>) : Trie<K, V> = t;
 
@@ -324,11 +324,11 @@ module {
   /// Replace the given key's value option with the given value, returning the modified trie.
   /// Also returns the replaced value if the key existed and `null` otherwise.
   /// Compares keys using the provided function `k_eq`.
-  /// 
+  ///
   /// :::note
   /// Replacing a key's value by `null` removes the key and also shrinks the trie.
   /// :::
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "test", Text.equal, 1).0;
@@ -367,8 +367,8 @@ module {
   };
 
   /// Put the given key's value in the trie; return the new trie, and the previous value associated with the key, if any.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -378,8 +378,8 @@ module {
   public func put<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool, v : V) : (Trie<K, V>, ?V) = replace(t, k, k_eq, ?v);
 
   /// Get the value of the given key in the trie, or return null if nonexistent.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -391,8 +391,8 @@ module {
   public func get<K, V>(t : Trie<K, V>, k : Key<K>, k_eq : (K, K) -> Bool) : ?V = find(t, k, k_eq);
 
   /// Find the given key's value in the trie, or return `null` if nonexistent
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -440,13 +440,13 @@ module {
 
   /// Merge tries, preferring the left trie where there are collisions
   /// in common keys.
-  /// 
+  ///
   /// :::note
   /// The `disj` operation generalizes this `merge`
   /// operation in various ways, and does not (in general) lose
   /// information; this operation is a simpler, special case.
   /// :::
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -500,11 +500,11 @@ module {
   };
 
   /// <a name="mergedisjoint"></a>
-  /// 
+  ///
   /// Merge tries like `merge`, but traps if there are collisions in common keys between the
   /// left and right inputs.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -557,8 +557,8 @@ module {
   /// Difference of tries. The output consists of pairs of
   /// the left trie whose keys are not present in the right trie; the
   /// values of the right trie are irrelevant.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -607,19 +607,19 @@ module {
   };
 
   /// Map disjunction.
-  /// 
+  ///
   /// This operation generalizes the notion of "set union" to finite maps.
-  /// 
+  ///
   /// Produces a "disjunctive image" of the two tries, where the values of
   /// matching keys are combined with the given binary operator.
-  /// 
+  ///
   /// For unmatched key-value pairs, the operator is still applied to
   /// create the value in the image.  To accomodate these various
   /// situations, the operator accepts optional values, but is never
   /// applied to (null, null).
-  /// 
+  ///
   /// Implements the database idea of an ["outer join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
-  /// 
+  ///
   public func disj<K, V, W, X>(
     tl : Trie<K, V>,
     tr : Trie<K, W>,
@@ -684,13 +684,13 @@ module {
   };
 
   /// Map join.
-  /// 
+  ///
   /// Implements the database idea of an ["inner join"](https://stackoverflow.com/questions/38549/what-is-the-difference-between-inner-join-and-outer-join).
-  /// 
+  ///
   /// This operation generalizes the notion of "set intersection" to
   /// finite maps.  The values of matching keys are combined with the given binary
   /// operator, and unmatched key-value pairs are not present in the output.
-  /// 
+  ///
   public func join<K, V, W, X>(
     tl : Trie<K, V>,
     tr : Trie<K, W>,
@@ -744,16 +744,16 @@ module {
   };
 
   /// Map product.
-  /// 
+  ///
   /// Conditional _catesian product_, where the given
   /// operation `op` _conditionally_ creates output elements in the
   /// resulting trie.
-  /// 
+  ///
   /// The keyed structure of the input tries are not relevant for this
   /// operation: all pairs are considered, regardless of keys matching or
   /// not.  Moreover, the resulting trie may use keys that are unrelated to
   /// these input keys.
-  /// 
+  ///
   public func prod<K1, V1, K2, V2, K3, V3>(
     tl : Trie<K1, V1>,
     tr : Trie<K2, V2>,
@@ -782,10 +782,10 @@ module {
   };
 
   /// Returns an iterator of type `Iter` over the key-value entries of the trie.
-  /// 
+  ///
   /// Each iterator gets a _persistent view_ of the mapping, independent of concurrent updates to the iterated map.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -830,22 +830,22 @@ module {
   };
 
   /// Represent the construction of tries as data.
-  /// 
+  ///
   /// This module provides optimized variants of normal tries, for
   /// more efficient join queries.
-  /// 
+  ///
   /// The central insight is that for (unmaterialized) join query results, we
   /// do not need to actually build any resulting trie of the resulting
   /// data, but rather, just need a collection of what would be in that
   /// trie.  Since query results can be large (quadratic in the DB size),
   /// avoiding the construction of this trie provides a considerable savings.
-  /// 
+  ///
   /// To get this savings, we use an ADT for the operations that _would_ build this trie,
   /// if evaluated. This structure specializes a rope: a balanced tree representing a
   /// sequence.  It is only as balanced as the tries from which we generate
   /// these build ASTs.  They have no intrinsic balance properties of their
   /// own.
-  /// 
+  ///
   public module Build {
     /// The build of a trie, as an AST for a simple DSL.
     public type Build<K, V> = {
@@ -901,7 +901,7 @@ module {
     };
 
     /// Project the nth key-value pair from the trie build.
-    /// 
+    ///
     /// This position is meaningful only when the build contains multiple uses of one or more keys, otherwise it is not.
     public func nth<K, V>(tb : Build<K, V>, i : Nat) : ?(K, ?Hash.Hash, V) {
       func rec(tb : Build<K, V>, i : Nat) : ?(K, ?Hash.Hash, V) = switch tb {
@@ -958,8 +958,8 @@ module {
 
   /// Fold over the key-value pairs of the trie, using an accumulator.
   /// The key-value pairs have no reliable or meaningful ordering.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -988,8 +988,8 @@ module {
   };
 
   /// Test whether a given key-value pair is present, or not.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -1023,8 +1023,8 @@ module {
   };
 
   /// Test whether all key-value pairs have a given property.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -1060,12 +1060,12 @@ module {
   };
 
   /// Project the nth key-value pair from the trie.
-  /// 
+  ///
   /// :::note
   /// This position is not meaningful; it's only here so that we
   /// can inject tries into arrays using functions like `Array.tabulate`.
   /// :::
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// import Array "mo:base/Array";
@@ -1103,8 +1103,8 @@ module {
   };
 
   /// Gather the collection of key-value pairs into an array of a (possibly-distinct) type.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -1136,8 +1136,8 @@ module {
   public func isEmpty<K, V>(t : Trie<K, V>) : Bool = size(t) == 0;
 
   /// Filter the key-value pairs by a given predicate.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -1174,8 +1174,8 @@ module {
   };
 
   /// Map and filter the key-value pairs by a given predicate.
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -1249,8 +1249,8 @@ module {
   /// Replace the given key's value in the trie,
   /// and only if successful, do the success continuation,
   /// otherwise, return the failure value
-  /// 
-  /// 
+  ///
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;
@@ -1296,7 +1296,7 @@ module {
   };
 
   /// Put the given key's value in the trie; return the new trie; assert that no prior value is associated with the key.
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// // note that compared to `put`, `putFresh` does not return a tuple
@@ -1369,11 +1369,11 @@ module {
   /// Remove the entry for the given key from the trie, by returning the reduced trie.
   /// Also returns the removed value if the key existed and `null` otherwise.
   /// Compares keys using the provided function `k_eq`.
-  /// 
-  /// :::note 
+  ///
+  /// :::note
   /// The removal of an existing key shrinks the trie.
   /// :::
-  /// 
+  ///
   /// Example:
   /// ```motoko include=initialize
   /// trie := Trie.put(trie, key "hello", Text.equal, 42).0;

@@ -1,22 +1,22 @@
 /// The Internet Computer allows canister smart contracts to store a small amount of data during
 /// update method processing so that during query call processing, the canister can obtain
 /// a certificate about that data.
-/// 
+///
 /// :::info Intended audience
-/// 
+///
 /// This module provides a _low-level_ interface to this API, aimed at advanced
 /// users and library implementors. See the Internet Computer interface
 /// specification and corresponding documentation for how to use this to make query
 /// calls to your canister tamperproof.
 /// :::
-/// 
+///
 
 import Prim "mo:⛔";
 
 module {
 
   /// Set the certified data.
-  /// 
+  ///
   /// :::note Usage constraints
   ///
   /// Must be called from an update method, else traps.
@@ -35,15 +35,15 @@ module {
   /// let blob = Blob.fromArray(array);
   /// CertifiedData.set(blob);
   /// ```
-  /// 
+  ///
   /// :::info
   /// [See a full example on how to use certified variables](https://github.com/dfinity/examples/tree/master/motoko/cert-var).
   /// :::
-  /// 
+  ///
   public let set : (data : Blob) -> () = Prim.setCertifiedData;
 
   /// Gets a certificate.
-  /// 
+  ///
   /// :::note When available
   ///
   /// Returns `null` if no certificate is available, e.g. when processing an
