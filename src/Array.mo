@@ -92,7 +92,7 @@ module {
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
-  public func thaw<A>(array : [A]) : [var A] = Prim.Array_tabulateVar<X>(array.size(), func i = array[i]);
+  public func thaw<A>(array : [A]) : [var A] = Prim.Array_tabulateVar<A>(array.size(), func i = array[i]);
 
   /// Tests if two arrays contain equal values (i.e. they represent the same
   /// list of elements). Uses `equal` to compare elements in the arrays.
