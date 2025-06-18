@@ -62,17 +62,8 @@ module {
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
-  public func tabulateVar<X>(size : Nat, generator : Nat -> X) : [var X] {
-    // FIXME add this as a primitive in the RTS
-    if (size == 0) { return [var] };
-    let array = Prim.Array_init<X>(size, generator 0);
-    var i = 1;
-    while (i < size) {
-      array[i] := generator i;
-      i += 1
-    };
-    array
-  };
+  public func tabulateVar<X>(size : Nat, generator : Nat -> X) : [var X] =
+    Prim.Array_tabulateVar<X>(size, generator);
 
   /// Transforms a mutable array into an immutable array.
   ///
@@ -101,19 +92,7 @@ module {
   /// | Runtime   | Space     |
   /// |-----------|-----------|
   /// | `O(size)` | `O(1)` |
-  public func thaw<A>(array : [A]) : [var A] {
-    let size = array.size();
-    if (size == 0) {
-      return [var]
-    };
-    let newArray = Prim.Array_init<A>(size, array[0]);
-    var i = 0;
-    while (i < size) {
-      newArray[i] := array[i];
-      i += 1
-    };
-    newArray
-  };
+  public func thaw<A>(array : [A]) : [var A] = Prim.Array_tabulateVar<X>(array.size(), func i = array[i]);
 
   /// Tests if two arrays contain equal values (i.e. they represent the same
   /// list of elements). Uses `equal` to compare elements in the arrays.
