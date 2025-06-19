@@ -145,6 +145,12 @@ module {
     };
     return null
   };
+  public func exists<X>(array : [X], predicate : X -> Bool) : Bool {
+      Option.isSome(find(array, predicate))
+  };
+  public func forall<X>(array : [X], predicate : X -> Bool) : Bool {
+      not exists<X>(array, func x = not (predicate x))
+  };
 
   /// Create a new array by appending the values of `array1` and `array2`.
   ///
@@ -196,6 +202,10 @@ module {
     let temp : [var X] = thaw(array);
     sortInPlace(temp, compare);
     freeze(temp)
+  };
+  public func sortByLessThanOrEqual<X>(array : [X], isLessThanOrEqual : (X, X) -> Bool) : [X] {
+      let compare = Order.lteToOrder(isLessThanOrEqual);
+      sort(array, compare);
   };
 
   /// Sorts the elements in the array, __in place__, according to `compare`.
@@ -551,6 +561,7 @@ module {
 
     accumulation
   };
+  public let fold = foldLeft;
 
   /// Collapses the elements in `array` into a single value by starting with `base`
   /// and progessively combining elements into `base` with `combine`. Iteration runs
