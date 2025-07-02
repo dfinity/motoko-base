@@ -199,10 +199,13 @@ module {
   /// | `O(size)` | `O(size)` |
 
   public func map<T, U>(l : List<T>, f : T -> U) : List<U> {
-    switch l {
-      case null { null };
-      case (?(h, t)) { ?(f(h), map<T, U>(t, f)) }
-    }
+    func go(acc : List<U>, l : List<T>) : List<U> {
+      switch l {
+        case null { reverse(acc) };
+        case (?(h, t)) { go(?(f(h), acc), t) }
+      }
+    };
+    go(null, l)
   };
 
   /// Create a new list with only those elements of the original list for which
@@ -217,16 +220,19 @@ module {
   /// |-----------|-----------|
   /// | `O(size)` | `O(size)` |
   public func filter<T>(l : List<T>, f : T -> Bool) : List<T> {
-    switch l {
-      case null { null };
-      case (?(h, t)) {
-        if (f(h)) {
-          ?(h, filter<T>(t, f))
-        } else {
-          filter<T>(t, f)
+    func go(acc : List<T>, l : List<T>) : List<T> {
+      switch l {
+        case null { reverse(acc) };
+        case (?(h, t)) {
+          if (f(h)) {
+            go(?(h, acc), t)
+          } else {
+            go(acc, t)
+          }
         }
       }
-    }
+    };
+    go(null, l);
   };
 
   /// Create two new lists from the results of a given function (`f`).
@@ -281,15 +287,18 @@ module {
   /// | `O(size)` | `O(size)` |
   ///
   public func mapFilter<T, U>(l : List<T>, f : T -> ?U) : List<U> {
-    switch l {
-      case null { null };
-      case (?(h, t)) {
-        switch (f(h)) {
-          case null { mapFilter<T, U>(t, f) };
-          case (?h_) { ?(h_, mapFilter<T, U>(t, f)) }
+    func go(acc : List<U>, l : List<T>) : List<U> {
+      switch l {
+        case null { reverse(acc) };
+        case (?(h, t)) {
+          switch (f(h)) {
+            case null { go(acc, t) };
+            case (?h_) { go(?(h_,acc), t) }
+          }
         }
       }
-    }
+    };
+    go(null, l);
   };
 
   /// Maps a Result-returning function `f` over a List and returns either
@@ -784,18 +793,17 @@ module {
   /// | `O(n)`  | `O(n)`  |
   public func split<T>(n : Nat, xs : List<T>) : (List<T>, List<T>) {
     if (n == 0) { (null, xs) } else {
-      func rec(n : Nat, xs : List<T>) : (List<T>, List<T>) {
-        switch (pop<T>(xs)) {
-          case (null, _) { (null, null) };
-          case (?h, t) {
-            if (n == 1) { (make<T>(h), t) } else {
-              let (l, r) = rec(n - 1, t);
-              (push<T>(h, l), r)
+      func rec(n : Nat, acc : List<T>, xs : List<T>) : (List<T>, List<T>) {
+        switch xs {
+          case null { (reverse(acc), null) };
+          case (?(h, t)) {
+            if (n == 1) { (reverse(?(h, acc)), t) } else {
+              rec(n - 1, ?(h, acc), t);
             }
           }
         }
       };
-      rec(n, xs)
+      rec(n, null, xs)
     }
   };
 
