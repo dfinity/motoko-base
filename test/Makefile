@@ -21,8 +21,8 @@ STDLIB_FILES= $(wildcard $(STDLIB)/*.mo)
 VESSEL_PKGS= $(shell vessel sources)
 
 MOC_COMMON_FLAGS=-c --package base $(STDLIB) $(VESSEL_PKGS) -wasi-system-api
-MOC_CLASSICAL=$(MOC) $(MOC_COMMON_FLAGS)
-MOC_ENHANCED=$(MOC) $(MOC_COMMON_FLAGS) --enhanced-orthogonal-persistence
+MOC_CLASSICAL=$(MOC) $(MOC_COMMON_FLAGS) --legacy-persistence
+MOC_ENHANCED=$(MOC) $(MOC_COMMON_FLAGS)
 
 $(OUTDIR):
 	@mkdir $@
