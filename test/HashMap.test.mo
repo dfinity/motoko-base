@@ -97,19 +97,24 @@ let suite = Suite.suite(
     ),
     Suite.test(
       "toState/fromState", do {
-      var state = HashMap.emptyState<Nat, Nat>();
+      /*stable*/ var state = HashMap.emptyState<Nat, Nat>();
       let map = newMap();
-      let oldentries = Iter.toArray(map.entries());
-      let size = map.size();
-      assert size == smallSize;
-      state := map.toState(); // save state
-      assert map.size() == 0;
-      map.fromState(state); // restore state
-      assert map.size() == size;
-      assert oldentries == Iter.toArray(map.entries());
+      var k = 0;
+      while (k < 100) {
+        let size = map.size();
+        assert size == smallSize+k;
+      	k += 1;
+        map.put(smallSize+k, smallSize+k);
+        let oldentries = Iter.toArray(map.entries());
+        state := map.toState(); // save state
+        assert map.size() == 0;
+        map.fromState(state); // restore state
+        assert map.size() == size+1;
+        assert oldentries == Iter.toArray(map.entries());
+      };
       map.size();
       },
-      M.equals(T.nat(smallSize))
+      M.equals(T.nat(smallSize+100))
     ),
     Suite.test(
       "size with collisions",
