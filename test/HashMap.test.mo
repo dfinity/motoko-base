@@ -96,6 +96,27 @@ let suite = Suite.suite(
       M.equals(T.nat(smallSize))
     ),
     Suite.test(
+      "toState/fromState", do {
+      /*stable*/ var state = HashMap.emptyState<Nat, Nat>();
+      let map = newMap();
+      var k = 0;
+      while (k < 100) {
+        let size = map.size();
+        assert size == smallSize+k;
+      	k += 1;
+        map.put(smallSize+k, smallSize+k);
+        let oldentries = Iter.toArray(map.entries());
+        state := map.toState(); // save state
+        assert map.size() == 0;
+        map.fromState(state); // restore state
+        assert map.size() == size+1;
+        assert oldentries == Iter.toArray(map.entries());
+      };
+      map.size();
+      },
+      M.equals(T.nat(smallSize+100))
+    ),
+    Suite.test(
       "size with collisions",
       newCollidedMap().size(),
       M.equals(T.nat(largeSize))
