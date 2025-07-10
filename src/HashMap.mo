@@ -82,7 +82,7 @@ module {
     ///
     /// | Runtime   | Space     |
     /// |-----------|-----------|
-    /// | `O(1)` | `O(1)` |
+    /// | `O(1)`    | `O(1)`    |
     public func toState() : State<K, V> {
       let state = {var table; var _count};
       table := [var];
@@ -92,7 +92,11 @@ module {
 
     /// Restore map from state, assuming consistent `keyEq` and `keyHash`.
     /// Trap if map is already non-empty.
-    public func fromState( state : State<K, V>) {
+    ///
+    /// | Runtime   | Space     |
+    /// |-----------|-----------|
+    /// | `O(1)`    | `O(1)`    |
+    public func fromState(state : State<K, V>) {
       if (not (table.size() == 0 and _count == 0)) {
         Prim.trap("HashMap.fromStable: HashMap not empty")
       };
