@@ -1,3 +1,11 @@
+## 0.15.1
+
+(nothing)
+
+## 0.15.0
+
+(nothing)
+
 ## 0.14.14
 
 * Improved performance of `Array.tabulateVar` and `Array.thaw` (#725).
