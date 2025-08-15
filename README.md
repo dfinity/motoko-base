@@ -3,6 +3,7 @@ The Motoko base library
 
 > **Important update:** The Motoko base library has been replaced by the official [`core`](https://github.com/dfinity/motoko-core) package. New projects should use `core` instead of `base`.
 >
+> - [GitHub repository](https://github.com/dfinity/motoko-core)
 > - [Core documentation](https://internetcomputer.org/docs/motoko/core)
 > - [Core Mops package](https://mops.one/core)
 > - [Migration guide from `base` to `core`](https://internetcomputer.org/docs/motoko/base-core-migration)
