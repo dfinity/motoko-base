@@ -1,6 +1,12 @@
 The Motoko base library
 =======================
 
+> **Important update:** The Motoko base library has been replaced by the official [`core`](https://github.com/dfinity/motoko-core) package. New projects should use `core` instead of `base`.
+>
+> - [Core documentation](https://internetcomputer.org/docs/motoko/core)
+> - [Core Mops package](https://mops.one/core)
+> - [Migration guide from `base` to `core`](https://internetcomputer.org/docs/motoko/base-core-migration)
+
 This repository contains the Motoko base library. It is intended to be used with the [`moc` compiler](https://github.com/dfinity/motoko) (and tools that wrap it, like `dfx`).
 
 Usage
