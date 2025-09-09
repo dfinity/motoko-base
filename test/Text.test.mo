@@ -1060,7 +1060,7 @@ run(
       test(
         "toList-example",
         Text.toList("Café"),
-        M.equals(T.list<Char>(T.charTestable, ?('C', ?('a', ?('f', ?('é', null)))))),
+        M.equals(T.linkedList(T.charTestable, ?('C', ?('a', ?('f', ?('é', null)))))),
       ),
       test(
         "fromList-example",
