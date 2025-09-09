@@ -7,11 +7,9 @@ import Debug "../src/Debug";
 import Array "../src/Array";
 import Option "../src/Option";
 
-import Suite "mo:matchers/Suite";
+import { run; test; suite } "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
-
-let { run; test; suite } = Suite;
 
 let entryTestable = T.tuple2Testable(T.natTestable, T.textTestable);
 
