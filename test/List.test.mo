@@ -168,9 +168,9 @@ func makeNatural(x : Int) : Result.Result<Nat, Text> = if (x >= 0) {
   #ok(Int.abs(x))
 } else { #err(Int.toText(x) # " is not a natural number.") };
 
-func listRes(itm : Result.Result<List.List<Nat>, Text>) : T.TestableItem<Result.Result<List.List<Nat>, Text>> {
+func listRes(item : Result.Result<List.List<Nat>, Text>) : T.TestableItem<Result.Result<List.List<Nat>, Text>> {
   let resT = T.resultTestable(T.listTestable<Nat>(T.intTestable), T.textTestable);
-  { display = resT.display; equals = resT.equals; item = itm }
+  { display = resT.display; equals = resT.equals; item }
 };
 
 
