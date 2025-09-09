@@ -7,7 +7,7 @@ import Debug "../src/Debug";
 import Array "../src/Array";
 import Option "../src/Option";
 
-import { run; test; suite } "mo:matchers/Suite";
+import { run; test; suite } = "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
