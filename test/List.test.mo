@@ -210,14 +210,14 @@ let replicate = Suite.suite(
       "empty-list",
       List.replicate<Nat>(0, 0),
       M.equals(
-        T.list(T.natTestable, List.nil<Nat>())
+        T.linkedList(T.natTestable, List.nil<Nat>())
       )
     ),
     Suite.test(
       "small-list",
       List.replicate(3, 0),
       M.equals(
-        T.list<Nat>(T.natTestable, ?(0, ?(0, ?(0, null))))
+        T.linkedList(T.natTestable, ?(0, ?(0, ?(0, null))))
       )
     )
   ]
@@ -230,21 +230,21 @@ let tabulate = Suite.suite(
       "empty-list",
       List.tabulate<Nat>(0, func i { i }),
       M.equals(
-        T.list(T.natTestable, List.nil<Nat>())
+        T.linkedList(T.natTestable, List.nil<Nat>())
       )
     ),
     Suite.test(
       "small-list",
       List.tabulate<Nat>(3, func i { i * 2 }),
       M.equals(
-        T.list<Nat>(T.natTestable, ?(0, ?(2, ?(4, null))))
+        T.linkedList(T.natTestable, ?(0, ?(2, ?(4, null))))
       )
     ),
     Suite.test(
       "large-list",
       List.tabulate<Nat>(10000, func i { 0 }),
       M.equals(
-        T.list<Nat>(T.natTestable, List.replicate(10000, 0))
+        T.linkedList(T.natTestable, List.replicate(10000, 0))
       )
     )
   ]
@@ -260,7 +260,7 @@ let append = Suite.suite(
         List.tabulate<Nat>(10, func i { i + 10 })
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(20, func i { i }))
       )
     ),
     Suite.test(
@@ -270,7 +270,7 @@ let append = Suite.suite(
         List.tabulate<Nat>(10000, func i { i + 10000 })
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20000, func i { i }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(20000, func i { i }))
       )
     )
   ]
@@ -303,17 +303,17 @@ let push = Suite.suite(
     Suite.test(
       "empty",
       List.push(0, List.nil<Nat>()),
-      M.equals(T.list(T.natTestable, ?(0, null)))
+      M.equals(T.linkedList(T.natTestable, ?(0, null)))
     ),
     Suite.test(
       "singleton",
       List.push(1, List.push(0, List.nil<Nat>())),
-      M.equals(T.list(T.natTestable, ?(1, ?(0, null))))
+      M.equals(T.linkedList(T.natTestable, ?(1, ?(0, null))))
     ),
     Suite.test(
       "nary",
       List.push(2, List.push(1, List.push(0, List.nil<Nat>()))),
-      M.equals(T.list(T.natTestable, ?(2, ?(1, ?(0, null)))))
+      M.equals(T.linkedList(T.natTestable, ?(2, ?(1, ?(0, null)))))
     )
   ]
 );
@@ -347,21 +347,21 @@ let pop = Suite.suite(
       "empty list",
       List.pop(List.nil<Nat>()),
       M.equals(T.tuple2(T.optionalTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (null, null) : (?Nat, List.List<Nat>) ))
     ),
     Suite.test(
       "singleton",
       List.pop(?(3, null)),
       M.equals(T.tuple2(T.optionalTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (?3, null) : (?Nat, List.List<Nat>) ))
     ),
     Suite.test(
       "threesome",
       List.pop(?(1, ?(2, ?(3, null)))),
       M.equals(T.tuple2(T.optionalTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (?1, ?(2, ?(3, null))) : (?Nat, List.List<Nat>) ))
     ),
   ]
@@ -441,18 +441,18 @@ let reverse = Suite.suite(
     Suite.test(
       "empty list",
       List.reverse(List.nil<Nat>()),
-      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+      M.equals(T.linkedList(T.natTestable, null : List.List<Nat>))
 
     ),
     Suite.test(
       "singleton",
       List.reverse(?(3, null)),
-      M.equals(T.list(T.natTestable, ?(3, null)))
+      M.equals(T.linkedList(T.natTestable, ?(3, null)))
     ),
     Suite.test(
       "threesome",
       List.reverse(?(1, ?(2, ?(3, null)))),
-      M.equals(T.list(T.natTestable, ?(3, ?(2, ?(1, null)))))
+      M.equals(T.linkedList(T.natTestable, ?(3, ?(2, ?(1, null)))))
     ),
   ]
 );
@@ -498,21 +498,21 @@ let map = Suite.suite(
       List.map<Nat,Nat>(
        List.nil<Nat>(),
       func n { n + 1 }),
-      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+      M.equals(T.linkedList(T.natTestable, null : List.List<Nat>))
     ),
     Suite.test(
       "singleton",
       List.map<Nat,Nat>(
         ?(3, null),
         func n { n + 1 }),
-      M.equals(T.list(T.natTestable, ?(4, null)))
+      M.equals(T.linkedList(T.natTestable, ?(4, null)))
     ),
     Suite.test(
       "threesome",
       List.map<Nat,Nat>(
         ?(1, ?(2, ?(3, null))),
         func n { n + 1 }),
-      M.equals(T.list(T.natTestable, ?(2, ?(3, ?(4, null)))))
+      M.equals(T.linkedList(T.natTestable, ?(2, ?(3, ?(4, null)))))
     ),
   ]
 );
@@ -526,28 +526,28 @@ let filter = Suite.suite(
       List.filter<Nat>(
        List.nil<Nat>(),
        func n { n % 2 == 0 }),
-      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+      M.equals(T.linkedList(T.natTestable, null : List.List<Nat>))
     ),
     Suite.test(
       "singleton",
       List.filter<Nat>(
         ?(3, null),
       func n { n % 2 == 0 }),
-      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+      M.equals(T.linkedList(T.natTestable, null : List.List<Nat>))
     ),
     Suite.test(
       "threesome",
       List.filter<Nat>(
         ?(1, ?(2, ?(3, null))),
         func n { n % 2 == 0 }),
-      M.equals(T.list(T.natTestable, ?(2, null)))
+      M.equals(T.linkedList(T.natTestable, ?(2, null)))
     ),
     Suite.test(
       "foursome",
       List.filter<Nat>(
         ?(1, ?(2, ?(3, ?(4, null)))),
         func n { n % 2 == 0 }),
-      M.equals(T.list(T.natTestable, ?(2, ?(4, null))))
+      M.equals(T.linkedList(T.natTestable, ?(2, ?(4, null))))
     ),
   ]
 );
@@ -560,8 +560,8 @@ let partition = Suite.suite(
       List.partition<Nat>(
        List.nil<Nat>(),
        func n { n % 2 == 0 }),
-      M.equals(T.tuple2(T.listTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+      M.equals(T.tuple2(T.linkedListTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (null, null) : (List.List<Nat>, List.List<Nat>)))
     ),
     Suite.test(
@@ -569,8 +569,8 @@ let partition = Suite.suite(
       List.partition<Nat>(
         ?(3, null),
       func n { n % 2 == 0 }),
-      M.equals(T.tuple2(T.listTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+      M.equals(T.tuple2(T.linkedListTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (null, ?(3, null)) : (List.List<Nat>, List.List<Nat>)))
 
     ),
@@ -579,8 +579,8 @@ let partition = Suite.suite(
       List.partition<Nat>(
         ?(2, null),
       func n { n % 2 == 0 }),
-      M.equals(T.tuple2(T.listTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+      M.equals(T.tuple2(T.linkedListTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (?(2, null), null) : (List.List<Nat>, List.List<Nat>)))
     ),
     Suite.test(
@@ -588,8 +588,8 @@ let partition = Suite.suite(
       List.partition<Nat>(
         ?(1, ?(2, ?(3, null))),
         func n { n % 2 == 0 }),
-      M.equals(T.tuple2(T.listTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+      M.equals(T.tuple2(T.linkedListTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (?(2, null), ?(1, ?(3, null))) : (List.List<Nat>, List.List<Nat>)))
     ),
     Suite.test(
@@ -597,8 +597,8 @@ let partition = Suite.suite(
       List.partition<Nat>(
         ?(1, ?(2, ?(3, ?(4, null)))),
         func n { n % 2 == 0 }),
-      M.equals(T.tuple2(T.listTestable(T.natTestable),
-                        T.listTestable(T.natTestable),
+      M.equals(T.tuple2(T.linkedListTestable(T.natTestable),
+                        T.linkedListTestable(T.natTestable),
                         (?(2, ?(4, null)),
                          ?(1, ?(3, null))) : (List.List<Nat>, List.List<Nat>)))
     ),
@@ -614,28 +614,28 @@ let mapFilter = Suite.suite(
       List.mapFilter<Nat, Text>(
        List.nil<Nat>(),
        func n { if (n % 2 == 0) ?(debug_show n) else null }),
-      M.equals(T.list(T.textTestable, null : List.List<Text>))
+      M.equals(T.linkedList(T.textTestable, null : List.List<Text>))
     ),
     Suite.test(
       "singleton",
       List.mapFilter<Nat, Text>(
         ?(3, null),
        func n { if (n % 2 == 0) ?(debug_show n) else null }),
-      M.equals(T.list(T.textTestable, null : List.List<Text>))
+      M.equals(T.linkedList(T.textTestable, null : List.List<Text>))
     ),
     Suite.test(
       "threesome",
       List.mapFilter<Nat, Text>(
         ?(1, ?(2, ?(3, null))),
        func n { if (n % 2 == 0) ?(debug_show n) else null }),
-      M.equals(T.list(T.textTestable, ?("2", null)))
+      M.equals(T.linkedList(T.textTestable, ?("2", null)))
     ),
     Suite.test(
       "foursome",
       List.mapFilter<Nat, Text>(
         ?(1, ?(2, ?(3, ?(4, null)))),
         func n { if (n % 2 == 0) ?(debug_show n) else null }),
-      M.equals(T.list(T.textTestable, ?("2", ?("4", null))))
+      M.equals(T.linkedList(T.textTestable, ?("2", ?("4", null))))
     ),
   ]
 );
@@ -650,7 +650,7 @@ let flatten = Suite.suite(
         List.tabulate<List.List<Nat>>(10, func i { List.tabulate<Nat>(10, func j { i * 10 + j })})
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(100, func i { i }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(100, func i { i }))
       )
     ),
     Suite.test(
@@ -659,7 +659,7 @@ let flatten = Suite.suite(
         List.tabulate<List.List<Nat>>(10, func i { null : List.List<Nat> })
       ),
       M.equals(
-        T.list(T.natTestable, null : List.List<Nat>)
+        T.linkedList(T.natTestable, null : List.List<Nat>)
       )
     ),
    Suite.test(
@@ -668,7 +668,7 @@ let flatten = Suite.suite(
                           ?(null,
                             ?(?(1, null),
                               null)))),
-      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
+      M.equals(T.linkedList<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
     ),
     Suite.test(
       "flatten empty start",
@@ -677,7 +677,7 @@ let flatten = Suite.suite(
                            ?(null,
                              ?(?(1, null),
                                null))))),
-      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
+      M.equals(T.linkedList<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
     ),
     Suite.test(
       "flatten empty end",
@@ -686,23 +686,23 @@ let flatten = Suite.suite(
                             ?(?(1, null),
                               ?(null,
                                 null))))),
-      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
+      M.equals(T.linkedList<Int>(T.intTestable, ?(1, ?(2, ?(3, ?(1, null))))))
     ),
     Suite.test(
       "flatten singleton",
       List.flatten<Int>(?(?(1, ?(2, (?(3, null)))),
                           null)),
-      M.equals(T.list<Int>(T.intTestable, ?(1, ?(2, (?(3, null))))))
+      M.equals(T.linkedList<Int>(T.intTestable, ?(1, ?(2, (?(3, null))))))
     ),
     Suite.test(
       "flatten singleton empty",
       List.flatten<Int>(?(null, null)),
-      M.equals(T.list<Int>(T.intTestable, null))
+      M.equals(T.linkedList<Int>(T.intTestable, null))
     ),
     Suite.test(
       "flatten empty",
       List.flatten<Int>(null),
-      M.equals(T.list<Int>(T.intTestable, null))
+      M.equals(T.linkedList<Int>(T.intTestable, null))
     ),
   ]
 );
@@ -713,7 +713,7 @@ let make = Suite.suite(
     Suite.test(
       "make",
       List.make<Int>(0),
-      M.equals(T.list<Int>(T.intTestable, ?(0, null)))
+      M.equals(T.linkedList<Int>(T.intTestable, ?(0, null)))
     ),
   ]
 );
@@ -724,42 +724,42 @@ let take = Suite.suite(
     Suite.test(
       "empty list",
       List.take(List.nil<Nat>(), 0),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "singleton-0",
       List.take(?(3, null), 0),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     ),
      Suite.test(
       "singleton-1",
       List.take(?(3, null), 1),
-      M.equals(T.list(T.natTestable, ?(3, null)))
+      M.equals(T.linkedList(T.natTestable, ?(3, null)))
     ),
     Suite.test(
       "singleton-2",
       List.take(?(3, null), 2),
-      M.equals(T.list(T.natTestable, ?(3, null)))
+      M.equals(T.linkedList(T.natTestable, ?(3, null)))
     ),
     Suite.test(
       "threesome-0",
       List.take(?(1, ?(2, ?(3, null))), 0),
-      M.equals(T.list(T.natTestable, null : List.List<Nat>))
+      M.equals(T.linkedList(T.natTestable, null : List.List<Nat>))
     ),
      Suite.test(
       "threesome-1",
       List.take(?(1, ?(2, ?(3, null))), 1),
-      M.equals(T.list(T.natTestable, ?(1, null)))
+      M.equals(T.linkedList(T.natTestable, ?(1, null)))
     ),
      Suite.test(
       "threesome-3",
       List.take(?(1, ?(2, ?(3, null))), 3),
-      M.equals(T.list(T.natTestable, ?(1, ?(2, ?(3, null)))))
+      M.equals(T.linkedList(T.natTestable, ?(1, ?(2, ?(3, null)))))
     ),
     Suite.test(
       "threesome-4",
       List.take(?(1, ?(2, ?(3, null))), 4),
-      M.equals(T.list(T.natTestable, ?(1, ?(2, ?(3, null)))))
+      M.equals(T.linkedList(T.natTestable, ?(1, ?(2, ?(3, null)))))
     )
   ]
 );
@@ -770,47 +770,47 @@ let drop = Suite.suite(
     Suite.test(
       "empty list",
       List.drop(List.nil<Nat>(), 0),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "singleton-0",
       List.drop(?(3, null), 0),
-      M.equals(T.list<Nat>(T.natTestable, ?(3,null)))
+      M.equals(T.linkedList<Nat>(T.natTestable, ?(3,null)))
     ),
      Suite.test(
       "singleton-1",
       List.drop(?(3, null), 1),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "singleton-2",
       List.drop(?(3, null), 2),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "threesome-0",
       List.drop(?(1, ?(2, ?(3, null))), 0),
-      M.equals(T.list<Nat>(T.natTestable, ?(1, ?(2, ?(3, null)))))
+      M.equals(T.linkedList<Nat>(T.natTestable, ?(1, ?(2, ?(3, null)))))
     ),
      Suite.test(
       "threesome-1",
       List.drop(?(1, ?(2, ?(3, null))), 1),
-      M.equals(T.list(T.natTestable, ?(2, ?(3, null))))
+      M.equals(T.linkedList(T.natTestable, ?(2, ?(3, null))))
     ),
      Suite.test(
       "threesome-2",
       List.drop(?(1, ?(2, ?(3, null))), 2),
-      M.equals(T.list(T.natTestable, ?(3, null)))
+      M.equals(T.linkedList(T.natTestable, ?(3, null)))
     ),
     Suite.test(
       "threesome-3",
       List.drop(?(1, ?(2, ?(3, null))), 3),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     ),
     Suite.test(
       "threesome-4",
       List.drop(?(1, ?(2, ?(3, null))), 4),
-      M.equals(T.list<Nat>(T.natTestable, null))
+      M.equals(T.linkedList<Nat>(T.natTestable, null))
     )
   ]
 );
@@ -917,7 +917,7 @@ let merge = Suite.suite(
         func (i, j) { i <= j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(20, func i { i }))
       )
     ),
 
@@ -938,7 +938,7 @@ let merge = Suite.suite(
         func (i, j) { i <= j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20, func i { i }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(20, func i { i }))
       )
     ),
 
@@ -950,7 +950,7 @@ let merge = Suite.suite(
         func (i, j) { i <= j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(20, func i { 2 * (i / 2) }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(20, func i { 2 * (i / 2) }))
       )
     ),
 
@@ -962,7 +962,7 @@ let merge = Suite.suite(
         func (i, j) { i <= j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(2000, func i { i }))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(2000, func i { i }))
       )
     )
   ]
@@ -1100,7 +1100,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
       )),
     Suite.test(
       "small-list-shorter",
@@ -1110,7 +1110,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
       )),
     Suite.test(
       "small-list-longer",
@@ -1120,7 +1120,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
+        T.linkedList(T.natTestable, List.tabulate<Nat>(10, func i { i  *  i}))
       )),
     Suite.test(
       "small-list-empty-left",
@@ -1130,7 +1130,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, null : List.List<Nat>)
+        T.linkedList(T.natTestable, null : List.List<Nat>)
       )),
     Suite.test(
       "small-list-empty-right",
@@ -1140,7 +1140,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, null : List.List<Nat>)
+        T.linkedList(T.natTestable, null : List.List<Nat>)
       )),
     Suite.test(
       "small-list-both-empty",
@@ -1150,7 +1150,7 @@ let zipWith = Suite.suite(
         func (i, j) { i * j }
       ),
       M.equals(
-        T.list(T.natTestable, null : List.List<Nat>)
+        T.linkedList(T.natTestable, null : List.List<Nat>)
       )),
   ]
 );
@@ -1165,7 +1165,7 @@ let zip = Suite.suite(
         List.tabulate<Nat>(10, func i { i })
       ),
       M.equals(
-        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+        T.linkedList(T.tuple2Testable(T.natTestable,T.natTestable),
           List.tabulate<(Nat, Nat)>(10, func i { (i, i) }))
       )),
     Suite.test(
@@ -1175,7 +1175,7 @@ let zip = Suite.suite(
         List.tabulate<Nat>(11, func i { i })
       ),
       M.equals(
-        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+        T.linkedList(T.tuple2Testable(T.natTestable,T.natTestable),
           List.tabulate<(Nat, Nat)>(10, func i { (i, i) }))
       )),
     Suite.test(
@@ -1185,7 +1185,7 @@ let zip = Suite.suite(
         List.tabulate<Nat>(10, func i { i })
       ),
       M.equals(
-        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+        T.linkedList(T.tuple2Testable(T.natTestable,T.natTestable),
           List.tabulate<(Nat, Nat)>(10, func i { (i, i) }))
       )),
     Suite.test(
@@ -1195,7 +1195,7 @@ let zip = Suite.suite(
         List.tabulate<Nat>(10, func i { i })
       ),
       M.equals(
-        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+        T.linkedList(T.tuple2Testable(T.natTestable,T.natTestable),
           null : List.List<(Nat, Nat)>)
       )),
     Suite.test(
@@ -1205,7 +1205,7 @@ let zip = Suite.suite(
         null
       ),
       M.equals(
-        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+        T.linkedList(T.tuple2Testable(T.natTestable,T.natTestable),
           null : List.List<(Nat, Nat)>)
       )),
     Suite.test(
@@ -1215,7 +1215,7 @@ let zip = Suite.suite(
         null
       ),
       M.equals(
-        T.list(T.tuple2Testable(T.natTestable,T.natTestable),
+        T.linkedList(T.tuple2Testable(T.natTestable,T.natTestable),
           null : List.List<(Nat, Nat)>)
       )),
   ]
@@ -1231,8 +1231,8 @@ let split = Suite.suite(
       ),
       M.equals(
         T.tuple2(
-          T.listTestable(T.natTestable),
-          T.listTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
           (null : List.List<Nat>,
            List.tabulate<Nat>(10, func i { i })))
       )),
@@ -1244,8 +1244,8 @@ let split = Suite.suite(
       ),
       M.equals(
         T.tuple2(
-          T.listTestable(T.natTestable),
-          T.listTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
           (null : List.List<Nat>,
            null : List.List<Nat>))
       )),
@@ -1257,8 +1257,8 @@ let split = Suite.suite(
       ),
       M.equals(
         T.tuple2(
-          T.listTestable(T.natTestable),
-          T.listTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
           (null : List.List<Nat>,
            null : List.List<Nat>))
       )),
@@ -1270,8 +1270,8 @@ let split = Suite.suite(
       ),
       M.equals(
         T.tuple2(
-          T.listTestable(T.natTestable),
-          T.listTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
           (List.tabulate<Nat>(10, func i { i }),
            null : List.List<Nat>
            ))
@@ -1284,8 +1284,8 @@ let split = Suite.suite(
       ),
       M.equals(
         T.tuple2(
-          T.listTestable(T.natTestable),
-          T.listTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
           (List.tabulate<Nat>(10, func i { i }),
            List.tabulate<Nat>(5, func i { 10 + i })
            ))
@@ -1298,8 +1298,8 @@ let split = Suite.suite(
       ),
       M.equals(
         T.tuple2(
-          T.listTestable(T.natTestable),
-          T.listTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
+          T.linkedListTestable(T.natTestable),
           (List.tabulate<Nat>(1, func i { i }),
            List.tabulate<Nat>(14, func i { 1 + i })
            ))
@@ -1317,8 +1317,8 @@ let chunks = Suite.suite(
         List.tabulate<Nat>(10, func i { i }),
       ),
       M.equals(
-        T.list(
-          T.listTestable(T.natTestable),
+        T.linkedList(
+          T.linkedListTestable(T.natTestable),
           (List.tabulate<List.List<Nat>>(2, func i {
             List.tabulate<Nat>(5, func j { i * 5 + j }) })))
       )),
@@ -1328,8 +1328,8 @@ let chunks = Suite.suite(
         List.tabulate<Nat>(13, func i { i }),
       ),
       M.equals(
-        T.list(
-          T.listTestable(T.natTestable),
+        T.linkedList(
+          T.linkedListTestable(T.natTestable),
           (List.tabulate<List.List<Nat>>((13+4)/5, func i {
             List.tabulate<Nat>(if (i < 13 / 5) 5 else 13 % 5, func j { i * 5 + j }) })))
       )),
@@ -1339,8 +1339,8 @@ let chunks = Suite.suite(
         List.tabulate<Nat>(3, func i { i }),
       ),
       M.equals(
-        T.list(
-          T.listTestable(T.natTestable),
+        T.linkedList(
+          T.linkedListTestable(T.natTestable),
           (List.tabulate<List.List<Nat>>(1, func i {
             List.tabulate<Nat>(3, func j { i * 5 + j }) })))
       )),
@@ -1350,8 +1350,8 @@ let chunks = Suite.suite(
         List.tabulate<Nat>(5, func i { i }),
       ),
       M.equals(
-        T.list(
-          T.listTestable(T.natTestable),
+        T.linkedList(
+          T.linkedListTestable(T.natTestable),
           (null : List.List<List.List<Nat>>))
       )),
   ]
