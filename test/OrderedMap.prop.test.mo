@@ -7,7 +7,7 @@ import Debug "../src/Debug";
 import Array "../src/Array";
 import Option "../src/Option";
 
-import { run; test; suite } = "mo:matchers/Suite";
+import { type Suite; run; test; suite } = "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
 
@@ -60,7 +60,7 @@ func mapGen(samples_number: Nat, size: Nat, range: (Nat, Nat)): Iter.Iter<Map.Ma
 
 
 func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples: Nat) {
-  func prop(name: Text, f: Map.Map<Nat, Text> -> Bool): Suite.Suite {
+  func prop(name: Text, f: Map.Map<Nat, Text> -> Bool): Suite {
     var error_msg: Text = "";
     test(name, do {
         var error = true;
@@ -74,7 +74,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
         error_msg
       }, M.describedAs(error_msg, M.equals(T.text(""))))
   };
-  func prop_with_key(name: Text, f: (Map.Map<Nat, Text>, Nat) -> Bool): Suite.Suite {
+  func prop_with_key(name: Text, f: (Map.Map<Nat, Text>, Nat) -> Bool): Suite {
     var error_msg: Text = "";
     test(name, do {
         label stop for(map in mapGen(map_samples, size, range)) {
