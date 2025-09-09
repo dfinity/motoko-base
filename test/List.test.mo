@@ -15,7 +15,7 @@ FIXME:
 
 * flatten is quadratic
 * Array.mo doesn't implement `all`, `some`, `compare`
-* merge takes lte predicate of type (T,T)-> Bool, not comparison of type: (T,T) -> Ord
+* merge takes the predicate of type (T,T)-> Bool, not comparison of type: (T,T) -> Ord
 * split is not tail recursive and calls redundant helpers
 
 TODO:
