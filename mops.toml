@@ -1,6 +1,6 @@
 [package]
 name = "base"
-version = "0.16.0"
+version = "0.16.2"
 description = "The Motoko base library"
 repository = "https://github.com/dfinity/motoko-base"
 keywords = [ "base" ]
@@ -11,5 +11,5 @@ matchers = "https://github.com/kritzcreek/motoko-matchers#v2.1.0@781eb4980bf4238
 core = "https://github.com/dfinity/motoko-core"
 
 [toolchain]
-moc = "0.16.0"
+moc = "0.16.2"
 wasmtime = "35.0.0"
