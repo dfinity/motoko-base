@@ -55,6 +55,20 @@ module {
   // key-val list type
   type KVs<K, V> = AssocList.AssocList<Key<K>, V>;
 
+  /// state of a hashmap
+  /// stable when K and V are stable
+  public type State<K, V> = {
+    var table : [var KVs<K, V>];
+    var _count : Nat
+  };
+
+  /// fresh empty state
+  public func emptyState<K,V>() : State<K,V> = {
+    var table = [var];
+    var _count = 0;
+  };
+
+
   public class HashMap<K, V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
@@ -63,6 +77,34 @@ module {
 
     var table : [var KVs<K, V>] = [var];
     var _count : Nat = 0;
+
+    /// Extract state from map and clear map.
+    ///
+    /// | Runtime   | Space     |
+    /// |-----------|-----------|
+    /// | `O(1)`    | `O(1)`    |
+    public func toState() : State<K, V> {
+      let state = {var table; var _count};
+      table := [var];
+      _count := 0;
+      state
+    };
+
+    /// Restore map from state, assuming consistent `keyEq` and `keyHash`.
+    /// Trap if map is already non-empty.
+    ///
+    /// | Runtime   | Space     |
+    /// |-----------|-----------|
+    /// | `O(1)`    | `O(1)`    |
+    public func fromState(state : State<K, V>) {
+      if (not (table.size() == 0 and _count == 0)) {
+        Prim.trap("HashMap.fromStable: HashMap not empty")
+      };
+      table := state.table;
+      _count := state._count;
+      state.table := [var];
+      state._count := 0;
+    };
 
     /// Returns the current number of key-value entries in the map.
     ///
