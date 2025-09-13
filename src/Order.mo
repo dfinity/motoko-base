@@ -41,5 +41,17 @@ module {
       case _ { false }
     }
   };
-
+  public func lteToOrder<X>(isLessThanOrEqual : (X, X) -> Bool) : (X, X) -> Order {
+      func (a : X, b : X) : Order {
+          if (isLessThanOrEqual(a, b)) {
+              if (isLessThanOrEqual(b, a)) {
+                  #equal;
+              } else {
+                  #less;
+              }
+          } else {
+              #greater;
+          };
+      };
+  };
 }

@@ -35,6 +35,7 @@ module {
   public func abs(x : Int) : Nat {
     Prim.abs(x)
   };
+  public func fromNat(n : Nat) : Int = n;
 
   /// Converts an integer number to its textual representation. Textual
   /// representation _do not_ contain underscores to represent commas.

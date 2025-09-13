@@ -18,6 +18,7 @@
 
 import Nat "Nat";
 import Prim "mo:⛔";
+import Hash "Hash";
 
 module {
 
@@ -39,6 +40,7 @@ module {
   /// Nat32.toNat(123); // => 123 : Nat
   /// ```
   public let toNat : Nat32 -> Nat = Prim.nat32ToNat;
+  public func hash(n : Nat32) : Hash.Hash = Hash.hash(toNat n);
 
   /// Converts an unsigned integer with infinite precision to a 32-bit unsigned integer.
   ///
