@@ -6,7 +6,7 @@ WASMTIME_OPTIONS = -C cache=n -W nan-canonicalization=y -W memory64 -W multi-mem
 
 OUTDIR=_out
 
-TESTS = $(wildcard *.mo)
+TESTS = $(wildcard *.mo) # FIXME somehow add StableBTreeTest into suite
 
 TEST_CLASSICAL_TARGETS = $(patsubst %.mo,_out/%.classical.checked,$(TESTS))
 TEST_ENHANCED_TARGETS = $(patsubst %.mo,_out/%.enhanced.checked,$(TESTS))

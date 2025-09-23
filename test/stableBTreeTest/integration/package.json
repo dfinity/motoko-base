@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@dfinity/agent": "^0.14.0",
+    "node-fetch": "^3.2.10",
+    "tape": "^5.6.1"
+  }
+}
