@@ -7,13 +7,9 @@ import Debug "../src/Debug";
 import Array "../src/Array";
 import Option "../src/Option";
 
-import Suite "mo:matchers/Suite";
+import { type Suite; run; test; suite } = "mo:matchers/Suite";
 import T "mo:matchers/Testable";
 import M "mo:matchers/Matchers";
-
-import Random2 "mo:base/Random";
-
-let { run; test; suite } = Suite;
 
 let entryTestable = T.tuple2Testable(T.natTestable, T.textTestable);
 
@@ -64,7 +60,7 @@ func mapGen(samples_number: Nat, size: Nat, range: (Nat, Nat)): Iter.Iter<Map.Ma
 
 
 func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples: Nat) {
-  func prop(name: Text, f: Map.Map<Nat, Text> -> Bool): Suite.Suite {
+  func prop(name: Text, f: Map.Map<Nat, Text> -> Bool): Suite {
     var error_msg: Text = "";
     test(name, do {
         var error = true;
@@ -78,7 +74,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
         error_msg
       }, M.describedAs(error_msg, M.equals(T.text(""))))
   };
-  func prop_with_key(name: Text, f: (Map.Map<Nat, Text>, Nat) -> Bool): Suite.Suite {
+  func prop_with_key(name: Text, f: (Map.Map<Nat, Text>, Nat) -> Bool): Suite {
     var error_msg: Text = "";
     test(name, do {
         label stop for(map in mapGen(map_samples, size, range)) {
@@ -195,10 +191,10 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
           let k = natMap.keys<Text>(m);
           let v = natMap.vals(m);
           for (e in natMap.entries(m)) {
-            if (e.0 != k.next() or e.1 != v.next())
+            if (?e.0 != k.next() or ?e.1 != v.next())
               return false;
           };
-          return true;
+          true;
         }),
         prop("Array.fromIter(entries(m)) == Array.fromIter(entriesRev(m)).reverse()", func (m) {
           let a = Iter.toArray(natMap.entries(m));
@@ -210,7 +206,7 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
       suite("mapFilter", [
         prop_with_key("get(mapFilter(m, (!=k)), k) == null", func (m, k) {
           natMap.get(natMap.mapFilter<Text, Text>(m,
-          func (ki, vi) { if (ki != k) {?vi} else {null}}), k) == null
+          func (ki, vi) { if (ki != k) ?vi else null }), k) == null
         }),
         prop_with_key("get(mapFilter(put(m, k, v), (==k)), k) == ?v", func (m, k) {
           natMap.get(natMap.mapFilter<Text, Text>(natMap.put(m, k, "v"),
@@ -237,11 +233,11 @@ func run_all_props(range: (Nat, Nat), size: Nat, map_samples: Nat, query_samples
 
       suite("all/some", [
         prop("all through fold", func(m) {
-          let pred = func(k: Nat, v: Text): Bool = (k <= range.1 - 2 and range.0 + 2 <= k);
+          let pred = func(k: Nat, v: Text): Bool = (k <= (range.1 - 2 : Nat) and range.0 + 2 <= k);
           natMap.all(m, pred) == natMap.foldLeft<Text, Bool>(m, true, func (acc, k, v) {acc and pred(k, v)})
         }),
         prop("some through fold", func(m) {
-          let pred = func(k: Nat, v: Text): Bool = (k >= range.1 - 1 or range.0 + 1 >= k);
+          let pred = func(k: Nat, v: Text): Bool = (k >= (range.1 - 1 : Nat) or range.0 + 1 >= k);
           natMap.some(m, pred) == natMap.foldLeft<Text, Bool>(m, false, func (acc, k, v) {acc or pred(k, v)})
         }),
 
